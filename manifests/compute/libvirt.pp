@@ -1,6 +1,7 @@
 class nova::compute::libvirt (
-  $libvirt_type = 'kvm',
-  $vncserver_listen = '127.0.0.1'
+  $libvirt_type      = 'kvm',
+  $vncserver_listen  = '127.0.0.1',
+  $migration_support = false
 ) {
 
   include nova::params
@@ -24,6 +25,14 @@ class nova::compute::libvirt (
     ensure   => running,
     provider => $::nova::params::special_service_provider,
     require  => Package['libvirt'],
+  }
+
+  if $migration_support {
+    if $vncserver_listen != '0.0.0.0' {
+      fail("For migration support to work, you MUST set vncserver_listen to '0.0.0.0'")
+    } else {
+      class { 'nova::migration::libvirt': }
+    }
   }
 
   nova_config { 'libvirt_type': value => $libvirt_type }
