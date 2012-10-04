@@ -7,7 +7,8 @@ class nova::api(
   $auth_protocol     = 'http',
   $admin_tenant_name = 'services',
   $admin_user        = 'nova',
-  $admin_password    = 'passw0rd'
+  $admin_password    = 'passw0rd',
+  $api_bind_address  = '0.0.0.0',
 ) {
 
   include nova::params
@@ -32,6 +33,13 @@ class nova::api(
   }
 
   nova_config { 'api_paste_config': value => '/etc/nova/api-paste.ini'; }
+
+  nova_config {
+    'ec2_listen':           value => $api_bind_address;
+    'osapi_compute_listen': value => $api_bind_address;
+    'metadata_listen':      value => $api_bind_address;
+    'osapi_volume_listen':  value => $api_bind_address;
+  }
 
   file { '/etc/nova/api-paste.ini':
     content => template('nova/api-paste.ini.erb'),
