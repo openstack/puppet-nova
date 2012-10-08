@@ -8,7 +8,7 @@ class nova::api(
   $admin_tenant_name = 'services',
   $admin_user        = 'nova',
   $admin_password    = 'passw0rd',
-  $api_bind_address  = '0.0.0.0',
+  $api_bind_address  = '0.0.0.0'
 ) {
 
   include nova::params
