@@ -9,7 +9,6 @@ class nova::api(
   $admin_user        = 'nova',
   $admin_password    = 'passw0rd',
   $api_bind_address  = '0.0.0.0',
-  $enabled_apis      = 'ec2,osapi_compute,osapi_volume,metadata',
 ) {
 
   include nova::params
@@ -32,33 +31,6 @@ class nova::api(
     package_name   => $::nova::params::api_package_name,
     service_name   => $::nova::params::api_service_name,
   }
-
-  if 'occiapi' in $enabled_apis {
-
-    ensure_resource(
-      'package',  'python-pip',
-        {
-         'ensure' => 'latest'
-        }
-    )
-    
-    package { 'pyssf':
-      provider  => pip,
-      ensure    => latest,
-      require   => Package['python-pip']
-    }
-
-    ensure_resource(
-      'package', 'openstackocci',
-       {
-        'provider'  => 'pip',
-        'ensure'    => 'latest',
-        'require' => 'Package[python-pip]'
-       }
-    )
-  }
-
-  nova_config { 'enabled_apis': value => $enabled_apis; }
 
   nova_config { 'api_paste_config': value => '/etc/nova/api-paste.ini'; }
 
