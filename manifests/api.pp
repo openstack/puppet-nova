@@ -9,7 +9,7 @@ class nova::api(
   $admin_user        = 'nova',
   $admin_password    = 'passw0rd',
   $api_bind_address  = '0.0.0.0',
-  $enabled_apis      = 'ec2,osapi_compute,osapi_volume,metadata',
+  $enabled_apis      = 'ec2,osapi_compute,osapi_volume,metadata'
 ) {
 
   include nova::params
