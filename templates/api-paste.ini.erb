@@ -134,26 +134,6 @@ pipeline = faultwrap osvolumeversionapp
 [app:osvolumeversionapp]
 paste.app_factory = nova.api.openstack.volume.versions:Versions.factory
 
-<% if @enabled_apis.include? "occiapi" %>
-
-########
-# OCCI #
-########
-
-[composite:occiapi]
-use = egg:Paste#urlmap
-/: occiapppipe
-
-[pipeline:occiapppipe]
-pipeline = authtoken keystonecontext occiapp
-# with request body size limiting and rate limiting
-# pipeline = sizelimit authtoken keystonecontext ratelimit occiapp
-
-[app:occiapp]
-use = egg:openstackocci#occi_app
-
-<% end %>
-
 ##########
 # Shared #
 ##########
