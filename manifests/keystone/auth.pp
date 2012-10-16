@@ -29,9 +29,8 @@ class nova::keystone::auth(
     type        => 'compute',
     description => "Openstack Compute Service",
   }
-  keystone_endpoint { $auth_name:
+  keystone_endpoint { "${region}/${auth_name}":
     ensure       => present,
-    region       => $region,
     public_url   => "http://${public_address}:${compute_port}/${compute_version}/%(tenant_id)s",
     admin_url    => "http://${admin_address}:${compute_port}/${compute_version}/%(tenant_id)s",
     internal_url => "http://${internal_address}:${compute_port}/${compute_version}/%(tenant_id)s",
@@ -42,9 +41,8 @@ class nova::keystone::auth(
     type        => 'volume',
     description => 'Volume Service',
   }
-  keystone_endpoint { "${auth_name}_volume":
+  keystone_endpoint { "${region}/${auth_name}_volume":
     ensure       => present,
-    region       => $region,
     public_url   => "http://${public_address}:${volume_port}/${volume_version}/%(tenant_id)s",
     admin_url    => "http://${admin_address}:${volume_port}/${volume_version}/%(tenant_id)s",
     internal_url => "http://${internal_address}:${volume_port}/${volume_version}/%(tenant_id)s",
@@ -55,9 +53,8 @@ class nova::keystone::auth(
     type        => 'ec2',
     description => 'EC2 Service',
   }
-  keystone_endpoint { "${auth_name}_ec2":
+  keystone_endpoint { "${region}/${auth_name}_ec2":
     ensure       => present,
-    region       => $region,
     public_url   => "http://${public_address}:${ec2_port}/services/Cloud",
     admin_url    => "http://${admin_address}:${ec2_port}/services/Admin",
     internal_url => "http://${internal_address}:${ec2_port}/services/Cloud",
