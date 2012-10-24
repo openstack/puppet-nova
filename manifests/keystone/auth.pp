@@ -11,7 +11,8 @@ class nova::keystone::auth(
   $volume_version   = 'v1',
   $region           = 'RegionOne',
   $tenant           = 'services',
-  $email            = 'nova@localhost'
+  $email            = 'nova@localhost',
+  $cinder           = false
 ) {
 
   keystone_user { $auth_name:
@@ -36,16 +37,18 @@ class nova::keystone::auth(
     internal_url => "http://${internal_address}:${compute_port}/${compute_version}/%(tenant_id)s",
   }
 
-  keystone_service { "${auth_name}_volume":
-    ensure      => present,
-    type        => 'volume',
-    description => 'Volume Service',
-  }
-  keystone_endpoint { "${region}/${auth_name}_volume":
-    ensure       => present,
-    public_url   => "http://${public_address}:${volume_port}/${volume_version}/%(tenant_id)s",
-    admin_url    => "http://${admin_address}:${volume_port}/${volume_version}/%(tenant_id)s",
-    internal_url => "http://${internal_address}:${volume_port}/${volume_version}/%(tenant_id)s",
+  if $cinder == false {
+    keystone_service { "${auth_name}_volume":
+      ensure      => present,
+      type        => 'volume',
+      description => 'Volume Service',
+    }
+    keystone_endpoint { "${region}/${auth_name}_volume":
+      ensure       => present,
+      public_url   => "http://${public_address}:${volume_port}/${volume_version}/%(tenant_id)s",
+      admin_url    => "http://${admin_address}:${volume_port}/${volume_version}/%(tenant_id)s",
+      internal_url => "http://${internal_address}:${volume_port}/${volume_version}/%(tenant_id)s",
+    }
   }
 
   keystone_service { "${auth_name}_ec2":
