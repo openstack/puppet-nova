@@ -22,7 +22,9 @@ class nova::api(
   $auth_protocol     = 'http',
   $admin_tenant_name = 'services',
   $admin_user        = 'nova',
-  $enabled_apis      = 'ec2,osapi_compute,metadata'
+  $admin_password    = 'passw0rd',
+  $api_bind_address  = '0.0.0.0',
+  $enabled_apis      = 'ec2,osapi_compute,osapi_volume,metadata'
 ) {
 
   include nova::params
@@ -41,9 +43,13 @@ class nova::api(
   }
 
   nova_config {
-    'api_paste_config': value => '/etc/nova/api-paste.ini';
-    'enabled_apis':     value => $enabled_apis;
-    'volume_api_class': value => 'nova.volume.cinder.API';
+    'api_paste_config':     value => '/etc/nova/api-paste.ini';
+    'enabled_apis':         value => $enabled_apis;
+    'volume_api_class':     value => 'nova.volume.cinder.API';
+    'ec2_listen':           value => $api_bind_address;
+    'osapi_compute_listen': value => $api_bind_address;
+    'metadata_listen':      value => $api_bind_address;
+    'osapi_volume_listen':  value => $api_bind_address;
   }
 
   nova_paste_api_ini {
@@ -53,6 +59,26 @@ class nova::api(
     'filter:authtoken/admin_tenant_name': value => $admin_tenant_name;
     'filter:authtoken/admin_user':        value => $admin_user;
     'filter:authtoken/admin_password':    value => $admin_password;
+  }
+
+  if 'occiapi' in $enabled_apis {
+    if !defined(Package['python-pip']) {
+        package {'python-pip':
+                ensure => latest,
+        }
+    }
+    if !defined(Package['pyssf']){
+        package {'pyssf':
+            provider => pip,
+            ensure   => latest,
+            require  => Package['python-pip']
+        }
+    }
+    package { 'openstackocci' :
+      provider  => 'pip',
+      ensure    => latest,
+      require => Package['python-pip'],
+    }
   }
 
   # I need to ensure that I better understand this resource
