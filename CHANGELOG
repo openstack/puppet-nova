@@ -1,3 +1,11 @@
+* 2012-10-08 0.2.2
+- various improvements for testing
+- Adds support for system usage data notifications via rabbitmq driver
+- Parameterize the nova db charset
+- Add dhcp_domain to vlan manifest and flatdhcp
+- Adds basic quantum support
+- support Redhat
+- make bind address customizable
 * 2012-06-12 0.1.1
 - Fix dependency for automatic forge installation
 
