@@ -6,14 +6,14 @@ describe 'nova::api' do
     'include nova'
   end
 
+  let :params do
+    {:admin_password => 'passw0rd'}
+  end
+
   describe 'on debian platforms' do
     let :facts do
       { :osfamily => 'Debian' }
     end
-    it{ should contain_exec('initial-db-sync').with(
-      'command'     => '/usr/bin/nova-manage db sync',
-      'refreshonly' => true
-    )}
     it { should contain_service('nova-api').with(
       'name'    => 'nova-api',
       'ensure'  => 'stopped',
@@ -22,12 +22,11 @@ describe 'nova::api' do
     it { should contain_package('nova-api').with(
       'name'   => 'nova-api',
       'ensure' => 'present',
-      'notify' => 'Service[nova-api]',
-      'before' => ['Exec[initial-db-sync]', 'File[/etc/nova/api-paste.ini]']
+      'notify' => 'Service[nova-api]'
     ) }
     describe 'with enabled as true' do
       let :params do
-        {:enabled => true}
+        {:admin_password => 'passw0rd', :enabled => true}
       end
     it { should contain_service('nova-api').with(
       'name'    => 'nova-api',
@@ -37,27 +36,26 @@ describe 'nova::api' do
     end
     describe 'with package version' do
       let :params do
-        {:ensure_package => '2012.1-2'}
+        {:admin_password => 'passw0rd', :ensure_package => '2012.1-2'}
       end
       it { should contain_package('nova-api').with(
         'ensure' => '2012.1-2'
       )}
     end
     describe 'with defaults' do
-      it 'should use default params for api-paste.ini' do
-        verify_contents(subject, '/etc/nova/api-paste.ini',
-          [
-            '[filter:authtoken]',
-            'paste.filter_factory = keystone.middleware.auth_token:filter_factory',
-            'auth_host = 127.0.0.1',
-            'auth_port = 35357',
-            'auth_protocol = http',
-            'auth_uri = http://127.0.0.1:35357/v2.0',
-            'admin_tenant_name = services',
-            'admin_user = nova',
-            'admin_password = passw0rd',
-          ]
-        )
+      it 'should use default params for api-paste.init' do
+        should contain_nova_paste_api_ini(
+         'filter:authtoken/auth_host').with_value('127.0.0.1')
+        should contain_nova_paste_api_ini(
+          'filter:authtoken/auth_port').with_value('35357')
+        should contain_nova_paste_api_ini(
+          'filter:authtoken/auth_protocol').with_value('http')
+        should contain_nova_paste_api_ini(
+          'filter:authtoken/admin_tenant_name').with_value('services')
+        should contain_nova_paste_api_ini(
+          'filter:authtoken/admin_user').with_value('nova')
+        should contain_nova_paste_api_ini(
+          'filter:authtoken/admin_password').with_value('passw0rd')
       end
       it { should contain_nova_config('ec2_listen').with('value' => '0.0.0.0') }
       it { should contain_nova_config('osapi_compute_listen').with('value' => '0.0.0.0') }
@@ -77,20 +75,19 @@ describe 'nova::api' do
           :api_bind_address  => '192.168.56.210',
         }
       end
-      it 'should use default params for api-paste.ini' do
-        verify_contents(subject, '/etc/nova/api-paste.ini',
-          [
-            '[filter:authtoken]',
-            'paste.filter_factory = keystone.middleware.auth_token:filter_factory',
-            'auth_host = 10.0.0.1',
-            'auth_port = 1234',
-            'auth_protocol = https',
-            'auth_uri = https://10.0.0.1:1234/v2.0',
-            'admin_tenant_name = service2',
-            'admin_user = nova2',
-            'admin_password = passw0rd2',
-          ]
-        )
+      it 'should use default params for api-paste.init' do
+        should contain_nova_paste_api_ini(
+         'filter:authtoken/auth_host').with_value('10.0.0.1')
+        should contain_nova_paste_api_ini(
+          'filter:authtoken/auth_port').with_value('1234')
+        should contain_nova_paste_api_ini(
+          'filter:authtoken/auth_protocol').with_value('https')
+        should contain_nova_paste_api_ini(
+          'filter:authtoken/admin_tenant_name').with_value('service2')
+        should contain_nova_paste_api_ini(
+          'filter:authtoken/admin_user').with_value('nova2')
+        should contain_nova_paste_api_ini(
+          'filter:authtoken/admin_password').with_value('passw0rd2')
       end
       it { should contain_nova_config('ec2_listen').with('value' => '192.168.56.210') }
       it { should contain_nova_config('osapi_compute_listen').with('value' => '192.168.56.210') }
@@ -102,10 +99,6 @@ describe 'nova::api' do
     let :facts do
       { :osfamily => 'RedHat' }
     end
-    it{ should contain_exec('initial-db-sync').with(
-      'command'     => '/usr/bin/nova-manage db sync',
-      'refreshonly' => true
-    )}
     it { should contain_service('nova-api').with(
       'name'    => 'openstack-nova-api',
       'ensure'  => 'stopped',
