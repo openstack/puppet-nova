@@ -50,7 +50,7 @@ class nova(
   $verbose = false,
   $periodic_interval = '60',
   $report_interval = '10',
-  $root_wrap_config = '/etc/nova/rootwrap.conf',
+  $rootwrap_config = '/etc/nova/rootwrap.conf',
   # deprecated in folsom
   #$root_helper = $::nova::params::root_helper,
   $monitoring_notifications = false
@@ -174,7 +174,7 @@ class nova(
     'state_path':        value => $state_path;
     'lock_path':         value => $lock_path;
     'service_down_time': value => $service_down_time;
-    'root_wrap_config':  value => $root_wrap_config;
+    'rootwrap_config':  value => $rootwrap_config;
   }
 
 
