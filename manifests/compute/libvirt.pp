@@ -8,7 +8,7 @@ class nova::compute::libvirt (
 
   Service['libvirt'] -> Service['nova-compute']
 
-  if($::nova::params::compute_package_name) {
+  if($::osfamily == 'Debian') {
     package { "nova-compute-${libvirt_type}":
       ensure => present,
       before => Package['nova-compute'],
