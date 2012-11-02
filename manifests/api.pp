@@ -35,6 +35,10 @@ class nova::api(
   Nova_paste_api_ini<| |> ~> Exec['post-nova_config']
   Nova_paste_api_ini<| |> ~> Service['nova-api']
 
+  class {'cinder::client':
+     notify         => Service[$::nova::params::api_service_name],
+  }
+
   nova::generic_service { 'api':
     enabled        => $enabled,
     ensure_package => $ensure_package,
