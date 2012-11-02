@@ -73,7 +73,7 @@ describe 'nova' do
     it { should contain_nova_config('state_path').with_value('/var/lib/nova') }
     it { should contain_nova_config('lock_path').with_value('/var/lock/nova') }
     it { should contain_nova_config('service_down_time').with_value('60') }
-    it { should contain_nova_config('root_wrap_config').with_value('/etc/nova/rootwrap.conf') }
+    it { should contain_nova_config('rootwrap_config').with_value('/etc/nova/rootwrap.conf') }
 
 
 
@@ -123,10 +123,10 @@ describe 'nova' do
         {:osfamily => 'RedHat'}
       end
       it { should contain_package('nova-common').with(
-        'name'   => 'openstack-nova',
+        'name'   => 'openstack-nova-common',
         'ensure' => 'present'
       )}
-      it { should contain_nova_config('root_wrap_config').with_value('/etc/nova/rootwrap.conf') }
+      it { should contain_nova_config('rootwrap_config').with_value('/etc/nova/rootwrap.conf') }
     end
   end
 end

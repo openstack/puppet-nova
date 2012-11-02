@@ -71,7 +71,7 @@ describe 'nova::compute' do
         it { should contain_package('nova-compute').with(
           'ensure' => '2012.1-2'
         )}
-      end        
+      end
     end
     describe 'on rhel' do
       let :facts do
@@ -82,7 +82,7 @@ describe 'nova::compute' do
         'ensure'  => 'stopped',
         'enable'  => false
       )}
-      it { should_not contain_package('nova-compute') }
+      it { should contain_package('nova-compute').with_name('openstack-nova-compute') }
     end
   end
 end

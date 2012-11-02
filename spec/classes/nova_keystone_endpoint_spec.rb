@@ -36,25 +36,22 @@ describe 'nova::keystone::auth' do
       :description => 'EC2 Service'
     )}
 
-    it { should contain_keystone_endpoint('nova').with(
+    it { should contain_keystone_endpoint('RegionOne/nova').with(
       :ensure       => 'present',
-      :region       => 'RegionOne',
       :public_url   => 'http://127.0.0.1:8774/v2/%(tenant_id)s',
       :admin_url    => 'http://127.0.0.1:8774/v2/%(tenant_id)s',
       :internal_url => 'http://127.0.0.1:8774/v2/%(tenant_id)s'
     )}
 
-    it { should contain_keystone_endpoint('nova_volume').with(
+    it { should contain_keystone_endpoint('RegionOne/nova_volume').with(
       :ensure       => 'present',
-      :region       => 'RegionOne',
       :public_url   => 'http://127.0.0.1:8776/v1/%(tenant_id)s',
       :admin_url    => 'http://127.0.0.1:8776/v1/%(tenant_id)s',
       :internal_url => 'http://127.0.0.1:8776/v1/%(tenant_id)s'
     )}
 
-    it { should contain_keystone_endpoint('nova_ec2').with(
+    it { should contain_keystone_endpoint('RegionOne/nova_ec2').with(
       :ensure       => 'present',
-      :region       => 'RegionOne',
       :public_url   => 'http://127.0.0.1:8773/services/Cloud',
       :admin_url    => 'http://127.0.0.1:8773/services/Admin',
       :internal_url => 'http://127.0.0.1:8773/services/Cloud'
@@ -129,25 +126,22 @@ describe 'nova::keystone::auth' do
       }
     end
 
-    it { should contain_keystone_endpoint('nova').with(
+    it { should contain_keystone_endpoint('RegionTwo/nova').with(
       :ensure       => 'present',
-      :region       => 'RegionTwo',
       :public_url   => 'http://10.0.0.1:9774/v2.2/%(tenant_id)s',
       :admin_url    => 'http://10.0.0.2:9774/v2.2/%(tenant_id)s',
       :internal_url => 'http://10.0.0.3:9774/v2.2/%(tenant_id)s'
     )}
 
-    it { should contain_keystone_endpoint('nova_volume').with(
+    it { should contain_keystone_endpoint('RegionTwo/nova_volume').with(
       :ensure       => 'present',
-      :region       => 'RegionTwo',
       :public_url   => 'http://10.0.0.1:9776/v2.1/%(tenant_id)s',
       :admin_url    => 'http://10.0.0.2:9776/v2.1/%(tenant_id)s',
       :internal_url => 'http://10.0.0.3:9776/v2.1/%(tenant_id)s'
     )}
 
-    it { should contain_keystone_endpoint('nova_ec2').with(
+    it { should contain_keystone_endpoint('RegionTwo/nova_ec2').with(
       :ensure       => 'present',
-      :region       => 'RegionTwo',
       :public_url   => 'http://10.0.0.1:9773/services/Cloud',
       :admin_url    => 'http://10.0.0.2:9773/services/Admin',
       :internal_url => 'http://10.0.0.3:9773/services/Cloud'
