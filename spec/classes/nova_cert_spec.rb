@@ -37,7 +37,7 @@ describe 'nova::cert' do
       it { should contain_package('nova-cert').with(
         'ensure' => '2012.1-2'
       )}
-    end        
+    end
   end
   describe 'on rhel' do
     let :facts do
@@ -48,6 +48,6 @@ describe 'nova::cert' do
       'ensure'  => 'stopped',
       'enable'  => false
     )}
-    it { should_not contain_package('nova-cert') }
+    it { should contain_package('nova-cert').with_name('openstack-nova-cert') }
   end
 end

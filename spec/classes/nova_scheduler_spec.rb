@@ -48,6 +48,6 @@ describe 'nova::scheduler' do
       'ensure'  => 'stopped',
       'enable'  => false
     )}
-    it { should_not contain_package('nova-scheduler') }
+    it { should contain_package('nova-scheduler').with_name('openstack-nova-scheduler') }
   end
 end

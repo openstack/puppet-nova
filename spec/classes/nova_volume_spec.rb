@@ -48,6 +48,6 @@ describe 'nova::volume' do
       'ensure'   => 'stopped',
       'enable'   => false
     )}
-    it { should_not contain_package('nova-volume') }
+    it { should contain_package('nova-volume').with_name('openstack-nova-volume') }
   end
 end

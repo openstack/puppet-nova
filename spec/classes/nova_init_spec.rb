@@ -123,7 +123,7 @@ describe 'nova' do
         {:osfamily => 'RedHat'}
       end
       it { should contain_package('nova-common').with(
-        'name'   => 'openstack-nova',
+        'name'   => 'openstack-nova-common',
         'ensure' => 'present'
       )}
       it { should contain_nova_config('rootwrap_config').with_value('/etc/nova/rootwrap.conf') }

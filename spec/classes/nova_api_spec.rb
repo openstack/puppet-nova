@@ -104,6 +104,6 @@ describe 'nova::api' do
       'ensure'  => 'stopped',
       'enable'  => false
     )}
-    it { should_not contain_package('nova-api') }
+    it { should contain_package('nova-api').with_name('openstack-nova-api') }
   end
 end
