@@ -37,7 +37,7 @@ describe 'nova::objectstore' do
       it { should contain_package('nova-objectstore').with(
         'ensure' => '2012.1-2'
       )}
-    end    
+    end
   end
   describe 'on rhel' do
     let :facts do
@@ -48,6 +48,6 @@ describe 'nova::objectstore' do
       'ensure'  => 'stopped',
       'enable'  => false
     )}
-    it { should_not contain_package('nova-objectstore') }
+    it { should contain_package('nova-objectstore').with('openstack-nova-objectstore') }
   end
 end

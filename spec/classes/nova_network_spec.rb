@@ -207,6 +207,6 @@ describe 'nova::network' do
       'ensure'  => 'stopped',
       'enable'  => false
     )}
-    it { should_not contain_package('nova-network') }
+    it { should contain_package('nova-network').with_name('openstack-nova-network') }
   end
 end
