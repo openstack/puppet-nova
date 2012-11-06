@@ -27,15 +27,6 @@ class nova::compute::libvirt (
     require  => Package['libvirt'],
   }
 
-  case $libvirt_type {
-    'kvm': {
-      package { $::nova::params::libvirt_type_kvm:
-        ensure => present,
-        before => Package['nova-compute'],
-      }
-    }
-  }
-
   nova_config {
     'compute_driver':   value => 'libvirt.LibvirtDriver';
     'libvirt_type':     value => $libvirt_type;
