@@ -6,6 +6,8 @@ class nova::utilities {
         ensure => present
       }
     }
+    $pkgs=['unzip', 'screen', 'parted', 'curl', 'euca2ools']
+    nova::utilities::install{$pkgs:}
   }
   if $::osfamily == 'Debian' {
     $pkgs=['unzip', 'screen', 'parted', 'curl', 'euca2ools']
