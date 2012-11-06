@@ -1,3 +1,11 @@
+* 2012-11-02 1.0.1
+- no changes, just forgot to update the version
+* 2012-11-02 1.0.0
+- remove essex suppot
+- add folsom support
+- imprive travisci support
+- add cinder and quantum integration
+- use init types instead of concat
 * 2012-10-08 0.2.2
 - various improvements for testing
 - Adds support for system usage data notifications via rabbitmq driver
