@@ -1,14 +1,5 @@
 class nova::migration::libvirt {
 
-  define replace($file, $orig, $new) {
-    exec { "Replace ${orig} with ${new} in ${file}":
-      path    => ['/bin', '/usr/bin'],
-      command => "perl -p -i -e 's/^${orig}\$/${new}/g' ${file}",
-      unless  => "grep -q '^${new}$' ${file}",
-      notify  => Service['libvirt'],
-    }
-  }
-
   case $::lsbdistid {
     'Ubuntu': {
       # Ubuntu-specific, not Debian, due to upstart
