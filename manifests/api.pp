@@ -28,9 +28,12 @@ class nova::api(
 ) {
 
   include nova::params
+  require keystone::python
 
   Package<| title == 'nova-api' |> -> Exec['nova-db-sync']
   Package<| title == 'nova-api' |> -> Nova_paste_api_ini<| |>
+
+  Package<| title == 'nova-common' |> -> Class['nova::api']
 
   Nova_paste_api_ini<| |> ~> Exec['post-nova_config']
   Nova_paste_api_ini<| |> ~> Service['nova-api']

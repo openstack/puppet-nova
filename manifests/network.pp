@@ -43,6 +43,12 @@ class nova::network(
     nova_config { 'floating_range':   value => $floating_range }
   }
 
+  if has_key($config_overrides, 'vlan_start') {
+    $vlan_start = $config_overrides['vlan_start']
+  } else {
+    $vlan_start = undef
+  }
+
   if $install_service {
     nova::generic_service { 'network':
       enabled        => $enabled,
@@ -58,6 +64,7 @@ class nova::network(
       network       => $fixed_range,
       num_networks  => $num_networks,
       network_size  => $network_size,
+      vlan_start    => $vlan_start,
     }
     if $floating_range {
       nova::manage::floating { 'nova-vm-floating':
