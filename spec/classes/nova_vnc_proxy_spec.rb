@@ -43,6 +43,20 @@ describe 'nova::vncproxy' do
 
   end
 
+  describe 'on debian OS' do
+      let :facts do
+        { :osfamily => 'Debian', :operatingsystem => 'Debian' }
+      end
+      it { should contain_package('nova-vncproxy').with(
+        :name   => "novnc",
+        :ensure => 'present'
+      )}
+      it { should contain_service('nova-vncproxy').with(
+        :name   => 'novnc',
+        :ensure => 'running'
+      )}
+  end
+
 
   describe 'on Redhatish platforms' do
 
