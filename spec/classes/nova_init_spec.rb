@@ -74,8 +74,7 @@ describe 'nova' do
     it { should contain_nova_config('lock_path').with_value('/var/lock/nova') }
     it { should contain_nova_config('service_down_time').with_value('60') }
     it { should contain_nova_config('rootwrap_config').with_value('/etc/nova/rootwrap.conf') }
-
-
+    
 
     describe 'with parameters supplied' do
 

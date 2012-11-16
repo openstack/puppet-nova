@@ -73,6 +73,7 @@ describe 'nova::api' do
           :admin_user        => 'nova2',
           :admin_password    => 'passw0rd2',
           :api_bind_address  => '192.168.56.210',
+          :volume_api_class  => 'nova.volume.cinder.API'
         }
       end
       it 'should use default params for api-paste.init' do
