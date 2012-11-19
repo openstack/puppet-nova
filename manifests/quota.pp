@@ -22,7 +22,7 @@ class nova::quota(
   nova_config {
     'quota_instances': value => $quota_instances;
     'quota_cores': value => $quota_cores;
-	'quota_rams': value => $quota_rams;
+    'quota_rams': value => $quota_rams;
     'quota_volumes': value => $quota_volumes;
     'quota_gigabytes': value => $quota_gigabytes;
     'quota_floating_ips': value => $quota_floating_ips;
@@ -30,13 +30,13 @@ class nova::quota(
     'quota_max_injected_files': value => $quota_max_injected_files;
     'quota_max_injected_file_content_bytes': value => $quota_max_injected_file_content_bytes;
     'quota_max_injected_file_path_bytes': value => $quota_max_injected_file_path_bytes;
-	'quota_security_groups': value => $quota_security_groups;
-	'quota_security_group_rules': value => $quota_security_group_rules;
-	'quota_key_pairs': value => $quota_key_pairs;
-	'reservation_expire': value => $reservation_expire;
-	'reservation_expire': value => $reservation_expire;
-	'max_age': value => $max_age;
-	'quota_driver': value => $quota_driver
+    'quota_security_groups': value => $quota_security_groups;
+    'quota_security_group_rules': value => $quota_security_group_rules;
+    'quota_key_pairs': value => $quota_key_pairs;
+    'reservation_expire': value => $reservation_expire;
+    'reservation_expire': value => $reservation_expire;
+    'max_age': value => $max_age;
+    'quota_driver': value => $quota_driver
   }
 
 }
