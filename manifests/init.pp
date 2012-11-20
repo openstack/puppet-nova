@@ -30,6 +30,7 @@
 # [monitoring_notifications] A boolean specifying whether or not to send system usage data notifications out on the message queue. Optional, false by default. Only valid for stable/essex.
 #
 class nova(
+  $ensure_package = 'present',
   # this is how to query all resources from our clutser
   $nova_cluster_id='localcluster',
   $sql_connection = false,
@@ -85,14 +86,14 @@ class nova(
   # allowing a resource to serve as a point where the configuration of nova begins
   anchor { 'nova-start': }
 
-  package { "python-nova":
-    ensure  => present,
-    require => Package["python-greenlet"]
+  package { 'python-nova':
+    ensure  => $ensure_package,
+    require => Package['python-greenlet']
   }
 
   package { 'nova-common':
     name    => $::nova::params::common_package_name,
-    ensure  => present,
+    ensure  => $ensure_package,
     require => [Package["python-nova"], Anchor['nova-start']]
   }
 
