@@ -24,7 +24,8 @@ class nova::api(
   $admin_user        = 'nova',
   $admin_password    = 'passw0rd',
   $api_bind_address  = '0.0.0.0',
-  $enabled_apis      = 'ec2,osapi_compute,metadata'
+  $enabled_apis      = 'ec2,osapi_compute,metadata',
+  $volume_api_class  = 'nova.volume.cinder.API'
 ) {
 
   include nova::params
@@ -52,7 +53,7 @@ class nova::api(
   nova_config {
     'api_paste_config':     value => '/etc/nova/api-paste.ini';
     'enabled_apis':         value => $enabled_apis;
-    'volume_api_class':     value => 'nova.volume.cinder.API';
+    'volume_api_class':     value => $volume_api_class;
     'ec2_listen':           value => $api_bind_address;
     'osapi_compute_listen': value => $api_bind_address;
     'metadata_listen':      value => $api_bind_address;
