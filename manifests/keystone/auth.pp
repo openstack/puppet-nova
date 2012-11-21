@@ -12,7 +12,8 @@ class nova::keystone::auth(
   $region           = 'RegionOne',
   $tenant           = 'services',
   $email            = 'nova@localhost',
-  $cinder           = false
+  $cinder           = false,
+  $public_protocol  = 'http'
 ) {
 
   keystone_user { $auth_name:
@@ -32,7 +33,7 @@ class nova::keystone::auth(
   }
   keystone_endpoint { "${region}/${auth_name}":
     ensure       => present,
-    public_url   => "http://${public_address}:${compute_port}/${compute_version}/%(tenant_id)s",
+    public_url   => "${public_protocol}://${public_address}:${compute_port}/${compute_version}/%(tenant_id)s",
     admin_url    => "http://${admin_address}:${compute_port}/${compute_version}/%(tenant_id)s",
     internal_url => "http://${internal_address}:${compute_port}/${compute_version}/%(tenant_id)s",
   }
@@ -45,7 +46,7 @@ class nova::keystone::auth(
     }
     keystone_endpoint { "${region}/${auth_name}_volume":
       ensure       => present,
-      public_url   => "http://${public_address}:${volume_port}/${volume_version}/%(tenant_id)s",
+      public_url   => "${public_protocol}://${public_address}:${volume_port}/${volume_version}/%(tenant_id)s",
       admin_url    => "http://${admin_address}:${volume_port}/${volume_version}/%(tenant_id)s",
       internal_url => "http://${internal_address}:${volume_port}/${volume_version}/%(tenant_id)s",
     }
@@ -58,7 +59,7 @@ class nova::keystone::auth(
   }
   keystone_endpoint { "${region}/${auth_name}_ec2":
     ensure       => present,
-    public_url   => "http://${public_address}:${ec2_port}/services/Cloud",
+    public_url   => "${public_protocol}://${public_address}:${ec2_port}/services/Cloud",
     admin_url    => "http://${admin_address}:${ec2_port}/services/Admin",
     internal_url => "http://${internal_address}:${ec2_port}/services/Cloud",
   }
