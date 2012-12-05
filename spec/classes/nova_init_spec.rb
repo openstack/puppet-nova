@@ -91,10 +91,13 @@ describe 'nova' do
           'lock_path'           => '/var/locky/path',
           'state_path'          => '/var/lib/nova2',
           'service_down_time'   => '120',
-          'auth_strategy'       => 'foo'
+          'auth_strategy'       => 'foo',
+          'ensure_package'      => '2012.1.1-15.el6'
         }
       end
 
+      it { should contain_package('nova-common').with('ensure' => '2012.1.1-15.el6') }
+      it { should contain_package('python-nova').with('ensure' => '2012.1.1-15.el6') }
       it { should contain_nova_config('sql_connection').with_value('mysql://user:pass@db/db') }
 
       it { should contain_nova_config('image_service').with_value('nova.image.local.LocalImageService') }
