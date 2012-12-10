@@ -14,7 +14,6 @@ class nova::quota(
   $quota_security_group_rules = 20,
   $quota_key_pairs = 10,
   $reservation_expire = 86400,
-  $reservation_expire = 0,
   $max_age = 0,
   $quota_driver = 'nova.quota.DbQuotaDriver'
 ) {
@@ -33,7 +32,6 @@ class nova::quota(
     'quota_security_groups': value => $quota_security_groups;
     'quota_security_group_rules': value => $quota_security_group_rules;
     'quota_key_pairs': value => $quota_key_pairs;
-    'reservation_expire': value => $reservation_expire;
     'reservation_expire': value => $reservation_expire;
     'max_age': value => $max_age;
     'quota_driver': value => $quota_driver
