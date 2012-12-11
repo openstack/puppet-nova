@@ -46,7 +46,6 @@ class nova::params {
       $doc_package_name         = 'nova-doc'
       $libvirt_package_name     = 'libvirt-bin'
       $network_package_name     = 'nova-network'
-      $vncproxy_package_name    = ['novnc', 'nova-novncproxy']
       $numpy_package_name       = 'python-numpy'
       $objectstore_package_name = 'nova-objectstore'
       $scheduler_package_name   = 'nova-scheduler'
@@ -59,7 +58,6 @@ class nova::params {
       $consoleauth_service_name = 'nova-consoleauth'
       $libvirt_service_name     = 'libvirt-bin'
       $network_service_name     = 'nova-network'
-      $vncproxy_service_name    = 'nova-novncproxy'
       $objectstore_service_name = 'nova-objectstore'
       $scheduler_service_name   = 'nova-scheduler'
       $volume_service_name      = 'nova-volume'
@@ -71,11 +69,15 @@ class nova::params {
       case $::operatingsystem {
         'Debian': {
           $consoleauth_package_name = 'nova-console'
+          $vncproxy_package_name    = 'novnc'
+          $vncproxy_service_name    = 'novnc'
           # Use default provider on Debian
           $special_service_provider = undef
         }
         default: {
           $consoleauth_package_name = 'nova-consoleauth'
+          $vncproxy_package_name    = ['novnc', 'nova-novncproxy']
+          $vncproxy_service_name    = 'nova-novncproxy'
           # some of the services need to be started form the special upstart provider
           $special_service_provider = 'upstart'
         }
