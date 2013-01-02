@@ -24,8 +24,7 @@ describe 'nova::manage::network' do
       :ensure       => 'present',
       :network      => '10.0.0.0/24',
       :num_networks => 1,
-      :project      => nil,
-      :notify       => 'Exec[nova-db-sync]'
+      :project      => nil
     ) }
   end
   describe 'when overriding num networks' do
