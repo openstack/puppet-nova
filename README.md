@@ -1,6 +1,6 @@
 # The nova module
 
-[![Unit Test Status](https://secure.travis-ci.org/puppetlabs/puppetlabs-nova.png?branch=master)](http://travis-ci.org/puppetlabs/puppetlabs-nova)
+[![Unit Test Status](https://secure.travis-ci.org/puppetlabs/puppetlabs-nova.png?branch=master,folsom)](http://travis-ci.org/puppetlabs/puppetlabs-nova)
 
 This module can be used to flexibly configure [nova](http://nova.openstack.org/),
 the compute service of openstack.
