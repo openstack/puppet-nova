@@ -48,6 +48,6 @@ describe 'nova::objectstore' do
       'ensure'  => 'stopped',
       'enable'  => false
     )}
-    it { should contain_package('nova-objectstore').with('openstack-nova-objectstore') }
+    it { should contain_package('nova-objectstore').with_name('openstack-nova-objectstore') }
   end
 end
