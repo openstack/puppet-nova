@@ -60,7 +60,7 @@ describe 'nova::compute' do
         end
 
         it { should contain_nova_config('vnc_enabled').with_value('false') }
-        it { should contain_nova_config('vncserver_proxyclient_address').with('127.0.0.1')}
+        it { should contain_nova_config('vncserver_proxyclient_address').with_value('127.0.0.1')}
         it { should_not contain_nova_config('novncproxy_base_url') }
 
       end
