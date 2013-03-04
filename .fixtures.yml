@@ -8,6 +8,5 @@ fixtures:
     "sysctl": "git://github.com/duritong/puppet-sysctl.git"
     "rabbitmq": "git://github.com/puppetlabs/puppetlabs-rabbitmq.git"
     'inifile':  'git://github.com/cprice-puppet/puppetlabs-inifile'
-    "create_resources": 'git://github.com/puppetlabs/puppetlabs-create_resources'
   symlinks:
     "nova": "#{source_dir}"
