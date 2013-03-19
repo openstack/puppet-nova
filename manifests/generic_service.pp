@@ -49,7 +49,7 @@ define nova::generic_service(
       name    => $service_name,
       ensure  => $service_ensure,
       enable  => $enabled,
-      require => Package['nova-common'],
+      require => [Package['nova-common'], Package[$nova_title]],
     }
   }
 
