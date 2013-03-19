@@ -1,5 +1,5 @@
 name    'puppetlabs-nova'
-version '1.0.1'
+version '1.1.1'
 source  'https://github.com/puppetlabs/puppetlabs-nova'
 author  'Puppet Labs'
 license 'Apache License 2.0'
