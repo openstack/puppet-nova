@@ -15,6 +15,16 @@ class nova::compute::libvirt (
     }
   }
 
+  if($::osfamily == 'RedHat') {
+    service { 'messagebus':
+      ensure   => running,
+      enable   => true,
+      provider => $::nova::params::special_service_provider,
+    }
+    Package['libvirt'] -> Service['messagebus'] -> Service['libvirt']
+
+  }
+
   if $migration_support {
     if $vncserver_listen != '0.0.0.0' {
       fail("For migration support to work, you MUST set vncserver_listen to '0.0.0.0'")
