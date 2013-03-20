@@ -6,11 +6,10 @@ class nova::db::mysql(
   $dbname = 'nova',
   $user = 'nova',
   $host = '127.0.0.1',
+  $charset = 'latin1',
   $allowed_hosts = undef,
   $cluster_id = 'localzone'
 ) {
-
-  include 'nova::params'
 
   require 'mysql::python'
   # Create the db instance before openstack-nova if its installed
@@ -21,7 +20,7 @@ class nova::db::mysql(
     user         => $user,
     password     => $password,
     host         => $host,
-    charset      => $nova::params::nova_db_charset,
+    charset      => $charset,
     # I may want to inject some sql
     require      => Class['mysql::config'],
   }
