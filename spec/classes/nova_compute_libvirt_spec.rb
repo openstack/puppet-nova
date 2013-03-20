@@ -2,9 +2,7 @@ require 'spec_helper'
 describe 'nova::compute::libvirt' do
 
   let :pre_condition do
-    [ 'include nova',
-      'include nova::compute'
-    ]
+    "include nova\ninclude nova::compute"
   end
 
   describe 'on debian platforms' do
