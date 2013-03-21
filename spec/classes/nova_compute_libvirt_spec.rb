@@ -95,6 +95,11 @@ describe 'nova::compute::libvirt' do
         :require  => 'Package[libvirt]',
         :before   => 'Service[nova-compute]'
       )}
+      it { should contain_service('messagebus').with(
+        :ensure   => 'running',
+        :enable   => true,
+        :before   => 'Service[libvirt]'
+      ) }
 
       it { should contain_nova_config('compute_driver').with_value('libvirt.LibvirtDriver')}
       it { should contain_nova_config('libvirt_type').with_value('kvm')}
