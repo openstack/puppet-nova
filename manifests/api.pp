@@ -25,13 +25,13 @@ class nova::api(
   $admin_password    = 'passw0rd',
   $api_bind_address  = '0.0.0.0',
   $enabled_apis      = 'ec2,osapi_compute,metadata',
-  $volume_api_class  = 'nova.volume.cinder.API'
+  $volume_api_class  = 'nova.volume.cinder.API',
+  $sync_db           = true
 ) {
 
   include nova::params
   require keystone::python
 
-  Package<| title == 'nova-api' |> -> Exec['nova-db-sync']
   Package<| title == 'nova-api' |> -> Nova_paste_api_ini<| |>
 
   Package<| title == 'nova-common' |> -> Class['nova::api']
@@ -89,12 +89,14 @@ class nova::api(
     }
   }
 
-  # I need to ensure that I better understand this resource
-  # this is potentially constantly resyncing a central DB
-  exec { "nova-db-sync":
-    command     => "/usr/bin/nova-manage db sync",
-    refreshonly => "true",
-    subscribe   => Exec['post-nova_config'],
+  # Added arg and if statement prevents this from being run where db is not active i.e. the compute
+  if $sync_db {
+    Package<| title == 'nova-api' |> -> Exec['nova-db-sync']
+    exec { "nova-db-sync":
+      command     => "/usr/bin/nova-manage db sync",
+      refreshonly => "true",
+      subscribe   => Exec['post-nova_config'],
+    }
   }
 
 }
