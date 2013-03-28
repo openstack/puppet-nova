@@ -22,7 +22,6 @@ class nova::api(
   $auth_protocol     = 'http',
   $admin_tenant_name = 'services',
   $admin_user        = 'nova',
-  $admin_password    = 'passw0rd',
   $api_bind_address  = '0.0.0.0',
   $enabled_apis      = 'ec2,osapi_compute,metadata',
   $volume_api_class  = 'nova.volume.cinder.API',
