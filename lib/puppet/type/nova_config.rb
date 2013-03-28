@@ -1,13 +1,13 @@
 Puppet::Type.newtype(:nova_config) do
 
-  def self.default_target
-    "/etc/nova/nova.conf"
-  end
+#  def self.default_target
+#    "/etc/nova/nova.conf"
+#  end
 
   ensurable
 
   newparam(:name, :namevar => true) do
-    newvalues(/^\S+$/)
+    newvalues(/^\S+$/, /\S+\/\S+/)
   end
 
   newproperty(:value) do
@@ -17,12 +17,12 @@ Puppet::Type.newtype(:nova_config) do
     newvalues(/^[\S ]+$/)
   end
 
-  newproperty(:target) do
-    desc "Path to our nova config file"
-    defaultto {
-      Puppet::Type.type(:nova_config).default_target
-    }
-  end
+  #newproperty(:target) do
+  #  desc "Path to our nova config file"
+  #  defaultto {
+  #    Puppet::Type.type(:nova_config).default_target
+  #  }
+  #end
 
   validate do
     if self[:ensure] == :present
