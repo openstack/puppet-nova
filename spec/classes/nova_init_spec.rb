@@ -65,6 +65,8 @@ describe 'nova' do
     it { should contain_nova_config('rabbit_host').with_value('localhost') }
     it { should contain_nova_config('rabbit_password').with_value('guest') }
     it { should contain_nova_config('rabbit_port').with_value('5672') }
+    it { should contain_nova_config('rabbit_hosts').with_value('localhost:5672') }
+    it { should contain_nova_config('rabbit_ha_queues').with_value('false') }
     it { should contain_nova_config('rabbit_userid').with_value('guest') }
     it { should contain_nova_config('rabbit_virtual_host').with_value('/') }
 
@@ -105,18 +107,34 @@ describe 'nova' do
 
       it { should contain_nova_config('auth_strategy').with_value('foo') }
       it { should_not contain_nova_config('use_deprecated_auth').with_value(true) }
-
       it { should contain_nova_config('rabbit_host').with_value('rabbit') }
       it { should contain_nova_config('rabbit_password').with_value('password') }
       it { should contain_nova_config('rabbit_port').with_value('5673') }
       it { should contain_nova_config('rabbit_userid').with_value('rabbit_user') }
       it { should contain_nova_config('rabbit_virtual_host').with_value('/') }
+      it { should contain_nova_config('rabbit_hosts').with_value('rabbit:5673') }
+      it { should contain_nova_config('rabbit_ha_queues').with_value('false') }
 
       it { should contain_nova_config('verbose').with_value(true) }
       it { should contain_nova_config('logdir').with_value('/var/log/nova2') }
       it { should contain_nova_config('state_path').with_value('/var/lib/nova2') }
       it { should contain_nova_config('lock_path').with_value('/var/locky/path') }
       it { should contain_nova_config('service_down_time').with_value('120') }
+
+    end
+
+    describe 'with some others parameters supplied' do
+
+      let :params do
+        {
+          'rabbit_hosts'        => ['rabbit:5673', 'rabbit2:5674'],
+        }
+      end
+
+      it { should_not contain_nova_config('rabbit_host') }
+      it { should_not contain_nova_config('rabbit_port') }
+      it { should contain_nova_config('rabbit_hosts').with_value('rabbit:5673,rabbit2:5674') }
+      it { should contain_nova_config('rabbit_ha_queues').with_value('true') }
 
     end
 
