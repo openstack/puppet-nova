@@ -62,6 +62,7 @@ describe 'nova' do
     it { should contain_nova_config('auth_strategy').with_value('keystone') }
     it { should_not contain_nova_config('use_deprecated_auth').with_value('false') }
 
+      it { should contain_nova_config('rpc_backend').with_value('nova.openstack.common.rpc.impl_kombu') }
     it { should contain_nova_config('rabbit_host').with_value('localhost') }
     it { should contain_nova_config('rabbit_password').with_value('guest') }
     it { should contain_nova_config('rabbit_port').with_value('5672') }
@@ -107,6 +108,7 @@ describe 'nova' do
 
       it { should contain_nova_config('auth_strategy').with_value('foo') }
       it { should_not contain_nova_config('use_deprecated_auth').with_value(true) }
+      it { should contain_nova_config('rpc_backend').with_value('nova.openstack.common.rpc.impl_kombu') }
       it { should contain_nova_config('rabbit_host').with_value('rabbit') }
       it { should contain_nova_config('rabbit_password').with_value('password') }
       it { should contain_nova_config('rabbit_port').with_value('5673') }
@@ -135,6 +137,56 @@ describe 'nova' do
       it { should_not contain_nova_config('rabbit_port') }
       it { should contain_nova_config('rabbit_hosts').with_value('rabbit:5673,rabbit2:5674') }
       it { should contain_nova_config('rabbit_ha_queues').with_value('true') }
+
+    end
+
+
+    describe 'with qpid rpc supplied' do
+
+      let :params do
+        {
+          'sql_connection'      => 'mysql://user:pass@db/db',
+          'verbose'             => true,
+          'logdir'              => '/var/log/nova2',
+          'image_service'       => 'nova.image.local.LocalImageService',
+          'rpc_backend'         => 'nova.openstack.common.rpc.impl_qpid',
+          'lock_path'           => '/var/locky/path',
+          'state_path'          => '/var/lib/nova2',
+          'service_down_time'   => '120',
+          'auth_strategy'       => 'foo',
+          'ensure_package'      => '2012.1.1-15.el6'
+        }
+      end
+
+      it { should contain_package('nova-common').with('ensure' => '2012.1.1-15.el6') }
+      it { should contain_package('python-nova').with('ensure' => '2012.1.1-15.el6') }
+      it { should contain_nova_config('sql_connection').with_value('mysql://user:pass@db/db') }
+
+      it { should contain_nova_config('image_service').with_value('nova.image.local.LocalImageService') }
+      it { should_not contain_nova_config('glance_api_servers') }
+
+      it { should contain_nova_config('auth_strategy').with_value('foo') }
+      it { should_not contain_nova_config('use_deprecated_auth').with_value(true) }
+      it { should contain_nova_config('rpc_backend').with_value('nova.openstack.common.rpc.impl_qpid') }
+      it { should contain_nova_config('qpid_hostname').with_value('localhost') }
+      it { should contain_nova_config('qpid_port').with_value('5672') }
+      it { should contain_nova_config('qpid_username').with_value('guest') }
+      it { should contain_nova_config('qpid_password').with_value('guest') }
+      it { should contain_nova_config('qpid_reconnect').with_value('true') }
+      it { should contain_nova_config('qpid_reconnect_timeout').with_value('0') }
+      it { should contain_nova_config('qpid_reconnect_limit').with_value('0') }
+      it { should contain_nova_config('qpid_reconnect_interval_min').with_value('0') }
+      it { should contain_nova_config('qpid_reconnect_interval_max').with_value('0') }
+      it { should contain_nova_config('qpid_reconnect_interval').with_value('0') }
+      it { should contain_nova_config('qpid_heartbeat').with_value('60') }
+      it { should contain_nova_config('qpid_protocol').with_value('tcp') }
+      it { should contain_nova_config('qpid_tcp_nodelay').with_value('true') }
+
+      it { should contain_nova_config('verbose').with_value(true) }
+      it { should contain_nova_config('logdir').with_value('/var/log/nova2') }
+      it { should contain_nova_config('state_path').with_value('/var/lib/nova2') }
+      it { should contain_nova_config('lock_path').with_value('/var/locky/path') }
+      it { should contain_nova_config('service_down_time').with_value('120') }
 
     end
 
