@@ -33,10 +33,17 @@ class nova::params {
       $tgt_service_name         = 'tgtd'
       $vncproxy_service_name    = 'openstack-nova-novncproxy'
       $volume_service_name      = 'openstack-nova-volume'
-      $special_service_provider = 'init'
       # redhat specific config defaults
       $root_helper              = 'sudo nova-rootwrap'
       $lock_path                = '/var/lib/nova/tmp'
+      case $::operatingsystem {
+        'RedHat': {
+          $special_service_provider = 'init'
+        }
+        default: {
+          $special_service_provider = undef
+        }
+      }
     }
     'Debian': {
       # package names
