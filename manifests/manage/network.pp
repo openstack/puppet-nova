@@ -7,6 +7,7 @@
 #
 define nova::manage::network (
   $network,
+  $label        = 'novanetwork',
   $num_networks = 1,
   $network_size = 255,
   $vlan_start   = undef,
@@ -19,6 +20,7 @@ define nova::manage::network (
   nova_network { $name:
     ensure       => present,
     network      => $network,
+    label        => $label,
     num_networks => $num_networks,
     network_size => $network_size,
     project      => $project,
