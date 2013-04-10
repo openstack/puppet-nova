@@ -23,6 +23,7 @@ describe 'nova::manage::network' do
     it { should contain_nova_network('foo').with(
       :ensure       => 'present',
       :network      => '10.0.0.0/24',
+      :label        => 'novanetwork',
       :num_networks => 1,
       :project      => nil
     ) }
