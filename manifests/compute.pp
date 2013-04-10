@@ -15,10 +15,7 @@ class nova::compute(
   include nova::params
 
   if ($vnc_enabled) {
-    if !($vncproxy_host) {
-      warning("VNC is enabled and \$vncproxy_host must be specified nova::compute assumes that it can collect the exported resource: Nova_config[novncproxy_base_url]")
-      Nova_config <<| title == 'novncproxy_base_url' |>>
-    } else {
+    if ($vncproxy_host) {
       $vncproxy_base_url = "${vncproxy_protocol}://${vncproxy_host}:${vncproxy_port}${vncproxy_path}"
       # config for vnc proxy
       nova_config {
