@@ -31,7 +31,5 @@ class nova::db::mysql(
       password  => $password,
       database  => $dbname,
     }
-  } else {
-    Nova::Db::Mysql::Host_access<<| tag == $cluster_id |>>
   }
 }
