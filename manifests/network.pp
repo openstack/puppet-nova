@@ -12,8 +12,8 @@
 #   the fixed and floating ranges provided.
 #
 class nova::network(
-  $private_interface,
-  $fixed_range,
+  $private_interface = undef,
+  $fixed_range = '10.0.0.0/8',
   $public_interface = undef,
   $num_networks     = 1,
   $network_size     = 255,
