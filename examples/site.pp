@@ -6,7 +6,7 @@ $db_password = 'password'
 $rabbit_user     = 'nova'
 $rabbit_password = 'nova'
 $rabbit_vhost    = '/'
-$rabbit_host     = 'rabbitmq'
+$rabbit_hosts    = ['rabbitmq:5672']
 $rabbit_port     = '5672'
 
 $glance_api_servers = 'glance:9292'
@@ -66,10 +66,9 @@ node controller {
     db_host => $db_host,
 
     rabbit_password => $rabbit_password,
-    rabbit_port => $rabbit_port,
     rabbit_userid => $rabbit_user,
     rabbit_virtual_host => $rabbit_vhost,
-    rabbit_host => $rabbit_host,
+    rabbit_hosts => $rabbit_hosts,
 
     image_service => 'nova.image.glance.GlanceImageService',
 
@@ -97,8 +96,7 @@ node compute {
     sql_connection      => "mysql://${db_username}:${db_password}@${db_host}/${db_name}",
     image_service       => 'nova.image.glance.GlanceImageService',
     glance_api_servers  => $glance_api_servers,
-    rabbit_host         => $rabbit_host,
-    rabbit_port         => $rabbit_port,
+    rabbit_hosts        => $rabbit_hosts,
     rabbit_userid       => $rabbit_user,
     rabbit_password     => $rabbit_password,
     rabbit_virtual_host => $rabbit_virtual_host,
@@ -180,10 +178,9 @@ node all {
     db_host => 'localhost',
 
     rabbit_password => 'rabbitpassword',
-    rabbit_port => '5672',
     rabbit_userid => 'rabbit_user',
     rabbit_virtual_host => '/',
-    rabbit_host => 'localhost',
+    rabbit_hosts => ['localhost:5672'],
 
     image_service => 'nova.image.glance.GlanceImageService',
     glance_api_servers => $glance_api_servers,

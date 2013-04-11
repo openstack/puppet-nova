@@ -6,7 +6,7 @@ resources { 'nova_config':
 
 class { 'nova::ubuntu::compute':
   api_server => '10.0.0.4',
-  rabbit_host => '10.0.0.4',
+  rabbit_hosts => ['10.0.0.4'],
   db_host => '10.0.0.4',
   db_user => 'nova',
   db_password => 'password',

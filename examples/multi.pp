@@ -61,8 +61,8 @@ node /controller/ {
   $nova_db = "mysql://nova:${nova_db_password}@${controller_host}/nova"
 
   # export all of the things that will be needed by the clients
-  @@nova_config { 'rabbit_host': value => $controller_host }
-  Nova_config <| title == 'rabbit_host' |>
+  @@nova_config { 'rabbit_hosts': value => $controller_host }
+  Nova_config <| title == 'rabbit_hosts' |>
   @@nova_config { 'sql_connection': value => $nova_db }
   Nova_config <| title == 'sql_connection' |>
   @@nova_config { 'glance_api_servers': value => $glance_api_servers }
@@ -163,7 +163,7 @@ node /controller/ {
   class { 'nova':
     sql_connection     => false,
     # this is false b/c we are exporting
-    rabbit_host        => false,
+    rabbit_hosts       => false,
     rabbit_userid      => $rabbit_user,
     rabbit_password    => $rabbit_password,
     image_service      => 'nova.image.glance.GlanceImageService',
@@ -235,7 +235,7 @@ node /compute/ {
   class { 'nova':
     # set sql and rabbit to false so that the resources will be collected
     sql_connection     => false,
-    rabbit_host        => false,
+    rabbit_hosts       => false,
     image_service      => 'nova.image.glance.GlanceImageService',
     glance_api_servers => false,
     rabbit_userid      => $rabbit_user,

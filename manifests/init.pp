@@ -11,8 +11,9 @@
 # [glance_api_servers] List of addresses for api servers. Optional.
 #   Defaults to localhost:9292.
 # [rabbit_host] Location of rabbitmq installation. Optional. Defaults to localhost.
-# [rabbit_password] Password used to connect to rabbitmq. Optional. Defaults to guest.
 # [rabbit_port] Port for rabbitmq instance. Optional. Defaults to 5672.
+# [rabbit_hosts] Location of rabbitmq installation. Optional. Defaults to undef.
+# [rabbit_password] Password used to connect to rabbitmq. Optional. Defaults to guest.
 # [rabbit_userid] User used to connect to rabbitmq. Optional. Defaults to guest.
 # [rabbit_virtual_host] The RabbitMQ virtual host. Optional. Defaults to /.
 # [auth_strategy]
@@ -39,6 +40,7 @@ class nova(
   # this should probably just be configured as a glance client
   $glance_api_servers = 'localhost:9292',
   $rabbit_host = 'localhost',
+  $rabbit_hosts = undef,
   $rabbit_password='guest',
   $rabbit_port='5672',
   $rabbit_userid='guest',
@@ -155,15 +157,26 @@ class nova(
 
   nova_config { 'auth_strategy': value => $auth_strategy }
 
-  if $rabbit_host {
-    nova_config { 'rabbit_host': value => $rabbit_host }
+  if size($rabbit_hosts) > 1 {
+    nova_config { 'rabbit_ha_queues': value => 'true' }
   } else {
-    Nova_config <<| title == 'rabbit_host' |>>
+    nova_config { 'rabbit_ha_queues': value => 'false' }
   }
+
+  if $rabbit_hosts {
+    nova_config { 'rabbit_hosts': value => join($rabbit_hosts, ',') }
+  } elsif $rabbit_host {
+    nova_config { 'rabbit_host': value => $rabbit_host }
+    nova_config { 'rabbit_port': value => $rabbit_port }
+    nova_config { 'rabbit_hosts': value => "${rabbit_host}:${rabbit_port}" }
+  } else {
+    Nova_config <<| title == rabbit_host |>>
+    Nova_config <<| title == rabbit_hosts |>>
+  }
+
   # I may want to support exporting and collecting these
   nova_config {
     'rabbit_password':     value => $rabbit_password;
-    'rabbit_port':         value => $rabbit_port;
     'rabbit_userid':       value => $rabbit_userid;
     'rabbit_virtual_host': value => $rabbit_virtual_host;
   }
