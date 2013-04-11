@@ -76,7 +76,7 @@ describe 'nova::compute::libvirt' do
 
   describe 'on rhel platforms' do
     let :facts do
-      { :osfamily => 'RedHat' }
+      { :operatingsystem => 'RedHat', :osfamily => 'RedHat' }
     end
 
     describe 'with default parameters' do
@@ -98,7 +98,8 @@ describe 'nova::compute::libvirt' do
       it { should contain_service('messagebus').with(
         :ensure   => 'running',
         :enable   => true,
-        :before   => 'Service[libvirt]'
+        :before   => 'Service[libvirt]',
+        :provider => 'init'
       ) }
 
       it { should contain_nova_config('compute_driver').with_value('libvirt.LibvirtDriver')}
@@ -140,5 +141,38 @@ describe 'nova::compute::libvirt' do
           raise_error(Puppet::Error, /For migration support to work, you MUST set vncserver_listen to '0.0.0.0'/) }
       end
     end
+
+    describe 'with default parameters on Fedora' do
+      let :facts do
+        { :operatingsystem => 'Fedora', :osfamily => 'RedHat' }
+      end
+
+      it { should include_class('nova::params')}
+
+      it { should contain_package('libvirt').with(
+        :name   => 'libvirt',
+        :ensure => 'present'
+      ) }
+
+      it { should contain_service('libvirt').with(
+        :name     => 'libvirtd',
+        :ensure   => 'running',
+        :provider => nil,
+        :require  => 'Package[libvirt]',
+        :before   => 'Service[nova-compute]'
+      )}
+      it { should contain_service('messagebus').with(
+        :ensure   => 'running',
+        :enable   => true,
+        :before   => 'Service[libvirt]',
+        :provider => nil
+      ) }
+
+      it { should contain_nova_config('compute_driver').with_value('libvirt.LibvirtDriver')}
+      it { should contain_nova_config('libvirt_type').with_value('kvm')}
+      it { should contain_nova_config('connection_type').with_value('libvirt')}
+      it { should contain_nova_config('vncserver_listen').with_value('127.0.0.1')}
+    end
+
   end
 end
