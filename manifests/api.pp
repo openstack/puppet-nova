@@ -50,13 +50,13 @@ class nova::api(
   }
 
   nova_config {
-    'api_paste_config':     value => '/etc/nova/api-paste.ini';
-    'enabled_apis':         value => $enabled_apis;
-    'volume_api_class':     value => $volume_api_class;
-    'ec2_listen':           value => $api_bind_address;
-    'osapi_compute_listen': value => $api_bind_address;
-    'metadata_listen':      value => $api_bind_address;
-    'osapi_volume_listen':  value => $api_bind_address;
+    'DEFAULT/api_paste_config':     value => '/etc/nova/api-paste.ini';
+    'DEFAULT/enabled_apis':         value => $enabled_apis;
+    'DEFAULT/volume_api_class':     value => $volume_api_class;
+    'DEFAULT/ec2_listen':           value => $api_bind_address;
+    'DEFAULT/osapi_compute_listen': value => $api_bind_address;
+    'DEFAULT/metadata_listen':      value => $api_bind_address;
+    'DEFAULT/osapi_volume_listen':  value => $api_bind_address;
   }
 
   nova_paste_api_ini {

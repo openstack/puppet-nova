@@ -32,10 +32,10 @@ describe 'nova::compute::libvirt' do
         :before   => 'Service[nova-compute]'
       )}
 
-      it { should contain_nova_config('compute_driver').with_value('libvirt.LibvirtDriver')}
-      it { should contain_nova_config('libvirt_type').with_value('kvm')}
-      it { should contain_nova_config('connection_type').with_value('libvirt')}
-      it { should contain_nova_config('vncserver_listen').with_value('127.0.0.1')}
+      it { should contain_nova_config('DEFAULT/compute_driver').with_value('libvirt.LibvirtDriver')}
+      it { should contain_nova_config('DEFAULT/libvirt_type').with_value('kvm')}
+      it { should contain_nova_config('DEFAULT/connection_type').with_value('libvirt')}
+      it { should contain_nova_config('DEFAULT/vncserver_listen').with_value('127.0.0.1')}
     end
 
     describe 'with params' do
@@ -45,8 +45,8 @@ describe 'nova::compute::libvirt' do
         }
       end
 
-      it { should contain_nova_config('libvirt_type').with_value('qemu')}
-      it { should contain_nova_config('vncserver_listen').with_value('0.0.0.0')}
+      it { should contain_nova_config('DEFAULT/libvirt_type').with_value('qemu')}
+      it { should contain_nova_config('DEFAULT/vncserver_listen').with_value('0.0.0.0')}
     end
 
     describe 'with migration_support enabled' do
@@ -58,7 +58,7 @@ describe 'nova::compute::libvirt' do
         end
 
         it { should include_class('nova::migration::libvirt')}
-        it { should contain_nova_config('vncserver_listen').with_value('0.0.0.0')}
+        it { should contain_nova_config('DEFAULT/vncserver_listen').with_value('0.0.0.0')}
       end
 
       context 'with vncserver_listen not set to 0.0.0.0' do
@@ -102,10 +102,10 @@ describe 'nova::compute::libvirt' do
         :provider => 'init'
       ) }
 
-      it { should contain_nova_config('compute_driver').with_value('libvirt.LibvirtDriver')}
-      it { should contain_nova_config('libvirt_type').with_value('kvm')}
-      it { should contain_nova_config('connection_type').with_value('libvirt')}
-      it { should contain_nova_config('vncserver_listen').with_value('127.0.0.1')}
+      it { should contain_nova_config('DEFAULT/compute_driver').with_value('libvirt.LibvirtDriver')}
+      it { should contain_nova_config('DEFAULT/libvirt_type').with_value('kvm')}
+      it { should contain_nova_config('DEFAULT/connection_type').with_value('libvirt')}
+      it { should contain_nova_config('DEFAULT/vncserver_listen').with_value('127.0.0.1')}
     end
 
     describe 'with params' do
@@ -115,8 +115,8 @@ describe 'nova::compute::libvirt' do
         }
       end
 
-      it { should contain_nova_config('libvirt_type').with_value('qemu')}
-      it { should contain_nova_config('vncserver_listen').with_value('0.0.0.0')}
+      it { should contain_nova_config('DEFAULT/libvirt_type').with_value('qemu')}
+      it { should contain_nova_config('DEFAULT/vncserver_listen').with_value('0.0.0.0')}
     end
 
     describe 'with migration_support enabled' do
@@ -128,7 +128,7 @@ describe 'nova::compute::libvirt' do
         end
 
         it { should include_class('nova::migration::libvirt')}
-        it { should contain_nova_config('vncserver_listen').with_value('0.0.0.0')}
+        it { should contain_nova_config('DEFAULT/vncserver_listen').with_value('0.0.0.0')}
       end
 
       context 'with vncserver_listen not set to 0.0.0.0' do
@@ -162,10 +162,10 @@ describe 'nova::compute::libvirt' do
         :before   => 'Service[nova-compute]'
       )}
 
-      it { should contain_nova_config('compute_driver').with_value('libvirt.LibvirtDriver')}
-      it { should contain_nova_config('libvirt_type').with_value('kvm')}
-      it { should contain_nova_config('connection_type').with_value('libvirt')}
-      it { should contain_nova_config('vncserver_listen').with_value('127.0.0.1')}
+      it { should contain_nova_config('DEFAULT/compute_driver').with_value('libvirt.LibvirtDriver')}
+      it { should contain_nova_config('DEFAULT/libvirt_type').with_value('kvm')}
+      it { should contain_nova_config('DEFAULT/connection_type').with_value('libvirt')}
+      it { should contain_nova_config('DEFAULT/vncserver_listen').with_value('127.0.0.1')}
     end
 
   end

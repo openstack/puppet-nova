@@ -1,5 +1,5 @@
 class { 'nova': }
 
-class { 'nova::volume': 
+class { 'nova::volume':
   enabled => true,
 }

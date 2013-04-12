@@ -20,7 +20,7 @@ describe provider_class do
 
   it 'should default to the default setting when no other one is specified' do
     resource = Puppet::Type::Nova_config.new(
-      {:name => 'foo', :value => 'bar'}
+      {:name => 'DEFAULT/foo', :value => 'bar'}
     )
     provider = provider_class.new(resource)
     provider.section.should == 'DEFAULT'

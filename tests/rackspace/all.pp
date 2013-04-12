@@ -3,7 +3,6 @@ This test should configure everything needed to run openstack on a compute vm ru
 on a xenserver.
 */
 
-Nova_config { target => '/etc/nova/nova.conf' }
 resources { 'nova_config':
   purge => true,
 }

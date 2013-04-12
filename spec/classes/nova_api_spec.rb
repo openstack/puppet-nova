@@ -57,10 +57,10 @@ describe 'nova::api' do
         should contain_nova_paste_api_ini(
           'filter:authtoken/admin_password').with_value('passw0rd')
       end
-      it { should contain_nova_config('ec2_listen').with('value' => '0.0.0.0') }
-      it { should contain_nova_config('osapi_compute_listen').with('value' => '0.0.0.0') }
-      it { should contain_nova_config('metadata_listen').with('value' => '0.0.0.0') }
-      it { should contain_nova_config('osapi_volume_listen').with('value' => '0.0.0.0') }
+      it { should contain_nova_config('DEFAULT/ec2_listen').with('value' => '0.0.0.0') }
+      it { should contain_nova_config('DEFAULT/osapi_compute_listen').with('value' => '0.0.0.0') }
+      it { should contain_nova_config('DEFAULT/metadata_listen').with('value' => '0.0.0.0') }
+      it { should contain_nova_config('DEFAULT/osapi_volume_listen').with('value' => '0.0.0.0') }
     end
     describe 'with params' do
       let :params do
@@ -90,10 +90,10 @@ describe 'nova::api' do
         should contain_nova_paste_api_ini(
           'filter:authtoken/admin_password').with_value('passw0rd2')
       end
-      it { should contain_nova_config('ec2_listen').with('value' => '192.168.56.210') }
-      it { should contain_nova_config('osapi_compute_listen').with('value' => '192.168.56.210') }
-      it { should contain_nova_config('metadata_listen').with('value' => '192.168.56.210') }
-      it { should contain_nova_config('osapi_volume_listen').with('value' => '192.168.56.210') }
+      it { should contain_nova_config('DEFAULT/ec2_listen').with('value' => '192.168.56.210') }
+      it { should contain_nova_config('DEFAULT/osapi_compute_listen').with('value' => '192.168.56.210') }
+      it { should contain_nova_config('DEFAULT/metadata_listen').with('value' => '192.168.56.210') }
+      it { should contain_nova_config('DEFAULT/osapi_volume_listen').with('value' => '192.168.56.210') }
     end
   end
   describe 'on rhel' do

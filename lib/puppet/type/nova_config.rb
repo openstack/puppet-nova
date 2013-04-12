@@ -7,7 +7,11 @@ Puppet::Type.newtype(:nova_config) do
   ensurable
 
   newparam(:name, :namevar => true) do
-    newvalues(/^\S+$/, /\S+\/\S+/)
+    validate do |value|
+      unless value =~ /\S+\/\S+/
+        fail("Invalid nova_config #{value}, entries without sections are no longer supported, please add an explicit section (probably DEFAULT) to all nova_config resources")
+      end
+    end
   end
 
   newproperty(:value) do

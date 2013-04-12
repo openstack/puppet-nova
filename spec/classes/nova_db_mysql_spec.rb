@@ -9,12 +9,12 @@ describe 'nova::db::mysql' do
     let :facts do
       { :osfamily => "Debian" }
     end
-    
+
     context 'with only required parameters' do
       let :params do
         required_params
       end
-      
+
       it { should contain_mysql__db('nova').with(
         :user        => 'nova',
         :password    => 'qwerty',
@@ -22,12 +22,12 @@ describe 'nova::db::mysql' do
         :require     => "Class[Mysql::Config]"
       )}
     end
-    
+
     context 'when overriding charset' do
       let :params do
         { :charset => 'utf8' }.merge(required_params)
       end
-      
+
       it { should contain_mysql__db('nova').with_charset(params[:charset]) }
     end
   end
@@ -36,12 +36,12 @@ describe 'nova::db::mysql' do
     let :facts do
       { :osfamily => 'RedHat' }
     end
-    
+
     context 'with only required parameters' do
       let :params do
         required_params
       end
-      
+
       it { should contain_mysql__db('nova').with(
         :user        => 'nova',
         :password    => 'qwerty',
@@ -49,12 +49,12 @@ describe 'nova::db::mysql' do
         :require     => "Class[Mysql::Config]"
       )}
     end
-    
+
     context 'when overriding charset' do
       let :params do
         { :charset => 'utf8' }.merge(required_params)
       end
-      
+
       it { should contain_mysql__db('nova').with_charset(params[:charset]) }
     end
   end

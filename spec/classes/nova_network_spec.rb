@@ -88,7 +88,7 @@ describe 'nova::network' do
         let :params do
           default_params.merge(:floating_range => '10.0.0.0/30')
         end
-        it { should contain_nova_config('floating_range').with_value('10.0.0.0/30') }
+        it { should contain_nova_config('DEFAULT/floating_range').with_value('10.0.0.0/30') }
         it { should contain_nova__manage__floating('nova-vm-floating').with_network('10.0.0.0/30') }
       end
     end

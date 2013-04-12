@@ -39,8 +39,8 @@ describe 'nova::volume::iscsi' do
       it { should contain_file('/etc/default/iscsitarget') }
     end
 
-    it { should contain_nova_config('volume_group').with_value('nova-volumes') }
-    it { should_not contain_nova_config('iscsi_ip_address') }
+    it { should contain_nova_config('DEFAULT/volume_group').with_value('nova-volumes') }
+    it { should_not contain_nova_config('DEFAULT/iscsi_ip_address') }
 
   end
 

@@ -6,16 +6,14 @@ Puppet::Type.type(:nova_config).provide(
   # the setting is always default
   # this if for backwards compat with the old puppet providers for nova_config
   def section
-    section_setting = resource[:name].split('/', 2)
-    section_setting.size == 2 ? section_setting.first : 'DEFAULT'
+    resource[:name].split('/', 2)[0]
   end
 
   # assumes that the name was the setting
   # this is to maintain backwards compat with the the older
   # stuff
   def setting
-    section_setting = resource[:name].split('/', 2)
-    section_setting.size == 2 ? section_setting.last : resource[:name]
+    resource[:name].split('/', 2)[1]
   end
 
   def separator

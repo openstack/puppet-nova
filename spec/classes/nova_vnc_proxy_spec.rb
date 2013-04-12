@@ -20,8 +20,8 @@ describe 'nova::vncproxy' do
       :name   => 'python-numpy'
     )}
 
-    it { should contain_nova_config('novncproxy_host').with(:value => '0.0.0.0') }
-    it { should contain_nova_config('novncproxy_port').with(:value => '6080') }
+    it { should contain_nova_config('DEFAULT/novncproxy_host').with(:value => '0.0.0.0') }
+    it { should contain_nova_config('DEFAULT/novncproxy_port').with(:value => '6080') }
 
     it { should contain_package('nova-vncproxy').with(
       :name   => ["novnc", "nova-novncproxy"],

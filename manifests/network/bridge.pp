@@ -14,7 +14,7 @@ define nova::network::bridge ( $ip, $netmask = "255.255.255.0" )
           "set iface[. = '${name}']/method static",
           "set iface[. = '${name}']/address ${ip}",
           "set iface[. = '${name}']/netmask ${netmask}",
-          "set iface[. = '${name}']/bridge_ports none", 
+          "set iface[. = '${name}']/bridge_ports none",
         ],
         notify => Exec["networking-refresh"],
       }
