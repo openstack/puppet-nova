@@ -38,16 +38,18 @@ describe 'nova::network' do
           default_params.merge(:enabled => true)
         end
         it { should contain_service('nova-network').with(
-          'name'    => 'nova-network',
-          'ensure'  => 'running',
-          'enable'  => true
+          'name'      => 'nova-network',
+          'ensure'    => 'running',
+          'hasstatus' => 'true',
+          'enable'    => true
         )}
       end
       describe 'when enabled is set to false' do
         it { should contain_service('nova-network').with(
-          'name'    => 'nova-network',
-          'ensure'  => 'stopped',
-          'enable'  => false
+          'name'      => 'nova-network',
+          'ensure'    => 'stopped',
+          'hasstatus' => 'true',
+          'enable'    => false
         )}
       end
     end
@@ -203,9 +205,10 @@ describe 'nova::network' do
       { :osfamily => 'RedHat' }
     end
     it { should contain_service('nova-network').with(
-      'name'    => 'openstack-nova-network',
-      'ensure'  => 'stopped',
-      'enable'  => false
+      'name'      => 'openstack-nova-network',
+      'ensure'    => 'stopped',
+      'hasstatus' => 'true',
+      'enable'    => false
     )}
     it { should contain_package('nova-network').with_name('openstack-nova-network') }
   end

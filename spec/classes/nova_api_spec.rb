@@ -15,9 +15,10 @@ describe 'nova::api' do
       { :osfamily => 'Debian' }
     end
     it { should contain_service('nova-api').with(
-      'name'    => 'nova-api',
-      'ensure'  => 'stopped',
-      'enable'  => false
+      'name'      => 'nova-api',
+      'ensure'    => 'stopped',
+      'hasstatus' => 'true',
+      'enable'    => false
     )}
     it { should contain_package('nova-api').with(
       'name'   => 'nova-api',
@@ -29,9 +30,10 @@ describe 'nova::api' do
         {:admin_password => 'passw0rd', :enabled => true}
       end
     it { should contain_service('nova-api').with(
-      'name'    => 'nova-api',
-      'ensure'  => 'running',
-      'enable'  => true
+      'name'      => 'nova-api',
+      'ensure'    => 'running',
+      'hasstatus' => 'true',
+      'enable'    => true
     )}
     end
     describe 'with package version' do

@@ -11,9 +11,10 @@ describe 'nova::volume' do
       { :osfamily => 'Debian' }
     end
     it { should contain_service('nova-volume').with(
-      'name'    => 'nova-volume',
-      'ensure'  => 'stopped',
-      'enable'  => false
+      'name'      => 'nova-volume',
+      'ensure'    => 'stopped',
+      'hasstatus' => 'true',
+      'enable'    => false
     )}
     it { should contain_package('nova-volume').with(
       'name'   => 'nova-volume',
@@ -25,9 +26,10 @@ describe 'nova::volume' do
         {:enabled => true}
       end
       it { should contain_service('nova-volume').with(
-        'name'     => 'nova-volume',
-        'ensure'   => 'running',
-        'enable'   => true
+        'name'      => 'nova-volume',
+        'ensure'    => 'running',
+        'hasstatus' => 'true',
+        'enable'    => true
       )}
     end
     describe 'with package version' do
@@ -44,9 +46,10 @@ describe 'nova::volume' do
       { :osfamily => 'RedHat' }
     end
     it { should contain_service('nova-volume').with(
-      'name'     => 'openstack-nova-volume',
-      'ensure'   => 'stopped',
-      'enable'   => false
+      'name'      => 'openstack-nova-volume',
+      'ensure'    => 'stopped',
+      'hasstatus' => 'true',
+      'enable'    => false
     )}
     it { should contain_package('nova-volume').with_name('openstack-nova-volume') }
   end

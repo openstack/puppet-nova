@@ -26,9 +26,10 @@ describe 'nova::compute' do
       ) }
 
       it { should contain_service('nova-compute').with(
-        'name'    => 'nova-compute',
-        'ensure'  => 'stopped',
-        'enable'  => false
+        'name'      => 'nova-compute',
+        'ensure'    => 'stopped',
+        'hasstatus' => 'true',
+        'enable'    => false
       )}
       it { should contain_package('nova-compute').with(
         'name'   => 'nova-compute',
@@ -48,9 +49,10 @@ describe 'nova::compute' do
           }
         end
       it { should contain_service('nova-compute').with(
-        'name'    => 'nova-compute',
-        'ensure'  => 'running',
-        'enable'  => true
+        'name'      => 'nova-compute',
+        'ensure'    => 'running',
+        'hasstatus' => 'true',
+        'enable'    => true
       )}
       end
       describe 'with vnc_enabled set to false' do
@@ -78,9 +80,10 @@ describe 'nova::compute' do
         { :osfamily => 'RedHat' }
       end
       it { should contain_service('nova-compute').with(
-        'name'    => 'openstack-nova-compute',
-        'ensure'  => 'stopped',
-        'enable'  => false
+        'name'      => 'openstack-nova-compute',
+        'ensure'    => 'stopped',
+        'hasstatus' => 'true',
+        'enable'    => false
       )}
       it { should contain_package('nova-compute').with_name('openstack-nova-compute') }
     end
