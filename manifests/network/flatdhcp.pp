@@ -1,7 +1,7 @@
 # flatdhcp.pp
 class nova::network::flatdhcp (
-  $flat_interface,
   $fixed_range,
+  $flat_interface      = undef,
   $public_interface    = undef,
   $flat_network_bridge = 'br100',
   $force_dhcp_release  = true,
