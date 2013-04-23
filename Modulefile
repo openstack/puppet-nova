@@ -8,7 +8,6 @@ description 'Puppet module to install and configure the OpenStack Nova compute s
 project_page 'https://github.com/puppetlabs/puppetlabs-nova'
 
 ## Add dependencies, if any:
-dependency 'puppetlabs/apt', '>= 0.0.4'
 dependency 'puppetlabs/glance', '>= 1.0.0'
 dependency 'puppetlabs/keystone', '>= 1.0.1'
 dependency 'puppetlabs/cinder', '>= 1.0.1'
