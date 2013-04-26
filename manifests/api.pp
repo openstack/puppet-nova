@@ -25,6 +25,7 @@ class nova::api(
   $api_bind_address  = '0.0.0.0',
   $enabled_apis      = 'ec2,osapi_compute,metadata',
   $volume_api_class  = 'nova.volume.cinder.API',
+  $workers           = $::processorcount,
   $sync_db           = true
 ) {
 
@@ -50,13 +51,14 @@ class nova::api(
   }
 
   nova_config {
-    'DEFAULT/api_paste_config':     value => '/etc/nova/api-paste.ini';
-    'DEFAULT/enabled_apis':         value => $enabled_apis;
-    'DEFAULT/volume_api_class':     value => $volume_api_class;
-    'DEFAULT/ec2_listen':           value => $api_bind_address;
-    'DEFAULT/osapi_compute_listen': value => $api_bind_address;
-    'DEFAULT/metadata_listen':      value => $api_bind_address;
-    'DEFAULT/osapi_volume_listen':  value => $api_bind_address;
+    'DEFAULT/api_paste_config':      value => '/etc/nova/api-paste.ini';
+    'DEFAULT/enabled_apis':          value => $enabled_apis;
+    'DEFAULT/volume_api_class':      value => $volume_api_class;
+    'DEFAULT/ec2_listen':            value => $api_bind_address;
+    'DEFAULT/osapi_compute_listen':  value => $api_bind_address;
+    'DEFAULT/metadata_listen':       value => $api_bind_address;
+    'DEFAULT/osapi_volume_listen':   value => $api_bind_address;
+    'DEFAULT/osapi_compute_workers': value => $workers;
   }
 
   nova_paste_api_ini {

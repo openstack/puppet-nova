@@ -9,7 +9,7 @@ describe 'nova::db::postgresql' do
     let :facts do
       {
         :postgres_default_version => '8.4',
-        :osfamily => 'RedHat',
+        :osfamily => 'RedHat'
       }
     end
 
@@ -20,7 +20,7 @@ describe 'nova::db::postgresql' do
 
       it { should contain_postgresql__db('nova').with(
         :user        => 'nova',
-        :password    => 'qwerty',
+        :password    => 'qwerty'
       )}
     end
 
@@ -30,7 +30,7 @@ describe 'nova::db::postgresql' do
     let :facts do
       {
         :postgres_default_version => '8.4',
-        :osfamily => 'Debian',
+        :osfamily => 'Debian'
       }
     end
 
@@ -41,7 +41,7 @@ describe 'nova::db::postgresql' do
 
       it { should contain_postgresql__db('nova').with(
         :user        => 'nova',
-        :password    => 'qwerty',
+        :password    => 'qwerty'
       )}
     end
 

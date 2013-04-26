@@ -65,6 +65,12 @@ describe 'nova::api' do
       it { should contain_nova_config('DEFAULT/osapi_volume_listen').with('value' => '0.0.0.0') }
     end
     describe 'with params' do
+      let :facts do
+        { 
+          :osfamily          => 'RedHat',
+          :processorcount    => 5
+        }
+      end
       let :params do
         {
           :auth_strategy     => 'foo',
@@ -96,6 +102,7 @@ describe 'nova::api' do
       it { should contain_nova_config('DEFAULT/osapi_compute_listen').with('value' => '192.168.56.210') }
       it { should contain_nova_config('DEFAULT/metadata_listen').with('value' => '192.168.56.210') }
       it { should contain_nova_config('DEFAULT/osapi_volume_listen').with('value' => '192.168.56.210') }
+      it { should contain_nova_config('DEFAULT/osapi_compute_workers').with('value' => '5') }
     end
   end
   describe 'on rhel' do
