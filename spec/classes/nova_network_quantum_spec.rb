@@ -6,6 +6,7 @@ describe 'nova::network::quantum' do
     { :quantum_auth_strategy     => 'keystone',
       :quantum_url               => 'http://127.0.0.1:9696',
       :quantum_admin_tenant_name => 'services',
+      :quantum_region_name       => 'RegionOne',
       :quantum_admin_username    => 'quantum',
       :quantum_admin_auth_url    => 'http://127.0.0.1:35357/v2.0'
     }
@@ -22,6 +23,7 @@ describe 'nova::network::quantum' do
       should contain_nova_config('DEFAULT/quantum_auth_strategy').with_value(default_params[:quantum_auth_strategy])
       should contain_nova_config('DEFAULT/quantum_url').with_value(default_params[:quantum_url])
       should contain_nova_config('DEFAULT/quantum_admin_tenant_name').with_value(default_params[:quantum_admin_tenant_name])
+      should contain_nova_config('DEFAULT/quantum_region_name').with_value(default_params[:quantum_region_name])
       should contain_nova_config('DEFAULT/quantum_admin_username').with_value(default_params[:quantum_admin_username])
       should contain_nova_config('DEFAULT/quantum_admin_auth_url').with_value(default_params[:quantum_admin_auth_url])
     end
@@ -32,6 +34,7 @@ describe 'nova::network::quantum' do
       params.merge!(
         :quantum_url               => 'http://10.0.0.1:9696',
         :quantum_admin_tenant_name => 'openstack',
+        :quantum_region_name       => 'RegionTwo',
         :quantum_admin_username    => 'quantum2',
         :quantum_admin_auth_url    => 'http://10.0.0.1:35357/v2.0'
       )
@@ -43,6 +46,7 @@ describe 'nova::network::quantum' do
       should contain_nova_config('DEFAULT/network_api_class').with_value('nova.network.quantumv2.api.API')
       should contain_nova_config('DEFAULT/quantum_url').with_value(params[:quantum_url])
       should contain_nova_config('DEFAULT/quantum_admin_tenant_name').with_value(params[:quantum_admin_tenant_name])
+      should contain_nova_config('DEFAULT/quantum_region_name').with_value(params[:quantum_region_name])
       should contain_nova_config('DEFAULT/quantum_admin_username').with_value(params[:quantum_admin_username])
       should contain_nova_config('DEFAULT/quantum_admin_auth_url').with_value(params[:quantum_admin_auth_url])
     end
