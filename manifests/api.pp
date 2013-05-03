@@ -11,6 +11,7 @@
 # * admin_tenant_name
 # * admin_user
 # * enabled_apis
+# * quantum_metadata_proxy_shared_secret
 #
 class nova::api(
   $admin_password,
@@ -27,7 +28,8 @@ class nova::api(
   $enabled_apis      = 'ec2,osapi_compute,metadata',
   $volume_api_class  = 'nova.volume.cinder.API',
   $workers           = $::processorcount,
-  $sync_db           = true
+  $sync_db           = true,
+  $quantum_metadata_proxy_shared_secret = undef
 ) {
 
   include nova::params
@@ -60,6 +62,19 @@ class nova::api(
     'DEFAULT/metadata_listen':       value => $metadata_listen;
     'DEFAULT/osapi_volume_listen':   value => $api_bind_address;
     'DEFAULT/osapi_compute_workers': value => $workers;
+  }
+
+  if ($quantum_metadata_proxy_shared_secret){
+    nova_config {
+      'DEFAULT/service_quantum_metadata_proxy': value => true;
+      'DEFAULT/quantum_metadata_proxy_shared_secret':
+        value => $quantum_metadata_proxy_shared_secret;
+    }
+  } else {
+    nova_config {
+      'DEFAULT/service_quantum_metadata_proxy': value => false;
+      'DEFAULT/quantum_metadata_proxy_shared_secret': ensure => absent;
+    }
   }
 
   nova_paste_api_ini {
