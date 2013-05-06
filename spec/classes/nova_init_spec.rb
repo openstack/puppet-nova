@@ -36,7 +36,7 @@ describe 'nova' do
 
     it { should contain_file('/var/log/nova').with(
       'ensure'  => 'directory',
-      'mode'    => '0751',
+      'mode'    => '0750',
       'owner'   => 'nova',
       'group'   => 'nova',
       'require' => 'Package[nova-common]'
