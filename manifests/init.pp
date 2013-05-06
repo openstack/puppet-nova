@@ -125,7 +125,7 @@ class nova(
 
   file { $logdir:
     ensure  => directory,
-    mode    => '0751',
+    mode    => '0750',
   }
   file { '/etc/nova/nova.conf':
     mode  => '0640',
