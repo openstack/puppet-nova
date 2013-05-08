@@ -1,6 +1,6 @@
 # Class: nova::volume::san
 #
-# This class assumes that you have already configured your 
+# This class assumes that you have already configured your
 # volume group - either by another module or during the server
 # provisioning
 #

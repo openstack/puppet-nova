@@ -1,3 +1,4 @@
+#
 class nova::keystone::auth(
   $password,
   $auth_name              = 'nova',
@@ -30,7 +31,7 @@ class nova::keystone::auth(
   keystone_service { $auth_name:
     ensure      => present,
     type        => 'compute',
-    description => "Openstack Compute Service",
+    description => 'Openstack Compute Service',
   }
   keystone_endpoint { "${region}/${auth_name}":
     ensure       => present,

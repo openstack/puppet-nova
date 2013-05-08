@@ -91,7 +91,7 @@ class nova(
     ensure => present,
   }
   package { 'python-greenlet':
-    ensure => present,
+    ensure  => present,
     require => Package['python'],
   }
 
@@ -109,7 +109,7 @@ class nova(
   package { 'nova-common':
     name    => $::nova::params::common_package_name,
     ensure  => $ensure_package,
-    require => [Package["python-nova"], Anchor['nova-start']]
+    require => [Package['python-nova'], Anchor['nova-start']]
   }
 
   group { 'nova':
@@ -134,9 +134,9 @@ class nova(
 
   # used by debian/ubuntu in nova::network_bridge to refresh
   # interfaces based on /etc/network/interfaces
-  exec { "networking-refresh":
-    command     => "/sbin/ifdown -a ; /sbin/ifup -a",
-    refreshonly => "true",
+  exec { 'networking-refresh':
+    command     => '/sbin/ifdown -a ; /sbin/ifup -a',
+    refreshonly => true,
   }
 
 
@@ -182,8 +182,8 @@ class nova(
     if $rabbit_hosts {
       nova_config { 'DEFAULT/rabbit_hosts': value => join($rabbit_hosts, ',') }
     } elsif $rabbit_host {
-      nova_config { 'DEFAULT/rabbit_host': value => $rabbit_host }
-      nova_config { 'DEFAULT/rabbit_port': value => $rabbit_port }
+      nova_config { 'DEFAULT/rabbit_host':  value => $rabbit_host }
+      nova_config { 'DEFAULT/rabbit_port':  value => $rabbit_port }
       nova_config { 'DEFAULT/rabbit_hosts': value => "${rabbit_host}:${rabbit_port}" }
     }
   }
@@ -215,7 +215,7 @@ class nova(
     'DEFAULT/state_path':        value => $state_path;
     'DEFAULT/lock_path':         value => $lock_path;
     'DEFAULT/service_down_time': value => $service_down_time;
-    'DEFAULT/rootwrap_config':  value => $rootwrap_config;
+    'DEFAULT/rootwrap_config':   value => $rootwrap_config;
   }
 
   if $monitoring_notifications {
@@ -225,7 +225,7 @@ class nova(
   }
 
   exec { 'post-nova_config':
-    command => '/bin/echo "Nova config has changed"',
+    command     => '/bin/echo "Nova config has changed"',
     refreshonly => true,
   }
 

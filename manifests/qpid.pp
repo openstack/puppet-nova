@@ -3,11 +3,11 @@
 #
 #
 class nova::qpid(
-  $enabled = true,
-  $user='guest',
-  $password='guest',
-  $file='/var/lib/qpidd/qpidd.sasldb',
-  $realm='OPENSTACK'
+  $enabled  = true,
+  $user     = 'guest',
+  $password = 'guest',
+  $file     = '/var/lib/qpidd/qpidd.sasldb',
+  $realm    = 'OPENSTACK'
 ) {
 
   # only configure nova after the queue is up
@@ -18,9 +18,9 @@ class nova::qpid(
 
     qpid_user { $user:
       password  => $password,
-      file  => $file,
-      realm  => $realm,
-      provider => 'saslpasswd2',
+      file      => $file,
+      realm     => $realm,
+      provider  => 'saslpasswd2',
       require   => Class['qpid::server'],
     }
 
@@ -29,7 +29,7 @@ class nova::qpid(
   }
 
   class { 'qpid::server':
-    service_ensure    => $service_ensure
+    service_ensure => $service_ensure
   }
 
 }

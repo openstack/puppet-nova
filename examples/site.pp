@@ -27,10 +27,8 @@ file { '/usr/lib/ruby/1.8/facter/ec2.rb':
 node db {
   class { 'mysql::server':
     config_hash => {
-                     'bind_address' => '0.0.0.0'
-                     #'root_password' => 'foo',
-                     #'etc_root_password' => true
-                   }
+      'bind_address' => '0.0.0.0'
+    }
   }
   class { 'mysql::ruby': }
   class { 'nova::db::mysql':
@@ -45,21 +43,21 @@ node db {
 
 node controller {
   class { 'nova::controller':
-    db_password => $db_password,
-    db_name => $db_name,
-    db_user => $db_username,
-    db_host => $db_host,
+    db_password         => $db_password,
+    db_name             => $db_name,
+    db_user             => $db_username,
+    db_host             => $db_host,
 
-    rabbit_password => $rabbit_password,
-    rabbit_userid => $rabbit_user,
+    rabbit_password     => $rabbit_password,
+    rabbit_userid       => $rabbit_user,
     rabbit_virtual_host => $rabbit_vhost,
-    rabbit_hosts => $rabbit_hosts,
+    rabbit_hosts        => $rabbit_hosts,
 
-    image_service => 'nova.image.glance.GlanceImageService',
+    image_service       => 'nova.image.glance.GlanceImageService',
 
-    glance_api_servers => $glance_api_servers,
+    glance_api_servers  => $glance_api_servers,
 
-    libvirt_type => 'qemu',
+    libvirt_type        => 'qemu',
   }
 }
 
@@ -76,7 +74,7 @@ node compute {
     flat_network_bridge_ip      => '11.0.0.1',
     flat_network_bridge_netmask => '255.255.255.0',
   }
-  class { "nova":
+  class { 'nova':
     verbose             => $verbose,
     sql_connection      => "mysql://${db_username}:${db_password}@${db_host}/${db_name}",
     image_service       => 'nova.image.glance.GlanceImageService',
@@ -127,7 +125,7 @@ node puppetmaster {
     version                 => installed,
     puppet_master_package   => 'puppet',
     package_provider        => 'gem',
-    autosign                => 'true',
+    autosign                => true,
     certname                => $clientcert,
   }
 }
@@ -152,20 +150,20 @@ node all {
   class { 'keystone::roles::admin': }
 
   class { 'nova::all':
-    db_password => 'password',
-    db_name => 'nova',
-    db_user => 'nova',
-    db_host => 'localhost',
+    db_password         => 'password',
+    db_name             => 'nova',
+    db_user             => 'nova',
+    db_host             => 'localhost',
 
-    rabbit_password => 'rabbitpassword',
-    rabbit_userid => 'rabbit_user',
+    rabbit_password     => 'rabbitpassword',
+    rabbit_userid       => 'rabbit_user',
     rabbit_virtual_host => '/',
-    rabbit_hosts => ['localhost:5672'],
+    rabbit_hosts        => ['localhost:5672'],
 
-    image_service => 'nova.image.glance.GlanceImageService',
-    glance_api_servers => $glance_api_servers,
+    image_service       => 'nova.image.glance.GlanceImageService',
+    glance_api_servers  => $glance_api_servers,
 
-    libvirt_type => 'qemu',
+    libvirt_type        => 'qemu',
   }
 }
 

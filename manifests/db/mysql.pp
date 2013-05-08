@@ -3,17 +3,17 @@
 #
 class nova::db::mysql(
   $password,
-  $dbname = 'nova',
-  $user = 'nova',
-  $host = '127.0.0.1',
-  $charset = 'latin1',
+  $dbname        = 'nova',
+  $user          = 'nova',
+  $host          = '127.0.0.1',
+  $charset       = 'latin1',
   $allowed_hosts = undef,
-  $cluster_id = 'localzone'
+  $cluster_id    = 'localzone'
 ) {
 
   require 'mysql::python'
   # Create the db instance before openstack-nova if its installed
-  Mysql::Db[$dbname] -> Anchor<| title == "nova-start" |>
+  Mysql::Db[$dbname] -> Anchor<| title == 'nova-start' |>
   Mysql::Db[$dbname] ~> Exec<| title == 'nova-db-sync' |>
 
   mysql::db { $dbname:
@@ -21,7 +21,6 @@ class nova::db::mysql(
     password     => $password,
     host         => $host,
     charset      => $charset,
-    # I may want to inject some sql
     require      => Class['mysql::config'],
   }
 

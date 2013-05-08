@@ -68,7 +68,7 @@ class nova::network(
     }
     if $floating_range {
       nova::manage::floating { 'nova-vm-floating':
-        network       => $floating_range,
+        network => $floating_range,
       }
     }
   }

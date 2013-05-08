@@ -1,3 +1,4 @@
+#
 class nova::compute::xenserver(
   $xenapi_connection_url,
   $xenapi_connection_username,

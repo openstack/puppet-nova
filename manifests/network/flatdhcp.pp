@@ -1,4 +1,4 @@
-# flatdhcp.pp
+#
 class nova::network::flatdhcp (
   $fixed_range,
   $flat_interface      = undef,
@@ -20,7 +20,6 @@ class nova::network::flatdhcp (
     'DEFAULT/fixed_range':         value => $fixed_range;
     'DEFAULT/flat_interface':      value => $flat_interface;
     'DEFAULT/flat_network_bridge': value => $flat_network_bridge;
-    #'flat_dhcp_start':     value => $flat_dhcp_start;
     'DEFAULT/force_dhcp_release':  value => $force_dhcp_release;
     'DEFAULT/flat_injected':       value => $flat_injected;
     'DEFAULT/dhcp_domain':         value => $dhcp_domain;

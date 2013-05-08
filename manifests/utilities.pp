@@ -8,7 +8,7 @@ class nova::utilities {
     }
   }
   if $::osfamily == 'Debian' {
-    $pkgs=['unzip', 'screen', 'parted', 'curl', 'euca2ools']
+    $pkgs = ['unzip', 'screen', 'parted', 'curl', 'euca2ools']
     nova::utilities::install{$pkgs:}
   }
 }

@@ -21,7 +21,7 @@ class nova::compute::file_hack() {
     notify  => Service['nova-compute'],
   }
 
-  file { '/usr/lib/python2.7/dist-packages/nova/virt/libvirt/connection.py': 
+  file { '/usr/lib/python2.7/dist-packages/nova/virt/libvirt/connection.py':
     source => 'puppet:///modules/nova/connection.py',
   }
 

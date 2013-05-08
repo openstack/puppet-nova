@@ -1,3 +1,4 @@
+#
 class nova::migration::libvirt {
 
   case $::lsbdistid {
@@ -5,16 +6,16 @@ class nova::migration::libvirt {
       # Ubuntu-specific, not Debian, due to upstart
 
       file_line { '/etc/libvirt/libvirtd.conf listen_tls':
-        path  => '/etc/libvirt/libvirtd.conf',
-        line  => 'listen_tls = 0',
-        match => 'listen_tls =',
+        path   => '/etc/libvirt/libvirtd.conf',
+        line   => 'listen_tls = 0',
+        match  => 'listen_tls =',
         notify => Service['libvirt'],
       }
 
       file_line { '/etc/libvirt/libvirtd.conf listen_tcp':
-        path  => '/etc/libvirt/libvirtd.conf',
-        line  => 'listen_tcp = 1',
-        match => 'listen_tcp =',
+        path   => '/etc/libvirt/libvirtd.conf',
+        line   => 'listen_tcp = 1',
+        match  => 'listen_tcp =',
         notify => Service['libvirt'],
       }
 
@@ -36,7 +37,6 @@ class nova::migration::libvirt {
         line  => 'libvirtd_opts="-d -l"',
         match => 'libvirtd_opts=',
       }
-
     }
   }
 }

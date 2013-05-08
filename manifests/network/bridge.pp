@@ -1,10 +1,13 @@
 # bridge.pp
-define nova::network::bridge ( $ip, $netmask = "255.255.255.0" )
-{
+define nova::network::bridge (
+  $ip,
+  $netmask = '255.255.255.0'
+) {
+
   case $::operatingsystem {
 
     'debian', 'ubuntu': {
-      $context = "/files/etc/network/interfaces"
+      $context = '/files/etc/network/interfaces'
       augeas { "bridge_${name}":
         context => $context,
         changes => [
@@ -16,7 +19,7 @@ define nova::network::bridge ( $ip, $netmask = "255.255.255.0" )
           "set iface[. = '${name}']/netmask ${netmask}",
           "set iface[. = '${name}']/bridge_ports none",
         ],
-        notify => Exec["networking-refresh"],
+        notify  => Exec['networking-refresh'],
       }
     }
 

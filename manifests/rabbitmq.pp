@@ -21,7 +21,7 @@ class nova::rabbitmq(
       rabbitmq_user { $userid:
         admin     => true,
         password  => $password,
-        provider => 'rabbitmqctl',
+        provider  => 'rabbitmqctl',
         require   => Class['rabbitmq::server'],
       }
       # I need to figure out the appropriate permissions
@@ -46,7 +46,7 @@ class nova::rabbitmq(
   if ($enabled) {
     rabbitmq_vhost { $virtual_host:
       provider => 'rabbitmqctl',
-      require => Class['rabbitmq::server'],
+      require  => Class['rabbitmq::server'],
     }
   }
 }
