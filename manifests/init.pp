@@ -63,6 +63,7 @@ class nova(
   $state_path = '/var/lib/nova',
   $lock_path = $::nova::params::lock_path,
   $verbose = false,
+  $debug = false,
   $periodic_interval = '60',
   $report_interval = '10',
   $rootwrap_config = '/etc/nova/rootwrap.conf',
@@ -207,6 +208,7 @@ class nova(
 
   nova_config {
     'DEFAULT/verbose':           value => $verbose;
+    'DEFAULT/debug':             value => $debug;
     'DEFAULT/logdir':            value => $logdir;
     'DEFAULT/rpc_backend':       value => $rpc_backend;
     # Following may need to be broken out to different nova services
