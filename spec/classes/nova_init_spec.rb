@@ -72,6 +72,7 @@ describe 'nova' do
     it { should contain_nova_config('DEFAULT/rabbit_virtual_host').with_value('/') }
 
     it { should contain_nova_config('DEFAULT/verbose').with_value(false) }
+    it { should contain_nova_config('DEFAULT/debug').with_value(false) }
     it { should contain_nova_config('DEFAULT/logdir').with_value('/var/log/nova') }
     it { should contain_nova_config('DEFAULT/state_path').with_value('/var/lib/nova') }
     it { should contain_nova_config('DEFAULT/lock_path').with_value('/var/lock/nova') }
@@ -85,6 +86,7 @@ describe 'nova' do
         {
           'sql_connection'      => 'mysql://user:pass@db/db',
           'verbose'             => true,
+          'debug'               => true,
           'logdir'              => '/var/log/nova2',
           'image_service'       => 'nova.image.local.LocalImageService',
           'rabbit_host'         => 'rabbit',
@@ -118,6 +120,7 @@ describe 'nova' do
       it { should contain_nova_config('DEFAULT/rabbit_ha_queues').with_value('false') }
 
       it { should contain_nova_config('DEFAULT/verbose').with_value(true) }
+      it { should contain_nova_config('DEFAULT/debug').with_value(true) }
       it { should contain_nova_config('DEFAULT/logdir').with_value('/var/log/nova2') }
       it { should contain_nova_config('DEFAULT/state_path').with_value('/var/lib/nova2') }
       it { should contain_nova_config('DEFAULT/lock_path').with_value('/var/locky/path') }
@@ -147,6 +150,7 @@ describe 'nova' do
         {
           'sql_connection'      => 'mysql://user:pass@db/db',
           'verbose'             => true,
+          'debug'               => true,
           'logdir'              => '/var/log/nova2',
           'image_service'       => 'nova.image.local.LocalImageService',
           'rpc_backend'         => 'nova.openstack.common.rpc.impl_qpid',
@@ -183,6 +187,7 @@ describe 'nova' do
       it { should contain_nova_config('DEFAULT/qpid_tcp_nodelay').with_value('true') }
 
       it { should contain_nova_config('DEFAULT/verbose').with_value(true) }
+      it { should contain_nova_config('DEFAULT/debug').with_value(true) }
       it { should contain_nova_config('DEFAULT/logdir').with_value('/var/log/nova2') }
       it { should contain_nova_config('DEFAULT/state_path').with_value('/var/lib/nova2') }
       it { should contain_nova_config('DEFAULT/lock_path').with_value('/var/locky/path') }
