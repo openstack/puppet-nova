@@ -33,6 +33,18 @@
 #   and not the Identity service API IP and port.
 #   Defaults to 'http://127.0.0.1:35357/v2.0'
 #
+# [*security_group_api*]
+#   (optional) The full class name of the security API class.
+#   Defaults to 'quantum' which configures Nova to use Quantum for
+#   security groups. Set to 'nova' to use standard Nova security groups.
+#
+# [*firewall_driver*]
+#   (optional) Firewall driver.
+#   Defaults to nova.virt.firewall.NoopFirewallDriver. This prevents Nova
+#   from maintaining a firewall so it does not interfere with Quantum's.
+#   Set to 'nova.virt.firewall.IptablesFirewallDriver'
+#   to re-enable the Nova firewall.
+#
 class nova::network::quantum (
   $quantum_admin_password,
   $quantum_auth_strategy     = 'keystone',
@@ -40,7 +52,9 @@ class nova::network::quantum (
   $quantum_admin_tenant_name = 'services',
   $quantum_region_name       = 'RegionOne',
   $quantum_admin_username    = 'quantum',
-  $quantum_admin_auth_url    = 'http://127.0.0.1:35357/v2.0'
+  $quantum_admin_auth_url    = 'http://127.0.0.1:35357/v2.0',
+  $security_group_api        = 'quantum',
+  $firewall_driver           = 'nova.virt.firewall.NoopFirewallDriver',
 ) {
 
   nova_config {
@@ -52,5 +66,8 @@ class nova::network::quantum (
     'DEFAULT/quantum_admin_username':    value => $quantum_admin_username;
     'DEFAULT/quantum_admin_password':    value => $quantum_admin_password;
     'DEFAULT/quantum_admin_auth_url':    value => $quantum_admin_auth_url;
+    'DEFAULT/security_group_api':        value => $security_group_api;
+    'DEFAULT/firewall_driver':           value => $firewall_driver;
   }
+
 }

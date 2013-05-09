@@ -8,7 +8,9 @@ describe 'nova::network::quantum' do
       :quantum_admin_tenant_name => 'services',
       :quantum_region_name       => 'RegionOne',
       :quantum_admin_username    => 'quantum',
-      :quantum_admin_auth_url    => 'http://127.0.0.1:35357/v2.0'
+      :quantum_admin_auth_url    => 'http://127.0.0.1:35357/v2.0',
+      :security_group_api        => 'quantum',
+      :firewall_driver           => 'nova.virt.firewall.NoopFirewallDriver',
     }
   end
 
@@ -27,6 +29,10 @@ describe 'nova::network::quantum' do
       should contain_nova_config('DEFAULT/quantum_admin_username').with_value(default_params[:quantum_admin_username])
       should contain_nova_config('DEFAULT/quantum_admin_auth_url').with_value(default_params[:quantum_admin_auth_url])
     end
+    it 'configures Nova to use Quantum Security Groups and Firewall' do
+      should contain_nova_config('DEFAULT/firewall_driver').with_value(default_params[:firewall_driver])
+      should contain_nova_config('DEFAULT/security_group_api').with_value(default_params[:security_group_api])
+    end
   end
 
   context 'when overriding class parameters' do
@@ -36,7 +42,9 @@ describe 'nova::network::quantum' do
         :quantum_admin_tenant_name => 'openstack',
         :quantum_region_name       => 'RegionTwo',
         :quantum_admin_username    => 'quantum2',
-        :quantum_admin_auth_url    => 'http://10.0.0.1:35357/v2.0'
+        :quantum_admin_auth_url    => 'http://10.0.0.1:35357/v2.0',
+        :security_group_api        => 'nova',
+        :firewall_driver           => 'nova.virt.firewall.IptablesFirewallDriver'
       )
     end
 
@@ -49,6 +57,10 @@ describe 'nova::network::quantum' do
       should contain_nova_config('DEFAULT/quantum_region_name').with_value(params[:quantum_region_name])
       should contain_nova_config('DEFAULT/quantum_admin_username').with_value(params[:quantum_admin_username])
       should contain_nova_config('DEFAULT/quantum_admin_auth_url').with_value(params[:quantum_admin_auth_url])
+    end
+    it 'configures Nova to use Quantum Security Groups and Firewall' do
+      should contain_nova_config('DEFAULT/firewall_driver').with_value(params[:firewall_driver])
+      should contain_nova_config('DEFAULT/security_group_api').with_value(params[:security_group_api])
     end
   end
 end
