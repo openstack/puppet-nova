@@ -66,7 +66,7 @@ describe 'nova::api' do
     end
     describe 'with params' do
       let :facts do
-        { 
+        {
           :osfamily          => 'RedHat',
           :processorcount    => 5
         }
@@ -81,6 +81,7 @@ describe 'nova::api' do
           :admin_user        => 'nova2',
           :admin_password    => 'passw0rd2',
           :api_bind_address  => '192.168.56.210',
+          :metadata_listen   => '127.0.0.1',
           :volume_api_class  => 'nova.volume.cinder.API'
         }
       end
@@ -100,7 +101,7 @@ describe 'nova::api' do
       end
       it { should contain_nova_config('DEFAULT/ec2_listen').with('value' => '192.168.56.210') }
       it { should contain_nova_config('DEFAULT/osapi_compute_listen').with('value' => '192.168.56.210') }
-      it { should contain_nova_config('DEFAULT/metadata_listen').with('value' => '192.168.56.210') }
+      it { should contain_nova_config('DEFAULT/metadata_listen').with('value' => '127.0.0.1') }
       it { should contain_nova_config('DEFAULT/osapi_volume_listen').with('value' => '192.168.56.210') }
       it { should contain_nova_config('DEFAULT/osapi_compute_workers').with('value' => '5') }
     end
