@@ -1,19 +1,20 @@
 class nova::keystone::auth(
   $password,
-  $auth_name        = 'nova',
-  $public_address   = '127.0.0.1',
-  $admin_address    = '127.0.0.1',
-  $internal_address = '127.0.0.1',
-  $compute_port     = '8774',
-  $volume_port      = '8776',
-  $ec2_port         = '8773',
-  $compute_version  = 'v2',
-  $volume_version   = 'v1',
-  $region           = 'RegionOne',
-  $tenant           = 'services',
-  $email            = 'nova@localhost',
-  $cinder           = false,
-  $public_protocol  = 'http'
+  $auth_name              = 'nova',
+  $public_address         = '127.0.0.1',
+  $admin_address          = '127.0.0.1',
+  $internal_address       = '127.0.0.1',
+  $compute_port           = '8774',
+  $volume_port            = '8776',
+  $ec2_port               = '8773',
+  $compute_version        = 'v2',
+  $volume_version         = 'v1',
+  $region                 = 'RegionOne',
+  $tenant                 = 'services',
+  $email                  = 'nova@localhost',
+  $configure_ec2_endpoint = true,
+  $cinder                 = false,
+  $public_protocol        = 'http'
 ) {
 
   keystone_user { $auth_name:
@@ -52,16 +53,17 @@ class nova::keystone::auth(
     }
   }
 
-  keystone_service { "${auth_name}_ec2":
-    ensure      => present,
-    type        => 'ec2',
-    description => 'EC2 Service',
+  if $configure_ec2_endpoint {
+    keystone_service { "${auth_name}_ec2":
+      ensure      => present,
+      type        => 'ec2',
+      description => 'EC2 Service',
+    }
+    keystone_endpoint { "${region}/${auth_name}_ec2":
+      ensure       => present,
+      public_url   => "${public_protocol}://${public_address}:${ec2_port}/services/Cloud",
+      admin_url    => "http://${admin_address}:${ec2_port}/services/Admin",
+      internal_url => "http://${internal_address}:${ec2_port}/services/Cloud",
+    }
   }
-  keystone_endpoint { "${region}/${auth_name}_ec2":
-    ensure       => present,
-    public_url   => "${public_protocol}://${public_address}:${ec2_port}/services/Cloud",
-    admin_url    => "http://${admin_address}:${ec2_port}/services/Admin",
-    internal_url => "http://${internal_address}:${ec2_port}/services/Cloud",
-  }
-
 }

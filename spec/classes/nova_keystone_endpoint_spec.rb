@@ -2,11 +2,11 @@ require 'spec_helper'
 
 describe 'nova::keystone::auth' do
 
-  describe 'with defaults' do
+  let :params do
+    {:password => 'nova_password'}
+  end
 
-    let :params do
-      {:password => 'nova_password'}
-    end
+  context 'with default parameters' do
 
     it { should contain_keystone_user('nova').with(
       :ensure   => 'present',
@@ -59,10 +59,9 @@ describe 'nova::keystone::auth' do
 
   end
 
-  describe 'when setting auth name' do
-
-    let :params do
-      {:password => 'nova_password', :auth_name => 'foo' }
+  context 'when setting auth name' do
+    before do
+      params.merge!( :auth_name => 'foo' )
     end
 
     it { should contain_keystone_user('foo').with(
@@ -95,25 +94,9 @@ describe 'nova::keystone::auth' do
 
   end
 
-  describe 'when setting password' do
-
-    let :params do
-      { :password => 'pass'}
-    end
-
-    it { should contain_keystone_user('nova').with(
-      :ensure   => 'present',
-      :password => 'pass'
-    ) }
-
-  end
-
-
-  describe 'when overriding endpoint params' do
-
-    let :params do
-      {
-        :password         => 'nova_password',
+  context 'when overriding endpoint params' do
+    before do
+      params.merge!(
         :public_address   => '10.0.0.1',
         :admin_address    => '10.0.0.2',
         :internal_address => '10.0.0.3',
@@ -123,7 +106,7 @@ describe 'nova::keystone::auth' do
         :volume_version   => 'v2.1',
         :compute_version  => 'v2.2',
         :region           => 'RegionTwo'
-      }
+      )
     end
 
     it { should contain_keystone_endpoint('RegionTwo/nova').with(
@@ -147,6 +130,15 @@ describe 'nova::keystone::auth' do
       :internal_url => 'http://10.0.0.3:9773/services/Cloud'
     )}
 
+  end
+
+  describe 'when disabling EC2 endpoint' do
+    before do
+      params.merge!( :configure_ec2_endpoint => false )
+    end
+
+    it { should_not contain_keystone_service('nova_ec2') }
+    it { should_not contain_keystone_endpoint('RegionOne/nova_ec2') }
   end
 
 end
