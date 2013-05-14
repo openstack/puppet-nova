@@ -11,8 +11,11 @@ Puppet::Type.newtype(:nova_config) do
   end
 
   newproperty(:value) do
+    desc 'The value of the setting to be defined.'
     munge do |value|
-      value.to_s
+      value = value.to_s.strip
+      value.capitalize! if value =~ /^(true|false)$/i
+      value
     end
     newvalues(/^[\S ]*$/)
   end
