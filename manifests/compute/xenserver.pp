@@ -6,6 +6,7 @@ class nova::compute::xenserver(
 ) {
 
   nova_config {
+    'DEFAULT/compute_driver':   value => 'xenapi.XenAPIDriver';
     'DEFAULT/connection_type': value => 'xenapi';
     'DEFAULT/xenapi_connection_url': value => $xenapi_connection_url;
     'DEFAULT/xenapi_connection_username': value => $xenapi_connection_username;
