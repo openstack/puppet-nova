@@ -5,7 +5,6 @@ describe 'nova::network::flat' do
   describe 'with only required parameters' do
     let :params do
       {
-        :flat_interface => 'eth1',
         :fixed_range    => '10.0.0.0/32'
       }
     end
@@ -14,7 +13,7 @@ describe 'nova::network::flat' do
     it { should_not contain_nova_config('DEFAULT/public_interface') }
     it { should contain_nova_config('DEFAULT/fixed_range').with_value('10.0.0.0/32') }
     it { should contain_nova_config('DEFAULT/flat_network_bridge').with_value('br100') }
-    it { should contain_nova_config('DEFAULT/flat_interface').with_value('eth1') }
+    it { should contain_nova_config('DEFAULT/flat_interface').with_value(nil) }
   end
 
   describe 'when overriding class parameters' do
