@@ -54,7 +54,7 @@ class nova::network::quantum (
   $quantum_admin_username    = 'quantum',
   $quantum_admin_auth_url    = 'http://127.0.0.1:35357/v2.0',
   $security_group_api        = 'quantum',
-  $firewall_driver           = 'nova.virt.firewall.NoopFirewallDriver',
+  $firewall_driver           = 'nova.virt.firewall.NoopFirewallDriver'
 ) {
 
   nova_config {
