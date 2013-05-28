@@ -24,7 +24,7 @@ class nova::volume::san (
   } else {
     nova_config {
       'DEFAULT/san_login':    value => $san_login;
-      'DEFAULT/san_password': value => $san_password;
+      'DEFAULT/san_password': value => $san_password, secret => true;
     }
   }
 

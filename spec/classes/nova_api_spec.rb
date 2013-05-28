@@ -59,7 +59,7 @@ describe 'nova::api' do
         should contain_nova_paste_api_ini(
           'filter:authtoken/admin_user').with_value('nova')
         should contain_nova_paste_api_ini(
-          'filter:authtoken/admin_password').with_value('passw0rd')
+          'filter:authtoken/admin_password').with_value('passw0rd').with_secret(true)
       end
       it { should contain_nova_config('DEFAULT/ec2_listen').with('value' => '0.0.0.0') }
       it { should contain_nova_config('DEFAULT/osapi_compute_listen').with('value' => '0.0.0.0') }
@@ -107,7 +107,7 @@ describe 'nova::api' do
         should contain_nova_paste_api_ini(
           'filter:authtoken/admin_user').with_value('nova2')
         should contain_nova_paste_api_ini(
-          'filter:authtoken/admin_password').with_value('passw0rd2')
+          'filter:authtoken/admin_password').with_value('passw0rd2').with_secret(true)
       end
       it { should contain_nova_config('DEFAULT/ec2_listen').with('value' => '192.168.56.210') }
       it { should contain_nova_config('DEFAULT/osapi_compute_listen').with('value' => '192.168.56.210') }

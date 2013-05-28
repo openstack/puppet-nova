@@ -64,7 +64,7 @@ class nova::network::quantum (
     'DEFAULT/quantum_admin_tenant_name': value => $quantum_admin_tenant_name;
     'DEFAULT/quantum_region_name':       value => $quantum_region_name;
     'DEFAULT/quantum_admin_username':    value => $quantum_admin_username;
-    'DEFAULT/quantum_admin_password':    value => $quantum_admin_password;
+    'DEFAULT/quantum_admin_password':    value => $quantum_admin_password, secret => true;
     'DEFAULT/quantum_admin_auth_url':    value => $quantum_admin_auth_url;
     'DEFAULT/security_group_api':        value => $security_group_api;
     'DEFAULT/firewall_driver':           value => $firewall_driver;

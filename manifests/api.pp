@@ -88,7 +88,7 @@ class nova::api(
     'filter:authtoken/auth_protocol':     value => $auth_protocol;
     'filter:authtoken/admin_tenant_name': value => $admin_tenant_name;
     'filter:authtoken/admin_user':        value => $admin_user;
-    'filter:authtoken/admin_password':    value => $admin_password;
+    'filter:authtoken/admin_password':    value => $admin_password, secret => true;
   }
 
   if $auth_admin_prefix {
