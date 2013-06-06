@@ -78,26 +78,28 @@ describe 'nova' do
     it { should contain_nova_config('DEFAULT/lock_path').with_value('/var/lock/nova') }
     it { should contain_nova_config('DEFAULT/service_down_time').with_value('60') }
     it { should contain_nova_config('DEFAULT/rootwrap_config').with_value('/etc/nova/rootwrap.conf') }
+    it { should_not contain_nova_config('DEFAULT/notification_driver') }
 
 
     describe 'with parameters supplied' do
 
       let :params do
         {
-          'sql_connection'      => 'mysql://user:pass@db/db',
-          'verbose'             => true,
-          'debug'               => true,
-          'logdir'              => '/var/log/nova2',
-          'image_service'       => 'nova.image.local.LocalImageService',
-          'rabbit_host'         => 'rabbit',
-          'rabbit_userid'       => 'rabbit_user',
-          'rabbit_port'         => '5673',
-          'rabbit_password'     => 'password',
-          'lock_path'           => '/var/locky/path',
-          'state_path'          => '/var/lib/nova2',
-          'service_down_time'   => '120',
-          'auth_strategy'       => 'foo',
-          'ensure_package'      => '2012.1.1-15.el6'
+          'sql_connection'           => 'mysql://user:pass@db/db',
+          'verbose'                  => true,
+          'debug'                    => true,
+          'logdir'                   => '/var/log/nova2',
+          'image_service'            => 'nova.image.local.LocalImageService',
+          'rabbit_host'              => 'rabbit',
+          'rabbit_userid'            => 'rabbit_user',
+          'rabbit_port'              => '5673',
+          'rabbit_password'          => 'password',
+          'lock_path'                => '/var/locky/path',
+          'state_path'               => '/var/lib/nova2',
+          'service_down_time'        => '120',
+          'auth_strategy'            => 'foo',
+          'ensure_package'           => '2012.1.1-15.el6',
+          'monitoring_notifications' => 'true'
         }
       end
 
@@ -125,6 +127,7 @@ describe 'nova' do
       it { should contain_nova_config('DEFAULT/state_path').with_value('/var/lib/nova2') }
       it { should contain_nova_config('DEFAULT/lock_path').with_value('/var/locky/path') }
       it { should contain_nova_config('DEFAULT/service_down_time').with_value('120') }
+      it { should contain_nova_config('DEFAULT/notification_driver').with_value('nova.openstack.common.notifier.rpc_notifier') }
 
     end
 

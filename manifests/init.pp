@@ -222,7 +222,7 @@ class nova(
 
   if $monitoring_notifications {
     nova_config {
-      'DEFAULT/notification_driver': value => 'nova.notifier.rabbit_notifier'
+      'DEFAULT/notification_driver': value => 'nova.openstack.common.notifier.rpc_notifier'
     }
   }
 
