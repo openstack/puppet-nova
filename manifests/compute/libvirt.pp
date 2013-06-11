@@ -16,7 +16,7 @@ class nova::compute::libvirt (
     }
   }
 
-  if($::operatingsystem == 'RedHat') {
+  if($::osfamily == 'RedHat' and $::operatingsystem != 'Fedora') {
     service { 'messagebus':
       ensure   => running,
       enable   => true,
