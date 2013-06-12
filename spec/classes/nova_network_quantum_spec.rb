@@ -20,7 +20,7 @@ describe 'nova::network::quantum' do
 
   context 'with required parameters' do
     it 'configures quantum endpoint in nova.conf' do
-      should contain_nova_config('DEFAULT/quantum_admin_password').with_value(params[:quantum_admin_password])
+      should contain_nova_config('DEFAULT/quantum_admin_password').with_value(params[:quantum_admin_password]).with_secret(true)
       should contain_nova_config('DEFAULT/network_api_class').with_value('nova.network.quantumv2.api.API')
       should contain_nova_config('DEFAULT/quantum_auth_strategy').with_value(default_params[:quantum_auth_strategy])
       should contain_nova_config('DEFAULT/quantum_url').with_value(default_params[:quantum_url])
@@ -50,7 +50,7 @@ describe 'nova::network::quantum' do
 
     it 'configures quantum endpoint in nova.conf' do
       should contain_nova_config('DEFAULT/quantum_auth_strategy').with_value(default_params[:quantum_auth_strategy])
-      should contain_nova_config('DEFAULT/quantum_admin_password').with_value(params[:quantum_admin_password])
+      should contain_nova_config('DEFAULT/quantum_admin_password').with_value(params[:quantum_admin_password]).with_secret(true)
       should contain_nova_config('DEFAULT/network_api_class').with_value('nova.network.quantumv2.api.API')
       should contain_nova_config('DEFAULT/quantum_url').with_value(params[:quantum_url])
       should contain_nova_config('DEFAULT/quantum_admin_tenant_name').with_value(params[:quantum_admin_tenant_name])

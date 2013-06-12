@@ -152,7 +152,9 @@ class nova(
     } else {
       fail("Invalid db connection ${sql_connection}")
     }
-    nova_config { 'DEFAULT/sql_connection': value => $sql_connection }
+    nova_config {
+      'DEFAULT/sql_connection': value  => $sql_connection, secret => true,
+    }
   }
 
   nova_config { 'DEFAULT/image_service': value => $image_service }
@@ -168,7 +170,7 @@ class nova(
   if $rpc_backend == 'nova.openstack.common.rpc.impl_kombu' {
     # I may want to support exporting and collecting these
     nova_config {
-      'DEFAULT/rabbit_password':     value => $rabbit_password;
+      'DEFAULT/rabbit_password':     value => $rabbit_password, secret => true;
       'DEFAULT/rabbit_userid':       value => $rabbit_userid;
       'DEFAULT/rabbit_virtual_host': value => $rabbit_virtual_host;
     }
@@ -193,7 +195,7 @@ class nova(
       'DEFAULT/qpid_hostname':               value => $qpid_hostname;
       'DEFAULT/qpid_port':                   value => $qpid_port;
       'DEFAULT/qpid_username':               value => $qpid_username;
-      'DEFAULT/qpid_password':               value => $qpid_password;
+      'DEFAULT/qpid_password':               value => $qpid_password, secret => true;
       'DEFAULT/qpid_reconnect':              value => $qpid_reconnect;
       'DEFAULT/qpid_reconnect_timeout':      value => $qpid_reconnect_timeout;
       'DEFAULT/qpid_reconnect_limit':        value => $qpid_reconnect_limit;
