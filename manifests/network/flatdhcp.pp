@@ -6,6 +6,7 @@ class nova::network::flatdhcp (
   $flat_network_bridge = 'br100',
   $force_dhcp_release  = true,
   $flat_injected       = false,
+  $auto_assign_floating_ip = true,
   $dhcp_domain         = 'novalocal',
   $dhcpbridge          = '/usr/bin/nova-dhcpbridge',
   $dhcpbridge_flagfile = '/etc/nova/nova.conf'
@@ -26,6 +27,7 @@ class nova::network::flatdhcp (
     'DEFAULT/flat_network_bridge': value => $flat_network_bridge;
     'DEFAULT/force_dhcp_release':  value => $force_dhcp_release;
     'DEFAULT/flat_injected':       value => $flat_injected;
+    'DEFAULT/auto_assign_floating_ip':       value => $auto_assign_floating_ip;
     'DEFAULT/dhcp_domain':         value => $dhcp_domain;
     'DEFAULT/dhcpbridge':          value => $dhcpbridge;
     'DEFAULT/dhcpbridge_flagfile': value => $dhcpbridge_flagfile;

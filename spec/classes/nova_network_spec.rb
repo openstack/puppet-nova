@@ -106,6 +106,7 @@ describe 'nova::network' do
           :flat_network_bridge  => 'br100',
           :force_dhcp_release   => true,
           :flat_injected        => false,
+          :auto_assign_floating_ip => false,
           :dhcp_domain          => 'novalocal',
           :dhcpbridge           => '/usr/bin/nova-dhcpbridge',
           :dhcpbridge_flagfile  => '/etc/nova/nova.conf'
@@ -121,6 +122,7 @@ describe 'nova::network' do
                     'flat_network_bridge' => 'br400',
                     'force_dhcp_release'  => false,
                     'flat_injected'       => true,
+                    'auto_assign_floating_ip' => true,
                     'dhcp_domain'         => 'not-novalocal',
                     'dhcpbridge'          => '/tmp/bridge',
                     'dhcpbridge_flagfile' => '/tmp/file',
@@ -135,6 +137,7 @@ describe 'nova::network' do
             :flat_network_bridge  => 'br400',
             #:force_dhcp_release   => false,
             :flat_injected        => true,
+            :auto_assign_floating_ip => true,
             :dhcp_domain          => 'not-novalocal',
             :dhcpbridge           => '/tmp/bridge',
             :dhcpbridge_flagfile  => '/tmp/file'
