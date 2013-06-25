@@ -37,16 +37,21 @@ class nova::rabbitmq(
     $service_ensure = 'stopped'
   }
 
-  class { 'rabbitmq::server':
-    service_ensure    => $service_ensure,
-    port              => $port,
-    delete_guest_user => $delete_guest_user,
-  }
+  # check if rabbitmq server is already defined
+  # maybe the user wants to configure a cluster
+  if !defined(Class['rabbitmq::server'])
+  {
+    class { 'rabbitmq::server':
+      service_ensure    => $service_ensure,
+      port              => $port,
+      delete_guest_user => $delete_guest_user,
+    }
 
-  if ($enabled) {
-    rabbitmq_vhost { $virtual_host:
-      provider => 'rabbitmqctl',
-      require  => Class['rabbitmq::server'],
+    if ($enabled) {
+      rabbitmq_vhost { $virtual_host:
+        provider => 'rabbitmqctl',
+        require  => Class['rabbitmq::server'],
+      }
     }
   }
 }
