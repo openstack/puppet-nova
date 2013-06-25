@@ -98,4 +98,6 @@ Release Notes
 * Further compatibility fixes for RHEL and its derivatives.
 * Postgres support added.
 * Adjustments to help in supporting the still in development quantum module.
+* Config changes can be hidden from Puppet logs.
+* Move from deprecated rabbit_notifier to rpc_notifier.
 * Various cleanups and bug fixes.
