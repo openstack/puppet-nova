@@ -67,8 +67,6 @@ describe 'nova' do
     it { should contain_nova_config('DEFAULT/rabbit_host').with_value('localhost') }
     it { should contain_nova_config('DEFAULT/rabbit_password').with_value('guest').with_secret(true) }
     it { should contain_nova_config('DEFAULT/rabbit_port').with_value('5672') }
-    it { should contain_nova_config('DEFAULT/rabbit_hosts').with_value('localhost:5672') }
-    it { should contain_nova_config('DEFAULT/rabbit_ha_queues').with_value(false) }
     it { should contain_nova_config('DEFAULT/rabbit_userid').with_value('guest') }
     it { should contain_nova_config('DEFAULT/rabbit_virtual_host').with_value('/') }
 
@@ -121,8 +119,6 @@ describe 'nova' do
       it { should contain_nova_config('DEFAULT/rabbit_port').with_value('5673') }
       it { should contain_nova_config('DEFAULT/rabbit_userid').with_value('rabbit_user') }
       it { should contain_nova_config('DEFAULT/rabbit_virtual_host').with_value('/') }
-      it { should contain_nova_config('DEFAULT/rabbit_hosts').with_value('rabbit:5673') }
-      it { should contain_nova_config('DEFAULT/rabbit_ha_queues').with_value(false) }
 
       it { should contain_nova_config('DEFAULT/verbose').with_value(true) }
       it { should contain_nova_config('DEFAULT/debug').with_value(true) }
@@ -145,6 +141,21 @@ describe 'nova' do
       it { should_not contain_nova_config('DEFAULT/rabbit_host') }
       it { should_not contain_nova_config('DEFAULT/rabbit_port') }
       it { should contain_nova_config('DEFAULT/rabbit_hosts').with_value('rabbit:5673,rabbit2:5674') }
+      it { should contain_nova_config('DEFAULT/rabbit_ha_queues').with_value(true) }
+
+    end
+
+    describe 'with one rabbit_hosts supplied' do
+
+      let :params do
+        {
+          'rabbit_hosts'        => ['rabbit:5673'],
+        }
+      end
+
+      it { should_not contain_nova_config('DEFAULT/rabbit_host') }
+      it { should_not contain_nova_config('DEFAULT/rabbit_port') }
+      it { should contain_nova_config('DEFAULT/rabbit_hosts').with_value('rabbit:5673') }
       it { should contain_nova_config('DEFAULT/rabbit_ha_queues').with_value(true) }
 
     end

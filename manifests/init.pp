@@ -41,7 +41,7 @@ class nova(
   # this should probably just be configured as a glance client
   $glance_api_servers = 'localhost:9292',
   $rabbit_host = 'localhost',
-  $rabbit_hosts = undef,
+  $rabbit_hosts = false,
   $rabbit_password='guest',
   $rabbit_port='5672',
   $rabbit_userid='guest',
@@ -178,18 +178,14 @@ class nova(
       'DEFAULT/rabbit_virtual_host': value => $rabbit_virtual_host;
     }
 
-    if size($rabbit_hosts) > 1 {
-      nova_config { 'DEFAULT/rabbit_ha_queues': value => true }
-    } else {
-      nova_config { 'DEFAULT/rabbit_ha_queues': value => false }
-    }
-
     if $rabbit_hosts {
-      nova_config { 'DEFAULT/rabbit_hosts': value => join($rabbit_hosts, ',') }
-    } elsif $rabbit_host {
-      nova_config { 'DEFAULT/rabbit_host':  value => $rabbit_host }
-      nova_config { 'DEFAULT/rabbit_port':  value => $rabbit_port }
-      nova_config { 'DEFAULT/rabbit_hosts': value => "${rabbit_host}:${rabbit_port}" }
+      nova_config { 'DEFAULT/rabbit_hosts':     value  => join($rabbit_hosts, ',') }
+      nova_config { 'DEFAULT/rabbit_ha_queues': value  => true }
+    } else {
+      nova_config { 'DEFAULT/rabbit_host':      value  => $rabbit_host }
+      nova_config { 'DEFAULT/rabbit_port':      value  => $rabbit_port }
+      nova_config { 'DEFAULT/rabbit_hosts':     value => "${rabbit_host}:${rabbit_port}" }
+      nova_config { 'DEFAULT/rabbit_ha_queues': value => false }
     }
   }
 
