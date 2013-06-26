@@ -9,6 +9,7 @@ class nova::compute (
   $vncproxy_protocol             = 'http',
   $vncproxy_port                 = '6080',
   $vncproxy_path                 = '/vnc_auto.html',
+  $force_config_drive            = false,
   $virtio_nic                    = false
 ) {
 
@@ -40,6 +41,12 @@ class nova::compute (
     service_name   => $::nova::params::compute_service_name,
     ensure_package => $ensure_package,
     before         => Exec['networking-refresh']
+  }
+
+  if $force_config_drive {
+    nova_config { 'DEFAULT/force_config_drive': value => true }
+  } else {
+    nova_config { 'DEFAULT/force_config_drive': ensure => absent }
   }
 
   if $virtio_nic {
