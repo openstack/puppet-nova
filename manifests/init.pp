@@ -4,6 +4,7 @@
 # ==Parameters
 #
 # [sql_connection] Connection url to use to connect to nova sql database.
+# [sql_idle_timeout] Timeout before idle sql connections are reaped.
 # [image_service] Service used to search for and retrieve images. Optional.
 #   Defaults to 'nova.image.local.LocalImageService'
 # [glance_api_servers] List of addresses for api servers. Optional.
@@ -33,6 +34,7 @@ class nova(
   # this is how to query all resources from our clutser
   $nova_cluster_id='localcluster',
   $sql_connection = false,
+  $sql_idle_timeout = '3600',
   $rpc_backend = 'nova.openstack.common.rpc.impl_kombu',
   $image_service = 'nova.image.glance.GlanceImageService',
   # these glance params should be optional
@@ -153,7 +155,8 @@ class nova(
       fail("Invalid db connection ${sql_connection}")
     }
     nova_config {
-      'DEFAULT/sql_connection': value  => $sql_connection, secret => true,
+      'DEFAULT/sql_connection':   value => $sql_connection, secret => true;
+      'DEFAULT/sql_idle_timeout': value => $sql_idle_timeout;
     }
   }
 
