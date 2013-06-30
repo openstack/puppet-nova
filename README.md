@@ -46,7 +46,7 @@ class { 'nova':
   rabbit_password     => 'an_even_bigger_secret',
   image_service       => 'nova.image.glance.GlanceImageService',
   glance_api_servers  => 'localhost:9292',
-  verbose             => 'False'
+  verbose             => false,
   rabbit_host         => '127.0.0.1',
 }
 

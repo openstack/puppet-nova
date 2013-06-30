@@ -40,7 +40,7 @@ describe 'nova::network' do
         it { should contain_service('nova-network').with(
           'name'      => 'nova-network',
           'ensure'    => 'running',
-          'hasstatus' => 'true',
+          'hasstatus' => true,
           'enable'    => true
         )}
       end
@@ -48,7 +48,7 @@ describe 'nova::network' do
         it { should contain_service('nova-network').with(
           'name'      => 'nova-network',
           'ensure'    => 'stopped',
-          'hasstatus' => 'true',
+          'hasstatus' => true,
           'enable'    => false
         )}
       end
@@ -207,7 +207,7 @@ describe 'nova::network' do
     it { should contain_service('nova-network').with(
       'name'      => 'openstack-nova-network',
       'ensure'    => 'stopped',
-      'hasstatus' => 'true',
+      'hasstatus' => true,
       'enable'    => false
     )}
     it { should contain_package('nova-network').with_name('openstack-nova-network') }

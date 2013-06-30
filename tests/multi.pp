@@ -100,8 +100,8 @@ node /controller/ {
   }
 
   class { 'glance::api':
-    verbose           => 'True',
-    debug             => 'True',
+    verbose           => true,
+    debug             => true,
     auth_type         => 'keystone',
     auth_host         => '127.0.0.1',
     auth_port         => '35357',
@@ -112,8 +112,8 @@ node /controller/ {
   class { 'glance::backend::file': }
 
   class { 'glance::registry':
-    verbose           => 'True',
-    debug             => 'True',
+    verbose           => true,
+    debug             => true,
     auth_type         => 'keystone',
     auth_host         => '127.0.0.1',
     auth_port         => '35357',

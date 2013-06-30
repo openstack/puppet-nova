@@ -13,7 +13,7 @@ describe 'nova::cert' do
     it { should contain_service('nova-cert').with(
       'name'       => 'nova-cert',
       'ensure'     => 'stopped',
-      'hasstatus'  => 'true',
+      'hasstatus'  => true,
       'enable'     => false
     )}
     it { should contain_package('nova-cert').with(
@@ -28,7 +28,7 @@ describe 'nova::cert' do
       it { should contain_service('nova-cert').with(
         'name'      => 'nova-cert',
         'ensure'    => 'running',
-        'hasstatus' => 'true',
+        'hasstatus' => true,
         'enable'    => true
       )}
     end
@@ -48,7 +48,7 @@ describe 'nova::cert' do
     it { should contain_service('nova-cert').with(
       'name'      => 'openstack-nova-cert',
       'ensure'    => 'stopped',
-      'hasstatus' => 'true',
+      'hasstatus' => true,
       'enable'    => false
     )}
     it { should contain_package('nova-cert').with_name('openstack-nova-cert') }

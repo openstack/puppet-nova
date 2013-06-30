@@ -176,9 +176,9 @@ class nova(
     }
 
     if size($rabbit_hosts) > 1 {
-      nova_config { 'DEFAULT/rabbit_ha_queues': value => 'true' }
+      nova_config { 'DEFAULT/rabbit_ha_queues': value => true }
     } else {
-      nova_config { 'DEFAULT/rabbit_ha_queues': value => 'false' }
+      nova_config { 'DEFAULT/rabbit_ha_queues': value => false }
     }
 
     if $rabbit_hosts {

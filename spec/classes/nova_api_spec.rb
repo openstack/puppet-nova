@@ -17,7 +17,7 @@ describe 'nova::api' do
     it { should contain_service('nova-api').with(
       'name'      => 'nova-api',
       'ensure'    => 'stopped',
-      'hasstatus' => 'true',
+      'hasstatus' => true,
       'enable'    => false
     )}
     it { should contain_package('nova-api').with(
@@ -32,7 +32,7 @@ describe 'nova::api' do
     it { should contain_service('nova-api').with(
       'name'      => 'nova-api',
       'ensure'    => 'running',
-      'hasstatus' => 'true',
+      'hasstatus' => true,
       'enable'    => true
     )}
     end
@@ -114,7 +114,7 @@ describe 'nova::api' do
       it { should contain_nova_config('DEFAULT/metadata_listen').with('value' => '127.0.0.1') }
       it { should contain_nova_config('DEFAULT/osapi_volume_listen').with('value' => '192.168.56.210') }
       it { should contain_nova_config('DEFAULT/osapi_compute_workers').with('value' => '5') }
-      it { should contain_nova_config('DEFAULT/service_quantum_metadata_proxy').with('value' => 'true') }
+      it { should contain_nova_config('DEFAULT/service_quantum_metadata_proxy').with('value' => true) }
       it { should contain_nova_config('DEFAULT/quantum_metadata_proxy_shared_secret').with('value' => 'secrete') }
     end
 

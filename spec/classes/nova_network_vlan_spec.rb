@@ -15,7 +15,7 @@ describe 'nova::network::vlan' do
     it { should contain_nova_config('DEFAULT/fixed_range').with_value('10.0.0.0/32') }
     it { should contain_nova_config('DEFAULT/vlan_start').with_value('300') }
     it { should contain_nova_config('DEFAULT/vlan_interface').with_value('eth1') }
-    it { should contain_nova_config('DEFAULT/force_dhcp_release').with_value('true') }
+    it { should contain_nova_config('DEFAULT/force_dhcp_release').with_value(true) }
     it { should contain_nova_config('DEFAULT/dhcpbridge').with_value('/usr/bin/nova-dhcpbridge') }
     it { should contain_nova_config('DEFAULT/dhcpbridge_flagfile').with_value('/etc/nova/nova.conf') }
 
@@ -40,7 +40,7 @@ describe 'nova::network::vlan' do
     it { should contain_nova_config('DEFAULT/fixed_range').with_value('10.0.0.0/32') }
     it { should contain_nova_config('DEFAULT/vlan_start').with_value('100') }
     it { should contain_nova_config('DEFAULT/vlan_interface').with_value('eth1') }
-    it { should contain_nova_config('DEFAULT/force_dhcp_release').with_value('false') }
+    it { should contain_nova_config('DEFAULT/force_dhcp_release').with_value(false) }
     it { should contain_nova_config('DEFAULT/dhcpbridge').with_value('/usr/bin/dhcpbridge') }
     it { should contain_nova_config('DEFAULT/dhcpbridge_flagfile').with_value('/etc/nova/nova-dhcp.conf') }
   end

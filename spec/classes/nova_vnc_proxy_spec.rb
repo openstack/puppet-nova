@@ -29,7 +29,7 @@ describe 'nova::vncproxy' do
     ) }
     it { should contain_service('nova-vncproxy').with(
       :name      => 'nova-novncproxy',
-      :hasstatus => 'true',
+      :hasstatus => true,
       :ensure    => 'running'
     )}
 
@@ -54,7 +54,7 @@ describe 'nova::vncproxy' do
       )}
       it { should contain_service('nova-vncproxy').with(
         :name      => 'novnc',
-        :hasstatus => 'true',
+        :hasstatus => true,
         :ensure    => 'running'
       )}
   end

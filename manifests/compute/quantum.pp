@@ -5,6 +5,6 @@ class nova::compute::quantum (
 
   nova_config {
     'DEFAULT/libvirt_vif_driver':             value => $libvirt_vif_driver;
-    'DEFAULT/libvirt_use_virtio_for_bridges': value => 'True';
+    'DEFAULT/libvirt_use_virtio_for_bridges': value => true;
   }
 }

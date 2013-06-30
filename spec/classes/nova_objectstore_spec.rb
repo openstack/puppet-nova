@@ -13,7 +13,7 @@ describe 'nova::objectstore' do
     it { should contain_service('nova-objectstore').with(
       'name'      => 'nova-objectstore',
       'ensure'    => 'stopped',
-      'hasstatus' => 'true',
+      'hasstatus' => true,
       'enable'    => false
     )}
     it { should contain_package('nova-objectstore').with(
@@ -28,7 +28,7 @@ describe 'nova::objectstore' do
     it { should contain_service('nova-objectstore').with(
       'name'      => 'nova-objectstore',
       'ensure'    => 'running',
-      'hasstatus' => 'true',
+      'hasstatus' => true,
       'enable'    => true
     )}
     end
@@ -48,7 +48,7 @@ describe 'nova::objectstore' do
     it { should contain_service('nova-objectstore').with(
       'name'      => 'openstack-nova-objectstore',
       'ensure'    => 'stopped',
-      'hasstatus' => 'true',
+      'hasstatus' => true,
       'enable'    => false
     )}
     it { should contain_package('nova-objectstore').with_name('openstack-nova-objectstore') }

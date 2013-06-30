@@ -13,7 +13,7 @@ describe 'nova::scheduler' do
     it { should contain_service('nova-scheduler').with(
       'name'      => 'nova-scheduler',
       'ensure'    => 'stopped',
-      'hasstatus' => 'true',
+      'hasstatus' => true,
       'enable'    => false
     )}
     it { should contain_package('nova-scheduler').with(
@@ -28,7 +28,7 @@ describe 'nova::scheduler' do
     it { should contain_service('nova-scheduler').with(
       'name'      => 'nova-scheduler',
       'ensure'    => 'running',
-      'hasstatus' => 'true',
+      'hasstatus' => true,
       'enable'    => true
     )}
     end
@@ -48,7 +48,7 @@ describe 'nova::scheduler' do
     it { should contain_service('nova-scheduler').with(
       'name'      => 'openstack-nova-scheduler',
       'ensure'    => 'stopped',
-      'hasstatus' => 'true',
+      'hasstatus' => true,
       'enable'    => false
     )}
     it { should contain_package('nova-scheduler').with_name('openstack-nova-scheduler') }

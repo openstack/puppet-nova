@@ -19,7 +19,7 @@ describe 'nova::compute' do
         { :osfamily => 'Debian' }
       end
 
-      it { should contain_nova_config('DEFAULT/vnc_enabled').with_value('true') }
+      it { should contain_nova_config('DEFAULT/vnc_enabled').with_value(true) }
       it { should contain_nova_config('DEFAULT/vncserver_proxyclient_address').with_value('127.0.0.1') }
       it { should contain_nova_config('DEFAULT/novncproxy_base_url').with_value(
         'http://127.0.0.1:6080/vnc_auto.html'
@@ -28,7 +28,7 @@ describe 'nova::compute' do
       it { should contain_service('nova-compute').with(
         'name'      => 'nova-compute',
         'ensure'    => 'stopped',
-        'hasstatus' => 'true',
+        'hasstatus' => true,
         'enable'    => false
       )}
       it { should contain_package('nova-compute').with(
@@ -38,20 +38,20 @@ describe 'nova::compute' do
       ) }
       it { should contain_package('bridge-utils').with(
         :ensure => 'present',
-        :before => 'Nova::Generic_service[compute]' 
+        :before => 'Nova::Generic_service[compute]'
       ) }
 
       describe 'with enabled as true' do
         let :params do
           {
-            :enabled         => true,
+            :enabled       => true,
             :vncproxy_host => '127.0.0.1'
           }
         end
       it { should contain_service('nova-compute').with(
         'name'      => 'nova-compute',
         'ensure'    => 'running',
-        'hasstatus' => 'true',
+        'hasstatus' => true,
         'enable'    => true
       )}
       end
@@ -61,7 +61,7 @@ describe 'nova::compute' do
           {:vnc_enabled => false}
         end
 
-        it { should contain_nova_config('DEFAULT/vnc_enabled').with_value('false') }
+        it { should contain_nova_config('DEFAULT/vnc_enabled').with_value(false) }
         it { should contain_nova_config('DEFAULT/vncserver_proxyclient_address').with_value('127.0.0.1')}
         it { should_not contain_nova_config('DEFAULT/novncproxy_base_url') }
 
@@ -82,7 +82,7 @@ describe 'nova::compute' do
       it { should contain_service('nova-compute').with(
         'name'      => 'openstack-nova-compute',
         'ensure'    => 'stopped',
-        'hasstatus' => 'true',
+        'hasstatus' => true,
         'enable'    => false
       )}
       it { should contain_package('nova-compute').with_name('openstack-nova-compute') }

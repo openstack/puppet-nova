@@ -13,7 +13,7 @@ describe 'nova::volume' do
     it { should contain_service('nova-volume').with(
       'name'      => 'nova-volume',
       'ensure'    => 'stopped',
-      'hasstatus' => 'true',
+      'hasstatus' => true,
       'enable'    => false
     )}
     it { should contain_package('nova-volume').with(
@@ -28,7 +28,7 @@ describe 'nova::volume' do
       it { should contain_service('nova-volume').with(
         'name'      => 'nova-volume',
         'ensure'    => 'running',
-        'hasstatus' => 'true',
+        'hasstatus' => true,
         'enable'    => true
       )}
     end
@@ -48,7 +48,7 @@ describe 'nova::volume' do
     it { should contain_service('nova-volume').with(
       'name'      => 'openstack-nova-volume',
       'ensure'    => 'stopped',
-      'hasstatus' => 'true',
+      'hasstatus' => true,
       'enable'    => false
     )}
     it { should contain_package('nova-volume').with_name('openstack-nova-volume') }
