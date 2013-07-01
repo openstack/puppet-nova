@@ -160,6 +160,18 @@ describe 'nova' do
 
     end
 
+    describe 'with memcached parameter supplied' do
+
+      let :params do
+        {
+          'memcached_servers'        => ['memcached01:11211', 'memcached02:11211'],
+        }
+      end
+
+      it { should contain_nova_config('DEFAULT/memcached_servers').with_value('memcached01:11211,memcached02:11211') }
+
+    end
+
 
     describe 'with qpid rpc supplied' do
 

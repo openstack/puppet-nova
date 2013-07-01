@@ -9,6 +9,7 @@
 #   Defaults to 'nova.image.local.LocalImageService'
 # [glance_api_servers] List of addresses for api servers. Optional.
 #   Defaults to localhost:9292.
+# [memcached_servers] Use memcached instead of in-process cache. Supply a list of memcached server IP's:Memcached Port. Optional. Defaults to false.
 # [rabbit_host] Location of rabbitmq installation. Optional. Defaults to localhost.
 # [rabbit_port] Port for rabbitmq instance. Optional. Defaults to 5672.
 # [rabbit_hosts] Location of rabbitmq installation. Optional. Defaults to undef.
@@ -40,6 +41,7 @@ class nova(
   # these glance params should be optional
   # this should probably just be configured as a glance client
   $glance_api_servers = 'localhost:9292',
+  $memcached_servers = false,
   $rabbit_host = 'localhost',
   $rabbit_hosts = false,
   $rabbit_password='guest',
@@ -169,6 +171,12 @@ class nova(
   }
 
   nova_config { 'DEFAULT/auth_strategy': value => $auth_strategy }
+
+  if $memcached_servers {
+    nova_config { 'DEFAULT/memcached_servers': value  => join($memcached_servers, ',') }
+  } else {
+    nova_config { 'DEFAULT/memcached_servers': ensure => absent }
+  }
 
   if $rpc_backend == 'nova.openstack.common.rpc.impl_kombu' {
     # I may want to support exporting and collecting these
