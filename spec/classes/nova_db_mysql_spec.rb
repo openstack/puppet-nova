@@ -1,6 +1,11 @@
 require 'spec_helper'
 
 describe 'nova::db::mysql' do
+
+  let :pre_condition do
+    'include mysql::server'
+  end
+
   let :required_params do
     { :password => "qwerty" }
   end
