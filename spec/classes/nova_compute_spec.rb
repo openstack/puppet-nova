@@ -66,6 +66,15 @@ describe 'nova::compute' do
         it { should_not contain_nova_config('DEFAULT/novncproxy_base_url') }
 
       end
+      describe 'with force_config_drive set to true' do
+
+        let :params do
+          {:force_config_drive => true}
+        end
+
+        it { should contain_nova_config('DEFAULT/force_config_drive').with_value('true') }
+
+      end
       describe 'with package version' do
         let :params do
           {:ensure_package => '2012.1-2'}
