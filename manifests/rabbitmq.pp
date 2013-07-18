@@ -13,7 +13,7 @@ class nova::rabbitmq(
   $password           ='guest',
   $port               ='5672',
   $virtual_host       ='/',
-  $cluster_disk_nodes = false,
+  $cluster_nodes      = false,
   $enabled            = true
 ) {
 
@@ -44,17 +44,17 @@ class nova::rabbitmq(
     $service_ensure = 'stopped'
   }
 
-  if $cluster_disk_nodes {
-    class { 'rabbitmq::server':
+  if $cluster_nodes {
+    class { 'rabbitmq':
       service_ensure           => $service_ensure,
       port                     => $port,
       delete_guest_user        => $delete_guest_user,
       config_cluster           => true,
-      cluster_disk_nodes       => $cluster_disk_nodes,
+      cluster_nodes            => $cluster_nodes,
       wipe_db_on_cookie_change => true,
     }
   } else {
-    class { 'rabbitmq::server':
+    class { 'rabbitmq':
       service_ensure    => $service_ensure,
       port              => $port,
       delete_guest_user => $delete_guest_user,
@@ -64,7 +64,7 @@ class nova::rabbitmq(
   if ($enabled) {
     rabbitmq_vhost { $virtual_host:
       provider => 'rabbitmqctl',
-      require  => Class['rabbitmq::server'],
+      require  => Class['rabbitmq'],
     }
   }
 }
