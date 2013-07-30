@@ -15,6 +15,10 @@
 # * admin_tenant_name
 # * admin_user
 # * enabled_apis
+# * use_forwarded_for:
+#     Treat X-Forwarded-For as the canonical remote address. Only
+#     enable this if you have a sanitizing proxy. (boolean value)
+#     (Optional). Defaults to false.
 # * quantum_metadata_proxy_shared_secret
 #
 class nova::api(
@@ -32,6 +36,7 @@ class nova::api(
   $metadata_listen   = '0.0.0.0',
   $enabled_apis      = 'ec2,osapi_compute,metadata',
   $volume_api_class  = 'nova.volume.cinder.API',
+  $use_forwarded_for = false,
   $workers           = $::processorcount,
   $sync_db           = true,
   $quantum_metadata_proxy_shared_secret = undef
@@ -67,6 +72,7 @@ class nova::api(
     'DEFAULT/metadata_listen':       value => $metadata_listen;
     'DEFAULT/osapi_volume_listen':   value => $api_bind_address;
     'DEFAULT/osapi_compute_workers': value => $workers;
+    'DEFAULT/use_forwarded_for':     value => $use_forwarded_for;
   }
 
   if ($quantum_metadata_proxy_shared_secret){

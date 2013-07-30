@@ -90,6 +90,7 @@ describe 'nova::api' do
           :api_bind_address                     => '192.168.56.210',
           :metadata_listen                      => '127.0.0.1',
           :volume_api_class                     => 'nova.volume.cinder.API',
+          :use_forwarded_for                    => false,
           :quantum_metadata_proxy_shared_secret => 'secrete',
         }
       end
@@ -113,6 +114,7 @@ describe 'nova::api' do
       it { should contain_nova_config('DEFAULT/osapi_compute_listen').with('value' => '192.168.56.210') }
       it { should contain_nova_config('DEFAULT/metadata_listen').with('value' => '127.0.0.1') }
       it { should contain_nova_config('DEFAULT/osapi_volume_listen').with('value' => '192.168.56.210') }
+      it { should contain_nova_config('DEFAULT/use_forwarded_for').with('value' => false) }
       it { should contain_nova_config('DEFAULT/osapi_compute_workers').with('value' => '5') }
       it { should contain_nova_config('DEFAULT/service_quantum_metadata_proxy').with('value' => true) }
       it { should contain_nova_config('DEFAULT/quantum_metadata_proxy_shared_secret').with('value' => 'secrete') }
