@@ -24,8 +24,15 @@ class nova::db::mysql(
     require      => Class['mysql::config'],
   }
 
-  if $allowed_hosts {
-    nova::db::mysql::host_access { $allowed_hosts:
+  # Check allowed_hosts to avoid duplicate resource declarations
+  if is_array($allowed_hosts) and delete($allowed_hosts,$host) != [] {
+    $real_allowed_hosts = delete($allowed_hosts,$host)
+  } elsif is_string($allowed_hosts) and ($allowed_hosts != $host) {
+    $real_allowed_hosts = $allowed_hosts
+  }
+
+  if $real_allowed_hosts {
+    nova::db::mysql::host_access { $real_allowed_hosts:
       user      => $user,
       password  => $password,
       database  => $dbname,
