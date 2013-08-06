@@ -19,7 +19,7 @@
 #     Treat X-Forwarded-For as the canonical remote address. Only
 #     enable this if you have a sanitizing proxy. (boolean value)
 #     (Optional). Defaults to false.
-# * quantum_metadata_proxy_shared_secret
+# * neutron_metadata_proxy_shared_secret
 #
 class nova::api(
   $admin_password,
@@ -39,7 +39,7 @@ class nova::api(
   $use_forwarded_for = false,
   $workers           = $::processorcount,
   $sync_db           = true,
-  $quantum_metadata_proxy_shared_secret = undef
+  $neutron_metadata_proxy_shared_secret = undef
 ) {
 
   include nova::params
@@ -75,16 +75,16 @@ class nova::api(
     'DEFAULT/use_forwarded_for':     value => $use_forwarded_for;
   }
 
-  if ($quantum_metadata_proxy_shared_secret){
+  if ($neutron_metadata_proxy_shared_secret){
     nova_config {
-      'DEFAULT/service_quantum_metadata_proxy': value => true;
-      'DEFAULT/quantum_metadata_proxy_shared_secret':
-        value => $quantum_metadata_proxy_shared_secret;
+      'DEFAULT/service_neutron_metadata_proxy': value => true;
+      'DEFAULT/neutron_metadata_proxy_shared_secret':
+        value => $neutron_metadata_proxy_shared_secret;
     }
   } else {
     nova_config {
-      'DEFAULT/service_quantum_metadata_proxy': value => false;
-      'DEFAULT/quantum_metadata_proxy_shared_secret': ensure => absent;
+      'DEFAULT/service_neutron_metadata_proxy': value => false;
+      'DEFAULT/neutron_metadata_proxy_shared_secret': ensure => absent;
     }
   }
 

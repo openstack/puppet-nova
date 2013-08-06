@@ -97,7 +97,7 @@ Release Notes
 * The Apache Qpid message broker is available as an RPC backend.
 * Further compatibility fixes for RHEL and its derivatives.
 * Postgres support added.
-* Adjustments to help in supporting the still in development quantum module.
+* Adjustments to help in supporting the still in development neutron module.
 * Config changes can be hidden from Puppet logs.
 * Move from deprecated rabbit_notifier to rpc_notifier.
 * Various cleanups and bug fixes.
