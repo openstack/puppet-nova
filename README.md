@@ -88,6 +88,17 @@ Contributors
 Release Notes
 -------------
 
+**2.1.0**
+
+* Added support for X-Forwarded-For HTTP Headers.
+* Added html5 spice support.
+* Added config drive support.
+* Added RabbitMQ clustering support.
+* Added memcached support.
+* Added SQL idle timeout support.
+* Fixed allowed_hosts/database connection bug.
+* Pinned RabbitMQ and database module versions.
+
 **2.0.0**
 
 * Upstream is now part of stackfoge.
