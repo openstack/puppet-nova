@@ -15,7 +15,7 @@ nova
 Overview
 --------
 
-The nova module is a part of [Stackforge](https://github.com/stackfoge), an effort by the Openstack infrastructure team to provide continuous integration testing and code review for Openstack and Openstack community projects not part of the core software.  The module its self is used to flexibly configure and manage the compute service for Openstack.
+The nova module is a part of [Stackforge](https://github.com/stackforge), an effort by the Openstack infrastructure team to provide continuous integration testing and code review for Openstack and Openstack community projects not part of the core software.  The module its self is used to flexibly configure and manage the compute service for Openstack.
 
 Module Description
 ------------------
@@ -37,11 +37,11 @@ Setup
 
 ### Beginning with nova
 
-To utilize the nova module's functionality you will need to declare multiple resources.  The following is a modified excerpt from the [openstack module](https://github.com/stackfoge/puppet-openstack).  This is not an exhaustive list of all the components needed, we recommend you consult and understand the [openstack module](https://github.com/stackfoge/puppet-openstack) and the [core openstack](http://docs.openstack.org) documentation.
+To utilize the nova module's functionality you will need to declare multiple resources.  The following is a modified excerpt from the [openstack module](https://github.com/stackforge/puppet-openstack).  This is not an exhaustive list of all the components needed, we recommend you consult and understand the [openstack module](https://github.com/stackforge/puppet-openstack) and the [core openstack](http://docs.openstack.org) documentation.
 
 ```puppet
 class { 'nova':
-  sql_connection      => 'mysql://nova:a_big_secret@127.0.0.1/nova?charset=utf8",
+  sql_connection      => 'mysql://nova:a_big_secret@127.0.0.1/nova?charset=utf8',
   rabbit_userid       => 'nova',
   rabbit_password     => 'an_even_bigger_secret',
   image_service       => 'nova.image.glance.GlanceImageService',
@@ -65,7 +65,7 @@ Implementation
 
 ### nova
 
-nova is a combination of Puppet manifest and ruby code to delivery configuration and extra functionality through types and providers.
+nova is a combination of Puppet manifest and ruby code to deliver configuration and extra functionality through types and providers.
 
 Limitations
 ------------
