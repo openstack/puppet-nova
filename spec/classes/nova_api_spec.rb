@@ -65,9 +65,9 @@ describe 'nova::api' do
       it { should contain_nova_config('DEFAULT/osapi_compute_listen').with('value' => '0.0.0.0') }
       it { should contain_nova_config('DEFAULT/metadata_listen').with('value' => '0.0.0.0') }
       it { should contain_nova_config('DEFAULT/osapi_volume_listen').with('value' => '0.0.0.0') }
-      it 'should unconfigure quantum_metadata proxy' do
-        should contain_nova_config('DEFAULT/service_quantum_metadata_proxy').with('value' => false)
-        should contain_nova_config('DEFAULT/quantum_metadata_proxy_shared_secret').with('ensure' => 'absent')
+      it 'should unconfigure neutron_metadata proxy' do
+        should contain_nova_config('DEFAULT/service_neutron_metadata_proxy').with('value' => false)
+        should contain_nova_config('DEFAULT/neutron_metadata_proxy_shared_secret').with('ensure' => 'absent')
       end
     end
     describe 'with params' do
@@ -91,7 +91,7 @@ describe 'nova::api' do
           :metadata_listen                      => '127.0.0.1',
           :volume_api_class                     => 'nova.volume.cinder.API',
           :use_forwarded_for                    => false,
-          :quantum_metadata_proxy_shared_secret => 'secrete',
+          :neutron_metadata_proxy_shared_secret => 'secrete',
         }
       end
       it 'should use defined params for api-paste.ini' do
@@ -116,8 +116,8 @@ describe 'nova::api' do
       it { should contain_nova_config('DEFAULT/osapi_volume_listen').with('value' => '192.168.56.210') }
       it { should contain_nova_config('DEFAULT/use_forwarded_for').with('value' => false) }
       it { should contain_nova_config('DEFAULT/osapi_compute_workers').with('value' => '5') }
-      it { should contain_nova_config('DEFAULT/service_quantum_metadata_proxy').with('value' => true) }
-      it { should contain_nova_config('DEFAULT/quantum_metadata_proxy_shared_secret').with('value' => 'secrete') }
+      it { should contain_nova_config('DEFAULT/service_neutron_metadata_proxy').with('value' => true) }
+      it { should contain_nova_config('DEFAULT/neutron_metadata_proxy_shared_secret').with('value' => 'secrete') }
     end
 
     [
