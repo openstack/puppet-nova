@@ -53,6 +53,8 @@ describe 'nova::api' do
         should contain_nova_paste_api_ini(
           'filter:authtoken/auth_protocol').with_value('http')
         should contain_nova_paste_api_ini(
+          'filter:authtoken/auth_uri').with_value('http://127.0.0.1:5000/')
+        should contain_nova_paste_api_ini(
            'filter:authtoken/auth_admin_prefix').with_ensure('absent')
         should contain_nova_paste_api_ini(
           'filter:authtoken/admin_tenant_name').with_value('services')
@@ -84,6 +86,7 @@ describe 'nova::api' do
           :auth_port                            => 1234,
           :auth_protocol                        => 'https',
           :auth_admin_prefix                    => '/keystone/admin',
+          :auth_uri                             => 'https://10.0.0.1:9999/',
           :admin_tenant_name                    => 'service2',
           :admin_user                           => 'nova2',
           :admin_password                       => 'passw0rd2',
@@ -103,6 +106,8 @@ describe 'nova::api' do
           'filter:authtoken/auth_protocol').with_value('https')
         should contain_nova_paste_api_ini(
            'filter:authtoken/auth_admin_prefix').with_value('/keystone/admin')
+        should contain_nova_paste_api_ini(
+           'filter:authtoken/auth_uri').with_value('https://10.0.0.1:9999/')
         should contain_nova_paste_api_ini(
           'filter:authtoken/admin_tenant_name').with_value('service2')
         should contain_nova_paste_api_ini(
