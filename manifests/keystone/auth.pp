@@ -6,17 +6,19 @@ class nova::keystone::auth(
   $admin_address          = '127.0.0.1',
   $internal_address       = '127.0.0.1',
   $compute_port           = '8774',
-  $volume_port            = '8776',
   $ec2_port               = '8773',
   $compute_version        = 'v2',
-  $volume_version         = 'v1',
   $region                 = 'RegionOne',
   $tenant                 = 'services',
   $email                  = 'nova@localhost',
   $configure_ec2_endpoint = true,
-  $cinder                 = false,
+  $cinder                 = undef,
   $public_protocol        = 'http'
 ) {
+
+  if $cinder != undef {
+    warning('cinder parameter is deprecated and has no effect.')
+  }
 
   keystone_user { $auth_name:
     ensure   => present,
@@ -38,20 +40,6 @@ class nova::keystone::auth(
     public_url   => "${public_protocol}://${public_address}:${compute_port}/${compute_version}/%(tenant_id)s",
     admin_url    => "http://${admin_address}:${compute_port}/${compute_version}/%(tenant_id)s",
     internal_url => "http://${internal_address}:${compute_port}/${compute_version}/%(tenant_id)s",
-  }
-
-  if $cinder == false {
-    keystone_service { "${auth_name}_volume":
-      ensure      => present,
-      type        => 'volume',
-      description => 'Volume Service',
-    }
-    keystone_endpoint { "${region}/${auth_name}_volume":
-      ensure       => present,
-      public_url   => "${public_protocol}://${public_address}:${volume_port}/${volume_version}/%(tenant_id)s",
-      admin_url    => "http://${admin_address}:${volume_port}/${volume_version}/%(tenant_id)s",
-      internal_url => "http://${internal_address}:${volume_port}/${volume_version}/%(tenant_id)s",
-    }
   }
 
   if $configure_ec2_endpoint {

@@ -18,7 +18,6 @@ class nova::params {
       $objectstore_package_name     = 'openstack-nova-objectstore'
       $scheduler_package_name       = 'openstack-nova-scheduler'
       $tgt_package_name             = 'scsi-target-utils'
-      $volume_package_name          = 'openstack-nova-volume'
       $vncproxy_package_name        = 'openstack-nova-novncproxy'
       $spicehtml5proxy_package_name = 'openstack-nova-console'
       # service names
@@ -34,7 +33,6 @@ class nova::params {
       $tgt_service_name             = 'tgtd'
       $vncproxy_service_name        = 'openstack-nova-novncproxy'
       $spicehtml5proxy_service_name = 'openstack-nova-spicehtml5proxy'
-      $volume_service_name          = 'openstack-nova-volume'
       # redhat specific config defaults
       $root_helper                  = 'sudo nova-rootwrap'
       $lock_path                    = '/var/lib/nova/tmp'
@@ -62,7 +60,6 @@ class nova::params {
       $objectstore_package_name     = 'nova-objectstore'
       $scheduler_package_name       = 'nova-scheduler'
       $tgt_package_name             = 'tgt'
-      $volume_package_name          = 'nova-volume'
       # service names
       $api_service_name             = 'nova-api'
       $cert_service_name            = 'nova-cert'
@@ -73,7 +70,6 @@ class nova::params {
       $network_service_name         = 'nova-network'
       $objectstore_service_name     = 'nova-objectstore'
       $scheduler_service_name       = 'nova-scheduler'
-      $volume_service_name          = 'nova-volume'
       $spicehtml5proxy_service_name = 'nova-spicehtml5proxy'
       $tgt_service_name             = 'tgt'
       # debian specific nova config
