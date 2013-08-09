@@ -111,8 +111,8 @@ class nova(
   }
 
   package { 'nova-common':
-    name    => $::nova::params::common_package_name,
     ensure  => $ensure_package,
+    name    => $::nova::params::common_package_name,
     require => [Package['python-nova'], Anchor['nova-start']]
   }
 

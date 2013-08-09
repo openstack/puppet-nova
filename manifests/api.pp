@@ -116,14 +116,14 @@ class nova::api(
     }
     if !defined(Package['pyssf']) {
       package { 'pyssf':
-        provider => pip,
         ensure   => latest,
+        provider => pip,
         require  => Package['python-pip']
       }
     }
     package { 'openstackocci':
-      provider => 'pip',
       ensure   => latest,
+      provider => 'pip',
       require  => Package['python-pip'],
     }
   }
