@@ -38,16 +38,16 @@ define nova::generic_service(
   # installed before nova_config
   if ($package_name) {
     package { $nova_title:
-      name   => $package_name,
       ensure => $ensure_package,
+      name   => $package_name,
       notify => Service[$nova_title],
     }
   }
 
   if ($service_name) {
     service { $nova_title:
-      name      => $service_name,
       ensure    => $service_ensure,
+      name      => $service_name,
       enable    => $enabled,
       hasstatus => true,
       require   => [Package['nova-common'], Package[$nova_title]],
