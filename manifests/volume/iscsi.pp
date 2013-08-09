@@ -35,13 +35,13 @@ class nova::volume::iscsi (
   case $iscsi_helper {
     'tgtadm': {
       package { 'tgt':
-        name   => $::nova::params::tgt_package_name,
         ensure => present,
+        name   => $::nova::params::tgt_package_name,
       }
       service { 'tgtd':
+        ensure   => running,
         name     => $::nova::params::tgt_service_name,
         provider => $::nova::params::special_service_provider,
-        ensure   => running,
         enable   => true,
         require  => [Nova::Generic_service['volume'], Package['tgt']],
       }

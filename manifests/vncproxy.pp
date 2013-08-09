@@ -21,8 +21,8 @@ class nova::vncproxy(
 
   if ! defined(Package['python-numpy']) {
     package { 'python-numpy':
-      name   => $::nova::params::numpy_package_name,
       ensure => present,
+      name   => $::nova::params::numpy_package_name,
     }
   }
   nova::generic_service { 'vncproxy':
