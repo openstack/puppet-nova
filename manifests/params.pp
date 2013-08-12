@@ -6,6 +6,7 @@ class nova::params {
     'RedHat': {
       # package names
       $api_package_name             = 'openstack-nova-api'
+      $cells_package_name           = 'openstack-nova-cells'
       $cert_package_name            = 'openstack-nova-cert'
       $common_package_name          = 'openstack-nova-common'
       $compute_package_name         = 'openstack-nova-compute'
@@ -22,6 +23,7 @@ class nova::params {
       $spicehtml5proxy_package_name = 'openstack-nova-console'
       # service names
       $api_service_name             = 'openstack-nova-api'
+      $cells_service_name           = 'openstack-nova-cells'
       $cert_service_name            = 'openstack-nova-cert'
       $compute_service_name         = 'openstack-nova-compute'
       $conductor_service_name       = 'openstack-nova-conductor'
@@ -48,6 +50,7 @@ class nova::params {
     'Debian': {
       # package names
       $api_package_name             = 'nova-api'
+      $cells_package_name           = 'nova-cells'
       $cert_package_name            = 'nova-cert'
       $common_package_name          = 'nova-common'
       $compute_package_name         = 'nova-compute'
@@ -62,6 +65,7 @@ class nova::params {
       $tgt_package_name             = 'tgt'
       # service names
       $api_service_name             = 'nova-api'
+      $cells_service_name           = 'nova-cells'
       $cert_service_name            = 'nova-cert'
       $compute_service_name         = 'nova-compute'
       $conductor_service_name       = 'nova-conductor'

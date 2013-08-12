@@ -140,6 +140,10 @@ class { 'nova::scheduler':
   enabled => true
 }
 
+class { 'nova::cells':
+  enabled   => false
+}
+
 class { 'nova::network':
   enabled => true
 }
