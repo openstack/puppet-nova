@@ -1,17 +1,17 @@
 fixtures:
   repositories:
-    "keystone": "git://github.com/stackforge/puppet-keystone.git"
-    "cinder": "git://github.com/stackforge/puppet-cinder.git"
-    "mysql":
-      repo: "git://github.com/puppetlabs/puppetlabs-mysql.git"
-      ref: "origin/0.x"
-    "stdlib": "git://github.com/puppetlabs/puppetlabs-stdlib.git"
-    "sysctl": "git://github.com/duritong/puppet-sysctl.git"
-    "rabbitmq":
-      repo: "git://github.com/puppetlabs/puppetlabs-rabbitmq"
-      ref: "origin/2.x"
-    "qpid": "git://github.com/dprince/puppet-qpid.git"
+    'keystone': 'git://github.com/stackforge/puppet-keystone.git'
+    'cinder': 'git://github.com/stackforge/puppet-cinder.git'
+    'mysql':
+      repo: 'git://github.com/puppetlabs/puppetlabs-mysql.git'
+      ref: 'origin/0.x'
+    'stdlib': 'git://github.com/puppetlabs/puppetlabs-stdlib.git'
+    'sysctl': 'git://github.com/duritong/puppet-sysctl.git'
+    'rabbitmq':
+      repo: 'git://github.com/puppetlabs/puppetlabs-rabbitmq'
+      ref: 'origin/2.x'
+    'qpid': 'git://github.com/dprince/puppet-qpid.git'
     'inifile':  'git://github.com/puppetlabs/puppetlabs-inifile'
-    "postgresql": "git://github.com/puppetlabs/puppet-postgresql.git"
+    'postgresql': 'git://github.com/puppetlabs/puppetlabs-postgresql.git'
   symlinks:
-    "nova": "#{source_dir}"
+    'nova': "#{source_dir}"
