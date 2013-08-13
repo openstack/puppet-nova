@@ -38,5 +38,8 @@ class nova::migration::libvirt {
         match => 'libvirtd_opts=',
       }
     }
+    default:  {
+      warning("Unsupported operating system: ${::lsbdistid}, make sure you are configuring this yourself")
+    }
   }
 }
