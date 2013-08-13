@@ -19,22 +19,22 @@ class nova::quota(
 ) {
 
   nova_config {
-    'DEFAULT/quota_instances': value => $quota_instances;
-    'DEFAULT/quota_cores': value => $quota_cores;
-    'DEFAULT/quota_ram': value => $quota_ram;
-    'DEFAULT/quota_volumes': value => $quota_volumes;
-    'DEFAULT/quota_gigabytes': value => $quota_gigabytes;
-    'DEFAULT/quota_floating_ips': value => $quota_floating_ips;
-    'DEFAULT/quota_metadata_items': value => $quota_metadata_items;
-    'DEFAULT/quota_max_injected_files': value => $quota_max_injected_files;
+    'DEFAULT/quota_instances':                       value => $quota_instances;
+    'DEFAULT/quota_cores':                           value => $quota_cores;
+    'DEFAULT/quota_ram':                             value => $quota_ram;
+    'DEFAULT/quota_volumes':                         value => $quota_volumes;
+    'DEFAULT/quota_gigabytes':                       value => $quota_gigabytes;
+    'DEFAULT/quota_floating_ips':                    value => $quota_floating_ips;
+    'DEFAULT/quota_metadata_items':                  value => $quota_metadata_items;
+    'DEFAULT/quota_max_injected_files':              value => $quota_max_injected_files;
     'DEFAULT/quota_max_injected_file_content_bytes': value => $quota_max_injected_file_content_bytes;
-    'DEFAULT/quota_max_injected_file_path_bytes': value => $quota_max_injected_file_path_bytes;
-    'DEFAULT/quota_security_groups': value => $quota_security_groups;
-    'DEFAULT/quota_security_group_rules': value => $quota_security_group_rules;
-    'DEFAULT/quota_key_pairs': value => $quota_key_pairs;
-    'DEFAULT/reservation_expire': value => $reservation_expire;
-    'DEFAULT/max_age': value => $max_age;
-    'DEFAULT/quota_driver': value => $quota_driver
+    'DEFAULT/quota_max_injected_file_path_bytes':    value => $quota_max_injected_file_path_bytes;
+    'DEFAULT/quota_security_groups':                 value => $quota_security_groups;
+    'DEFAULT/quota_security_group_rules':            value => $quota_security_group_rules;
+    'DEFAULT/quota_key_pairs':                       value => $quota_key_pairs;
+    'DEFAULT/reservation_expire':                    value => $reservation_expire;
+    'DEFAULT/max_age':                               value => $max_age;
+    'DEFAULT/quota_driver':                          value => $quota_driver
   }
 
 }

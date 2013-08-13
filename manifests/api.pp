@@ -83,7 +83,7 @@ class nova::api(
     }
   } else {
     nova_config {
-      'DEFAULT/service_neutron_metadata_proxy': value => false;
+      'DEFAULT/service_neutron_metadata_proxy':       value  => false;
       'DEFAULT/neutron_metadata_proxy_shared_secret': ensure => absent;
     }
   }
