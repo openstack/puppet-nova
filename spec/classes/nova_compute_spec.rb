@@ -41,7 +41,7 @@ describe 'nova::compute' do
         :before => 'Nova::Generic_service[compute]'
       ) }
 
-      describe 'with enabled as true' do
+      describe 'with vnc_enabled set to true' do
         let :params do
           {
             :enabled       => true,
