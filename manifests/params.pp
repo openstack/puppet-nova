@@ -12,7 +12,13 @@ class nova::params {
       $conductor_package_name       = 'openstack-nova-conductor'
       $consoleauth_package_name     = 'openstack-nova-console'
       $doc_package_name             = 'openstack-nova-doc'
-      $libvirt_package_name         = 'libvirt'
+      # Fedora 18+ and EL 7+ have a more granular libvirt packaging.
+      # F17 and older are EOL, so checking for Fedora is good enough.
+      if $::operatingsystem == 'Fedora' or $::operatingsystemrelease >= 7 {
+        $libvirt_package_name         = 'libvirt-daemon-kvm'
+      } else {
+        $libvirt_package_name         = 'libvirt'
+      }
       $network_package_name         = 'openstack-nova-network'
       $numpy_package_name           = 'numpy'
       $objectstore_package_name     = 'openstack-nova-objectstore'
