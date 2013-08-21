@@ -58,4 +58,8 @@ class nova::compute (
     nova_config { 'DEFAULT/libvirt_use_virtio_for_bridges': value => true }
   }
 
+  package { 'pm-utils':
+    ensure => present,
+  }
+
 }

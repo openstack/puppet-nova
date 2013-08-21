@@ -41,6 +41,9 @@ describe 'nova::compute' do
         :ensure => 'present',
         :before => 'Nova::Generic_service[compute]'
       ) }
+      it { should contain_package('pm-utils').with(
+        :ensure => 'present'
+      ) }
 
       describe 'with vnc_enabled set to true' do
         let :params do
