@@ -29,6 +29,8 @@
 #    Defaults to '10'.
 # [root_helper] Command used for roothelper. Optional. Distro specific.
 # [monitoring_notifications] A boolean specifying whether or not to send system usage data notifications out on the message queue. Optional, false by default. Only valid for stable/essex.
+# [use_syslog] Use syslog for logging. Optional. Defaults to false.
+# [log_facility] Syslog facility to receive log lines. Optional. Defaults to LOG_USER.
 #
 class nova(
   $ensure_package = 'present',
@@ -73,7 +75,9 @@ class nova(
   $rootwrap_config = '/etc/nova/rootwrap.conf',
   # deprecated in folsom
   #$root_helper = $::nova::params::root_helper,
-  $monitoring_notifications = false
+  $monitoring_notifications = false,
+  $use_syslog = false,
+  $log_facility = 'LOG_USER',
 ) inherits nova::params {
 
   # all nova_config resources should be applied
@@ -230,6 +234,18 @@ class nova(
   if $monitoring_notifications {
     nova_config {
       'DEFAULT/notification_driver': value => 'nova.openstack.common.notifier.rpc_notifier'
+    }
+  }
+
+  # Syslog configuration
+  if $use_syslog {
+    nova_config {
+      'DEFAULT/use_syslog':           value => true;
+      'DEFAULT/syslog_log_facility':  value => $log_facility;
+    }
+  } else {
+    nova_config {
+      'DEFAULT/use_syslog':           value => false;
     }
   }
 
