@@ -29,6 +29,7 @@ class nova::api(
   $auth_host         = '127.0.0.1',
   $auth_port         = 35357,
   $auth_protocol     = 'http',
+  $auth_uri          = false,
   $auth_admin_prefix = false,
   $admin_tenant_name = 'services',
   $admin_user        = 'nova',
@@ -86,6 +87,12 @@ class nova::api(
       'DEFAULT/service_neutron_metadata_proxy':       value  => false;
       'DEFAULT/neutron_metadata_proxy_shared_secret': ensure => absent;
     }
+  }
+
+  if $auth_uri {
+    nova_paste_api_ini { 'filter:authtoken/auth_uri': value => $auth_uri; }
+  } else {
+    nova_paste_api_ini { 'filter:authtoken/auth_uri': value => "${auth_protocol}://${auth_host}:5000/"; }
   }
 
   nova_paste_api_ini {
