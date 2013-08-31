@@ -37,11 +37,11 @@ class nova::params {
       $root_helper                  = 'sudo nova-rootwrap'
       $lock_path                    = '/var/lib/nova/tmp'
       case $::operatingsystem {
-        'RedHat': {
-          $special_service_provider = 'init'
+        'Fedora': {
+          $special_service_provider = undef
         }
         default: {
-          $special_service_provider = undef
+          $special_service_provider = 'init'
         }
       }
     }

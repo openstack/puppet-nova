@@ -4,9 +4,9 @@ define nova::network::bridge (
   $netmask = '255.255.255.0'
 ) {
 
-  case $::operatingsystem {
+  case $::osfamily {
 
-    'debian', 'ubuntu': {
+    'Debian': {
       $context = '/files/etc/network/interfaces'
       augeas { "bridge_${name}":
         context => $context,
@@ -23,10 +23,10 @@ define nova::network::bridge (
       }
     }
 
-    'fedora', 'CentOS', 'RedHat' : {
+    'RedHat' : {
     }
 
-    default: { fail('nova::network_bridge currently only supports Debian, Ubuntu, Fedora, CentOS and RedHat') }
+    default: { fail('nova::network_bridge currently only supports osfamily Debian and RedHat') }
 
   }
 }
