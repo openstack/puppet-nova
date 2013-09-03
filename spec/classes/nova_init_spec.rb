@@ -236,5 +236,33 @@ describe 'nova' do
       )}
       it { should contain_nova_config('DEFAULT/rootwrap_config').with_value('/etc/nova/rootwrap.conf') }
     end
+
+    describe 'with syslog disabled' do
+      it { should contain_nova_config('DEFAULT/use_syslog').with_value(false) }
+    end
+
+    describe 'with syslog enabled' do
+      let :params do
+        {
+          :use_syslog   => 'true',
+        }
+      end
+
+      it { should contain_nova_config('DEFAULT/use_syslog').with_value(true) }
+      it { should contain_nova_config('DEFAULT/syslog_log_facility').with_value('LOG_USER') }
+    end
+
+    describe 'with syslog enabled and custom settings' do
+      let :params do
+        {
+          :use_syslog   => 'true',
+          :log_facility => 'LOG_LOCAL0'
+       }
+      end
+
+      it { should contain_nova_config('DEFAULT/use_syslog').with_value(true) }
+      it { should contain_nova_config('DEFAULT/syslog_log_facility').with_value('LOG_LOCAL0') }
+    end
+
   end
 end
