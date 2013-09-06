@@ -45,6 +45,7 @@ class nova::api(
 
   include nova::params
   require keystone::python
+  include cinder::client
 
   Package<| title == 'nova-api' |> -> Nova_paste_api_ini<| |>
 
@@ -53,15 +54,12 @@ class nova::api(
   Nova_paste_api_ini<| |> ~> Exec['post-nova_config']
   Nova_paste_api_ini<| |> ~> Service['nova-api']
 
-  class { 'cinder::client':
-    notify => Service[$::nova::params::api_service_name],
-  }
-
   nova::generic_service { 'api':
     enabled        => $enabled,
     ensure_package => $ensure_package,
     package_name   => $::nova::params::api_package_name,
     service_name   => $::nova::params::api_service_name,
+    subscribe      => Class['cinder::client'],
   }
 
   nova_config {
