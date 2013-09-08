@@ -20,6 +20,8 @@
 #     enable this if you have a sanitizing proxy. (boolean value)
 #     (Optional). Defaults to false.
 # * neutron_metadata_proxy_shared_secret
+# * ratelimit
+# * ratelimit_factory
 #
 class nova::api(
   $admin_password,
@@ -40,7 +42,10 @@ class nova::api(
   $use_forwarded_for = false,
   $workers           = $::processorcount,
   $sync_db           = true,
-  $neutron_metadata_proxy_shared_secret = undef
+  $neutron_metadata_proxy_shared_secret = undef,
+  $ratelimits        = undef,
+  $ratelimits_factory =
+    'nova.api.openstack.compute.limits:RateLimitingMiddleware.factory'
 ) {
 
   include nova::params
@@ -130,6 +135,13 @@ class nova::api(
       ensure   => latest,
       provider => 'pip',
       require  => Package['python-pip'],
+    }
+  }
+
+  if ($ratelimits != undef) {
+    nova_paste_api_ini {
+      'filter:ratelimit/paste.filter_factory': value => $ratelimits_factory;
+      'filter:ratelimit/limits':               value => $ratelimits;
     }
   }
 

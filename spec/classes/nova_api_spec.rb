@@ -95,25 +95,28 @@ describe 'nova::api' do
           :volume_api_class                     => 'nova.volume.cinder.API',
           :use_forwarded_for                    => false,
           :neutron_metadata_proxy_shared_secret => 'secrete',
+          :ratelimits                            => '(GET, "*", .*, 100, MINUTE);(POST, "*", .*, 200, MINUTE)'
         }
       end
       it 'should use defined params for api-paste.ini' do
         should contain_nova_paste_api_ini(
-         'filter:authtoken/auth_host').with_value('10.0.0.1')
+          'filter:authtoken/auth_host').with_value('10.0.0.1')
         should contain_nova_paste_api_ini(
           'filter:authtoken/auth_port').with_value('1234')
         should contain_nova_paste_api_ini(
           'filter:authtoken/auth_protocol').with_value('https')
         should contain_nova_paste_api_ini(
-           'filter:authtoken/auth_admin_prefix').with_value('/keystone/admin')
+          'filter:authtoken/auth_admin_prefix').with_value('/keystone/admin')
         should contain_nova_paste_api_ini(
-           'filter:authtoken/auth_uri').with_value('https://10.0.0.1:9999/')
+          'filter:authtoken/auth_uri').with_value('https://10.0.0.1:9999/')
         should contain_nova_paste_api_ini(
           'filter:authtoken/admin_tenant_name').with_value('service2')
         should contain_nova_paste_api_ini(
           'filter:authtoken/admin_user').with_value('nova2')
         should contain_nova_paste_api_ini(
           'filter:authtoken/admin_password').with_value('passw0rd2').with_secret(true)
+        should contain_nova_paste_api_ini(
+          'filter:ratelimit/limits').with_value('(GET, "*", .*, 100, MINUTE);(POST, "*", .*, 200, MINUTE)')
       end
       it { should contain_nova_config('DEFAULT/ec2_listen').with('value' => '192.168.56.210') }
       it { should contain_nova_config('DEFAULT/osapi_compute_listen').with('value' => '192.168.56.210') }
