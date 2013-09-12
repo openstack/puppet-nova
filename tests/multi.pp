@@ -46,8 +46,8 @@ node /controller/ {
   # export all of the things that will be needed by the clients
   @@nova_config { 'rabbit_hosts': value => $controller_host }
   Nova_config <| title == 'rabbit_hosts' |>
-  @@nova_config { 'sql_connection': value => $nova_db }
-  Nova_config <| title == 'sql_connection' |>
+  @@nova_config { 'database_connection': value => $nova_db }
+  Nova_config <| title == 'database_connection' |>
   @@nova_config { 'glance_api_servers': value => $glance_api_servers }
   Nova_config <| title == 'glance_api_servers' |>
 
@@ -112,15 +112,15 @@ node /controller/ {
   class { 'glance::backend::file': }
 
   class { 'glance::registry':
-    verbose           => true,
-    debug             => true,
-    auth_type         => 'keystone',
-    auth_host         => '127.0.0.1',
-    auth_port         => '35357',
-    keystone_tenant   => 'services',
-    keystone_user     => 'glance',
-    keystone_password => $glance_user_password,
-    sql_connection    => "mysql://glance:${glance_db_password}@127.0.0.1/glance",
+    verbose             => true,
+    debug               => true,
+    auth_type           => 'keystone',
+    auth_host           => '127.0.0.1',
+    auth_port           => '35357',
+    keystone_tenant     => 'services',
+    keystone_user       => 'glance',
+    keystone_password   => $glance_user_password,
+    database_connection => "mysql://glance:${glance_db_password}@127.0.0.1/glance",
   }
 
 
@@ -144,14 +144,14 @@ node /controller/ {
   }
 
   class { 'nova':
-    sql_connection     => false,
+    database_connection => false,
     # this is false b/c we are exporting
-    rabbit_hosts       => false,
-    rabbit_userid      => $rabbit_user,
-    rabbit_password    => $rabbit_password,
-    image_service      => 'nova.image.glance.GlanceImageService',
-    glance_api_servers => false,
-    network_manager    => 'nova.network.manager.FlatDHCPManager',
+    rabbit_hosts        => false,
+    rabbit_userid       => $rabbit_user,
+    rabbit_password     => $rabbit_password,
+    image_service       => 'nova.image.glance.GlanceImageService',
+    glance_api_servers  => false,
+    network_manager     => 'nova.network.manager.FlatDHCPManager',
   }
 
   class { 'nova::api':
@@ -210,15 +210,15 @@ node /controller/ {
 node /compute/ {
 
   class { 'nova':
-    # set sql and rabbit to false so that the resources will be collected
-    sql_connection     => false,
-    rabbit_hosts       => false,
-    image_service      => 'nova.image.glance.GlanceImageService',
-    glance_api_servers => false,
-    rabbit_userid      => $rabbit_user,
-    rabbit_password    => $rabbit_password,
-    network_manager    => 'nova.network.manager.FlatDHCPManager',
-    admin_password     => $nova_user_password,
+    # set db and rabbit to false so that the resources will be collected
+    database_connection => false,
+    rabbit_hosts        => false,
+    image_service       => 'nova.image.glance.GlanceImageService',
+    glance_api_servers  => false,
+    rabbit_userid       => $rabbit_user,
+    rabbit_password     => $rabbit_password,
+    network_manager     => 'nova.network.manager.FlatDHCPManager',
+    admin_password      => $nova_user_password,
   }
 
   class { 'nova::compute':

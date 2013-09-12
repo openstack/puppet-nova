@@ -3,8 +3,8 @@
 #
 # ==Parameters
 #
-# [sql_connection] Connection url to use to connect to nova sql database.
-# [sql_idle_timeout] Timeout before idle sql connections are reaped.
+# [database_connection] Connection url to connect to nova database.
+# [database_idle_timeout] Timeout before idle db connections are reaped.
 # [image_service] Service used to search for and retrieve images. Optional.
 #   Defaults to 'nova.image.local.LocalImageService'
 # [glance_api_servers] List of addresses for api servers. Optional.
@@ -36,8 +36,11 @@ class nova(
   $ensure_package = 'present',
   # this is how to query all resources from our clutser
   $nova_cluster_id='localcluster',
+  # note: sql_* deprecated for database_*
   $sql_connection = false,
-  $sql_idle_timeout = '3600',
+  $sql_idle_timeout = false,
+  $database_connection = false,
+  $database_idle_timeout = 3600,
   $rpc_backend = 'nova.openstack.common.rpc.impl_kombu',
   $image_service = 'nova.image.glance.GlanceImageService',
   # these glance params should be optional
@@ -147,22 +150,35 @@ class nova(
     refreshonly => true,
   }
 
-
-  # both the sql_connection and rabbit_host are things
-  # that may need to be collected from a remote host
   if $sql_connection {
-    if($sql_connection =~ /mysql:\/\/\S+:\S+@\S+\/\S+/) {
-      require 'mysql::python'
-    } elsif($sql_connection =~ /postgresql:\/\/\S+:\S+@\S+\/\S+/) {
+    warning('sql_connection deprecated for database_connection')
+    $database_connection_real = $sql_connection
+  } else {
+    $database_connection_real = $database_connection
+  }
 
-    } elsif($sql_connection =~ /sqlite:\/\//) {
+  if $sql_idle_timeout {
+    warning('sql_idle_timeout deprecated for database_idle_timeout')
+    $database_idle_timeout_real = $sql_idle_timeout
+  } else {
+    $database_idle_timeout_real = $database_idle_timeout
+  }
+
+  # both the database_connection and rabbit_host are things
+  # that may need to be collected from a remote host
+  if $database_connection_real {
+    if($database_connection_real =~ /mysql:\/\/\S+:\S+@\S+\/\S+/) {
+      require 'mysql::python'
+    } elsif($database_connection_real =~ /postgresql:\/\/\S+:\S+@\S+\/\S+/) {
+
+    } elsif($database_connection_real =~ /sqlite:\/\//) {
 
     } else {
-      fail("Invalid db connection ${sql_connection}")
+      fail("Invalid db connection ${database_connection_real}")
     }
     nova_config {
-      'DEFAULT/sql_connection':   value => $sql_connection, secret => true;
-      'DEFAULT/sql_idle_timeout': value => $sql_idle_timeout;
+      'database/connection':   value => $database_connection_real, secret => true;
+      'database/idle_timeout': value => $database_idle_timeout_real;
     }
   }
 

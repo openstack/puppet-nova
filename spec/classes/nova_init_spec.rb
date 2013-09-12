@@ -54,8 +54,8 @@ describe 'nova' do
       'refreshonly' => true
     )}
 
-    it { should_not contain_nova_config('DEFAULT/sql_connection') }
-    it { should_not contain_nova_config('DEFAULT/sql_idle_timeout').with_value('3600') }
+    it { should_not contain_nova_config('database/connection') }
+    it { should_not contain_nova_config('database/idle_timeout').with_value('3600') }
 
     it { should contain_nova_config('DEFAULT/image_service').with_value('nova.image.glance.GlanceImageService') }
     it { should contain_nova_config('DEFAULT/glance_api_servers').with_value('localhost:9292') }
@@ -84,8 +84,8 @@ describe 'nova' do
 
       let :params do
         {
-          'sql_connection'           => 'mysql://user:pass@db/db',
-          'sql_idle_timeout'         => '30',
+          'database_connection'      => 'mysql://user:pass@db/db',
+          'database_idle_timeout'    => '30',
           'verbose'                  => true,
           'debug'                    => true,
           'logdir'                   => '/var/log/nova2',
@@ -105,8 +105,8 @@ describe 'nova' do
 
       it { should contain_package('nova-common').with('ensure' => '2012.1.1-15.el6') }
       it { should contain_package('python-nova').with('ensure' => '2012.1.1-15.el6') }
-      it { should contain_nova_config('DEFAULT/sql_connection').with_value('mysql://user:pass@db/db').with_secret(true) }
-      it { should contain_nova_config('DEFAULT/sql_idle_timeout').with_value('30') }
+      it { should contain_nova_config('database/connection').with_value('mysql://user:pass@db/db').with_secret(true) }
+      it { should contain_nova_config('database/idle_timeout').with_value('30') }
 
       it { should contain_nova_config('DEFAULT/image_service').with_value('nova.image.local.LocalImageService') }
       it { should_not contain_nova_config('DEFAULT/glance_api_servers') }
@@ -129,6 +129,19 @@ describe 'nova' do
       it { should contain_nova_config('DEFAULT/notification_driver').with_value('nova.openstack.common.notifier.rpc_notifier') }
 
     end
+
+    describe 'with deprecated sql parameters' do
+
+      let :params do
+        {
+          'sql_connection'   => 'mysql://user:pass@db/db',
+          'sql_idle_timeout' => '30'
+        }
+      end
+      it { should contain_nova_config('database/connection').with_value('mysql://user:pass@db/db').with_secret(true) }
+      it { should contain_nova_config('database/idle_timeout').with_value('30') }
+    end
+
 
     describe 'with some others parameters supplied' do
 
@@ -177,8 +190,8 @@ describe 'nova' do
 
       let :params do
         {
-          'sql_connection'      => 'mysql://user:pass@db/db',
-          'sql_idle_timeout'    => '30',
+          'database_connection'      => 'mysql://user:pass@db/db',
+          'database_idle_timeout'    => '30',
           'verbose'             => true,
           'debug'               => true,
           'logdir'              => '/var/log/nova2',
@@ -194,8 +207,8 @@ describe 'nova' do
 
       it { should contain_package('nova-common').with('ensure' => '2012.1.1-15.el6') }
       it { should contain_package('python-nova').with('ensure' => '2012.1.1-15.el6') }
-      it { should contain_nova_config('DEFAULT/sql_connection').with_value('mysql://user:pass@db/db') }
-      it { should contain_nova_config('DEFAULT/sql_idle_timeout').with_value('30') }
+      it { should contain_nova_config('database/connection').with_value('mysql://user:pass@db/db') }
+      it { should contain_nova_config('database/idle_timeout').with_value('30') }
 
       it { should contain_nova_config('DEFAULT/image_service').with_value('nova.image.local.LocalImageService') }
       it { should_not contain_nova_config('DEFAULT/glance_api_servers') }
