@@ -1,21 +1,23 @@
 fixtures:
   repositories:
-    'keystone':
-      repo: 'git://github.com/stackforge/puppet-keystone.git'
-      ref: 'origin/stable/grizzly'
     'cinder':
       repo: 'git://github.com/stackforge/puppet-cinder.git'
+      ref: 'origin/stable/grizzly'
+    'inifile':  'git://github.com/puppetlabs/puppetlabs-inifile'
+    'keystone':
+      repo: 'git://github.com/stackforge/puppet-keystone.git'
       ref: 'origin/stable/grizzly'
     'mysql':
       repo: 'git://github.com/puppetlabs/puppetlabs-mysql.git'
       ref: 'origin/0.x'
-    'stdlib': 'git://github.com/puppetlabs/puppetlabs-stdlib.git'
-    'sysctl': 'git://github.com/duritong/puppet-sysctl.git'
+    'postgresql':
+      repo: 'git://github.com/puppetlabs/puppetlabs-postgresql.git'
+      ref: '2.5.0'
+    'qpid': 'git://github.com/dprince/puppet-qpid.git'
     'rabbitmq':
       repo: 'git://github.com/puppetlabs/puppetlabs-rabbitmq'
       ref: 'origin/2.x'
-    'qpid': 'git://github.com/dprince/puppet-qpid.git'
-    'inifile':  'git://github.com/puppetlabs/puppetlabs-inifile'
-    'postgresql': 'git://github.com/puppetlabs/puppetlabs-postgresql.git'
+    'stdlib': 'git://github.com/puppetlabs/puppetlabs-stdlib.git'
+    'sysctl': 'git://github.com/duritong/puppet-sysctl.git'
   symlinks:
     'nova': "#{source_dir}"
