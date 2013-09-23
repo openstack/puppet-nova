@@ -1,5 +1,5 @@
 nova
-=======
+====
 
 #### Table of Contents
 
@@ -15,7 +15,7 @@ nova
 Overview
 --------
 
-The nova module is a part of [Stackforge](https://github.com/stackfoge), an effort by the Openstack infrastructure team to provide continuous integration testing and code review for Openstack and Openstack community projects not part of the core software.  The module its self is used to flexibly configure and manage the compute service for Openstack.
+The nova module is a part of [Stackforge](https://github.com/stackforge), an effort by the Openstack infrastructure team to provide continuous integration testing and code review for Openstack and Openstack community projects not part of the core software.  The module its self is used to flexibly configure and manage the compute service for Openstack.
 
 Module Description
 ------------------
@@ -68,7 +68,7 @@ Implementation
 nova is a combination of Puppet manifest and ruby code to delivery configuration and extra functionality through types and providers.
 
 Limitations
-------------
+-----------
 
 * Only supports libvirt and xenserver compute drivers.
 * Tested on EL and Debian derivatives.
