@@ -88,6 +88,14 @@ Contributors
 Release Notes
 -------------
 
+**2.2.0**
+
+* Added a check to install bridge-utils only if needed.
+* Added syslog support.
+* Added installation of pm-utils for VM power management support.
+* Fixed cinder include dependency bug.
+* Various bug and lint fixes.
+
 **2.1.0**
 
 * Added support for X-Forwarded-For HTTP Headers.
