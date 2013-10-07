@@ -1,5 +1,5 @@
 name    'puppetlabs-nova'
-version '2.1.0'
+version '2.2.0'
 source  'https://github.com/stackforge/puppet-nova'
 author  'Puppet Labs'
 license 'Apache License 2.0'
@@ -8,9 +8,9 @@ description 'Puppet module to install and configure the OpenStack Nova compute s
 project_page 'https://launchpad.net/puppet-openstack'
 
 ## Add dependencies, if any:
-dependency 'puppetlabs/glance', '>=2.1.0 <3.0.0'
-dependency 'puppetlabs/keystone', '>=2.1.0 <3.0.0'
-dependency 'puppetlabs/cinder', '>=2.1.0 <3.0.0'
+dependency 'puppetlabs/glance', '>=2.2.0 <3.0.0'
+dependency 'puppetlabs/keystone', '>=2.2.0 <3.0.0'
+dependency 'puppetlabs/cinder', '>=2.2.0 <3.0.0'
 dependency 'puppetlabs/mysql', '>=0.6.1 <1.0.0'
 dependency 'puppetlabs/rabbitmq', '>=2.0.2 <3.0.0'
 dependency 'puppetlabs/stdlib', '>=2.5.0'
