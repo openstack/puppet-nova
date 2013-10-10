@@ -27,7 +27,7 @@ class nova::api(
   $admin_password,
   $enabled           = false,
   $ensure_package    = 'present',
-  $auth_strategy     = 'keystone',
+  $auth_strategy     = undef,
   $auth_host         = '127.0.0.1',
   $auth_port         = 35357,
   $auth_protocol     = 'http',
@@ -59,6 +59,10 @@ class nova::api(
   Nova_paste_api_ini<| |> ~> Exec['post-nova_config']
   Nova_paste_api_ini<| |> ~> Service['nova-api']
 
+  if $auth_strategy {
+    warning('Parameter auth_strategy is not used in class nova::api and going to be deprecated.')
+  }
+
   nova::generic_service { 'api':
     enabled        => $enabled,
     ensure_package => $ensure_package,
@@ -68,7 +72,6 @@ class nova::api(
   }
 
   nova_config {
-    'DEFAULT/api_paste_config':      value => '/etc/nova/api-paste.ini';
     'DEFAULT/enabled_apis':          value => $enabled_apis;
     'DEFAULT/volume_api_class':      value => $volume_api_class;
     'DEFAULT/ec2_listen':            value => $api_bind_address;
@@ -93,28 +96,28 @@ class nova::api(
   }
 
   if $auth_uri {
-    nova_paste_api_ini { 'filter:authtoken/auth_uri': value => $auth_uri; }
+    nova_config { 'keystone_authtoken/auth_uri': value => $auth_uri; }
   } else {
-    nova_paste_api_ini { 'filter:authtoken/auth_uri': value => "${auth_protocol}://${auth_host}:5000/"; }
+    nova_config { 'keystone_authtoken/auth_uri': value => "${auth_protocol}://${auth_host}:5000/"; }
   }
 
-  nova_paste_api_ini {
-    'filter:authtoken/auth_host':         value => $auth_host;
-    'filter:authtoken/auth_port':         value => $auth_port;
-    'filter:authtoken/auth_protocol':     value => $auth_protocol;
-    'filter:authtoken/admin_tenant_name': value => $admin_tenant_name;
-    'filter:authtoken/admin_user':        value => $admin_user;
-    'filter:authtoken/admin_password':    value => $admin_password, secret => true;
+  nova_config {
+    'keystone_authtoken/auth_host':         value => $auth_host;
+    'keystone_authtoken/auth_port':         value => $auth_port;
+    'keystone_authtoken/auth_protocol':     value => $auth_protocol;
+    'keystone_authtoken/admin_tenant_name': value => $admin_tenant_name;
+    'keystone_authtoken/admin_user':        value => $admin_user;
+    'keystone_authtoken/admin_password':    value => $admin_password, secret => true;
   }
 
   if $auth_admin_prefix {
     validate_re($auth_admin_prefix, '^(/.+[^/])?$')
-    nova_paste_api_ini {
-      'filter:authtoken/auth_admin_prefix': value => $auth_admin_prefix;
+    nova_config {
+      'keystone_authtoken/auth_admin_prefix': value => $auth_admin_prefix;
     }
   } else {
-    nova_paste_api_ini {
-      'filter:authtoken/auth_admin_prefix': ensure => absent;
+    nova_config {
+      'keystone_authtoken/auth_admin_prefix': ensure => absent;
     }
   }
 
@@ -154,6 +157,18 @@ class nova::api(
       refreshonly => true,
       subscribe   => Exec['post-nova_config'],
     }
+  }
+
+  # Remove auth configuration from api-paste.ini
+  nova_paste_api_ini {
+    'filter:authtoken/auth_uri':          ensure => absent;
+    'filter:authtoken/auth_host':         ensure => absent;
+    'filter:authtoken/auth_port':         ensure => absent;
+    'filter:authtoken/auth_protocol':     ensure => absent;
+    'filter:authtoken/admin_tenant_name': ensure => absent;
+    'filter:authtoken/admin_user':        ensure => absent;
+    'filter:authtoken/admin_password':    ensure => absent;
+    'filter:authtoken/auth_admin_prefix': ensure => absent;
   }
 
 }
