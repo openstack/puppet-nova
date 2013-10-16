@@ -45,23 +45,23 @@ describe 'nova::api' do
       )}
     end
     describe 'with defaults' do
-      it 'should use default params for nova.conf' do
-        should contain_nova_config(
-         'keystone_authtoken/auth_host').with_value('127.0.0.1')
-        should contain_nova_config(
-          'keystone_authtoken/auth_port').with_value('35357')
-        should contain_nova_config(
-          'keystone_authtoken/auth_protocol').with_value('http')
-        should contain_nova_config(
-          'keystone_authtoken/auth_uri').with_value('http://127.0.0.1:5000/')
-        should contain_nova_config(
-          'keystone_authtoken/auth_admin_prefix').with_ensure('absent')
-        should contain_nova_config(
-          'keystone_authtoken/admin_tenant_name').with_value('services')
-        should contain_nova_config(
-          'keystone_authtoken/admin_user').with_value('nova')
-        should contain_nova_config(
-          'keystone_authtoken/admin_password').with_value('passw0rd').with_secret(true)
+      it 'should use default params for api-paste.ini' do
+        should contain_nova_paste_api_ini(
+         'filter:authtoken/auth_host').with_value('127.0.0.1')
+        should contain_nova_paste_api_ini(
+          'filter:authtoken/auth_port').with_value('35357')
+        should contain_nova_paste_api_ini(
+          'filter:authtoken/auth_protocol').with_value('http')
+        should contain_nova_paste_api_ini(
+          'filter:authtoken/auth_uri').with_value('http://127.0.0.1:5000/')
+        should contain_nova_paste_api_ini(
+           'filter:authtoken/auth_admin_prefix').with_ensure('absent')
+        should contain_nova_paste_api_ini(
+          'filter:authtoken/admin_tenant_name').with_value('services')
+        should contain_nova_paste_api_ini(
+          'filter:authtoken/admin_user').with_value('nova')
+        should contain_nova_paste_api_ini(
+          'filter:authtoken/admin_password').with_value('passw0rd').with_secret(true)
       end
       it { should contain_nova_config('DEFAULT/ec2_listen').with('value' => '0.0.0.0') }
       it { should contain_nova_config('DEFAULT/osapi_compute_listen').with('value' => '0.0.0.0') }
@@ -81,6 +81,7 @@ describe 'nova::api' do
       end
       let :params do
         {
+          :auth_strategy                        => 'foo',
           :auth_host                            => '10.0.0.1',
           :auth_port                            => 1234,
           :auth_protocol                        => 'https',
@@ -97,23 +98,23 @@ describe 'nova::api' do
           :ratelimits                            => '(GET, "*", .*, 100, MINUTE);(POST, "*", .*, 200, MINUTE)'
         }
       end
-      it 'should use defined params for nova.conf and api-paste.ini' do
-        should contain_nova_config(
-          'keystone_authtoken/auth_host').with_value('10.0.0.1')
-        should contain_nova_config(
-          'keystone_authtoken/auth_port').with_value('1234')
-        should contain_nova_config(
-          'keystone_authtoken/auth_protocol').with_value('https')
-        should contain_nova_config(
-          'keystone_authtoken/auth_admin_prefix').with_value('/keystone/admin')
-        should contain_nova_config(
-          'keystone_authtoken/auth_uri').with_value('https://10.0.0.1:9999/')
-        should contain_nova_config(
-          'keystone_authtoken/admin_tenant_name').with_value('service2')
-        should contain_nova_config(
-          'keystone_authtoken/admin_user').with_value('nova2')
-        should contain_nova_config(
-          'keystone_authtoken/admin_password').with_value('passw0rd2').with_secret(true)
+      it 'should use defined params for api-paste.ini' do
+        should contain_nova_paste_api_ini(
+          'filter:authtoken/auth_host').with_value('10.0.0.1')
+        should contain_nova_paste_api_ini(
+          'filter:authtoken/auth_port').with_value('1234')
+        should contain_nova_paste_api_ini(
+          'filter:authtoken/auth_protocol').with_value('https')
+        should contain_nova_paste_api_ini(
+          'filter:authtoken/auth_admin_prefix').with_value('/keystone/admin')
+        should contain_nova_paste_api_ini(
+          'filter:authtoken/auth_uri').with_value('https://10.0.0.1:9999/')
+        should contain_nova_paste_api_ini(
+          'filter:authtoken/admin_tenant_name').with_value('service2')
+        should contain_nova_paste_api_ini(
+          'filter:authtoken/admin_user').with_value('nova2')
+        should contain_nova_paste_api_ini(
+          'filter:authtoken/admin_password').with_value('passw0rd2').with_secret(true)
         should contain_nova_paste_api_ini(
           'filter:ratelimit/limits').with_value('(GET, "*", .*, 100, MINUTE);(POST, "*", .*, 200, MINUTE)')
       end
@@ -143,7 +144,7 @@ describe 'nova::api' do
           }
         end
 
-        it { expect { should contain_nova_config('keystone_authtoken/auth_admin_prefix') }.to \
+        it { expect { should contain_nova_paste_api_ini('filter:authtoken/auth_admin_prefix') }.to \
           raise_error(Puppet::Error, /validate_re\(\): "#{auth_admin_prefix}" does not match/) }
       end
     end
