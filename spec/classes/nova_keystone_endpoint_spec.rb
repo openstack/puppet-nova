@@ -113,4 +113,23 @@ describe 'nova::keystone::auth' do
     it { should_not contain_keystone_endpoint('RegionOne/nova_ec2') }
   end
 
+  describe 'when configuring nova-api and the keystone endpoint' do
+    let :pre_condition do
+      "class { 'nova::api': admin_password => 'test' }
+      include nova"
+    end
+
+    let :facts do
+      { :osfamily => "Debian"}
+    end
+
+    let :params do
+      {
+        :password => 'test'
+      }
+    end
+
+    it { should contain_keystone_endpoint('RegionOne/nova').with_notify('Service[nova-api]') }
+  end
+
 end

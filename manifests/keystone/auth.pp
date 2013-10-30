@@ -20,6 +20,8 @@ class nova::keystone::auth(
     warning('cinder parameter is deprecated and has no effect.')
   }
 
+  Keystone_endpoint["${region}/${auth_name}"] ~> Service <| name == 'nova-api' |>
+
   keystone_user { $auth_name:
     ensure   => present,
     password => $password,
