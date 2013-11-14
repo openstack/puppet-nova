@@ -88,6 +88,12 @@ Contributors
 Release Notes
 -------------
 
+**3.0.0**
+
+* Major release for OpenStack Havana.
+* Removed api-paste.ini configuration.
+* Fixed bug to ensure keystone endpoint is set before service is started.
+
 **2.2.0**
 
 * Added a check to install bridge-utils only if needed.
