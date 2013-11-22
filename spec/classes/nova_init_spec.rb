@@ -233,6 +233,44 @@ describe 'nova' do
 
     end
 
+    describe 'with qpid rpc and no qpid_sasl_mechanisms' do
+      let :params do
+        {
+          :sql_connection       => 'mysql://user:password@host/database',
+          :qpid_password        => 'guest',
+          :rpc_backend          => 'nova.openstack.common.rpc.impl_qpid'
+        }
+      end
+
+      it { should contain_nova_config('DEFAULT/qpid_sasl_mechanisms').with_ensure('absent') }
+    end
+
+    describe 'with qpid rpc and qpid_sasl_mechanisms string' do
+      let :params do
+        {
+          :sql_connection       => 'mysql://user:password@host/database',
+          :qpid_password        => 'guest',
+          :qpid_sasl_mechanisms => 'A',
+          'rpc_backend'         => 'nova.openstack.common.rpc.impl_qpid',
+        }
+      end
+
+      it { should contain_nova_config('DEFAULT/qpid_sasl_mechanisms').with_value('A') }
+    end
+
+    describe 'with qpid rpc and qpid_sasl_mechanisms array' do
+      let :params do
+        {
+          :sql_connection       => 'mysql://user:password@host/database',
+          :qpid_password        => 'guest',
+          :qpid_sasl_mechanisms => [ 'DIGEST-MD5', 'GSSAPI', 'PLAIN' ],
+          'rpc_backend'         => 'nova.openstack.common.rpc.impl_qpid',
+        }
+      end
+
+      it { should contain_nova_config('DEFAULT/qpid_sasl_mechanisms').with_value('DIGEST-MD5 GSSAPI PLAIN') }
+    end
+
     describe "When platform is RedHat" do
       let :facts do
         {:osfamily => 'RedHat'}
