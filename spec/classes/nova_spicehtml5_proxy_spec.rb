@@ -7,62 +7,77 @@ describe 'nova::spicehtml5proxy' do
   end
 
   let :params do
-    {:enabled => true}
+    { :enabled => true }
   end
 
-  describe 'on debian platforms' do
-    let :facts do
-      { :osfamily => 'Debian' }
+  shared_examples 'nova-spicehtml5proxy' do
+
+    it 'configures nova.conf' do
+      should contain_nova_config('DEFAULT/spicehtml5proxy_host').with(:value => '0.0.0.0')
+      should contain_nova_config('DEFAULT/spicehtml5proxy_port').with(:value => '6082')
     end
 
-    it { should contain_nova_config('DEFAULT/spicehtml5proxy_host').with(:value => '0.0.0.0') }
-    it { should contain_nova_config('DEFAULT/spicehtml5proxy_port').with(:value => '6082') }
-
     it { should contain_package('nova-spicehtml5proxy').with(
-      :name   => 'nova-spicehtml5proxy',
+      :name   => platform_params[:spicehtml5proxy_package_name],
       :ensure => 'present'
     ) }
+
     it { should contain_service('nova-spicehtml5proxy').with(
-      :name   => 'nova-spicehtml5proxy',
+      :name      => platform_params[:spicehtml5proxy_service_name],
       :hasstatus => 'true',
-      :ensure => 'running'
+      :ensure    => 'running'
     )}
 
-    describe 'with package version' do
+    context 'with package version' do
       let :params do
-        {:ensure_package => '2012.1-2'}
+        { :ensure_package => '2012.1-2' }
       end
+
       it { should contain_package('nova-spicehtml5proxy').with(
-        'ensure' => '2012.1-2'
+        :ensure => params[:ensure_package]
       )}
     end
-
   end
 
-  describe 'on debian system' do
+  context 'on Ubuntu system' do
     let :facts do
-      { :osfamily => 'Debian',
-        :operatingsystem => 'Debian',
-      }
+      { :osfamily        => 'Debian',
+        :operatingsystem => 'Ubuntu' }
     end
-    it { should contain_package('nova-spicehtml5proxy').with(
-        :name => 'nova-consoleproxy'
-    )}
+
+    let :platform_params do
+      { :spicehtml5proxy_package_name => 'nova-spiceproxy',
+        :spicehtml5proxy_service_name => 'nova-spicehtml5proxy' }
+    end
+
+    it_configures 'nova-spicehtml5proxy'
   end
 
-  describe 'on Redhatish platforms' do
-
+  context 'on Debian system' do
     let :facts do
-      { :osfamily => 'Redhat' }
+      { :osfamily        => 'Debian',
+        :operatingsystem => 'Debian' }
     end
-    it { should contain_service('nova-spicehtml5proxy').with(
-      :name   => 'openstack-nova-spicehtml5proxy',
-      :hasstatus => 'true',
-      :ensure => 'running'
-    )}
-    it { should contain_package('nova-spicehtml5proxy').with(
-        :name => 'openstack-nova-console'
-    )}
+
+    let :platform_params do
+      { :spicehtml5proxy_package_name => 'nova-consoleproxy',
+        :spicehtml5proxy_service_name => 'nova-spicehtml5proxy' }
+    end
+
+    it_configures 'nova-spicehtml5proxy'
+  end
+
+  context 'on Redhat platforms' do
+    let :facts do
+      { :osfamily => 'RedHat' }
+    end
+
+    let :platform_params do
+      { :spicehtml5proxy_package_name => 'openstack-nova-console',
+        :spicehtml5proxy_service_name => 'openstack-nova-spicehtml5proxy' }
+    end
+
+    it_configures 'nova-spicehtml5proxy'
   end
 
 end
