@@ -5,6 +5,5 @@ class nova::compute::neutron (
 
   nova_config {
     'DEFAULT/libvirt_vif_driver':             value => $libvirt_vif_driver;
-    'DEFAULT/libvirt_use_virtio_for_bridges': value => true;
   }
 }
