@@ -1,5 +1,16 @@
+# == Class: nova::cert
 #
-# installs nova cert package and service
+# Installs nova cert package and service
+#
+# === Parameters:
+#
+# [*enabled*]
+#   (optional) Whether or not to enable the nova cert service
+#   Defaults to false
+#
+# [*ensure_package*]
+#   (optional) The state to set for the nova-cert package
+#   Defaults to 'present'
 #
 class nova::cert(
   $enabled        = false,
