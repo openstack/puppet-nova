@@ -1,36 +1,144 @@
+# == Class: nova
+#
 # This class is used to specify configuration parameters that are common
 # across all nova services.
 #
-# ==Parameters
+# === Parameters:
 #
-# [database_connection] Connection url to connect to nova database.
-# [database_idle_timeout] Timeout before idle db connections are reaped.
-# [image_service] Service used to search for and retrieve images. Optional.
+# [*ensure_package*]
+#   (optional) The state of nova packages
+#   Defaults to 'present'
+#
+# [*nova_cluster_id*]
+#   (optional) Deprecated. This parameter does nothing and will be removed.
+#   Defaults to 'localcluster'
+#
+# [*sql_connection*]
+#   (optional) Deprecated. Use database_connection instead.
+#   Defaults to false
+#
+# [*sql_idle_timeout*]
+#   (optional) Deprecated. Use database_idle_timeout instead
+#   Defaults to false
+#
+# [*database_connection*]
+#   (optional) Connection url to connect to nova database.
+#   Defaults to false
+#
+# [*database_idle_timeout*]
+#   (optional) Timeout before idle db connections are reaped.
+#   Defaults to 3600
+#
+# [*rpc_backend*]
+#   (optional) The rpc backend implementation to use, can be:
+#     nova.openstack.common.rpc.impl_kombu (for rabbitmq)
+#     nova.openstack.common.rpc.impl_qpid  (for qpid)
+#   Defaults to 'nova.openstack.common.rpc.impl_kombu'
+#
+# [*image_service*]
+#   (optional) Service used to search for and retrieve images.
 #   Defaults to 'nova.image.local.LocalImageService'
-# [glance_api_servers] List of addresses for api servers. Optional.
-#   Defaults to localhost:9292.
-# [memcached_servers] Use memcached instead of in-process cache. Supply a list of memcached server IP's:Memcached Port. Optional. Defaults to false.
-# [rabbit_host] Location of rabbitmq installation. Optional. Defaults to localhost.
-# [rabbit_port] Port for rabbitmq instance. Optional. Defaults to 5672.
-# [rabbit_hosts] Location of rabbitmq installation. Optional. Defaults to undef.
-# [rabbit_password] Password used to connect to rabbitmq. Optional. Defaults to guest.
-# [rabbit_userid] User used to connect to rabbitmq. Optional. Defaults to guest.
-# [rabbit_virtual_host] The RabbitMQ virtual host. Optional. Defaults to /.
-# [auth_strategy]
-# [service_down_time] maximum time since last check-in for up service. Optional.
-#  Defaults to 60
-# [logdir] Directory where logs should be stored. Optional. Defaults to '/var/log/nova'.
-# [state_path] Directory for storing state. Optional. Defaults to '/var/lib/nova'.
-# [lock_path] Directory for lock files. Optional. Distro specific default.
-# [verbose] Rather to print more verbose output. Optional. Defaults to false.
-# [periodic_interval] Seconds between running periodic tasks. Optional.
-#   Defaults to '60'.
-# [report_interval] Interval at which nodes report to data store. Optional.
-#    Defaults to '10'.
-# [root_helper] Command used for roothelper. Optional. Distro specific.
-# [monitoring_notifications] A boolean specifying whether or not to send system usage data notifications out on the message queue. Optional, false by default. Only valid for stable/essex.
-# [use_syslog] Use syslog for logging. Optional. Defaults to false.
-# [log_facility] Syslog facility to receive log lines. Optional. Defaults to LOG_USER.
+#
+# [*glance_api_servers*]
+#   (optional) List of addresses for api servers.
+#   Defaults to 'localhost:9292'
+#
+# [*memcached_servers*]
+#   (optional) Use memcached instead of in-process cache. Supply a list of memcached server IP's:Memcached Port.
+#   Defaults to false
+#
+# [*rabbit_host*]
+#   (optional) Location of rabbitmq installation.
+#   Defaults to 'localhost'
+#
+# [*rabbit_hosts*]
+#   (optional) List of clustered rabbit servers.
+#   Defaults to false
+#
+# [*rabbit_port*]
+#   (optional) Port for rabbitmq instance.
+#   Defaults to '5672'
+#
+# [*rabbit_password*]
+#   (optional) Password used to connect to rabbitmq.
+#   Defaults to 'guest'
+#
+# [*rabbit_userid*]
+#   (optional) User used to connect to rabbitmq.
+#   Defaults to 'guest'
+#
+# [*rabbit_virtual_host*]
+#   (optional) The RabbitMQ virtual host.
+#   Defaults to '/'
+#
+# [*qpid_hostname*]
+#   (optional) Location of qpid server
+#   Defaults to 'localhost'
+#
+# [*qpid_port*]
+#   (optional) Port for qpid server
+#   Defaults to '5672'
+#
+# [*qpid_username*]
+#   (optional) Username to use when connecting to qpid
+#   Defaults to 'guest'
+#
+# [*qpid_password*]
+#   (optional) Password to use when connecting to qpid
+#   Defaults to 'guest'
+#
+# [*qpid_heartbeat*]
+#   (optional) Seconds between connection keepalive heartbeats
+#   Defaults to 60
+#
+# [*qpid_protocol*]
+#   (optional) Transport to use, either 'tcp' or 'ssl''
+#   Defaults to 'tcp'
+#
+# [*qpid_tcp_nodelay*]
+#   (optional) Disable Nagle algorithm
+#   Defaults to true
+#
+# [*service_down_time*]
+#   (optional) Maximum time since last check-in for up service.
+#   Defaults to 60
+#
+# [*logdir*]
+#   (optional) Directory where logs should be stored.
+#   Defaults to '/var/log/nova'
+#
+# [*state_path*]
+#   (optional) Directory for storing state.
+#   Defaults to '/var/lib/nova'
+#
+# [*lock_path*]
+#   (optional) Directory for lock files.
+#   On RHEL will be '/var/lib/nova/tmp' and on Debian '/var/lock/nova'
+#   Defaults to $::nova::params::lock_path
+#
+# [*verbose*]
+#   (optional) Set log output to verbose output.
+#   Defaults to false
+#
+# [*periodic_interval*]
+#   (optional) Seconds between running periodic tasks.
+#   Defaults to '60'
+#
+# [*report_interval*]
+#   (optional) Interval at which nodes report to data store.
+#    Defaults to '10'
+#
+# [*monitoring_notifications*]
+#   (optional) Whether or not to send system usage data notifications out on the message queue. Only valid for stable/essex.
+#   Defaults to false
+#
+# [*use_syslog*]
+#   (optional) Use syslog for logging
+#   Defaults to false
+#
+# [*log_facility*]
+#   (optional) Syslog facility to receive log lines.
+#   Defaults to 'LOG_USER'
 #
 class nova(
   $ensure_package = 'present',
