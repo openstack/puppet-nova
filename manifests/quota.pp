@@ -1,4 +1,73 @@
-# class for overriding the default quota settings.
+# == Class: nova::quota
+#
+# Class for overriding the default quota settings.
+#
+# === Parameters:
+#
+# [*quota_instances*]
+#   (optional) Number of instances
+#   Defaults to 10
+#
+# [*quota_cores*]
+#   (optional) Number of cores
+#   Defaults to 20
+#
+# [*quota_ram*]
+#   (optional) Ram in MB
+#   Defaults to 51200
+#
+# [*quota_volumes*]
+#   (optional) Number of volumes
+#   Defaults to 10
+#
+# [*quota_gigabytes*]
+#   (optional) Amount of ephemeral disk storage in GB
+#   Defaults to 1000
+#
+# [*quota_floating_ips*]
+#   (optional) Number of floating IPs
+#   Defaults to 10
+#
+# [*quota_metadata_items*]
+#   (optional) Number of metadata items per instance
+#   Defaults to 128
+#
+# [*quota_max_injected_files*]
+#   (optional) Number of files that can be injected per instance
+#   Defaults to 5
+#
+# [*quota_max_injected_file_content_bytes*]
+#   (optional) Maximum size in bytes of injected files
+#   Defaults to 10240
+#
+# [*quota_max_injected_file_path_bytes*]
+#   (optional) Maximum size in bytes of injected file path
+#   Defaults to 255
+#
+# [*quota_security_groups*]
+#   (optional) Number of security groups
+#   Defaults to 10
+#
+# [*quota_security_group_rules*]
+#   (optional) Number of security group rules
+#   Defaults to 20
+#
+# [*quota_key_pairs*]
+#   (optional) Number of key pairs
+#   Defaults to 10
+#
+# [*reservation_expire*]
+#   (optional) Time until reservations expire in seconds
+#   Defaults to 86400
+#
+# [*max_age*]
+#   (optional) Number of seconds between subsequent usage refreshes
+#   Defaults to 0
+#
+# [*quota_driver*]
+#   (optional) Driver to use for quota checks
+#   Defaults to 'nova.quota.DbQuotaDriver'
+#
 class nova::quota(
   $quota_instances = 10,
   $quota_cores = 20,

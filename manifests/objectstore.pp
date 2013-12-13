@@ -1,3 +1,16 @@
+# == Class: nova::objectstore
+#
+# Manages the nova-objectstore service
+#
+# === Parameters:
+#
+# [*enabled*]
+#   (optional) Whether to enable the service
+#   Defaults to false
+#
+# [*ensure_package*]
+#   (optional) The package state to set
+#   Defaults to 'present'
 #
 class nova::objectstore(
   $enabled        = false,
