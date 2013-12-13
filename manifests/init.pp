@@ -57,12 +57,6 @@ class nova(
   $qpid_port = '5672',
   $qpid_username = 'guest',
   $qpid_password = 'guest',
-  $qpid_reconnect = true,
-  $qpid_reconnect_timeout = 0,
-  $qpid_reconnect_limit = 0,
-  $qpid_reconnect_interval_min = 0,
-  $qpid_reconnect_interval_max = 0,
-  $qpid_reconnect_interval = 0,
   $qpid_heartbeat = 60,
   $qpid_protocol = 'tcp',
   $qpid_tcp_nodelay = true,
@@ -223,12 +217,6 @@ class nova(
       'DEFAULT/qpid_port':                   value => $qpid_port;
       'DEFAULT/qpid_username':               value => $qpid_username;
       'DEFAULT/qpid_password':               value => $qpid_password, secret => true;
-      'DEFAULT/qpid_reconnect':              value => $qpid_reconnect;
-      'DEFAULT/qpid_reconnect_timeout':      value => $qpid_reconnect_timeout;
-      'DEFAULT/qpid_reconnect_limit':        value => $qpid_reconnect_limit;
-      'DEFAULT/qpid_reconnect_interval_min': value => $qpid_reconnect_interval_min;
-      'DEFAULT/qpid_reconnect_interval_max': value => $qpid_reconnect_interval_max;
-      'DEFAULT/qpid_reconnect_interval':     value => $qpid_reconnect_interval;
       'DEFAULT/qpid_heartbeat':              value => $qpid_heartbeat;
       'DEFAULT/qpid_protocol':               value => $qpid_protocol;
       'DEFAULT/qpid_tcp_nodelay':            value => $qpid_tcp_nodelay;
