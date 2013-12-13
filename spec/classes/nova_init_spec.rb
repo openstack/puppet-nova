@@ -220,12 +220,6 @@ describe 'nova' do
       it { should contain_nova_config('DEFAULT/qpid_port').with_value('5672') }
       it { should contain_nova_config('DEFAULT/qpid_username').with_value('guest') }
       it { should contain_nova_config('DEFAULT/qpid_password').with_value('guest').with_secret(true) }
-      it { should contain_nova_config('DEFAULT/qpid_reconnect').with_value(true) }
-      it { should contain_nova_config('DEFAULT/qpid_reconnect_timeout').with_value('0') }
-      it { should contain_nova_config('DEFAULT/qpid_reconnect_limit').with_value('0') }
-      it { should contain_nova_config('DEFAULT/qpid_reconnect_interval_min').with_value('0') }
-      it { should contain_nova_config('DEFAULT/qpid_reconnect_interval_max').with_value('0') }
-      it { should contain_nova_config('DEFAULT/qpid_reconnect_interval').with_value('0') }
       it { should contain_nova_config('DEFAULT/qpid_heartbeat').with_value('60') }
       it { should contain_nova_config('DEFAULT/qpid_protocol').with_value('tcp') }
       it { should contain_nova_config('DEFAULT/qpid_tcp_nodelay').with_value(true) }
