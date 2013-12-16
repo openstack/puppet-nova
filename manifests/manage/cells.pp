@@ -23,41 +23,42 @@
 #
 # == Parameters
 #  [*cell_type*]
-#    Whether the cell is a 'parent' or 'child'
-#    Optional. Default to 'parent'
+#    (optional) Whether the cell is a 'parent' or 'child'
+#    Defaults to 'parent'
 #
 #  [*cell_parent_name*]
-#    If a child cell, this is the name of the 'parent' cell.
+#    (optional) If a child cell, this is the name of the 'parent' cell.
 #    If a parent cell, should be left to undef.
+#    Defaults to undef
 #
 #  [*rabbit_username*]
-#    Username for the message broker in this cell
-#    Optional. Default to 'guest'
+#    (optional) Username for the message broker in this cell
+#    Defaults to 'guest'
 #
 #  [*rabbit_password*]
-#    Password for the message broker in this cell
-#    Optional. Default to 'guest'
+#    (optional) Password for the message broker in this cell
+#    Defaults to 'guest'
 #
 #  [*rabbit_hosts*]
-#    Address of the message broker in this cell
-#    Optional. Default to 'localhost'
+#    (optional) Address of the message broker in this cell
+#    Defaults to 'localhost'
 #
 #  [*rabbit_port*]
-#    Port number of the message broker in this cell
-#    Optional. Default to '5672'
+#    (optional) Port number of the message broker in this cell
+#    Defaults to '5672'
 #
 #  [*rabbit_virtual_host*]
-#    The virtual host of the message broker in this cell
-#    Optional. Default to '/'
+#    (optional) The virtual host of the message broker in this cell
+#    Defaults to '/'
 #
 #  [*weight_offset*]
-#    It might be used by some cell scheduling code in the future
-#    Optional. Default to '1.0'
+#    (optional) It might be used by some cell scheduling code in the future
+#    Defaults to '1.0'
 #
 #  [*weight_scale*]
-#    It might be used by some cell scheduling code in the future
-#    Optional. Default to '1.0'
-
+#    (optional) It might be used by some cell scheduling code in the future
+#    Defaults to '1.0'
+#
 define nova::manage::cells (
   $cell_type           = 'parent',
   $cell_parent_name    = undef,

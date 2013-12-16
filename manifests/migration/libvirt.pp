@@ -1,3 +1,6 @@
+# == Class: nova::migration::libvirt
+#
+# Sets libvirt config that is required for migration
 #
 class nova::migration::libvirt {
 

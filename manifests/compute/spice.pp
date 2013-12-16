@@ -6,7 +6,7 @@
 #
 # [*agent_enabled*]
 #   (optional) enable spice guest agent support
-#   true/false
+#   Defaults to true
 #
 # [*server_listen*]
 #   (optional)  IP address on which instance spice servers should listen
@@ -15,11 +15,11 @@
 # [*server_proxyclient_address*]
 #   (optional) Management IP Address on which instance spiceservers will
 #   listen on the compute host.
-#   Defaults to 127.0.0.1
+#   Defaults to '127.0.0.1'
 #
 # [*keymap*]
 #   (optional) keymap for spice
-#   Defaults to en-us
+#   Defaults to 'en-us'
 #
 # [*proxy_host*]
 #   (optional) Host for the html5 console proxy
@@ -27,15 +27,15 @@
 #
 # [*proxy_port*]
 #   (optional) Port for the html5 console proxy
-#   Defaults to 6082
+#   Defaults to '6082'
 #
 # [*proxy_protocol*]
 #   (optional) Protocol for the html5 console proxy
-#   Defaults to http
+#   Defaults to 'http'
 #
 # [*proxy_path*]
 #   (optional) Path of the spice html file for the html5 console proxy
-#   Defaults to /spice_auto.html
+#   Defaults to '/spice_auto.html'
 #
 class nova::compute::spice(
   $agent_enabled                    = true,

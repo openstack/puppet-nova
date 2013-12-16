@@ -1,9 +1,23 @@
+# === Parameters:
 #
-# ==Parameters
-# [network] ipv4 CIDR of network to create. Required.
-# [num_networks] Number of networks to split $network into. Optional
-#   Defaults to 1.
-# [project] Project that network should be associated with.
+# [*network*]
+#   (required) IPv4 CIDR of network to create.
+#
+# [*num_networks*]
+#   (optional) Number of networks to split $network into.
+#   Defaults to 1
+#
+# [*network_size*]
+#   (optional) Size of the network to create
+#   Defaults to 255
+#
+# [*vlan_start*]
+#   (optional) The vlan number to use if in vlan mode
+#   Defaults to undef
+#
+# [*project*]
+#   (optional) Project that network should be associated with
+#   Defaults to undef
 #
 define nova::manage::network (
   $network,

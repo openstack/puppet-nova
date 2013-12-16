@@ -4,37 +4,57 @@
 #
 # === Parameters:
 #
-# ==== Options defined in nova.scheduler.driver
-# scheduler_host_manager: The scheduler host manager class to use
-# scheduler_max_attempts: Maximum number of attempts to schedule an instance
-
-# ==== Options defined in nova.scheduler.filter_scheduler
-# scheduler_host_subset_size: defines the subset size that a host is chosen from
-
-# ==== Options defined in nova.scheduler.filters.core_filter
-# cpu_allocation_ratio:   Virtual CPU to Physical CPU allocation ratio (float)
-
-# ==== Options defined in nova.scheduler.filters.disk_filter
-# disk_allocation_ratio:  Virtual disk to physical disk allocation ratio (float)
-
-# ==== Options defined in nova.scheduler.filters.io_ops_filter
-# max_io_ops_per_host:    Ignore hosts that have too many builds/resizes
-#                         /snaps/migrations (Int)
-
-# ==== Options defined in nova.scheduler.filters.isolated_hosts_filter
-# isolated_images: Images to run on isolated host (list value)
-# isolated_hosts:  Host reserved for specific images (list value)
-
-# ==== Options defined in nova.scheduler.filters.num_instances_filter
-# max_instances_per_host: Ignore hosts that have too many instances (Int)
-
-# ==== Options defined in nova.scheduler.filters.ram_filter
-# ram_allocation_ratio:   Virtual ram to physical ram allocation ratio (Int)
-
-# ==== Options defined in nova.scheduler.host_manager
-# scheduler_available_filters
-# scheduler_default_filters
-# scheduler_weight_classes
+# [*scheduler_host_manager*]
+#   (optional) The scheduler host manager class to use
+#   Defaults to 'nova.scheduler.host_manager.HostManager'
+#
+# [*scheduler_max_attempts*]
+#   (optional) Maximum number of attempts to schedule an instance
+#   Defaults to '3'
+#
+# [*scheduler_host_subset_size*]
+#   (optional) defines the subset size that a host is chosen from
+#   Defaults to '1'
+#
+# [*cpu_allocation_ratio*]
+#   (optional) Virtual CPU to Physical CPU allocation ratio
+#   Defaults to '16.0'
+#
+# [*disk_allocation_ratio*]
+#   (optional) Virtual disk to physical disk allocation ratio
+#   Defaults to '1.0'
+#
+# [*max_io_ops_per_host*]
+#   (optional) Ignore hosts that have too many builds/resizes/snaps/migrations
+#   Defaults to '8'
+#
+# [*isolated_images*]
+#   (optional) Images to run on isolated host
+#   Defaults to false
+#
+# [*isolated_hosts*]
+#   (optional) Host reserved for specific images
+#   Defaults to false
+#
+# [*max_instances_per_host*]
+#   (optional) Ignore hosts that have too many instances
+#   Defaults to '50'
+#
+# [*ram_allocation_ratio:*]
+#   (optional) Virtual ram to physical ram allocation ratio
+#   Defaults to '1.5'
+#
+# [*scheduler_available_filters*]
+#   (optional) Filter classes available to the scheduler
+#   Defaults to 'nova.scheduler.filters.all_filters'
+#
+# [*scheduler_default_filters*]
+#   (optional) A comma separated list of filters to be used by default
+#   Defaults to false
+#
+# [*scheduler_weight_classes*]
+#   (optional) Which weight class names to use for weighing hosts
+#   Defaults to 'nova.scheduler.weights.all_weighers'
 #
 class nova::scheduler::filter (
   $scheduler_host_manager       = 'nova.scheduler.host_manager.HostManager',

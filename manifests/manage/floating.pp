@@ -1,4 +1,4 @@
-#
+# Creates floating networks
 define nova::manage::floating ( $network ) {
 
   File['/etc/nova/nova.conf'] -> Nova_floating[$name]
