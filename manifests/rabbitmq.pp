@@ -1,12 +1,33 @@
+# == Class: nova::rabbitmq
 #
-# class for installing rabbitmq server for nova
+# Installs and manages rabbitmq server for nova
 #
+# == Parameters:
 #
-# ==Parameters
+# [*userid*]
+#   (optional) The username to use when connecting to Rabbit
+#   Defaults to 'guest'
 #
-# [cluster_disk_nodes] Enables/disables RabbitMQ clustering.  Specify an array of Rabbit Broker
-#   IP addresses to configure clustering. Optional.
-#   Defaults to false.
+# [*password*]
+#   (optional) The password to use when connecting to Rabbit
+#   Defaults to 'guest'
+#
+# [*port*]
+#   (optional) The port to use when connecting to Rabbit
+#   Defaults to '5672'
+#
+# [*virtual_host*]
+#   (optional) The virtual host to use when connecting to Rabbit
+#   Defaults to '/'
+#
+# [*cluster_disk_nodes*]
+#   (optional) Enables/disables RabbitMQ clustering.  Specify an array of Rabbit Broker
+#   IP addresses to configure clustering.
+#   Defaults to false
+#
+# [*enabled*]
+#   (optional) Whether to enable the Rabbit service
+#   Defaults to false
 #
 class nova::rabbitmq(
   $userid             ='guest',

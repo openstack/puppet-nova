@@ -1,5 +1,16 @@
+# == Class: nova::schedule
 #
-# install nova scheduler
+# Install and manage nova scheduler
+#
+# === Parameters:
+#
+# [*enabled*]
+#   (optional) Whether to run the scheduler service
+#   Defaults to false
+#
+# [*ensure_package*]
+#   (optional) The state of the scheduler package
+#   Defaults to 'present'
 #
 class nova::scheduler(
   $enabled        = false,

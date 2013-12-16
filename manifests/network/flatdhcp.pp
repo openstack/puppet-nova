@@ -1,3 +1,43 @@
+# == Class: nova::network::flatdhcp
+#
+# Configures nova-network with flat dhcp option
+#
+# === Parameters:
+#
+# [*fixed_range*]
+#   (required) The IPv4 CIDR for the flat network
+#
+# [*flat_interface*]
+#   (optional) FlatDHCP will bridge into this interface
+#   Defaults to undef
+#
+# [*public_interface*]
+#   (optional)
+#   Defaults to undef
+#
+# [*flat_network_bridge*]
+#   (optional) Bridge for simple network instances (
+#   Defaults to 'br100'
+#
+# [*force_dhcp_release*]
+#   (optional) Send a dhcp release on instance termination
+#   Defaults to true
+#
+# [*flat_injected*]
+#   (optional) Whether to attempt to inject network setup into guest
+#   Defaults to false
+#
+# [*dhcp_domain*]
+#   (optional) domain to use for building the hostnames
+#   Defaults to 'novalocal'
+#
+# [*dhcpbridge*]
+#   (optional) 'location of nova-dhcpbridge'
+#   Defaults to '/usr/bin/nova-dhcpbridge'
+#
+# [*dhcpbridge_flagfile*]
+#   (optional) location of flagfiles for dhcpbridge
+#   Defaults to '/etc/nova/nova.conf
 #
 class nova::network::flatdhcp (
   $fixed_range,

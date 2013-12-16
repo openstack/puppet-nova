@@ -1,5 +1,24 @@
+# == Class: nova:vncproxy
 #
-# configures nova vnc proxy
+# Configures nova vnc proxy
+#
+# === Parameters:
+#
+# [*enabled*]
+#   (optional) Whether to run the vncproxy service
+#   Defaults to false
+#
+# [*host*]
+#   (optional) Host on which to listen for incoming requests
+#   Defaults to '0.0.0.0'
+#
+# [*port*]
+#   (optional) Port on which to listen for incoming requests
+#   Defaults to '6080'
+#
+# [*ensure_package*]
+#   (optional) The state of the nova-novncproxy package
+#   Defaults to 'present'
 #
 class nova::vncproxy(
   $enabled        = false,

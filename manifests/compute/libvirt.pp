@@ -1,3 +1,21 @@
+# == Class: nova::compute::libvirt
+#
+# Install and manage nova-compute guests managed
+# by libvirt
+#
+# === Parameters:
+#
+# [*libvirt_type*]
+#   (optional) Libvirt domain type. Options are: kvm, lxc, qemu, uml, xen
+#   Defaults to 'kvm'
+#
+# [*vncserver_listen*]
+#   (optional) IP address on which instance vncservers should listen
+#   Defaults to '127.0.0.1'
+#
+# [*migration_support*]
+#   (optional) Whether to support virtual machine migration
+#   Defaults to false
 #
 class nova::compute::libvirt (
   $libvirt_type      = 'kvm',
