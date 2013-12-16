@@ -1,5 +1,16 @@
+# == Class: nova::conductor
 #
-# installs nova conductor package and service
+# Manages nova conductor package and service
+#
+# === Parameters:
+#
+# [*enabled*]
+#   (optional) Whether to enable the nova-conductor service
+#   Defaults to false
+#
+# [*ensure_package*]
+#   (optional) The state of the nova conductor package
+#   Defaults to 'present'
 #
 class nova::conductor(
   $enabled        = false,
