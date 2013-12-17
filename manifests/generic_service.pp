@@ -1,11 +1,11 @@
+# == Define: nova::generic_service
 #
-# This class implements basic nova services.
+# This defined type implements basic nova services.
 # It is introduced to attempt to consolidate
 # common code.
 #
 # It also allows users to specify ad-hoc services
 # as needed
-#
 #
 # This define creates a service resource with title nova-${name} and
 # conditionally creates a package resource with title nova-${name}

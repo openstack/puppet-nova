@@ -1,4 +1,6 @@
-# these parameters need to be accessed from several locations and
+# == Class: nova::params
+#
+# These parameters need to be accessed from several locations and
 # should be considered to be constant
 class nova::params {
 
