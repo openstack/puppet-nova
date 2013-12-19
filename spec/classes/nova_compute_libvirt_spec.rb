@@ -12,7 +12,7 @@ describe 'nova::compute::libvirt' do
 
     describe 'with default parameters' do
 
-      it { should include_class('nova::params')}
+      it { should contain_class('nova::params')}
 
       it { should contain_package('nova-compute-kvm').with(
         :ensure => 'present',
@@ -57,7 +57,7 @@ describe 'nova::compute::libvirt' do
             :migration_support => true }
         end
 
-        it { should include_class('nova::migration::libvirt')}
+        it { should contain_class('nova::migration::libvirt')}
         it { should contain_nova_config('DEFAULT/vncserver_listen').with_value('0.0.0.0')}
       end
 
@@ -81,7 +81,7 @@ describe 'nova::compute::libvirt' do
 
     describe 'with default parameters' do
 
-      it { should include_class('nova::params')}
+      it { should contain_class('nova::params')}
 
       it { should contain_package('libvirt').with(
         :name   => 'libvirt',
@@ -127,7 +127,7 @@ describe 'nova::compute::libvirt' do
             :migration_support => true }
         end
 
-        it { should include_class('nova::migration::libvirt')}
+        it { should contain_class('nova::migration::libvirt')}
         it { should contain_nova_config('DEFAULT/vncserver_listen').with_value('0.0.0.0')}
       end
 
@@ -147,7 +147,7 @@ describe 'nova::compute::libvirt' do
         { :operatingsystem => 'Fedora', :osfamily => 'RedHat' }
       end
 
-      it { should include_class('nova::params')}
+      it { should contain_class('nova::params')}
 
       it { should contain_package('libvirt').with(
         :name   => 'libvirt',

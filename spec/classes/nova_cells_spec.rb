@@ -55,7 +55,7 @@ describe 'nova::cells' do
 
   shared_examples_for 'nova-cells' do
 
-    it { should include_class('nova::params') }
+    it { should contain_class('nova::params') }
 
     it 'installs nova-cells package' do
       should contain_package('nova-cells').with(
