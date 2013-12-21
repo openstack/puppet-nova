@@ -26,6 +26,8 @@ describe 'nova::compute' do
         'http://127.0.0.1:6080/vnc_auto.html'
       ) }
 
+      it { should contain_nova_config('DEFAULT/network_device_mtu').with('ensure' => 'absent') }
+
       it { should contain_service('nova-compute').with(
         'name'      => 'nova-compute',
         'ensure'    => 'stopped',
@@ -77,6 +79,15 @@ describe 'nova::compute' do
         end
 
         it { should contain_nova_config('DEFAULT/force_config_drive').with_value('true') }
+
+      end
+      describe 'with network_device_mtu specified' do
+
+        let :params do
+          {:network_device_mtu => 9999}
+        end
+
+        it { should contain_nova_config('DEFAULT/network_device_mtu').with_value('9999') }
 
       end
       describe 'with package version' do
