@@ -91,7 +91,7 @@ class nova::params {
         }
         default: {
           $spicehtml5proxy_package_name = 'nova-spiceproxy'
-          $vncproxy_package_name    = ['novnc', 'nova-novncproxy']
+          $vncproxy_package_name    = 'nova-novncproxy'
           $vncproxy_service_name    = 'nova-novncproxy'
           # some of the services need to be started form the special upstart provider
           $special_service_provider = 'upstart'
