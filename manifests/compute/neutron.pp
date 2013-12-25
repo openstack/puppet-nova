@@ -20,6 +20,6 @@ class nova::compute::neutron (
   }
 
   nova_config {
-    'DEFAULT/libvirt_vif_driver':             value => $libvirt_vif_driver;
+    'libvirt/vif_driver': value => $libvirt_vif_driver;
   }
 }

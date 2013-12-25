@@ -1,13 +1,13 @@
 require 'spec_helper'
 describe 'nova::compute::neutron' do
 
-  it { should contain_nova_config('DEFAULT/libvirt_vif_driver').with_value('nova.virt.libvirt.vif.LibvirtGenericVIFDriver')}
+  it { should contain_nova_config('libvirt/vif_driver').with_value('nova.virt.libvirt.vif.LibvirtGenericVIFDriver')}
 
   context 'when overriding params' do
     let :params do
       {:libvirt_vif_driver => 'foo' }
     end
-    it { should contain_nova_config('DEFAULT/libvirt_vif_driver').with_value('foo')}
+    it { should contain_nova_config('libvirt/vif_driver').with_value('foo')}
   end
 
   context 'when overriding with a removed libvirt_vif_driver param' do

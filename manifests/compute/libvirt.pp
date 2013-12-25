@@ -5,8 +5,9 @@
 #
 # === Parameters:
 #
-# [*libvirt_type*]
+# [*libvirt_virt_type*]
 #   (optional) Libvirt domain type. Options are: kvm, lxc, qemu, uml, xen
+#   Replaces libvirt_type
 #   Defaults to 'kvm'
 #
 # [*vncserver_listen*]
@@ -18,17 +19,26 @@
 #   Defaults to false
 #
 class nova::compute::libvirt (
-  $libvirt_type      = 'kvm',
+  $libvirt_virt_type = 'kvm',
   $vncserver_listen  = '127.0.0.1',
-  $migration_support = false
+  $migration_support = false,
+  # DEPRECATED PARAMETER
+  $libvirt_type      = false
 ) {
 
   include nova::params
 
   Service['libvirt'] -> Service['nova-compute']
 
+  if $libvirt_type {
+    warning ('The libvirt_type parameter is deprecated, use libvirt_virt_type instead.')
+    $libvirt_virt_type_real = $libvirt_type
+  } else {
+    $libvirt_virt_type_real = $libvirt_virt_type
+  }
+
   if($::osfamily == 'Debian') {
-    package { "nova-compute-${libvirt_type}":
+    package { "nova-compute-${libvirt_virt_type_real}":
       ensure => present,
       before => Package['nova-compute'],
     }
@@ -66,8 +76,7 @@ class nova::compute::libvirt (
 
   nova_config {
     'DEFAULT/compute_driver':   value => 'libvirt.LibvirtDriver';
-    'DEFAULT/libvirt_type':     value => $libvirt_type;
-    'DEFAULT/connection_type':  value => 'libvirt';
     'DEFAULT/vncserver_listen': value => $vncserver_listen;
+    'libvirt/virt_type':        value => $libvirt_virt_type_real;
   }
 }
