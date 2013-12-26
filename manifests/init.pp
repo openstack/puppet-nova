@@ -95,6 +95,10 @@
 #   (optional) Transport to use, either 'tcp' or 'ssl''
 #   Defaults to 'tcp'
 #
+# [*qpid_sasl_mechanisms*]
+#   (optional) Enable one or more SASL mechanisms
+#   Defaults to false
+#
 # [*qpid_tcp_nodelay*]
 #   (optional) Disable Nagle algorithm
 #   Defaults to true
@@ -165,6 +169,7 @@ class nova(
   $qpid_port = '5672',
   $qpid_username = 'guest',
   $qpid_password = 'guest',
+  $qpid_sasl_mechanisms = false,
   $qpid_heartbeat = 60,
   $qpid_protocol = 'tcp',
   $qpid_tcp_nodelay = true,
@@ -328,6 +333,21 @@ class nova(
       'DEFAULT/qpid_heartbeat':              value => $qpid_heartbeat;
       'DEFAULT/qpid_protocol':               value => $qpid_protocol;
       'DEFAULT/qpid_tcp_nodelay':            value => $qpid_tcp_nodelay;
+    }
+    if is_array($qpid_sasl_mechanisms) {
+      nova_config {
+        'DEFAULT/qpid_sasl_mechanisms': value => join($qpid_sasl_mechanisms, ' ');
+      }
+    }
+    elsif $qpid_sasl_mechanisms {
+      nova_config {
+        'DEFAULT/qpid_sasl_mechanisms': value => $qpid_sasl_mechanisms;
+      }
+    }
+    else {
+      nova_config {
+        'DEFAULT/qpid_sasl_mechanisms': ensure => absent;
+      }
     }
   }
 
