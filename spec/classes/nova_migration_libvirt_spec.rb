@@ -22,6 +22,13 @@ require 'spec_helper'
 
 describe 'nova::migration::libvirt' do
 
+
+  let :pre_condition do
+   'include nova
+    include nova::compute
+    include nova::compute::libvirt'
+  end
+
   shared_examples_for 'nova migration with libvirt' do
 
     it 'configure libvirtd.conf' do
