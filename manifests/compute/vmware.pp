@@ -30,7 +30,7 @@
 #   Defaults to 100.
 #
 # [*task_poll_interval*]
-#   (optional) The interval used for polling of remote tasks.
+#   (optional) The interval in seconds used for polling of remote tasks.
 #   Defaults to 5.0
 #
 # [*use_linked_clone*]

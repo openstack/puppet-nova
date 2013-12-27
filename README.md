@@ -70,7 +70,7 @@ nova is a combination of Puppet manifest and ruby code to delivery configuration
 Limitations
 -----------
 
-* Only supports libvirt, xenserver and vmware compute drivers.
+* Supports libvirt, xenserver and vmware compute drivers.
 * Tested on EL and Debian derivatives.
 
 Development
