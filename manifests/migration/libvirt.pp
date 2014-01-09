@@ -4,6 +4,8 @@
 #
 class nova::migration::libvirt {
 
+  Package['libvirt'] -> File_line<| path == '/etc/libvirt/libvirtd.conf' |>
+
   case $::osfamily {
     'RedHat': {
       file_line { '/etc/libvirt/libvirtd.conf listen_tls':
@@ -32,6 +34,8 @@ class nova::migration::libvirt {
         line  => 'LIBVIRTD_ARGS="--listen"',
         match => 'LIBVIRTD_ARGS=',
       }
+
+      Package['libvirt'] -> File_line<| path == '/etc/sysconfig/libvirtd' |>
     }
 
     'Debian': {
@@ -62,6 +66,7 @@ class nova::migration::libvirt {
         match => 'libvirtd_opts=',
       }
 
+      Package['libvirt'] -> File_line<| path == '/etc/default/libvirt-bin' |>
     }
 
     default:  {
