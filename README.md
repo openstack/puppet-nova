@@ -95,6 +95,7 @@ Release Notes
 * Adds support for live migrations with using the libvirt Nova driver.
 * Fixed bug to ensure keystone endpoint is set before service is started.
 * Fixed nova-spiceproxy support on Ubuntu.
+* Added support for VMWareVCDriver.
 
 **2.2.0**
 
