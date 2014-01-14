@@ -48,6 +48,9 @@
 #   (optional) Whether to use Neutron for networking of VMs
 #   Defaults to true
 #
+# [*network_device_mtu*]
+#   (optional) The MTU size for the interfaces managed by nova
+#   Defaults to undef
 #
 class nova::compute (
   $enabled                       = false,
@@ -60,7 +63,8 @@ class nova::compute (
   $vncproxy_path                 = '/vnc_auto.html',
   $force_config_drive            = false,
   $virtio_nic                    = false,
-  $neutron_enabled               = true
+  $neutron_enabled               = true,
+  $network_device_mtu            = undef
 ) {
 
   include nova::params
@@ -105,6 +109,16 @@ class nova::compute (
   if $virtio_nic {
     # Enable the virtio network card for instances
     nova_config { 'DEFAULT/libvirt_use_virtio_for_bridges': value => true }
+  }
+
+  if $network_device_mtu {
+    nova_config {
+      'DEFAULT/network_device_mtu':   value => $network_device_mtu;
+    }
+  } else {
+    nova_config {
+      'DEFAULT/network_device_mtu':   ensure => absent;
+    }
   }
 
   package { 'pm-utils':
