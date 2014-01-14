@@ -14,16 +14,11 @@ define nova::generic_service(
   $package_name,
   $service_name,
   $enabled        = false,
+  $manage_service = true,
   $ensure_package = 'present'
 ) {
 
   include nova::params
-
-  if $enabled {
-    $service_ensure = 'running'
-  } else {
-    $service_ensure = 'stopped'
-  }
 
   $nova_title = "nova-${name}"
   # ensure that the service is only started after
@@ -44,7 +39,15 @@ define nova::generic_service(
     }
   }
 
-  if ($service_name) {
+  if $service_name {
+    if $manage_service {
+      if $enabled {
+        $service_ensure = 'running'
+      } else {
+        $service_ensure = 'stopped'
+      }
+    }
+
     service { $nova_title:
       ensure    => $service_ensure,
       name      => $service_name,
@@ -53,5 +56,4 @@ define nova::generic_service(
       require   => [Package['nova-common'], Package[$nova_title]],
     }
   }
-
 }

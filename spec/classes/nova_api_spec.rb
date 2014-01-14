@@ -148,6 +148,17 @@ describe 'nova::api' do
           raise_error(Puppet::Error, /validate_re\(\): "#{auth_admin_prefix}" does not match/) }
       end
     end
+
+    context 'while not managing service state' do
+      before do
+        params.merge!({
+          :enabled           => false,
+          :manage_service    => false,
+        })
+      end
+
+      it { should contain_service('nova-api').without_ensure }
+    end
   end
 
   context 'on Debian platforms' do

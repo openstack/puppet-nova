@@ -33,6 +33,15 @@ describe 'nova::vncproxy' do
       :ensure    => 'running'
     )}
 
+    describe 'with manage_service as false' do
+      let :params do
+        { :enabled        => true,
+          :manage_service => false
+        }
+      end
+      it { should contain_service('nova-vncproxy').without_ensure }
+    end
+
     describe 'with package version' do
       let :params do
         {:ensure_package => '2012.1-2'}

@@ -101,6 +101,16 @@ describe 'nova::compute' do
 
       it { should contain_nova_config('DEFAULT/force_config_drive').with_value(true) }
     end
+
+    context 'while not managing service state' do
+      let :params do
+        { :enabled           => false,
+          :manage_service    => false,
+        }
+      end
+
+      it { should contain_service('nova-compute').without_ensure }
+    end
   end
 
 

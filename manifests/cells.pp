@@ -23,6 +23,10 @@
 #    Use Nova Cells or not
 #    Defaults to 'False'
 #
+# [*manage_service*]
+#   (optional) Whether to start/stop the service
+#   Defaults to true
+#
 #  [*create_cells*]
 #    Create cells with nova-manage
 #    Defaults to 'True'
@@ -144,6 +148,7 @@ class nova::cells (
   $ensure_package                = 'present',
   $instance_updated_at_threshold = '3600',
   $instance_update_num_instances = '1',
+  $manage_service                = true,
   $manager                       = 'nova.cells.manager.CellsManager',
   $max_hop_count                 = '10',
   $mute_child_interval           = '300',
@@ -202,6 +207,7 @@ class nova::cells (
 
   nova::generic_service { 'cells':
     enabled        => $enabled,
+    manage_service => $manage_service,
     package_name   => $::nova::params::cells_package_name,
     service_name   => $::nova::params::cells_service_name,
     ensure_package => $ensure_package,

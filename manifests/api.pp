@@ -11,6 +11,10 @@
 #   (optional) Whether the nova api service will be run
 #   Defaults to false
 #
+# [*manage_service*]
+#   (optional) Whether to start/stop the service
+#   Defaults to true
+#
 # [*ensure_package*]
 #   (optional) Whether the nova api package will be installed
 #   Defaults to 'present'
@@ -93,6 +97,7 @@
 class nova::api(
   $admin_password,
   $enabled           = false,
+  $manage_service    = true,
   $ensure_package    = 'present',
   $auth_strategy     = undef,
   $auth_host         = '127.0.0.1',
@@ -124,6 +129,7 @@ class nova::api(
   Package<| title == 'nova-common' |> -> Class['nova::api']
 
   Nova_paste_api_ini<| |> ~> Exec['post-nova_config']
+
   Nova_paste_api_ini<| |> ~> Service['nova-api']
 
   if $auth_strategy {
@@ -132,6 +138,7 @@ class nova::api(
 
   nova::generic_service { 'api':
     enabled        => $enabled,
+    manage_service => $manage_service,
     ensure_package => $ensure_package,
     package_name   => $::nova::params::api_package_name,
     service_name   => $::nova::params::api_service_name,

@@ -109,6 +109,19 @@ describe 'nova::cells' do
     it_configures 'nova-cells'
   end
 
+  shared_examples_for 'a parent cell with manage_service as false' do
+    let :params do
+      { :enabled   => true,
+        :manage_service => false,
+        :cell_type => 'parent',
+        :cell_name => 'mommy' }
+    end
+    let :expected_params do
+      default_params.merge(params)
+    end
+    it { should contain_service(platform_params[:cells_service_name]).without_ensure }
+  end
+
   shared_examples_for 'a child cell' do
     let :params do
       { :enabled   => true,
@@ -137,6 +150,7 @@ describe 'nova::cells' do
     end
 
     it_configures 'a parent cell'
+    it_configures 'a parent cell with manage_service as false'
     it_configures 'a child cell'
   end
 

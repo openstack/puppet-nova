@@ -8,6 +8,10 @@
 #   (optional) Whether to enable the nova-compute service
 #   Defaults to false
 #
+# [*manage_service*]
+#   (optional) Whether to start/stop the service
+#   Defaults to true
+#
 # [*ensure_package*]
 #   (optional) The state for the nova-compute package
 #   Defaults to 'present'
@@ -54,6 +58,7 @@
 #
 class nova::compute (
   $enabled                       = false,
+  $manage_service                = true,
   $ensure_package                = 'present',
   $vnc_enabled                   = true,
   $vncserver_proxyclient_address = '127.0.0.1',
@@ -94,6 +99,7 @@ class nova::compute (
 
   nova::generic_service { 'compute':
     enabled        => $enabled,
+    manage_service => $manage_service,
     package_name   => $::nova::params::compute_package_name,
     service_name   => $::nova::params::compute_service_name,
     ensure_package => $ensure_package,

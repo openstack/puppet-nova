@@ -12,6 +12,10 @@
 #   (optional) enable spicehtml5proxy service
 #   true/false
 #
+# [*manage_service*]
+#   (optional) Whether to start/stop the service
+#   Defaults to true
+#
 # [*host*]
 #   (optional) Listen address for the html5 console proxy
 #   Defaults to 0.0.0.0
@@ -26,6 +30,7 @@
 #
 class nova::spicehtml5proxy(
   $enabled        = false,
+  $manage_service = true,
   $host           = '0.0.0.0',
   $port           = '6082',
   $ensure_package = 'present'
@@ -40,6 +45,7 @@ class nova::spicehtml5proxy(
 
   nova::generic_service { 'spicehtml5proxy':
     enabled        => $enabled,
+    manage_service => $manage_service,
     package_name   => $::nova::params::spicehtml5proxy_package_name,
     service_name   => $::nova::params::spicehtml5proxy_service_name,
     ensure_package => $ensure_package,

@@ -28,6 +28,15 @@ describe 'nova::spicehtml5proxy' do
       :ensure    => 'running'
     )}
 
+    context 'with manage_service as false' do
+      let :params do
+        { :enabled        => true,
+          :manage_service => false
+        }
+      end
+      it { should contain_service('nova-spicehtml5proxy').without_ensure }
+    end
+
     context 'with package version' do
       let :params do
         { :ensure_package => '2012.1-2' }

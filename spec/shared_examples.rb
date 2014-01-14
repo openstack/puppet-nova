@@ -42,4 +42,15 @@ shared_examples 'generic nova service' do |service|
       })
     end
   end
+
+  context 'while not managing service state' do
+    let :params do
+      { :enabled        => false,
+        :manage_service => false }
+    end
+
+    it 'does not control service state' do
+      should contain_service(service[:name]).without_ensure
+    end
+  end
 end

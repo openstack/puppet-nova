@@ -8,6 +8,10 @@
 #   (optional) Whether to run the vncproxy service
 #   Defaults to false
 #
+# [*manage_service*]
+#   (optional) Whether to start/stop the service
+#   Defaults to true
+#
 # [*host*]
 #   (optional) Host on which to listen for incoming requests
 #   Defaults to '0.0.0.0'
@@ -22,6 +26,7 @@
 #
 class nova::vncproxy(
   $enabled        = false,
+  $manage_service = true,
   $host           = '0.0.0.0',
   $port           = '6080',
   $ensure_package = 'present'
@@ -46,6 +51,7 @@ class nova::vncproxy(
   }
   nova::generic_service { 'vncproxy':
     enabled        => $enabled,
+    manage_service => $manage_service,
     package_name   => $::nova::params::vncproxy_package_name,
     service_name   => $::nova::params::vncproxy_service_name,
     ensure_package => $ensure_package,
