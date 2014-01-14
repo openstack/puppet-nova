@@ -49,11 +49,11 @@ describe 'nova::vncproxy' do
         { :osfamily => 'Debian', :operatingsystem => 'Debian' }
       end
       it { should contain_package('nova-vncproxy').with(
-        :name   => "novnc",
+        :name   => "nova-consoleproxy",
         :ensure => 'present'
       )}
       it { should contain_service('nova-vncproxy').with(
-        :name      => 'novnc',
+        :name      => 'nova-novncproxy',
         :hasstatus => true,
         :ensure    => 'running'
       )}

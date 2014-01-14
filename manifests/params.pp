@@ -77,6 +77,7 @@ class nova::params {
       $objectstore_service_name     = 'nova-objectstore'
       $scheduler_service_name       = 'nova-scheduler'
       $spicehtml5proxy_service_name = 'nova-spicehtml5proxy'
+      $vncproxy_service_name        = 'nova-novncproxy'
       $tgt_service_name             = 'tgt'
       # debian specific nova config
       $root_helper                  = 'sudo nova-rootwrap'
@@ -84,15 +85,13 @@ class nova::params {
       case $::operatingsystem {
         'Debian': {
           $spicehtml5proxy_package_name = 'nova-consoleproxy'
-          $vncproxy_package_name    = 'novnc'
-          $vncproxy_service_name    = 'novnc'
+          $vncproxy_package_name    = 'nova-consoleproxy'
           # Use default provider on Debian
           $special_service_provider = undef
         }
         default: {
           $spicehtml5proxy_package_name = 'nova-spiceproxy'
           $vncproxy_package_name    = 'nova-novncproxy'
-          $vncproxy_service_name    = 'nova-novncproxy'
           # some of the services need to be started form the special upstart provider
           $special_service_provider = 'upstart'
         }
