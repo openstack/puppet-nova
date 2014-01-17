@@ -37,9 +37,9 @@ define nova::generic_service(
   # I need to mark that ths package should be
   # installed before nova_config
   if ($package_name) {
-    package { $nova_title:
+    package { $package_name:
       ensure => $ensure_package,
-      name   => $package_name,
+      before => Service[$nova_title],
       notify => Service[$nova_title],
     }
   }
@@ -50,7 +50,7 @@ define nova::generic_service(
       name      => $service_name,
       enable    => $enabled,
       hasstatus => true,
-      require   => [Package['nova-common'], Package[$nova_title]],
+      require   => Package['nova-common'],
     }
   }
 
