@@ -6,110 +6,127 @@ describe 'nova::compute' do
     'include nova'
   end
 
-  describe 'with required params provided' do
+  shared_examples 'nova-compute' do
 
-    let :params do
-      {
-        :vncproxy_host   => '127.0.0.1',
-        :neutron_enabled => true
-      }
-    end
+    context 'with default parameters' do
 
-    describe 'on debian platforms' do
-      let :facts do
-        { :osfamily => 'Debian' }
+      it 'installs nova-compute package and service' do
+        should contain_service('nova-compute').with({
+          :name      => platform_params[:nova_compute_service],
+          :ensure    => 'stopped',
+          :hasstatus => true,
+          :enable    => false
+        })
+        should contain_package('nova-compute').with({
+          :name => platform_params[:nova_compute_package]
+        })
       end
 
-      it { should contain_nova_config('DEFAULT/vnc_enabled').with_value(true) }
-      it { should contain_nova_config('DEFAULT/vncserver_proxyclient_address').with_value('127.0.0.1') }
-      it { should contain_nova_config('DEFAULT/novncproxy_base_url').with_value(
-        'http://127.0.0.1:6080/vnc_auto.html'
-      ) }
+      it { should contain_nova_config('DEFAULT/network_device_mtu').with(:ensure => 'absent') }
+      it { should_not contain_nova_config('DEFAULT/novncproxy_base_url') }
 
-      it { should contain_nova_config('DEFAULT/network_device_mtu').with('ensure' => 'absent') }
-
-      it { should contain_service('nova-compute').with(
-        'name'      => 'nova-compute',
-        'ensure'    => 'stopped',
-        'hasstatus' => true,
-        'enable'    => false
-      )}
-      it { should contain_package('nova-compute').with(
-        'name'   => 'nova-compute',
-        'ensure' => 'present',
-        'notify' => 'Service[nova-compute]'
-      ) }
       it { should_not contain_package('bridge-utils').with(
         :ensure => 'present',
         :before => 'Nova::Generic_service[compute]'
       ) }
+
       it { should contain_package('pm-utils').with(
         :ensure => 'present'
       ) }
+    end
 
-      describe 'with vnc_enabled set to true' do
-        let :params do
-          {
-            :enabled       => true,
-            :vncproxy_host => '127.0.0.1'
-          }
-        end
-      it { should contain_service('nova-compute').with(
-        'name'      => 'nova-compute',
-        'ensure'    => 'running',
-        'hasstatus' => true,
-        'enable'    => true
-      )}
+    context 'with overridden parameters' do
+      let :params do
+        { :enabled            => true,
+          :ensure_package     => '2012.1-2',
+          :vncproxy_host      => '127.0.0.1',
+          :network_device_mtu => 9999 }
       end
-      describe 'with vnc_enabled set to false' do
 
-        let :params do
-          {:vnc_enabled => false}
-        end
-
-        it { should contain_nova_config('DEFAULT/vnc_enabled').with_value(false) }
-        it { should contain_nova_config('DEFAULT/vncserver_proxyclient_address').with_value('127.0.0.1')}
-        it { should_not contain_nova_config('DEFAULT/novncproxy_base_url') }
-
+      it 'installs nova-compute package and service' do
+        should contain_service('nova-compute').with({
+          :name      => platform_params[:nova_compute_service],
+          :ensure    => 'running',
+          :hasstatus => true,
+          :enable    => true
+        })
+        should contain_package('nova-compute').with({
+          :name   => platform_params[:nova_compute_package],
+          :ensure => '2012.1-2'
+        })
       end
-      describe 'with force_config_drive set to true' do
 
-        let :params do
-          {:force_config_drive => true}
-        end
-
-        it { should contain_nova_config('DEFAULT/force_config_drive').with_value('true') }
-
+      it 'configures network_device_mtu' do
+        should contain_nova_config('DEFAULT/network_device_mtu').with_value('9999')
       end
-      describe 'with network_device_mtu specified' do
 
-        let :params do
-          {:network_device_mtu => 9999}
-        end
-
-        it { should contain_nova_config('DEFAULT/network_device_mtu').with_value('9999') }
-
-      end
-      describe 'with package version' do
-        let :params do
-          {:ensure_package => '2012.1-2'}
-        end
-        it { should contain_package('nova-compute').with(
-          'ensure' => '2012.1-2'
-        )}
+      it 'configures vnc in nova.conf' do
+        should contain_nova_config('DEFAULT/vnc_enabled').with_value(true)
+        should contain_nova_config('DEFAULT/vncserver_proxyclient_address').with_value('127.0.0.1')
+        should contain_nova_config('DEFAULT/novncproxy_base_url').with_value(
+          'http://127.0.0.1:6080/vnc_auto.html'
+        )
       end
     end
-    describe 'on rhel' do
-      let :facts do
-        { :osfamily => 'RedHat' }
+
+    context 'with neutron_enabled set to false' do
+      let :params do
+        { :neutron_enabled => false }
       end
-      it { should contain_service('nova-compute').with(
-        'name'      => 'openstack-nova-compute',
-        'ensure'    => 'stopped',
-        'hasstatus' => true,
-        'enable'    => false
-      )}
-      it { should contain_package('nova-compute').with_name('openstack-nova-compute') }
+
+      it 'installs bridge-utils package for nova-network' do
+        should contain_package('bridge-utils').with(
+          :ensure => 'present',
+          :before => 'Nova::Generic_service[compute]'
+        )
+      end
     end
+
+    context 'with vnc_enabled set to false' do
+      let :params do
+        { :vnc_enabled => false }
+      end
+
+      it 'disables vnc in nova.conf' do
+        should contain_nova_config('DEFAULT/vnc_enabled').with_value(false)
+        should contain_nova_config('DEFAULT/vncserver_proxyclient_address').with_value('127.0.0.1')
+        should_not contain_nova_config('DEFAULT/novncproxy_base_url')
+      end
+    end
+
+    context 'with force_config_drive parameter set to true' do
+      let :params do
+        { :force_config_drive => true }
+      end
+
+      it { should contain_nova_config('DEFAULT/force_config_drive').with_value(true) }
+    end
+  end
+
+
+  context 'on Debian platforms' do
+    let :facts do
+      { :osfamily => 'Debian' }
+    end
+
+    let :platform_params do
+      { :nova_compute_package => 'nova-compute',
+        :nova_compute_service => 'nova-compute' }
+    end
+
+    it_behaves_like 'nova-compute'
+  end
+
+  context 'on RedHat platforms' do
+    let :facts do
+      { :osfamily => 'RedHat' }
+    end
+
+    let :platform_params do
+      { :nova_compute_package => 'openstack-nova-compute',
+        :nova_compute_service => 'openstack-nova-compute' }
+    end
+
+    it_behaves_like 'nova-compute'
   end
 end
