@@ -258,14 +258,14 @@ class nova(
   }
 
   if $sql_connection {
-    warning('sql_connection deprecated for database_connection')
+    warning('The sql_connection parameter is deprecated, use database_connection instead.')
     $database_connection_real = $sql_connection
   } else {
     $database_connection_real = $database_connection
   }
 
   if $sql_idle_timeout {
-    warning('sql_idle_timeout deprecated for database_idle_timeout')
+    warning('The sql_idle_timeout parameter is deprecated, use database_idle_timeout instead.')
     $database_idle_timeout_real = $sql_idle_timeout
   } else {
     $database_idle_timeout_real = $database_idle_timeout

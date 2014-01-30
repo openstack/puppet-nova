@@ -77,7 +77,7 @@ class nova::keystone::auth(
 ) {
 
   if $cinder != undef {
-    warning('cinder parameter is deprecated and has no effect.')
+    warning('The cinder parameter is deprecated and has no effect.')
   }
 
   Keystone_endpoint["${region}/${auth_name}"] ~> Service <| name == 'nova-api' |>
