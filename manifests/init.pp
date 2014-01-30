@@ -146,8 +146,6 @@
 #
 class nova(
   $ensure_package = 'present',
-  # this is how to query all resources from our clutser
-  $nova_cluster_id='localcluster',
   # note: sql_* deprecated for database_*
   $sql_connection = false,
   $sql_idle_timeout = false,
@@ -188,7 +186,14 @@ class nova(
   $monitoring_notifications = false,
   $use_syslog = false,
   $log_facility = 'LOG_USER',
+  # DEPRECATED PARAMETERS
+  # this is how to query all resources from our clutser
+  $nova_cluster_id = undef,
 ) inherits nova::params {
+
+  if $nova_cluster_id {
+    warning('The nova_cluster_id parameter is deprecated and has no effect.')
+  }
 
   # all nova_config resources should be applied
   # after the nova common package

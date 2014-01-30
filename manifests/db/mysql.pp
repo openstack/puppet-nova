@@ -38,8 +38,12 @@ class nova::db::mysql(
   $host          = '127.0.0.1',
   $charset       = 'latin1',
   $allowed_hosts = undef,
-  $cluster_id    = 'localzone'
+  $cluster_id    = undef
 ) {
+
+  if $cluster_id {
+    warning('The cluster_id parameter is deprecated and has no effect.')
+  }
 
   require 'mysql::python'
   # Create the db instance before openstack-nova if its installed
