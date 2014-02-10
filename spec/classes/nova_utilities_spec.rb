@@ -13,6 +13,7 @@ describe 'nova::utilities' do
       should contain_package('parted').with_ensure('present')
       should contain_package('curl').with_ensure('present')
       should contain_package('euca2ools').with_ensure('present')
+      should contain_package('libguestfs-tools').with_ensure('present')
     end
   end
 end
