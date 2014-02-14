@@ -88,6 +88,13 @@ Contributors
 Release Notes
 -------------
 
+**3.1.0**
+
+* Minor release for OpenStack Havana.
+* Add libguestfs-tools package to nova utilities.
+* Fixed vncproxy package naming for Ubuntu.
+* Fixed libvirt configuration.
+
 **3.0.0**
 
 * Major release for OpenStack Havana.
