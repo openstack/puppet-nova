@@ -41,7 +41,7 @@ To utilize the nova module's functionality you will need to declare multiple res
 
 ```puppet
 class { 'nova':
-  database_connection => 'mysql://nova:a_big_secret@127.0.0.1/nova?charset=utf8",
+  database_connection => 'mysql://nova:a_big_secret@127.0.0.1/nova?charset=utf8',
   rabbit_userid       => 'nova',
   rabbit_password     => 'an_even_bigger_secret',
   image_service       => 'nova.image.glance.GlanceImageService',
