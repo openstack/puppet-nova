@@ -194,6 +194,7 @@ class nova(
   $monitoring_notifications    = false,
   $use_syslog                  = false,
   $log_facility                = 'LOG_USER',
+  $install_utilities           = true,
   # DEPRECATED PARAMETERS
   # deprecated in folsom
   #$root_helper = $::nova::params::root_helper,
@@ -225,7 +226,9 @@ class nova(
     require => Package['python'],
   }
 
-  class { 'nova::utilities': }
+  if $install_utilities {
+    class { 'nova::utilities': }
+  }
 
   # this anchor is used to simplify the graph between nova components by
   # allowing a resource to serve as a point where the configuration of nova begins
