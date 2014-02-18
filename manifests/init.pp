@@ -167,6 +167,11 @@
 #   the ownership of all files/dirs owned by nova.
 #   Defaults to undef.
 #
+# [*mysql_module*]
+#   (optional) Mysql module version to use. Tested versions
+#   are 0.9 and 2.2
+#   Defaults to '0.9'
+#
 class nova(
   $ensure_package           = 'present',
   $database_connection      = false,
@@ -210,6 +215,7 @@ class nova(
   $use_syslog               = false,
   $log_facility             = 'LOG_USER',
   $install_utilities        = true,
+  $mysql_module             = '0.9',
   # DEPRECATED PARAMETERS
   # this is how to query all resources from our clutser
   $nova_cluster_id          = undef,
@@ -311,7 +317,12 @@ class nova(
   # that may need to be collected from a remote host
   if $database_connection_real {
     if($database_connection_real =~ /mysql:\/\/\S+:\S+@\S+\/\S+/) {
-      require 'mysql::python'
+      if ($mysql_module >= 2.2) {
+        require 'mysql::bindings'
+        require 'mysql::bindings::python'
+      } else {
+        require 'mysql::python'
+      }
     } elsif($database_connection_real =~ /postgresql:\/\/\S+:\S+@\S+\/\S+/) {
 
     } elsif($database_connection_real =~ /sqlite:\/\//) {
