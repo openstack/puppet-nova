@@ -96,6 +96,10 @@ describe 'nova' do
         should_not contain_nova_config('DEFAULT/notification_driver')
       end
 
+      it 'installs utilities' do
+        should contain_class('nova::utilities')
+      end
+
       it 'disables syslog' do
         should contain_nova_config('DEFAULT/use_syslog').with_value(false)
       end
@@ -120,7 +124,8 @@ describe 'nova' do
           :auth_strategy            => 'foo',
           :ensure_package           => '2012.1.1-15.el6',
           :monitoring_notifications => true,
-          :memcached_servers        => ['memcached01:11211', 'memcached02:11211'] }
+          :memcached_servers        => ['memcached01:11211', 'memcached02:11211'],
+          :install_utilities        => false }
       end
 
       it 'installs packages' do
@@ -166,12 +171,15 @@ describe 'nova' do
         should contain_nova_config('DEFAULT/notification_driver').with_value('nova.openstack.common.notifier.rpc_notifier')
       end
 
+      it 'does not install utilities' do
+        should_not contain_class('nova::utilities')
+      end
+
       context 'with logging directory disabled' do
         before { params.merge!( :log_dir => false) }
 
         it { should contain_nova_config('DEFAULT/log_dir').with_ensure('absent') }
       end
-
     end
 
     context 'with deprecated sql parameters' do
