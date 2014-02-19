@@ -72,7 +72,7 @@ describe 'nova' do
 
     it { should contain_nova_config('DEFAULT/verbose').with_value(false) }
     it { should contain_nova_config('DEFAULT/debug').with_value(false) }
-    it { should contain_nova_config('DEFAULT/logdir').with_value('/var/log/nova') }
+    it { should contain_nova_config('DEFAULT/log_dir').with_value('/var/log/nova') }
     it { should contain_nova_config('DEFAULT/state_path').with_value('/var/lib/nova') }
     it { should contain_nova_config('DEFAULT/lock_path').with_value('/var/lock/nova') }
     it { should contain_nova_config('DEFAULT/service_down_time').with_value('60') }
@@ -88,7 +88,7 @@ describe 'nova' do
           'database_idle_timeout'    => '30',
           'verbose'                  => true,
           'debug'                    => true,
-          'logdir'                   => '/var/log/nova2',
+          'log_dir'                  => '/var/log/nova2',
           'image_service'            => 'nova.image.local.LocalImageService',
           'rabbit_host'              => 'rabbit',
           'rabbit_userid'            => 'rabbit_user',
@@ -122,7 +122,7 @@ describe 'nova' do
 
       it { should contain_nova_config('DEFAULT/verbose').with_value(true) }
       it { should contain_nova_config('DEFAULT/debug').with_value(true) }
-      it { should contain_nova_config('DEFAULT/logdir').with_value('/var/log/nova2') }
+      it { should contain_nova_config('DEFAULT/log_dir').with_value('/var/log/nova2') }
       it { should contain_nova_config('DEFAULT/state_path').with_value('/var/lib/nova2') }
       it { should contain_nova_config('DEFAULT/lock_path').with_value('/var/locky/path') }
       it { should contain_nova_config('DEFAULT/service_down_time').with_value('120') }
@@ -194,7 +194,7 @@ describe 'nova' do
           'database_idle_timeout'    => '30',
           'verbose'             => true,
           'debug'               => true,
-          'logdir'              => '/var/log/nova2',
+          'log_dir'             => '/var/log/nova2',
           'image_service'       => 'nova.image.local.LocalImageService',
           'rpc_backend'         => 'nova.openstack.common.rpc.impl_qpid',
           'lock_path'           => '/var/locky/path',
@@ -232,7 +232,7 @@ describe 'nova' do
 
       it { should contain_nova_config('DEFAULT/verbose').with_value(true) }
       it { should contain_nova_config('DEFAULT/debug').with_value(true) }
-      it { should contain_nova_config('DEFAULT/logdir').with_value('/var/log/nova2') }
+      it { should contain_nova_config('DEFAULT/log_dir').with_value('/var/log/nova2') }
       it { should contain_nova_config('DEFAULT/state_path').with_value('/var/lib/nova2') }
       it { should contain_nova_config('DEFAULT/lock_path').with_value('/var/locky/path') }
       it { should contain_nova_config('DEFAULT/service_down_time').with_value('120') }
