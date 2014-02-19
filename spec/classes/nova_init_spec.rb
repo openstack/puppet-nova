@@ -277,5 +277,15 @@ describe 'nova' do
       it { should contain_nova_config('DEFAULT/syslog_log_facility').with_value('LOG_LOCAL0') }
     end
 
+    describe 'with logging directory disabled' do
+      let :params do
+        {
+          :log_dir => false,
+        }
+      end
+
+      it { should contain_nova_config('DEFAULT/log_dir').with_ensure('absent') }
+    end
+
   end
 end
