@@ -113,6 +113,7 @@
 #
 # [*log_dir*]
 #   (optional) Directory where logs should be stored.
+#   If set to boolean false, it will not log to any directory.
 #   Defaults to '/var/log/nova'
 #
 # [*state_path*]
@@ -363,15 +364,19 @@ class nova(
     $log_dir_real = $log_dir
   }
 
-  file { $log_dir_real:
-    ensure  => directory,
-    mode    => '0750',
+  if $log_dir_real {
+    file { $log_dir_real:
+      ensure  => directory,
+      mode    => '0750',
+    }
+    nova_config { 'DEFAULT/log_dir': value => $log_dir_real;}
+  } else {
+    nova_config { 'DEFAULT/log_dir': ensure => absent;}
   }
 
   nova_config {
     'DEFAULT/verbose':           value => $verbose;
     'DEFAULT/debug':             value => $debug;
-    'DEFAULT/log_dir':           value => $log_dir_real;
     'DEFAULT/rpc_backend':       value => $rpc_backend;
     # Following may need to be broken out to different nova services
     'DEFAULT/state_path':        value => $state_path;

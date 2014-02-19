@@ -165,6 +165,13 @@ describe 'nova' do
         should contain_nova_config('DEFAULT/service_down_time').with_value('120')
         should contain_nova_config('DEFAULT/notification_driver').with_value('nova.openstack.common.notifier.rpc_notifier')
       end
+
+      context 'with logging directory disabled' do
+        before { params.merge!( :log_dir => false) }
+
+        it { should contain_nova_config('DEFAULT/log_dir').with_ensure('absent') }
+      end
+
     end
 
     context 'with deprecated sql parameters' do
