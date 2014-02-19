@@ -88,7 +88,7 @@ describe 'nova' do
       it 'configures various things' do
         should contain_nova_config('DEFAULT/verbose').with_value(false)
         should contain_nova_config('DEFAULT/debug').with_value(false)
-        should contain_nova_config('DEFAULT/logdir').with_value('/var/log/nova')
+        should contain_nova_config('DEFAULT/log_dir').with_value('/var/log/nova')
         should contain_nova_config('DEFAULT/state_path').with_value('/var/lib/nova')
         should contain_nova_config('DEFAULT/lock_path').with_value(platform_params[:lock_path])
         should contain_nova_config('DEFAULT/service_down_time').with_value('60')
@@ -108,7 +108,7 @@ describe 'nova' do
           :database_idle_timeout    => '30',
           :verbose                  => true,
           :debug                    => true,
-          :logdir                   => '/var/log/nova2',
+          :log_dir                  => '/var/log/nova2',
           :image_service            => 'nova.image.local.LocalImageService',
           :rabbit_host              => 'rabbit',
           :rabbit_userid            => 'rabbit_user',
@@ -159,7 +159,7 @@ describe 'nova' do
       it 'configures various things' do
         should contain_nova_config('DEFAULT/verbose').with_value(true)
         should contain_nova_config('DEFAULT/debug').with_value(true)
-        should contain_nova_config('DEFAULT/logdir').with_value('/var/log/nova2')
+        should contain_nova_config('DEFAULT/log_dir').with_value('/var/log/nova2')
         should contain_nova_config('DEFAULT/state_path').with_value('/var/lib/nova2')
         should contain_nova_config('DEFAULT/lock_path').with_value('/var/locky/path')
         should contain_nova_config('DEFAULT/service_down_time').with_value('120')
