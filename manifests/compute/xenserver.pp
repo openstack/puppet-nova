@@ -33,8 +33,12 @@ class nova::compute::xenserver(
     'DEFAULT/xenapi_inject_image':        value => $xenapi_inject_image;
   }
 
+  ensure_packages(['python-pip'])
+
   package { 'xenapi':
     ensure   => present,
     provider => pip
   }
+
+  Package['python-pip'] -> Package['xenapi']
 }
