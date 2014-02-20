@@ -30,10 +30,10 @@ describe 'nova::compute::vmware' do
     should_not contain_nova_config('VMWARE/wsdl_location')
   end
 
-  it 'installs vmwareapi with pip' do
-    should contain_package('suds').with(
-               :ensure => 'present',
-               :provider => 'pip')
+  it 'installs suds python package' do
+    should contain_package('python-suds').with(
+               :ensure => 'present'
+                )
   end
 
   context 'with optional parameters' do

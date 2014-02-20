@@ -74,8 +74,7 @@ class nova::compute::vmware(
     }
   }
 
-  package { 'suds':
-    ensure   => present,
-    provider => pip
+  package { 'python-suds':
+    ensure   => present
   }
 }
