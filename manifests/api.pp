@@ -43,6 +43,11 @@
 #   (optional) Prefix to prepend at the beginning of the keystone path
 #   Defaults to false
 #
+# [*auth_version*]
+#   (optional) API version of the admin Identity API endpoint
+#   for example, use 'v3.0' for the keystone version 3.0 api
+#   Defaults to false
+#
 # [*admin_tenant_name*]
 #   (optional) The name of the tenant to create in keystone for use by the nova services
 #   Defaults to 'services'
@@ -105,6 +110,7 @@ class nova::api(
   $auth_protocol     = 'http',
   $auth_uri          = false,
   $auth_admin_prefix = false,
+  $auth_version      = false,
   $admin_tenant_name = 'services',
   $admin_user        = 'nova',
   $api_bind_address  = '0.0.0.0',
@@ -173,6 +179,12 @@ class nova::api(
     nova_config { 'keystone_authtoken/auth_uri': value => $auth_uri; }
   } else {
     nova_config { 'keystone_authtoken/auth_uri': value => "${auth_protocol}://${auth_host}:5000/"; }
+  }
+
+  if $auth_version {
+    nova_config { 'keystone_authtoken/auth_version': value => $auth_version; }
+  } else {
+    nova_config { 'keystone_authtoken/auth_version': ensure => absent; }
   }
 
   nova_config {

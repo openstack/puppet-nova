@@ -44,6 +44,8 @@ describe 'nova::api' do
         should contain_nova_config(
           'keystone_authtoken/auth_admin_prefix').with_ensure('absent')
         should contain_nova_config(
+          'keystone_authtoken/auth_version').with_ensure('absent')
+        should contain_nova_config(
           'keystone_authtoken/admin_tenant_name').with_value('services')
         should contain_nova_config(
           'keystone_authtoken/admin_user').with_value('nova')
@@ -74,6 +76,7 @@ describe 'nova::api' do
           :auth_protocol     => 'https',
           :auth_admin_prefix => '/keystone/admin',
           :auth_uri          => 'https://10.0.0.1:9999/',
+          :auth_version      => 'v3.0',
           :admin_tenant_name => 'service2',
           :admin_user        => 'nova2',
           :admin_password    => 'passw0rd2',
@@ -110,6 +113,8 @@ describe 'nova::api' do
           'keystone_authtoken/auth_admin_prefix').with_value('/keystone/admin')
         should contain_nova_config(
           'keystone_authtoken/auth_uri').with_value('https://10.0.0.1:9999/')
+        should contain_nova_config(
+          'keystone_authtoken/auth_version').with_value('v3.0')
         should contain_nova_config(
           'keystone_authtoken/admin_tenant_name').with_value('service2')
         should contain_nova_config(
