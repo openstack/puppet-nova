@@ -37,17 +37,20 @@ describe 'nova::compute::libvirt' do
       it { should contain_nova_config('DEFAULT/libvirt_type').with_value('kvm')}
       it { should contain_nova_config('DEFAULT/connection_type').with_value('libvirt')}
       it { should contain_nova_config('DEFAULT/vncserver_listen').with_value('127.0.0.1')}
+      it { should contain_nova_config('DEFAULT/libvirt_cpu_mode').with_value('host-model')}
     end
 
     describe 'with params' do
       let :params do
         { :libvirt_type     => 'qemu',
-          :vncserver_listen => '0.0.0.0'
+          :vncserver_listen => '0.0.0.0',
+          :libvirt_cpu_mode => 'host-passthrough'
         }
       end
 
       it { should contain_nova_config('DEFAULT/libvirt_type').with_value('qemu')}
       it { should contain_nova_config('DEFAULT/vncserver_listen').with_value('0.0.0.0')}
+      it { should contain_nova_config('DEFAULT/libvirt_cpu_mode').with_value('host-passthrough')}
     end
 
     describe 'with migration_support enabled' do
