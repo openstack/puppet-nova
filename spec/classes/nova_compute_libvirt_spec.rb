@@ -26,6 +26,7 @@ describe 'nova::compute::libvirt' do
 
       it { should contain_service('libvirt').with(
         :name     => 'libvirt-bin',
+        :enable   => true,
         :ensure   => 'running',
         :provider => 'upstart',
         :require  => 'Package[libvirt]',
@@ -53,7 +54,7 @@ describe 'nova::compute::libvirt' do
 
       context 'with vncserver_listen set to 0.0.0.0' do
         let :params do
-          { :vncserver_listen => '0.0.0.0',
+          { :vncserver_listen  => '0.0.0.0',
             :migration_support => true }
         end
 
@@ -63,7 +64,7 @@ describe 'nova::compute::libvirt' do
 
       context 'with vncserver_listen not set to 0.0.0.0' do
         let :params do
-          { :vncserver_listen => '127.0.0.1',
+          { :vncserver_listen  => '127.0.0.1',
             :migration_support => true }
         end
 
@@ -90,6 +91,7 @@ describe 'nova::compute::libvirt' do
 
       it { should contain_service('libvirt').with(
         :name     => 'libvirtd',
+        :enable   => true,
         :ensure   => 'running',
         :provider => 'init',
         :require  => 'Package[libvirt]',
@@ -123,7 +125,7 @@ describe 'nova::compute::libvirt' do
 
       context 'with vncserver_listen set to 0.0.0.0' do
         let :params do
-          { :vncserver_listen => '0.0.0.0',
+          { :vncserver_listen  => '0.0.0.0',
             :migration_support => true }
         end
 
@@ -133,7 +135,7 @@ describe 'nova::compute::libvirt' do
 
       context 'with vncserver_listen not set to 0.0.0.0' do
         let :params do
-          { :vncserver_listen => '127.0.0.1',
+          { :vncserver_listen  => '127.0.0.1',
             :migration_support => true }
         end
 
@@ -156,6 +158,7 @@ describe 'nova::compute::libvirt' do
 
       it { should contain_service('libvirt').with(
         :name     => 'libvirtd',
+        :enable   => true,
         :ensure   => 'running',
         :provider => nil,
         :require  => 'Package[libvirt]',
