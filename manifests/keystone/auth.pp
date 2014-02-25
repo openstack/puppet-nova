@@ -51,6 +51,10 @@
 #   (optional) Whether to create an ec2 endpoint
 #   Defaults to true
 #
+# [*configure_endpoint*]
+#   (optional) Whether to create the endpoint.
+#   Defaults to true
+#
 # [*cinder*]
 #   (optional) Deprecated and has no effect
 #   Defaults to undef
@@ -73,7 +77,8 @@ class nova::keystone::auth(
   $email                  = 'nova@localhost',
   $configure_ec2_endpoint = true,
   $cinder                 = undef,
-  $public_protocol        = 'http'
+  $public_protocol        = 'http',
+  $configure_endpoint     = true
 ) {
 
   if $cinder != undef {
@@ -97,11 +102,14 @@ class nova::keystone::auth(
     type        => 'compute',
     description => 'Openstack Compute Service',
   }
-  keystone_endpoint { "${region}/${auth_name}":
-    ensure       => present,
-    public_url   => "${public_protocol}://${public_address}:${compute_port}/${compute_version}/%(tenant_id)s",
-    admin_url    => "http://${admin_address}:${compute_port}/${compute_version}/%(tenant_id)s",
-    internal_url => "http://${internal_address}:${compute_port}/${compute_version}/%(tenant_id)s",
+
+  if $configure_endpoint {
+    keystone_endpoint { "${region}/${auth_name}":
+      ensure       => present,
+      public_url   => "${public_protocol}://${public_address}:${compute_port}/${compute_version}/%(tenant_id)s",
+      admin_url    => "http://${admin_address}:${compute_port}/${compute_version}/%(tenant_id)s",
+      internal_url => "http://${internal_address}:${compute_port}/${compute_version}/%(tenant_id)s",
+    }
   }
 
   if $configure_ec2_endpoint {

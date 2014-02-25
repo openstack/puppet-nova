@@ -104,6 +104,14 @@ describe 'nova::keystone::auth' do
 
   end
 
+  describe 'when disabling endpoint configuration' do
+    before do
+      params.merge!( :configure_endpoint => false )
+    end
+
+    it { should_not contain_keystone_endpoint('RegionOne/nova') }
+  end
+
   describe 'when disabling EC2 endpoint' do
     before do
       params.merge!( :configure_ec2_endpoint => false )
