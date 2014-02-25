@@ -133,7 +133,7 @@ class nova::api(
   Nova_paste_api_ini<| |> ~> Service['nova-api']
 
   if $auth_strategy {
-    warning('Parameter auth_strategy is not used in class nova::api and going to be deprecated.')
+    warning('The auth_strategy parameter is deprecated and has no effect.')
   }
 
   nova::generic_service { 'api':
