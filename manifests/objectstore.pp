@@ -35,6 +35,7 @@ class nova::objectstore(
     package_name   => $::nova::params::objectstore_package_name,
     service_name   => $::nova::params::objectstore_service_name,
     ensure_package => $ensure_package,
+    require        => User['nova'],
   }
 
   nova_config {

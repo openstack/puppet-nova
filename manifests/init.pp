@@ -153,6 +153,20 @@
 #   (optional) Syslog facility to receive log lines.
 #   Defaults to 'LOG_USER'
 #
+# [*nova_user_id*]
+#   (optional) Create the nova user with the specified gid.
+#   Changing to a new uid after specifying a different uid previously,
+#   or using this option after the nova account already exists will break
+#   the ownership of all files/dirs owned by nova.
+#   Defaults to undef.
+#
+# [*nova_group_id*]
+#   (optional) Create the nova user with the specified gid.
+#   Changing to a new uid after specifying a different uid previously,
+#   or using this option after the nova account already exists will break
+#   the ownership of all files/dirs owned by nova.
+#   Defaults to undef.
+#
 class nova(
   $ensure_package           = 'present',
   $database_connection      = false,
@@ -188,6 +202,8 @@ class nova(
   $periodic_interval        = '60',
   $report_interval          = '10',
   $rootwrap_config          = '/etc/nova/rootwrap.conf',
+  $nova_user_id             = undef,
+  $nova_group_id            = undef,
   # deprecated in folsom
   #$root_helper = $::nova::params::root_helper,
   $monitoring_notifications = false,
@@ -204,6 +220,24 @@ class nova(
 
   if $nova_cluster_id {
     warning('The nova_cluster_id parameter is deprecated and has no effect.')
+  }
+
+  group { 'nova':
+    ensure  => present,
+    system  => true,
+    gid     => $nova_group_id,
+    before  => User['nova'],
+  }
+
+  user { 'nova':
+    ensure     => present,
+    system     => true,
+    groups     => 'nova',
+    home       => '/var/lib/nova',
+    managehome => false,
+    shell      => '/bin/false',
+    uid        => $nova_user_id,
+    gid        => $nova_group_id,
   }
 
   # all nova_config resources should be applied
@@ -245,19 +279,7 @@ class nova(
   package { 'nova-common':
     ensure  => $ensure_package,
     name    => $::nova::params::common_package_name,
-    require => [Package['python-nova'], Anchor['nova-start']]
-  }
-
-  group { 'nova':
-    ensure  => present,
-    system  => true,
-    require => Package['nova-common'],
-  }
-  user { 'nova':
-    ensure  => present,
-    gid     => 'nova',
-    system  => true,
-    require => Package['nova-common'],
+    require => [Package['python-nova'], Anchor['nova-start'], User['nova']]
   }
 
   file { '/etc/nova/nova.conf':

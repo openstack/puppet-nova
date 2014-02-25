@@ -103,8 +103,9 @@ class nova::compute::libvirt (
 
   if($::osfamily == 'Debian') {
     package { "nova-compute-${libvirt_virt_type_real}":
-      ensure => present,
-      before => Package['nova-compute'],
+      ensure  => present,
+      before  => Package['nova-compute'],
+      require => User['nova'],
     }
   }
 

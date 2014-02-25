@@ -17,8 +17,8 @@ describe 'nova' do
           :require => 'Package[python-greenlet]'
         )
         should contain_package('nova-common').with(
-          :name   => platform_params[:nova_common_package],
-          :ensure => 'present'
+          :name    => platform_params[:nova_common_package],
+          :ensure  => 'present'
         )
       end
 
@@ -26,13 +26,15 @@ describe 'nova' do
         should contain_group('nova').with(
           :ensure  => 'present',
           :system  => true,
-          :require => 'Package[nova-common]'
+          :before  => 'User[nova]'
         )
         should contain_user('nova').with(
-          :ensure  => 'present',
-          :gid     => 'nova',
-          :system  => true,
-          :require => 'Package[nova-common]'
+          :ensure     => 'present',
+          :system     => true,
+          :groups     => 'nova',
+          :home       => '/var/lib/nova',
+          :managehome => false,
+          :shell      => '/bin/false'
         )
       end
 
@@ -125,7 +127,28 @@ describe 'nova' do
           :ensure_package           => '2012.1.1-15.el6',
           :monitoring_notifications => true,
           :memcached_servers        => ['memcached01:11211', 'memcached02:11211'],
-          :install_utilities        => false }
+          :install_utilities        => false,
+          :nova_user_id             => '499',
+          :nova_group_id            => '499' }
+      end
+
+      it 'creates user and group' do
+        should contain_group('nova').with(
+          :ensure  => 'present',
+          :system  => true,
+          :gid     => '499',
+          :before  => 'User[nova]'
+        )
+        should contain_user('nova').with(
+          :ensure     => 'present',
+          :system     => true,
+          :groups     => 'nova',
+          :home       => '/var/lib/nova',
+          :managehome => false,
+          :shell      => '/bin/false',
+          :uid        => '499',
+          :gid        => '499'
+        )
       end
 
       it 'installs packages' do
