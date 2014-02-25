@@ -23,11 +23,20 @@
 #   Defaults to 'host-model' if libvirt_type is set to either
 #   kvm or qemu, otherwise defaults to 'None'.
 #
+# [*libvirt_disk_cachemodes*]
+#   (optional) A list of cachemodes for different disk types, e.g.
+#   ["file=directsync", "block=none"]
+#   If an empty list is specified, the disk_cachemodes directive
+#   will be removed from nova.conf completely.
+#   Defaults to an empty list
+#
+
 class nova::compute::libvirt (
-  $libvirt_type      = 'kvm',
-  $vncserver_listen  = '127.0.0.1',
-  $migration_support = false,
-  $libvirt_cpu_mode  = false,
+  $libvirt_type            = 'kvm',
+  $vncserver_listen        = '127.0.0.1',
+  $migration_support       = false,
+  $libvirt_cpu_mode        = false,
+  $libvirt_disk_cachemodes = [],
 ) {
 
   include nova::params
@@ -92,5 +101,15 @@ class nova::compute::libvirt (
     'DEFAULT/connection_type':  value => 'libvirt';
     'DEFAULT/vncserver_listen': value => $vncserver_listen;
     'DEFAULT/libvirt_cpu_mode': value => $libvirt_cpu_mode_real;
+  }
+
+  if size($libvirt_disk_cachemodes) > 0 {
+    nova_config {
+      'DEFAULT/disk_cachemodes': value => join($libvirt_disk_cachemodes, ',');
+    }
+  } else {
+    nova_config {
+      'DEFAULT/disk_cachemodes': ensure => absent;
+    }
   }
 }
