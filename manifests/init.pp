@@ -71,6 +71,10 @@
 #   (optional) The RabbitMQ virtual host.
 #   Defaults to '/'
 #
+# [*amqp_durable_queues*]
+#   (optional) Define queues as "durable" to rabbitmq.
+#   Defaults to false
+#
 # [*qpid_hostname*]
 #   (optional) Location of qpid server
 #   Defaults to 'localhost'
@@ -165,6 +169,7 @@ class nova(
   $rabbit_port              = '5672',
   $rabbit_userid            = 'guest',
   $rabbit_virtual_host      = '/',
+  $amqp_durable_queues      = false,
   $qpid_hostname            = 'localhost',
   $qpid_port                = '5672',
   $qpid_username            = 'guest',
@@ -317,6 +322,7 @@ class nova(
       'DEFAULT/rabbit_password':     value => $rabbit_password, secret => true;
       'DEFAULT/rabbit_userid':       value => $rabbit_userid;
       'DEFAULT/rabbit_virtual_host': value => $rabbit_virtual_host;
+      'DEFAULT/amqp_durable_queues': value => $amqp_durable_queues;
     }
 
     if $rabbit_hosts {
