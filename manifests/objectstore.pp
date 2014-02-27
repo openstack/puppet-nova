@@ -16,10 +16,15 @@
 #   (optional) The package state to set
 #   Defaults to 'present'
 #
+# [*bind_address*]
+#   (optional) The address to bind to
+#   Defaults to '0.0.0.0'
+#
 class nova::objectstore(
   $enabled        = false,
   $manage_service = true,
-  $ensure_package = 'present'
+  $ensure_package = 'present',
+  $bind_address   = '0.0.0.0'
 ) {
 
   include nova::params
@@ -32,4 +37,7 @@ class nova::objectstore(
     ensure_package => $ensure_package,
   }
 
+  nova_config {
+    'DEFAULT/s3_listen':  value => $bind_address;
+  }
 }
