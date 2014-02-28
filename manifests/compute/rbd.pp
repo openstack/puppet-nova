@@ -70,13 +70,13 @@ class nova::compute::rbd (
     }
 
     exec { 'get-or-set virsh secret':
-      command => '/usr/bin/virsh secret-define --file /etc/ceph/secret.xml | /usr/bin/awk \'{print $2}\' | sed \'/^$/d\' > /etc/ceph/virsh.secret',
-      creates => '/etc/ceph/virsh.secret',
-      require => File['/etc/ceph/secret.xml']
+      command => '/usr/bin/virsh secret-define --file /etc/nova/secret.xml | /usr/bin/awk \'{print $2}\' | sed \'/^$/d\' > /etc/nova/virsh.secret',
+      creates => '/etc/nova/virsh.secret',
+      require => File['/etc/nova/secret.xml']
     }
 
     exec { 'set-secret-value virsh':
-      command => '/usr/bin/virsh secret-set-value --secret $(cat /etc/ceph/virsh.secret) --base64 $(ceph auth get-key client.nova)',
+      command => '/usr/bin/virsh secret-set-value --secret $(cat /etc/nova/virsh.secret) --base64 $(ceph auth get-key client.nova)',
       require => Exec['get-or-set virsh secret']
     }
 
