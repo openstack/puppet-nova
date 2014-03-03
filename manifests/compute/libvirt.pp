@@ -18,10 +18,17 @@
 #   (optional) Whether to support virtual machine migration
 #   Defaults to false
 #
+# [*libvirt_cpu_mode*]
+#   (optional) The libvirt CPU mode to configure.  Possible values
+#   include custom, host-model, None, host-passthrough.
+#   Defaults to 'host-model' if libvirt_virt_type is set to either
+#   kvm or qemu, otherwise defaults to 'None'.
+#
 class nova::compute::libvirt (
   $libvirt_virt_type = 'kvm',
   $vncserver_listen  = '127.0.0.1',
   $migration_support = false,
+  $libvirt_cpu_mode  = false,
   # DEPRECATED PARAMETER
   $libvirt_type      = false
 ) {
@@ -35,6 +42,20 @@ class nova::compute::libvirt (
     $libvirt_virt_type_real = $libvirt_type
   } else {
     $libvirt_virt_type_real = $libvirt_virt_type
+  }
+
+  # libvirt_cpu_mode has different defaults depending on hypervisor.
+  if !$libvirt_cpu_mode {
+    case $libvirt_virt_type_real {
+      'kvm','qemu': {
+        $libvirt_cpu_mode_real = 'host-model'
+      }
+      default: {
+        $libvirt_cpu_mode_real = 'None'
+      }
+    }
+  } else {
+    $libvirt_cpu_mode_real = $libvirt_cpu_mode
   }
 
   if($::osfamily == 'Debian') {
@@ -79,5 +100,6 @@ class nova::compute::libvirt (
     'DEFAULT/compute_driver':   value => 'libvirt.LibvirtDriver';
     'DEFAULT/vncserver_listen': value => $vncserver_listen;
     'libvirt/virt_type':        value => $libvirt_virt_type_real;
+    'libvirt/cpu_mode':         value => $libvirt_cpu_mode_real;
   }
 }
