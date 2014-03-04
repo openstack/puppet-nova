@@ -219,6 +219,7 @@ describe 'nova' do
         should_not contain_nova_config('DEFAULT/rabbit_port')
         should contain_nova_config('DEFAULT/rabbit_hosts').with_value('rabbit:5673,rabbit2:5674')
         should contain_nova_config('DEFAULT/rabbit_ha_queues').with_value(true)
+        should contain_nova_config('DEFAULT/amqp_durable_queues').with_value(false)
       end
     end
 
@@ -232,6 +233,22 @@ describe 'nova' do
         should_not contain_nova_config('DEFAULT/rabbit_port')
         should contain_nova_config('DEFAULT/rabbit_hosts').with_value('rabbit:5673')
         should contain_nova_config('DEFAULT/rabbit_ha_queues').with_value(true)
+        should contain_nova_config('DEFAULT/amqp_durable_queues').with_value(false)
+      end
+    end
+
+    context 'with amqp_durable_queues parameter' do
+      let :params do
+        { :rabbit_hosts => ['rabbit:5673'],
+          :amqp_durable_queues => 'true' }
+      end
+
+      it 'configures rabbit' do
+        should_not contain_nova_config('DEFAULT/rabbit_host')
+        should_not contain_nova_config('DEFAULT/rabbit_port')
+        should contain_nova_config('DEFAULT/rabbit_hosts').with_value('rabbit:5673')
+        should contain_nova_config('DEFAULT/rabbit_ha_queues').with_value(true)
+        should contain_nova_config('DEFAULT/amqp_durable_queues').with_value(true)
       end
     end
 
