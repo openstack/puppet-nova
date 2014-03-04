@@ -36,6 +36,7 @@ describe 'nova::compute::libvirt' do
       it { should contain_nova_config('DEFAULT/compute_driver').with_value('libvirt.LibvirtDriver')}
       it { should contain_nova_config('libvirt/virt_type').with_value('kvm')}
       it { should contain_nova_config('libvirt/cpu_mode').with_value('host-model')}
+      it { should contain_nova_config('libvirt/disk_cachemodes').with_ensure('absent')}
       it { should contain_nova_config('DEFAULT/vncserver_listen').with_value('127.0.0.1')}
     end
 
@@ -43,12 +44,14 @@ describe 'nova::compute::libvirt' do
       let :params do
         { :libvirt_virt_type => 'qemu',
           :vncserver_listen  => '0.0.0.0',
-          :libvirt_cpu_mode  => 'host-passthrough'
+          :libvirt_cpu_mode  => 'host-passthrough',
+          :libvirt_disk_cachemodes => ['file=directsync','block=none']
         }
       end
 
       it { should contain_nova_config('libvirt/virt_type').with_value('qemu')}
       it { should contain_nova_config('libvirt/cpu_mode').with_value('host-passthrough')}
+      it { should contain_nova_config('libvirt/disk_cachemodes').with_value('file=directsync,block=none')}
       it { should contain_nova_config('DEFAULT/vncserver_listen').with_value('0.0.0.0')}
     end
 
