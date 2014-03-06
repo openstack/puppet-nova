@@ -63,6 +63,12 @@
 #   (optional) Protocol to use for the public endpoint. Can be http or https.
 #   Defaults to 'http'
 #
+# [*admin_protocol*]
+#   Protocol for admin endpoints. Defaults to 'http'.
+#
+# [*internal_protocol*]
+#   Protocol for internal endpoints. Defaults to 'http'.
+#
 class nova::keystone::auth(
   $password,
   $auth_name              = 'nova',
@@ -78,7 +84,9 @@ class nova::keystone::auth(
   $configure_ec2_endpoint = true,
   $cinder                 = undef,
   $public_protocol        = 'http',
-  $configure_endpoint     = true
+  $configure_endpoint     = true,
+  $admin_protocol         = 'http',
+  $internal_protocol      = 'http'
 ) {
 
   if $cinder != undef {
@@ -107,8 +115,8 @@ class nova::keystone::auth(
     keystone_endpoint { "${region}/${auth_name}":
       ensure       => present,
       public_url   => "${public_protocol}://${public_address}:${compute_port}/${compute_version}/%(tenant_id)s",
-      admin_url    => "http://${admin_address}:${compute_port}/${compute_version}/%(tenant_id)s",
-      internal_url => "http://${internal_address}:${compute_port}/${compute_version}/%(tenant_id)s",
+      admin_url    => "${admin_protocol}://${admin_address}:${compute_port}/${compute_version}/%(tenant_id)s",
+      internal_url => "${internal_protocol}://${internal_address}:${compute_port}/${compute_version}/%(tenant_id)s",
     }
   }
 
@@ -121,8 +129,8 @@ class nova::keystone::auth(
     keystone_endpoint { "${region}/${auth_name}_ec2":
       ensure       => present,
       public_url   => "${public_protocol}://${public_address}:${ec2_port}/services/Cloud",
-      admin_url    => "http://${admin_address}:${ec2_port}/services/Admin",
-      internal_url => "http://${internal_address}:${ec2_port}/services/Cloud",
+      admin_url    => "${admin_protocol}://${admin_address}:${ec2_port}/services/Admin",
+      internal_url => "${internal_protocol}://${internal_address}:${ec2_port}/services/Cloud",
     }
   }
 }

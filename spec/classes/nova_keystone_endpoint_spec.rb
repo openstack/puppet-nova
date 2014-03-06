@@ -78,28 +78,31 @@ describe 'nova::keystone::auth' do
   context 'when overriding endpoint params' do
     before do
       params.merge!(
-        :public_address   => '10.0.0.1',
-        :admin_address    => '10.0.0.2',
-        :internal_address => '10.0.0.3',
-        :compute_port     => '9774',
-        :ec2_port         => '9773',
-        :compute_version  => 'v2.2',
-        :region           => 'RegionTwo'
+        :public_address    => '10.0.0.1',
+        :admin_address     => '10.0.0.2',
+        :internal_address  => '10.0.0.3',
+        :compute_port      => '9774',
+        :ec2_port          => '9773',
+        :compute_version   => 'v2.2',
+        :region            => 'RegionTwo',
+        :admin_protocol    => 'https',
+        :internal_protocol => 'https',
+        :public_protocol   => 'https'
       )
     end
 
     it { should contain_keystone_endpoint('RegionTwo/nova').with(
       :ensure       => 'present',
-      :public_url   => 'http://10.0.0.1:9774/v2.2/%(tenant_id)s',
-      :admin_url    => 'http://10.0.0.2:9774/v2.2/%(tenant_id)s',
-      :internal_url => 'http://10.0.0.3:9774/v2.2/%(tenant_id)s'
+      :public_url   => 'https://10.0.0.1:9774/v2.2/%(tenant_id)s',
+      :admin_url    => 'https://10.0.0.2:9774/v2.2/%(tenant_id)s',
+      :internal_url => 'https://10.0.0.3:9774/v2.2/%(tenant_id)s'
     )}
 
     it { should contain_keystone_endpoint('RegionTwo/nova_ec2').with(
       :ensure       => 'present',
-      :public_url   => 'http://10.0.0.1:9773/services/Cloud',
-      :admin_url    => 'http://10.0.0.2:9773/services/Admin',
-      :internal_url => 'http://10.0.0.3:9773/services/Cloud'
+      :public_url   => 'https://10.0.0.1:9773/services/Cloud',
+      :admin_url    => 'https://10.0.0.2:9773/services/Admin',
+      :internal_url => 'https://10.0.0.3:9773/services/Cloud'
     )}
 
   end
