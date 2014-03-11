@@ -16,11 +16,6 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
-# Configure the neutron server to use the ML2 plugin.
-# This configures the plugin for the API server, but does nothing
-# about configuring the agents that must also run and share a config
-# file with the OVS plugin if both are on the same machine.
-#
 # == Class: nova::compute::rbd
 #
 # Configure nova-compute to store virtual machines on RBD
