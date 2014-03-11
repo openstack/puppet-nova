@@ -31,15 +31,49 @@
 #   will be removed from nova.conf completely.
 #   Defaults to an empty list
 #
+# [*remove_unused_base_images*]
+#   (optional) Should unused base images be removed?
+#   If undef is specified, remove the line in nova.conf
+#   otherwise, use a boolean to remove or not the base images.
+#   Defaults to undef
+#
+# [*remove_unused_kernels*]
+#   (optional) Should unused kernel images be removed?
+#   This is only safe to enable if all compute nodes
+#   have been updated to support this option.
+#   If undef is specified, remove the line in nova.conf
+#   otherwise, use a boolean to remove or not the kernels.
+#   Defaults to undef
+#
+# [*remove_unused_resized_minimum_age_seconds*]
+#   (optional) Unused resized base images younger
+#   than this will not be removed
+#   If undef is specified, remove the line in nove.conf
+#   otherwise, use a integer or a string to define after
+#   how many seconds it will be removed.
+#   Defaults to undef
+#
+# [*remove_unused_original_minimum_age_seconds*]
+#   (optional) Unused unresized base images younger
+#   than this will not be removed
+#   If undef is specified, remove the line in nove.conf
+#   otherwise, use a integer or a string to define after
+#   how many seconds it will be removed.
+#   Defaults to undef
+#
 
 class nova::compute::libvirt (
-  $libvirt_virt_type       = 'kvm',
-  $vncserver_listen        = '127.0.0.1',
-  $migration_support       = false,
-  $libvirt_cpu_mode        = false,
-  $libvirt_disk_cachemodes = [],
+  $libvirt_virt_type                          = 'kvm',
+  $vncserver_listen                           = '127.0.0.1',
+  $migration_support                          = false,
+  $libvirt_cpu_mode                           = false,
+  $libvirt_disk_cachemodes                    = [],
+  $remove_unused_base_images                  = undef,
+  $remove_unused_kernels                      = undef,
+  $remove_unused_resized_minimum_age_seconds  = undef,
+  $remove_unused_original_minimum_age_seconds = undef,
   # DEPRECATED PARAMETER
-  $libvirt_type            = false
+  $libvirt_type                               = false
 ) {
 
   include nova::params
@@ -119,6 +153,46 @@ class nova::compute::libvirt (
   } else {
     nova_config {
       'libvirt/disk_cachemodes': ensure => absent;
+    }
+  }
+
+  if $remove_unused_kernels != undef {
+    nova_config {
+      'libvirt/remove_unused_kernels': value => $remove_unused_kernels;
+    }
+  } else {
+    nova_config {
+      'libvirt/remove_unused_kernels': ensure => absent;
+    }
+  }
+
+  if $remove_unused_resized_minimum_age_seconds != undef {
+    nova_config {
+      'libvirt/remove_unused_resized_minimum_age_seconds': value => $remove_unused_resized_minimum_age_seconds;
+    }
+  } else {
+    nova_config {
+      'libvirt/remove_unused_resized_minimum_age_seconds': ensure => absent;
+    }
+  }
+
+  if $remove_unused_base_images != undef {
+    nova_config {
+      'DEFAULT/remove_unused_base_images': value => $remove_unused_base_images;
+    }
+  } else {
+    nova_config {
+      'DEFAULT/remove_unused_base_images': ensure => absent;
+    }
+  }
+
+  if $remove_unused_original_minimum_age_seconds != undef {
+    nova_config {
+      'DEFAULT/remove_unused_original_minimum_age_seconds': value => $remove_unused_original_minimum_age_seconds;
+    }
+  } else {
+    nova_config {
+      'DEFAULT/remove_unused_original_minimum_age_seconds': ensure => absent;
     }
   }
 }
