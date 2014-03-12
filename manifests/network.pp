@@ -15,7 +15,11 @@
 #   Defaults to '10.0.0.0/8'
 #
 # [*public_interface*]
-#   (optional) Interface used to connect vms to public network.
+#   (optional) Interface used to connect vms to public network through floating IPs.
+#   Defaults to undef
+#
+# [*flat_interface*]
+#   (optional) Interface used to bridge VMs to when using FlatDHCP or Flat.
 #   Defaults to undef
 #
 # [*num_networks*]
@@ -56,6 +60,7 @@ class nova::network(
   $private_interface = undef,
   $fixed_range       = '10.0.0.0/8',
   $public_interface  = undef,
+  $flat_interface    = undef,
   $num_networks      = 1,
   $network_size      = 255,
   $floating_range    = false,
@@ -68,6 +73,12 @@ class nova::network(
 ) {
 
   include nova::params
+
+  if $flat_interface {
+    $flat_interface_real = $flat_interface
+  } else {
+    $flat_interface_real = $private_interface
+  }
 
   # forward all ipv4 traffic
   # this is required for the vms to pass through the gateways
@@ -120,7 +131,7 @@ class nova::network(
       # I am not proud of this
       $parameters = { fixed_range      => $fixed_range,
                       public_interface => $public_interface,
-                      flat_interface   => $private_interface
+                      flat_interface   => $flat_interface_real,
       }
       $resource_parameters = merge($config_overrides, $parameters)
       $flatdhcp_resource = {'nova::network::flatdhcp' => $resource_parameters }
@@ -129,7 +140,7 @@ class nova::network(
     'nova.network.manager.FlatManager': {
       $parameters = { fixed_range      => $fixed_range,
                       public_interface => $public_interface,
-                      flat_interface   => $private_interface
+                      flat_interface   => $flat_interface_real,
       }
       $resource_parameters = merge($config_overrides, $parameters)
       $flat_resource = {'nova::network::flat' => $resource_parameters }

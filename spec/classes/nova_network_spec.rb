@@ -116,6 +116,7 @@ describe 'nova::network' do
               {
                 :network_manager  => 'nova.network.manager.FlatDHCPManager',
                 :public_interface => 'eth0',
+                :flat_interface   => 'eth0',
                 :config_overrides =>
                   {
                     'flat_network_bridge' => 'br400',
@@ -131,7 +132,7 @@ describe 'nova::network' do
           it { should contain_class('nova::network::flatdhcp').with(
             :fixed_range          => '10.0.0.0/32',
             :public_interface     => 'eth0',
-            :flat_interface       => 'eth1',
+            :flat_interface       => 'eth0',
             :flat_network_bridge  => 'br400',
             #:force_dhcp_release   => false,
             :flat_injected        => true,
@@ -158,12 +159,14 @@ describe 'nova::network' do
               {
                 :network_manager  => 'nova.network.manager.FlatManager',
                 :public_interface => 'eth0',
+                :flat_interface   => 'eth0',
                 :config_overrides => {'flat_network_bridge' => 'br400' }
               }
             )
           end
           it { should contain_class('nova::network::flat').with(
             :public_interface    => 'eth0',
+            :flat_interface      => 'eth0',
             :flat_network_bridge => 'br400'
           ) }
           end
