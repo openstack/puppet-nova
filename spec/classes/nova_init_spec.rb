@@ -79,6 +79,9 @@ describe 'nova' do
     it { should contain_nova_config('DEFAULT/rootwrap_config').with_value('/etc/nova/rootwrap.conf') }
     it { should_not contain_nova_config('DEFAULT/notification_driver') }
 
+    it 'installs utilities' do
+      should contain_class('nova::utilities')
+    end
 
     describe 'with parameters supplied' do
 
@@ -99,7 +102,8 @@ describe 'nova' do
           'service_down_time'        => '120',
           'auth_strategy'            => 'foo',
           'ensure_package'           => '2012.1.1-15.el6',
-          'monitoring_notifications' => true
+          'monitoring_notifications' => true,
+          'install_utilities'        => false,
         }
       end
 
@@ -127,7 +131,9 @@ describe 'nova' do
       it { should contain_nova_config('DEFAULT/lock_path').with_value('/var/locky/path') }
       it { should contain_nova_config('DEFAULT/service_down_time').with_value('120') }
       it { should contain_nova_config('DEFAULT/notification_driver').with_value('nova.openstack.common.notifier.rpc_notifier') }
-
+      it 'does not install utilities' do
+        should_not contain_class('nova::utilities')
+      end
     end
 
     describe 'with deprecated sql parameters' do
