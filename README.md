@@ -88,6 +88,17 @@ Contributors
 Release Notes
 -------------
 
+**3.2.0**
+
+* Replace pip with native package manager for VMWare.
+* Deprecated logdir parameter in favor of log_dir.
+* Allows log_dir to be set to false in order to disable file logging.
+* Enables libvirt at boot.
+* Adds RBD backend support for VM image storage.
+* Parameterizes libvirt cpu_mode and disk_cachemodes.
+* Adds support for https auth endpoints.
+* Adds ability to disable installation of nova utilities.
+
 **3.1.0**
 
 * Minor release for OpenStack Havana.
