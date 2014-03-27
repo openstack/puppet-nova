@@ -95,7 +95,6 @@ describe 'nova' do
         should contain_nova_config('DEFAULT/lock_path').with_value(platform_params[:lock_path])
         should contain_nova_config('DEFAULT/service_down_time').with_value('60')
         should contain_nova_config('DEFAULT/rootwrap_config').with_value('/etc/nova/rootwrap.conf')
-        should_not contain_nova_config('DEFAULT/notification_driver')
       end
 
       it 'installs utilities' do
@@ -125,9 +124,11 @@ describe 'nova' do
           :service_down_time        => '120',
           :auth_strategy            => 'foo',
           :ensure_package           => '2012.1.1-15.el6',
-          :monitoring_notifications => true,
           :memcached_servers        => ['memcached01:11211', 'memcached02:11211'],
           :install_utilities        => false,
+          :notification_driver      => 'ceilometer.compute.nova_notifier',
+          :notification_topics      => 'openstack',
+          :notify_api_faults        => true,
           :nova_user_id             => '499',
           :nova_group_id            => '499' }
       end
@@ -191,7 +192,17 @@ describe 'nova' do
         should contain_nova_config('DEFAULT/state_path').with_value('/var/lib/nova2')
         should contain_nova_config('DEFAULT/lock_path').with_value('/var/locky/path')
         should contain_nova_config('DEFAULT/service_down_time').with_value('120')
-        should contain_nova_config('DEFAULT/notification_driver').with_value('nova.openstack.common.notifier.rpc_notifier')
+        should contain_nova_config('DEFAULT/notification_driver').with_value('ceilometer.compute.nova_notifier')
+        should contain_nova_config('DEFAULT/notification_topics').with_value('openstack')
+        should contain_nova_config('DEFAULT/notify_api_faults').with_value(true)
+      end
+
+      context 'with multiple notification_driver' do
+        before { params.merge!( :notification_driver => ['ceilometer.compute.nova_notifier', 'nova.openstack.common.notifier.rpc_notifier']) }
+
+        it { should contain_nova_config('DEFAULT/notification_driver').with_value(
+          'ceilometer.compute.nova_notifier,nova.openstack.common.notifier.rpc_notifier'
+        ) }
       end
 
       it 'does not install utilities' do
@@ -202,6 +213,26 @@ describe 'nova' do
         before { params.merge!( :log_dir => false) }
 
         it { should contain_nova_config('DEFAULT/log_dir').with_ensure('absent') }
+      end
+    end
+
+    context 'with wrong notify_on_state_change parameter' do
+      let :params do
+        { :notify_on_state_change => 'vm_status' }
+      end
+
+      it 'configures database' do
+        should contain_nova_config('DEFAULT/notify_on_state_change').with_ensure('absent')
+      end
+    end
+
+    context 'with notify_on_state_change parameter' do
+      let :params do
+        { :notify_on_state_change => 'vm_state' }
+      end
+
+      it 'configures database' do
+        should contain_nova_config('DEFAULT/notify_on_state_change').with_value('vm_state')
       end
     end
 
