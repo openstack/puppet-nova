@@ -111,6 +111,35 @@ describe 'nova::compute' do
 
       it { should contain_service('nova-compute').without_ensure }
     end
+
+    context 'with instance_usage_audit parameter set to false' do
+      let :params do
+        { :instance_usage_audit => false, }
+      end
+
+      it { should contain_nova_config('DEFAULT/instance_usage_audit').with_ensure('absent') }
+      it { should contain_nova_config('DEFAULT/instance_usage_audit_period').with_ensure('absent') }
+    end
+
+    context 'with instance_usage_audit parameter and wrong period' do
+      let :params do
+        { :instance_usage_audit        => true,
+          :instance_usage_audit_period => 'fake', }
+      end
+
+      it { should contain_nova_config('DEFAULT/instance_usage_audit').with_ensure('absent') }
+      it { should contain_nova_config('DEFAULT/instance_usage_audit_period').with_ensure('absent') }
+    end
+
+    context 'with instance_usage_audit parameter and period' do
+      let :params do
+        { :instance_usage_audit        => true,
+          :instance_usage_audit_period => 'year', }
+      end
+
+      it { should contain_nova_config('DEFAULT/instance_usage_audit').with_value(true) }
+      it { should contain_nova_config('DEFAULT/instance_usage_audit_period').with_value('year') }
+    end
   end
 
 
