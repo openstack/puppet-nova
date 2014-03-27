@@ -71,6 +71,28 @@
 #   (optional) The RabbitMQ virtual host.
 #   Defaults to '/'
 #
+# [*rabbit_use_ssl*]
+#   (optional) Connect over SSL for RabbitMQ
+#   Defaults to false
+#
+# [*kombu_ssl_ca_certs*]
+#   (optional) SSL certification authority file (valid only if SSL enabled).
+#   Defaults to undef
+#
+# [*kombu_ssl_certfile*]
+#   (optional) SSL cert file (valid only if SSL enabled).
+#   Defaults to undef
+#
+# [*kombu_ssl_keyfile*]
+#   (optional) SSL key file (valid only if SSL enabled).
+#   Defaults to undef
+#
+# [*kombu_ssl_version*]
+#   (optional) SSL version to use (valid only if SSL enabled).
+#   Valid values are TLSv1, SSLv23 and SSLv3. SSLv2 may be
+#   available on some distributions.
+#   Defaults to 'SSLv3'
+#
 # [*amqp_durable_queues*]
 #   (optional) Define queues as "durable" to rabbitmq.
 #   Defaults to false
@@ -188,6 +210,11 @@ class nova(
   $rabbit_port              = '5672',
   $rabbit_userid            = 'guest',
   $rabbit_virtual_host      = '/',
+  $rabbit_use_ssl           = false,
+  $kombu_ssl_ca_certs       = undef,
+  $kombu_ssl_certfile       = undef,
+  $kombu_ssl_keyfile        = undef,
+  $kombu_ssl_version        = 'SSLv3',
   $amqp_durable_queues      = false,
   $qpid_hostname            = 'localhost',
   $qpid_port                = '5672',
@@ -358,7 +385,41 @@ class nova(
       'DEFAULT/rabbit_password':     value => $rabbit_password, secret => true;
       'DEFAULT/rabbit_userid':       value => $rabbit_userid;
       'DEFAULT/rabbit_virtual_host': value => $rabbit_virtual_host;
+      'DEFAULT/rabbit_use_ssl':      value => $rabbit_use_ssl;
       'DEFAULT/amqp_durable_queues': value => $amqp_durable_queues;
+    }
+
+    if $rabbit_use_ssl {
+      if $kombu_ssl_ca_certs {
+        nova_config { 'DEFAULT/kombu_ssl_ca_certs': value => $kombu_ssl_ca_certs }
+      } else {
+        nova_config { 'DEFAULT/kombu_ssl_ca_certs': ensure => absent}
+      }
+
+      if $kombu_ssl_certfile {
+        nova_config { 'DEFAULT/kombu_ssl_certfile': value => $kombu_ssl_certfile }
+      } else {
+        nova_config { 'DEFAULT/kombu_ssl_certfile': ensure => absent}
+      }
+
+      if $kombu_ssl_keyfile {
+        nova_config { 'DEFAULT/kombu_ssl_keyfile': value => $kombu_ssl_keyfile }
+      } else {
+        nova_config { 'DEFAULT/kombu_ssl_keyfile': ensure => absent}
+      }
+
+      if $kombu_ssl_version {
+        nova_config { 'DEFAULT/kombu_ssl_version': value => $kombu_ssl_version }
+      } else {
+        nova_config { 'DEFAULT/kombu_ssl_version': ensure => absent}
+      }
+    } else {
+      nova_config {
+        'DEFAULT/kombu_ssl_ca_certs': ensure => absent;
+        'DEFAULT/kombu_ssl_certfile': ensure => absent;
+        'DEFAULT/kombu_ssl_keyfile':  ensure => absent;
+        'DEFAULT/kombu_ssl_version':  ensure => absent;
+      }
     }
 
     if $rabbit_hosts {

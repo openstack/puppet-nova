@@ -250,7 +250,12 @@ describe 'nova' do
         should_not contain_nova_config('DEFAULT/rabbit_port')
         should contain_nova_config('DEFAULT/rabbit_hosts').with_value('rabbit:5673,rabbit2:5674')
         should contain_nova_config('DEFAULT/rabbit_ha_queues').with_value(true)
+        should contain_nova_config('DEFAULT/rabbit_use_ssl').with_value(false)
         should contain_nova_config('DEFAULT/amqp_durable_queues').with_value(false)
+        should contain_nova_config('DEFAULT/kombu_ssl_ca_certs').with_ensure('absent')
+        should contain_nova_config('DEFAULT/kombu_ssl_certfile').with_ensure('absent')
+        should contain_nova_config('DEFAULT/kombu_ssl_keyfile').with_ensure('absent')
+        should contain_nova_config('DEFAULT/kombu_ssl_version').with_ensure('absent')
       end
     end
 
@@ -264,6 +269,7 @@ describe 'nova' do
         should_not contain_nova_config('DEFAULT/rabbit_port')
         should contain_nova_config('DEFAULT/rabbit_hosts').with_value('rabbit:5673')
         should contain_nova_config('DEFAULT/rabbit_ha_queues').with_value(true)
+        should contain_nova_config('DEFAULT/rabbit_use_ssl').with_value(false)
         should contain_nova_config('DEFAULT/amqp_durable_queues').with_value(false)
       end
     end
@@ -279,7 +285,51 @@ describe 'nova' do
         should_not contain_nova_config('DEFAULT/rabbit_port')
         should contain_nova_config('DEFAULT/rabbit_hosts').with_value('rabbit:5673')
         should contain_nova_config('DEFAULT/rabbit_ha_queues').with_value(true)
+        should contain_nova_config('DEFAULT/rabbit_use_ssl').with_value(false)
         should contain_nova_config('DEFAULT/amqp_durable_queues').with_value(true)
+        should contain_nova_config('DEFAULT/kombu_ssl_ca_certs').with_ensure('absent')
+        should contain_nova_config('DEFAULT/kombu_ssl_certfile').with_ensure('absent')
+        should contain_nova_config('DEFAULT/kombu_ssl_keyfile').with_ensure('absent')
+        should contain_nova_config('DEFAULT/kombu_ssl_version').with_ensure('absent')
+      end
+    end
+
+    context 'with rabbit_use_ssl parameter' do
+      let :params do
+        { :rabbit_hosts   => ['rabbit:5673'],
+          :rabbit_use_ssl => 'true' }
+      end
+
+      it 'configures rabbit' do
+        should_not contain_nova_config('DEFAULT/rabbit_host')
+        should_not contain_nova_config('DEFAULT/rabbit_port')
+        should contain_nova_config('DEFAULT/rabbit_hosts').with_value('rabbit:5673')
+        should contain_nova_config('DEFAULT/rabbit_ha_queues').with_value(true)
+        should contain_nova_config('DEFAULT/rabbit_use_ssl').with_value(true)
+        should contain_nova_config('DEFAULT/amqp_durable_queues').with_value(false)
+        should contain_nova_config('DEFAULT/kombu_ssl_ca_certs').with_ensure('absent')
+        should contain_nova_config('DEFAULT/kombu_ssl_certfile').with_ensure('absent')
+        should contain_nova_config('DEFAULT/kombu_ssl_keyfile').with_ensure('absent')
+        should contain_nova_config('DEFAULT/kombu_ssl_version').with_value('SSLv3')
+      end
+    end
+
+    context 'with amqp ssl parameters' do
+      let :params do
+        { :rabbit_hosts       => ['rabbit:5673'],
+          :rabbit_use_ssl     => 'true',
+          :kombu_ssl_ca_certs => '/etc/ca.cert',
+          :kombu_ssl_certfile => '/etc/certfile',
+          :kombu_ssl_keyfile  => '/etc/key',
+          :kombu_ssl_version  => 'TLSv1', }
+      end
+
+      it 'configures rabbit' do
+        should contain_nova_config('DEFAULT/rabbit_use_ssl').with_value(true)
+        should contain_nova_config('DEFAULT/kombu_ssl_ca_certs').with_value('/etc/ca.cert')
+        should contain_nova_config('DEFAULT/kombu_ssl_certfile').with_value('/etc/certfile')
+        should contain_nova_config('DEFAULT/kombu_ssl_keyfile').with_value('/etc/key')
+        should contain_nova_config('DEFAULT/kombu_ssl_version').with_value('TLSv1')
       end
     end
 
