@@ -89,6 +89,33 @@ Contributors
 Release Notes
 -------------
 
+**3.2.0**
+
+* Replace pip with native package manager for VMWare.
+* Deprecated logdir parameter in favor of log_dir.
+* Allows log_dir to be set to false in order to disable file logging.
+* Enables libvirt at boot.
+* Adds RBD backend support for VM image storage.
+* Parameterizes libvirt cpu_mode and disk_cachemodes.
+* Adds support for https auth endpoints.
+* Adds ability to disable installation of nova utilities.
+
+**3.1.0**
+
+* Minor release for OpenStack Havana.
+* Add libguestfs-tools package to nova utilities.
+* Fixed vncproxy package naming for Ubuntu.
+* Fixed libvirt configuration.
+
+**3.0.0**
+
+* Major release for OpenStack Havana.
+* Removed api-paste.ini configuration.
+* Adds support for live migrations with using the libvirt Nova driver.
+* Fixed bug to ensure keystone endpoint is set before service is started.
+* Fixed nova-spiceproxy support on Ubuntu.
+* Added support for VMWareVCDriver.
+
 **2.2.0**
 
 * Added a check to install bridge-utils only if needed.
