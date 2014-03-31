@@ -48,7 +48,7 @@
 # [*remove_unused_resized_minimum_age_seconds*]
 #   (optional) Unused resized base images younger
 #   than this will not be removed
-#   If undef is specified, remove the line in nove.conf
+#   If undef is specified, remove the line in nova.conf
 #   otherwise, use a integer or a string to define after
 #   how many seconds it will be removed.
 #   Defaults to undef
@@ -56,7 +56,7 @@
 # [*remove_unused_original_minimum_age_seconds*]
 #   (optional) Unused unresized base images younger
 #   than this will not be removed
-#   If undef is specified, remove the line in nove.conf
+#   If undef is specified, remove the line in nova.conf
 #   otherwise, use a integer or a string to define after
 #   how many seconds it will be removed.
 #   Defaults to undef
