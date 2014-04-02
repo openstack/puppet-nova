@@ -58,6 +58,9 @@ describe 'nova::api' do
         should contain_nova_config('DEFAULT/osapi_compute_listen').with('value' => '0.0.0.0')
         should contain_nova_config('DEFAULT/metadata_listen').with('value' => '0.0.0.0')
         should contain_nova_config('DEFAULT/osapi_volume_listen').with('value' => '0.0.0.0')
+        should contain_nova_config('DEFAULT/osapi_compute_workers').with('value' => '5')
+        should contain_nova_config('DEFAULT/metadata_workers').with('value' => '5')
+        should contain_nova_config('conductor/workers').with('value' => '5')
       end
 
       it 'unconfigures neutron_metadata proxy' do
@@ -66,26 +69,40 @@ describe 'nova::api' do
       end
     end
 
+    context 'with deprecated parameters' do
+      before do
+        params.merge!({
+          :workers           => 1,
+        })
+      end
+      it 'configures various stuff' do
+        should contain_nova_config('DEFAULT/osapi_compute_workers').with('value' => '1')
+      end
+    end
+
     context 'with overridden parameters' do
       before do
         params.merge!({
-          :enabled           => true,
-          :ensure_package    => '2012.1-2',
-          :auth_host         => '10.0.0.1',
-          :auth_port         => 1234,
-          :auth_protocol     => 'https',
-          :auth_admin_prefix => '/keystone/admin',
-          :auth_uri          => 'https://10.0.0.1:9999/',
-          :auth_version      => 'v3.0',
-          :admin_tenant_name => 'service2',
-          :admin_user        => 'nova2',
-          :admin_password    => 'passw0rd2',
-          :api_bind_address  => '192.168.56.210',
-          :metadata_listen   => '127.0.0.1',
-          :volume_api_class  => 'nova.volume.cinder.API',
-          :use_forwarded_for => false,
-          :ratelimits        => '(GET, "*", .*, 100, MINUTE);(POST, "*", .*, 200, MINUTE)',
+          :enabled                              => true,
+          :ensure_package                       => '2012.1-2',
+          :auth_host                            => '10.0.0.1',
+          :auth_port                            => 1234,
+          :auth_protocol                        => 'https',
+          :auth_admin_prefix                    => '/keystone/admin',
+          :auth_uri                             => 'https://10.0.0.1:9999/',
+          :auth_version                         => 'v3.0',
+          :admin_tenant_name                    => 'service2',
+          :admin_user                           => 'nova2',
+          :admin_password                       => 'passw0rd2',
+          :api_bind_address                     => '192.168.56.210',
+          :metadata_listen                      => '127.0.0.1',
+          :volume_api_class                     => 'nova.volume.cinder.API',
+          :use_forwarded_for                    => false,
+          :ratelimits                           => '(GET, "*", .*, 100, MINUTE);(POST, "*", .*, 200, MINUTE)',
           :neutron_metadata_proxy_shared_secret => 'secrete',
+          :osapi_compute_workers                => 1,
+          :metadata_workers                     => 2,
+          :conductor_workers                    => 3,
         })
       end
 
@@ -131,7 +148,9 @@ describe 'nova::api' do
         should contain_nova_config('DEFAULT/metadata_listen').with('value' => '127.0.0.1')
         should contain_nova_config('DEFAULT/osapi_volume_listen').with('value' => '192.168.56.210')
         should contain_nova_config('DEFAULT/use_forwarded_for').with('value' => false)
-        should contain_nova_config('DEFAULT/osapi_compute_workers').with('value' => '5')
+        should contain_nova_config('DEFAULT/osapi_compute_workers').with('value' => '1')
+        should contain_nova_config('DEFAULT/metadata_workers').with('value' => '2')
+        should contain_nova_config('conductor/workers').with('value' => '3')
         should contain_nova_config('DEFAULT/service_neutron_metadata_proxy').with('value' => true)
         should contain_nova_config('DEFAULT/neutron_metadata_proxy_shared_secret').with('value' => 'secrete')
       end
