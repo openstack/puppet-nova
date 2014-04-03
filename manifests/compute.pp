@@ -56,6 +56,15 @@
 #   (optional) The MTU size for the interfaces managed by nova
 #   Defaults to undef
 #
+# [*instance_usage_audit*]
+#   (optional) Generate periodic compute.instance.exists notifications.
+#   Defaults to false
+#
+# [*instance_usage_audit_period*]
+#   (optional) Time period to generate instance usages for.
+#   Time period must be hour, day, month or year
+#   Defaults to 'month'
+#
 class nova::compute (
   $enabled                       = false,
   $manage_service                = true,
@@ -69,7 +78,9 @@ class nova::compute (
   $force_config_drive            = false,
   $virtio_nic                    = false,
   $neutron_enabled               = true,
-  $network_device_mtu            = undef
+  $network_device_mtu            = undef,
+  $instance_usage_audit          = false,
+  $instance_usage_audit_period   = 'month'
 ) {
 
   include nova::params
@@ -127,8 +138,19 @@ class nova::compute (
     }
   }
 
+  if $instance_usage_audit and $instance_usage_audit_period in ['hour', 'day', 'month', 'year'] {
+    nova_config {
+      'DEFAULT/instance_usage_audit':        value => $instance_usage_audit;
+      'DEFAULT/instance_usage_audit_period': value => $instance_usage_audit_period;
+    }
+  } else {
+    nova_config {
+      'DEFAULT/instance_usage_audit':        ensure => absent;
+      'DEFAULT/instance_usage_audit_period': ensure => absent;
+    }
+  }
+
   package { 'pm-utils':
     ensure => present,
   }
-
 }
