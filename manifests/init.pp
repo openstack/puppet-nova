@@ -194,6 +194,27 @@
 #   are 0.9 and 2.2
 #   Defaults to '0.9'
 #
+# [*notification_driver*]
+#   (optional) Driver or drivers to handle sending notifications.
+#   Value can be a string or a list.
+#   Defaults to []
+#
+# [*notification_topics*]
+#   (optional) AMQP topic used for OpenStack notifications
+#   Defaults to 'notifications'
+#
+# [*notify_api_faults*]
+#   (optional) If set, send api.fault notifications on caught
+#   exceptions in the API service
+#   Defaults to false
+#
+# [*notify_on_state_change*]
+#   (optional) If set, send compute.instance.update notifications
+#   on instance state changes. Valid values are None for no notifications,
+#   "vm_state" for notifications on VM state changes, or "vm_and_task_state"
+#   for notifications on VM and task state changes.
+#   Defaults to undef
+#
 class nova(
   $ensure_package           = 'present',
   $database_connection      = false,
@@ -243,6 +264,10 @@ class nova(
   $log_facility             = 'LOG_USER',
   $install_utilities        = true,
   $mysql_module             = '0.9',
+  $notification_driver      = [],
+  $notification_topics      = 'notifications',
+  $notify_api_faults        = false,
+  $notify_on_state_change   = undef,
   # DEPRECATED PARAMETERS
   # this is how to query all resources from our clutser
   $nova_cluster_id          = undef,
@@ -477,21 +502,36 @@ class nova(
     nova_config { 'DEFAULT/log_dir': ensure => absent;}
   }
 
-  nova_config {
-    'DEFAULT/verbose':           value => $verbose;
-    'DEFAULT/debug':             value => $debug;
-    'DEFAULT/rpc_backend':       value => $rpc_backend;
-    # Following may need to be broken out to different nova services
-    'DEFAULT/state_path':        value => $state_path;
-    'DEFAULT/lock_path':         value => $lock_path;
-    'DEFAULT/service_down_time': value => $service_down_time;
-    'DEFAULT/rootwrap_config':   value => $rootwrap_config;
+  if $monitoring_notifications {
+    warning('The monitoring_notifications parameter is deprecated, use notification_driver instead.')
+    $notification_driver_real = 'nova.openstack.common.notifier.rpc_notifier'
+  } else {
+    $notification_driver_real = is_string($notification_driver) ? {
+      true    => $notification_driver,
+      default => join($notification_driver, ',')
+    }
   }
 
-  if $monitoring_notifications {
+  nova_config {
+    'DEFAULT/verbose':             value => $verbose;
+    'DEFAULT/debug':               value => $debug;
+    'DEFAULT/rpc_backend':         value => $rpc_backend;
+    'DEFAULT/notification_driver': value => $notification_driver_real;
+    'DEFAULT/notification_topics': value => $notification_topics;
+    'DEFAULT/notify_api_faults':   value => $notify_api_faults;
+    # Following may need to be broken out to different nova services
+    'DEFAULT/state_path':          value => $state_path;
+    'DEFAULT/lock_path':           value => $lock_path;
+    'DEFAULT/service_down_time':   value => $service_down_time;
+    'DEFAULT/rootwrap_config':     value => $rootwrap_config;
+  }
+
+  if $notify_on_state_change and $notify_on_state_change in ['vm_state', 'vm_and_task_state'] {
     nova_config {
-      'DEFAULT/notification_driver': value => 'nova.openstack.common.notifier.rpc_notifier'
+      'DEFAULT/notify_on_state_change': value => $notify_on_state_change;
     }
+  } else {
+    nova_config { 'DEFAULT/notify_on_state_change': ensure => absent; }
   }
 
   # Syslog configuration
