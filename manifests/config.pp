@@ -7,7 +7,15 @@
 # [*nova_config*]
 #   (optional) Allow configuration of arbitrary Nova configurations.
 #   The value is an hash of nova_config resources. Example:
-#   { 'DEFAULT/foo': value => 'fooValue'; 'DEFAULT/bar': value => 'barValue'}
+#   { 'DEFAULT/foo' => { value => 'fooValue'},
+#     'DEFAULT/bar' => { value => 'barValue'}
+#   }
+#   In yaml format, Example:
+#   nova_config:
+#     DEFAULT/foo:
+#       value: fooValue
+#     DEFAULT/bar:
+#       value: barValue
 #
 #   NOTE: The configuration MUST NOT be already handled by this module
 #   or Puppet catalog compilation will fail with duplicate resources.
