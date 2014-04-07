@@ -29,6 +29,18 @@
 #   (optional) Timeout before idle db connections are reaped.
 #   Defaults to 3600
 #
+# [*database_min_pool_size*]
+#   (optional) Minimal number of db connections in the pool.
+#   Defaults to 1
+#
+# [*database_max_pool_size*]
+#   (optional) Maximum number of db connections in the pool
+#   Defaults to 10
+#
+# [*database_max_overflow*]
+#   (optional) Maximum number of extra connections created when the pool is fully utilized.
+#   Defaults to -1
+#
 # [*rpc_backend*]
 #   (optional) The rpc backend implementation to use, can be:
 #     nova.openstack.common.rpc.impl_kombu (for rabbitmq)
@@ -198,6 +210,9 @@ class nova(
   $ensure_package           = 'present',
   $database_connection      = false,
   $database_idle_timeout    = 3600,
+  $database_min_pool_size   = 1,
+  $database_max_pool_size   = 10,
+  $database_max_overflow    = -1,
   $rpc_backend              = 'nova.openstack.common.rpc.impl_kombu',
   $image_service            = 'nova.image.glance.GlanceImageService',
   # these glance params should be optional
@@ -360,6 +375,9 @@ class nova(
     nova_config {
       'database/connection':   value => $database_connection_real, secret => true;
       'database/idle_timeout': value => $database_idle_timeout_real;
+      'database/min_pool_size': value => $database_min_pool_size;
+      'database/max_pool_size': value => $database_max_pool_size;
+      'database/max_overflow': value => $database_max_overflow;
     }
   }
 
