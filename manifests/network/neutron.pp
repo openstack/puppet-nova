@@ -70,6 +70,18 @@
 #   to re-enable the Nova firewall.
 #   Defaults to 'nova.virt.firewall.NoopFirewallDriver'
 #
+# [*vif_plugging_is_fatal*]
+#   (optional) Fail to boot instance if vif plugging fails.
+#   This prevents nova from booting an instance if vif plugging notification
+#   is not received from neutron.
+#   Defaults to 'True'
+#
+# [*vif_plugging_timeout*]
+#   (optional) Number of seconds to wait for neutron vif plugging events.
+#   Set to '0' and vif_plugging_is_fatal to 'False' if vif plugging
+#   notification is not being used.
+#   Defaults to '300'
+#
 class nova::network::neutron (
   $neutron_admin_password,
   $neutron_auth_strategy           = 'keystone',
@@ -84,7 +96,9 @@ class nova::network::neutron (
   $neutron_extension_sync_interval = '600',
   $neutron_ca_certificates_file    = undef,
   $security_group_api              = 'neutron',
-  $firewall_driver                 = 'nova.virt.firewall.NoopFirewallDriver'
+  $firewall_driver                 = 'nova.virt.firewall.NoopFirewallDriver',
+  $vif_plugging_is_fatal           = true,
+  $vif_plugging_timeout            = '300'
 ) {
 
   nova_config {
@@ -102,6 +116,8 @@ class nova::network::neutron (
     'DEFAULT/neutron_extension_sync_interval': value => $neutron_extension_sync_interval;
     'DEFAULT/security_group_api':              value => $security_group_api;
     'DEFAULT/firewall_driver':                 value => $firewall_driver;
+    'DEFAULT/vif_plugging_is_fatal':           value => $vif_plugging_is_fatal;
+    'DEFAULT/vif_plugging_timeout':            value => $vif_plugging_timeout;
   }
 
   if ! $neutron_ca_certificates_file {
