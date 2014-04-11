@@ -9,7 +9,7 @@ project_page 'https://launchpad.net/puppet-nova'
 
 ## Add dependencies, if any:
 dependency 'dprince/qpid', '>= 1.0.0 <2.0.0'
-dependency 'duritong/sysctl', '>=0.0.1 <1.0.0'
+dependency 'thias/sysctl', '>=0.0.1'
 dependency 'puppetlabs/cinder', '>=4.0.0 <5.0.0'
 dependency 'puppetlabs/glance', '>=4.0.0 <5.0.0'
 dependency 'puppetlabs/inifile', '>=1.0.0 <2.0.0'

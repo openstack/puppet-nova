@@ -76,7 +76,7 @@ class nova::network(
     path => $::path
   }
 
-  sysctl::value { 'net.ipv4.ip_forward':
+  sysctl { 'net.ipv4.ip_forward':
     value => '1'
   }
 
