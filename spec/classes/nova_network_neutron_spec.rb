@@ -14,7 +14,9 @@ describe 'nova::network::neutron' do
       :neutron_ovs_bridge              => 'br-int',
       :neutron_extension_sync_interval => '600',
       :security_group_api              => 'neutron',
-      :firewall_driver                 => 'nova.virt.firewall.NoopFirewallDriver'
+      :firewall_driver                 => 'nova.virt.firewall.NoopFirewallDriver',
+      :vif_plugging_is_fatal           => true,
+      :vif_plugging_timeout            => '300'
     }
   end
 
@@ -41,6 +43,10 @@ describe 'nova::network::neutron' do
       should contain_nova_config('DEFAULT/security_group_api').with_value(default_params[:security_group_api])
       should contain_nova_config('DEFAULT/neutron_ovs_bridge').with_value(default_params[:neutron_ovs_bridge])
     end
+    it 'configures neutron vif plugging events in nova.conf' do
+      should contain_nova_config('DEFAULT/vif_plugging_is_fatal').with_value(default_params[:vif_plugging_is_fatal])
+      should contain_nova_config('DEFAULT/vif_plugging_timeout').with_value(default_params[:vif_plugging_timeout])
+    end
   end
 
   context 'when overriding class parameters' do
@@ -56,7 +62,9 @@ describe 'nova::network::neutron' do
         :security_group_api              => 'nova',
         :firewall_driver                 => 'nova.virt.firewall.IptablesFirewallDriver',
         :neutron_ovs_bridge              => 'br-int',
-        :neutron_extension_sync_interval => '600'
+        :neutron_extension_sync_interval => '600',
+        :vif_plugging_is_fatal           => false,
+        :vif_plugging_timeout            => '0'
       )
     end
 
@@ -77,6 +85,10 @@ describe 'nova::network::neutron' do
       should contain_nova_config('DEFAULT/firewall_driver').with_value(params[:firewall_driver])
       should contain_nova_config('DEFAULT/security_group_api').with_value(params[:security_group_api])
       should contain_nova_config('DEFAULT/neutron_ovs_bridge').with_value(params[:neutron_ovs_bridge])
+    end
+    it 'configures neutron vif plugging events in nova.conf' do
+      should contain_nova_config('DEFAULT/vif_plugging_is_fatal').with_value(params[:vif_plugging_is_fatal])
+      should contain_nova_config('DEFAULT/vif_plugging_timeout').with_value(params[:vif_plugging_timeout])
     end
   end
 end
