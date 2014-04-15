@@ -1,5 +1,4 @@
 *.swp
 spec/fixtures/modules/*
-spec/fixtures/manifests/site.pp
 pkg
 Gemfile.lock
