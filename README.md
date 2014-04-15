@@ -88,6 +88,10 @@ Contributors
 Release Notes
 -------------
 
+**3.2.1**
+
+* Fixed consoleauth/spice resource duplication on Red Hat systems.
+
 **3.2.0**
 
 * Replace pip with native package manager for VMWare.
