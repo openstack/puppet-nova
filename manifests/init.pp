@@ -524,6 +524,7 @@ class nova(
     'DEFAULT/lock_path':           value => $lock_path;
     'DEFAULT/service_down_time':   value => $service_down_time;
     'DEFAULT/rootwrap_config':     value => $rootwrap_config;
+    'DEFAULT/report_interval':     value => $report_interval;
   }
 
   if $notify_on_state_change and $notify_on_state_change in ['vm_state', 'vm_and_task_state'] {
