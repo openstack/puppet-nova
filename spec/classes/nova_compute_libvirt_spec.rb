@@ -103,7 +103,8 @@ describe 'nova::compute::libvirt' do
 
   describe 'on rhel platforms' do
     let :facts do
-      { :operatingsystem => 'RedHat', :osfamily => 'RedHat' }
+      { :operatingsystem => 'RedHat', :osfamily => 'RedHat',
+        :operatingsystemrelease => 6.5 }
     end
 
     describe 'with default parameters' do
@@ -129,6 +130,20 @@ describe 'nova::compute::libvirt' do
         :before   => 'Service[libvirt]',
         :provider => nil
       ) }
+
+      describe 'on rhel 7' do
+        let :facts do
+          super().merge(:operatingsystemrelease => 7.0)
+        end
+
+        it { should contain_service('libvirt').with(
+          :provider => nil
+        )}
+
+        it { should contain_service('messagebus').with(
+          :provider => nil
+        )}
+      end
 
       it { should contain_nova_config('DEFAULT/compute_driver').with_value('libvirt.LibvirtDriver')}
       it { should contain_nova_config('libvirt/virt_type').with_value('kvm')}
