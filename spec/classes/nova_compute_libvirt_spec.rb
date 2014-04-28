@@ -119,7 +119,7 @@ describe 'nova::compute::libvirt' do
         :name     => 'libvirtd',
         :enable   => true,
         :ensure   => 'running',
-        :provider => 'init',
+        :provider => nil,
         :require  => 'Package[libvirt]',
         :before   => 'Service[nova-compute]'
       )}
@@ -127,7 +127,7 @@ describe 'nova::compute::libvirt' do
         :ensure   => 'running',
         :enable   => true,
         :before   => 'Service[libvirt]',
-        :provider => 'init'
+        :provider => nil
       ) }
 
       it { should contain_nova_config('DEFAULT/compute_driver').with_value('libvirt.LibvirtDriver')}
