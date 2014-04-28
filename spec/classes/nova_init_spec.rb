@@ -132,7 +132,8 @@ describe 'nova' do
           :notify_api_faults        => true,
           :nova_user_id             => '499',
           :nova_group_id            => '499',
-          :report_interval          => '60' }
+          :report_interval          => '60',
+          :nova_shell               => '/bin/bash' }
       end
 
       it 'creates user and group' do
@@ -148,7 +149,7 @@ describe 'nova' do
           :groups     => 'nova',
           :home       => '/var/lib/nova',
           :managehome => false,
-          :shell      => '/bin/false',
+          :shell      => '/bin/bash',
           :uid        => '499',
           :gid        => '499'
         )
@@ -412,6 +413,128 @@ describe 'nova' do
         it { should contain_nova_config('DEFAULT/qpid_sasl_mechanisms').with_value('DIGEST-MD5 GSSAPI PLAIN') }
       end
     end
+
+    context 'with ssh public key' do
+        let :params do
+            {
+                :nova_public_key => {'type' => 'ssh-rsa',
+                                     'key'  => 'keydata'}
+            }
+        end
+
+        it 'should install ssh public key' do
+            should contain_ssh_authorized_key('nova-migration-public-key').with(
+                :ensure => 'present',
+                :key => 'keydata',
+                :type => 'ssh-rsa'
+            )
+        end
+    end
+
+    context 'with ssh public key missing key type' do
+        let :params do
+            {
+                :nova_public_key => {'type' => '',
+                                     'key'  => 'keydata'}
+            }
+        end
+
+        it 'should raise an error' do
+            expect {
+                should contain_ssh_authorized_key('nova-migration-public-key').with(
+                    :ensure => 'present',
+                    :key => 'keydata',
+                    :type => ''
+                )
+            }.to raise_error Puppet::Error, /You must provide both a key type and key data./
+        end
+    end
+
+    context 'with ssh public key missing key data' do
+        let :params do
+            {
+                :nova_public_key => {'type' => 'ssh-rsa',
+                                     'key'  => ''}
+            }
+        end
+
+        it 'should raise an error' do
+            expect {
+                should contain_ssh_authorized_key('nova-migration-public-key').with(
+                    :ensure => 'present',
+                    :key => 'keydata',
+                    :type => ''
+                )
+            }.to raise_error Puppet::Error, /You must provide both a key type and key data./
+        end
+    end
+
+    context 'with ssh private key' do
+        let :params do
+            {
+                :nova_private_key => {'type' => 'ssh-rsa',
+                                     'key'  => 'keydata'}
+            }
+        end
+
+        it 'should install ssh private key' do
+            should contain_file('/var/lib/nova/.ssh/id_rsa').with(
+                :content => 'keydata'
+            )
+        end
+    end
+
+    context 'with ssh private key missing key type' do
+        let :params do
+            {
+                :nova_private_key => {'type' => '',
+                                     'key'  => 'keydata'}
+            }
+        end
+
+        it 'should raise an error' do
+            expect {
+                should contain_file('/var/lib/nova/.ssh/id_rsa').with(
+                    :content => 'keydata'
+                )
+            }.to raise_error Puppet::Error, /You must provide both a key type and key data./
+        end
+    end
+
+    context 'with ssh private key having incorrect key type' do
+        let :params do
+            {
+                :nova_private_key => {'type' => 'invalid',
+                                     'key'  => 'keydata'}
+            }
+        end
+
+        it 'should raise an error' do
+            expect {
+                should contain_file('/var/lib/nova/.ssh/id_rsa').with(
+                    :content => 'keydata'
+                )
+            }.to raise_error Puppet::Error, /Unable to determine name of private key file./
+        end
+    end
+
+    context 'with ssh private key missing key data' do
+        let :params do
+            {
+                :nova_private_key => {'type' => 'ssh-rsa',
+                                     'key'  => ''}
+            }
+        end
+
+        it 'should raise an error' do
+            expect {
+                should contain_file('/var/lib/nova/.ssh/id_rsa').with(
+                    :content => 'keydata'
+                )
+            }.to raise_error Puppet::Error, /You must provide both a key type and key data./
+        end
+    end
+
   end
 
   context 'on Debian platforms' do

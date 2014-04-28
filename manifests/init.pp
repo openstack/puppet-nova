@@ -189,6 +189,22 @@
 #   the ownership of all files/dirs owned by nova.
 #   Defaults to undef.
 #
+# [*nova_public_key*]
+#   (optional) Install public key in .ssh/authorized_keys for the 'nova' user.
+#   Expects a hash of the form { type => 'key-type', key => 'key-data' } where
+#   'key-type' is one of (ssh-rsa, ssh-dsa, ssh-ecdsa) and 'key-data' is the
+#   actual key data (e.g, 'AAAA...').
+#
+# [*nova_private_key*]
+#   (optional) Install private key into .ssh/id_rsa (or appropriate equivalent
+#   for key type).  Expects a hash of the form { type => 'key-type', key =>
+#   'key-data' }, where 'key-type' is one of (ssh-rsa, ssh-dsa, ssh-ecdsa) and
+#   'key-data' is the contents of the private key file.
+#
+# [*nova_shell*]
+#   (optional) Set shell for 'nova' user to the specified value.
+#   Defaults to '/bin/false'.
+#
 # [*mysql_module*]
 #   (optional) Mysql module version to use. Tested versions
 #   are 0.9 and 2.2
@@ -257,6 +273,9 @@ class nova(
   $rootwrap_config          = '/etc/nova/rootwrap.conf',
   $nova_user_id             = undef,
   $nova_group_id            = undef,
+  $nova_public_key          = undef,
+  $nova_private_key         = undef,
+  $nova_shell               = '/bin/false',
   # deprecated in folsom
   #$root_helper = $::nova::params::root_helper,
   $monitoring_notifications = false,
@@ -293,10 +312,59 @@ class nova(
     groups     => 'nova',
     home       => '/var/lib/nova',
     managehome => false,
-    shell      => '/bin/false',
+    shell      => $nova_shell,
     uid        => $nova_user_id,
     gid        => $nova_group_id,
   }
+
+  if $nova_public_key or $nova_private_key {
+    file { '/var/lib/nova/.ssh':
+      ensure => directory,
+      mode   => '0700',
+      owner  => nova,
+      group  => nova,
+    }
+
+    if $nova_public_key {
+      if ! $nova_public_key[key] or ! $nova_public_key[type] {
+        fail('You must provide both a key type and key data.')
+      }
+
+      ssh_authorized_key { 'nova-migration-public-key':
+        ensure  => present,
+        key     => $nova_public_key[key],
+        type    => $nova_public_key[type],
+        user    => 'nova',
+        require => File['/var/lib/nova/.ssh'],
+      }
+    }
+
+    if $nova_private_key {
+      if ! $nova_private_key[key] or ! $nova_private_key[type] {
+        fail('You must provide both a key type and key data.')
+      }
+
+      $nova_private_key_file = $nova_private_key[type] ? {
+        'ssh-rsa'   => '/var/lib/nova/.ssh/id_rsa',
+        'ssh-dsa'   => '/var/lib/nova/.ssh/id_dsa',
+        'ssh-ecdsa' => '/var/lib/nova/.ssh/id_ecdsa',
+        default     => undef
+      }
+
+      if ! $nova_private_key_file {
+        fail("Unable to determine name of private key file.  Type specified was '${nova_private_key[type]}' but should be one of: ssh-rsa, ssh-dsa, ssh-ecdsa.")
+      }
+
+      file { $nova_private_key_file:
+        content => $nova_private_key[key],
+        mode    => '0600',
+        owner   => nova,
+        group   => nova,
+        require => File['/var/lib/nova/.ssh'],
+      }
+    }
+  }
+
 
   # all nova_config resources should be applied
   # after the nova common package
