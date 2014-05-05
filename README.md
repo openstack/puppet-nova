@@ -1,6 +1,8 @@
 nova
 ====
 
+4.0.0 - 2014.1.0 - Icehouse
+
 #### Table of Contents
 
 1. [Overview - What is the nova module?](#overview)
@@ -88,6 +90,29 @@ Contributors
 
 Release Notes
 -------------
+
+**4.0.0**
+
+* Stable Icehouse release.
+* Added support for RHEL 7.
+* Added support for metadata and conductor workers.
+* Added support for vif_plugging parameters.
+* Added support for puppetlabs-mysql 2.2 and greater.
+* Added support for instance_usage_audit parameters.
+* Added support to manage the nova uid/gid for NFS live migration..
+* Added nova::config to handle additional custom options.
+* Added support to disable installation of nova utilities.
+* Added support for durable RabbitMQ queues.
+* Added SSL support for RabbitMQ.
+* Added support for nova-objectstore bind address.
+* Updated support for notification parameters.
+* Fixed packaging bugs.
+* Fixed report_interval configuration.
+* Fixed file location for nova compute rbd secret.
+
+**3.2.1**
+
+* Fixed consoleauth/spice resource duplication on Red Hat systems.
 
 **3.2.0**
 
