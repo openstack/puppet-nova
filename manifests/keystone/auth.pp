@@ -11,6 +11,10 @@
 #   (optional) The name of the nova service user
 #   Defaults to 'nova'
 #
+# [*auth_name_v3*]
+#   (optional) The name of the nova v3 service user
+#   Defaults to 'novav3'
+#
 # [*public_address*]
 #   (optional) The public nova-api endpoint
 #   Defaults to '127.0.0.1'
@@ -55,6 +59,10 @@
 #   (optional) Whether to create the endpoint.
 #   Defaults to true
 #
+# [*configure_endpoint_v3*]
+#   (optional) Whether to create the v3 endpoint.
+#   Defaults to true
+#
 # [*cinder*]
 #   (optional) Deprecated and has no effect
 #   Defaults to undef
@@ -72,6 +80,7 @@
 class nova::keystone::auth(
   $password,
   $auth_name              = 'nova',
+  $auth_name_v3           = 'novav3',
   $public_address         = '127.0.0.1',
   $admin_address          = '127.0.0.1',
   $internal_address       = '127.0.0.1',
@@ -85,6 +94,7 @@ class nova::keystone::auth(
   $cinder                 = undef,
   $public_protocol        = 'http',
   $configure_endpoint     = true,
+  $configure_endpoint_v3  = true,
   $admin_protocol         = 'http',
   $internal_protocol      = 'http'
 ) {
@@ -110,6 +120,11 @@ class nova::keystone::auth(
     type        => 'compute',
     description => 'Openstack Compute Service',
   }
+  keystone_service { $auth_name_v3:
+    ensure      => present,
+    type        => 'computev3',
+    description => 'Openstack Compute Service v3',
+  }
 
   if $configure_endpoint {
     keystone_endpoint { "${region}/${auth_name}":
@@ -117,6 +132,15 @@ class nova::keystone::auth(
       public_url   => "${public_protocol}://${public_address}:${compute_port}/${compute_version}/%(tenant_id)s",
       admin_url    => "${admin_protocol}://${admin_address}:${compute_port}/${compute_version}/%(tenant_id)s",
       internal_url => "${internal_protocol}://${internal_address}:${compute_port}/${compute_version}/%(tenant_id)s",
+    }
+  }
+
+  if $configure_endpoint_v3 {
+    keystone_endpoint { "${region}/${auth_name_v3}":
+      ensure       => present,
+      public_url   => "${public_protocol}://${public_address}:${compute_port}/v3",
+      admin_url    => "${admin_protocol}://${admin_address}:${compute_port}/v3",
+      internal_url => "${internal_protocol}://${internal_address}:${compute_port}/v3",
     }
   }
 
