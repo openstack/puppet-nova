@@ -63,6 +63,10 @@ describe 'nova::api' do
         should contain_nova_config('conductor/workers').with('value' => '5')
       end
 
+      it 'do not configure v3 api' do
+        should contain_nova_config('osapi_v3/enabled').with('value' => false)
+      end
+
       it 'unconfigures neutron_metadata proxy' do
         should contain_nova_config('DEFAULT/service_neutron_metadata_proxy').with(:value => false)
         should contain_nova_config('DEFAULT/neutron_metadata_proxy_shared_secret').with(:ensure => 'absent')
@@ -103,6 +107,7 @@ describe 'nova::api' do
           :osapi_compute_workers                => 1,
           :metadata_workers                     => 2,
           :conductor_workers                    => 3,
+          :osapi_v3                             => true,
         })
       end
 
@@ -153,6 +158,10 @@ describe 'nova::api' do
         should contain_nova_config('conductor/workers').with('value' => '3')
         should contain_nova_config('DEFAULT/service_neutron_metadata_proxy').with('value' => true)
         should contain_nova_config('DEFAULT/neutron_metadata_proxy_shared_secret').with('value' => 'secrete')
+      end
+
+      it 'configure nova api v3' do
+        should contain_nova_config('osapi_v3/enabled').with('value' => true)
       end
     end
 

@@ -107,6 +107,9 @@
 #   (optional) The rate limiting factory to use
 #   Defaults to 'nova.api.openstack.compute.limits:RateLimitingMiddleware.factory'
 #
+# [*osapi_v3*]
+#   (optional) Enable or not Nova API v3
+#   Defaults to false
 class nova::api(
   $admin_password,
   $enabled               = false,
@@ -131,6 +134,7 @@ class nova::api(
   $conductor_workers     = $::processorcount,
   $sync_db               = true,
   $neutron_metadata_proxy_shared_secret = undef,
+  $osapi_v3              = false,
   $ratelimits            = undef,
   $ratelimits_factory    =
     'nova.api.openstack.compute.limits:RateLimitingMiddleware.factory',
@@ -181,6 +185,7 @@ class nova::api(
     'DEFAULT/metadata_workers':      value => $metadata_workers;
     'conductor/workers':             value => $conductor_workers;
     'DEFAULT/use_forwarded_for':     value => $use_forwarded_for;
+    'osapi_v3/enabled':              value => $osapi_v3;
   }
 
   if ($neutron_metadata_proxy_shared_secret){
