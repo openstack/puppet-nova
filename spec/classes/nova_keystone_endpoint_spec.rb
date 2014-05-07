@@ -24,6 +24,12 @@ describe 'nova::keystone::auth' do
       :description => 'Openstack Compute Service'
     )}
 
+    it { should contain_keystone_service('novav3').with(
+      :ensure => 'present',
+      :type        => 'computev3',
+      :description => 'Openstack Compute Service v3'
+    )}
+
     it { should contain_keystone_service('nova_ec2').with(
       :ensure => 'present',
       :type        => 'ec2',
@@ -35,6 +41,13 @@ describe 'nova::keystone::auth' do
       :public_url   => 'http://127.0.0.1:8774/v2/%(tenant_id)s',
       :admin_url    => 'http://127.0.0.1:8774/v2/%(tenant_id)s',
       :internal_url => 'http://127.0.0.1:8774/v2/%(tenant_id)s'
+    )}
+
+    it { should contain_keystone_endpoint('RegionOne/novav3').with(
+      :ensure       => 'present',
+      :public_url   => 'http://127.0.0.1:8774/v3',
+      :admin_url    => 'http://127.0.0.1:8774/v3',
+      :internal_url => 'http://127.0.0.1:8774/v3'
     )}
 
     it { should contain_keystone_endpoint('RegionOne/nova_ec2').with(
