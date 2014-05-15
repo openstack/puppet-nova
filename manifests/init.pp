@@ -299,6 +299,18 @@ class nova(
     warning('The nova_cluster_id parameter is deprecated and has no effect.')
   }
 
+  if $rabbit_use_ssl {
+    if !$kombu_ssl_ca_certs {
+      fail('The kombu_ssl_ca_certs parameter is required when rabbit_use_ssl is set to true')
+    }
+    if !$kombu_ssl_certfile {
+      fail('The kombu_ssl_certfile parameter is required when rabbit_use_ssl is set to true')
+    }
+    if !$kombu_ssl_keyfile {
+      fail('The kombu_ssl_keyfile parameter is required when rabbit_use_ssl is set to true')
+    }
+  }
+
   group { 'nova':
     ensure  => present,
     system  => true,
@@ -483,28 +495,11 @@ class nova(
     }
 
     if $rabbit_use_ssl {
-      if $kombu_ssl_ca_certs {
-        nova_config { 'DEFAULT/kombu_ssl_ca_certs': value => $kombu_ssl_ca_certs }
-      } else {
-        nova_config { 'DEFAULT/kombu_ssl_ca_certs': ensure => absent}
-      }
-
-      if $kombu_ssl_certfile {
-        nova_config { 'DEFAULT/kombu_ssl_certfile': value => $kombu_ssl_certfile }
-      } else {
-        nova_config { 'DEFAULT/kombu_ssl_certfile': ensure => absent}
-      }
-
-      if $kombu_ssl_keyfile {
-        nova_config { 'DEFAULT/kombu_ssl_keyfile': value => $kombu_ssl_keyfile }
-      } else {
-        nova_config { 'DEFAULT/kombu_ssl_keyfile': ensure => absent}
-      }
-
-      if $kombu_ssl_version {
-        nova_config { 'DEFAULT/kombu_ssl_version': value => $kombu_ssl_version }
-      } else {
-        nova_config { 'DEFAULT/kombu_ssl_version': ensure => absent}
+      nova_config {
+        'DEFAULT/kombu_ssl_ca_certs': value => $kombu_ssl_ca_certs;
+        'DEFAULT/kombu_ssl_certfile': value => $kombu_ssl_certfile;
+        'DEFAULT/kombu_ssl_keyfile':  value => $kombu_ssl_keyfile;
+        'DEFAULT/kombu_ssl_version':  value => $kombu_ssl_version;
       }
     } else {
       nova_config {
