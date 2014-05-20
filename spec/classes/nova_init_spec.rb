@@ -536,6 +536,53 @@ describe 'nova' do
       end
     end
 
+    context 'with SSL socket options set' do
+      let :params do
+        {
+          :use_ssl          => true,
+          :enabled_ssl_apis => ['ec2'],
+          :cert_file        => '/path/to/cert',
+          :ca_file          => '/path/to/ca',
+          :key_file         => '/path/to/key',
+        }
+      end
+
+      it { should contain_nova_config('DEFAULT/enabled_ssl_apis').with_value(['ec2']) }
+      it { should contain_nova_config('DEFAULT/ssl_ca_file').with_value('/path/to/ca') }
+      it { should contain_nova_config('DEFAULT/ssl_cert_file').with_value('/path/to/cert') }
+      it { should contain_nova_config('DEFAULT/ssl_key_file').with_value('/path/to/key') }
+    end
+
+    context 'with SSL socket options set with wrong parameters' do
+      let :params do
+        {
+          :use_ssl          => true,
+          :enabled_ssl_apis => ['ec2'],
+          :ca_file          => '/path/to/ca',
+          :key_file         => '/path/to/key',
+        }
+      end
+
+      it_raises 'a Puppet::Error', /The cert_file parameter is required when use_ssl is set to true/
+    end
+
+    context 'with SSL socket options set to false' do
+      let :params do
+        {
+          :use_ssl          => false,
+          :enabled_ssl_apis => [],
+          :cert_file        => false,
+          :ca_file          => false,
+          :key_file         => false,
+        }
+      end
+
+      it { should contain_nova_config('DEFAULT/enabled_ssl_apis').with_ensure('absent') }
+      it { should contain_nova_config('DEFAULT/ssl_ca_file').with_ensure('absent') }
+      it { should contain_nova_config('DEFAULT/ssl_cert_file').with_ensure('absent') }
+      it { should contain_nova_config('DEFAULT/ssl_key_file').with_ensure('absent') }
+    end
+
   end
 
   context 'on Debian platforms' do
