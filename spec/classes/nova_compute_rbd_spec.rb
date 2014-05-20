@@ -74,7 +74,7 @@ describe 'nova::compute::rbd' do
         verify_contents(subject, '/etc/nova/secret.xml', [
           "<secret ephemeral=\'no\' private=\'no\'>",
           "  <usage type=\'ceph\'>",
-          "    <name>client.nova secret</name>",
+          "    <name>client.rbd_test secret</name>",
           "  </usage>",
           "  <uuid>UUID</uuid>",
           "</secret>"
