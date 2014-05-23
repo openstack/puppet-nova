@@ -21,11 +21,11 @@
 #
 # [*charset*]
 #   (optional) The charset to use for the nova database
-#   Defaults to 'latin1'
+#   Defaults to 'utf8'
 #
 # [*collate*]
 #   (optional) The collate to use for the nova database
-#   Defaults to 'latin1_swedish_ci'
+#   Defaults to 'utf8_unicode_ci'
 #
 # [*allowed_hosts*]
 #   (optional) Additional hosts that are allowed to access this DB
@@ -45,8 +45,8 @@ class nova::db::mysql(
   $dbname        = 'nova',
   $user          = 'nova',
   $host          = '127.0.0.1',
-  $charset       = 'latin1',
-  $collate       = 'latin1_swedish_ci',
+  $charset       = 'utf8',
+  $collate       = 'utf8_unicode_ci',
   $allowed_hosts = undef,
   $mysql_module  = '0.9',
   $cluster_id    = undef
