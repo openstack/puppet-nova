@@ -140,6 +140,13 @@ describe 'nova::compute' do
       it { should contain_nova_config('DEFAULT/instance_usage_audit').with_value(true) }
       it { should contain_nova_config('DEFAULT/instance_usage_audit_period').with_value('year') }
     end
+    context 'with vnc_keymap set to fr' do
+      let :params do
+        { :vnc_keymap => 'fr', }
+      end
+
+      it { should contain_nova_config('DEFAULT/vnc_keymap').with_value('fr') }
+    end
   end
 
 
