@@ -39,7 +39,7 @@ Setup
 
 ### Beginning with nova
 
-To utilize the nova module's functionality you will need to declare multiple resources.  The following is a modified excerpt from the [openstack module](https://github.com/stackfoge/puppet-openstack).  This is not an exhaustive list of all the components needed, we recommend you consult and understand the [openstack module](https://github.com/stackfoge/puppet-openstack) and the [core openstack](http://docs.openstack.org) documentation.
+To utilize the nova module's functionality you will need to declare multiple resources.  The following is a modified excerpt from the [openstack module](https://github.com/stackforge/puppet-openstack).  This is not an exhaustive list of all the components needed, we recommend you consult and understand the [openstack module](https://github.com/stackforge/puppet-openstack) and the [core openstack](http://docs.openstack.org) documentation.
 
 ```puppet
 class { 'nova':
@@ -162,7 +162,7 @@ Release Notes
 
 **2.0.0**
 
-* Upstream is now part of stackfoge.
+* Upstream is now part of stackforge.
 * The ini_file type is now used by nova_config.
 * Support for nova-conductor added.
 * Networks can now be labeled by Class['nova::manage::network'].
