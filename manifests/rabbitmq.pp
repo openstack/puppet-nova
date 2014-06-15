@@ -20,7 +20,7 @@
 #   (optional) The virtual host to use when connecting to Rabbit
 #   Defaults to '/'
 #
-# [*cluster_disk_nodes*]
+# [*cluster_nodes*]
 #   (optional) Enables/disables RabbitMQ clustering.  Specify an array of Rabbit Broker
 #   IP addresses to configure clustering.
 #   Defaults to false
@@ -40,7 +40,7 @@ class nova::rabbitmq(
   $password           ='guest',
   $port               ='5672',
   $virtual_host       ='/',
-  $cluster_disk_nodes = false,
+  $cluster_nodes = false,
   $enabled            = true,
   $rabbitmq_class     = 'rabbitmq::server'
 ) {
@@ -72,13 +72,13 @@ class nova::rabbitmq(
     $service_ensure = 'stopped'
   }
 
-  if $cluster_disk_nodes {
+  if $cluster_nodes {
     class { $rabbitmq_class:
       service_ensure           => $service_ensure,
       port                     => $port,
       delete_guest_user        => $delete_guest_user,
       config_cluster           => true,
-      cluster_disk_nodes       => $cluster_disk_nodes,
+      cluster_nodes       => $cluster_nodes,
       wipe_db_on_cookie_change => true,
     }
   } else {

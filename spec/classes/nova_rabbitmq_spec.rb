@@ -82,7 +82,7 @@ describe 'nova::rabbitmq' do
 
     let :params do
       {
-        :cluster_disk_nodes => ['rabbit01', 'rabbit02', 'rabbit03']
+        :cluster_nodes => ['rabbit01', 'rabbit02', 'rabbit03']
       }
     end
 
@@ -93,7 +93,7 @@ describe 'nova::rabbitmq' do
         :port                     => '5672',
         :delete_guest_user        => false,
         :config_cluster           => true,
-        :cluster_disk_nodes       => ['rabbit01', 'rabbit02', 'rabbit03'],
+        :cluster_nodes            => ['rabbit01', 'rabbit02', 'rabbit03'],
         :wipe_db_on_cookie_change => true
       )
 
