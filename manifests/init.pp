@@ -252,6 +252,13 @@
 #   for notifications on VM and task state changes.
 #   Defaults to undef
 #
+# [*os_region_name*]
+#   (optional) Sets the os_region_name flag. For environments with
+#   more than one endpoint per service, this is required to make
+#   things such as cinder volume attach work. If you don't set this
+#   and you have multiple endpoints, you will get AmbiguousEndpoint
+#   exceptions in the nova API service.
+#   Defaults to undef
 class nova(
   $ensure_package           = 'present',
   $database_connection      = false,
@@ -319,6 +326,7 @@ class nova(
   $sql_connection           = false,
   $sql_idle_timeout         = false,
   $logdir                   = false,
+  $os_region_name           = undef,
 ) inherits nova::params {
 
   if $nova_cluster_id {
@@ -672,6 +680,17 @@ class nova(
   } else {
     nova_config {
       'DEFAULT/use_syslog':           value => false;
+    }
+  }
+
+  if $os_region_name {
+    nova_config {
+      'DEFAULT/os_region_name':       value => $os_region_name;
+    }
+  }
+  else {
+    nova_config {
+      'DEFAULT/os_region_name':       ensure => absent;
     }
   }
 

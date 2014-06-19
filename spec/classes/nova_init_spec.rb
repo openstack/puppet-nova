@@ -96,6 +96,7 @@ describe 'nova' do
         should contain_nova_config('DEFAULT/service_down_time').with_value('60')
         should contain_nova_config('DEFAULT/rootwrap_config').with_value('/etc/nova/rootwrap.conf')
         should contain_nova_config('DEFAULT/report_interval').with_value('10')
+        should contain_nova_config('DEFAULT/os_region_name').with_ensure('absent')
       end
 
       it 'installs utilities' do
@@ -133,7 +134,8 @@ describe 'nova' do
           :nova_user_id             => '499',
           :nova_group_id            => '499',
           :report_interval          => '60',
-          :nova_shell               => '/bin/bash' }
+          :nova_shell               => '/bin/bash',
+          :os_region_name           => 'MyRegion' }
       end
 
       it 'creates user and group' do
@@ -199,6 +201,7 @@ describe 'nova' do
         should contain_nova_config('DEFAULT/notification_topics').with_value('openstack')
         should contain_nova_config('DEFAULT/notify_api_faults').with_value(true)
         should contain_nova_config('DEFAULT/report_interval').with_value('60')
+        should contain_nova_config('DEFAULT/os_region_name').with_value('MyRegion')
       end
 
       context 'with multiple notification_driver' do
