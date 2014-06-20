@@ -91,6 +91,15 @@ Contributors
 Release Notes
 -------------
 
+**4.1.0**
+
+* Added API v3 endpoint support.
+* Added configuration of rbd keyring name.
+* Added support for run Nova SSL endpoints.
+* Updated RabbitMQ dependency.
+* Updated mysql charset to UTF8.
+* Pinned major gems.
+
 **4.0.0**
 
 * Stable Icehouse release.
