@@ -105,7 +105,7 @@ class nova::compute::libvirt (
     package { "nova-compute-${libvirt_virt_type_real}":
       ensure  => present,
       before  => Package['nova-compute'],
-      require => User['nova'],
+      require => Package['nova-common'],
     }
   }
 
