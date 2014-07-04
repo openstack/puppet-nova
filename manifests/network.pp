@@ -1,8 +1,11 @@
 # == Class: nova::network
 #
-# Manages nova-network. Note that
-# Nova-network is not receiving upstream patches any more
-# and Neutron should be used in its place
+# Manages nova-network.
+#
+# An OpenStack deployment that includes compute and networking will use either
+# nova-network or Neutron.  Neutron is newer and nova-network is the legacy
+# networking support built directly into Nova.  However, nova-network is still
+# fully supported, is not feature frozen, and is not yet officially deprecated.
 #
 # === Parameters:
 #
