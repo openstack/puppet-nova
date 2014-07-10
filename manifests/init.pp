@@ -235,9 +235,7 @@
 #   Defaults to '/bin/false'.
 #
 # [*mysql_module*]
-#   (optional) Mysql module version to use. Tested versions
-#   are 0.9 and 2.2
-#   Defaults to '0.9'
+#   (optional) Deprecated. Does nothing.
 #
 # [*notification_driver*]
 #   (optional) Driver or drivers to handle sending notifications.
@@ -323,12 +321,12 @@ class nova(
   $use_syslog               = false,
   $log_facility             = 'LOG_USER',
   $install_utilities        = true,
-  $mysql_module             = '0.9',
   $notification_driver      = [],
   $notification_topics      = 'notifications',
   $notify_api_faults        = false,
   $notify_on_state_change   = undef,
   # DEPRECATED PARAMETERS
+  $mysql_module             = undef,
   # this is how to query all resources from our clutser
   $nova_cluster_id          = undef,
   $sql_connection           = false,
@@ -336,6 +334,10 @@ class nova(
   $logdir                   = false,
   $os_region_name           = undef,
 ) inherits nova::params {
+
+  if $mysql_module {
+    warning('The mysql_module parameter is deprecated. The latest 2.x mysql module will be used.')
+  }
 
   if $nova_cluster_id {
     warning('The nova_cluster_id parameter is deprecated and has no effect.')
@@ -510,12 +512,8 @@ class nova(
   # that may need to be collected from a remote host
   if $database_connection_real {
     if($database_connection_real =~ /mysql:\/\/\S+:\S+@\S+\/\S+/) {
-      if ($mysql_module >= 2.2) {
-        require 'mysql::bindings'
-        require 'mysql::bindings::python'
-      } else {
-        require 'mysql::python'
-      }
+      require 'mysql::bindings'
+      require 'mysql::bindings::python'
     } elsif($database_connection_real =~ /postgresql:\/\/\S+:\S+@\S+\/\S+/) {
 
     } elsif($database_connection_real =~ /sqlite:\/\//) {
