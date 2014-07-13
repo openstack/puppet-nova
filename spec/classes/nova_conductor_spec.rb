@@ -15,6 +15,15 @@ describe 'nova::conductor' do
       :name         => 'nova-conductor',
       :package_name => 'nova-conductor',
       :service_name => 'nova-conductor' }
+
+    it { should contain_nova_config('conductor/workers').with_ensure('absent') }
+
+    describe 'when overriding params' do
+      let :params do
+        {:workers     => '5' }
+      end
+      it { should contain_nova_config('conductor/workers').with_value('5') }
+    end
   end
 
   context 'on RedHat platforms' do
@@ -26,5 +35,13 @@ describe 'nova::conductor' do
       :name         => 'nova-conductor',
       :package_name => 'openstack-nova-conductor',
       :service_name => 'openstack-nova-conductor' }
+    it { should contain_nova_config('conductor/workers').with_ensure('absent') }
+
+    describe 'when overriding params' do
+      let :params do
+        {:workers     => '5' }
+      end
+      it { should contain_nova_config('conductor/workers').with_value('5') }
+    end
   end
 end
