@@ -200,14 +200,22 @@
 #   (optional) Create the nova user with the specified gid.
 #   Changing to a new uid after specifying a different uid previously,
 #   or using this option after the nova account already exists will break
-#   the ownership of all files/dirs owned by nova.
+#   the ownership of all files/dirs owned by nova. It is strongly encouraged
+#   not to use this option and instead create user before nova class or
+#   for network shares create netgroup into which you'll put nova on all the
+#   nodes. If undef no user will be created and user creation will standardly
+#   happen in nova-common package.
 #   Defaults to undef.
 #
 # [*nova_group_id*]
 #   (optional) Create the nova user with the specified gid.
 #   Changing to a new uid after specifying a different uid previously,
 #   or using this option after the nova account already exists will break
-#   the ownership of all files/dirs owned by nova.
+#   the ownership of all files/dirs owned by nova. It is strongly encouraged
+#   not to use this option and instead create group before nova class or for
+#   network shares create netgroup into which you'll put nova on all the
+#   nodes. If undef no user or group will be created and creation will
+#   happen in nova-common package.
 #   Defaults to undef.
 #
 # [*nova_public_key*]
@@ -359,22 +367,29 @@ class nova(
     }
   }
 
-  group { 'nova':
-    ensure  => present,
-    system  => true,
-    gid     => $nova_group_id,
-    before  => User['nova'],
+  if $nova_group_id {
+    warning('The nova_group_id will be deprecated, please create group manually')
+    group { 'nova':
+      ensure  => present,
+      system  => true,
+      gid     => $nova_group_id,
+      before  => Package['nova-common'],
+    }
   }
-
-  user { 'nova':
-    ensure     => present,
-    system     => true,
-    groups     => 'nova',
-    home       => '/var/lib/nova',
-    managehome => false,
-    shell      => $nova_shell,
-    uid        => $nova_user_id,
-    gid        => $nova_group_id,
+  if $nova_user_id {
+    warning('The nova_user_id will be deprecated, please create user manually')
+    user { 'nova':
+      ensure     => present,
+      system     => true,
+      groups     => 'nova',
+      home       => '/var/lib/nova',
+      managehome => false,
+      shell      => $nova_shell,
+      uid        => $nova_user_id,
+      gid        => $nova_group_id,
+      before     => Package['nova-common'],
+      require    => Group['nova'],
+    }
   }
 
   if $nova_public_key or $nova_private_key {
@@ -465,7 +480,7 @@ class nova(
   package { 'nova-common':
     ensure  => $ensure_package,
     name    => $::nova::params::common_package_name,
-    require => [Package['python-nova'], Anchor['nova-start'], User['nova']]
+    require => [Package['python-nova'], Anchor['nova-start']]
   }
 
   file { '/etc/nova/nova.conf':
