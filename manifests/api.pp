@@ -86,8 +86,9 @@
 #   Defaults to $::processorcount
 #
 # [*conductor_workers*]
-#   (optional) Number of workers for OpenStack Conductor service
-#   Defaults to $::processorcount
+#   (optional) DEPRECATED. Use workers parameter of nova::conductor
+#   Class instead.
+#   Defaults to undef
 #
 # [*sync_db*]
 #   (optional) Run nova-manage db sync on api nodes after installing the package.
@@ -110,6 +111,7 @@
 # [*osapi_v3*]
 #   (optional) Enable or not Nova API v3
 #   Defaults to false
+#
 class nova::api(
   $admin_password,
   $enabled               = false,
@@ -131,7 +133,6 @@ class nova::api(
   $use_forwarded_for     = false,
   $osapi_compute_workers = $::processorcount,
   $metadata_workers      = $::processorcount,
-  $conductor_workers     = $::processorcount,
   $sync_db               = true,
   $neutron_metadata_proxy_shared_secret = undef,
   $osapi_v3              = false,
@@ -140,6 +141,7 @@ class nova::api(
     'nova.api.openstack.compute.limits:RateLimitingMiddleware.factory',
   # DEPRECATED PARAMETER
   $workers               = undef,
+  $conductor_workers     = undef,
 ) {
 
   include nova::params
@@ -165,6 +167,10 @@ class nova::api(
     $osapi_compute_workers_real = $osapi_compute_workers
   }
 
+  if $conductor_workers {
+    warning('The conductor_workers parameter is deprecated and has no effect. Use workers parameter of nova::conductor class instead.')
+  }
+
   nova::generic_service { 'api':
     enabled        => $enabled,
     manage_service => $manage_service,
@@ -183,7 +189,6 @@ class nova::api(
     'DEFAULT/osapi_volume_listen':   value => $api_bind_address;
     'DEFAULT/osapi_compute_workers': value => $osapi_compute_workers_real;
     'DEFAULT/metadata_workers':      value => $metadata_workers;
-    'conductor/workers':             value => $conductor_workers;
     'DEFAULT/use_forwarded_for':     value => $use_forwarded_for;
     'osapi_v3/enabled':              value => $osapi_v3;
   }
