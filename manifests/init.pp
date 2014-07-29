@@ -394,10 +394,11 @@ class nova(
 
   if $nova_public_key or $nova_private_key {
     file { '/var/lib/nova/.ssh':
-      ensure => directory,
-      mode   => '0700',
-      owner  => nova,
-      group  => nova,
+      ensure  => directory,
+      mode    => '0700',
+      owner   => 'nova',
+      group   => 'nova',
+      require => Package['nova-common'],
     }
 
     if $nova_public_key {
@@ -433,9 +434,9 @@ class nova(
       file { $nova_private_key_file:
         content => $nova_private_key[key],
         mode    => '0600',
-        owner   => nova,
-        group   => nova,
-        require => File['/var/lib/nova/.ssh'],
+        owner   => 'nova',
+        group   => 'nova',
+        require => [ File['/var/lib/nova/.ssh'], Package['nova-common'] ],
       }
     }
   }
@@ -447,12 +448,6 @@ class nova(
   # and before the post config resource
   Package['nova-common'] -> Nova_config<| |> -> File['/etc/nova/nova.conf']
   Nova_config<| |> ~> Exec['post-nova_config']
-
-  File {
-    require => Package['nova-common'],
-    owner   => 'nova',
-    group   => 'nova',
-  }
 
   # TODO - see if these packages can be removed
   # they should be handled as package deps by the OS
@@ -484,7 +479,10 @@ class nova(
   }
 
   file { '/etc/nova/nova.conf':
-    mode  => '0640',
+    mode    => '0640',
+    owner   => 'nova',
+    group   => 'nova',
+    require => Package['nova-common'],
   }
 
   # used by debian/ubuntu in nova::network_bridge to refresh
@@ -647,6 +645,9 @@ class nova(
     file { $log_dir_real:
       ensure  => directory,
       mode    => '0750',
+      owner   => 'nova',
+      group   => 'nova',
+      require => Package['nova-common'],
     }
     nova_config { 'DEFAULT/log_dir': value => $log_dir_real;}
   } else {
