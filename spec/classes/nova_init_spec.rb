@@ -22,13 +22,13 @@ describe 'nova' do
         )
       end
 
-      it 'creates user and group' do
-        should contain_group('nova').with(
+      it 'does not create user and group' do
+        should_not contain_group('nova').with(
           :ensure  => 'present',
           :system  => true,
           :before  => 'User[nova]'
         )
-        should contain_user('nova').with(
+        should_not contain_user('nova').with(
           :ensure     => 'present',
           :system     => true,
           :groups     => 'nova',
@@ -141,7 +141,7 @@ describe 'nova' do
           :ensure  => 'present',
           :system  => true,
           :gid     => '499',
-          :before  => 'User[nova]'
+          :before  => 'Package[nova-common]'
         )
         should contain_user('nova').with(
           :ensure     => 'present',
@@ -151,7 +151,8 @@ describe 'nova' do
           :managehome => false,
           :shell      => '/bin/bash',
           :uid        => '499',
-          :gid        => '499'
+          :gid        => '499',
+          :require    => 'Group[nova]'
         )
       end
 
