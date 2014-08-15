@@ -106,6 +106,7 @@ describe 'nova::api' do
           :osapi_compute_workers                => 1,
           :metadata_workers                     => 2,
           :osapi_v3                             => true,
+          :keystone_ec2_url                     => 'https://example.com:5000/v2.0/ec2tokens',
         })
       end
 
@@ -155,6 +156,7 @@ describe 'nova::api' do
         should contain_nova_config('DEFAULT/metadata_workers').with('value' => '2')
         should contain_nova_config('DEFAULT/service_neutron_metadata_proxy').with('value' => true)
         should contain_nova_config('DEFAULT/neutron_metadata_proxy_shared_secret').with('value' => 'secrete')
+        should contain_nova_config('DEFAULT/keystone_ec2_url').with('value' => 'https://example.com:5000/v2.0/ec2tokens')
       end
 
       it 'configure nova api v3' do

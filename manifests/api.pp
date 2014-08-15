@@ -68,6 +68,10 @@
 #   (optional) A comma separated list of apis to enable
 #   Defaults to 'ec2,osapi_compute,metadata'
 #
+# [*keystone_ec2_url*]
+#   (optional) The keystone url where nova should send requests for ec2tokens
+#   Defaults to false
+#
 # [*volume_api_class*]
 #   (optional) The name of the class that nova will use to access volumes. Cinder is the only option.
 #   Defaults to 'nova.volume.cinder.API'
@@ -129,6 +133,7 @@ class nova::api(
   $api_bind_address      = '0.0.0.0',
   $metadata_listen       = '0.0.0.0',
   $enabled_apis          = 'ec2,osapi_compute,metadata',
+  $keystone_ec2_url      = false,
   $volume_api_class      = 'nova.volume.cinder.API',
   $use_forwarded_for     = false,
   $osapi_compute_workers = $::processorcount,
@@ -235,6 +240,16 @@ class nova::api(
   } else {
     nova_config {
       'keystone_authtoken/auth_admin_prefix': ensure => absent;
+    }
+  }
+
+  if $keystone_ec2_url {
+    nova_config {
+      'DEFAULT/keystone_ec2_url': value => $keystone_ec2_url;
+    }
+  } else {
+    nova_config {
+      'DEFAULT/keystone_ec2_url': ensure => absent;
     }
   }
 
