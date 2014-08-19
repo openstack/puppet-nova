@@ -120,11 +120,6 @@ class nova::keystone::auth(
     type        => 'compute',
     description => 'Openstack Compute Service',
   }
-  keystone_service { $auth_name_v3:
-    ensure      => present,
-    type        => 'computev3',
-    description => 'Openstack Compute Service v3',
-  }
 
   if $configure_endpoint {
     keystone_endpoint { "${region}/${auth_name}":
@@ -136,6 +131,11 @@ class nova::keystone::auth(
   }
 
   if $configure_endpoint_v3 {
+    keystone_service { $auth_name_v3:
+      ensure      => present,
+      type        => 'computev3',
+      description => 'Openstack Compute Service v3',
+    }
     keystone_endpoint { "${region}/${auth_name_v3}":
       ensure       => present,
       public_url   => "${public_protocol}://${public_address}:${compute_port}/v3",
