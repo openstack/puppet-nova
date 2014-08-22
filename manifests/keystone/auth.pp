@@ -71,6 +71,14 @@
 #   (optional) Whether to create the v3 endpoint.
 #   Defaults to true
 #
+# [*configure_user*]
+#   (optional) Whether to create the service user.
+#   Defaults to true
+#
+# [*configure_user_role*]
+#   (optional) Whether to configure the admin role for the service user.
+#   Defaults to true
+#
 # [*cinder*]
 #   (optional) Deprecated and has no effect
 #   Defaults to undef
@@ -105,6 +113,8 @@ class nova::keystone::auth(
   $public_protocol        = 'http',
   $configure_endpoint     = true,
   $configure_endpoint_v3  = true,
+  $configure_user         = true,
+  $configure_user_role    = true,
   $admin_protocol         = 'http',
   $internal_protocol      = 'http'
 ) {
@@ -127,16 +137,22 @@ class nova::keystone::auth(
 
   Keystone_endpoint["${region}/${real_service_name}"] ~> Service <| name == 'nova-api' |>
 
-  keystone_user { $auth_name:
-    ensure   => present,
-    password => $password,
-    email    => $email,
-    tenant   => $tenant,
+  if $configure_user {
+    keystone_user { $auth_name:
+      ensure   => present,
+      password => $password,
+      email    => $email,
+      tenant   => $tenant,
+    }
   }
-  keystone_user_role { "${auth_name}@${tenant}":
-    ensure  => present,
-    roles   => 'admin',
+
+  if $configure_user_role {
+    keystone_user_role { "${auth_name}@${tenant}":
+      ensure => present,
+      roles  => 'admin',
+    }
   }
+
   keystone_service { $real_service_name:
     ensure      => present,
     type        => 'compute',
