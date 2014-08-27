@@ -121,6 +121,7 @@ describe 'nova' do
           :rabbit_userid            => 'rabbit_user',
           :rabbit_port              => '5673',
           :rabbit_password          => 'password',
+          :rabbit_ha_queues         => 'undef',
           :lock_path                => '/var/locky/path',
           :state_path               => '/var/lib/nova2',
           :service_down_time        => '120',
@@ -310,6 +311,16 @@ describe 'nova' do
         should contain_nova_config('DEFAULT/rabbit_ha_queues').with_value(true)
         should contain_nova_config('DEFAULT/rabbit_use_ssl').with_value(false)
         should contain_nova_config('DEFAULT/amqp_durable_queues').with_value(false)
+      end
+    end
+
+    context 'with rabbit_ha_queues set to true' do
+      let :params do
+        { :rabbit_ha_queues => 'true' }
+      end
+
+      it 'configures rabbit' do
+        should contain_nova_config('DEFAULT/rabbit_ha_queues').with_value(true)
       end
     end
 
