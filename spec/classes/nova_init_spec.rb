@@ -344,7 +344,7 @@ describe 'nova' do
       end
     end
 
-    context 'with rabbit ssl enabled' do
+    context 'with rabbit ssl enabled with kombu' do
       let :params do
         { :rabbit_hosts       => ['rabbit:5673'],
           :rabbit_use_ssl     => 'true',
@@ -363,14 +363,26 @@ describe 'nova' do
       end
     end
 
+    context 'with rabbit ssl enabled without kombu' do
+      let :params do
+        { :rabbit_hosts       => ['rabbit:5673'],
+          :rabbit_use_ssl     => 'true', }
+      end
+
+      it 'configures rabbit' do
+        should contain_nova_config('DEFAULT/rabbit_use_ssl').with_value(true)
+        should contain_nova_config('DEFAULT/kombu_ssl_ca_certs').with_ensure('absent')
+        should contain_nova_config('DEFAULT/kombu_ssl_certfile').with_ensure('absent')
+        should contain_nova_config('DEFAULT/kombu_ssl_keyfile').with_ensure('absent')
+        should contain_nova_config('DEFAULT/kombu_ssl_version').with_value('SSLv3')
+      end
+    end
+
     context 'with rabbit ssl disabled' do
       let :params do
         {
           :rabbit_password    => 'pass',
           :rabbit_use_ssl     => false,
-          :kombu_ssl_ca_certs => 'undef',
-          :kombu_ssl_certfile => 'undef',
-          :kombu_ssl_keyfile  => 'undef',
           :kombu_ssl_version  => 'SSLv3',
         }
       end
