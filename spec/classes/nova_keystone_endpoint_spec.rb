@@ -156,4 +156,25 @@ describe 'nova::keystone::auth' do
     it { should contain_keystone_endpoint('RegionOne/nova').with_notify('Service[nova-api]') }
   end
 
+  describe 'when overriding service names' do
+
+    let :params do
+      {
+        :service_name    => 'nova_service',
+        :service_name_v3 => 'nova_service_v3',
+        :password        => 'nova_password'
+      }
+    end
+
+    it { should contain_keystone_user('nova') }
+    it { should contain_keystone_user_role('nova@services') }
+    it { should contain_keystone_service('nova_service') }
+    it { should contain_keystone_service('nova_service_v3') }
+    it { should contain_keystone_service('nova_service_ec2') }
+    it { should contain_keystone_endpoint('RegionOne/nova_service') }
+    it { should contain_keystone_endpoint('RegionOne/nova_service_v3') }
+    it { should contain_keystone_endpoint('RegionOne/nova_service_ec2') }
+
+  end
+
 end
