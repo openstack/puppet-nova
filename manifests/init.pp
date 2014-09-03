@@ -282,6 +282,7 @@ class nova(
   $rabbit_userid            = 'guest',
   $rabbit_virtual_host      = '/',
   $rabbit_use_ssl           = false,
+  $rabbit_ha_queues         = undef,
   $kombu_ssl_ca_certs       = undef,
   $kombu_ssl_certfile       = undef,
   $kombu_ssl_keyfile        = undef,
@@ -571,12 +572,19 @@ class nova(
 
     if $rabbit_hosts {
       nova_config { 'DEFAULT/rabbit_hosts':     value => join($rabbit_hosts, ',') }
-      nova_config { 'DEFAULT/rabbit_ha_queues': value => true }
     } else {
       nova_config { 'DEFAULT/rabbit_host':      value => $rabbit_host }
       nova_config { 'DEFAULT/rabbit_port':      value => $rabbit_port }
       nova_config { 'DEFAULT/rabbit_hosts':     value => "${rabbit_host}:${rabbit_port}" }
-      nova_config { 'DEFAULT/rabbit_ha_queues': value => false }
+    }
+    if $rabbit_ha_queues == undef {
+      if $rabbit_hosts {
+        nova_config { 'DEFAULT/rabbit_ha_queues': value => true }
+      } else {
+        nova_config { 'DEFAULT/rabbit_ha_queues': value => false }
+      }
+    } else {
+      nova_config { 'DEFAULT/rabbit_ha_queues': value => $rabbit_ha_queues }
     }
   }
 
