@@ -85,6 +85,10 @@
 #   (optional) Number of workers for OpenStack API service
 #   Defaults to $::processorcount
 #
+# [*ec2_workers*]
+#   (optional) Number of workers for EC2 service
+#   Defaults to $::processorcount
+#
 # [*metadata_workers*]
 #   (optional) Number of workers for metadata service
 #   Defaults to $::processorcount
@@ -137,6 +141,7 @@ class nova::api(
   $volume_api_class      = 'nova.volume.cinder.API',
   $use_forwarded_for     = false,
   $osapi_compute_workers = $::processorcount,
+  $ec2_workers           = $::processorcount,
   $metadata_workers      = $::processorcount,
   $sync_db               = true,
   $neutron_metadata_proxy_shared_secret = undef,
@@ -193,6 +198,7 @@ class nova::api(
     'DEFAULT/metadata_listen':       value => $metadata_listen;
     'DEFAULT/osapi_volume_listen':   value => $api_bind_address;
     'DEFAULT/osapi_compute_workers': value => $osapi_compute_workers_real;
+    'DEFAULT/ec2_workers':           value => $ec2_workers;
     'DEFAULT/metadata_workers':      value => $metadata_workers;
     'DEFAULT/use_forwarded_for':     value => $use_forwarded_for;
     'osapi_v3/enabled':              value => $osapi_v3;

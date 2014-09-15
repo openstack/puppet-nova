@@ -59,6 +59,7 @@ describe 'nova::api' do
         should contain_nova_config('DEFAULT/metadata_listen').with('value' => '0.0.0.0')
         should contain_nova_config('DEFAULT/osapi_volume_listen').with('value' => '0.0.0.0')
         should contain_nova_config('DEFAULT/osapi_compute_workers').with('value' => '5')
+        should contain_nova_config('DEFAULT/ec2_workers').with('value' => '5')
         should contain_nova_config('DEFAULT/metadata_workers').with('value' => '5')
       end
 
