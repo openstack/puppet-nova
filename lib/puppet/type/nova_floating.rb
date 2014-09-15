@@ -9,4 +9,10 @@ Puppet::Type.newtype(:nova_floating) do
     newvalues(/^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\/[0-9]{1,2}$/)
   end
 
+  newparam(:pool) do
+    desc "Floating IP pool name. Default: 'nova'"
+    defaultto :nova
+    newvalues(/^.{1,255}$/)
+  end
+
 end
