@@ -221,7 +221,7 @@ class nova::cells (
       rabbit_password     => $::nova::init::rabbit_password,
       rabbit_hosts        => $::nova::init::rabbit_hosts,
       rabbit_port         => $::nova::init::rabbit_port,
-      rabbit_virtual_host => $::nova::init::virtual_host,
+      rabbit_virtual_host => $::nova::init::rabbit_virtual_host,
       weight_offset       => $weight_offset,
       weight_scale        => $weight_scale,
       before              => Service['cells']
