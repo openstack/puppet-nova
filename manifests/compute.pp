@@ -69,6 +69,10 @@
 #   Time period must be hour, day, month or year
 #   Defaults to 'month'
 #
+#  [*force_raw_images*]
+#   (optional) Force backing images to raw format.
+#   Defaults to true
+#
 class nova::compute (
   $enabled                       = false,
   $manage_service                = true,
@@ -85,7 +89,8 @@ class nova::compute (
   $neutron_enabled               = true,
   $network_device_mtu            = undef,
   $instance_usage_audit          = false,
-  $instance_usage_audit_period   = 'month'
+  $instance_usage_audit_period   = 'month',
+  $force_raw_images              = true,
 ) {
 
   include nova::params
@@ -158,5 +163,9 @@ class nova::compute (
 
   package { 'pm-utils':
     ensure => present,
+  }
+
+  nova_config {
+    'DEFAULT/force_raw_images': value => $force_raw_images;
   }
 }

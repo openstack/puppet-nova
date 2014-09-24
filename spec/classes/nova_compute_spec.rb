@@ -33,6 +33,8 @@ describe 'nova::compute' do
       it { should contain_package('pm-utils').with(
         :ensure => 'present'
       ) }
+
+      it { should contain_nova_config('DEFAULT/force_raw_images').with(:value => true) }
     end
 
     context 'with overridden parameters' do
@@ -40,7 +42,8 @@ describe 'nova::compute' do
         { :enabled            => true,
           :ensure_package     => '2012.1-2',
           :vncproxy_host      => '127.0.0.1',
-          :network_device_mtu => 9999 }
+          :network_device_mtu => 9999,
+          :force_raw_images   => false }
       end
 
       it 'installs nova-compute package and service' do
@@ -67,6 +70,8 @@ describe 'nova::compute' do
           'http://127.0.0.1:6080/vnc_auto.html'
         )
       end
+
+      it { should contain_nova_config('DEFAULT/force_raw_images').with(:value => false) }
     end
 
     context 'with neutron_enabled set to false' do
