@@ -53,7 +53,8 @@ describe 'nova::compute::libvirt' do
           :remove_unused_base_images                  => true,
           :remove_unused_kernels                      => true,
           :remove_unused_resized_minimum_age_seconds  => 3600,
-          :remove_unused_original_minimum_age_seconds => 3600
+          :remove_unused_original_minimum_age_seconds => 3600,
+          :libvirt_service_name                       => 'custom_service'
         }
       end
 
@@ -65,6 +66,13 @@ describe 'nova::compute::libvirt' do
       it { should contain_nova_config('DEFAULT/remove_unused_original_minimum_age_seconds').with_value(3600)}
       it { should contain_nova_config('libvirt/remove_unused_kernels').with_value(true)}
       it { should contain_nova_config('libvirt/remove_unused_resized_minimum_age_seconds').with_value(3600)}
+      it { should contain_service('libvirt').with(
+        :name     => 'custom_service',
+        :enable   => true,
+        :ensure   => 'running',
+        :require  => 'Package[libvirt]',
+        :before   => 'Service[nova-compute]'
+      )}
     end
 
     describe 'with deprecated params' do

@@ -61,6 +61,10 @@
 #   how many seconds it will be removed.
 #   Defaults to undef
 #
+# [*libvirt_service_name*]
+#   (optional) libvirt service name.
+#   Defaults to $::nova::params::libvirt_service_name
+#
 
 class nova::compute::libvirt (
   $libvirt_virt_type                          = 'kvm',
@@ -72,6 +76,7 @@ class nova::compute::libvirt (
   $remove_unused_kernels                      = undef,
   $remove_unused_resized_minimum_age_seconds  = undef,
   $remove_unused_original_minimum_age_seconds = undef,
+  $libvirt_service_name                       = undef,
   # DEPRECATED PARAMETER
   $libvirt_type                               = false
 ) {
@@ -132,10 +137,16 @@ class nova::compute::libvirt (
     name   => $::nova::params::libvirt_package_name,
   }
 
+  if $libvirt_service_name {
+    $libvirt_service_name_real=$libvirt_service_name
+  } else {
+    $libvirt_service_name_real=$::nova::params::libvirt_service_name
+  }
+
   service { 'libvirt' :
     ensure   => running,
     enable   => true,
-    name     => $::nova::params::libvirt_service_name,
+    name     => $libvirt_service_name_real,
     provider => $::nova::params::special_service_provider,
     require  => Package['libvirt'],
   }
