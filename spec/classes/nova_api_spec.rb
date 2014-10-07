@@ -30,6 +30,7 @@ describe 'nova::api' do
           :ensure => 'present',
           :notify => 'Service[nova-api]'
         )
+        should_not contain_exec('validate_nova_api')
       end
 
       it 'configures keystone_authtoken middleware' do
@@ -180,6 +181,45 @@ describe 'nova::api' do
         it { expect { should contain_nova_config('keystone_authtoken/auth_admin_prefix') }.to \
           raise_error(Puppet::Error, /validate_re\(\): "#{auth_admin_prefix}" does not match/) }
       end
+    end
+
+    context 'while validating the service with default command' do
+      before do
+        params.merge!({
+          :validate => true,
+        })
+      end
+      it { should contain_exec('execute nova-api validation').with(
+        :path        => '/usr/bin:/bin:/usr/sbin:/sbin',
+        :provider    => 'shell',
+        :tries       => '10',
+        :try_sleep   => '2',
+        :command     => 'nova --os-auth-url http://127.0.0.1:5000/ --os-tenant-name services --os-username nova --os-password passw0rd flavor-list',
+      )}
+
+      it { should contain_anchor('create nova-api anchor').with(
+        :require => 'Exec[execute nova-api validation]',
+      )}
+    end
+
+    context 'while validating the service with custom command' do
+      before do
+        params.merge!({
+          :validate            => true,
+          :validation_options  => { 'nova-api' => { 'command' => 'my-script' } }
+        })
+      end
+      it { should contain_exec('execute nova-api validation').with(
+        :path        => '/usr/bin:/bin:/usr/sbin:/sbin',
+        :provider    => 'shell',
+        :tries       => '10',
+        :try_sleep   => '2',
+        :command     => 'my-script',
+      )}
+
+      it { should contain_anchor('create nova-api anchor').with(
+        :require => 'Exec[execute nova-api validation]',
+      )}
     end
 
     context 'while not managing service state' do
