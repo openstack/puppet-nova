@@ -94,6 +94,7 @@ describe 'nova::compute::libvirt' do
 
         it { should contain_class('nova::migration::libvirt')}
         it { should contain_nova_config('DEFAULT/vncserver_listen').with_value('0.0.0.0')}
+        it { should contain_file_line('/etc/default/libvirt-bin libvirtd opts').with(:line => 'libvirtd_opts="-d -l"') }
       end
 
       context 'with vncserver_listen not set to 0.0.0.0' do
@@ -104,6 +105,16 @@ describe 'nova::compute::libvirt' do
 
         it { expect { should contain_class('nova::compute::libvirt') }.to \
           raise_error(Puppet::Error, /For migration support to work, you MUST set vncserver_listen to '0.0.0.0'/) }
+      end
+
+      context 'with custom libvirt service name on Debian plateforms' do
+        let :params do
+          { :libvirt_service_name  => 'libvirtd',
+            :vncserver_listen      => '0.0.0.0',
+            :migration_support     => true }
+        end
+        it { should contain_file_line('/etc/default/libvirtd libvirtd opts').with(:line => 'libvirtd_opts="-d -l"') }
+
       end
     end
   end

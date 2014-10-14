@@ -65,7 +65,6 @@
 #   (optional) libvirt service name.
 #   Defaults to $::nova::params::libvirt_service_name
 #
-
 class nova::compute::libvirt (
   $libvirt_virt_type                          = 'kvm',
   $vncserver_listen                           = '127.0.0.1',
@@ -76,10 +75,10 @@ class nova::compute::libvirt (
   $remove_unused_kernels                      = undef,
   $remove_unused_resized_minimum_age_seconds  = undef,
   $remove_unused_original_minimum_age_seconds = undef,
-  $libvirt_service_name                       = undef,
+  $libvirt_service_name                       = $::nova::params::libvirt_service_name,
   # DEPRECATED PARAMETER
   $libvirt_type                               = false
-) {
+) inherits nova::params {
 
   include nova::params
 
@@ -137,16 +136,10 @@ class nova::compute::libvirt (
     name   => $::nova::params::libvirt_package_name,
   }
 
-  if $libvirt_service_name {
-    $libvirt_service_name_real=$libvirt_service_name
-  } else {
-    $libvirt_service_name_real=$::nova::params::libvirt_service_name
-  }
-
   service { 'libvirt' :
     ensure   => running,
     enable   => true,
-    name     => $libvirt_service_name_real,
+    name     => $libvirt_service_name,
     provider => $::nova::params::special_service_provider,
     require  => Package['libvirt'],
   }
