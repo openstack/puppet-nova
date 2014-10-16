@@ -355,6 +355,19 @@ class nova(
     }
   }
 
+  if $kombu_ssl_ca_certs and !$rabbit_use_ssl {
+    fail('The kombu_ssl_ca_certs parameter requires rabbit_use_ssl to be set to true')
+  }
+  if $kombu_ssl_certfile and !$rabbit_use_ssl {
+    fail('The kombu_ssl_certfile parameter requires rabbit_use_ssl to be set to true')
+  }
+  if $kombu_ssl_keyfile and !$rabbit_use_ssl {
+    fail('The kombu_ssl_keyfile parameter requires rabbit_use_ssl to be set to true')
+  }
+  if ($kombu_ssl_certfile and !$kombu_ssl_keyfile) or ($kombu_ssl_keyfile and !$kombu_ssl_certfile) {
+    fail('The kombu_ssl_certfile and kombu_ssl_keyfile parameters must be used together')
+  }
+
   if $nova_group_id {
     warning('The nova_group_id will be deprecated, please create group manually')
     group { 'nova':
@@ -546,29 +559,31 @@ class nova(
     }
 
     if $rabbit_use_ssl {
+
       if $kombu_ssl_ca_certs {
-        nova_config { 'DEFAULT/kombu_ssl_ca_certs': value => $kombu_ssl_ca_certs }
+        nova_config { 'DEFAULT/kombu_ssl_ca_certs': value => $kombu_ssl_ca_certs; }
       } else {
-        nova_config { 'DEFAULT/kombu_ssl_ca_certs': ensure => absent}
+        nova_config { 'DEFAULT/kombu_ssl_ca_certs': ensure => absent; }
       }
 
-      if $kombu_ssl_certfile {
-        nova_config { 'DEFAULT/kombu_ssl_certfile': value => $kombu_ssl_certfile }
+      if $kombu_ssl_certfile or $kombu_ssl_keyfile {
+        nova_config {
+          'DEFAULT/kombu_ssl_certfile': value => $kombu_ssl_certfile;
+          'DEFAULT/kombu_ssl_keyfile':  value => $kombu_ssl_keyfile;
+        }
       } else {
-        nova_config { 'DEFAULT/kombu_ssl_certfile': ensure => absent}
-      }
-
-      if $kombu_ssl_keyfile {
-        nova_config { 'DEFAULT/kombu_ssl_keyfile': value => $kombu_ssl_keyfile }
-      } else {
-        nova_config { 'DEFAULT/kombu_ssl_keyfile': ensure => absent}
+        nova_config {
+          'DEFAULT/kombu_ssl_certfile': ensure => absent;
+          'DEFAULT/kombu_ssl_keyfile':  ensure => absent;
+        }
       }
 
       if $kombu_ssl_version {
-        nova_config { 'DEFAULT/kombu_ssl_version': value => $kombu_ssl_version }
+        nova_config { 'DEFAULT/kombu_ssl_version':  value => $kombu_ssl_version; }
       } else {
-        nova_config { 'DEFAULT/kombu_ssl_version': ensure => absent}
+        nova_config { 'DEFAULT/kombu_ssl_version':  ensure => absent; }
       }
+
     } else {
       nova_config {
         'DEFAULT/kombu_ssl_ca_certs': ensure => absent;
