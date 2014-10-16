@@ -619,7 +619,7 @@ class nova(
   # SSL Options
   if $use_ssl {
     nova_config {
-      'DEFAULT/enabled_ssl_apis' : value => $enabled_ssl_apis;
+      'DEFAULT/enabled_ssl_apis' : value => join($enabled_ssl_apis, ',');
       'DEFAULT/ssl_cert_file' :    value => $cert_file;
       'DEFAULT/ssl_key_file' :     value => $key_file;
     }
