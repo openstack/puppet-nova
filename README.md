@@ -1,7 +1,7 @@
 nova
 ====
 
-4.0.0 - 2014.1.0 - Icehouse
+4.2.0 - 2014.1.0 - Icehouse
 
 #### Table of Contents
 
@@ -90,6 +90,18 @@ Contributors
 
 Release Notes
 -------------
+
+**4.2.0**
+
+* Added option to configure libvirt service name via class parameters
+* Added support for multiple SSL APIs
+* Added option to configure os_region_name in the nova config
+* Corrected resource dependencies on the nova user
+* Fixed os version fact comparison for RedHat-based operating systems
+  for specifying service provider
+* Fixed ssl parameter requirements when using kombu and rabbit
+* Added class for extended logging options
+
 
 **4.1.0**
 
