@@ -79,9 +79,7 @@ class nova::network(
     path => $::path
   }
 
-  sysctl::value { 'net.ipv4.ip_forward':
-    value => '1'
-  }
+  ensure_resource('sysctl::value', 'net.ipv4.ip_forward', { value => '1' })
 
   if $floating_range {
     nova_config { 'DEFAULT/floating_range':   value => $floating_range }
