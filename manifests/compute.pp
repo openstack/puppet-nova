@@ -85,6 +85,8 @@ class nova::compute (
   $vncproxy_path                 = '/vnc_auto.html',
   $vnc_keymap                    = 'en-us',
   $force_config_drive            = false,
+  $inject_partition              = undef,
+  $inject_key                    = undef,
   $virtio_nic                    = false,
   $neutron_enabled               = true,
   $network_device_mtu            = undef,
@@ -132,6 +134,14 @@ class nova::compute (
     nova_config { 'DEFAULT/force_config_drive': value => true }
   } else {
     nova_config { 'DEFAULT/force_config_drive': ensure => absent }
+  }
+
+  if $inject_partition {
+    nova_config { 'libvirt/inject_partition': value => $inject_partition }
+  }
+
+  if $inject_key {
+    nova_config { 'libvirt/inject_key': value => $inject_key }
   }
 
   if $virtio_nic {
