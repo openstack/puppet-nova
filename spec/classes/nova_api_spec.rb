@@ -68,8 +68,8 @@ describe 'nova::api' do
       end
 
       it 'unconfigures neutron_metadata proxy' do
-        should contain_nova_config('DEFAULT/service_neutron_metadata_proxy').with(:value => false)
-        should contain_nova_config('DEFAULT/neutron_metadata_proxy_shared_secret').with(:ensure => 'absent')
+        should contain_nova_config('neutron/service_metadata_proxy').with(:value => false)
+        should contain_nova_config('neutron/metadata_proxy_shared_secret').with(:ensure => 'absent')
       end
     end
 
@@ -155,8 +155,8 @@ describe 'nova::api' do
         should contain_nova_config('DEFAULT/use_forwarded_for').with('value' => false)
         should contain_nova_config('DEFAULT/osapi_compute_workers').with('value' => '1')
         should contain_nova_config('DEFAULT/metadata_workers').with('value' => '2')
-        should contain_nova_config('DEFAULT/service_neutron_metadata_proxy').with('value' => true)
-        should contain_nova_config('DEFAULT/neutron_metadata_proxy_shared_secret').with('value' => 'secrete')
+        should contain_nova_config('neutron/service_metadata_proxy').with('value' => true)
+        should contain_nova_config('neutron/metadata_proxy_shared_secret').with('value' => 'secrete')
         should contain_nova_config('DEFAULT/keystone_ec2_url').with('value' => 'https://example.com:5000/v2.0/ec2tokens')
       end
 
