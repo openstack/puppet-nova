@@ -21,11 +21,16 @@
 #   (optional) Migration flags to be set for block migration (string value)
 #   Defaults to undef
 #
+# [*override_uuid*]
+#   (optional) Set uuid not equal to output from dmidecode (boolean)
+#   Defaults to false
+#
 class nova::migration::libvirt(
   $use_tls              = false,
   $auth                 = 'none',
   $live_migration_flag  = undef,
   $block_migration_flag = undef,
+  $override_uuid        = false,
 ){
 
   include ::nova::deps
@@ -61,6 +66,26 @@ class nova::migration::libvirt(
 
   File_line<| tag == 'libvirt-file_line' |>
   ~> Service['libvirt']
+
+  if $override_uuid {
+    if ! $::libvirt_uuid {
+      $host_uuid = generate('/bin/cat', '/proc/sys/kernel/random/uuid')
+      file { '/etc/libvirt/libvirt_uuid':
+        content => $host_uuid
+      }
+    } else {
+      $host_uuid = $::libvirt_uuid
+    }
+
+    augeas { 'libvirt-conf-uuid':
+      context => '/files/etc/libvirt/libvirtd.conf',
+      changes => [
+        "set host_uuid ${host_uuid}",
+      ],
+      notify  => Service['libvirt'],
+      require => Package['libvirt'],
+    }
+  }
 
   case $::osfamily {
     'RedHat': {
