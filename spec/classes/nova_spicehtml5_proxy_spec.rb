@@ -56,7 +56,7 @@ describe 'nova::spicehtml5proxy' do
 
     let :platform_params do
       { :spicehtml5proxy_package_name => 'nova-spiceproxy',
-        :spicehtml5proxy_service_name => 'nova-spicehtml5proxy' }
+        :spicehtml5proxy_service_name => 'nova-spiceproxy' }
     end
 
     it_configures 'nova-spicehtml5proxy'
