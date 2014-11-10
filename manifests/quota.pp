@@ -57,6 +57,10 @@
 #   Defaults to 10240
 #
 # [*quota_injected_file_path_bytes*]
+#   (optional) Deprecated. Use quota_injected_file_path_length instead
+#   Defaults to undef
+#
+# [*quota_injected_file_path_length*]
 #   (optional) Maximum size in bytes of injected file path
 #   Defaults to 255
 #
@@ -97,7 +101,7 @@ class nova::quota(
   $quota_metadata_items = 128,
   $quota_injected_files = 5,
   $quota_injected_file_content_bytes = 10240,
-  $quota_injected_file_path_bytes = 255,
+  $quota_injected_file_path_length = 255,
   $quota_security_groups = 10,
   $quota_security_group_rules = 20,
   $quota_key_pairs = 100,
@@ -109,6 +113,7 @@ class nova::quota(
   $quota_volumes = undef,
   $quota_gigabytes = undef,
   $quota_max_injected_files = undef,
+  $quota_injected_file_path_bytes = undef,
   $quota_max_injected_file_content_bytes = undef,
   $quota_max_injected_file_path_bytes = undef
 ) {
@@ -136,10 +141,14 @@ class nova::quota(
   }
 
   if $quota_max_injected_file_path_bytes {
-    warning('The quota_max_injected_file_path_bytes parameter is deprecated, use quota_injected_file_path_bytes instead.')
-    $quota_injected_file_path_bytes_real = $quota_max_injected_file_path_bytes
+    fail('The quota_max_injected_file_path_bytes parameter is deprecated, use quota_injected_file_path_length instead.')
+  }
+
+  if $quota_injected_file_path_bytes {
+    warning('The quota_injected_file_path_bytes parameter is deprecated, use quota_injected_file_path_length instead.')
+    $quota_injected_file_path_length_real = $quota_injected_file_path_bytes
   } else {
-    $quota_injected_file_path_bytes_real = $quota_injected_file_path_bytes
+    $quota_injected_file_path_length_real = $quota_injected_file_path_length
   }
 
   nova_config {
@@ -151,7 +160,7 @@ class nova::quota(
     'DEFAULT/quota_metadata_items':              value => $quota_metadata_items;
     'DEFAULT/quota_injected_files':              value => $quota_injected_files_real;
     'DEFAULT/quota_injected_file_content_bytes': value => $quota_injected_file_content_bytes_real;
-    'DEFAULT/quota_injected_file_path_bytes':    value => $quota_injected_file_path_bytes_real;
+    'DEFAULT/quota_injected_file_path_length':   value => $quota_injected_file_path_length_real;
     'DEFAULT/quota_security_groups':             value => $quota_security_groups;
     'DEFAULT/quota_security_group_rules':        value => $quota_security_group_rules;
     'DEFAULT/quota_key_pairs':                   value => $quota_key_pairs;

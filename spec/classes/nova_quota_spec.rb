@@ -15,7 +15,7 @@ describe 'nova::quota' do
       :quota_metadata_items => 128,
       :quota_injected_files => 5,
       :quota_injected_file_content_bytes => 10240,
-      :quota_injected_file_path_bytes => 255,
+      :quota_injected_file_path_length => 255,
       :quota_security_groups => 10,
       :quota_security_group_rules => 20,
       :quota_key_pairs => 100,
@@ -52,7 +52,7 @@ describe 'nova::quota' do
         :quota_metadata_items => 256,
         :quota_injected_files => 10,
         :quota_injected_file_content_bytes => 20480,
-        :quota_injected_file_path_bytes => 254,
+        :quota_injected_file_path_length => 254,
         :quota_security_groups => 20,
         :quota_security_group_rules => 40,
         :quota_key_pairs => 200,
@@ -69,14 +69,14 @@ describe 'nova::quota' do
     let :params do {
         :quota_max_injected_files => 10,
         :quota_max_injected_file_content_bytes => 20480,
-        :quota_max_injected_file_path_bytes => 254
+        :quota_injected_file_path_bytes => 254
       }
     end
 
     it {
       should contain_nova_config('DEFAULT/quota_injected_files').with_value('10')
       should contain_nova_config('DEFAULT/quota_injected_file_content_bytes').with_value('20480')
-      should contain_nova_config('DEFAULT/quota_injected_file_path_bytes').with_value('254')
+      should contain_nova_config('DEFAULT/quota_injected_file_path_length').with_value('254')
     }
   end
 
