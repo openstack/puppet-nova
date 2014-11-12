@@ -97,6 +97,9 @@ class nova::compute::libvirt (
       'kvm','qemu': {
         $libvirt_cpu_mode_real = 'host-model'
       }
+      'lxc': {
+        $libvirt_cpu_mode_real = undef
+      }
       default: {
         $libvirt_cpu_mode_real = 'None'
       }
@@ -148,7 +151,16 @@ class nova::compute::libvirt (
     'DEFAULT/compute_driver':   value => 'libvirt.LibvirtDriver';
     'DEFAULT/vncserver_listen': value => $vncserver_listen;
     'libvirt/virt_type':        value => $libvirt_virt_type_real;
-    'libvirt/cpu_mode':         value => $libvirt_cpu_mode_real;
+  }
+
+  if ($libvirt_cpu_mode_real) {
+    nova_config {
+       'libvirt/cpu_mode':         ensure => absent
+    }
+  } else {
+    nova_config {
+       'libvirt/cpu_mode':         value => $libvirt_cpu_mode_real
+    }
   }
 
   if size($libvirt_disk_cachemodes) > 0 {
