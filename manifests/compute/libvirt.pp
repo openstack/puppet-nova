@@ -110,6 +110,7 @@ class nova::compute::libvirt (
       ensure  => present,
       before  => Package['nova-compute'],
       require => Package['nova-common'],
+      tag     => ['openstack', 'nova'],
     }
   }
 

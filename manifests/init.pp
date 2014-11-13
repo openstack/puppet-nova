@@ -473,13 +473,15 @@ class nova(
 
   package { 'python-nova':
     ensure  => $ensure_package,
-    require => Package['python-greenlet']
+    require => Package['python-greenlet'],
+    tag     => ['openstack', 'nova'],
   }
 
   package { 'nova-common':
     ensure  => $ensure_package,
     name    => $::nova::params::common_package_name,
-    require => [Package['python-nova'], Anchor['nova-start']]
+    require => [Package['python-nova'], Anchor['nova-start']],
+    tag     => ['openstack', 'nova'],
   }
 
   file { '/etc/nova/nova.conf':

@@ -28,7 +28,8 @@ describe 'nova::api' do
         should contain_package('nova-api').with(
           :name   => platform_params[:nova_api_package],
           :ensure => 'present',
-          :notify => 'Service[nova-api]'
+          :notify => 'Service[nova-api]',
+          :tag    => ['openstack', 'nova']
         )
       end
 
@@ -114,7 +115,8 @@ describe 'nova::api' do
       it 'installs nova-api package and service' do
         should contain_package('nova-api').with(
           :name   => platform_params[:nova_api_package],
-          :ensure => '2012.1-2'
+          :ensure => '2012.1-2',
+          :tag    => ['openstack', 'nova']
         )
         should contain_service('nova-api').with(
           :name      => platform_params[:nova_api_service],
