@@ -155,16 +155,19 @@ class nova::api(
 ) {
 
   include nova::params
+  include nova::policy
   require keystone::python
   include cinder::client
 
   Package<| title == 'nova-api' |> -> Nova_paste_api_ini<| |>
 
   Package<| title == 'nova-common' |> -> Class['nova::api']
+  Package<| title == 'nova-common' |> -> Class['nova::policy']
 
   Nova_paste_api_ini<| |> ~> Exec['post-nova_config']
 
   Nova_paste_api_ini<| |> ~> Service['nova-api']
+  Class['nova::policy'] ~> Service['nova-api']
 
   if $auth_strategy {
     warning('The auth_strategy parameter is deprecated and has no effect.')
