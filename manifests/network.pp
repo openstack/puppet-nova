@@ -59,6 +59,15 @@
 #   (optional) Whether to install and enable the service
 #   Defaults to true
 #
+# [*allowed_start*]
+#   (optional) Start of allowed addresses for instances
+#   Defaults to undef
+#
+# [*allowed_end*]
+#   (optional) End of allowed addresses for instances
+#   Defaults to undef
+#
+
 class nova::network(
   $private_interface = undef,
   $fixed_range       = '10.0.0.0/8',
@@ -71,7 +80,9 @@ class nova::network(
   $config_overrides  = {},
   $create_networks   = true,
   $ensure_package    = 'present',
-  $install_service   = true
+  $install_service   = true,
+  $allowed_start     = undef,
+  $allowed_end       = undef,
 ) {
 
   include ::nova::params
@@ -107,10 +118,12 @@ class nova::network(
 
   if $create_networks {
     nova::manage::network { 'nova-vm-net':
-      network      => $fixed_range,
-      num_networks => $num_networks,
-      network_size => $network_size,
-      vlan_start   => $vlan_start,
+      network       => $fixed_range,
+      num_networks  => $num_networks,
+      network_size  => $network_size,
+      vlan_start    => $vlan_start,
+      allowed_start => $allowed_start,
+      allowed_end   => $allowed_end,
     }
     if $floating_range {
       nova::manage::floating { 'nova-vm-floating':
