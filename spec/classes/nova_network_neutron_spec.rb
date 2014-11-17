@@ -16,13 +16,15 @@ describe 'nova::network::neutron' do
       :security_group_api              => 'neutron',
       :firewall_driver                 => 'nova.virt.firewall.NoopFirewallDriver',
       :vif_plugging_is_fatal           => true,
-      :vif_plugging_timeout            => '300'
+      :vif_plugging_timeout            => '300',
+      :dhcp_domain                     => 'novalocal'
     }
   end
 
   let :params do
     { :neutron_admin_password => 's3cr3t' }
   end
+
 
   context 'with required parameters' do
     it 'configures neutron endpoint in nova.conf' do
@@ -37,6 +39,7 @@ describe 'nova::network::neutron' do
       should contain_nova_config('DEFAULT/neutron_admin_username').with_value(default_params[:neutron_admin_username])
       should contain_nova_config('DEFAULT/neutron_admin_auth_url').with_value(default_params[:neutron_admin_auth_url])
       should contain_nova_config('DEFAULT/neutron_extension_sync_interval').with_value(default_params[:neutron_extension_sync_interval])
+      should contain_nova_config('DEFAULT/dhcp_domain').with_value(default_params[:dhcp_domain])
     end
     it 'configures Nova to use Neutron Bridge Security Groups and Firewall' do
       should contain_nova_config('DEFAULT/firewall_driver').with_value(default_params[:firewall_driver])
@@ -64,7 +67,8 @@ describe 'nova::network::neutron' do
         :neutron_ovs_bridge              => 'br-int',
         :neutron_extension_sync_interval => '600',
         :vif_plugging_is_fatal           => false,
-        :vif_plugging_timeout            => '0'
+        :vif_plugging_timeout            => '0',
+	:dhcp_domain                     => 'foo'
       )
     end
 
@@ -80,6 +84,7 @@ describe 'nova::network::neutron' do
       should contain_nova_config('DEFAULT/neutron_admin_username').with_value(params[:neutron_admin_username])
       should contain_nova_config('DEFAULT/neutron_admin_auth_url').with_value(params[:neutron_admin_auth_url])
       should contain_nova_config('DEFAULT/neutron_extension_sync_interval').with_value(params[:neutron_extension_sync_interval])
+      should contain_nova_config('DEFAULT/dhcp_domain').with_value(params[:dhcp_domain])
     end
     it 'configures Nova to use Neutron Security Groups and Firewall' do
       should contain_nova_config('DEFAULT/firewall_driver').with_value(params[:firewall_driver])
