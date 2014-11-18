@@ -60,7 +60,8 @@ describe 'nova::cells' do
     it 'installs nova-cells package' do
       should contain_package('nova-cells').with(
         :ensure => 'present',
-        :name   => platform_params[:cells_package_name]
+        :name   => platform_params[:cells_package_name],
+        :tag    => ['openstack', 'nova']
       )
     end
 

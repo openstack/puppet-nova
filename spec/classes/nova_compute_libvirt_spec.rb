@@ -16,7 +16,8 @@ describe 'nova::compute::libvirt' do
 
       it { should contain_package('nova-compute-kvm').with(
         :ensure => 'present',
-        :before => 'Package[nova-compute]'
+        :before => 'Package[nova-compute]',
+        :tag    => ['openstack', 'nova']
       ) }
 
       it { should contain_package('libvirt').with(
