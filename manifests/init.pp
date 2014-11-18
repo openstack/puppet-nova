@@ -533,7 +533,7 @@ class nova(
 
   if $image_service == 'nova.image.glance.GlanceImageService' {
     if $glance_api_servers {
-      nova_config { 'DEFAULT/glance_api_servers': value => $glance_api_servers }
+      nova_config { 'glance/api_servers': value => $glance_api_servers }
     }
   }
 

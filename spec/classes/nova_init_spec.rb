@@ -70,7 +70,7 @@ describe 'nova' do
 
       it 'configures image service' do
         should contain_nova_config('DEFAULT/image_service').with_value('nova.image.glance.GlanceImageService')
-        should contain_nova_config('DEFAULT/glance_api_servers').with_value('localhost:9292')
+        should contain_nova_config('glance/api_servers').with_value('localhost:9292')
       end
 
       it 'configures auth_strategy' do
@@ -171,7 +171,7 @@ describe 'nova' do
 
       it 'configures image service' do
         should contain_nova_config('DEFAULT/image_service').with_value('nova.image.local.LocalImageService')
-        should_not contain_nova_config('DEFAULT/glance_api_servers')
+        should_not contain_nova_config('glance/api_servers')
       end
 
       it 'configures auth_strategy' do
