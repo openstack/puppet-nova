@@ -283,6 +283,9 @@ class nova(
   $os_region_name           = undef,
 ) inherits nova::params {
 
+  # maintain backward compatibility
+  include nova::db
+
   if $mysql_module {
     warning('The mysql_module parameter is deprecated. The latest 2.x mysql module will be used.')
   }
@@ -414,25 +417,6 @@ class nova(
   exec { 'networking-refresh':
     command     => '/sbin/ifdown -a ; /sbin/ifup -a',
     refreshonly => true,
-  }
-
-  # both the database_connection and rabbit_host are things
-  # that may need to be collected from a remote host
-  if $database_connection {
-    if($database_connection =~ /mysql:\/\/\S+:\S+@\S+\/\S+/) {
-      require 'mysql::bindings'
-      require 'mysql::bindings::python'
-    } elsif($database_connection =~ /postgresql:\/\/\S+:\S+@\S+\/\S+/) {
-
-    } elsif($database_connection =~ /sqlite:\/\//) {
-
-    } else {
-      fail("Invalid db connection ${database_connection}")
-    }
-    nova_config {
-      'database/connection':   value => $database_connection, secret => true;
-      'database/idle_timeout': value => $database_idle_timeout;
-    }
   }
 
   nova_config { 'DEFAULT/image_service': value => $image_service }

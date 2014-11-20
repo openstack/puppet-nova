@@ -170,6 +170,7 @@ class nova::api(
   $conductor_workers     = undef,
 ) {
 
+  include nova::db
   include nova::params
   include nova::policy
   require keystone::python

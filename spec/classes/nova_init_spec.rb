@@ -48,11 +48,6 @@ describe 'nova' do
         :refreshonly => true
       )}
 
-      it 'configures database' do
-        should_not contain_nova_config('database/connection')
-        should_not contain_nova_config('database/idle_timeout').with_value('3600')
-      end
-
       it 'configures image service' do
         should contain_nova_config('DEFAULT/image_service').with_value('nova.image.glance.GlanceImageService')
         should contain_nova_config('glance/api_servers').with_value('localhost:9292')
@@ -96,9 +91,7 @@ describe 'nova' do
     context 'with overridden parameters' do
 
       let :params do
-        { :database_connection      => 'mysql://user:pass@db/db',
-          :database_idle_timeout    => '30',
-          :verbose                  => true,
+        { :verbose                  => true,
           :debug                    => true,
           :log_dir                  => '/var/log/nova2',
           :image_service            => 'nova.image.local.LocalImageService',
@@ -124,11 +117,6 @@ describe 'nova' do
       it 'installs packages' do
         should contain_package('nova-common').with('ensure' => '2012.1.1-15.el6')
         should contain_package('python-nova').with('ensure' => '2012.1.1-15.el6')
-      end
-
-      it 'configures database' do
-        should contain_nova_config('database/connection').with_value('mysql://user:pass@db/db').with_secret(true)
-        should contain_nova_config('database/idle_timeout').with_value('30')
       end
 
       it 'configures image service' do
