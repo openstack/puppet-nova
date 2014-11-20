@@ -22,6 +22,7 @@ class nova::scheduler(
   $ensure_package = 'present'
 ) {
 
+  include nova::db
   include nova::params
 
   nova::generic_service { 'scheduler':
