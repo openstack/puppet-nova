@@ -1,7 +1,7 @@
 nova
 ====
 
-4.0.0 - 2014.1.0 - Icehouse
+5.0.0 - 2014.2.0 - Juno
 
 #### Table of Contents
 
@@ -89,6 +89,58 @@ Contributors
 
 Release Notes
 -------------
+
+**5.0.0**
+
+* Stable Juno release
+* Added tags to all nova packages
+* Added parameter dhcp_domain to nova class
+* Updated the [glance] and [neutron] section parameters for Juno
+* Fixed potential duplicate declaration errors for sysctl::value in nova::network
+* Fixed dependency cycle in nova::migration::libvirt
+* Updated the libvirtd init script path for Debian
+* Added parameters for nova service validation to nova::api
+* Added nova::policy to control policy.json
+* Fixed the rabbit_virtual_host default in nova::cells
+* Bumped stdlib dependency to >=4.0.0
+* Added force_raw_images parameter to nova::compute class
+* Replaced usage of the keyword type with the string 'type' since type is a reserved keyword in puppet 3.7
+* Added parameter ec2_workers to nova::api
+* Fixed bug in usage of --vlan versus --vlan_start in nova_network provider
+* Added parameter rabbit_ha_queues to nova class
+* Added parameter pool to nova_floating type
+* Added parameters to control whether to configure keystone users
+* Added nova::cron::archive_deleted_rows class to create a crontab for archiving deleted database rows
+* Changed the keystone_service to only be configured if the endpoint is to be configured
+* Added parameter keystone_ec2_url to nova::api
+* Added the ability to override the keystone service name in ceilometer::keystone::auth
+* Removed dynamic scoping of File resources in nova class
+* Add parameter workers to in nova::conductor and deprecate conductor_workers in nova::api
+* Update nova quota parameters for Juno
+* Migrated the ceilometer::db::mysql class to use openstacklib::db::mysql and deprecated the mysql_module parameter
+* Removed deprecation notice for sectionless nova_config names
+* Added parameter vnc_keymap in nova::compute
+* Added parameter osapi_v3 to nova::api
+
+**4.2.0**
+
+* Added option to configure libvirt service name via class parameters
+* Added support for multiple SSL APIs
+* Added option to configure os_region_name in the nova config
+* Corrected resource dependencies on the nova user
+* Fixed os version fact comparison for RedHat-based operating systems
+  for specifying service provider
+* Fixed ssl parameter requirements when using kombu and rabbit
+* Added class for extended logging options
+
+**4.1.0**
+
+* Added API v3 endpoint support.
+* Added configuration of rbd keyring name.
+* Added support for run Nova SSL endpoints.
+* Updated RabbitMQ dependency.
+* Updated mysql charset to UTF8.
+* Pinned major gems.
 
 **4.0.0**
 
