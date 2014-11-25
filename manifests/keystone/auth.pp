@@ -79,10 +79,6 @@
 #   (optional) Whether to configure the admin role for the service user.
 #   Defaults to true
 #
-# [*cinder*]
-#   (optional) Deprecated and has no effect
-#   Defaults to undef
-#
 # [*public_protocol*]
 #   (optional) Protocol to use for the public endpoint. Can be http or https.
 #   Defaults to 'http'
@@ -109,7 +105,6 @@ class nova::keystone::auth(
   $tenant                 = 'services',
   $email                  = 'nova@localhost',
   $configure_ec2_endpoint = true,
-  $cinder                 = undef,
   $public_protocol        = 'http',
   $configure_endpoint     = true,
   $configure_endpoint_v3  = true,
@@ -118,10 +113,6 @@ class nova::keystone::auth(
   $admin_protocol         = 'http',
   $internal_protocol      = 'http'
 ) {
-
-  if $cinder != undef {
-    warning('The cinder parameter is deprecated and has no effect.')
-  }
 
   if $service_name == undef {
     $real_service_name = $auth_name

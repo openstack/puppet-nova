@@ -23,22 +23,6 @@ describe 'nova' do
         )
       end
 
-      it 'does not create user and group' do
-        should_not contain_group('nova').with(
-          :ensure  => 'present',
-          :system  => true,
-          :before  => 'User[nova]'
-        )
-        should_not contain_user('nova').with(
-          :ensure     => 'present',
-          :system     => true,
-          :groups     => 'nova',
-          :home       => '/var/lib/nova',
-          :managehome => false,
-          :shell      => '/bin/false'
-        )
-      end
-
       it 'creates various files and folders' do
         should contain_file('/var/log/nova').with(
           :ensure  => 'directory',
@@ -133,31 +117,8 @@ describe 'nova' do
           :notification_driver      => 'ceilometer.compute.nova_notifier',
           :notification_topics      => 'openstack',
           :notify_api_faults        => true,
-          :nova_user_id             => '499',
-          :nova_group_id            => '499',
           :report_interval          => '60',
-          :nova_shell               => '/bin/bash',
           :os_region_name           => 'MyRegion' }
-      end
-
-      it 'creates user and group' do
-        should contain_group('nova').with(
-          :ensure  => 'present',
-          :system  => true,
-          :gid     => '499',
-          :before  => 'Package[nova-common]'
-        )
-        should contain_user('nova').with(
-          :ensure     => 'present',
-          :system     => true,
-          :groups     => 'nova',
-          :home       => '/var/lib/nova',
-          :managehome => false,
-          :shell      => '/bin/bash',
-          :uid        => '499',
-          :gid        => '499',
-          :require    => 'Group[nova]'
-        )
       end
 
       it 'installs packages' do
@@ -243,18 +204,6 @@ describe 'nova' do
 
       it 'configures database' do
         should contain_nova_config('DEFAULT/notify_on_state_change').with_value('vm_state')
-      end
-    end
-
-    context 'with deprecated sql parameters' do
-      let :params do
-        { :sql_connection   => 'mysql://user:pass@db/db',
-          :sql_idle_timeout => '30' }
-      end
-
-      it 'configures database' do
-        should contain_nova_config('database/connection').with_value('mysql://user:pass@db/db').with_secret(true)
-        should contain_nova_config('database/idle_timeout').with_value('30')
       end
     end
 

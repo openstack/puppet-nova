@@ -75,17 +75,6 @@ describe 'nova::api' do
       end
     end
 
-    context 'with deprecated parameters' do
-      before do
-        params.merge!({
-          :workers           => 1,
-        })
-      end
-      it 'configures various stuff' do
-        should contain_nova_config('DEFAULT/osapi_compute_workers').with('value' => '1')
-      end
-    end
-
     context 'with overridden parameters' do
       before do
         params.merge!({

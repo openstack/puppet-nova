@@ -47,12 +47,7 @@ class nova::db::mysql(
   $collate       = 'utf8_unicode_ci',
   $allowed_hosts = undef,
   $mysql_module  = undef,
-  $cluster_id    = undef
 ) {
-
-  if $cluster_id {
-    warning('The cluster_id parameter is deprecated and has no effect.')
-  }
 
   if $mysql_module {
     warning('The mysql_module parameter is deprecated. The latest 2.x mysql module will be used.')

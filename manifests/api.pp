@@ -19,10 +19,6 @@
 #   (optional) Whether the nova api package will be installed
 #   Defaults to 'present'
 #
-# [*auth_strategy*]
-#   (DEPRECATED) Does nothing and will be removed in Icehouse
-#   Defaults to false
-#
 # [*auth_host*]
 #   (optional) The IP of the server running keystone
 #   Defaults to '127.0.0.1'
@@ -145,7 +141,6 @@ class nova::api(
   $enabled               = false,
   $manage_service        = true,
   $ensure_package        = 'present',
-  $auth_strategy         = undef,
   $auth_host             = '127.0.0.1',
   $auth_port             = 35357,
   $auth_protocol         = 'http',
@@ -172,7 +167,6 @@ class nova::api(
   $validate              = false,
   $validation_options    = {},
   # DEPRECATED PARAMETER
-  $workers               = undef,
   $conductor_workers     = undef,
 ) {
 
@@ -190,17 +184,6 @@ class nova::api(
 
   Nova_paste_api_ini<| |> ~> Service['nova-api']
   Class['nova::policy'] ~> Service['nova-api']
-
-  if $auth_strategy {
-    warning('The auth_strategy parameter is deprecated and has no effect.')
-  }
-
-  if $workers {
-    warning('The workers parameter is deprecated, use osapi_compute_workers instead.')
-    $osapi_compute_workers_real = $workers
-  } else {
-    $osapi_compute_workers_real = $osapi_compute_workers
-  }
 
   if $conductor_workers {
     warning('The conductor_workers parameter is deprecated and has no effect. Use workers parameter of nova::conductor class instead.')
@@ -222,7 +205,7 @@ class nova::api(
     'DEFAULT/osapi_compute_listen':  value => $api_bind_address;
     'DEFAULT/metadata_listen':       value => $metadata_listen;
     'DEFAULT/osapi_volume_listen':   value => $api_bind_address;
-    'DEFAULT/osapi_compute_workers': value => $osapi_compute_workers_real;
+    'DEFAULT/osapi_compute_workers': value => $osapi_compute_workers;
     'DEFAULT/ec2_workers':           value => $ec2_workers;
     'DEFAULT/metadata_workers':      value => $metadata_workers;
     'DEFAULT/use_forwarded_for':     value => $use_forwarded_for;

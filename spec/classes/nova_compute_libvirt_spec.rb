@@ -76,15 +76,6 @@ describe 'nova::compute::libvirt' do
       )}
     end
 
-    describe 'with deprecated params' do
-      let :params do
-        { :libvirt_type => 'qemu'
-        }
-      end
-
-      it { should contain_nova_config('libvirt/virt_type').with_value('qemu')}
-    end
-
     describe 'with migration_support enabled' do
 
       context 'with vncserver_listen set to 0.0.0.0' do
@@ -191,15 +182,6 @@ describe 'nova::compute::libvirt' do
       it { should contain_nova_config('DEFAULT/remove_unused_original_minimum_age_seconds').with_value(3600)}
       it { should contain_nova_config('libvirt/remove_unused_kernels').with_value(true)}
       it { should contain_nova_config('libvirt/remove_unused_resized_minimum_age_seconds').with_value(3600)}
-    end
-
-    describe 'with deprecated params' do
-      let :params do
-        { :libvirt_type => 'qemu'
-        }
-      end
-
-      it { should contain_nova_config('libvirt/virt_type').with_value('qemu')}
     end
 
     describe 'with migration_support enabled' do
