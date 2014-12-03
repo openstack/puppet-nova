@@ -128,62 +128,48 @@ class nova::keystone::auth(
 
   Keystone_endpoint["${region}/${real_service_name}"] ~> Service <| name == 'nova-api' |>
 
-  if $configure_user {
-    keystone_user { $auth_name:
-      ensure   => present,
-      password => $password,
-      email    => $email,
-      tenant   => $tenant,
-    }
+  keystone::resource::service_identity { $auth_name:
+    configure_user      => $configure_user,
+    configure_user_role => $configure_user_role,
+    configure_endpoint  => $configure_endpoint,
+    service_type        => 'compute',
+    service_description => 'Openstack Compute Service',
+    service_name        => $real_service_name,
+    region              => $region,
+    password            => $password,
+    email               => $email,
+    tenant              => $tenant,
+    public_url          => "${public_protocol}://${public_address}:${compute_port}/${compute_version}/%(tenant_id)s",
+    admin_url           => "${admin_protocol}://${admin_address}:${compute_port}/${compute_version}/%(tenant_id)s",
+    internal_url        => "${internal_protocol}://${internal_address}:${compute_port}/${compute_version}/%(tenant_id)s",
   }
 
-  if $configure_user_role {
-    keystone_user_role { "${auth_name}@${tenant}":
-      ensure => present,
-      roles  => 'admin',
-    }
+  keystone::resource::service_identity { $auth_name_v3:
+    configure_user      => false,
+    configure_user_role => false,
+    configure_endpoint  => $configure_endpoint_v3,
+    configure_service   => $configure_endpoint_v3,
+    service_type        => 'computev3',
+    service_description => 'Openstack Compute Service v3',
+    service_name        => $real_service_name_v3,
+    region              => $region,
+    public_url          => "${public_protocol}://${public_address}:${compute_port}/v3",
+    admin_url           => "${admin_protocol}://${admin_address}:${compute_port}/v3",
+    internal_url        => "${internal_protocol}://${internal_address}:${compute_port}/v3",
   }
 
-  keystone_service { $real_service_name:
-    ensure      => present,
-    type        => 'compute',
-    description => 'Openstack Compute Service',
+  keystone::resource::service_identity { "${auth_name}_ec2":
+    configure_user      => false,
+    configure_user_role => false,
+    configure_endpoint  => $configure_ec2_endpoint,
+    configure_service   => $configure_ec2_endpoint,
+    service_type        => 'ec2',
+    service_description => 'EC2 Service',
+    service_name        => "${real_service_name}_ec2",
+    region              => $region,
+    public_url          => "${public_protocol}://${public_address}:${ec2_port}/services/Cloud",
+    admin_url           => "${admin_protocol}://${admin_address}:${ec2_port}/services/Admin",
+    internal_url        => "${internal_protocol}://${internal_address}:${ec2_port}/services/Cloud",
   }
 
-  if $configure_endpoint {
-    keystone_endpoint { "${region}/${real_service_name}":
-      ensure       => present,
-      public_url   => "${public_protocol}://${public_address}:${compute_port}/${compute_version}/%(tenant_id)s",
-      admin_url    => "${admin_protocol}://${admin_address}:${compute_port}/${compute_version}/%(tenant_id)s",
-      internal_url => "${internal_protocol}://${internal_address}:${compute_port}/${compute_version}/%(tenant_id)s",
-    }
-  }
-
-  if $configure_endpoint_v3 {
-    keystone_service { $real_service_name_v3:
-      ensure      => present,
-      type        => 'computev3',
-      description => 'Openstack Compute Service v3',
-    }
-    keystone_endpoint { "${region}/${real_service_name_v3}":
-      ensure       => present,
-      public_url   => "${public_protocol}://${public_address}:${compute_port}/v3",
-      admin_url    => "${admin_protocol}://${admin_address}:${compute_port}/v3",
-      internal_url => "${internal_protocol}://${internal_address}:${compute_port}/v3",
-    }
-  }
-
-  if $configure_ec2_endpoint {
-    keystone_service { "${real_service_name}_ec2":
-      ensure      => present,
-      type        => 'ec2',
-      description => 'EC2 Service',
-    }
-    keystone_endpoint { "${region}/${real_service_name}_ec2":
-      ensure       => present,
-      public_url   => "${public_protocol}://${public_address}:${ec2_port}/services/Cloud",
-      admin_url    => "${admin_protocol}://${admin_address}:${ec2_port}/services/Admin",
-      internal_url => "${internal_protocol}://${internal_address}:${ec2_port}/services/Cloud",
-    }
-  }
 }
