@@ -57,7 +57,7 @@ class nova::cron::archive_deleted_rows (
 
   cron { 'nova-manage db archive_deleted_rows':
     command     => "nova-manage db archive_deleted_rows --max_rows ${max_rows} >>/var/log/nova/nova-rowsflush.log 2>&1",
-    environment => 'PATH=/bin:/usr/bin:/usr/sbin',
+    environment => 'PATH=/bin:/usr/bin:/usr/sbin SHELL=/bin/sh',
     user        => $user,
     minute      => $minute,
     hour        => $hour,
