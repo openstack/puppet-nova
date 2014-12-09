@@ -9,7 +9,7 @@ describe 'nova::cron::archive_deleted_rows' do
   it 'configures a cron' do
     should contain_cron('nova-manage db archive_deleted_rows').with(
       :command     => 'nova-manage db archive_deleted_rows --max_rows 100 >>/var/log/nova/nova-rowsflush.log 2>&1',
-      :environment => 'PATH=/bin:/usr/bin:/usr/sbin',
+      :environment => 'PATH=/bin:/usr/bin:/usr/sbin SHELL=/bin/sh',
       :user        => 'nova',
       :minute      => 1,
       :hour        => 0,
