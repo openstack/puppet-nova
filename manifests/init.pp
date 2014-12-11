@@ -336,6 +336,9 @@ class nova(
   $os_region_name           = undef,
 ) inherits nova::params {
 
+  # maintain backward compatibility
+  include nova::db
+
   if $mysql_module {
     warning('The mysql_module parameter is deprecated. The latest 2.x mysql module will be used.')
   }
@@ -496,39 +499,6 @@ class nova(
   exec { 'networking-refresh':
     command     => '/sbin/ifdown -a ; /sbin/ifup -a',
     refreshonly => true,
-  }
-
-  if $sql_connection {
-    warning('The sql_connection parameter is deprecated, use database_connection instead.')
-    $database_connection_real = $sql_connection
-  } else {
-    $database_connection_real = $database_connection
-  }
-
-  if $sql_idle_timeout {
-    warning('The sql_idle_timeout parameter is deprecated, use database_idle_timeout instead.')
-    $database_idle_timeout_real = $sql_idle_timeout
-  } else {
-    $database_idle_timeout_real = $database_idle_timeout
-  }
-
-  # both the database_connection and rabbit_host are things
-  # that may need to be collected from a remote host
-  if $database_connection_real {
-    if($database_connection_real =~ /mysql:\/\/\S+:\S+@\S+\/\S+/) {
-      require 'mysql::bindings'
-      require 'mysql::bindings::python'
-    } elsif($database_connection_real =~ /postgresql:\/\/\S+:\S+@\S+\/\S+/) {
-
-    } elsif($database_connection_real =~ /sqlite:\/\//) {
-
-    } else {
-      fail("Invalid db connection ${database_connection_real}")
-    }
-    nova_config {
-      'database/connection':   value => $database_connection_real, secret => true;
-      'database/idle_timeout': value => $database_idle_timeout_real;
-    }
   }
 
   nova_config { 'DEFAULT/image_service': value => $image_service }
