@@ -217,11 +217,11 @@ class nova::cells (
     @@nova::manage::cells { $cell_name:
       cell_type           => $cell_type,
       cell_parent_name    => $cell_parent_name,
-      rabbit_username     => $::nova::init::rabbit_userid,
-      rabbit_password     => $::nova::init::rabbit_password,
-      rabbit_hosts        => $::nova::init::rabbit_hosts,
-      rabbit_port         => $::nova::init::rabbit_port,
-      rabbit_virtual_host => $::nova::init::rabbit_virtual_host,
+      rabbit_username     => $::nova::rabbit_userid,
+      rabbit_password     => $::nova::rabbit_password,
+      rabbit_hosts        => $::nova::rabbit_hosts,
+      rabbit_port         => $::nova::rabbit_port,
+      rabbit_virtual_host => $::nova::rabbit_virtual_host,
       weight_offset       => $weight_offset,
       weight_scale        => $weight_scale,
       before              => Service['cells']
