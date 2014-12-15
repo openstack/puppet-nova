@@ -2,3 +2,4 @@
 spec/fixtures/modules/*
 pkg
 Gemfile.lock
+.vagrant/*

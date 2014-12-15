@@ -82,6 +82,19 @@ Developer documentation for the entire puppet-openstack project.
 
 * https://wiki.openstack.org/wiki/Puppet-openstack#Developer_documentation
 
+
+Beaker-Rspec
+------------
+
+This module has beaker-rspec tests
+
+To run:
+
+```shell
+bundle install
+BEAKER_setfile=default bundle exec rspec spec/acceptance
+```
+
 Contributors
 ------------
 
