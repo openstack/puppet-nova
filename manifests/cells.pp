@@ -171,11 +171,11 @@ class nova::cells (
   case $cell_type {
     'parent': {
       nova_config { 'DEFAULT/compute_api_class': value => 'nova.compute.cells_api.ComputeCellsAPI' }
-      nova_config { 'DEFAULT/cell_type': value         => 'api' }
+      nova_config { 'cells/cell_type': value         => 'api' }
     }
     'child': {
       nova_config { 'DEFAULT/quota_driver': value => 'nova.quota.NoopQuotaDriver' }
-      nova_config { 'DEFAULT/cell_type': value    => 'compute' }
+      nova_config { 'cells/cell_type': value    => 'compute' }
     }
     default: { fail("Unsupported cell_type parameter value: '${cell_type}'. Should be 'parent' or 'child'.") }
   }
