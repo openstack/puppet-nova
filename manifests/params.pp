@@ -69,7 +69,6 @@ class nova::params {
       $libvirt_package_name         = 'libvirt-bin'
       $network_package_name         = 'nova-network'
       $numpy_package_name           = 'python-numpy'
-      $objectstore_package_name     = 'nova-objectstore'
       $scheduler_package_name       = 'nova-scheduler'
       $tgt_package_name             = 'tgt'
       # service names
@@ -81,7 +80,6 @@ class nova::params {
       $consoleauth_service_name     = 'nova-consoleauth'
       $libvirt_service_name         = 'libvirt-bin'
       $network_service_name         = 'nova-network'
-      $objectstore_service_name     = 'nova-objectstore'
       $scheduler_service_name       = 'nova-scheduler'
       $vncproxy_service_name        = 'nova-novncproxy'
       $tgt_service_name             = 'tgt'
