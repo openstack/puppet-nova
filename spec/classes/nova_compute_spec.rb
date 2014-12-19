@@ -40,11 +40,13 @@ describe 'nova::compute' do
 
     context 'with overridden parameters' do
       let :params do
-        { :enabled            => true,
-          :ensure_package     => '2012.1-2',
-          :vncproxy_host      => '127.0.0.1',
-          :network_device_mtu => 9999,
-          :force_raw_images   => false }
+        { :enabled              => true,
+          :ensure_package       => '2012.1-2',
+          :vncproxy_host        => '127.0.0.1',
+          :network_device_mtu   => 9999,
+          :force_raw_images     => false,
+          :reserved_host_memory => '0',
+          :compute_manager      => 'ironic.nova.compute.manager.ClusteredComputeManager'}
       end
 
       it 'installs nova-compute package and service' do
@@ -59,6 +61,11 @@ describe 'nova::compute' do
           :ensure => '2012.1-2',
           :tag    => ['openstack', 'nova']
         })
+      end
+
+      it 'configures ironic in nova.conf' do
+        should contain_nova_config('DEFAULT/reserved_host_memory_mb').with_value('0')
+        should contain_nova_config('DEFAULT/compute_manager').with_value('ironic.nova.compute.manager.ClusteredComputeManager')
       end
 
       it 'configures network_device_mtu' do
