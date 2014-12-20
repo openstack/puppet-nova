@@ -62,6 +62,7 @@ describe 'nova::network::neutron' do
         :neutron_region_name             => 'RegionTwo',
         :neutron_admin_username          => 'neutron2',
         :neutron_admin_auth_url          => 'http://10.0.0.1:35357/v2.0',
+        :network_api_class               => 'network.api.class',
         :security_group_api              => 'nova',
         :firewall_driver                 => 'nova.virt.firewall.IptablesFirewallDriver',
         :neutron_ovs_bridge              => 'br-int',
@@ -75,7 +76,7 @@ describe 'nova::network::neutron' do
     it 'configures neutron endpoint in nova.conf' do
       should contain_nova_config('neutron/auth_strategy').with_value(default_params[:neutron_auth_strategy])
       should contain_nova_config('neutron/admin_password').with_value(params[:neutron_admin_password]).with_secret(true)
-      should contain_nova_config('DEFAULT/network_api_class').with_value('nova.network.neutronv2.api.API')
+      should contain_nova_config('DEFAULT/network_api_class').with_value('network.api.class')
       should contain_nova_config('DEFAULT/dhcp_domain').with_value(params[:dhcp_domain])
       should contain_nova_config('neutron/url').with_value(params[:neutron_url])
       should contain_nova_config('neutron/url_timeout').with_value(params[:neutron_url_timeout])
