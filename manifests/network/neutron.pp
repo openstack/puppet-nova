@@ -57,6 +57,11 @@
 #   and not the Identity service API IP and port.
 #   Defaults to 'http://127.0.0.1:35357/v2.0'
 #
+# [*network_api_class*]
+#   (optional) The full class name of the network API class.
+#   The default configures Nova to use Neutron for the network API.
+#   Defaults to 'nova.network.neutronv2.api.API'
+#
 # [*security_group_api*]
 #   (optional) The full class name of the security API class.
 #   The default configures Nova to use Neutron for security groups.
@@ -99,6 +104,7 @@ class nova::network::neutron (
   $neutron_ovs_bridge              = 'br-int',
   $neutron_extension_sync_interval = '600',
   $neutron_ca_certificates_file    = undef,
+  $network_api_class               = 'nova.network.neutronv2.api.API',
   $security_group_api              = 'neutron',
   $firewall_driver                 = 'nova.virt.firewall.NoopFirewallDriver',
   $vif_plugging_is_fatal           = true,
@@ -109,7 +115,7 @@ class nova::network::neutron (
   nova_config {
     'DEFAULT/dhcp_domain':             value => $dhcp_domain;
     'DEFAULT/firewall_driver':         value => $firewall_driver;
-    'DEFAULT/network_api_class':       value => 'nova.network.neutronv2.api.API';
+    'DEFAULT/network_api_class':       value => $network_api_class;
     'DEFAULT/security_group_api':      value => $security_group_api;
     'DEFAULT/vif_plugging_is_fatal':   value => $vif_plugging_is_fatal;
     'DEFAULT/vif_plugging_timeout':    value => $vif_plugging_timeout;
