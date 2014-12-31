@@ -59,7 +59,7 @@ describe 'nova' do
       end
 
       it 'configures rabbit' do
-        should contain_nova_config('DEFAULT/rpc_backend').with_value('nova.openstack.common.rpc.impl_kombu')
+        should contain_nova_config('DEFAULT/rpc_backend').with_value('rabbit')
         should contain_nova_config('DEFAULT/rabbit_host').with_value('localhost')
         should contain_nova_config('DEFAULT/rabbit_password').with_value('guest').with_secret(true)
         should contain_nova_config('DEFAULT/rabbit_port').with_value('5672')
@@ -130,7 +130,7 @@ describe 'nova' do
       end
 
       it 'configures rabbit' do
-        should contain_nova_config('DEFAULT/rpc_backend').with_value('nova.openstack.common.rpc.impl_kombu')
+        should contain_nova_config('DEFAULT/rpc_backend').with_value('rabbit')
         should contain_nova_config('DEFAULT/rabbit_host').with_value('rabbit')
         should contain_nova_config('DEFAULT/rabbit_password').with_value('password').with_secret(true)
         should contain_nova_config('DEFAULT/rabbit_port').with_value('5673')
@@ -336,12 +336,12 @@ describe 'nova' do
 
     context 'with qpid rpc_backend' do
       let :params do
-        { :rpc_backend => 'nova.openstack.common.rpc.impl_qpid' }
+        { :rpc_backend => 'qpid' }
       end
 
       context 'with default parameters' do
         it 'configures qpid' do
-          should contain_nova_config('DEFAULT/rpc_backend').with_value('nova.openstack.common.rpc.impl_qpid')
+          should contain_nova_config('DEFAULT/rpc_backend').with_value('qpid')
           should contain_nova_config('DEFAULT/qpid_hostname').with_value('localhost')
           should contain_nova_config('DEFAULT/qpid_port').with_value('5672')
           should contain_nova_config('DEFAULT/qpid_username').with_value('guest')
@@ -378,6 +378,22 @@ describe 'nova' do
         end
         it { should contain_nova_config('DEFAULT/qpid_sasl_mechanisms').with_value('DIGEST-MD5 GSSAPI PLAIN') }
       end
+    end
+
+    context 'with qpid rpc_backend with old parameter' do
+      let :params do
+        { :rpc_backend => 'nova.openstack.common.rpc.impl_qpid' }
+      end
+
+      it { should contain_nova_config('DEFAULT/rpc_backend').with_value('nova.openstack.common.rpc.impl_qpid') }
+    end
+
+    context 'with rabbitmq rpc_backend with old parameter' do
+      let :params do
+        { :rpc_backend => 'nova.openstack.common.rpc.impl_kombu' }
+      end
+
+      it { should contain_nova_config('DEFAULT/rpc_backend').with_value('nova.openstack.common.rpc.impl_kombu') }
     end
 
     context 'with ssh public key' do
