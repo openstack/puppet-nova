@@ -349,7 +349,7 @@ describe 'nova' do
         should contain_nova_config('DEFAULT/kombu_ssl_ca_certs').with_ensure('absent')
         should contain_nova_config('DEFAULT/kombu_ssl_certfile').with_ensure('absent')
         should contain_nova_config('DEFAULT/kombu_ssl_keyfile').with_ensure('absent')
-        should contain_nova_config('DEFAULT/kombu_ssl_version').with_value('SSLv3')
+        should contain_nova_config('DEFAULT/kombu_ssl_version').with_value('TLSv1')
       end
     end
 
@@ -383,7 +383,7 @@ describe 'nova' do
         should contain_nova_config('DEFAULT/kombu_ssl_ca_certs').with_ensure('absent')
         should contain_nova_config('DEFAULT/kombu_ssl_certfile').with_ensure('absent')
         should contain_nova_config('DEFAULT/kombu_ssl_keyfile').with_ensure('absent')
-        should contain_nova_config('DEFAULT/kombu_ssl_version').with_value('SSLv3')
+        should contain_nova_config('DEFAULT/kombu_ssl_version').with_value('TLSv1')
       end
     end
 
@@ -392,7 +392,7 @@ describe 'nova' do
         {
           :rabbit_password    => 'pass',
           :rabbit_use_ssl     => false,
-          :kombu_ssl_version  => 'SSLv3',
+          :kombu_ssl_version  => 'TLSv1',
         }
       end
 
