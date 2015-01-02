@@ -88,6 +88,51 @@ describe 'nova::keystone::auth' do
 
   end
 
+  context 'when setting auth_name and auth_name_v3 the same' do
+    before do
+      params.merge!(
+        :auth_name        => 'thesame',
+        :auth_name_v3     => 'thesame',
+        :service_name     => 'nova',
+        :service_name_v3  => 'novav3',
+      )
+    end
+
+    it { should contain_keystone_user('thesame').with(:ensure => 'present') }
+    it { should contain_keystone_user_role('thesame@services').with(:ensure => 'present') }
+    it { should contain_keystone_service('nova').with(:ensure => 'present') }
+    it { should contain_keystone_service('novav3').with(:ensure => 'present') }
+
+  end
+
+  context 'when service_name and service_name_3 the same (by explicitly setting them)' do
+    before do
+      params.merge!(
+        :service_name     => 'nova',
+        :service_name_v3  => 'nova'
+      )
+    end
+
+    it do
+      expect { should contain_keystone_service('nova') }.to raise_error(Puppet::Error, /service_name and service_name_v3 must be different/)
+    end
+
+  end
+
+  context 'when service_name and service_name_3 the same (by implicit declaration via auth_name and auth_name_v3)' do
+    before do
+      params.merge!(
+        :auth_name        => 'thesame',
+        :auth_name_v3     => 'thesame',
+      )
+    end
+
+    it do
+      expect { should contain_keystone_service('nova') }.to raise_error(Puppet::Error, /service_name and service_name_v3 must be different/)
+    end
+
+  end
+
   context 'when overriding endpoint params' do
     before do
       params.merge!(
@@ -214,3 +259,4 @@ describe 'nova::keystone::auth' do
   end
 
 end
+
