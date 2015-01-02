@@ -30,9 +30,11 @@
 #   Defaults to false
 #
 # [*rabbitmq_class*]
-#   (optional) The rabbitmq puppet class to depend on,
+#   (optional) Deprecated. The rabbitmq puppet class to depend on,
 #   which is dependent on the puppet-rabbitmq version.
-#   Use the default for 1.x, use 'rabbitmq' for 3.x
+#   Use the default for 1.x, use 'rabbitmq' for 3.x.
+#   Use false if rabbitmq class should not be configured
+#   here
 #   Defaults to 'rabbitmq::server'
 #
 class nova::rabbitmq(
@@ -42,11 +44,9 @@ class nova::rabbitmq(
   $virtual_host       ='/',
   $cluster_disk_nodes = false,
   $enabled            = true,
+  # DEPRECATED PARAMETER
   $rabbitmq_class     = 'rabbitmq::server'
 ) {
-
-  # only configure nova after the queue is up
-  Class[$rabbitmq_class] -> Anchor<| title == 'nova-start' |>
 
   if ($enabled) {
     if $userid == 'guest' {
@@ -57,7 +57,6 @@ class nova::rabbitmq(
         admin     => true,
         password  => $password,
         provider  => 'rabbitmqctl',
-        require   => Class[$rabbitmq_class],
       }
       # I need to figure out the appropriate permissions
       rabbitmq_user_permissions { "${userid}@${virtual_host}":
@@ -72,27 +71,36 @@ class nova::rabbitmq(
     $service_ensure = 'stopped'
   }
 
-  if $cluster_disk_nodes {
-    class { $rabbitmq_class:
-      service_ensure           => $service_ensure,
-      port                     => $port,
-      delete_guest_user        => $delete_guest_user,
-      config_cluster           => true,
-      cluster_disk_nodes       => $cluster_disk_nodes,
-      wipe_db_on_cookie_change => true,
+  # NOTE(bogdando) do not nova manage rabbitmq service
+  # if rabbitmq_class is set to False
+  if $rabbitmq_class {
+    warning('The rabbitmq_class parameter is deprecated.')
+
+    if $cluster_disk_nodes {
+      class { $rabbitmq_class:
+        service_ensure           => $service_ensure,
+        port                     => $port,
+        delete_guest_user        => $delete_guest_user,
+        config_cluster           => true,
+        cluster_disk_nodes       => $cluster_disk_nodes,
+        wipe_db_on_cookie_change => true,
+      }
+    } else {
+      class { $rabbitmq_class:
+        service_ensure    => $service_ensure,
+        port              => $port,
+        delete_guest_user => $delete_guest_user,
+      }
     }
-  } else {
-    class { $rabbitmq_class:
-      service_ensure    => $service_ensure,
-      port              => $port,
-      delete_guest_user => $delete_guest_user,
-    }
+    Class[$rabbitmq_class] -> Rabbitmq_user<| title == $userid |>
+    Class[$rabbitmq_class] -> Rabbitmq_vhost<| title == $virtual_host |>
+    # only configure nova after the queue is up
+    Class[$rabbitmq_class] -> Anchor<| title == 'nova-start' |>
   }
 
   if ($enabled) {
     rabbitmq_vhost { $virtual_host:
       provider => 'rabbitmqctl',
-      require  => Class[$rabbitmq_class],
     }
   }
 }
