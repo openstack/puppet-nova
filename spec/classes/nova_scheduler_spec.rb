@@ -49,6 +49,7 @@ describe 'nova::scheduler' do
       end
 
       it { should_not contain_nova_config('database/connection') }
+      it { should_not contain_nova_config('database/slave_connection') }
       it { should_not contain_nova_config('database/idle_timeout').with_value('3600') }
     end
 
@@ -56,12 +57,14 @@ describe 'nova::scheduler' do
       let :pre_condition do
         "class { 'nova':
            database_connection   => 'mysql://user:pass@db/db',
+           slave_connection      => 'mysql://user:pass@slave/db',
            database_idle_timeout => '30',
          }
         "
       end
 
       it { should contain_nova_config('database/connection').with_value('mysql://user:pass@db/db').with_secret(true) }
+      it { should contain_nova_config('database/slave_connection').with_value('mysql://user:pass@slave/db').with_secret(true) }
       it { should contain_nova_config('database/idle_timeout').with_value('30') }
     end
 

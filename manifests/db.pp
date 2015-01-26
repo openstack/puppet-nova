@@ -24,16 +24,22 @@
 #   (optional) Connection url to connect to nova database.
 #   Defaults to undef
 #
+# [*slave_connection*]
+#   (optional) Connection url to connect to nova slave database (read-only).
+#   Defaults to undef
+#
 # [*database_idle_timeout*]
 #   (optional) Timeout before idle db connections are reaped.
 #   Defaults to undef
 #
 class nova::db (
   $database_connection   = undef,
+  $slave_connection      = undef,
   $database_idle_timeout = undef,
 ) {
 
   $database_connection_real = pick($database_connection, $::nova::database_connection, false)
+  $slave_connection_real = pick($slave_connection, $::nova::slave_connection, false)
   $database_idle_timeout_real = pick($database_idle_timeout, $::nova::database_idle_timeout, false)
 
   if $database_connection_real {
@@ -50,6 +56,15 @@ class nova::db (
     nova_config {
       'database/connection':   value => $database_connection_real, secret => true;
       'database/idle_timeout': value => $database_idle_timeout_real;
+    }
+    if $slave_connection_real {
+      nova_config {
+        'database/slave_connection': value => $slave_connection_real, secret => true;
+      }
+    } else {
+      nova_config {
+        'database/slave_connection': ensure => absent;
+      }
     }
   }
 
