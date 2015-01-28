@@ -20,23 +20,27 @@
 #   Defaults to 'present'
 #
 # [*auth_host*]
-#   (optional) The IP of the server running keystone
+#   (optional) DEPRECATED. The IP of the server running keystone
 #   Defaults to '127.0.0.1'
 #
 # [*auth_port*]
-#   (optional) The port to use when authenticating against Keystone
+#   (optional) DEPRECATED. The port to use when authenticating against Keystone
 #   Defaults to 35357
 #
 # [*auth_protocol*]
-#   (optional) The protocol to use when authenticating against Keystone
+#   (optional) DEPRECATED. The protocol to use when authenticating against Keystone
 #   Defaults to 'http'
 #
 # [*auth_uri*]
-#   (optional) The uri of a Keystone service to authenticate against
+#   (optional) Complete public Identity API endpoint.
 #   Defaults to false
 #
+# [*identity_uri*]
+#   (optional) Complete admin Identity API endpoint.
+#   Defaults to: false
+#
 # [*auth_admin_prefix*]
-#   (optional) Prefix to prepend at the beginning of the keystone path
+#   (optional) DEPRECATED. Prefix to prepend at the beginning of the keystone path
 #   Defaults to false
 #
 # [*auth_version*]
@@ -147,11 +151,8 @@ class nova::api(
   $enabled               = false,
   $manage_service        = true,
   $ensure_package        = 'present',
-  $auth_host             = '127.0.0.1',
-  $auth_port             = 35357,
-  $auth_protocol         = 'http',
   $auth_uri              = false,
-  $auth_admin_prefix     = false,
+  $identity_uri          = false,
   $auth_version          = false,
   $admin_tenant_name     = 'services',
   $admin_user            = 'nova',
@@ -174,6 +175,10 @@ class nova::api(
   $validate              = false,
   $validation_options    = {},
   # DEPRECATED PARAMETER
+  $auth_protocol         = 'http',
+  $auth_port             = 35357,
+  $auth_host             = '127.0.0.1',
+  $auth_admin_prefix     = false,
   $conductor_workers     = undef,
 ) {
 
@@ -240,30 +245,65 @@ class nova::api(
   }
   nova_config { 'keystone_authtoken/auth_uri': value => $auth_uri_real; }
 
+  if $identity_uri {
+    nova_config { 'keystone_authtoken/identity_uri': value => $identity_uri; }
+  } else {
+    nova_config { 'keystone_authtoken/identity_uri': ensure => absent; }
+  }
+
   if $auth_version {
     nova_config { 'keystone_authtoken/auth_version': value => $auth_version; }
   } else {
     nova_config { 'keystone_authtoken/auth_version': ensure => absent; }
   }
 
+  # if both auth_uri and identity_uri are set we skip these deprecated settings entirely
+  if !$auth_uri or !$identity_uri {
+
+    if $auth_host {
+      warning('The auth_host parameter is deprecated. Please use auth_uri and identity_uri instead.')
+      nova_config { 'keystone_authtoken/auth_host': value => $auth_host; }
+    } else {
+      nova_config { 'keystone_authtoken/auth_host': ensure => absent; }
+    }
+
+    if $auth_port {
+      warning('The auth_port parameter is deprecated. Please use auth_uri and identity_uri instead.')
+      nova_config { 'keystone_authtoken/auth_port': value => $auth_port; }
+    } else {
+      nova_config { 'keystone_authtoken/auth_port': ensure => absent; }
+    }
+
+    if $auth_protocol {
+      warning('The auth_protocol parameter is deprecated. Please use auth_uri and identity_uri instead.')
+      nova_config { 'keystone_authtoken/auth_protocol': value => $auth_protocol; }
+    } else {
+      nova_config { 'keystone_authtoken/auth_protocol': ensure => absent; }
+    }
+
+    if $auth_admin_prefix {
+      warning('The auth_admin_prefix  parameter is deprecated. Please use auth_uri and identity_uri instead.')
+      validate_re($auth_admin_prefix, '^(/.+[^/])?$')
+      nova_config {
+        'keystone_authtoken/auth_admin_prefix': value => $auth_admin_prefix;
+      }
+    } else {
+      nova_config { 'keystone_authtoken/auth_admin_prefix': ensure => absent; }
+    }
+
+  } else {
+    nova_config {
+      'keystone_authtoken/auth_host': ensure => absent;
+      'keystone_authtoken/auth_port': ensure => absent;
+      'keystone_authtoken/auth_protocol': ensure => absent;
+      'keystone_authtoken/auth_admin_prefix': ensure => absent;
+    }
+  }
+
   nova_config {
-    'keystone_authtoken/auth_host':         value => $auth_host;
-    'keystone_authtoken/auth_port':         value => $auth_port;
-    'keystone_authtoken/auth_protocol':     value => $auth_protocol;
     'keystone_authtoken/admin_tenant_name': value => $admin_tenant_name;
     'keystone_authtoken/admin_user':        value => $admin_user;
     'keystone_authtoken/admin_password':    value => $admin_password, secret => true;
-  }
-
-  if $auth_admin_prefix {
-    validate_re($auth_admin_prefix, '^(/.+[^/])?$')
-    nova_config {
-      'keystone_authtoken/auth_admin_prefix': value => $auth_admin_prefix;
-    }
-  } else {
-    nova_config {
-      'keystone_authtoken/auth_admin_prefix': ensure => absent;
-    }
   }
 
   if $keystone_ec2_url {
