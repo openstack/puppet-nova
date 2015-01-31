@@ -565,7 +565,7 @@ class nova(
       ensure  => directory,
       mode    => '0750',
       owner   => 'nova',
-      group   => 'nova',
+      group   => $::nova::params::nova_log_group,
       require => Package['nova-common'],
     }
     nova_config { 'DEFAULT/log_dir': value => $log_dir;}

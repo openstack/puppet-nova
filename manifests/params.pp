@@ -42,6 +42,7 @@ class nova::params {
       # redhat specific config defaults
       $root_helper                  = 'sudo nova-rootwrap'
       $lock_path                    = '/var/lib/nova/tmp'
+      $nova_log_group               = 'nova'
       case $::operatingsystem {
         'Fedora': {
           $special_service_provider = undef
@@ -99,6 +100,7 @@ class nova::params {
           $vncproxy_package_name    = 'nova-consoleproxy'
           # Use default provider on Debian
           $special_service_provider = undef
+          $nova_log_group               = 'nova'
         }
         default: {
           $spicehtml5proxy_package_name = 'nova-spiceproxy'
@@ -106,6 +108,7 @@ class nova::params {
           $vncproxy_package_name    = 'nova-novncproxy'
           # some of the services need to be started form the special upstart provider
           $special_service_provider = 'upstart'
+          $nova_log_group               = 'adm'
         }
       }
     }
