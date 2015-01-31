@@ -44,7 +44,6 @@ describe 'nova' do
           :ensure  => 'directory',
           :mode    => '0750',
           :owner   => 'nova',
-          :group   => 'nova',
           :require => 'Package[nova-common]'
         )
         should contain_file('/etc/nova/nova.conf').with(
@@ -591,7 +590,8 @@ describe 'nova' do
 
   context 'on Debian platforms' do
     let :facts do
-      { :osfamily => 'Debian' }
+      { :osfamily => 'Debian',
+        :operatingsystem => 'Debian' }
     end
 
     let :platform_params do
@@ -600,6 +600,26 @@ describe 'nova' do
     end
 
     it_behaves_like 'nova'
+    it 'creates the log folder with the right group for Debian' do
+      should contain_file('/var/log/nova').with(:group => 'nova')
+    end
+  end
+
+  context 'on Ubuntu platforms' do
+    let :facts do
+      { :osfamily => 'Debian',
+        :operatingsystem => 'Ubuntu' }
+    end
+
+    let :platform_params do
+      { :nova_common_package => 'nova-common',
+        :lock_path           => '/var/lock/nova' }
+    end
+
+    it_behaves_like 'nova'
+    it 'creates the log folder with the right group for Ubuntu' do
+      should contain_file('/var/log/nova').with(:group => 'adm')
+    end
   end
 
   context 'on RedHat platforms' do
@@ -613,5 +633,9 @@ describe 'nova' do
     end
 
     it_behaves_like 'nova'
+
+    it 'creates the log folder with the right group for RedHat' do
+      should contain_file('/var/log/nova').with(:group => 'nova')
+    end
   end
 end
