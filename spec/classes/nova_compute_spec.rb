@@ -42,6 +42,7 @@ describe 'nova::compute' do
         should contain_nova_config('DEFAULT/internal_service_availability_zone').with_value('internal')
       end
 
+      it { should contain_nova_config('DEFAULT/heal_instance_info_cache_interval').with_value('60') }
     end
 
     context 'with overridden parameters' do
@@ -56,6 +57,7 @@ describe 'nova::compute' do
           :default_availability_zone          => 'az1',
           :default_schedule_zone              => 'az2',
           :internal_service_availability_zone => 'az_int1',
+          :heal_instance_info_cache_interval  => '120',
         }
       end
 
@@ -95,6 +97,8 @@ describe 'nova::compute' do
         should contain_nova_config('DEFAULT/default_schedule_zone').with_value('az2')
         should contain_nova_config('DEFAULT/internal_service_availability_zone').with_value('az_int1')
       end
+
+      it { should contain_nova_config('DEFAULT/heal_instance_info_cache_interval').with_value('120') }
 
       it { should contain_nova_config('DEFAULT/force_raw_images').with(:value => false) }
     end

@@ -8,6 +8,10 @@
 #   (optional) Whether to enable the nova-compute service
 #   Defaults to false
 #
+# [*heal_instance_info_cache_interval*]
+#   (optional) Controls how often the instance info should be updated.
+#    Defaults to '60' , to disable you can set the value to zero.
+#
 # [*manage_service*]
 #   (optional) Whether to start/stop the service
 #   Defaults to true
@@ -118,13 +122,15 @@ class nova::compute (
   $default_availability_zone          = 'nova',
   $default_schedule_zone              = undef,
   $internal_service_availability_zone = 'internal',
+  $heal_instance_info_cache_interval  = '60',
 ) {
 
   include nova::params
 
   nova_config {
-    'DEFAULT/reserved_host_memory_mb':  value => $reserved_host_memory;
-    'DEFAULT/compute_manager':          value => $compute_manager;
+    'DEFAULT/reserved_host_memory_mb':           value => $reserved_host_memory;
+    'DEFAULT/compute_manager':                   value => $compute_manager;
+    'DEFAULT/heal_instance_info_cache_interval': value => $heal_instance_info_cache_interval;
   }
 
   if ($vnc_enabled) {
@@ -211,4 +217,5 @@ class nova::compute (
       'DEFAULT/default_schedule_zone': value => $default_schedule_zone;
     }
   }
+
 }
