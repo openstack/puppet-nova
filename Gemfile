@@ -4,6 +4,7 @@ group :development, :test do
   gem 'puppetlabs_spec_helper', :require => false
   gem 'puppet-lint', '~> 0.3.2'
   gem 'rake', '10.1.1'
+  gem 'rspec-puppet', '~> 1.0.1', :require => false
   gem 'rspec', '< 2.99'
   gem 'json'
   gem 'webmock'
