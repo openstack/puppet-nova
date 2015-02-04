@@ -29,7 +29,7 @@ describe 'nova::api' do
           :name   => platform_params[:nova_api_package],
           :ensure => 'present',
           :notify => 'Service[nova-api]',
-          :tag    => ['openstack', 'nova']
+          :tag    => ['openstack']
         )
         should_not contain_exec('validate_nova_api')
       end
@@ -106,7 +106,7 @@ describe 'nova::api' do
         should contain_package('nova-api').with(
           :name   => platform_params[:nova_api_package],
           :ensure => '2012.1-2',
-          :tag    => ['openstack', 'nova']
+          :tag    => ['openstack']
         )
         should contain_service('nova-api').with(
           :name      => platform_params[:nova_api_service],

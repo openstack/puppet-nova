@@ -14,7 +14,7 @@ class nova::client(
 
   package { 'python-novaclient':
     ensure => $ensure,
-    tag    => ['openstack', 'nova'],
+    tag    => ['openstack'],
   }
 
 }

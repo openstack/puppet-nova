@@ -401,14 +401,14 @@ class nova(
   package { 'python-nova':
     ensure  => $ensure_package,
     require => Package['python-greenlet'],
-    tag     => ['openstack', 'nova'],
+    tag     => ['openstack'],
   }
 
   package { 'nova-common':
     ensure  => $ensure_package,
     name    => $::nova::params::common_package_name,
     require => [Package['python-nova'], Anchor['nova-start']],
-    tag     => ['openstack', 'nova'],
+    tag     => ['openstack'],
   }
 
   file { '/etc/nova/nova.conf':

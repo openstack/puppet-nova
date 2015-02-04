@@ -19,7 +19,7 @@ describe 'nova::compute' do
         })
         should contain_package('nova-compute').with({
           :name => platform_params[:nova_compute_package],
-          :tag  => ['openstack', 'nova']
+          :tag  => ['openstack']
         })
       end
 
@@ -71,7 +71,7 @@ describe 'nova::compute' do
         should contain_package('nova-compute').with({
           :name   => platform_params[:nova_compute_package],
           :ensure => '2012.1-2',
-          :tag    => ['openstack', 'nova']
+          :tag    => ['openstack']
         })
       end
 

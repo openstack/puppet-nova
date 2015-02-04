@@ -6,7 +6,7 @@ describe 'nova::client' do
     it {
       should contain_package('python-novaclient').with(
         :ensure => 'present',
-        :tag    => ['openstack', 'nova']
+        :tag    => ['openstack']
       )
     }
   end

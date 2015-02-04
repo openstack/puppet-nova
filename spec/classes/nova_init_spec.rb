@@ -19,7 +19,7 @@ describe 'nova' do
         should contain_package('nova-common').with(
           :name    => platform_params[:nova_common_package],
           :ensure  => 'present',
-          :tag    => ['openstack', 'nova']
+          :tag    => ['openstack']
         )
       end
 
