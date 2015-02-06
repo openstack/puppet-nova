@@ -102,6 +102,12 @@
 #   (optional) Shared secret to validate proxies Neutron metadata requests
 #   Defaults to undef
 #
+# [*pci_alias*]
+#   (optional) Pci passthrough for controller:
+#   Defaults to undef
+#   Example
+#   "[ {'vendor_id':'1234', 'product_id':'5678', 'name':'default'}, {...} ]"
+#
 # [*ratelimits*]
 #   (optional) A string that is a semicolon-separated list of 5-tuples.
 #   See http://docs.openstack.org/trunk/config-reference/content/configuring-compute-API.html
@@ -161,6 +167,7 @@ class nova::api(
   $sync_db               = true,
   $neutron_metadata_proxy_shared_secret = undef,
   $osapi_v3              = false,
+  $pci_alias             = undef,
   $ratelimits            = undef,
   $ratelimits_factory    =
     'nova.api.openstack.compute.limits:RateLimitingMiddleware.factory',
@@ -319,6 +326,12 @@ class nova::api(
     'filter:authtoken/auth_admin_prefix': ensure => absent;
   }
 
+  if $pci_alias {
+    nova_config {
+      'DEFAULT/pci_alias': value => check_array_of_hash($pci_alias);
+    }
+  }
+
   if $validate {
     $defaults = {
       'nova-api' => {
@@ -328,5 +341,4 @@ class nova::api(
     $validation_options_hash = merge ($defaults, $validation_options)
     create_resources('openstacklib::service_validation', $validation_options_hash, {'subscribe' => 'Service[nova-api]'})
   }
-
 }
