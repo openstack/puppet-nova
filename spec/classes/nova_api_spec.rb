@@ -110,6 +110,7 @@ describe 'nova::api' do
           :metadata_workers                     => 2,
           :osapi_v3                             => true,
           :keystone_ec2_url                     => 'https://example.com:5000/v2.0/ec2tokens',
+          :pci_alias                            => "[{\"vendor_id\":\"8086\",\"product_id\":\"0126\",\"name\":\"graphic_card\"},{\"vendor_id\":\"9096\",\"product_id\":\"1520\",\"name\":\"network_card\"}]"
         })
       end
 
@@ -165,6 +166,12 @@ describe 'nova::api' do
 
       it 'configure nova api v3' do
         should contain_nova_config('osapi_v3/enabled').with('value' => true)
+      end
+
+      it 'configures nova pci_alias entries' do
+        should contain_nova_config('DEFAULT/pci_alias').with(
+          'value' => "[{\"vendor_id\":\"8086\",\"product_id\":\"0126\",\"name\":\"graphic_card\"},{\"vendor_id\":\"9096\",\"product_id\":\"1520\",\"name\":\"network_card\"}]"
+        )
       end
     end
 

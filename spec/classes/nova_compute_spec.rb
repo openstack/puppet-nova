@@ -46,7 +46,9 @@ describe 'nova::compute' do
           :network_device_mtu   => 9999,
           :force_raw_images     => false,
           :reserved_host_memory => '0',
-          :compute_manager      => 'ironic.nova.compute.manager.ClusteredComputeManager'}
+          :compute_manager      => 'ironic.nova.compute.manager.ClusteredComputeManager',
+          :pci_passthrough      => "[{\"vendor_id\":\"8086\",\"product_id\":\"0126\"},{\"vendor_id\":\"9096\",\"product_id\":\"1520\",\"physical_network\":\"physnet1\"}]"
+        }
       end
 
       it 'installs nova-compute package and service' do
@@ -81,6 +83,12 @@ describe 'nova::compute' do
       end
 
       it { should contain_nova_config('DEFAULT/force_raw_images').with(:value => false) }
+
+      it 'configures nova pci_passthrough_whitelist entries' do
+        should contain_nova_config('DEFAULT/pci_passthrough_whitelist').with(
+          'value' => "[{\"vendor_id\":\"8086\",\"product_id\":\"0126\"},{\"vendor_id\":\"9096\",\"product_id\":\"1520\",\"physical_network\":\"physnet1\"}]"
+        )
+      end
     end
 
     context 'with neutron_enabled set to false' do
