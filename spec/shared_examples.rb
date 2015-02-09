@@ -12,7 +12,7 @@ shared_examples 'generic nova service' do |service|
         :name   => service[:package_name],
         :ensure => 'present',
         :notify => "Service[#{service[:name]}]",
-        :tag    => ['openstack', 'nova']
+        :tag    => ['openstack']
       })
       should contain_service(service[:name]).with({
         :name      => service[:service_name],
