@@ -17,11 +17,13 @@
 #
 # [*service_name*]
 #   (optional) Name of the service.
-#   Defaults to the value of auth_name.
+#   Defaults to the value of auth_name, but must differ from the value
+#   of service_name_v3.
 #
 # [*service_name_v3*]
 #   (optional) Name of the v3 service.
-#   Defaults to the value of auth_name_v3.
+#   Defaults to the value of auth_name_v3, but must differ from the value
+#   of service_name.
 #
 # [*public_address*]
 #   (optional) The public nova-api endpoint
@@ -126,9 +128,13 @@ class nova::keystone::auth(
     $real_service_name_v3 = $service_name_v3
   }
 
+  if $real_service_name == $real_service_name_v3 {
+    fail('nova::keystone::auth parameters service_name and service_name_v3 must be different.')
+  }
+
   Keystone_endpoint["${region}/${real_service_name}"] ~> Service <| name == 'nova-api' |>
 
-  keystone::resource::service_identity { $auth_name:
+  keystone::resource::service_identity { "nova service, user ${auth_name}":
     configure_user      => $configure_user,
     configure_user_role => $configure_user_role,
     configure_endpoint  => $configure_endpoint,
@@ -136,6 +142,7 @@ class nova::keystone::auth(
     service_description => 'Openstack Compute Service',
     service_name        => $real_service_name,
     region              => $region,
+    auth_name           => $auth_name,
     password            => $password,
     email               => $email,
     tenant              => $tenant,
@@ -144,7 +151,7 @@ class nova::keystone::auth(
     internal_url        => "${internal_protocol}://${internal_address}:${compute_port}/${compute_version}/%(tenant_id)s",
   }
 
-  keystone::resource::service_identity { $auth_name_v3:
+  keystone::resource::service_identity { "nova v3 service, user ${auth_name_v3}":
     configure_user      => false,
     configure_user_role => false,
     configure_endpoint  => $configure_endpoint_v3,
@@ -153,12 +160,13 @@ class nova::keystone::auth(
     service_description => 'Openstack Compute Service v3',
     service_name        => $real_service_name_v3,
     region              => $region,
+    auth_name           => $auth_name_v3,
     public_url          => "${public_protocol}://${public_address}:${compute_port}/v3",
     admin_url           => "${admin_protocol}://${admin_address}:${compute_port}/v3",
     internal_url        => "${internal_protocol}://${internal_address}:${compute_port}/v3",
   }
 
-  keystone::resource::service_identity { "${auth_name}_ec2":
+  keystone::resource::service_identity { "nova ec2 service, user ${auth_name}_ec2":
     configure_user      => false,
     configure_user_role => false,
     configure_endpoint  => $configure_ec2_endpoint,
@@ -167,6 +175,7 @@ class nova::keystone::auth(
     service_description => 'EC2 Service',
     service_name        => "${real_service_name}_ec2",
     region              => $region,
+    auth_name           => "${auth_name}_ec2",
     public_url          => "${public_protocol}://${public_address}:${ec2_port}/services/Cloud",
     admin_url           => "${admin_protocol}://${admin_address}:${ec2_port}/services/Admin",
     internal_url        => "${internal_protocol}://${internal_address}:${ec2_port}/services/Cloud",
