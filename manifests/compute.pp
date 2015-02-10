@@ -99,6 +99,13 @@
 #   (optional) The availability zone to show internal services under.
 #   Defaults to internal
 #
+#  [*pci_passthrough_whitelist*]
+#   (optional) Pci passthrough hash in format of:
+#   Defaults to undef
+#   Example
+#  "[ { 'vendor_id':'1234','product_id':'5678' },
+#     { 'vendor_id':'4321','product_id':'8765','physical_network':'default' } ] "
+#
 class nova::compute (
   $enabled                            = false,
   $manage_service                     = true,
@@ -123,6 +130,7 @@ class nova::compute (
   $default_schedule_zone              = undef,
   $internal_service_availability_zone = 'internal',
   $heal_instance_info_cache_interval  = '60',
+  $pci_passthrough                    = undef,
 ) {
 
   include nova::params
@@ -218,4 +226,9 @@ class nova::compute (
     }
   }
 
+  if ($pci_passthrough) {
+    nova_config {
+      'DEFAULT/pci_passthrough_whitelist': value => check_array_of_hash($pci_passthrough);
+    }
+  }
 }
