@@ -15,7 +15,6 @@ describe 'nova class' do
         glance_api_servers  => 'localhost:9292',
         verbose             => false,
         rabbit_host         => '127.0.0.1',
-        mysql_module        => '2.2',
       }
 
       class { 'nova::compute':

@@ -1,8 +1,8 @@
 HOSTS:
-  ubuntu-server-12042-x64:
+  ubuntu-server-1404-x64:
     roles:
       - master
-    platform: ubuntu-12.04-amd64
+    platform: ubuntu-14.04-amd64
     hypervisor : none
     ip: 127.0.0.1
 CONFIG:
