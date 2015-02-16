@@ -290,7 +290,7 @@ class nova(
 ) inherits nova::params {
 
   # maintain backward compatibility
-  include nova::db
+  include ::nova::db
 
   if $mysql_module {
     warning('The mysql_module parameter is deprecated. The latest 2.x mysql module will be used.')
@@ -391,7 +391,7 @@ class nova(
   }
 
   if $install_utilities {
-    class { 'nova::utilities': }
+    class { '::nova::utilities': }
   }
 
   # this anchor is used to simplify the graph between nova components by

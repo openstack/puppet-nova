@@ -94,7 +94,7 @@ class nova::compute::libvirt (
   $libvirt_service_name                       = $::nova::params::libvirt_service_name,
 ) inherits nova::params {
 
-  include nova::params
+  include ::nova::params
 
   Service['libvirt'] -> Service['nova-compute']
 
@@ -135,7 +135,7 @@ class nova::compute::libvirt (
     if $vncserver_listen != '0.0.0.0' {
       fail('For migration support to work, you MUST set vncserver_listen to \'0.0.0.0\'')
     } else {
-      class { 'nova::migration::libvirt': }
+      class { '::nova::migration::libvirt': }
     }
   }
 

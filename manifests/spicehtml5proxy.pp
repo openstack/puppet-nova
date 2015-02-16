@@ -36,7 +36,7 @@ class nova::spicehtml5proxy(
   $ensure_package = 'present'
 ) {
 
-  include nova::params
+  include ::nova::params
 
   nova_config {
     'DEFAULT/spicehtml5proxy_host': value => $host;

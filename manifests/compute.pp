@@ -133,7 +133,7 @@ class nova::compute (
   $pci_passthrough                    = undef,
 ) {
 
-  include nova::params
+  include ::nova::params
 
   nova_config {
     'DEFAULT/reserved_host_memory_mb':           value => $reserved_host_memory;

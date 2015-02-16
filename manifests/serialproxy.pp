@@ -32,7 +32,7 @@ class nova::serialproxy(
   $ensure_package       = 'present'
 ) {
 
-  include nova::params
+  include ::nova::params
 
   nova_config {
     'serial_console/serialproxy_port':    value => $serialproxy_port;

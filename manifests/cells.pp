@@ -166,7 +166,7 @@ class nova::cells (
   $weight_scale                  = '1.0'
 ) {
 
-  include nova::params
+  include ::nova::params
 
   case $cell_type {
     'parent': {

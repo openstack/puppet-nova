@@ -27,8 +27,8 @@ class nova::conductor(
   $workers        = undef,
 ) {
 
-  include nova::db
-  include nova::params
+  include ::nova::db
+  include ::nova::params
 
   nova::generic_service { 'conductor':
     enabled        => $enabled,

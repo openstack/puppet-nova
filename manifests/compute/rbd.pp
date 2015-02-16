@@ -51,7 +51,7 @@ class nova::compute::rbd (
   $rbd_keyring                  = 'client.nova',
 ) {
 
-  include nova::params
+  include ::nova::params
 
   nova_config {
     'libvirt/images_type':          value => 'rbd';

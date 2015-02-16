@@ -18,7 +18,7 @@ define nova::generic_service(
   $ensure_package = 'present'
 ) {
 
-  include nova::params
+  include ::nova::params
 
   $nova_title = "nova-${name}"
   # ensure that the service is only started after

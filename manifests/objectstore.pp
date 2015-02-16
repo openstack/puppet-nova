@@ -27,7 +27,7 @@ class nova::objectstore(
   $bind_address   = '0.0.0.0'
 ) {
 
-  include nova::params
+  include ::nova::params
 
   nova::generic_service { 'objectstore':
     enabled        => $enabled,

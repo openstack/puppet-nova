@@ -54,9 +54,9 @@ class nova::rabbitmq(
     } else {
       $delete_guest_user = true
       rabbitmq_user { $userid:
-        admin     => true,
-        password  => $password,
-        provider  => 'rabbitmqctl',
+        admin    => true,
+        password => $password,
+        provider => 'rabbitmqctl',
       }
       # I need to figure out the appropriate permissions
       rabbitmq_user_permissions { "${userid}@${virtual_host}":

@@ -30,10 +30,10 @@ class nova::migration::libvirt {
       }
 
       file_line { '/etc/sysconfig/libvirtd libvirtd args':
-        path    => '/etc/sysconfig/libvirtd',
-        line    => 'LIBVIRTD_ARGS="--listen"',
-        match   => 'LIBVIRTD_ARGS=',
-        notify  => Service['libvirt'],
+        path   => '/etc/sysconfig/libvirtd',
+        line   => 'LIBVIRTD_ARGS="--listen"',
+        match  => 'LIBVIRTD_ARGS=',
+        notify => Service['libvirt'],
       }
 
       Package['libvirt'] -> File_line<| path == '/etc/sysconfig/libvirtd' |>
@@ -61,10 +61,10 @@ class nova::migration::libvirt {
         notify => Service['libvirt'],
       }
       file_line { "/etc/default/${::nova::compute::libvirt::libvirt_service_name} libvirtd opts":
-        path    => "/etc/default/${::nova::compute::libvirt::libvirt_service_name}",
-        line    => 'libvirtd_opts="-d -l"',
-        match   => 'libvirtd_opts=',
-        notify  => Service['libvirt'],
+        path   => "/etc/default/${::nova::compute::libvirt::libvirt_service_name}",
+        line   => 'libvirtd_opts="-d -l"',
+        match  => 'libvirtd_opts=',
+        notify => Service['libvirt'],
       }
 
       Package['libvirt'] -> File_line<| path == "/etc/default/${::nova::compute::libvirt::libvirt_service_name}" |>

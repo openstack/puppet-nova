@@ -70,7 +70,7 @@ class nova::network(
   $install_service   = true
 ) {
 
-  include nova::params
+  include ::nova::params
 
   # forward all ipv4 traffic
   # this is required for the vms to pass through the gateways
@@ -103,10 +103,10 @@ class nova::network(
 
   if $create_networks {
     nova::manage::network { 'nova-vm-net':
-      network       => $fixed_range,
-      num_networks  => $num_networks,
-      network_size  => $network_size,
-      vlan_start    => $vlan_start,
+      network      => $fixed_range,
+      num_networks => $num_networks,
+      network_size => $network_size,
+      vlan_start   => $vlan_start,
     }
     if $floating_range {
       nova::manage::floating { 'nova-vm-floating':

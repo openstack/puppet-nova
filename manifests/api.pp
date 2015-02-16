@@ -177,11 +177,11 @@ class nova::api(
   $conductor_workers     = undef,
 ) {
 
-  include nova::db
-  include nova::params
-  include nova::policy
-  require keystone::python
-  include cinder::client
+  include ::nova::db
+  include ::nova::params
+  include ::nova::policy
+  require ::keystone::python
+  include ::cinder::client
 
   Package<| title == 'nova-api' |> -> Nova_paste_api_ini<| |>
 

@@ -32,7 +32,7 @@ class nova::vncproxy(
   $ensure_package = 'present'
 ) {
 
-  include nova::params
+  include ::nova::params
 
   # TODO make this work on Fedora
 
