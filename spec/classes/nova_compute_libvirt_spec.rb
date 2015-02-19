@@ -38,6 +38,9 @@ describe 'nova::compute::libvirt' do
       it { should contain_nova_config('libvirt/virt_type').with_value('kvm')}
       it { should contain_nova_config('libvirt/cpu_mode').with_value('host-model')}
       it { should contain_nova_config('libvirt/disk_cachemodes').with_ensure('absent')}
+      it { should contain_nova_config('libvirt/inject_password').with_value(false)}
+      it { should contain_nova_config('libvirt/inject_key').with_value(false)}
+      it { should contain_nova_config('libvirt/inject_partition').with_value(-2)}
       it { should contain_nova_config('DEFAULT/vncserver_listen').with_value('127.0.0.1')}
       it { should contain_nova_config('DEFAULT/remove_unused_base_images').with_ensure('absent')}
       it { should contain_nova_config('DEFAULT/remove_unused_original_minimum_age_seconds').with_ensure('absent')}
@@ -167,6 +170,9 @@ describe 'nova::compute::libvirt' do
 
       it { should contain_nova_config('DEFAULT/compute_driver').with_value('libvirt.LibvirtDriver')}
       it { should contain_nova_config('libvirt/virt_type').with_value('kvm')}
+      it { should contain_nova_config('libvirt/inject_password').with_value(false)}
+      it { should contain_nova_config('libvirt/inject_key').with_value(false)}
+      it { should contain_nova_config('libvirt/inject_partition').with_value(-2)}
       it { should contain_nova_config('DEFAULT/vncserver_listen').with_value('127.0.0.1')}
       it { should contain_nova_config('DEFAULT/remove_unused_base_images').with_ensure('absent')}
       it { should contain_nova_config('DEFAULT/remove_unused_original_minimum_age_seconds').with_ensure('absent')}

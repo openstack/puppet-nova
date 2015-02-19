@@ -31,6 +31,20 @@
 #   will be removed from nova.conf completely.
 #   Defaults to an empty list
 #
+# [*libvirt_inject_password*]
+#   (optional) Inject the admin password at boot time, without an agent.
+#   Defaults to false
+#
+# [*libvirt_inject_key*]
+#   (optional) Inject the ssh public key at boot time.
+#   Defaults to false
+#
+# [*libvirt_inject_partition*]
+#   (optional) The partition to inject to : -2 => disable, -1 => inspect
+#   (libguestfs only), 0 => not partitioned, >0 => partition
+#   number (integer value)
+#   Defaults to -2
+#
 # [*remove_unused_base_images*]
 #   (optional) Should unused base images be removed?
 #   If undef is specified, remove the line in nova.conf
@@ -71,6 +85,9 @@ class nova::compute::libvirt (
   $migration_support                          = false,
   $libvirt_cpu_mode                           = false,
   $libvirt_disk_cachemodes                    = [],
+  $libvirt_inject_password                    = false,
+  $libvirt_inject_key                         = false,
+  $libvirt_inject_partition                   = -2,
   $remove_unused_base_images                  = undef,
   $remove_unused_kernels                      = undef,
   $remove_unused_resized_minimum_age_seconds  = undef,
@@ -150,6 +167,9 @@ class nova::compute::libvirt (
     'DEFAULT/vncserver_listen': value => $vncserver_listen;
     'libvirt/virt_type':        value => $libvirt_virt_type_real;
     'libvirt/cpu_mode':         value => $libvirt_cpu_mode_real;
+    'libvirt/inject_password':  value => $libvirt_inject_password;
+    'libvirt/inject_key':       value => $libvirt_inject_key;
+    'libvirt/inject_partition': value => $libvirt_inject_partition;
   }
 
   if size($libvirt_disk_cachemodes) > 0 {
