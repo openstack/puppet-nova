@@ -129,7 +129,8 @@ describe 'nova::compute::libvirt' do
   describe 'on rhel platforms' do
     let :facts do
       { :operatingsystem => 'RedHat', :osfamily => 'RedHat',
-        :operatingsystemrelease => 6.5 }
+        :operatingsystemrelease => 6.5,
+        :operatingsystemmajrelease => '6' }
     end
 
     describe 'with default parameters' do
@@ -145,7 +146,7 @@ describe 'nova::compute::libvirt' do
         :name     => 'libvirtd',
         :enable   => true,
         :ensure   => 'running',
-        :provider => nil,
+        :provider => 'init',
         :require  => 'Package[libvirt]',
         :before   => 'Service[nova-compute]'
       )}
@@ -153,12 +154,13 @@ describe 'nova::compute::libvirt' do
         :ensure   => 'running',
         :enable   => true,
         :before   => 'Service[libvirt]',
-        :provider => nil
+        :provider => 'init'
       ) }
 
       describe 'on rhel 7' do
         let :facts do
           super().merge(:operatingsystemrelease => 7.0)
+          super().merge(:operatingsystemmajrelease => '7')
         end
 
         it { is_expected.to contain_service('libvirt').with(

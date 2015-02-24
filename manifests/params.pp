@@ -48,7 +48,7 @@ class nova::params {
           $special_service_provider = undef
         }
         'RedHat', 'CentOS', 'Scientific': {
-          if ($::operatingsystemmajrelease < 7) {
+          if (versioncmp($::operatingsystemmajrelease, '7') < 0) {
             $special_service_provider = 'init'
           } else {
             $special_service_provider = undef
