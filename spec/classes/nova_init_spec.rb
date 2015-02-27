@@ -7,7 +7,6 @@ describe 'nova' do
     context 'with default parameters' do
 
       it 'installs packages' do
-        should contain_package('python').with_ensure('present')
         should contain_package('python-greenlet').with(
           :ensure  => 'present',
           :require => 'Package[python]'

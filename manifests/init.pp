@@ -382,9 +382,6 @@ class nova(
 
   # TODO - see if these packages can be removed
   # they should be handled as package deps by the OS
-  package { 'python':
-    ensure => present,
-  }
   package { 'python-greenlet':
     ensure  => present,
     require => Package['python'],
