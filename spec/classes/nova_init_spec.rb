@@ -9,7 +9,6 @@ describe 'nova' do
       it 'installs packages' do
         should contain_package('python-greenlet').with(
           :ensure  => 'present',
-          :require => 'Package[python]'
         )
         should contain_package('python-nova').with(
           :ensure  => 'present',

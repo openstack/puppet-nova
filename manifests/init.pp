@@ -384,7 +384,6 @@ class nova(
   # they should be handled as package deps by the OS
   package { 'python-greenlet':
     ensure  => present,
-    require => Package['python'],
   }
 
   if $install_utilities {
