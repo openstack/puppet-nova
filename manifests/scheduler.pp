@@ -1,4 +1,4 @@
-# == Class: nova::schedule
+# == Class: nova::scheduler
 #
 # Install and manage nova scheduler
 #
