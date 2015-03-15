@@ -26,6 +26,10 @@
 #   split into.
 #   Defaults to 1
 #
+# [*network_size*]
+#   (optional) Number of addresses in each private subnet.
+#   Defaults to 255
+#
 # [*floating_range*]
 #   (optional) Range of floating ip addresses to create.
 #   Defaults to false

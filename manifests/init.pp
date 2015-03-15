@@ -68,6 +68,10 @@
 #   (optional) Connect over SSL for RabbitMQ
 #   Defaults to false
 #
+# [*rabbit_ha_queues*]
+#   (optional) Use HA queues in RabbitMQ.
+#   Defaults to undef
+#
 # [*kombu_ssl_ca_certs*]
 #   (optional) SSL certification authority file (valid only if SSL enabled).
 #   Defaults to undef
@@ -122,6 +126,10 @@
 #   (optional) Disable Nagle algorithm
 #   Defaults to true
 #
+# [*auth_strategy*]
+#   (optional) The strategy to use for auth: noauth or keystone.
+#   Defaults to 'keystone'
+#
 # [*service_down_time*]
 #   (optional) Maximum time since last check-in for up service.
 #   Defaults to 60
@@ -144,6 +152,10 @@
 #   (optional) Set log output to verbose output.
 #   Defaults to false
 #
+# [*debug*]
+#   (optional) Set log output to debug output.
+#   Defaults to false
+#
 # [*periodic_interval*]
 #   (optional) Seconds between running periodic tasks.
 #   Defaults to '60'
@@ -151,6 +163,10 @@
 # [*report_interval*]
 #   (optional) Interval at which nodes report to data store.
 #    Defaults to '10'
+#
+# [*rootwrap_config*]
+#   (optional) Path to the rootwrap configuration file to use for running commands as root
+#   Defaults to '/etc/nova/rootwrap.conf'
 #
 # [*monitoring_notifications*]
 #   (optional) Whether or not to send system usage data notifications out on the message queue. Only valid for stable/essex.
@@ -163,6 +179,10 @@
 # [*log_facility*]
 #   (optional) Syslog facility to receive log lines.
 #   Defaults to 'LOG_USER'
+#
+# [*install_utilities*]
+#   (optional) Install nova utilities (Extra packages used by nova tools)
+#   Defaults to true,
 #
 # [*use_ssl*]
 #   (optional) Enable SSL on the API server
@@ -228,6 +248,7 @@
 #   and you have multiple endpoints, you will get AmbiguousEndpoint
 #   exceptions in the nova API service.
 #   Defaults to undef
+#
 class nova(
   $ensure_package           = 'present',
   $database_connection      = false,

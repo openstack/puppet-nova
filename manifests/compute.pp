@@ -99,7 +99,7 @@
 #   (optional) The availability zone to show internal services under.
 #   Defaults to internal
 #
-#  [*pci_passthrough_whitelist*]
+#  [*pci_passthrough*]
 #   (optional) Pci passthrough hash in format of:
 #   Defaults to undef
 #   Example

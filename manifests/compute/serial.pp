@@ -4,7 +4,7 @@
 #
 # === Parameters:
 #
-# [*port_range]
+# [*port_range*]
 #   (optional) Range of TCP ports to use for serial ports on compute hosts
 #   Defaults to 10000:20000
 #
@@ -12,7 +12,7 @@
 #   (optional) URL that gets passed to the clients
 #   Defaults to 'ws://127.0.0.1:6083/'
 #
-# [*listen]
+# [*listen*]
 #   IP address on which instance serial console should listen
 #   Defaults to 127.0.0.1
 #
@@ -20,8 +20,7 @@
 #   The address to which proxy clients (like nova-serialproxy)
 #   should connect (string value)
 #   Defaults to 127.0.0.1
-
-
+#
 class nova::compute::serial(
   $port_range            = '10000:20000',
   $base_url              = 'ws://127.0.0.1:6083/',
