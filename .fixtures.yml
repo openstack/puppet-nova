@@ -1,8 +1,12 @@
 fixtures:
   repositories:
-    'cinder': 'git://github.com/stackforge/puppet-cinder.git'
+    'cinder':
+      repo: 'git://github.com/stackforge/puppet-cinder.git'
+      ref: 'origin/stable/juno'
     'inifile':  'git://github.com/puppetlabs/puppetlabs-inifile'
-    'keystone': 'git://github.com/stackforge/puppet-keystone.git'
+    'keystone':
+      repo: 'git://github.com/stackforge/puppet-keystone.git'
+      ref: 'origin/stable/juno'
     'mysql':
       repo: 'git://github.com/puppetlabs/puppetlabs-mysql.git'
       ref: 'origin/2.2.x'
