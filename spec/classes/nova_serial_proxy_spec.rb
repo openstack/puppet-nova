@@ -13,16 +13,16 @@ describe 'nova::serialproxy' do
   shared_examples 'nova-serialproxy' do
 
     it 'configures nova.conf' do
-      should contain_nova_config('serial_console/serialproxy_host').with(:value => '0.0.0.0')
-      should contain_nova_config('serial_console/serialproxy_port').with(:value => '6083')
+      is_expected.to contain_nova_config('serial_console/serialproxy_host').with(:value => '0.0.0.0')
+      is_expected.to contain_nova_config('serial_console/serialproxy_port').with(:value => '6083')
     end
 
-    it { should contain_package('nova-serialproxy').with(
+    it { is_expected.to contain_package('nova-serialproxy').with(
       :name   => platform_params[:serialproxy_package_name],
       :ensure => 'present'
     ) }
 
-    it { should contain_service('nova-serialproxy').with(
+    it { is_expected.to contain_service('nova-serialproxy').with(
       :name      => platform_params[:serialproxy_service_name],
       :hasstatus => 'true',
       :ensure    => 'running'
@@ -34,7 +34,7 @@ describe 'nova::serialproxy' do
           :manage_service => false
         }
       end
-      it { should contain_service('nova-serialproxy').without_ensure }
+      it { is_expected.to contain_service('nova-serialproxy').without_ensure }
     end
 
     context 'with package version' do
@@ -42,7 +42,7 @@ describe 'nova::serialproxy' do
         { :ensure_package => '2012.2' }
       end
 
-      it { should contain_package('nova-serialproxy').with(
+      it { is_expected.to contain_package('nova-serialproxy').with(
         :ensure => params[:ensure_package]
       )}
     end

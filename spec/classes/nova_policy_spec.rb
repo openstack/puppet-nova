@@ -16,7 +16,7 @@ describe 'nova::policy' do
     end
 
     it 'set up the policies' do
-      should contain_openstacklib__policy__base('context_is_admin').with({
+      is_expected.to contain_openstacklib__policy__base('context_is_admin').with({
         :key   => 'context_is_admin',
         :value => 'foo:bar'
       })

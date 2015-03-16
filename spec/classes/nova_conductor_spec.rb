@@ -13,12 +13,12 @@ describe 'nova::conductor' do
   shared_examples 'nova-conductor' do
 
 
-    it { should contain_package('nova-conductor').with(
+    it { is_expected.to contain_package('nova-conductor').with(
       :name   => platform_params[:conductor_package_name],
       :ensure => 'present'
     ) }
 
-    it { should contain_service('nova-conductor').with(
+    it { is_expected.to contain_service('nova-conductor').with(
       :name      => platform_params[:conductor_service_name],
       :hasstatus => 'true',
       :ensure    => 'running'
@@ -30,7 +30,7 @@ describe 'nova::conductor' do
           :manage_service => false
         }
       end
-      it { should contain_service('nova-conductor').without_ensure }
+      it { is_expected.to contain_service('nova-conductor').without_ensure }
     end
 
     context 'with package version' do
@@ -38,7 +38,7 @@ describe 'nova::conductor' do
         { :ensure_package => '2012.1-2' }
       end
 
-      it { should contain_package('nova-conductor').with(
+      it { is_expected.to contain_package('nova-conductor').with(
         :ensure => params[:ensure_package]
       )}
     end
@@ -47,7 +47,7 @@ describe 'nova::conductor' do
       before do
         params.merge!({:workers => '5' })
       end
-      it { should contain_nova_config('conductor/workers').with_value('5') }
+      it { is_expected.to contain_nova_config('conductor/workers').with_value('5') }
     end
 
     context 'with default database parameters' do
@@ -55,9 +55,9 @@ describe 'nova::conductor' do
         "include nova"
       end
 
-      it { should_not contain_nova_config('database/connection') }
-      it { should_not contain_nova_config('database/slave_connection') }
-      it { should_not contain_nova_config('database/idle_timeout').with_value('3600') }
+      it { is_expected.to_not contain_nova_config('database/connection') }
+      it { is_expected.to_not contain_nova_config('database/slave_connection') }
+      it { is_expected.to_not contain_nova_config('database/idle_timeout').with_value('3600') }
     end
 
     context 'with overridden database parameters' do
@@ -70,9 +70,9 @@ describe 'nova::conductor' do
         "
       end
 
-      it { should contain_nova_config('database/connection').with_value('mysql://user:pass@db/db').with_secret(true) }
-      it { should contain_nova_config('database/slave_connection').with_value('mysql://user:pass@slave/db').with_secret(true) }
-      it { should contain_nova_config('database/idle_timeout').with_value('30') }
+      it { is_expected.to contain_nova_config('database/connection').with_value('mysql://user:pass@db/db').with_secret(true) }
+      it { is_expected.to contain_nova_config('database/slave_connection').with_value('mysql://user:pass@slave/db').with_secret(true) }
+      it { is_expected.to contain_nova_config('database/idle_timeout').with_value('30') }
     end
 
   end

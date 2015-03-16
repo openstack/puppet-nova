@@ -12,20 +12,20 @@ describe 'nova::compute::libvirt' do
 
     describe 'with default parameters' do
 
-      it { should contain_class('nova::params')}
+      it { is_expected.to contain_class('nova::params')}
 
-      it { should contain_package('nova-compute-kvm').with(
+      it { is_expected.to contain_package('nova-compute-kvm').with(
         :ensure => 'present',
         :before => 'Package[nova-compute]',
         :tag    => ['openstack']
       ) }
 
-      it { should contain_package('libvirt').with(
+      it { is_expected.to contain_package('libvirt').with(
         :name   => 'libvirt-bin',
         :ensure => 'present'
       ) }
 
-      it { should contain_service('libvirt').with(
+      it { is_expected.to contain_service('libvirt').with(
         :name     => 'libvirt-bin',
         :enable   => true,
         :ensure   => 'running',
@@ -34,18 +34,18 @@ describe 'nova::compute::libvirt' do
         :before   => 'Service[nova-compute]'
       )}
 
-      it { should contain_nova_config('DEFAULT/compute_driver').with_value('libvirt.LibvirtDriver')}
-      it { should contain_nova_config('libvirt/virt_type').with_value('kvm')}
-      it { should contain_nova_config('libvirt/cpu_mode').with_value('host-model')}
-      it { should contain_nova_config('libvirt/disk_cachemodes').with_ensure('absent')}
-      it { should contain_nova_config('libvirt/inject_password').with_value(false)}
-      it { should contain_nova_config('libvirt/inject_key').with_value(false)}
-      it { should contain_nova_config('libvirt/inject_partition').with_value(-2)}
-      it { should contain_nova_config('DEFAULT/vncserver_listen').with_value('127.0.0.1')}
-      it { should contain_nova_config('DEFAULT/remove_unused_base_images').with_ensure('absent')}
-      it { should contain_nova_config('DEFAULT/remove_unused_original_minimum_age_seconds').with_ensure('absent')}
-      it { should contain_nova_config('libvirt/remove_unused_kernels').with_ensure('absent')}
-      it { should contain_nova_config('libvirt/remove_unused_resized_minimum_age_seconds').with_ensure('absent')}
+      it { is_expected.to contain_nova_config('DEFAULT/compute_driver').with_value('libvirt.LibvirtDriver')}
+      it { is_expected.to contain_nova_config('libvirt/virt_type').with_value('kvm')}
+      it { is_expected.to contain_nova_config('libvirt/cpu_mode').with_value('host-model')}
+      it { is_expected.to contain_nova_config('libvirt/disk_cachemodes').with_ensure('absent')}
+      it { is_expected.to contain_nova_config('libvirt/inject_password').with_value(false)}
+      it { is_expected.to contain_nova_config('libvirt/inject_key').with_value(false)}
+      it { is_expected.to contain_nova_config('libvirt/inject_partition').with_value(-2)}
+      it { is_expected.to contain_nova_config('DEFAULT/vncserver_listen').with_value('127.0.0.1')}
+      it { is_expected.to contain_nova_config('DEFAULT/remove_unused_base_images').with_ensure('absent')}
+      it { is_expected.to contain_nova_config('DEFAULT/remove_unused_original_minimum_age_seconds').with_ensure('absent')}
+      it { is_expected.to contain_nova_config('libvirt/remove_unused_kernels').with_ensure('absent')}
+      it { is_expected.to contain_nova_config('libvirt/remove_unused_resized_minimum_age_seconds').with_ensure('absent')}
     end
 
     describe 'with params' do
@@ -62,15 +62,15 @@ describe 'nova::compute::libvirt' do
         }
       end
 
-      it { should contain_nova_config('libvirt/virt_type').with_value('qemu')}
-      it { should contain_nova_config('libvirt/cpu_mode').with_value('host-passthrough')}
-      it { should contain_nova_config('libvirt/disk_cachemodes').with_value('file=directsync,block=none')}
-      it { should contain_nova_config('DEFAULT/vncserver_listen').with_value('0.0.0.0')}
-      it { should contain_nova_config('DEFAULT/remove_unused_base_images').with_value(true)}
-      it { should contain_nova_config('DEFAULT/remove_unused_original_minimum_age_seconds').with_value(3600)}
-      it { should contain_nova_config('libvirt/remove_unused_kernels').with_value(true)}
-      it { should contain_nova_config('libvirt/remove_unused_resized_minimum_age_seconds').with_value(3600)}
-      it { should contain_service('libvirt').with(
+      it { is_expected.to contain_nova_config('libvirt/virt_type').with_value('qemu')}
+      it { is_expected.to contain_nova_config('libvirt/cpu_mode').with_value('host-passthrough')}
+      it { is_expected.to contain_nova_config('libvirt/disk_cachemodes').with_value('file=directsync,block=none')}
+      it { is_expected.to contain_nova_config('DEFAULT/vncserver_listen').with_value('0.0.0.0')}
+      it { is_expected.to contain_nova_config('DEFAULT/remove_unused_base_images').with_value(true)}
+      it { is_expected.to contain_nova_config('DEFAULT/remove_unused_original_minimum_age_seconds').with_value(3600)}
+      it { is_expected.to contain_nova_config('libvirt/remove_unused_kernels').with_value(true)}
+      it { is_expected.to contain_nova_config('libvirt/remove_unused_resized_minimum_age_seconds').with_value(3600)}
+      it { is_expected.to contain_service('libvirt').with(
         :name     => 'custom_service',
         :enable   => true,
         :ensure   => 'running',
@@ -87,9 +87,9 @@ describe 'nova::compute::libvirt' do
             :migration_support => true }
         end
 
-        it { should contain_class('nova::migration::libvirt')}
-        it { should contain_nova_config('DEFAULT/vncserver_listen').with_value('0.0.0.0')}
-        it { should contain_file_line('/etc/default/libvirt-bin libvirtd opts').with(:line => 'libvirtd_opts="-d -l"') }
+        it { is_expected.to contain_class('nova::migration::libvirt')}
+        it { is_expected.to contain_nova_config('DEFAULT/vncserver_listen').with_value('0.0.0.0')}
+        it { is_expected.to contain_file_line('/etc/default/libvirt-bin libvirtd opts').with(:line => 'libvirtd_opts="-d -l"') }
       end
 
       context 'with vncserver_listen set to ::0' do
@@ -109,7 +109,7 @@ describe 'nova::compute::libvirt' do
             :migration_support => true }
         end
 
-        it { expect { should contain_class('nova::compute::libvirt') }.to \
+        it { expect { is_expected.to contain_class('nova::compute::libvirt') }.to \
           raise_error(Puppet::Error, /For migration support to work, you MUST set vncserver_listen to '0.0.0.0' or '::0'/) }
       end
 
@@ -119,7 +119,7 @@ describe 'nova::compute::libvirt' do
             :vncserver_listen      => '0.0.0.0',
             :migration_support     => true }
         end
-        it { should contain_file_line('/etc/default/libvirtd libvirtd opts').with(:line => 'libvirtd_opts="-d -l"') }
+        it { is_expected.to contain_file_line('/etc/default/libvirtd libvirtd opts').with(:line => 'libvirtd_opts="-d -l"') }
 
       end
     end
@@ -134,14 +134,14 @@ describe 'nova::compute::libvirt' do
 
     describe 'with default parameters' do
 
-      it { should contain_class('nova::params')}
+      it { is_expected.to contain_class('nova::params')}
 
-      it { should contain_package('libvirt').with(
+      it { is_expected.to contain_package('libvirt').with(
         :name   => 'libvirt',
         :ensure => 'present'
       ) }
 
-      it { should contain_service('libvirt').with(
+      it { is_expected.to contain_service('libvirt').with(
         :name     => 'libvirtd',
         :enable   => true,
         :ensure   => 'running',
@@ -149,7 +149,7 @@ describe 'nova::compute::libvirt' do
         :require  => 'Package[libvirt]',
         :before   => 'Service[nova-compute]'
       )}
-      it { should contain_service('messagebus').with(
+      it { is_expected.to contain_service('messagebus').with(
         :ensure   => 'running',
         :enable   => true,
         :before   => 'Service[libvirt]',
@@ -161,25 +161,25 @@ describe 'nova::compute::libvirt' do
           super().merge(:operatingsystemrelease => 7.0)
         end
 
-        it { should contain_service('libvirt').with(
+        it { is_expected.to contain_service('libvirt').with(
           :provider => nil
         )}
 
-        it { should contain_service('messagebus').with(
+        it { is_expected.to contain_service('messagebus').with(
           :provider => nil
         )}
       end
 
-      it { should contain_nova_config('DEFAULT/compute_driver').with_value('libvirt.LibvirtDriver')}
-      it { should contain_nova_config('libvirt/virt_type').with_value('kvm')}
-      it { should contain_nova_config('libvirt/inject_password').with_value(false)}
-      it { should contain_nova_config('libvirt/inject_key').with_value(false)}
-      it { should contain_nova_config('libvirt/inject_partition').with_value(-2)}
-      it { should contain_nova_config('DEFAULT/vncserver_listen').with_value('127.0.0.1')}
-      it { should contain_nova_config('DEFAULT/remove_unused_base_images').with_ensure('absent')}
-      it { should contain_nova_config('DEFAULT/remove_unused_original_minimum_age_seconds').with_ensure('absent')}
-      it { should contain_nova_config('libvirt/remove_unused_kernels').with_ensure('absent')}
-      it { should contain_nova_config('libvirt/remove_unused_resized_minimum_age_seconds').with_ensure('absent')}
+      it { is_expected.to contain_nova_config('DEFAULT/compute_driver').with_value('libvirt.LibvirtDriver')}
+      it { is_expected.to contain_nova_config('libvirt/virt_type').with_value('kvm')}
+      it { is_expected.to contain_nova_config('libvirt/inject_password').with_value(false)}
+      it { is_expected.to contain_nova_config('libvirt/inject_key').with_value(false)}
+      it { is_expected.to contain_nova_config('libvirt/inject_partition').with_value(-2)}
+      it { is_expected.to contain_nova_config('DEFAULT/vncserver_listen').with_value('127.0.0.1')}
+      it { is_expected.to contain_nova_config('DEFAULT/remove_unused_base_images').with_ensure('absent')}
+      it { is_expected.to contain_nova_config('DEFAULT/remove_unused_original_minimum_age_seconds').with_ensure('absent')}
+      it { is_expected.to contain_nova_config('libvirt/remove_unused_kernels').with_ensure('absent')}
+      it { is_expected.to contain_nova_config('libvirt/remove_unused_resized_minimum_age_seconds').with_ensure('absent')}
     end
 
     describe 'with params' do
@@ -193,12 +193,12 @@ describe 'nova::compute::libvirt' do
         }
       end
 
-      it { should contain_nova_config('libvirt/virt_type').with_value('qemu')}
-      it { should contain_nova_config('DEFAULT/vncserver_listen').with_value('0.0.0.0')}
-      it { should contain_nova_config('DEFAULT/remove_unused_base_images').with_value(true)}
-      it { should contain_nova_config('DEFAULT/remove_unused_original_minimum_age_seconds').with_value(3600)}
-      it { should contain_nova_config('libvirt/remove_unused_kernels').with_value(true)}
-      it { should contain_nova_config('libvirt/remove_unused_resized_minimum_age_seconds').with_value(3600)}
+      it { is_expected.to contain_nova_config('libvirt/virt_type').with_value('qemu')}
+      it { is_expected.to contain_nova_config('DEFAULT/vncserver_listen').with_value('0.0.0.0')}
+      it { is_expected.to contain_nova_config('DEFAULT/remove_unused_base_images').with_value(true)}
+      it { is_expected.to contain_nova_config('DEFAULT/remove_unused_original_minimum_age_seconds').with_value(3600)}
+      it { is_expected.to contain_nova_config('libvirt/remove_unused_kernels').with_value(true)}
+      it { is_expected.to contain_nova_config('libvirt/remove_unused_resized_minimum_age_seconds').with_value(3600)}
     end
 
     describe 'with migration_support enabled' do
@@ -209,8 +209,8 @@ describe 'nova::compute::libvirt' do
             :migration_support => true }
         end
 
-        it { should contain_class('nova::migration::libvirt')}
-        it { should contain_nova_config('DEFAULT/vncserver_listen').with_value('0.0.0.0')}
+        it { is_expected.to contain_class('nova::migration::libvirt')}
+        it { is_expected.to contain_nova_config('DEFAULT/vncserver_listen').with_value('0.0.0.0')}
       end
 
       context 'with vncserver_listen not set to 0.0.0.0' do
@@ -219,7 +219,7 @@ describe 'nova::compute::libvirt' do
             :migration_support => true }
         end
 
-        it { expect { should contain_class('nova::compute::libvirt') }.to \
+        it { expect { is_expected.to contain_class('nova::compute::libvirt') }.to \
           raise_error(Puppet::Error, /For migration support to work, you MUST set vncserver_listen to '0.0.0.0'/) }
       end
     end
@@ -229,14 +229,14 @@ describe 'nova::compute::libvirt' do
         { :operatingsystem => 'Fedora', :osfamily => 'RedHat' }
       end
 
-      it { should contain_class('nova::params')}
+      it { is_expected.to contain_class('nova::params')}
 
-      it { should contain_package('libvirt').with(
+      it { is_expected.to contain_package('libvirt').with(
         :name   => 'libvirt',
         :ensure => 'present'
       ) }
 
-      it { should contain_service('libvirt').with(
+      it { is_expected.to contain_service('libvirt').with(
         :name     => 'libvirtd',
         :enable   => true,
         :ensure   => 'running',
@@ -245,9 +245,9 @@ describe 'nova::compute::libvirt' do
         :before   => 'Service[nova-compute]'
       )}
 
-      it { should contain_nova_config('DEFAULT/compute_driver').with_value('libvirt.LibvirtDriver')}
-      it { should contain_nova_config('libvirt/virt_type').with_value('kvm')}
-      it { should contain_nova_config('DEFAULT/vncserver_listen').with_value('127.0.0.1')}
+      it { is_expected.to contain_nova_config('DEFAULT/compute_driver').with_value('libvirt.LibvirtDriver')}
+      it { is_expected.to contain_nova_config('libvirt/virt_type').with_value('kvm')}
+      it { is_expected.to contain_nova_config('DEFAULT/vncserver_listen').with_value('127.0.0.1')}
     end
 
   end

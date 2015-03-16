@@ -9,9 +9,9 @@ describe 'nova::db' do
   shared_examples 'nova-db' do
 
     context 'with default parameters' do
-      it { should_not contain_nova_config('database/connection') }
-      it { should_not contain_nova_config('database/slave_connection') }
-      it { should_not contain_nova_config('database/idle_timeout') }
+      it { is_expected.to_not contain_nova_config('database/connection') }
+      it { is_expected.to_not contain_nova_config('database/slave_connection') }
+      it { is_expected.to_not contain_nova_config('database/idle_timeout') }
     end
 
     context 'with overriden parameters' do
@@ -23,9 +23,9 @@ describe 'nova::db' do
         )
       end
 
-      it { should contain_nova_config('database/connection').with_value('mysql://user:pass@db/db').with_secret(true) }
-      it { should contain_nova_config('database/slave_connection').with_value('mysql://user:pass@slave/db').with_secret(true) }
-      it { should contain_nova_config('database/idle_timeout').with_value('30') }
+      it { is_expected.to contain_nova_config('database/connection').with_value('mysql://user:pass@db/db').with_secret(true) }
+      it { is_expected.to contain_nova_config('database/slave_connection').with_value('mysql://user:pass@slave/db').with_secret(true) }
+      it { is_expected.to contain_nova_config('database/idle_timeout').with_value('30') }
     end
 
   end

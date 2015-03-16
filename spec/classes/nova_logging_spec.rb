@@ -42,36 +42,36 @@ describe 'nova::logging' do
 
   shared_examples_for 'logging params set' do
     it 'enables logging params' do
-      should contain_nova_config('DEFAULT/logging_context_format_string').with_value(
+      is_expected.to contain_nova_config('DEFAULT/logging_context_format_string').with_value(
         '%(asctime)s.%(msecs)03d %(process)d %(levelname)s %(name)s [%(request_id)s %(user_identity)s] %(instance)s%(message)s')
 
-      should contain_nova_config('DEFAULT/logging_default_format_string').with_value(
+      is_expected.to contain_nova_config('DEFAULT/logging_default_format_string').with_value(
         '%(asctime)s.%(msecs)03d %(process)d %(levelname)s %(name)s [-] %(instance)s%(message)s')
 
-      should contain_nova_config('DEFAULT/logging_debug_format_suffix').with_value(
+      is_expected.to contain_nova_config('DEFAULT/logging_debug_format_suffix').with_value(
         '%(funcName)s %(pathname)s:%(lineno)d')
 
-      should contain_nova_config('DEFAULT/logging_exception_prefix').with_value(
+      is_expected.to contain_nova_config('DEFAULT/logging_exception_prefix').with_value(
        '%(asctime)s.%(msecs)03d %(process)d TRACE %(name)s %(instance)s')
 
-      should contain_nova_config('DEFAULT/log_config_append').with_value(
+      is_expected.to contain_nova_config('DEFAULT/log_config_append').with_value(
         '/etc/nova/logging.conf')
-      should contain_nova_config('DEFAULT/publish_errors').with_value(
+      is_expected.to contain_nova_config('DEFAULT/publish_errors').with_value(
         true)
 
-      should contain_nova_config('DEFAULT/default_log_levels').with_value(
+      is_expected.to contain_nova_config('DEFAULT/default_log_levels').with_value(
         'amqp=WARN,amqplib=WARN,boto=WARN,iso8601=WARN,qpid=WARN,requests.packages.urllib3.connectionpool=WARN,sqlalchemy=WARN,suds=INFO')
 
-      should contain_nova_config('DEFAULT/fatal_deprecations').with_value(
+      is_expected.to contain_nova_config('DEFAULT/fatal_deprecations').with_value(
         true)
 
-      should contain_nova_config('DEFAULT/instance_format').with_value(
+      is_expected.to contain_nova_config('DEFAULT/instance_format').with_value(
         '[instance: %(uuid)s] ')
 
-      should contain_nova_config('DEFAULT/instance_uuid_format').with_value(
+      is_expected.to contain_nova_config('DEFAULT/instance_uuid_format').with_value(
         '[instance: %(uuid)s] ')
 
-      should contain_nova_config('DEFAULT/log_date_format').with_value(
+      is_expected.to contain_nova_config('DEFAULT/log_date_format').with_value(
         '%Y-%m-%d %H:%M:%S')
     end
   end
@@ -84,7 +84,7 @@ describe 'nova::logging' do
      :default_log_levels, :fatal_deprecations,
      :instance_format, :instance_uuid_format,
      :log_date_format, ].each { |param|
-        it { should contain_nova_config("DEFAULT/#{param}").with_ensure('absent') }
+        it { is_expected.to contain_nova_config("DEFAULT/#{param}").with_ensure('absent') }
       }
   end
 

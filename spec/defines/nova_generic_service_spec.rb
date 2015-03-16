@@ -13,7 +13,7 @@ describe 'nova::generic_service' do
         :enabled => true
       }
     end
- 
+
     let :facts do
       { :osfamily => 'Debian' }
     end
@@ -22,7 +22,7 @@ describe 'nova::generic_service' do
       'foo'
     end
 
-    it { should contain_service('nova-foo').with(
+    it { is_expected.to contain_service('nova-foo').with(
       'name'    => 'food',
       'ensure'  => 'running',
       'enable'  => true,

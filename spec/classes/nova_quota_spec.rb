@@ -32,7 +32,7 @@ describe 'nova::quota' do
 
     it 'configures quota in nova.conf' do
       params_hash.each_pair do |config,value|
-        should contain_nova_config("DEFAULT/#{config}").with_value( value )
+        is_expected.to contain_nova_config("DEFAULT/#{config}").with_value( value )
       end
     end
   end
@@ -74,13 +74,13 @@ describe 'nova::quota' do
     end
 
     it {
-      should contain_nova_config('DEFAULT/quota_injected_files').with_value('10')
-      should contain_nova_config('DEFAULT/quota_injected_file_content_bytes').with_value('20480')
-      should contain_nova_config('DEFAULT/quota_injected_file_path_length').with_value('254')
+      is_expected.to contain_nova_config('DEFAULT/quota_injected_files').with_value('10')
+      is_expected.to contain_nova_config('DEFAULT/quota_injected_file_content_bytes').with_value('20480')
+      is_expected.to contain_nova_config('DEFAULT/quota_injected_file_path_length').with_value('254')
     }
   end
 
-  it { should contain_nova_config('DEFAULT/quota_ram').with_value('51200') }
+  it { is_expected.to contain_nova_config('DEFAULT/quota_ram').with_value('51200') }
 
   describe 'when overriding params' do
 
@@ -88,7 +88,7 @@ describe 'nova::quota' do
       {:quota_ram => '1'}
     end
 
-    it { should contain_nova_config('DEFAULT/quota_ram').with_value('1') }
+    it { is_expected.to contain_nova_config('DEFAULT/quota_ram').with_value('1') }
 
   end
 
