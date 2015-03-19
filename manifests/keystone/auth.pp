@@ -132,7 +132,9 @@ class nova::keystone::auth(
     fail('nova::keystone::auth parameters service_name and service_name_v3 must be different.')
   }
 
-  Keystone_endpoint["${region}/${real_service_name}"] ~> Service <| name == 'nova-api' |>
+  if $configure_endpoint {
+    Keystone_endpoint["${region}/${real_service_name}"] ~> Service <| name == 'nova-api' |>
+  }
 
   keystone::resource::service_identity { "nova service, user ${auth_name}":
     configure_user      => $configure_user,
