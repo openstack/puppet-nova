@@ -13,13 +13,13 @@ describe 'nova::rabbitmq' do
 
     it 'should contain all of the default resources' do
 
-      should contain_class('rabbitmq::server').with(
+      is_expected.to contain_class('rabbitmq::server').with(
         :service_ensure    => 'running',
         :port              => '5672',
         :delete_guest_user => false
       )
 
-      should contain_rabbitmq_vhost('/').with(
+      is_expected.to contain_rabbitmq_vhost('/').with(
         :provider => 'rabbitmqctl'
       )
     end
@@ -37,13 +37,13 @@ describe 'nova::rabbitmq' do
 
     it 'should contain user and permissions' do
 
-      should contain_rabbitmq_user('dan').with(
+      is_expected.to contain_rabbitmq_user('dan').with(
         :admin    => true,
         :password => 'pass',
         :provider => 'rabbitmqctl'
       )
 
-      should contain_rabbitmq_user_permissions('dan@/').with(
+      is_expected.to contain_rabbitmq_user_permissions('dan@/').with(
         :configure_permission => '.*',
         :write_permission     => '.*',
         :read_permission      => '.*',
@@ -65,15 +65,15 @@ describe 'nova::rabbitmq' do
 
     it 'should be disabled' do
 
-      should_not contain_rabbitmq_user('dan')
-      should_not contain_rabbitmq_user_permissions('dan@/')
-      should contain_class('rabbitmq::server').with(
+      is_expected.to_not contain_rabbitmq_user('dan')
+      is_expected.to_not contain_rabbitmq_user_permissions('dan@/')
+      is_expected.to contain_class('rabbitmq::server').with(
         :service_ensure    => 'stopped',
         :port              => '5672',
         :delete_guest_user => false
       )
 
-      should_not contain_rabbitmq_vhost('/')
+      is_expected.to_not contain_rabbitmq_vhost('/')
 
     end
   end
@@ -88,7 +88,7 @@ describe 'nova::rabbitmq' do
 
     it 'should contain all the clustering resources' do
 
-      should contain_class('rabbitmq::server').with(
+      is_expected.to contain_class('rabbitmq::server').with(
         :service_ensure           => 'running',
         :port                     => '5672',
         :delete_guest_user        => false,
@@ -111,7 +111,7 @@ describe 'nova::rabbitmq' do
 
     it 'should not contain rabbitmq class calls' do
 
-      should_not contain_class('rabbitmq::server')
+      is_expected.to_not contain_class('rabbitmq::server')
 
     end
 

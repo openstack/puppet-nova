@@ -24,7 +24,7 @@ describe 'nova::db::postgresql' do
         req_params
       end
 
-      it { should contain_postgresql__server__db('nova').with(
+      it { is_expected.to contain_postgresql__server__db('nova').with(
         :user     => 'nova',
         :password => 'md557ae0608fad632bf0155cb9502a6b454'
       )}
@@ -47,7 +47,7 @@ describe 'nova::db::postgresql' do
         req_params
       end
 
-      it { should contain_postgresql__server__db('nova').with(
+      it { is_expected.to contain_postgresql__server__db('nova').with(
         :user     => 'nova',
         :password => 'md557ae0608fad632bf0155cb9502a6b454'
       )}
