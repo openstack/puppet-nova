@@ -80,6 +80,8 @@ describe 'nova::vncproxy' do
       :ensure => 'present'
     )}
 
+    it { is_expected.to compile.with_all_deps }
+
   end
 
 end

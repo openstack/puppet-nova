@@ -26,7 +26,7 @@ describe 'nova::generic_service' do
       'name'    => 'food',
       'ensure'  => 'running',
       'enable'  => true,
-      'require' => ['Package[nova-common]', 'Package[foo]']
+      'require' => ['Package[nova-common]', 'Package[nova-foo]']
     )}
   end
 end
