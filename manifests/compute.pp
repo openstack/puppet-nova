@@ -42,7 +42,7 @@
 #
 # [*vncproxy_path*]
 #   (optional) The path at the end of the uri for communication with the VNC proxy server
-#   Defaults to './vnc_auto.html'
+#   Defaults to '/vnc_auto.html'
 #
 # [*vnc_keymap*]
 #   (optional) The keymap to use with VNC (ls -alh /usr/share/qemu/keymaps to list available keymaps)
@@ -142,13 +142,7 @@ class nova::compute (
   }
 
   if ($vnc_enabled) {
-    if ($vncproxy_host) {
-      $vncproxy_base_url = "${vncproxy_protocol}://${vncproxy_host}:${vncproxy_port}${vncproxy_path}"
-      # config for vnc proxy
-      nova_config {
-        'DEFAULT/novncproxy_base_url': value => $vncproxy_base_url;
-      }
-    }
+    include ::nova::vncproxy::common
   }
 
   nova_config {
