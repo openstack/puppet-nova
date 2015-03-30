@@ -84,8 +84,9 @@ describe 'nova::compute::rbd' do
           :creates => '/etc/nova/virsh.secret',
           :require => 'File[/etc/nova/secret.xml]'
         )
+
         should contain_exec('set-secret-value virsh').with(
-          :command => "/usr/bin/virsh secret-set-value --secret $(cat /etc/nova/virsh.secret) --base64 $(ceph auth get-key client.rbd_test)"
+          :command => "/usr/bin/virsh secret-set-value --secret UUID --base64 $(ceph auth get-key client.rbd_test)"
         )
       end
     end
