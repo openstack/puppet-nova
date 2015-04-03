@@ -90,6 +90,21 @@ describe 'nova::compute::rbd' do
       end
     end
 
+    context 'when using cephx and passing libvirt_rbd_secret_key' do
+      before :each do
+        params.merge!(
+          :libvirt_rbd_secret_uuid => 'UUID',
+          :libvirt_rbd_secret_key  => 'LIBVIRT/SECRET/KEY',
+        )
+      end
+
+      it 'set libvirt secret key from passed key' do
+        is_expected.to contain_exec('set-secret-value virsh').with(
+          :command => "/usr/bin/virsh secret-set-value --secret #{params[:libvirt_rbd_secret_uuid]} --base64 #{params[:libvirt_rbd_secret_key]}"
+        )
+      end
+    end
+
   end
 
   context 'on Debian platforms' do
