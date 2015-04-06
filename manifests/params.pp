@@ -47,7 +47,7 @@ class nova::params {
         'Fedora': {
           $special_service_provider = undef
         }
-        'RedHat', 'CentOS', 'Scientific': {
+        'RedHat', 'CentOS', 'Scientific', 'OracleLinux': {
           if (versioncmp($::operatingsystemmajrelease, '7') < 0) {
             $special_service_provider = 'init'
           } else {
