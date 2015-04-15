@@ -25,6 +25,10 @@
 #   (optional) Connection url to connect to nova database.
 #   Defaults to false
 #
+# [*slave_connection*]
+#   (optional) Connection url to connect to nova slave database (read-only).
+#   Defaults to false
+#
 # [*database_idle_timeout*]
 #   (optional) Timeout before idle db connections are reaped.
 #   Defaults to 3600
@@ -268,6 +272,7 @@
 class nova(
   $ensure_package           = 'present',
   $database_connection      = false,
+  $slave_connection         = false,
   $database_idle_timeout    = 3600,
   $rpc_backend              = 'nova.openstack.common.rpc.impl_kombu',
   $image_service            = 'nova.image.glance.GlanceImageService',
