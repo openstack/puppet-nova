@@ -23,7 +23,8 @@ describe 'nova::db::mysql' do
       it { is_expected.to contain_openstacklib__db__mysql('nova').with(
         :user          => 'nova',
         :password_hash => '*AA1420F182E88B9E5F874F6FBE7459291E8F4601',
-        :charset       => 'utf8'
+        :charset       => 'utf8',
+        :collate       => 'utf8_general_ci',
       )}
     end
 
@@ -49,7 +50,8 @@ describe 'nova::db::mysql' do
       it { is_expected.to contain_openstacklib__db__mysql('nova').with(
         :user          => 'nova',
         :password_hash => '*AA1420F182E88B9E5F874F6FBE7459291E8F4601',
-        :charset       => 'utf8'
+        :charset       => 'utf8',
+        :collate       => 'utf8_general_ci',
       )}
     end
 
