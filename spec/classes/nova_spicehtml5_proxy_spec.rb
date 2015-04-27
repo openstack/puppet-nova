@@ -13,8 +13,8 @@ describe 'nova::spicehtml5proxy' do
   shared_examples 'nova-spicehtml5proxy' do
 
     it 'configures nova.conf' do
-      is_expected.to contain_nova_config('DEFAULT/spicehtml5proxy_host').with(:value => '0.0.0.0')
-      is_expected.to contain_nova_config('DEFAULT/spicehtml5proxy_port').with(:value => '6082')
+      is_expected.to contain_nova_config('spice/html5proxy_host').with(:value => '0.0.0.0')
+      is_expected.to contain_nova_config('spice/html5proxy_port').with(:value => '6082')
     end
 
     it { is_expected.to contain_package('nova-spicehtml5proxy').with(

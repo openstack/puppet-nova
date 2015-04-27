@@ -39,8 +39,10 @@ class nova::spicehtml5proxy(
   include ::nova::params
 
   nova_config {
-    'DEFAULT/spicehtml5proxy_host': value => $host;
-    'DEFAULT/spicehtml5proxy_port': value => $port;
+    'spice/enabled':         value => $enabled;
+    'spice/agent_enabled':   value => $enabled;
+    'spice/html5proxy_host': value => $host;
+    'spice/html5proxy_port': value => $port;
   }
 
   nova::generic_service { 'spicehtml5proxy':
