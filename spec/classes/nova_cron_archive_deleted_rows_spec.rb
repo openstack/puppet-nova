@@ -15,7 +15,8 @@ describe 'nova::cron::archive_deleted_rows' do
       :hour        => 0,
       :monthday    => '*',
       :month       => '*',
-      :weekday     => '*'
+      :weekday     => '*',
+      :require     => 'Package[nova-common]',
     )
   end
 end
