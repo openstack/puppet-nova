@@ -88,12 +88,16 @@ Beaker-Rspec
 
 This module has beaker-rspec tests
 
-To run:
+To run the tests on the default vagrant node:
 
 ```shell
 bundle install
-BEAKER_setfile=default bundle exec rspec spec/acceptance
+bundle exec rspec spec/acceptance
 ```
+
+For more information on writing and running beaker-rspec tests visit the documentation:
+
+* https://github.com/puppetlabs/beaker/wiki/How-to-Write-a-Beaker-Test-for-a-Module
 
 Contributors
 ------------
