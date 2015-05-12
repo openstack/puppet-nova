@@ -98,9 +98,9 @@ describe 'nova::compute::libvirt' do
             :migration_support => true }
         end
 
-        it { should contain_class('nova::migration::libvirt')}
-        it { should contain_nova_config('DEFAULT/vncserver_listen').with_value('::0')}
-        it { should contain_file_line('/etc/default/libvirt-bin libvirtd opts').with(:line => 'libvirtd_opts="-d -l"') }
+        it { is_expected.to contain_class('nova::migration::libvirt')}
+        it { is_expected.to contain_nova_config('DEFAULT/vncserver_listen').with_value('::0')}
+        it { is_expected.to contain_file_line('/etc/default/libvirt-bin libvirtd opts').with(:line => 'libvirtd_opts="-d -l"') }
       end
 
       context 'with vncserver_listen not set to 0.0.0.0' do
