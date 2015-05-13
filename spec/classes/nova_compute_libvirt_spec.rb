@@ -154,7 +154,8 @@ describe 'nova::compute::libvirt' do
         :ensure   => 'running',
         :enable   => true,
         :before   => 'Service[libvirt]',
-        :provider => 'init'
+        :provider => 'init',
+        :name     => 'messagebus'
       ) }
 
       describe 'on rhel 7' do
@@ -168,7 +169,8 @@ describe 'nova::compute::libvirt' do
         )}
 
         it { is_expected.to contain_service('messagebus').with(
-          :provider => nil
+          :provider => nil,
+          :name     => 'dbus'
         )}
       end
 

@@ -125,10 +125,10 @@ class nova::compute::libvirt (
     service { 'messagebus':
       ensure   => running,
       enable   => true,
+      name     => $::nova::params::messagebus_service_name,
       provider => $::nova::params::special_service_provider,
     }
     Package['libvirt'] -> Service['messagebus'] -> Service['libvirt']
-
   }
 
   if $migration_support {
