@@ -8,21 +8,12 @@ describe 'basic nova' do
       pp= <<-EOS
       Exec { logoutput => 'on_failure' }
 
+      # Common resources
       include ::apt
-      # some packages are not autoupgraded in trusty.
-      # it will be fixed in liberty, but broken in kilo.
-      $need_to_be_upgraded = ['python-tz', 'python-pbr']
-      apt::source { 'trusty-updates-kilo':
-        location          => 'http://ubuntu-cloud.archive.canonical.com/ubuntu/',
-        release           => 'trusty-updates',
-        required_packages => 'ubuntu-cloud-keyring',
-        repos             => 'kilo/main',
-        trusted_source    => true,
-      } ~>
-      exec { '/usr/bin/apt-get -y dist-upgrade':
-        refreshonly => true,
+      class { '::openstack_extras::repo::debian::ubuntu':
+         release         => 'kilo',
+         package_require => true,
       }
-      Apt::Source['trusty-updates-kilo'] -> Package<| |>
 
       class { '::mysql::server': }
 

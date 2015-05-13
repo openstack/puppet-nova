@@ -35,6 +35,7 @@ RSpec.configure do |c|
 
       # install puppet modules from git, use master
       shell('git clone https://git.openstack.org/stackforge/puppet-openstacklib /etc/puppet/modules/openstacklib')
+      shell('git clone https://git.openstack.org/stackforge/puppet-openstack_extras /etc/puppet/modules/openstack_extras')
       shell('git clone https://git.openstack.org/stackforge/puppet-keystone /etc/puppet/modules/keystone')
       shell('git clone https://git.openstack.org/stackforge/puppet-cinder /etc/puppet/modules/cinder')
       shell('git clone https://git.openstack.org/stackforge/puppet-glance /etc/puppet/modules/glance')
