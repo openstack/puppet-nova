@@ -354,13 +354,13 @@ class nova(
     }
 
     if $nova_public_key {
-      if ! $nova_public_key[key] or ! $nova_public_key['type'] {
+      if ! $nova_public_key['key'] or ! $nova_public_key['type'] {
         fail('You must provide both a key type and key data.')
       }
 
       ssh_authorized_key { 'nova-migration-public-key':
         ensure  => present,
-        key     => $nova_public_key[key],
+        key     => $nova_public_key['key'],
         type    => $nova_public_key['type'],
         user    => 'nova',
         require => File['/var/lib/nova/.ssh'],
