@@ -9,7 +9,7 @@
 #
 # [*enabled*]
 #   (optional) Whether the nova consoleauth service will be run
-#   Defaults to false
+#   Defaults to true
 #
 # [*manage_service*]
 #   (optional) Whether to start/stop the service
@@ -20,7 +20,7 @@
 #   Defaults to 'present'
 #
 class nova::consoleauth(
-  $enabled        = false,
+  $enabled        = true,
   $manage_service = true,
   $ensure_package = 'present'
 ) {

@@ -6,10 +6,6 @@ describe 'nova::conductor' do
     'include nova'
   end
 
-  let :params do
-    { :enabled => true }
-  end
-
   shared_examples 'nova-conductor' do
 
 
@@ -44,8 +40,8 @@ describe 'nova::conductor' do
     end
 
     context 'with overriden workers parameter' do
-      before do
-        params.merge!({:workers => '5' })
+      let :params do
+        {:workers => '5' }
       end
       it { is_expected.to contain_nova_config('conductor/workers').with_value('5') }
     end

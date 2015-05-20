@@ -6,7 +6,7 @@
 #
 # [*enabled*]
 #   (optional) Whether to enable the service
-#   Defaults to false
+#   Defaults to true
 #
 # [*manage_service*]
 #   (optional) Whether to start/stop the service
@@ -21,7 +21,7 @@
 #   Defaults to '0.0.0.0'
 #
 class nova::objectstore(
-  $enabled        = false,
+  $enabled        = true,
   $manage_service = true,
   $ensure_package = 'present',
   $bind_address   = '0.0.0.0'

@@ -6,7 +6,7 @@
 #
 # [*enabled*]
 #   (optional) Whether to run the scheduler service
-#   Defaults to false
+#   Defaults to true
 #
 # [*manage_service*]
 #   (optional) Whether to start/stop the service
@@ -21,7 +21,7 @@
 #   Defaults to 'nova.scheduler.filter_scheduler.FilterScheduler'
 #
 class nova::scheduler(
-  $enabled          = false,
+  $enabled          = true,
   $manage_service   = true,
   $ensure_package   = 'present',
   $scheduler_driver = 'nova.scheduler.filter_scheduler.FilterScheduler',

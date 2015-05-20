@@ -33,7 +33,7 @@
 define nova::generic_service(
   $package_name,
   $service_name,
-  $enabled        = false,
+  $enabled        = true,
   $manage_service = true,
   $ensure_package = 'present'
 ) {

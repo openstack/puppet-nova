@@ -9,8 +9,7 @@ describe 'nova::generic_service' do
     let :params do
       {
         :package_name => 'foo',
-        :service_name => 'food',
-        :enabled => true
+        :service_name => 'food'
       }
     end
 

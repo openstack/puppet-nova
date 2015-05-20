@@ -24,7 +24,7 @@
 #
 #  [*enabled*]
 #    Use Nova Cells or not
-#    Defaults to 'False'
+#    Defaults to true
 #
 # [*manage_service*]
 #   (optional) Whether to start/stop the service
@@ -150,7 +150,7 @@ class nova::cells (
   $create_cells                  = true,
   $db_check_interval             = '60',
   $driver                        = 'nova.cells.rpc_driver.CellsRPCDriver',
-  $enabled                       = false,
+  $enabled                       = true,
   $ensure_package                = 'present',
   $instance_updated_at_threshold = '3600',
   $instance_update_num_instances = '1',

@@ -36,7 +36,7 @@
 #
 # [*enabled*]
 #   (optional) Whether the network service should be enabled.
-#   Defaults to false
+#   Defaults to true
 #
 # [*network_manager*]
 #   (optional) The type of network manager to use.
@@ -66,7 +66,7 @@ class nova::network(
   $num_networks      = 1,
   $network_size      = 255,
   $floating_range    = false,
-  $enabled           = false,
+  $enabled           = true,
   $network_manager   = 'nova.network.manager.FlatDHCPManager',
   $config_overrides  = {},
   $create_networks   = true,

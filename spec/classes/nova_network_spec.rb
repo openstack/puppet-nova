@@ -34,9 +34,6 @@ describe 'nova::network' do
       ) }
 
       describe 'with enabled as true' do
-        let :params do
-          default_params.merge(:enabled => true)
-        end
         it { is_expected.to contain_service('nova-network').with(
           'name'      => 'nova-network',
           'ensure'    => 'running',
@@ -45,6 +42,9 @@ describe 'nova::network' do
         )}
       end
       describe 'when enabled is set to false' do
+        let :params do
+          default_params.merge(:enabled => false)
+        end
         it { is_expected.to contain_service('nova-network').with(
           'name'      => 'nova-network',
           'ensure'    => 'stopped',
@@ -206,9 +206,9 @@ describe 'nova::network' do
     end
     it { is_expected.to contain_service('nova-network').with(
       'name'      => 'openstack-nova-network',
-      'ensure'    => 'stopped',
+      'ensure'    => 'running',
       'hasstatus' => true,
-      'enable'    => false
+      'enable'    => true
     )}
     it { is_expected.to contain_package('nova-network').with_name('openstack-nova-network') }
   end

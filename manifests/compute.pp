@@ -6,7 +6,7 @@
 #
 # [*enabled*]
 #   (optional) Whether to enable the nova-compute service
-#   Defaults to false
+#   Defaults to true
 #
 # [*heal_instance_info_cache_interval*]
 #   (optional) Controls how often the instance info should be updated.
@@ -112,7 +112,7 @@
 #     { 'vendor_id':'4321','product_id':'8765','physical_network':'default' } ] "
 #
 class nova::compute (
-  $enabled                            = false,
+  $enabled                            = true,
   $manage_service                     = true,
   $ensure_package                     = 'present',
   $vnc_enabled                        = true,

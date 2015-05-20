@@ -21,9 +21,9 @@ describe 'nova::api' do
       it 'installs nova-api package and service' do
         is_expected.to contain_service('nova-api').with(
           :name      => platform_params[:nova_api_service],
-          :ensure    => 'stopped',
+          :ensure    => 'running',
           :hasstatus => true,
-          :enable    => false
+          :enable    => true
         )
         is_expected.to contain_package('nova-api').with(
           :name   => platform_params[:nova_api_package],
@@ -78,7 +78,7 @@ describe 'nova::api' do
     context 'with overridden parameters' do
       before do
         params.merge!({
-          :enabled                              => true,
+          :enabled                              => false,
           :ensure_package                       => '2012.1-2',
           :auth_host                            => '10.0.0.1',
           :auth_port                            => 1234,
@@ -111,9 +111,9 @@ describe 'nova::api' do
         )
         is_expected.to contain_service('nova-api').with(
           :name      => platform_params[:nova_api_service],
-          :ensure    => 'running',
+          :ensure    => 'stopped',
           :hasstatus => true,
-          :enable    => true
+          :enable    => false
         )
       end
 

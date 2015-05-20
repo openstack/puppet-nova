@@ -6,10 +6,6 @@ describe 'nova::spicehtml5proxy' do
     'include nova'
   end
 
-  let :params do
-    { :enabled => true }
-  end
-
   shared_examples 'nova-spicehtml5proxy' do
 
     it 'configures nova.conf' do

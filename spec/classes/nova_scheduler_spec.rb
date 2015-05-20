@@ -6,10 +6,6 @@ describe 'nova::scheduler' do
     'include nova'
   end
 
-  let :params do
-    { :enabled => true }
-  end
-
   shared_examples 'nova-scheduler' do
 
 

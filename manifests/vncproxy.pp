@@ -6,7 +6,7 @@
 #
 # [*enabled*]
 #   (optional) Whether to run the vncproxy service
-#   Defaults to false
+#   Defaults to true
 #
 # [*manage_service*]
 #   (optional) Whether to start/stop the service
@@ -34,7 +34,7 @@
 #   Defaults to '/vnc_auto.html'
 #
 class nova::vncproxy(
-  $enabled           = false,
+  $enabled           = true,
   $manage_service    = true,
   $vncproxy_protocol = 'http',
   $host              = '0.0.0.0',
