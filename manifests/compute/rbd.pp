@@ -74,7 +74,8 @@ class nova::compute::rbd (
     }
 
     file { '/etc/nova/secret.xml':
-      content => template('nova/secret.xml-compute.erb')
+      content => template('nova/secret.xml-compute.erb'),
+      require => Class['::nova']
     }
 
     exec { 'get-or-set virsh secret':
