@@ -28,9 +28,9 @@ describe 'nova::api' do
         is_expected.to contain_package('nova-api').with(
           :name   => platform_params[:nova_api_package],
           :ensure => 'present',
-          :notify => 'Service[nova-api]',
           :tag    => ['openstack']
         )
+        is_expected.to contain_package('nova-api').that_notifies('Service[nova-api]')
         is_expected.to_not contain_exec('validate_nova_api')
       end
 
