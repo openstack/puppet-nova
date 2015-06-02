@@ -168,10 +168,6 @@
 #   (optional) Path to the rootwrap configuration file to use for running commands as root
 #   Defaults to '/etc/nova/rootwrap.conf'
 #
-# [*monitoring_notifications*]
-#   (optional) Whether or not to send system usage data notifications out on the message queue. Only valid for stable/essex.
-#   Defaults to false
-#
 # [*use_syslog*]
 #   (optional) Use syslog for logging
 #   Defaults to false
