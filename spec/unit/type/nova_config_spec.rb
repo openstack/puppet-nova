@@ -29,19 +29,19 @@ describe 'Puppet::Type.type(:nova_config)' do
 
   it 'should accept a valid value' do
     @nova_config[:value] = 'bar'
-    @nova_config[:value].should == 'bar'
+    expect(@nova_config[:value]).to eq('bar')
   end
 
   it 'should not accept a value with whitespace' do
     @nova_config[:value] = 'b ar'
-    @nova_config[:value].should == 'b ar'
+    expect(@nova_config[:value]).to eq('b ar')
   end
 
   it 'should accept valid ensure values' do
     @nova_config[:ensure] = :present
-    @nova_config[:ensure].should == :present
+    expect(@nova_config[:ensure]).to eq(:present)
     @nova_config[:ensure] = :absent
-    @nova_config[:ensure].should == :absent
+    expect(@nova_config[:ensure]).to eq(:absent)
   end
 
   it 'should not accept invalid ensure values' do
