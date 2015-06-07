@@ -31,7 +31,7 @@ describe 'nova::compute::libvirt' do
         :ensure   => 'running',
         :provider => 'upstart',
         :require  => 'Package[libvirt]',
-        :before   => 'Service[nova-compute]'
+        :before   => ['Service[nova-compute]']
       )}
 
       it { is_expected.to contain_nova_config('DEFAULT/compute_driver').with_value('libvirt.LibvirtDriver')}
@@ -75,7 +75,7 @@ describe 'nova::compute::libvirt' do
         :enable   => true,
         :ensure   => 'running',
         :require  => 'Package[libvirt]',
-        :before   => 'Service[nova-compute]'
+        :before   => ['Service[nova-compute]']
       )}
     end
 
@@ -148,12 +148,12 @@ describe 'nova::compute::libvirt' do
         :ensure   => 'running',
         :provider => 'init',
         :require  => 'Package[libvirt]',
-        :before   => 'Service[nova-compute]'
+        :before   => ['Service[nova-compute]']
       )}
       it { is_expected.to contain_service('messagebus').with(
         :ensure   => 'running',
         :enable   => true,
-        :before   => 'Service[libvirt]',
+        :before   => ['Service[libvirt]'],
         :provider => 'init',
         :name     => 'messagebus'
       ) }
@@ -246,7 +246,7 @@ describe 'nova::compute::libvirt' do
         :ensure   => 'running',
         :provider => nil,
         :require  => 'Package[libvirt]',
-        :before   => 'Service[nova-compute]'
+        :before   => ['Service[nova-compute]']
       )}
 
       it { is_expected.to contain_nova_config('DEFAULT/compute_driver').with_value('libvirt.LibvirtDriver')}

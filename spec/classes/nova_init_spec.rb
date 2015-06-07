@@ -413,8 +413,7 @@ describe 'nova' do
     context 'with ssh public key missing key type' do
       let :params do
         {
-          :nova_public_key => {'type' => '',
-                               'key'  => 'keydata'}
+          :nova_public_key => {'key'  => 'keydata'}
         }
       end
 
@@ -422,8 +421,7 @@ describe 'nova' do
         expect {
           is_expected.to contain_ssh_authorized_key('nova-migration-public-key').with(
             :ensure => 'present',
-            :key => 'keydata',
-            :type => ''
+            :key => 'keydata'
           )
         }.to raise_error Puppet::Error, /You must provide both a key type and key data./
       end
@@ -432,8 +430,7 @@ describe 'nova' do
     context 'with ssh public key missing key data' do
       let :params do
         {
-          :nova_public_key => {'type' => 'ssh-rsa',
-                               'key'  => ''}
+          :nova_public_key => {'type' => 'ssh-rsa'}
         }
       end
 
@@ -441,8 +438,7 @@ describe 'nova' do
         expect {
           is_expected.to contain_ssh_authorized_key('nova-migration-public-key').with(
             :ensure => 'present',
-            :key => 'keydata',
-            :type => ''
+            :key => 'keydata'
           )
         }.to raise_error Puppet::Error, /You must provide both a key type and key data./
       end
@@ -466,8 +462,7 @@ describe 'nova' do
     context 'with ssh private key missing key type' do
       let :params do
         {
-          :nova_private_key => {'type' => '',
-                                'key'  => 'keydata'}
+          :nova_private_key => {'key'  => 'keydata'}
         }
       end
 
@@ -500,8 +495,7 @@ describe 'nova' do
     context 'with ssh private key missing key data' do
       let :params do
         {
-          :nova_private_key => {'type' => 'ssh-rsa',
-                                'key'  => ''}
+          :nova_private_key => {'type' => 'ssh-rsa'}
         }
       end
 

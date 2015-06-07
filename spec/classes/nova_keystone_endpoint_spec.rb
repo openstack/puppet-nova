@@ -15,7 +15,7 @@ describe 'nova::keystone::auth' do
 
     it { is_expected.to contain_keystone_user_role('nova@services').with(
       :ensure => 'present',
-      :roles  => 'admin'
+      :roles  => ['admin']
     )}
 
     it { is_expected.to contain_keystone_service('nova').with(
@@ -71,7 +71,7 @@ describe 'nova::keystone::auth' do
 
     it { is_expected.to contain_keystone_user_role('foo@services').with(
       :ensure => 'present',
-      :roles  => 'admin'
+      :roles  => ['admin']
     )}
 
     it { is_expected.to contain_keystone_service('foo').with(
@@ -234,7 +234,7 @@ describe 'nova::keystone::auth' do
       }
     end
 
-    it { is_expected.to contain_keystone_endpoint('RegionOne/nova').with_notify('Service[nova-api]') }
+    it { is_expected.to contain_keystone_endpoint('RegionOne/nova').with_notify(['Service[nova-api]']) }
   end
 
   describe 'when overriding service names' do
