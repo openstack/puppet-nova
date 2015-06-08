@@ -57,11 +57,11 @@ describe 'nova' do
 
       it 'configures rabbit' do
         is_expected.to contain_nova_config('DEFAULT/rpc_backend').with_value('rabbit')
-        is_expected.to contain_nova_config('DEFAULT/rabbit_host').with_value('localhost')
-        is_expected.to contain_nova_config('DEFAULT/rabbit_password').with_value('guest').with_secret(true)
-        is_expected.to contain_nova_config('DEFAULT/rabbit_port').with_value('5672')
-        is_expected.to contain_nova_config('DEFAULT/rabbit_userid').with_value('guest')
-        is_expected.to contain_nova_config('DEFAULT/rabbit_virtual_host').with_value('/')
+        is_expected.to contain_nova_config('oslo_messaging_rabbit/rabbit_host').with_value('localhost')
+        is_expected.to contain_nova_config('oslo_messaging_rabbit/rabbit_password').with_value('guest').with_secret(true)
+        is_expected.to contain_nova_config('oslo_messaging_rabbit/rabbit_port').with_value('5672')
+        is_expected.to contain_nova_config('oslo_messaging_rabbit/rabbit_userid').with_value('guest')
+        is_expected.to contain_nova_config('oslo_messaging_rabbit/rabbit_virtual_host').with_value('/')
       end
 
       it 'configures various things' do
@@ -128,11 +128,11 @@ describe 'nova' do
 
       it 'configures rabbit' do
         is_expected.to contain_nova_config('DEFAULT/rpc_backend').with_value('rabbit')
-        is_expected.to contain_nova_config('DEFAULT/rabbit_host').with_value('rabbit')
-        is_expected.to contain_nova_config('DEFAULT/rabbit_password').with_value('password').with_secret(true)
-        is_expected.to contain_nova_config('DEFAULT/rabbit_port').with_value('5673')
-        is_expected.to contain_nova_config('DEFAULT/rabbit_userid').with_value('rabbit_user')
-        is_expected.to contain_nova_config('DEFAULT/rabbit_virtual_host').with_value('/')
+        is_expected.to contain_nova_config('oslo_messaging_rabbit/rabbit_host').with_value('rabbit')
+        is_expected.to contain_nova_config('oslo_messaging_rabbit/rabbit_password').with_value('password').with_secret(true)
+        is_expected.to contain_nova_config('oslo_messaging_rabbit/rabbit_port').with_value('5673')
+        is_expected.to contain_nova_config('oslo_messaging_rabbit/rabbit_userid').with_value('rabbit_user')
+        is_expected.to contain_nova_config('oslo_messaging_rabbit/rabbit_virtual_host').with_value('/')
       end
 
       it 'configures memcached_servers' do
@@ -221,16 +221,16 @@ describe 'nova' do
       end
 
       it 'configures rabbit' do
-        is_expected.to_not contain_nova_config('DEFAULT/rabbit_host')
-        is_expected.to_not contain_nova_config('DEFAULT/rabbit_port')
-        is_expected.to contain_nova_config('DEFAULT/rabbit_hosts').with_value('rabbit:5673,rabbit2:5674')
-        is_expected.to contain_nova_config('DEFAULT/rabbit_ha_queues').with_value(true)
-        is_expected.to contain_nova_config('DEFAULT/rabbit_use_ssl').with_value(false)
+        is_expected.to_not contain_nova_config('oslo_messaging_rabbit/rabbit_host')
+        is_expected.to_not contain_nova_config('oslo_messaging_rabbit/rabbit_port')
+        is_expected.to contain_nova_config('oslo_messaging_rabbit/rabbit_hosts').with_value('rabbit:5673,rabbit2:5674')
+        is_expected.to contain_nova_config('oslo_messaging_rabbit/rabbit_ha_queues').with_value(true)
+        is_expected.to contain_nova_config('oslo_messaging_rabbit/rabbit_use_ssl').with_value(false)
         is_expected.to contain_nova_config('DEFAULT/amqp_durable_queues').with_value(false)
-        is_expected.to contain_nova_config('DEFAULT/kombu_ssl_ca_certs').with_ensure('absent')
-        is_expected.to contain_nova_config('DEFAULT/kombu_ssl_certfile').with_ensure('absent')
-        is_expected.to contain_nova_config('DEFAULT/kombu_ssl_keyfile').with_ensure('absent')
-        is_expected.to contain_nova_config('DEFAULT/kombu_ssl_version').with_ensure('absent')
+        is_expected.to contain_nova_config('oslo_messaging_rabbit/kombu_ssl_ca_certs').with_ensure('absent')
+        is_expected.to contain_nova_config('oslo_messaging_rabbit/kombu_ssl_certfile').with_ensure('absent')
+        is_expected.to contain_nova_config('oslo_messaging_rabbit/kombu_ssl_keyfile').with_ensure('absent')
+        is_expected.to contain_nova_config('oslo_messaging_rabbit/kombu_ssl_version').with_ensure('absent')
       end
     end
 
@@ -240,11 +240,11 @@ describe 'nova' do
       end
 
       it 'configures rabbit' do
-        is_expected.to_not contain_nova_config('DEFAULT/rabbit_host')
-        is_expected.to_not contain_nova_config('DEFAULT/rabbit_port')
-        is_expected.to contain_nova_config('DEFAULT/rabbit_hosts').with_value('rabbit:5673')
-        is_expected.to contain_nova_config('DEFAULT/rabbit_ha_queues').with_value(true)
-        is_expected.to contain_nova_config('DEFAULT/rabbit_use_ssl').with_value(false)
+        is_expected.to_not contain_nova_config('oslo_messaging_rabbit/rabbit_host')
+        is_expected.to_not contain_nova_config('oslo_messaging_rabbit/rabbit_port')
+        is_expected.to contain_nova_config('oslo_messaging_rabbit/rabbit_hosts').with_value('rabbit:5673')
+        is_expected.to contain_nova_config('oslo_messaging_rabbit/rabbit_ha_queues').with_value(true)
+        is_expected.to contain_nova_config('oslo_messaging_rabbit/rabbit_use_ssl').with_value(false)
         is_expected.to contain_nova_config('DEFAULT/amqp_durable_queues').with_value(false)
       end
     end
@@ -255,7 +255,7 @@ describe 'nova' do
       end
 
       it 'configures rabbit' do
-        is_expected.to contain_nova_config('DEFAULT/rabbit_ha_queues').with_value(true)
+        is_expected.to contain_nova_config('oslo_messaging_rabbit/rabbit_ha_queues').with_value(true)
       end
     end
 
@@ -266,16 +266,16 @@ describe 'nova' do
       end
 
       it 'configures rabbit' do
-        is_expected.to_not contain_nova_config('DEFAULT/rabbit_host')
-        is_expected.to_not contain_nova_config('DEFAULT/rabbit_port')
-        is_expected.to contain_nova_config('DEFAULT/rabbit_hosts').with_value('rabbit:5673')
-        is_expected.to contain_nova_config('DEFAULT/rabbit_ha_queues').with_value(true)
-        is_expected.to contain_nova_config('DEFAULT/rabbit_use_ssl').with_value(false)
+        is_expected.to_not contain_nova_config('oslo_messaging_rabbit/rabbit_host')
+        is_expected.to_not contain_nova_config('oslo_messaging_rabbit/rabbit_port')
+        is_expected.to contain_nova_config('oslo_messaging_rabbit/rabbit_hosts').with_value('rabbit:5673')
+        is_expected.to contain_nova_config('oslo_messaging_rabbit/rabbit_ha_queues').with_value(true)
+        is_expected.to contain_nova_config('oslo_messaging_rabbit/rabbit_use_ssl').with_value(false)
         is_expected.to contain_nova_config('DEFAULT/amqp_durable_queues').with_value(true)
-        is_expected.to contain_nova_config('DEFAULT/kombu_ssl_ca_certs').with_ensure('absent')
-        is_expected.to contain_nova_config('DEFAULT/kombu_ssl_certfile').with_ensure('absent')
-        is_expected.to contain_nova_config('DEFAULT/kombu_ssl_keyfile').with_ensure('absent')
-        is_expected.to contain_nova_config('DEFAULT/kombu_ssl_version').with_ensure('absent')
+        is_expected.to contain_nova_config('oslo_messaging_rabbit/kombu_ssl_ca_certs').with_ensure('absent')
+        is_expected.to contain_nova_config('oslo_messaging_rabbit/kombu_ssl_certfile').with_ensure('absent')
+        is_expected.to contain_nova_config('oslo_messaging_rabbit/kombu_ssl_keyfile').with_ensure('absent')
+        is_expected.to contain_nova_config('oslo_messaging_rabbit/kombu_ssl_version').with_ensure('absent')
       end
     end
 
@@ -290,11 +290,11 @@ describe 'nova' do
       end
 
       it 'configures rabbit' do
-        is_expected.to contain_nova_config('DEFAULT/rabbit_use_ssl').with_value(true)
-        is_expected.to contain_nova_config('DEFAULT/kombu_ssl_ca_certs').with_value('/etc/ca.cert')
-        is_expected.to contain_nova_config('DEFAULT/kombu_ssl_certfile').with_value('/etc/certfile')
-        is_expected.to contain_nova_config('DEFAULT/kombu_ssl_keyfile').with_value('/etc/key')
-        is_expected.to contain_nova_config('DEFAULT/kombu_ssl_version').with_value('TLSv1')
+        is_expected.to contain_nova_config('oslo_messaging_rabbit/rabbit_use_ssl').with_value(true)
+        is_expected.to contain_nova_config('oslo_messaging_rabbit/kombu_ssl_ca_certs').with_value('/etc/ca.cert')
+        is_expected.to contain_nova_config('oslo_messaging_rabbit/kombu_ssl_certfile').with_value('/etc/certfile')
+        is_expected.to contain_nova_config('oslo_messaging_rabbit/kombu_ssl_keyfile').with_value('/etc/key')
+        is_expected.to contain_nova_config('oslo_messaging_rabbit/kombu_ssl_version').with_value('TLSv1')
       end
     end
 
@@ -305,11 +305,11 @@ describe 'nova' do
       end
 
       it 'configures rabbit' do
-        is_expected.to contain_nova_config('DEFAULT/rabbit_use_ssl').with_value(true)
-        is_expected.to contain_nova_config('DEFAULT/kombu_ssl_ca_certs').with_ensure('absent')
-        is_expected.to contain_nova_config('DEFAULT/kombu_ssl_certfile').with_ensure('absent')
-        is_expected.to contain_nova_config('DEFAULT/kombu_ssl_keyfile').with_ensure('absent')
-        is_expected.to contain_nova_config('DEFAULT/kombu_ssl_version').with_value('TLSv1')
+        is_expected.to contain_nova_config('oslo_messaging_rabbit/rabbit_use_ssl').with_value(true)
+        is_expected.to contain_nova_config('oslo_messaging_rabbit/kombu_ssl_ca_certs').with_ensure('absent')
+        is_expected.to contain_nova_config('oslo_messaging_rabbit/kombu_ssl_certfile').with_ensure('absent')
+        is_expected.to contain_nova_config('oslo_messaging_rabbit/kombu_ssl_keyfile').with_ensure('absent')
+        is_expected.to contain_nova_config('oslo_messaging_rabbit/kombu_ssl_version').with_value('TLSv1')
       end
     end
 
@@ -323,11 +323,11 @@ describe 'nova' do
       end
 
       it 'configures rabbit' do
-        is_expected.to contain_nova_config('DEFAULT/rabbit_use_ssl').with_value('false')
-        is_expected.to contain_nova_config('DEFAULT/kombu_ssl_ca_certs').with_ensure('absent')
-        is_expected.to contain_nova_config('DEFAULT/kombu_ssl_certfile').with_ensure('absent')
-        is_expected.to contain_nova_config('DEFAULT/kombu_ssl_keyfile').with_ensure('absent')
-        is_expected.to contain_nova_config('DEFAULT/kombu_ssl_version').with_ensure('absent')
+        is_expected.to contain_nova_config('oslo_messaging_rabbit/rabbit_use_ssl').with_value('false')
+        is_expected.to contain_nova_config('oslo_messaging_rabbit/kombu_ssl_ca_certs').with_ensure('absent')
+        is_expected.to contain_nova_config('oslo_messaging_rabbit/kombu_ssl_certfile').with_ensure('absent')
+        is_expected.to contain_nova_config('oslo_messaging_rabbit/kombu_ssl_keyfile').with_ensure('absent')
+        is_expected.to contain_nova_config('oslo_messaging_rabbit/kombu_ssl_version').with_ensure('absent')
       end
     end
 
