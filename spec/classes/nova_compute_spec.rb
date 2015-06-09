@@ -36,18 +36,27 @@ describe 'nova::compute' do
       ) }
 
       it { should contain_nova_config('DEFAULT/force_raw_images').with(:value => true) }
+
+      it 'configures availability zones' do
+        should contain_nova_config('DEFAULT/default_availability_zone').with_value('nova')
+        should contain_nova_config('DEFAULT/internal_service_availability_zone').with_value('internal')
+      end
+
     end
 
     context 'with overridden parameters' do
       let :params do
-        { :enabled              => true,
-          :ensure_package       => '2012.1-2',
-          :vncproxy_host        => '127.0.0.1',
-          :network_device_mtu   => 9999,
-          :force_raw_images     => false,
-          :reserved_host_memory => '0',
-          :compute_manager      => 'ironic.nova.compute.manager.ClusteredComputeManager',
-          :pci_passthrough      => "[{\"vendor_id\":\"8086\",\"product_id\":\"0126\"},{\"vendor_id\":\"9096\",\"product_id\":\"1520\",\"physical_network\":\"physnet1\"}]"
+        { :enabled                            => true,
+          :ensure_package                     => '2012.1-2',
+          :vncproxy_host                      => '127.0.0.1',
+          :network_device_mtu                 => 9999,
+          :force_raw_images                   => false,
+          :reserved_host_memory               => '0',
+          :compute_manager                    => 'ironic.nova.compute.manager.ClusteredComputeManager',
+          :pci_passthrough                    => "[{\"vendor_id\":\"8086\",\"product_id\":\"0126\"},{\"vendor_id\":\"9096\",\"product_id\":\"1520\",\"physical_network\":\"physnet1\"}]",
+          :default_availability_zone          => 'az1',
+          :default_schedule_zone              => 'az2',
+          :internal_service_availability_zone => 'az_int1',
         }
       end
 
@@ -80,6 +89,12 @@ describe 'nova::compute' do
         should contain_nova_config('DEFAULT/novncproxy_base_url').with_value(
           'http://127.0.0.1:6080/vnc_auto.html'
         )
+      end
+
+      it 'configures availability zones' do
+        should contain_nova_config('DEFAULT/default_availability_zone').with_value('az1')
+        should contain_nova_config('DEFAULT/default_schedule_zone').with_value('az2')
+        should contain_nova_config('DEFAULT/internal_service_availability_zone').with_value('az_int1')
       end
 
       it { should contain_nova_config('DEFAULT/force_raw_images').with(:value => false) }
