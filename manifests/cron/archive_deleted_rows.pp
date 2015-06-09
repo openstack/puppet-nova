@@ -64,5 +64,6 @@ class nova::cron::archive_deleted_rows (
     monthday    => $monthday,
     month       => $month,
     weekday     => $weekday,
+    require     => Package['nova-common'],
   }
 }
