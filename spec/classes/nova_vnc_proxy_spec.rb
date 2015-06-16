@@ -22,6 +22,7 @@ describe 'nova::vncproxy' do
 
     it { should contain_nova_config('DEFAULT/novncproxy_host').with(:value => '0.0.0.0') }
     it { should contain_nova_config('DEFAULT/novncproxy_port').with(:value => '6080') }
+    it { should contain_nova_config('DEFAULT/novncproxy_base_url').with(:value => 'http://0.0.0.0:6080/vnc_auto.html') }
 
     it { should contain_package('nova-vncproxy').with(
       :name   => 'nova-novncproxy',
