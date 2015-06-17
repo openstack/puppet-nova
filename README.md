@@ -1,7 +1,7 @@
 nova
 ====
 
-5.0.0 - 2014.2.0 - Juno
+5.1.0 - 2014.2 - Juno
 
 #### Table of Contents
 
@@ -106,6 +106,36 @@ Contributors
 
 Release Notes
 -------------
+
+**5.1.0**
+
+* move setting of novncproxy_base_url
+* Added parameters for availability zones configuration
+* crontab: ensure nova-common is installed before
+* Correct docs on format for nova::policy data
+* Allow libvirt secret key setting from param
+* Fix behaviour of 'set-secret-value virsh' exec
+* MySQL: change default MySQL collate to utf8_general_ci
+* Pin puppetlabs-concat to 1.2.1 in fixtures
+* Make group on /var/log/nova OS specific
+* IPv6 support for migration check.
+* Database: add slave_connection support
+* Correct references to ::nova::rabbit_* variables
+* Add optional network_api_class parameter to nova::network::neutron class
+* Add Nova Aggregate support
+* rpc_backend: simplify parameters
+* supporting lxc cpu mode Fixing the default cpu_mode from None to none
+* virsh returns a list of secret uuids, not keyring names
+* Pin fixtures for stables branches
+* Add serialproxy configuration
+* Switch to TLSv1 as SSLv3 is considered insecure and is disabled by default
+* Disable file injection when using RBD as compute ephemeral storage
+* Add PCI Passthrough/SR-IOV support
+* Add Ironic support into nova puppet modules
+* spec: pin rspec-puppet to 1.0.1
+* Correct section for cell_type nova.conf parameter
+* crontab: ensure the script is run with shell
+* Configure database parameters on the right nodes
 
 **5.0.0**
 
