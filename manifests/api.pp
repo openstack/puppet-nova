@@ -159,6 +159,7 @@ class nova::api(
   $api_bind_address      = '0.0.0.0',
   $metadata_listen       = '0.0.0.0',
   $enabled_apis          = 'ec2,osapi_compute,metadata',
+  $install_occi          = true,
   $keystone_ec2_url      = false,
   $volume_api_class      = 'nova.volume.cinder.API',
   $use_forwarded_for     = false,
@@ -316,7 +317,7 @@ class nova::api(
     }
   }
 
-  if 'occiapi' in $enabled_apis {
+  if ('occiapi' in $enabled_apis and $install_occi) {
     if !defined(Package['python-pip']) {
       package { 'python-pip':
         ensure => latest,
