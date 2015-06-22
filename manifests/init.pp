@@ -72,6 +72,21 @@
 #   (optional) Use HA queues in RabbitMQ.
 #   Defaults to undef
 #
+# [*rabbit_heartbeat_timeout_threshold*]
+#   (optional) Number of seconds after which the RabbitMQ broker is considered
+#   down if the heartbeat keepalive fails.  Any value >0 enables heartbeats.
+#   Heartbeating helps to ensure the TCP connection to RabbitMQ isn't silently
+#   closed, resulting in missed or lost messages from the queue.
+#   (Requires kombu >= 3.0.7 and amqp >= 1.4.0)
+#   Defaults to 0
+#
+# [*rabbit_heartbeat_rate*]
+#   (optional) How often during the rabbit_heartbeat_timeout_threshold period to
+#   check the heartbeat on RabbitMQ connection.  (i.e. rabbit_heartbeat_rate=2
+#   when rabbit_heartbeat_timeout_threshold=60, the heartbeat will be checked
+#   every 30 seconds.
+#   Defaults to 2
+#
 # [*kombu_ssl_ca_certs*]
 #   (optional) SSL certification authority file (valid only if SSL enabled).
 #   Defaults to undef
@@ -246,64 +261,66 @@
 #   Defaults to undef
 #
 class nova(
-  $ensure_package           = 'present',
-  $database_connection      = false,
-  $slave_connection         = false,
-  $database_idle_timeout    = 3600,
-  $rpc_backend              = 'rabbit',
-  $image_service            = 'nova.image.glance.GlanceImageService',
+  $ensure_package                     = 'present',
+  $database_connection                = false,
+  $slave_connection                   = false,
+  $database_idle_timeout              = 3600,
+  $rpc_backend                        = 'rabbit',
+  $image_service                      = 'nova.image.glance.GlanceImageService',
   # these glance params should be optional
   # this should probably just be configured as a glance client
-  $glance_api_servers       = 'localhost:9292',
-  $memcached_servers        = false,
-  $rabbit_host              = 'localhost',
-  $rabbit_hosts             = false,
-  $rabbit_password          = 'guest',
-  $rabbit_port              = '5672',
-  $rabbit_userid            = 'guest',
-  $rabbit_virtual_host      = '/',
-  $rabbit_use_ssl           = false,
-  $rabbit_ha_queues         = undef,
-  $kombu_ssl_ca_certs       = undef,
-  $kombu_ssl_certfile       = undef,
-  $kombu_ssl_keyfile        = undef,
-  $kombu_ssl_version        = 'TLSv1',
-  $amqp_durable_queues      = false,
-  $qpid_hostname            = 'localhost',
-  $qpid_port                = '5672',
-  $qpid_username            = 'guest',
-  $qpid_password            = 'guest',
-  $qpid_sasl_mechanisms     = false,
-  $qpid_heartbeat           = 60,
-  $qpid_protocol            = 'tcp',
-  $qpid_tcp_nodelay         = true,
-  $auth_strategy            = 'keystone',
-  $service_down_time        = 60,
-  $log_dir                  = '/var/log/nova',
-  $state_path               = '/var/lib/nova',
-  $lock_path                = $::nova::params::lock_path,
-  $verbose                  = false,
-  $debug                    = false,
-  $periodic_interval        = '60',
-  $report_interval          = '10',
-  $rootwrap_config          = '/etc/nova/rootwrap.conf',
-  $use_ssl                  = false,
-  $enabled_ssl_apis         = ['ec2', 'metadata', 'osapi_compute'],
-  $ca_file                  = false,
-  $cert_file                = false,
-  $key_file                 = false,
-  $nova_public_key          = undef,
-  $nova_private_key         = undef,
-  $use_syslog               = false,
-  $log_facility             = 'LOG_USER',
-  $install_utilities        = true,
-  $notification_driver      = [],
-  $notification_topics      = 'notifications',
-  $notify_api_faults        = false,
-  $notify_on_state_change   = undef,
+  $glance_api_servers                 = 'localhost:9292',
+  $memcached_servers                  = false,
+  $rabbit_host                        = 'localhost',
+  $rabbit_hosts                       = false,
+  $rabbit_password                    = 'guest',
+  $rabbit_port                        = '5672',
+  $rabbit_userid                      = 'guest',
+  $rabbit_virtual_host                = '/',
+  $rabbit_use_ssl                     = false,
+  $rabbit_heartbeat_timeout_threshold = 0,
+  $rabbit_heartbeat_rate              = 2,
+  $rabbit_ha_queues                   = undef,
+  $kombu_ssl_ca_certs                 = undef,
+  $kombu_ssl_certfile                 = undef,
+  $kombu_ssl_keyfile                  = undef,
+  $kombu_ssl_version                  = 'TLSv1',
+  $amqp_durable_queues                = false,
+  $qpid_hostname                      = 'localhost',
+  $qpid_port                          = '5672',
+  $qpid_username                      = 'guest',
+  $qpid_password                      = 'guest',
+  $qpid_sasl_mechanisms               = false,
+  $qpid_heartbeat                     = 60,
+  $qpid_protocol                      = 'tcp',
+  $qpid_tcp_nodelay                   = true,
+  $auth_strategy                      = 'keystone',
+  $service_down_time                  = 60,
+  $log_dir                            = '/var/log/nova',
+  $state_path                         = '/var/lib/nova',
+  $lock_path                          = $::nova::params::lock_path,
+  $verbose                            = false,
+  $debug                              = false,
+  $periodic_interval                  = '60',
+  $report_interval                    = '10',
+  $rootwrap_config                    = '/etc/nova/rootwrap.conf',
+  $use_ssl                            = false,
+  $enabled_ssl_apis                   = ['ec2', 'metadata', 'osapi_compute'],
+  $ca_file                            = false,
+  $cert_file                          = false,
+  $key_file                           = false,
+  $nova_public_key                    = undef,
+  $nova_private_key                   = undef,
+  $use_syslog                         = false,
+  $log_facility                       = 'LOG_USER',
+  $install_utilities                  = true,
+  $notification_driver                = [],
+  $notification_topics                = 'notifications',
+  $notify_api_faults                  = false,
+  $notify_on_state_change             = undef,
   # DEPRECATED PARAMETERS
-  $mysql_module             = undef,
-  $os_region_name           = undef,
+  $mysql_module                       = undef,
+  $os_region_name                     = undef,
 ) inherits nova::params {
 
   # maintain backward compatibility
@@ -459,11 +476,13 @@ class nova(
   if $rpc_backend == 'nova.openstack.common.rpc.impl_kombu' or $rpc_backend == 'rabbit' {
     # I may want to support exporting and collecting these
     nova_config {
-      'oslo_messaging_rabbit/rabbit_password':     value => $rabbit_password, secret => true;
-      'oslo_messaging_rabbit/rabbit_userid':       value => $rabbit_userid;
-      'oslo_messaging_rabbit/rabbit_virtual_host': value => $rabbit_virtual_host;
-      'oslo_messaging_rabbit/rabbit_use_ssl':      value => $rabbit_use_ssl;
-      'DEFAULT/amqp_durable_queues': value => $amqp_durable_queues;
+      'oslo_messaging_rabbit/rabbit_password':              value => $rabbit_password, secret => true;
+      'oslo_messaging_rabbit/rabbit_userid':                value => $rabbit_userid;
+      'oslo_messaging_rabbit/rabbit_virtual_host':          value => $rabbit_virtual_host;
+      'oslo_messaging_rabbit/rabbit_use_ssl':               value => $rabbit_use_ssl;
+      'oslo_messaging_rabbit/heartbeat_timeout_threshold':  value => $rabbit_heartbeat_timeout_threshold;
+      'oslo_messaging_rabbit/heartbeat_rate':               value => $rabbit_heartbeat_rate;
+      'DEFAULT/amqp_durable_queues':                        value => $amqp_durable_queues;
     }
 
     if $rabbit_use_ssl {
