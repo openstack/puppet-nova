@@ -16,14 +16,14 @@ nova
 Overview
 --------
 
-The nova module is a part of [Stackforge](https://github.com/stackforge), an effort by the Openstack infrastructure team to provide continuous integration testing and code review for Openstack and Openstack community projects not part of the core software.  The module its self is used to flexibly configure and manage the compute service for Openstack.
+The nova module is a part of [OpenStack](https://github.com/openstack), an effort by the Openstack infrastructure team to provide continuous integration testing and code review for Openstack and Openstack community projects as part of the core software.  The module its self is used to flexibly configure and manage the compute service for Openstack.
 
 Module Description
 ------------------
 
 The nova module is a thorough attempt to make Puppet capable of managing the entirety of nova.  This includes manifests to provision such things as keystone endpoints, RPC configurations specific to nova, and database connections.  Types are shipped as part of the nova module to assist in manipulation of configuration files.
 
-This module is tested in combination with other modules needed to build and leverage an entire Openstack software stack.  These modules can be found, all pulled together in the [openstack module](https://github.com/stackforge/puppet-openstack).
+This module is tested in combination with other modules needed to build and leverage an entire Openstack software stack.  These modules can be found, all pulled together in the [openstack module](https://github.com/openstack/puppet-openstack).
 
 Setup
 -----
@@ -101,4 +101,4 @@ For more information on writing and running beaker-rspec tests visit the documen
 Contributors
 ------------
 
-* https://github.com/stackforge/puppet-nova/graphs/contributors
+* https://github.com/openstack/puppet-nova/graphs/contributors
