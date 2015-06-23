@@ -138,8 +138,14 @@ describe 'nova::compute::libvirt' do
       it { is_expected.to contain_class('nova::params')}
 
       it { is_expected.to contain_package('libvirt').with(
-        :name   => 'libvirt',
-        :ensure => 'present'
+        :name   => 'libvirt-daemon-kvm',
+        :ensure => 'present',
+      ) }
+
+      it { is_expected.to contain_package('libvirt-nwfilter').with(
+        :name   => 'libvirt-daemon-config-nwfilter',
+        :ensure => 'present',
+        :before  => 'Service[libvirt]',
       ) }
 
       it { is_expected.to contain_service('libvirt').with(
@@ -203,6 +209,10 @@ describe 'nova::compute::libvirt' do
       it { is_expected.to contain_nova_config('DEFAULT/remove_unused_original_minimum_age_seconds').with_value(3600)}
       it { is_expected.to contain_nova_config('libvirt/remove_unused_kernels').with_value(true)}
       it { is_expected.to contain_nova_config('libvirt/remove_unused_resized_minimum_age_seconds').with_value(3600)}
+      it { is_expected.to contain_package('libvirt').with(
+        :name   => 'libvirt-daemon-kvm',
+        :ensure => 'present'
+      ) }
     end
 
     describe 'with migration_support enabled' do
@@ -236,8 +246,14 @@ describe 'nova::compute::libvirt' do
       it { is_expected.to contain_class('nova::params')}
 
       it { is_expected.to contain_package('libvirt').with(
-        :name   => 'libvirt',
+        :name   => 'libvirt-daemon-kvm',
         :ensure => 'present'
+      ) }
+
+      it { is_expected.to contain_package('libvirt-nwfilter').with(
+        :name   => 'libvirt-daemon-config-nwfilter',
+        :ensure => 'present',
+        :before  => 'Service[libvirt]',
       ) }
 
       it { is_expected.to contain_service('libvirt').with(
