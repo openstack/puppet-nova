@@ -314,26 +314,6 @@ class nova::api(
     }
   }
 
-  if 'occiapi' in $enabled_apis {
-    if !defined(Package['python-pip']) {
-      package { 'python-pip':
-        ensure => latest,
-      }
-    }
-    if !defined(Package['pyssf']) {
-      package { 'pyssf':
-        ensure   => latest,
-        provider => pip,
-        require  => Package['python-pip']
-      }
-    }
-    package { 'openstackocci':
-      ensure   => latest,
-      provider => 'pip',
-      require  => Package['python-pip'],
-    }
-  }
-
   if ($ratelimits != undef) {
     nova_paste_api_ini {
       'filter:ratelimit/paste.filter_factory': value => $ratelimits_factory;
