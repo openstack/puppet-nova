@@ -3,6 +3,10 @@
 # [*network*]
 #   (required) IPv4 CIDR of network to create.
 #
+# [*label*]
+#   (optional) The label of the network.
+#   Defaults to 'novanetwork'.
+#
 # [*num_networks*]
 #   (optional) Number of networks to split $network into.
 #   Defaults to 1
