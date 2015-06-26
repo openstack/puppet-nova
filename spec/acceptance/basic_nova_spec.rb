@@ -20,16 +20,7 @@ describe 'basic nova' do
         }
         'RedHat': {
           class { '::openstack_extras::repo::redhat::redhat':
-            # Kilo is not GA yet, so let's use the testing repo
-            manage_rdo => false,
-            repo_hash  => {
-              'rdo-kilo-testing' => {
-                'baseurl'  => 'https://repos.fedorapeople.org/repos/openstack/openstack-kilo/testing/el7/',
-                # packages are not GA so not signed
-                'gpgcheck' => '0',
-                'priority' => 97,
-              },
-            },
+            release => 'kilo',
           }
           $package_provider = 'yum'
         }
