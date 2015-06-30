@@ -46,7 +46,7 @@
 #
 # [*rabbit_hosts*]
 #   (optional) List of clustered rabbit servers.
-#   Defaults to false
+#   Defaults to undef
 #
 # [*rabbit_port*]
 #   (optional) Port for rabbitmq instance.
@@ -276,7 +276,7 @@ class nova(
   $glance_api_servers                 = 'localhost:9292',
   $memcached_servers                  = false,
   $rabbit_host                        = 'localhost',
-  $rabbit_hosts                       = false,
+  $rabbit_hosts                       = undef,
   $rabbit_password                    = 'guest',
   $rabbit_port                        = '5672',
   $rabbit_userid                      = 'guest',
@@ -526,6 +526,7 @@ class nova(
       nova_config { 'oslo_messaging_rabbit/rabbit_port':      value => $rabbit_port }
       nova_config { 'oslo_messaging_rabbit/rabbit_hosts':     value => "${rabbit_host}:${rabbit_port}" }
     }
+
     if $rabbit_ha_queues == undef {
       if $rabbit_hosts {
         nova_config { 'oslo_messaging_rabbit/rabbit_ha_queues': value => true }

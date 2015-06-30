@@ -269,6 +269,17 @@ describe 'nova' do
       end
     end
 
+    context 'with rabbit_ha_queues set to false and with rabbit_hosts' do
+      let :params do
+        { :rabbit_ha_queues => 'false',
+          :rabbit_hosts => ['rabbit:5673'] }
+      end
+
+      it 'configures rabbit' do
+        is_expected.to contain_nova_config('oslo_messaging_rabbit/rabbit_ha_queues').with_value(false)
+      end
+    end
+
     context 'with amqp_durable_queues parameter' do
       let :params do
         { :rabbit_hosts => ['rabbit:5673'],
