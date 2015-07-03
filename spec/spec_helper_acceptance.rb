@@ -1,11 +1,7 @@
 require 'beaker-rspec'
+require 'beaker/puppet_install_helper'
 
-hosts.each do |host|
-
-  install_puppet
-
-  on host, "mkdir -p #{host['distmoduledir']}"
-end
+run_puppet_install_helper
 
 RSpec.configure do |c|
   # Project root
