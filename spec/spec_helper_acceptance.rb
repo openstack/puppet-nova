@@ -38,7 +38,7 @@ RSpec.configure do |c|
         zuul_clone_cmd += "git://git.openstack.org #{repo}"
         on host, zuul_clone_cmd
       else
-        on host, "git clone https://git.openstack.org/#{repo}"
+        on host, "git clone https://git.openstack.org/#{repo} #{repo}"
       end
 
       on host, "ZUUL_REF=#{zuul_ref} ZUUL_BRANCH=#{zuul_branch} ZUUL_URL=#{zuul_url} bash #{repo}/install_modules.sh"
