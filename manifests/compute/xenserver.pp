@@ -13,29 +13,31 @@
 # [*xenapi_connection_password*]
 #   (required) Password for connection to XenServer/Xen Cloud Platform
 #
-# [*xenapi_inject_image*]
-#   (optional) This parameter was removed in Diablo and does nothing.
-#   Defaults to false
-#
 # [*compute_driver*]
 #   (optional) Compute driver.
 #   Defaults to 'xenapi.XenAPIDriver'
+#
+# [*xenapi_inject_image*]
+#   (optional) DEPRECATED: This parameter does nothing.
 #
 class nova::compute::xenserver(
   $xenapi_connection_url,
   $xenapi_connection_username,
   $xenapi_connection_password,
-  $xenapi_inject_image = false,
-  $compute_driver = 'xenapi.XenAPIDriver'
+  $compute_driver = 'xenapi.XenAPIDriver',
+  # DEPRECATED PARAMETERS
+  $xenapi_inject_image = undef,
 ) {
+
+  if $xenapi_inject_image != undef {
+    warning('The xenapi_inject_image parameter is deprecated and has no effect.')
+  }
 
   nova_config {
     'DEFAULT/compute_driver':             value => $compute_driver;
-    'DEFAULT/connection_type':            value => 'xenapi';
     'DEFAULT/xenapi_connection_url':      value => $xenapi_connection_url;
     'DEFAULT/xenapi_connection_username': value => $xenapi_connection_username;
     'DEFAULT/xenapi_connection_password': value => $xenapi_connection_password;
-    'DEFAULT/xenapi_inject_image':        value => $xenapi_inject_image;
   }
 
   ensure_packages(['python-pip'])
