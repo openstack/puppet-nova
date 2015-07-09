@@ -34,7 +34,7 @@ Setup
 
 ### Installing nova
 
-    example% puppet module install puppetlabs/nova
+    example% puppet module install openstack/nova
 
 ### Beginning with nova
 
