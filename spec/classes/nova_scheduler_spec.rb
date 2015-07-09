@@ -24,7 +24,7 @@ describe 'nova::scheduler' do
       :ensure    => 'running'
     )}
 
-    it { is_expected.to contain_nova_config('DEFAULT/scheduler_driver').with_value('nova.scheduler.host_manager.HostManager') }
+    it { is_expected.to contain_nova_config('DEFAULT/scheduler_driver').with_value('nova.scheduler.filter_scheduler.FilterScheduler') }
 
     context 'with manage_service as false' do
       let :params do
