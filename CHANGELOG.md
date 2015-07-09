@@ -1,3 +1,52 @@
+##2015-07-08 - 6.0.0
+###Summary
+
+This is a backwards-incompatible major release for OpenStack Kilo.
+
+####Backwards-incompatible changes
+- Remove deprecated parameters
+- Disable file injection when using RBD as compute ephemeral storage
+- Remove Python Package Declaration
+- move setting of novncproxy_base_url
+- Move rabbit/kombu settings to oslo_messaging_rabbit section
+- MySQL: change default MySQL collate to utf8_general_ci
+- Moved spice configuration options from DEFAULT to spice section
+
+####Features
+- Puppet 4.x support
+- Refactorise Keystone resources management
+- Configure database parameters on the right nodes
+- Add parameters for availability zones configuration
+- Migrate postgresql backend to use openstacklib::db::postgresql
+- Allow auth_name and auth_name_v3 to be the same
+- Add an option to not configure RabbitMQ service
+- Database: add slave_connection support
+- Support for heal_instance_info_cache_interval
+- Only tag packages with openstack tag
+- Add PCI Passthrough/SR-IOV support
+- Add support for identity_uri
+- IPv6 support for migration check
+- Allow libvirt secret key setting from param
+- Adds OracleLinux support
+- Ensure /etc/nova exists before creating secret.xml
+- Run db-sync if nova packages are upgraded
+- Make package 'bridge-utils' install optional
+- Introduce public_url, internal_url and admin_url (and v3/ec2)
+- Better handling of package dependencies in nova generic_service
+- Add scheduler_driver parameter to nova::scheduler class
+- Add parameter to control use of rbd for the ephemeral storage
+- Install only required libvirt packages
+- keystone/auth: make service description configurable
+
+####Bugfixes
+- Fix catalog compilation when not configuring endpoint
+- Fix behaviour of 'set-secret-value virsh' exec
+- Fix variable access in RBD secret template
+
+####Maintenance
+- Acceptance tests with Beaker
+- Fix spec tests for RSpec 3.x and Puppet 4.x
+
 ##2015-06-17 - 5.1.0
 ###Summary
 
