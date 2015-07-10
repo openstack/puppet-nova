@@ -12,11 +12,9 @@ describe 'nova::compute::xenserver' do
 
     it 'configures xenapi in nova.conf' do
       is_expected.to contain_nova_config('DEFAULT/compute_driver').with_value('xenapi.XenAPIDriver')
-      is_expected.to contain_nova_config('DEFAULT/connection_type').with_value('xenapi')
       is_expected.to contain_nova_config('DEFAULT/xenapi_connection_url').with_value(params[:xenapi_connection_url])
       is_expected.to contain_nova_config('DEFAULT/xenapi_connection_username').with_value(params[:xenapi_connection_username])
       is_expected.to contain_nova_config('DEFAULT/xenapi_connection_password').with_value(params[:xenapi_connection_password])
-      is_expected.to contain_nova_config('DEFAULT/xenapi_inject_image').with_value(false)
     end
 
     it 'installs xenapi with pip' do
