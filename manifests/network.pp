@@ -67,7 +67,14 @@
 #   (optional) End of allowed addresses for instances
 #   Defaults to undef
 #
-
+# [*dns1*]
+#   (optional) First DNS server
+#   Defaults to undef
+#
+# [*dns2*]
+#   (optional) Second DNS server
+#   Defaults to undef
+#
 class nova::network(
   $private_interface = undef,
   $fixed_range       = '10.0.0.0/8',
@@ -83,6 +90,8 @@ class nova::network(
   $install_service   = true,
   $allowed_start     = undef,
   $allowed_end       = undef,
+  $dns1              = undef,
+  $dns2              = undef
 ) {
 
   include ::nova::params
@@ -124,6 +133,8 @@ class nova::network(
       vlan_start    => $vlan_start,
       allowed_start => $allowed_start,
       allowed_end   => $allowed_end,
+      dns1          => $dns1,
+      dns2          => $dns2,
     }
     if $floating_range {
       nova::manage::floating { 'nova-vm-floating':

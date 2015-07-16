@@ -199,6 +199,26 @@ describe 'nova::network' do
         'ensure' => '2012.1-2'
       )}
     end
+
+     describe 'when creating network with nameservers' do
+       let :params do
+         default_params.merge(
+           {
+             :create_networks => true,
+             :dns1            => '8.8.8.8',
+             :dns2            => '8.8.4.4'
+           }
+         )
+       end
+       it { is_expected.to contain_class('nova::network').with(
+         :dns1 => '8.8.8.8',
+         :dns2 => '8.8.4.4'
+       ) }
+       it { is_expected.to contain_nova__manage__network('nova-vm-net').with(
+         :dns1 => '8.8.8.8',
+         :dns2 => '8.8.4.4'
+       ) }
+     end
   end
   describe 'on rhel' do
     let :facts do
