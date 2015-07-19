@@ -116,10 +116,10 @@ describe 'nova::compute::rbd' do
       end
 
       it 'should only set user and secret_uuid in nova.conf ' do
-          should_not contain_nova_config('libvirt/images_rbd_pool').with_value('rbd')
-          should_not contain_nova_config('libvirt/images_rbd_ceph_conf').with_value('/etc/ceph/ceph.conf')
-          should contain_nova_config('libvirt/rbd_user').with_value('nova')
-          should contain_nova_config('libvirt/rbd_secret_uuid').with_value('UUID')
+          is_expected.to_not contain_nova_config('libvirt/images_rbd_pool').with_value('rbd')
+          is_expected.to_not contain_nova_config('libvirt/images_rbd_ceph_conf').with_value('/etc/ceph/ceph.conf')
+          is_expected.to contain_nova_config('libvirt/rbd_user').with_value('nova')
+          is_expected.to contain_nova_config('libvirt/rbd_secret_uuid').with_value('UUID')
       end
 
       it 'configure ceph on compute nodes' do

@@ -16,7 +16,7 @@ describe Puppet::Type.type(:nova_aggregate) do
   end
 
   it "should be able to create an instance" do
-    described_class.new(:name => 'agg0').should_not be_nil
+    expect(described_class.new(:name => 'agg0')).not_to be_nil
   end
 
   it "should be able to create an more complex instance" do
