@@ -23,18 +23,18 @@ Module Description
 
 The nova module is a thorough attempt to make Puppet capable of managing the entirety of nova.  This includes manifests to provision such things as keystone endpoints, RPC configurations specific to nova, and database connections.  Types are shipped as part of the nova module to assist in manipulation of configuration files.
 
-This module is tested in combination with other modules needed to build and leverage an entire Openstack software stack.  These modules can be found, all pulled together in the [openstack module](https://github.com/openstack/puppet-openstack).
+This module is tested in combination with other modules needed to build and leverage an entire Openstack software stack.  These modules can be found, all pulled together in the [openstack module](https://github.com/stackforge/puppet-openstack).
 
 Setup
 -----
 
 **What the nova module affects:**
 
-* nova, the compute service for Openstack.
+* [Nova](https://wiki.openstack.org/wiki/Nova), the compute service for Openstack.
 
 ### Installing nova
 
-    example% puppet module install openstack/nova
+    puppet module install openstack/nova
 
 ### Beginning with nova
 
