@@ -15,11 +15,12 @@ describe 'nova::compute' do
           :name      => platform_params[:nova_compute_service],
           :ensure    => 'running',
           :hasstatus => true,
-          :enable    => true
+          :enable    => true,
+          :tag       => 'nova-service'
         })
         is_expected.to contain_package('nova-compute').with({
           :name => platform_params[:nova_compute_package],
-          :tag  => ['openstack']
+          :tag  => ['openstack', 'nova-package']
         })
       end
 
@@ -67,12 +68,13 @@ describe 'nova::compute' do
           :name      => platform_params[:nova_compute_service],
           :ensure    => 'stopped',
           :hasstatus => true,
-          :enable    => false
+          :enable    => false,
+          :tag       => 'nova-service'
         })
         is_expected.to contain_package('nova-compute').with({
           :name   => platform_params[:nova_compute_package],
           :ensure => '2012.1-2',
-          :tag    => ['openstack']
+          :tag    => ['openstack', 'nova-package']
         })
       end
 

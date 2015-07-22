@@ -61,14 +61,15 @@ describe 'nova::cells' do
       is_expected.to contain_package('nova-cells').with(
         :ensure => 'present',
         :name   => platform_params[:cells_package_name],
-        :tag    => ['openstack']
+        :tag    => ['openstack', 'nova-package']
       )
     end
 
     it 'configures nova-cells service' do
       is_expected.to contain_service('nova-cells').with(
         :ensure     => 'running',
-        :name       => platform_params[:cells_service_name]
+        :name       => platform_params[:cells_service_name],
+        :tag        => 'nova-service'
       )
     end
 

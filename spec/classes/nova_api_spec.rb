@@ -23,12 +23,13 @@ describe 'nova::api' do
           :name      => platform_params[:nova_api_service],
           :ensure    => 'running',
           :hasstatus => true,
-          :enable    => true
+          :enable    => true,
+          :tag       => 'nova-service',
         )
         is_expected.to contain_package('nova-api').with(
           :name   => platform_params[:nova_api_package],
           :ensure => 'present',
-          :tag    => ['openstack']
+          :tag    => ['openstack', 'nova-package'],
         )
         is_expected.to contain_package('nova-api').that_notifies('Service[nova-api]')
         is_expected.to_not contain_exec('validate_nova_api')
@@ -107,13 +108,14 @@ describe 'nova::api' do
         is_expected.to contain_package('nova-api').with(
           :name   => platform_params[:nova_api_package],
           :ensure => '2012.1-2',
-          :tag    => ['openstack']
+          :tag    => ['openstack', 'nova-package'],
         )
         is_expected.to contain_service('nova-api').with(
           :name      => platform_params[:nova_api_service],
           :ensure    => 'stopped',
           :hasstatus => true,
-          :enable    => false
+          :enable    => false,
+          :tag       => 'nova-service',
         )
       end
 

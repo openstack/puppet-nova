@@ -438,7 +438,7 @@ class nova(
     ensure  => $ensure_package,
     name    => $::nova::params::common_package_name,
     require => [Package['python-nova'], Anchor['nova-start']],
-    tag     => ['openstack'],
+    tag     => ['openstack', 'nova-package'],
   }
 
   file { '/etc/nova/nova.conf':
