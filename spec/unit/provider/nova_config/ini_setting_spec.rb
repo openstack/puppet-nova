@@ -14,6 +14,17 @@ $LOAD_PATH.push(
     'inifile',
     'lib')
 )
+$LOAD_PATH.push(
+  File.join(
+    File.dirname(__FILE__),
+    '..',
+    '..',
+    '..',
+    'fixtures',
+    'modules',
+    'openstacklib',
+    'lib')
+)
 require 'spec_helper'
 provider_class = Puppet::Type.type(:nova_config).provider(:ini_setting)
 describe provider_class do
@@ -35,4 +46,23 @@ describe provider_class do
     expect(provider.section).to eq('dude')
     expect(provider.setting).to eq('foo')
   end
+
+  it 'should ensure absent when <SERVICE DEFAULT> is specified as a value' do
+    resource = Puppet::Type::Nova_config.new(
+      {:name => 'dude/foo', :value => '<SERVICE DEFAULT>'}
+    )
+    provider = provider_class.new(resource)
+    provider.exists?
+    expect(resource[:ensure]).to eq :absent
+  end
+
+  it 'should ensure absent when value matches ensure_absent_val' do
+    resource = Puppet::Type::Nova_config.new(
+      {:name => 'dude/foo', :value => 'foo', :ensure_absent_val => 'foo' }
+    )
+    provider = provider_class.new(resource)
+    provider.exists?
+    expect(resource[:ensure]).to eq :absent
+  end
+
 end
