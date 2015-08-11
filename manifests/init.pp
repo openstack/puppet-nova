@@ -318,9 +318,9 @@ class nova(
   $notification_topics                = 'notifications',
   $notify_api_faults                  = false,
   $notify_on_state_change             = undef,
+  $os_region_name                     = undef,
   # DEPRECATED PARAMETERS
   $mysql_module                       = undef,
-  $os_region_name                     = undef,
 ) inherits nova::params {
 
   # maintain backward compatibility
@@ -647,13 +647,17 @@ class nova(
 
   if $os_region_name {
     nova_config {
-      'DEFAULT/os_region_name':       value => $os_region_name;
+      'cinder/os_region_name':       value => $os_region_name;
     }
   }
   else {
     nova_config {
-      'DEFAULT/os_region_name':       ensure => absent;
+      'cinder/os_region_name':        ensure => absent;
     }
+  }
+  # Deprecated in Juno, removed in Kilo
+  nova_config {
+    'DEFAULT/os_region_name':       ensure => absent;
   }
 
   exec { 'post-nova_config':
