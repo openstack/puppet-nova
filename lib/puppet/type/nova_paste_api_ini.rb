@@ -40,4 +40,8 @@ Puppet::Type.newtype(:nova_paste_api_ini) do
     defaultto false
   end
 
+  autorequire(:package) do
+    'nova-common'
+  end
+
 end

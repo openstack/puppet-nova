@@ -188,8 +188,6 @@ class nova::api(
   require ::keystone::python
   include ::cinder::client
 
-  Package<| title == 'nova-api' |> -> Nova_paste_api_ini<| |>
-
   Package<| title == 'nova-common' |> -> Class['nova::api']
   Package<| title == 'nova-common' |> -> Class['nova::policy']
 
