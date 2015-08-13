@@ -49,4 +49,16 @@ describe 'Puppet::Type.type(:nova_config)' do
       @nova_config[:ensure] = :latest
     }.to raise_error(Puppet::Error, /Invalid value/)
   end
+
+  it 'should autorequire the package that install the file' do
+    catalog = Puppet::Resource::Catalog.new
+    package = Puppet::Type.type(:package).new(:name => 'nova-common')
+    catalog.add_resource package, @nova_config
+    dependency = @nova_config.autorequire
+    expect(dependency.size).to eq(1)
+    expect(dependency[0].target).to eq(@nova_config)
+    expect(dependency[0].source).to eq(package)
+  end
+
+
 end

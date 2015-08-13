@@ -39,4 +39,9 @@ Puppet::Type.newtype(:nova_config) do
 
     defaultto false
   end
+
+  autorequire(:package) do
+    'nova-common'
+  end
+
 end

@@ -411,12 +411,6 @@ class nova(
     }
   }
 
-
-  # all nova_config resources should be applied
-  # after the nova common package
-  # before the file resource for nova.conf is managed
-  # and before the post config resource
-  Package['nova-common'] -> Nova_config<| |> -> File['/etc/nova/nova.conf']
   Nova_config<| |> ~> Exec['post-nova_config']
 
   # TODO - see if these packages can be removed
