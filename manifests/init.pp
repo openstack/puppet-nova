@@ -105,6 +105,11 @@
 #   available on some distributions.
 #   Defaults to 'TLSv1'
 #
+# [*kombu_reconnect_delay*]
+#   (optional) How long to wait before reconnecting in response to an AMQP
+#   consumer cancel notification.
+#   Defaults to '1.0'
+#
 # [*amqp_durable_queues*]
 #   (optional) Define queues as "durable" to rabbitmq.
 #   Defaults to false
@@ -289,6 +294,7 @@ class nova(
   $kombu_ssl_certfile                 = undef,
   $kombu_ssl_keyfile                  = undef,
   $kombu_ssl_version                  = 'TLSv1',
+  $kombu_reconnect_delay              = '1.0',
   $amqp_durable_queues                = false,
   $qpid_hostname                      = 'localhost',
   $qpid_port                          = '5672',
@@ -481,6 +487,7 @@ class nova(
       'oslo_messaging_rabbit/rabbit_use_ssl':               value => $rabbit_use_ssl;
       'oslo_messaging_rabbit/heartbeat_timeout_threshold':  value => $rabbit_heartbeat_timeout_threshold;
       'oslo_messaging_rabbit/heartbeat_rate':               value => $rabbit_heartbeat_rate;
+      'oslo_messaging_rabbit/kombu_reconnect_delay':        value => $kombu_reconnect_delay;
       'DEFAULT/amqp_durable_queues':                        value => $amqp_durable_queues;
     }
 
