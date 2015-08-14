@@ -48,6 +48,11 @@ describe 'basic nova' do
         admin_password => 'a_big_secret',
         identity_uri   => 'http://127.0.0.1:35357/',
         osapi_v3       => true,
+        service_name   => 'httpd',
+      }
+      include ::apache
+      class { '::nova::wsgi::apache':
+        ssl => false,
       }
       class { '::nova::cert': }
       class { '::nova::client': }
@@ -71,15 +76,15 @@ describe 'basic nova' do
     end
 
     describe port(8774) do
-      it { is_expected.to be_listening.with('tcp') }
+      it { is_expected.to be_listening }
     end
 
     describe port(8775) do
-      it { is_expected.to be_listening.with('tcp') }
+      it { is_expected.to be_listening }
     end
 
     describe port(6080) do
-      it { is_expected.to be_listening.with('tcp') }
+      it { is_expected.to be_listening }
     end
 
     describe cron do

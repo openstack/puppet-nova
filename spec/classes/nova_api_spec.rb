@@ -49,6 +49,10 @@ describe 'nova::api' do
           'keystone_authtoken/admin_password').with_value('passw0rd').with_secret(true)
       end
 
+      it 'enable metadata in evenlet configuration' do
+        is_expected.to contain_nova_config('DEFAULT/enabled_apis').with_value('osapi_compute,metadata')
+      end
+
       it { is_expected.to contain_nova_config('DEFAULT/instance_name_template').with_ensure('absent')}
 
       it 'configures various stuff' do
@@ -276,11 +280,98 @@ describe 'nova::api' do
       end
     end
 
+    context 'when running nova API in wsgi compute, and enabling metadata' do
+      before do
+        params.merge!({ :service_name => 'httpd' })
+      end
+
+      let :pre_condition do
+        "include ::apache
+         include ::nova"
+      end
+
+      it 'enable nova API service' do
+        is_expected.to contain_service('nova-api').with(
+          :ensure     => 'running',
+          :name       => platform_params[:nova_api_service],
+          :enable     => true,
+          :tag        => 'nova-service',
+        )
+      end
+      it 'enable metadata in evenlet configuration' do
+        is_expected.to contain_nova_config('DEFAULT/enabled_apis').with_value('metadata')
+      end
+    end
+
+    context 'when running nova API in wsgi for compute, and disabling metadata' do
+      before do
+        params.merge!({
+          :service_name => 'httpd',
+          :enabled_apis => ['osapi_compute'] })
+      end
+
+      let :pre_condition do
+        "include ::apache
+         include ::nova"
+      end
+
+      it 'disable nova API service' do
+        is_expected.to contain_service('nova-api').with(
+          :ensure     => 'stopped',
+          :name       => platform_params[:nova_api_service],
+          :enable     => false,
+          :tag        => 'nova-service',
+        )
+      end
+    end
+
+    context 'when enabled_apis is not an array' do
+      before do
+        params.merge!({
+          :service_name => 'httpd',
+          :enabled_apis => 'osapi_compute' })
+      end
+
+      let :pre_condition do
+        "include ::apache
+         include ::nova"
+      end
+
+      it 'disable nova API service' do
+        is_expected.to contain_service('nova-api').with(
+          :ensure     => 'stopped',
+          :name       => platform_params[:nova_api_service],
+          :enable     => false,
+          :tag        => 'nova-service',
+        )
+      end
+    end
+
+    context 'when service_name is not valid' do
+      before do
+        params.merge!({ :service_name   => 'foobar' })
+      end
+
+      let :pre_condition do
+        "include ::apache
+         include ::nova"
+      end
+
+      it_raises 'a Puppet::Error', /Invalid service_name/
+    end
+
   end
 
   context 'on Debian platforms' do
     before do
-      facts.merge!( :osfamily => 'Debian' )
+      facts.merge!(
+        :osfamily                  => 'Debian',
+        :operatingsystem           => 'Debian',
+        :operatingsystemrelease    => '8.0',
+        :operatingsystemmajrelease => '8',
+        :concat_basedir            => '/var/lib/puppet/concat',
+        :fqdn                      => 'some.host.tld',
+      )
     end
 
     let :platform_params do
@@ -293,7 +384,14 @@ describe 'nova::api' do
 
   context 'on RedHat platforms' do
     before do
-      facts.merge!( :osfamily => 'RedHat' )
+      facts.merge!(
+        :osfamily                  => 'RedHat',
+        :operatingsystem           => 'RedHat',
+        :operatingsystemrelease    => '7.0',
+        :operatingsystemmajrelease => '7',
+        :concat_basedir            => '/var/lib/puppet/concat',
+        :fqdn                      => 'some.host.tld',
+      )
     end
 
     let :platform_params do

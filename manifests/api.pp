@@ -61,8 +61,10 @@
 #   Defaults to 8775
 #
 # [*enabled_apis*]
-#   (optional) A comma separated list of apis to enable
-#   Defaults to 'osapi_compute,metadata'
+#   (optional) A list of apis to enable
+#   It was a string until now but will be an array.
+#   To avoid a warning, use an array, like ['osapi_compute', metadata'] for example.
+#   Defaults to ['osapi_compute', 'metadata']
 #
 # [*keystone_ec2_url*]
 #   (optional) DEPRECATED. The keystone url where nova should send requests for ec2tokens
@@ -162,6 +164,15 @@
 #       try_sleep: 10
 #   Defaults to {}
 #
+# [*service_name*]
+#   (optional) Name of the service that will be providing the
+#   server functionality of nova-api.
+#   If the value is 'httpd', this means nova-api will be a web
+#   service, and you must use another class to configure that
+#   web service. For example, use class { 'nova::wsgi::apache'...}
+#   to make nova be a web app using apache mod_wsgi.
+#   Defaults to '$::nova::params::api_service_name'
+#
 class nova::api(
   $admin_password,
   $enabled                   = true,
@@ -176,7 +187,7 @@ class nova::api(
   $osapi_compute_listen_port = 8774,
   $metadata_listen           = '0.0.0.0',
   $metadata_listen_port      = 8775,
-  $enabled_apis              = 'osapi_compute,metadata',
+  $enabled_apis              = ['osapi_compute', 'metadata'],
   $volume_api_class          = 'nova.volume.cinder.API',
   $use_forwarded_for         = false,
   $osapi_compute_workers     = $::processorcount,
@@ -188,23 +199,23 @@ class nova::api(
   $default_floating_pool     = 'nova',
   $pci_alias                 = undef,
   $ratelimits                = undef,
-  $ratelimits_factory    =
+  $ratelimits_factory        =
     'nova.api.openstack.compute.limits:RateLimitingMiddleware.factory',
   $validate                  = false,
   $validation_options        = {},
   $instance_name_template    = undef,
   $fping_path                = '/usr/sbin/fping',
+  $service_name              = $::nova::params::api_service_name,
   # DEPRECATED PARAMETER
   $conductor_workers         = undef,
   $ec2_listen_port           = undef,
   $ec2_workers               = undef,
   $keystone_ec2_url          = undef,
   $auth_version              = false,
-) {
+) inherits nova::params {
 
   include ::nova::deps
   include ::nova::db
-  include ::nova::params
   include ::nova::policy
   include ::cinder::client
 
@@ -226,8 +237,53 @@ class nova::api(
     }
   }
 
+  # In N release, enabled_apis should be an array by default
+  if is_array($enabled_apis) {
+    # let's transform the array in a string
+    # ['osapi_compute', 'metadata'] would become 'osapi_compute,metadata'
+    $enabled_apis_string = join($enabled_apis, ',')
+  } else {
+    # But for Mitaka cycle, we maintain backward compatibility:
+    # when running wsgi, we need to know what to exactly enable or not.
+    # since enabled_apis is not an array, so we need to grep services
+    # so we can detect what is actually activated for eventlet or not.
+    $enabled_apis_string = $enabled_apis
+    warning('In N cycle, enabled_apis will have to be an array of APIs to enable.')
+  }
+
+  # metadata can't be run in wsgi so we have to enable it in eventlet anyway.
+  if ('metadata' in $enabled_apis and $service_name == 'httpd') {
+    $enable_metadata = true
+  } else {
+    $enable_metadata = false
+  }
+
+  # sanitize service_name and prepare DEFAULT/enabled_apis parameter
+  if $service_name == $::nova::params::api_service_name {
+    # if running evenlet, we use the original puppet parameter
+    # so people can enable custom service names and we keep backward compatibility.
+    $enabled_apis_real = $enabled_apis_string
+    $service_enabled   = $enabled
+  } elsif $service_name == 'httpd' {
+    # when running wsgi, we want to enable metadata in eventlet if part of enabled_apis
+    if $enable_metadata {
+      $enabled_apis_real = 'metadata'
+      $service_enabled   = $enabled
+    } else {
+      # otherwise, set it to undef
+      $enabled_apis_real = undef
+      # if running wsgi for compute, and metadata disabled
+      # we don't need to enable nova-api service.
+      $service_enabled   = false
+    }
+    # make sure we start apache before nova-api to avoid binding issues
+    Service[$service_name] -> Service['nova-api']
+  } else {
+    fail('Invalid service_name. Either nova-api/openstack-nova-api for running as a standalone service, or httpd for being run by a httpd server')
+  }
+
   nova::generic_service { 'api':
-    enabled        => $enabled,
+    enabled        => $service_enabled,
     manage_service => $manage_service,
     ensure_package => $ensure_package,
     package_name   => $::nova::params::api_package_name,
@@ -236,8 +292,8 @@ class nova::api(
   }
 
   nova_config {
-    'DEFAULT/enabled_apis':              value => $enabled_apis;
     'DEFAULT/api_paste_config':          value => $api_paste_config;
+    'DEFAULT/enabled_apis':              value => $enabled_apis_real;
     'DEFAULT/volume_api_class':          value => $volume_api_class;
     'DEFAULT/osapi_compute_listen':      value => $api_bind_address;
     'DEFAULT/metadata_listen':           value => $metadata_listen;
