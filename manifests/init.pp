@@ -30,7 +30,7 @@
 #
 # [*image_service*]
 #   (optional) Service used to search for and retrieve images.
-#   Defaults to 'nova.image.local.LocalImageService'
+#   Defaults to 'nova.image.glance.GlanceImageService'
 #
 # [*glance_api_servers*]
 #   (optional) List of addresses for api servers.
