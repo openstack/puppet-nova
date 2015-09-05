@@ -1,4 +1,6 @@
 require 'spec_helper'
+# LP1492636 - Cohabitation of compile matcher and webmock
+WebMock.disable_net_connect!(:allow => "169.254.169.254")
 
 describe 'nova::vncproxy' do
 
