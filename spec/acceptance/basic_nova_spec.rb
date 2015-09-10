@@ -23,15 +23,19 @@ describe 'basic nova' do
           class { '::openstack_extras::repo::redhat::redhat':
             manage_rdo => false,
             repo_hash => {
-              # we need kilo repo to be installed for dependencies
-              'rdo-kilo' => {
-                'baseurl' => 'https://repos.fedorapeople.org/repos/openstack/openstack-kilo/el7/',
-                'descr'   => 'RDO kilo',
+              'openstack-common-testing' => {
+                'baseurl'  => 'http://cbs.centos.org/repos/cloud7-openstack-common-testing/x86_64/os/',
+                'descr'    => 'openstack-common-testing',
                 'gpgcheck' => 'no',
               },
-              'rdo-liberty' => {
-                'baseurl'  => 'http://trunk.rdoproject.org/centos7/current/',
-                'descr'    => 'RDO trunk',
+              'openstack-liberty-testing' => {
+                'baseurl'  => 'http://cbs.centos.org/repos/cloud7-openstack-liberty-testing/x86_64/os/',
+                'descr'    => 'openstack-liberty-testing',
+                'gpgcheck' => 'no',
+              },
+              'openstack-liberty-trunk' => {
+                'baseurl'  => 'http://trunk.rdoproject.org/centos7-liberty/current/',
+                'descr'    => 'openstack-liberty-trunk',
                 'gpgcheck' => 'no',
               },
             },
