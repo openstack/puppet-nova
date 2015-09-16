@@ -64,6 +64,7 @@ describe 'nova::api' do
         is_expected.to contain_nova_config('DEFAULT/osapi_compute_workers').with('value' => '5')
         is_expected.to contain_nova_config('DEFAULT/ec2_workers').with('value' => '5')
         is_expected.to contain_nova_config('DEFAULT/metadata_workers').with('value' => '5')
+        is_expected.to contain_nova_config('DEFAULT/default_floating_pool').with('value' => 'nova')
       end
 
       it 'do not configure v3 api' do
@@ -98,6 +99,7 @@ describe 'nova::api' do
           :neutron_metadata_proxy_shared_secret => 'secrete',
           :osapi_compute_workers                => 1,
           :metadata_workers                     => 2,
+          :default_floating_pool                => 'public',
           :osapi_v3                             => true,
           :keystone_ec2_url                     => 'https://example.com:5000/v2.0/ec2tokens',
           :pci_alias                            => "[{\"vendor_id\":\"8086\",\"product_id\":\"0126\",\"name\":\"graphic_card\"},{\"vendor_id\":\"9096\",\"product_id\":\"1520\",\"name\":\"network_card\"}]"
@@ -150,6 +152,7 @@ describe 'nova::api' do
         is_expected.to contain_nova_config('DEFAULT/use_forwarded_for').with('value' => false)
         is_expected.to contain_nova_config('DEFAULT/osapi_compute_workers').with('value' => '1')
         is_expected.to contain_nova_config('DEFAULT/metadata_workers').with('value' => '2')
+        is_expected.to contain_nova_config('DEFAULT/default_floating_pool').with('value' => 'public')
         is_expected.to contain_nova_config('neutron/service_metadata_proxy').with('value' => true)
         is_expected.to contain_nova_config('neutron/metadata_proxy_shared_secret').with('value' => 'secrete')
         is_expected.to contain_nova_config('DEFAULT/keystone_ec2_url').with('value' => 'https://example.com:5000/v2.0/ec2tokens')
