@@ -126,6 +126,10 @@
 #   (optional) Enable or not Nova API v3
 #   Defaults to false
 #
+# [*default_floating_pool*]
+#   (optional) Default pool for floating IPs
+#   Defaults to 'nova'
+#
 # [*validate*]
 #   (optional) Whether to validate the service is working after any service refreshes
 #   Defaults to false
@@ -168,6 +172,7 @@ class nova::api(
   $sync_db               = true,
   $neutron_metadata_proxy_shared_secret = undef,
   $osapi_v3              = false,
+  $default_floating_pool = 'nova',
   $pci_alias             = undef,
   $ratelimits            = undef,
   $ratelimits_factory    =
@@ -220,6 +225,7 @@ class nova::api(
     'DEFAULT/ec2_workers':           value => $ec2_workers;
     'DEFAULT/metadata_workers':      value => $metadata_workers;
     'DEFAULT/use_forwarded_for':     value => $use_forwarded_for;
+    'DEFAULT/default_floating_pool': value => $default_floating_pool;
     'osapi_v3/enabled':              value => $osapi_v3;
   }
 
