@@ -238,7 +238,7 @@
 # [*notification_driver*]
 #   (optional) Driver or drivers to handle sending notifications.
 #   Value can be a string or a list.
-#   Defaults to []
+#   Defaults to undef
 #
 # [*notification_topics*]
 #   (optional) AMQP topic used for OpenStack notifications
@@ -319,7 +319,7 @@ class nova(
   $use_stderr                         = true,
   $log_facility                       = 'LOG_USER',
   $install_utilities                  = true,
-  $notification_driver                = [],
+  $notification_driver                = undef,
   $notification_topics                = 'notifications',
   $notify_api_faults                  = false,
   $notify_on_state_change             = undef,
@@ -605,9 +605,12 @@ class nova(
     nova_config { 'DEFAULT/log_dir': ensure => absent;}
   }
 
-  $notification_driver_real = is_string($notification_driver) ? {
-    true    => $notification_driver,
-    default => join($notification_driver, ',')
+  if $notification_driver {
+    nova_config {
+      'DEFAULT/notification_driver': value => join(any2array($notification_driver), ',');
+    }
+  } else {
+    nova_config { 'DEFAULT/notification_driver': ensure => absent; }
   }
 
   nova_config {
@@ -615,7 +618,6 @@ class nova(
     'DEFAULT/debug':               value => $debug;
     'DEFAULT/use_stderr':          value => $use_stderr;
     'DEFAULT/rpc_backend':         value => $rpc_backend;
-    'DEFAULT/notification_driver': value => $notification_driver_real;
     'DEFAULT/notification_topics': value => $notification_topics;
     'DEFAULT/notify_api_faults':   value => $notify_api_faults;
     # Following may need to be broken out to different nova services
