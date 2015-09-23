@@ -45,7 +45,7 @@ Puppet::Type.newtype(:nova_aggregate) do
   ensurable
 
   autorequire(:nova_config) do
-    ['auth_host', 'auth_port', 'auth_protocol', 'admin_tenant_name', 'admin_user', 'admin_password']
+    ['auth_uri', 'admin_tenant_name', 'admin_user', 'admin_password']
   end
 
   newparam(:name, :namevar => true) do
@@ -105,7 +105,11 @@ Puppet::Type.newtype(:nova_aggregate) do
     desc 'Single host or comma seperated list of hosts'
     #convert DSL/string form to internal form
     munge do |value|
-      return value.split(",").map{|el| el.strip()}.sort
+      if value.is_a?(Array)
+        return value
+      else
+        return value.split(",").map{|el| el.strip()}.sort
+      end
     end
   end
 
