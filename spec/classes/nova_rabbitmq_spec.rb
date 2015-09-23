@@ -13,12 +13,6 @@ describe 'nova::rabbitmq' do
 
     it 'should contain all of the default resources' do
 
-      is_expected.to contain_class('rabbitmq::server').with(
-        :service_ensure    => 'running',
-        :port              => '5672',
-        :delete_guest_user => false
-      )
-
       is_expected.to contain_rabbitmq_vhost('/').with(
         :provider => 'rabbitmqctl'
       )
@@ -67,54 +61,9 @@ describe 'nova::rabbitmq' do
 
       is_expected.to_not contain_rabbitmq_user('dan')
       is_expected.to_not contain_rabbitmq_user_permissions('dan@/')
-      is_expected.to contain_class('rabbitmq::server').with(
-        :service_ensure    => 'stopped',
-        :port              => '5672',
-        :delete_guest_user => false
-      )
-
       is_expected.to_not contain_rabbitmq_vhost('/')
 
     end
-  end
-
-  describe 'with clustering' do
-
-    let :params do
-      {
-        :cluster_disk_nodes => ['rabbit01', 'rabbit02', 'rabbit03']
-      }
-    end
-
-    it 'should contain all the clustering resources' do
-
-      is_expected.to contain_class('rabbitmq::server').with(
-        :service_ensure           => 'running',
-        :port                     => '5672',
-        :delete_guest_user        => false,
-        :config_cluster           => true,
-        :cluster_disk_nodes       => ['rabbit01', 'rabbit02', 'rabbit03'],
-        :wipe_db_on_cookie_change => true
-      )
-
-    end
-
-  end
-
-  describe 'when no rabbitmq class specified' do
-
-    let :params do
-      {
-        :rabbitmq_class => false
-      }
-    end
-
-    it 'should not contain rabbitmq class calls' do
-
-      is_expected.to_not contain_class('rabbitmq::server')
-
-    end
-
   end
 
 end
