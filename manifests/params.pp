@@ -26,6 +26,8 @@ class nova::params {
       $vncproxy_package_name         = 'openstack-nova-novncproxy'
       $serialproxy_package_name      = 'openstack-nova-serialproxy'
       $spicehtml5proxy_package_name  = 'openstack-nova-console'
+      $psycopg_package_name          = 'python-psycopg2'
+      $sqlite_package_name           = undef
       # service names
       $api_service_name             = 'openstack-nova-api'
       $cells_service_name           = 'openstack-nova-cells'
@@ -80,6 +82,8 @@ class nova::params {
       $scheduler_package_name       = 'nova-scheduler'
       $tgt_package_name             = 'tgt'
       $serialproxy_package_name     = 'nova-serialproxy'
+      $psycopg_package_name         = 'python-psycopg2'
+      $sqlite_package_name          = 'python-pysqlite2'
       # service names
       $api_service_name             = 'nova-api'
       $cells_service_name           = 'nova-cells'

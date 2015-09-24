@@ -16,47 +16,106 @@
 # under the License.
 #
 # == Class: nova::db
-# Configures the nova database.
+#
+#  Configures the Nova database.
 #
 # == Parameters
 #
 # [*database_connection*]
 #   (optional) Connection url to connect to nova database.
-#   Defaults to undef
+#   Defaults to false.
 #
 # [*slave_connection*]
 #   (optional) Connection url to connect to nova slave database (read-only).
-#   Defaults to undef
+#   Defaults to false.
 #
 # [*database_idle_timeout*]
-#   (optional) Timeout before idle db connections are reaped.
-#   Defaults to undef
+#   Timeout when db connections should be reaped.
+#   (Optional) Defaults to 3600.
+#
+# [*database_min_pool_size*]
+#   Minimum number of SQL connections to keep open in a pool.
+#   (Optional) Defaults to 1.
+#
+# [*database_max_pool_size*]
+#   Maximum number of SQL connections to keep open in a pool.
+#   (Optional) Defaults to 10.
+#
+# [*database_max_retries*]
+#   Maximum db connection retries during startup.
+#   Setting -1 implies an infinite retry count.
+#   (Optional) Defaults to 10.
+#
+# [*database_retry_interval*]
+#   Interval between retries of opening a sql connection.
+#   (Optional) Defaults to 10.
+#
+# [*database_max_overflow*]
+#   If set, use this value for max_overflow with sqlalchemy.
+#   (Optional) Defaults to 20.
 #
 class nova::db (
-  $database_connection   = undef,
-  $slave_connection      = undef,
-  $database_idle_timeout = undef,
+  $database_connection     = false,
+  $slave_connection        = false,
+  $database_idle_timeout   = 3600,
+  $database_min_pool_size  = 1,
+  $database_max_pool_size  = 10,
+  $database_max_retries    = 10,
+  $database_retry_interval = 10,
+  $database_max_overflow   = 20,
 ) {
 
-  $database_connection_real = pick($database_connection, $::nova::database_connection, false)
-  $slave_connection_real = pick($slave_connection, $::nova::slave_connection, false)
-  $database_idle_timeout_real = pick($database_idle_timeout, $::nova::database_idle_timeout, false)
+  # NOTE(spredzy): In order to keep backward compatibility we rely on the pick function
+  # to use nova::<myparam> first the nova::db::<myparam>
+  $database_connection_real = pick($::nova::database_connection, $database_connection)
+  $slave_connection_real = pick($::nova::slave_connection, $slave_connection)
+  $database_idle_timeout_real = pick($::nova::database_idle_timeout, $database_idle_timeout)
+  $database_min_pool_size_real = pick($::nova::database_min_pool_size, $database_min_pool_size)
+  $database_max_pool_size_real = pick($::nova::database_max_pool_size, $database_max_pool_size)
+  $database_max_retries_real = pick($::nova::database_max_retries, $database_max_retries)
+  $database_retry_interval_real = pick($::nova::database_retry_interval, $database_retry_interval)
+  $database_max_overflow_real = pick($::nova::database_max_overflow, $database_max_overflow)
 
   if $database_connection_real {
-    if($database_connection_real =~ /mysql:\/\/\S+:\S+@\S+\/\S+/) {
-      require 'mysql::bindings'
-      require 'mysql::bindings::python'
-    } elsif($database_connection_real =~ /postgresql:\/\/\S+:\S+@\S+\/\S+/) {
 
-    } elsif($database_connection_real =~ /sqlite:\/\//) {
+    validate_re($database_connection_real,
+      '(sqlite|mysql|postgresql):\/\/(\S+:\S+@\S+\/\S+)?')
 
-    } else {
-      fail("Invalid db connection ${database_connection_real}")
+    case $database_connection_real {
+      /^mysql:\/\//: {
+        $backend_package = false
+        require 'mysql::bindings'
+        require 'mysql::bindings::python'
+      }
+      /^postgresql:\/\//: {
+        $backend_package = $::neutron::params::psycopg_package_name
+      }
+      /^sqlite:\/\//: {
+        $backend_package = $::neutron::params::sqlite_package_name
+      }
+      default: {
+        fail('Unsupported backend configured')
+      }
     }
+
+    if $backend_package and !defined(Package[$backend_package]) {
+      package {'nova-backend-package':
+        ensure => present,
+        name   => $backend_package,
+        tag    => 'openstack',
+      }
+    }
+
     nova_config {
-      'database/connection':   value => $database_connection_real, secret => true;
-      'database/idle_timeout': value => $database_idle_timeout_real;
+      'database/connection':     value => $database_connection_real, secret => true;
+      'database/idle_timeout':   value => $database_idle_timeout_real;
+      'database/min_pool_size':  value => $database_min_pool_size_real;
+      'database/max_retries':    value => $database_max_retries_real;
+      'database/retry_interval': value => $database_retry_interval_real;
+      'database/max_pool_size':  value => $database_max_pool_size_real;
+      'database/max_overflow':   value => $database_max_overflow_real;
     }
+
     if $slave_connection_real {
       nova_config {
         'database/slave_connection': value => $slave_connection_real, secret => true;
