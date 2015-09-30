@@ -58,8 +58,11 @@ describe 'nova::api' do
 
       it 'configures various stuff' do
         is_expected.to contain_nova_config('DEFAULT/ec2_listen').with('value' => '0.0.0.0')
+        is_expected.to contain_nova_config('DEFAULT/ec2_listen_port').with('value' => '8773')
         is_expected.to contain_nova_config('DEFAULT/osapi_compute_listen').with('value' => '0.0.0.0')
+        is_expected.to contain_nova_config('DEFAULT/osapi_compute_listen_port').with('value' => '8774')
         is_expected.to contain_nova_config('DEFAULT/metadata_listen').with('value' => '0.0.0.0')
+        is_expected.to contain_nova_config('DEFAULT/metadata_listen_port').with('value' => '8775')
         is_expected.to contain_nova_config('DEFAULT/osapi_volume_listen').with('value' => '0.0.0.0')
         is_expected.to contain_nova_config('DEFAULT/osapi_compute_workers').with('value' => '5')
         is_expected.to contain_nova_config('DEFAULT/ec2_workers').with('value' => '5')
@@ -94,6 +97,9 @@ describe 'nova::api' do
           :admin_password                       => 'passw0rd2',
           :api_bind_address                     => '192.168.56.210',
           :metadata_listen                      => '127.0.0.1',
+          :metadata_listen_port                 => 8875,
+          :osapi_compute_listen_port            => 8874,
+          :ec2_listen_port                      => 8873,
           :volume_api_class                     => 'nova.volume.cinder.API',
           :use_forwarded_for                    => false,
           :ratelimits                           => '(GET, "*", .*, 100, MINUTE);(POST, "*", .*, 200, MINUTE)',
@@ -148,8 +154,11 @@ describe 'nova::api' do
 
       it 'configures various stuff' do
         is_expected.to contain_nova_config('DEFAULT/ec2_listen').with('value' => '192.168.56.210')
+        is_expected.to contain_nova_config('DEFAULT/ec2_listen_port').with('value' => '8873')
         is_expected.to contain_nova_config('DEFAULT/osapi_compute_listen').with('value' => '192.168.56.210')
+        is_expected.to contain_nova_config('DEFAULT/osapi_compute_listen_port').with('value' => '8874')
         is_expected.to contain_nova_config('DEFAULT/metadata_listen').with('value' => '127.0.0.1')
+        is_expected.to contain_nova_config('DEFAULT/metadata_listen_port').with('value' => '8875')
         is_expected.to contain_nova_config('DEFAULT/osapi_volume_listen').with('value' => '192.168.56.210')
         is_expected.to contain_nova_config('DEFAULT/use_forwarded_for').with('value' => false)
         is_expected.to contain_nova_config('DEFAULT/osapi_compute_workers').with('value' => '1')
