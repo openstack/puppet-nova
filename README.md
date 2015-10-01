@@ -1,7 +1,7 @@
 nova
 ====
 
-5.1.0 - 2014.2 - Juno
+5.2.0 - 2014.2 - Juno
 
 #### Table of Contents
 
@@ -89,6 +89,13 @@ Contributors
 
 Release Notes
 -------------
+
+**5.2.0**
+
+* Remove dead providers
+* Add an ability to manage use_stderr parameter
+* Remove utf-8 characters
+* Ensure /etc/nova exists before creating secret.xml
 
 **5.1.0**
 
