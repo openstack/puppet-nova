@@ -81,6 +81,16 @@ class nova::compute::rbd (
       require => Class['::nova']
     }
 
+    # whenever `rbd_keyring` value changed,
+    # undefine the old secret and remove the file lock (/etc/nova/virsh.secret),
+    # then recreate secret with the new `rbd_keyring`,
+    # if there's no value change, leave it untouched.
+    exec { 'undefine-if-value-not-match virsh secret':
+      path    => ['/bin', '/usr/bin'],
+      command => "virsh secret-undefine --secret ${libvirt_rbd_secret_uuid} && rm -f /etc/nova/virsh.secret",
+      onlyif  => "virsh secret-dumpxml --secret ${libvirt_rbd_secret_uuid} 2>/dev/null | grep -q -v -w \"${rbd_keyring}\"",
+      require => File['/etc/nova/secret.xml']
+    } ->
     exec { 'get-or-set virsh secret':
       command => '/usr/bin/virsh secret-define --file /etc/nova/secret.xml | /usr/bin/awk \'{print $2}\' | sed \'/^$/d\' > /etc/nova/virsh.secret',
       creates => '/etc/nova/virsh.secret',
