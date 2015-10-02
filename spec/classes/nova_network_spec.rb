@@ -94,6 +94,15 @@ describe 'nova::network' do
         it { is_expected.to contain_nova__manage__floating('nova-vm-floating').with_network('10.0.0.0/30') }
       end
     end
+
+    describe 'when creating networks, but service nova-network is disabled' do
+      let :params do
+        default_params.merge(:enabled => false)
+      end
+      it { is_expected.to_not contain_nova__manage__network('nova-vm-net') }
+      it { is_expected.to_not contain_nova__manage__floating('nova-vm-floating') }
+    end
+
     describe 'when configuring networks' do
       describe 'when configuring flatdhcpmanager' do
         let :params do

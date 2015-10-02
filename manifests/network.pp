@@ -123,22 +123,28 @@ class nova::network(
       ensure_package => $ensure_package,
       before         => Exec['networking-refresh']
     }
-  }
 
-  if $create_networks {
-    nova::manage::network { 'nova-vm-net':
-      network       => $fixed_range,
-      num_networks  => $num_networks,
-      network_size  => $network_size,
-      vlan_start    => $vlan_start,
-      allowed_start => $allowed_start,
-      allowed_end   => $allowed_end,
-      dns1          => $dns1,
-      dns2          => $dns2,
-    }
-    if $floating_range {
-      nova::manage::floating { 'nova-vm-floating':
-        network => $floating_range,
+    # because nova_network provider uses nova client, so it assumes
+    # that nova-network service is running already
+    if $create_networks {
+      if $enabled {
+        nova::manage::network { 'nova-vm-net':
+          network       => $fixed_range,
+          num_networks  => $num_networks,
+          network_size  => $network_size,
+          vlan_start    => $vlan_start,
+          allowed_start => $allowed_start,
+          allowed_end   => $allowed_end,
+          dns1          => $dns1,
+          dns2          => $dns2,
+        }
+        if $floating_range {
+          nova::manage::floating { 'nova-vm-floating':
+            network => $floating_range,
+          }
+        }
+      } else {
+        warning('Can not create networks, when nova-network service is disabled.')
       }
     }
   }
