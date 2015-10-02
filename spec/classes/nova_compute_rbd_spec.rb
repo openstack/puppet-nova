@@ -80,12 +80,6 @@ describe 'nova::compute::rbd' do
           "  <uuid>UUID</uuid>",
           "</secret>"
         ])
-        is_expected.to contain_exec('undefine-if-value-not-match virsh secret').with(
-          :path    => '["/bin", "/usr/bin"]',
-          :command => 'virsh secret-undefine --secret UUID && rm -f /etc/nova/virsh.secret',
-          :onlyif  => 'virsh secret-dumpxml --secret UUID 2>/dev/null | grep -q -v -w "client.rbd_test"',
-          :require => 'File[/etc/nova/secret.xml]'
-        )
         is_expected.to contain_exec('get-or-set virsh secret').with(
           :command =>  '/usr/bin/virsh secret-define --file /etc/nova/secret.xml | /usr/bin/awk \'{print $2}\' | sed \'/^$/d\' > /etc/nova/virsh.secret',
           :creates => '/etc/nova/virsh.secret',
@@ -137,12 +131,6 @@ describe 'nova::compute::rbd' do
           "  <uuid>UUID</uuid>",
           "</secret>"
         ])
-        is_expected.to contain_exec('undefine-if-value-not-match virsh secret').with(
-          :path    => '["/bin", "/usr/bin"]',
-          :command => 'virsh secret-undefine --secret UUID && rm -f /etc/nova/virsh.secret',
-          :onlyif  => 'virsh secret-dumpxml --secret UUID 2>/dev/null | grep -q -v -w "client.rbd_test"',
-          :require => 'File[/etc/nova/secret.xml]'
-        )
         is_expected.to contain_exec('get-or-set virsh secret').with(
           :command =>  '/usr/bin/virsh secret-define --file /etc/nova/secret.xml | /usr/bin/awk \'{print $2}\' | sed \'/^$/d\' > /etc/nova/virsh.secret',
           :creates => '/etc/nova/virsh.secret',
