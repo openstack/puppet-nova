@@ -121,7 +121,7 @@ class nova::network::neutron (
     'DEFAULT/vif_plugging_timeout':    value => $vif_plugging_timeout;
     'neutron/auth_strategy':           value => $neutron_auth_strategy;
     'neutron/url':                     value => $neutron_url;
-    'neutron/url_timeout':             value => $neutron_url_timeout;
+    'neutron/timeout':                 value => $neutron_url_timeout;
     'neutron/admin_tenant_name':       value => $neutron_admin_tenant_name;
     'neutron/default_tenant_id':       value => $neutron_default_tenant_id;
     'neutron/region_name':             value => $neutron_region_name;
