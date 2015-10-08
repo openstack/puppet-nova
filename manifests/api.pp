@@ -60,9 +60,17 @@
 #   (optional) IP address for nova-api server to listen
 #   Defaults to '0.0.0.0'
 #
+# [*ec2_listen_port*]
+#   (optional) The port on which the EC2 API will listen.
+#   Defaults to port 8773
+#
 # [*metadata_listen*]
 #   (optional) IP address  for metadata server to listen
 #   Defaults to '0.0.0.0'
+#
+# [*metadata_listen_port*]
+#   (optional) The port on which the metadata API will listen.
+#   Defaults to 8775
 #
 # [*enabled_apis*]
 #   (optional) A comma separated list of apis to enable
@@ -90,6 +98,10 @@
 # [*osapi_compute_workers*]
 #   (optional) Number of workers for OpenStack API service
 #   Defaults to $::processorcount
+#
+# [*osapi_compute_listen_port*]
+#   (optional) The port on which the OpenStack API will listen.
+#   Defaults to port 8774
 #
 # [*ec2_workers*]
 #   (optional) Number of workers for EC2 service
@@ -158,40 +170,43 @@
 #
 class nova::api(
   $admin_password,
-  $enabled               = true,
-  $manage_service        = true,
-  $ensure_package        = 'present',
-  $auth_uri              = false,
-  $identity_uri          = false,
-  $auth_version          = false,
-  $admin_tenant_name     = 'services',
-  $admin_user            = 'nova',
-  $api_bind_address      = '0.0.0.0',
-  $metadata_listen       = '0.0.0.0',
-  $enabled_apis          = 'ec2,osapi_compute,metadata',
-  $keystone_ec2_url      = false,
-  $volume_api_class      = 'nova.volume.cinder.API',
-  $cinder_catalog_info   = 'volumev2:cinderv2:publicURL',
-  $use_forwarded_for     = false,
-  $osapi_compute_workers = $::processorcount,
-  $ec2_workers           = $::processorcount,
-  $metadata_workers      = $::processorcount,
-  $sync_db               = true,
+  $enabled                   = true,
+  $manage_service            = true,
+  $ensure_package            = 'present',
+  $auth_uri                  = false,
+  $identity_uri              = false,
+  $auth_version              = false,
+  $admin_tenant_name         = 'services',
+  $admin_user                = 'nova',
+  $api_bind_address          = '0.0.0.0',
+  $ec2_listen_port           = 8773,
+  $osapi_compute_listen_port = 8774,
+  $metadata_listen           = '0.0.0.0',
+  $metadata_listen_port      = 8775,
+  $enabled_apis              = 'ec2,osapi_compute,metadata',
+  $keystone_ec2_url          = false,
+  $volume_api_class          = 'nova.volume.cinder.API',
+  $cinder_catalog_info       = 'volumev2:cinderv2:publicURL',
+  $use_forwarded_for         = false,
+  $osapi_compute_workers     = $::processorcount,
+  $ec2_workers               = $::processorcount,
+  $metadata_workers          = $::processorcount,
+  $sync_db                   = true,
   $neutron_metadata_proxy_shared_secret = undef,
-  $osapi_v3              = false,
-  $default_floating_pool = 'nova',
-  $pci_alias             = undef,
-  $ratelimits            = undef,
+  $osapi_v3                  = false,
+  $default_floating_pool     = 'nova',
+  $pci_alias                 = undef,
+  $ratelimits                = undef,
   $ratelimits_factory    =
     'nova.api.openstack.compute.limits:RateLimitingMiddleware.factory',
-  $validate              = false,
-  $validation_options    = {},
+  $validate                  = false,
+  $validation_options        = {},
   # DEPRECATED PARAMETER
-  $auth_protocol         = 'http',
-  $auth_port             = 35357,
-  $auth_host             = '127.0.0.1',
-  $auth_admin_prefix     = false,
-  $conductor_workers     = undef,
+  $auth_protocol             = 'http',
+  $auth_port                 = 35357,
+  $auth_host                 = '127.0.0.1',
+  $auth_admin_prefix         = false,
+  $conductor_workers         = undef,
 ) {
 
   include ::nova::db
@@ -222,19 +237,22 @@ class nova::api(
   }
 
   nova_config {
-    'DEFAULT/enabled_apis':          value => $enabled_apis;
-    'DEFAULT/volume_api_class':      value => $volume_api_class;
-    'DEFAULT/ec2_listen':            value => $api_bind_address;
-    'DEFAULT/osapi_compute_listen':  value => $api_bind_address;
-    'DEFAULT/metadata_listen':       value => $metadata_listen;
-    'DEFAULT/osapi_volume_listen':   value => $api_bind_address;
-    'DEFAULT/osapi_compute_workers': value => $osapi_compute_workers;
-    'DEFAULT/ec2_workers':           value => $ec2_workers;
-    'DEFAULT/metadata_workers':      value => $metadata_workers;
-    'DEFAULT/use_forwarded_for':     value => $use_forwarded_for;
-    'DEFAULT/default_floating_pool': value => $default_floating_pool;
-    'osapi_v3/enabled':              value => $osapi_v3;
-    'cinder/catalog_info':           value => $cinder_catalog_info;
+    'DEFAULT/enabled_apis':              value => $enabled_apis;
+    'DEFAULT/volume_api_class':          value => $volume_api_class;
+    'DEFAULT/ec2_listen':                value => $api_bind_address;
+    'DEFAULT/ec2_listen_port':           value => $ec2_listen_port;
+    'DEFAULT/osapi_compute_listen':      value => $api_bind_address;
+    'DEFAULT/metadata_listen':           value => $metadata_listen;
+    'DEFAULT/metadata_listen_port':      value => $metadata_listen_port;
+    'DEFAULT/osapi_compute_listen_port': value => $osapi_compute_listen_port;
+    'DEFAULT/osapi_volume_listen':       value => $api_bind_address;
+    'DEFAULT/osapi_compute_workers':     value => $osapi_compute_workers;
+    'DEFAULT/ec2_workers':               value => $ec2_workers;
+    'DEFAULT/metadata_workers':          value => $metadata_workers;
+    'DEFAULT/use_forwarded_for':         value => $use_forwarded_for;
+    'DEFAULT/default_floating_pool':     value => $default_floating_pool;
+    'osapi_v3/enabled':                  value => $osapi_v3;
+    'cinder/catalog_info':               value => $cinder_catalog_info;
   }
 
   if ($neutron_metadata_proxy_shared_secret){
