@@ -14,6 +14,7 @@ group :development, :test do
   gem 'puppet-lint-numericvariable',          :require => 'false'
   gem 'json',                                 :require => 'false'
   gem 'webmock',                              :require => 'false'
+  gem 'r10k',                                 :require => 'false'
 end
 
 group :system_tests do

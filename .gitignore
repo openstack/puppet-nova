@@ -8,3 +8,4 @@ coverage/
 .idea/
 *.swp
 *.iml
+openstack/
