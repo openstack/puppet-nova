@@ -157,7 +157,7 @@
 # [*log_dir*]
 #   (optional) Directory where logs should be stored.
 #   If set to boolean false, it will not log to any directory.
-#   Defaults to '/var/log/nova'
+#   Defaults to undef
 #
 # [*state_path*]
 #   (optional) Directory for storing state.
@@ -170,11 +170,11 @@
 #
 # [*verbose*]
 #   (optional) Set log output to verbose output.
-#   Defaults to false
+#   Defaults to undef
 #
 # [*debug*]
 #   (optional) Set log output to debug output.
-#   Defaults to false
+#   Defaults to undef
 #
 # [*periodic_interval*]
 #   (optional) Seconds between running periodic tasks.
@@ -190,15 +190,15 @@
 #
 # [*use_syslog*]
 #   (optional) Use syslog for logging
-#   Defaults to false
+#   Defaults to undef
 #
 # [*use_stderr*]
 #   (optional) Use stderr for logging
-#   Defaults to true
+#   Defaults to undef
 #
 # [*log_facility*]
 #   (optional) Syslog facility to receive log lines.
-#   Defaults to 'LOG_USER'
+#   Defaults to undef
 #
 # [*install_utilities*]
 #   (optional) Install nova utilities (Extra packages used by nova tools)
@@ -306,11 +306,11 @@ class nova(
   $qpid_tcp_nodelay                   = true,
   $auth_strategy                      = 'keystone',
   $service_down_time                  = 60,
-  $log_dir                            = '/var/log/nova',
+  $log_dir                            = undef,
   $state_path                         = '/var/lib/nova',
   $lock_path                          = $::nova::params::lock_path,
-  $verbose                            = false,
-  $debug                              = false,
+  $verbose                            = undef,
+  $debug                              = undef,
   $periodic_interval                  = '60',
   $report_interval                    = '10',
   $rootwrap_config                    = '/etc/nova/rootwrap.conf',
@@ -321,9 +321,9 @@ class nova(
   $key_file                           = false,
   $nova_public_key                    = undef,
   $nova_private_key                   = undef,
-  $use_syslog                         = false,
-  $use_stderr                         = true,
-  $log_facility                       = 'LOG_USER',
+  $use_syslog                         = undef,
+  $use_stderr                         = undef,
+  $log_facility                       = undef,
   $install_utilities                  = true,
   $notification_driver                = undef,
   $notification_topics                = 'notifications',
@@ -336,6 +336,7 @@ class nova(
 
   # maintain backward compatibility
   include ::nova::db
+  include ::nova::logging
 
   if $mysql_module {
     warning('The mysql_module parameter is deprecated. The latest 2.x mysql module will be used.')
@@ -599,19 +600,6 @@ class nova(
     }
   }
 
-  if $log_dir {
-    file { $log_dir:
-      ensure  => directory,
-      mode    => '0750',
-      owner   => 'nova',
-      group   => $::nova::params::nova_log_group,
-      require => Package['nova-common'],
-    }
-    nova_config { 'DEFAULT/log_dir': value => $log_dir;}
-  } else {
-    nova_config { 'DEFAULT/log_dir': ensure => absent;}
-  }
-
   if $notification_driver {
     nova_config {
       'DEFAULT/notification_driver': value => join(any2array($notification_driver), ',');
@@ -621,9 +609,6 @@ class nova(
   }
 
   nova_config {
-    'DEFAULT/verbose':             value => $verbose;
-    'DEFAULT/debug':               value => $debug;
-    'DEFAULT/use_stderr':          value => $use_stderr;
     'DEFAULT/rpc_backend':         value => $rpc_backend;
     'DEFAULT/notification_topics': value => $notification_topics;
     'DEFAULT/notify_api_faults':   value => $notify_api_faults;
@@ -641,18 +626,6 @@ class nova(
     }
   } else {
     nova_config { 'DEFAULT/notify_on_state_change': ensure => absent; }
-  }
-
-  # Syslog configuration
-  if $use_syslog {
-    nova_config {
-      'DEFAULT/use_syslog':           value => true;
-      'DEFAULT/syslog_log_facility':  value => $log_facility;
-    }
-  } else {
-    nova_config {
-      'DEFAULT/use_syslog':           value => false;
-    }
   }
 
   if $os_region_name {

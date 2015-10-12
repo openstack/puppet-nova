@@ -6,6 +6,10 @@ describe 'nova' do
 
     context 'with default parameters' do
 
+     it 'contains the logging class' do
+       is_expected.to contain_class('nova::logging')
+     end
+
       it 'installs packages' do
         is_expected.to contain_package('python-greenlet').with(
           :ensure  => 'present',
@@ -23,12 +27,6 @@ describe 'nova' do
       end
 
       it 'creates various files and folders' do
-        is_expected.to contain_file('/var/log/nova').with(
-          :ensure  => 'directory',
-          :mode    => '0750',
-          :owner   => 'nova',
-          :require => 'Package[nova-common]'
-        )
         is_expected.to contain_file('/etc/nova/nova.conf').with(
           :mode    => '0640',
           :owner   => 'nova',
@@ -68,10 +66,6 @@ describe 'nova' do
       end
 
       it 'configures various things' do
-        is_expected.to contain_nova_config('DEFAULT/verbose').with_value(false)
-        is_expected.to contain_nova_config('DEFAULT/debug').with_value(false)
-        is_expected.to contain_nova_config('DEFAULT/use_stderr').with_value(true)
-        is_expected.to contain_nova_config('DEFAULT/log_dir').with_value('/var/log/nova')
         is_expected.to contain_nova_config('DEFAULT/state_path').with_value('/var/lib/nova')
         is_expected.to contain_nova_config('DEFAULT/lock_path').with_value(platform_params[:lock_path])
         is_expected.to contain_nova_config('DEFAULT/service_down_time').with_value('60')
@@ -86,9 +80,6 @@ describe 'nova' do
         is_expected.to contain_class('nova::utilities')
       end
 
-      it 'disables syslog' do
-        is_expected.to contain_nova_config('DEFAULT/use_syslog').with_value(false)
-      end
     end
 
     context 'with overridden parameters' do
@@ -150,9 +141,6 @@ describe 'nova' do
       end
 
       it 'configures various things' do
-        is_expected.to contain_nova_config('DEFAULT/verbose').with_value(true)
-        is_expected.to contain_nova_config('DEFAULT/debug').with_value(true)
-        is_expected.to contain_nova_config('DEFAULT/log_dir').with_value('/var/log/nova2')
         is_expected.to contain_nova_config('DEFAULT/state_path').with_value('/var/lib/nova2')
         is_expected.to contain_nova_config('DEFAULT/lock_path').with_value('/var/locky/path')
         is_expected.to contain_nova_config('DEFAULT/service_down_time').with_value('120')
@@ -176,11 +164,6 @@ describe 'nova' do
         is_expected.to_not contain_class('nova::utilities')
       end
 
-      context 'with logging directory disabled' do
-        before { params.merge!( :log_dir => false) }
-
-        it { is_expected.to contain_nova_config('DEFAULT/log_dir').with_ensure('absent') }
-      end
     end
 
     context 'with wrong notify_on_state_change parameter' do
@@ -200,29 +183,6 @@ describe 'nova' do
 
       it 'configures database' do
         is_expected.to contain_nova_config('DEFAULT/notify_on_state_change').with_value('vm_state')
-      end
-    end
-
-    context 'with syslog enabled' do
-      let :params do
-        { :use_syslog => 'true' }
-      end
-
-      it 'configures syslog' do
-        is_expected.to contain_nova_config('DEFAULT/use_syslog').with_value(true)
-        is_expected.to contain_nova_config('DEFAULT/syslog_log_facility').with_value('LOG_USER')
-      end
-    end
-
-    context 'with syslog enabled and log_facility parameter' do
-      let :params do
-        { :use_syslog   => 'true',
-          :log_facility => 'LOG_LOCAL0' }
-      end
-
-      it 'configures syslog' do
-        is_expected.to contain_nova_config('DEFAULT/use_syslog').with_value(true)
-        is_expected.to contain_nova_config('DEFAULT/syslog_log_facility').with_value('LOG_LOCAL0')
       end
     end
 
@@ -603,9 +563,6 @@ describe 'nova' do
     end
 
     it_behaves_like 'nova'
-    it 'creates the log folder with the right group for Debian' do
-      is_expected.to contain_file('/var/log/nova').with(:group => 'nova')
-    end
   end
 
   context 'on Ubuntu platforms' do
@@ -620,9 +577,6 @@ describe 'nova' do
     end
 
     it_behaves_like 'nova'
-    it 'creates the log folder with the right group for Ubuntu' do
-      is_expected.to contain_file('/var/log/nova').with(:group => 'adm')
-    end
   end
 
   context 'on RedHat platforms' do
@@ -637,8 +591,5 @@ describe 'nova' do
 
     it_behaves_like 'nova'
 
-    it 'creates the log folder with the right group for RedHat' do
-      is_expected.to contain_file('/var/log/nova').with(:group => 'nova')
-    end
   end
 end
