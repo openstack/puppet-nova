@@ -1,3 +1,18 @@
+##2015-10-10 - 6.1.0
+###Summary
+
+This is a feature and maintenance release in the Kilo series.
+
+####Features
+- Allow to change archive destination
+- Support allow_start and allow_end parameters
+- Add ability to override compute_driver
+
+####Maintenance
+- acceptance: checkout stable/kilo puppet modules
+- Remove dead nova providers
+- Remove very old xenserver configs
+
 ##2015-07-08 - 6.0.0
 ###Summary
 
