@@ -448,9 +448,6 @@ class nova(
   }
 
   file { '/etc/nova/nova.conf':
-    mode    => '0640',
-    owner   => 'nova',
-    group   => 'nova',
     require => Package['nova-common'],
   }
 

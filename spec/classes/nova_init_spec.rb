@@ -28,9 +28,6 @@ describe 'nova' do
 
       it 'creates various files and folders' do
         is_expected.to contain_file('/etc/nova/nova.conf').with(
-          :mode    => '0640',
-          :owner   => 'nova',
-          :group   => 'nova',
           :require => 'Package[nova-common]'
         )
       end
