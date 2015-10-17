@@ -61,7 +61,8 @@ Puppet::Type.type(:nova_aggregate).provide(
     result = auth_nova("aggregate-create", resource[:name], extras)
 
     #get Id by Name
-    id = self.class.nova_aggregate_resources_get_name_by_id(resource[:name])
+    #force a refresh of the aggregate list on creation
+    id = self.class.nova_aggregate_resources_get_name_by_id(resource[:name], true)
 
     @property_hash = {
       :ensure => :present,
@@ -81,10 +82,21 @@ Puppet::Type.type(:nova_aggregate).provide(
     #add hosts - This throws an error if the host is already attached to another aggregate!
     if not @resource[:hosts].nil? and not @resource[:hosts].empty?
       @resource[:hosts].each do |host|
-        auth_nova("aggregate-add-host", id, "#{host}")
+        # make sure the host exists in nova, or nova will fail the call
+        # this solves weird ordering issues with a compute node that's
+        # not 100% up being added to the host aggregate
+        if is_host_in_nova?(host)
+          auth_nova("aggregate-add-host", id, "#{host}")
+        else
+          warning("Cannot add #{host} to host aggregate, it's not available yet in nova host-list")
+        end
       end
       @property_hash[:hosts] = resource[:hosts]
     end
+  end
+
+  def is_host_in_nova?(host)
+    return host==self.class.nova_get_host_by_name_and_type(host, "compute")
   end
 
   def hosts=(val)
@@ -101,7 +113,11 @@ Puppet::Type.type(:nova_aggregate).provide(
     #add hosts from the value list
     val.each do |h|
       if not attrs['Hosts'].include? h
-        auth_nova("aggregate-add-host", id, "#{h}")
+        if is_host_in_nova?(h)
+          auth_nova("aggregate-add-host", id, "#{h}")
+        else
+          warning("Cannot add #{h} to host aggregate, it's not available yet in nova host-list")
+        end
       end
     end
   end

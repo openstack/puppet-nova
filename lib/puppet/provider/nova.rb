@@ -158,22 +158,46 @@ class Puppet::Provider::Nova < Puppet::Provider
     return hash_list
   end
 
-  def self.nova_aggregate_resources_ids
+  def self.nova_hosts
+    return @nova_hosts if @nova_hosts
+    cmd_output = auth_nova("host-list")
+    @nova_hosts = cliout2list(cmd_output)
+    @nova_hosts
+  end
+
+  def self.nova_get_host_by_name_and_type(host_name, service_type)
+    #find the host by name and service type
+    nova_hosts.each do |entry|
+      if entry["host_name"] == host_name
+        if entry["service"] == service_type
+            return entry["host_name"]
+        end
+      end
+    end
+    #name/service combo not found
+    return nil
+  end
+
+  def self.nova_aggregate_resources_ids(force_refresh=false)
+    # return the cached list unless requested
+    if not force_refresh
+      return @nova_aggregate_resources_ids if @nova_aggregate_resources_ids
+    end
     #produce a list of hashes with Id=>Name pairs
     lines = []
     #run command
     cmd_output = auth_nova("aggregate-list")
     #parse output
-    hash_list = cliout2list(cmd_output)
+    @nova_aggregate_resources_ids = cliout2list(cmd_output)
     #only interessted in Id and Name
-    hash_list.map{ |e| e.delete("Availability Zone")}
-    hash_list.map{ |e| e['Id'] = e['Id'].to_i}
-  return hash_list
+    @nova_aggregate_resources_ids.map{ |e| e.delete("Availability Zone")}
+    @nova_aggregate_resources_ids.map{ |e| e['Id'] = e['Id'].to_i}
+    @nova_aggregate_resources_ids
   end
 
-  def self.nova_aggregate_resources_get_name_by_id(name)
+  def self.nova_aggregate_resources_get_name_by_id(name, force_refresh=false)
     #find the id by the given name
-    nova_aggregate_resources_ids.each do |entry|
+    nova_aggregate_resources_ids(force_refresh).each do |entry|
       if entry["Name"] == name
         return entry["Id"]
       end
