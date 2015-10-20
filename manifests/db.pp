@@ -65,6 +65,8 @@ class nova::db (
   $database_max_overflow   = 20,
 ) {
 
+  include ::nova::params
+
   # NOTE(spredzy): In order to keep backward compatibility we rely on the pick function
   # to use nova::<myparam> first the nova::db::<myparam>
   $database_connection_real = pick($::nova::database_connection, $database_connection)
@@ -88,10 +90,11 @@ class nova::db (
         require 'mysql::bindings::python'
       }
       /^postgresql:\/\//: {
-        $backend_package = $::neutron::params::psycopg_package_name
+        $backend_package = false
+        require 'postgresql::lib::python'
       }
       /^sqlite:\/\//: {
-        $backend_package = $::neutron::params::sqlite_package_name
+        $backend_package = $::nova::params::sqlite_package_name
       }
       default: {
         fail('Unsupported backend configured')
