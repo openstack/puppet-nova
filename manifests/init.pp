@@ -10,16 +10,36 @@
 #   Defaults to 'present'
 #
 # [*database_connection*]
-#   (optional) Connection url to connect to nova database.
-#   Defaults to false
+#   (optional) Connection url for the heat database.
+#   Defaults to undef.
 #
 # [*slave_connection*]
 #   (optional) Connection url to connect to nova slave database (read-only).
-#   Defaults to false
+#   Defaults to undef.
+#
+# [*database_max_retries*]
+#   (optional) Maximum database connection retries during startup.
+#   Defaults to undef.
 #
 # [*database_idle_timeout*]
-#   (optional) Timeout before idle db connections are reaped.
-#   Defaults to 3600
+#   (optional) Timeout before idle database connections are reaped.
+#   Defaults to undef.
+#
+# [*database_retry_interval*]
+#   (optional) Interval between retries of opening a database connection.
+#   Defaults to undef.
+#
+# [*database_min_pool_size*]
+#   (optional) Minimum number of SQL connections to keep open in a pool.
+#   Defaults to undef.
+#
+# [*database_max_pool_size*]
+#   (optional) Maximum number of SQL connections to keep open in a pool.
+#   Defaults to undef.
+#
+# [*database_max_overflow*]
+#   (optional) If set, use this value for max_overflow with sqlalchemy.
+#   Defaults to: undef.
 #
 # [*rpc_backend*]
 #   (optional) The rpc backend implementation to use, can be:
@@ -271,9 +291,14 @@
 #
 class nova(
   $ensure_package                     = 'present',
-  $database_connection                = false,
-  $slave_connection                   = false,
-  $database_idle_timeout              = 3600,
+  $database_connection                = undef,
+  $slave_connection                   = undef,
+  $database_idle_timeout              = undef,
+  $database_min_pool_size             = undef,
+  $database_max_pool_size             = undef,
+  $database_max_retries               = undef,
+  $database_retry_interval            = undef,
+  $database_max_overflow              = undef,
   $rpc_backend                        = 'rabbit',
   $image_service                      = 'nova.image.glance.GlanceImageService',
   # these glance params should be optional
