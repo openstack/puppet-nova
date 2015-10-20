@@ -71,6 +71,7 @@ describe 'nova' do
         is_expected.to contain_nova_config('DEFAULT/report_interval').with_value('10')
         is_expected.to contain_nova_config('DEFAULT/os_region_name').with_ensure('absent')
         is_expected.to contain_nova_config('cinder/os_region_name').with_ensure('absent')
+        is_expected.to contain_nova_config('cinder/catalog_info').with('value' => 'volumev2:cinderv2:publicURL')
       end
 
       it 'installs utilities' do

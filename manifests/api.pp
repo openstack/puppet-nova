@@ -84,12 +84,6 @@
 #   (optional) The name of the class that nova will use to access volumes. Cinder is the only option.
 #   Defaults to 'nova.volume.cinder.API'
 #
-# [*cinder_catalog_info*]
-#   (optional) Info to match when looking for cinder in the service
-#   catalog. Format is: separated values of the form:
-#   <service_type>:<service_name>:<endpoint_type>
-#   Defaults to 'volumev2:cinderv2:publicURL'
-#
 # [*use_forwarded_for*]
 #   (optional) Treat X-Forwarded-For as the canonical remote address. Only
 #   enable this if you have a sanitizing proxy.
@@ -186,7 +180,6 @@ class nova::api(
   $enabled_apis              = 'ec2,osapi_compute,metadata',
   $keystone_ec2_url          = false,
   $volume_api_class          = 'nova.volume.cinder.API',
-  $cinder_catalog_info       = 'volumev2:cinderv2:publicURL',
   $use_forwarded_for         = false,
   $osapi_compute_workers     = $::processorcount,
   $ec2_workers               = $::processorcount,
@@ -252,7 +245,6 @@ class nova::api(
     'DEFAULT/use_forwarded_for':         value => $use_forwarded_for;
     'DEFAULT/default_floating_pool':     value => $default_floating_pool;
     'osapi_v3/enabled':                  value => $osapi_v3;
-    'cinder/catalog_info':               value => $cinder_catalog_info;
   }
 
   if ($neutron_metadata_proxy_shared_secret){

@@ -289,6 +289,12 @@
 #   exceptions in the nova API service.
 #   Defaults to undef
 #
+# [*cinder_catalog_info*]
+#   (optional) Info to match when looking for cinder in the service
+#   catalog. Format is: separated values of the form:
+#   <service_type>:<service_name>:<endpoint_type>
+#   Defaults to 'volumev2:cinderv2:publicURL'
+#
 class nova(
   $ensure_package                     = 'present',
   $database_connection                = undef,
@@ -355,6 +361,7 @@ class nova(
   $notify_api_faults                  = false,
   $notify_on_state_change             = undef,
   $os_region_name                     = undef,
+  $cinder_catalog_info                = 'volumev2:cinderv2:publicURL',
   # DEPRECATED PARAMETERS
   $mysql_module                       = undef,
 ) inherits nova::params {
@@ -631,6 +638,7 @@ class nova(
   }
 
   nova_config {
+    'cinder/catalog_info':         value => $cinder_catalog_info;
     'DEFAULT/rpc_backend':         value => $rpc_backend;
     'DEFAULT/notification_topics': value => $notification_topics;
     'DEFAULT/notify_api_faults':   value => $notify_api_faults;
