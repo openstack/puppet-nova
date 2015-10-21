@@ -331,13 +331,13 @@ describe 'nova' do
       context 'with default parameters' do
         it 'configures qpid' do
           is_expected.to contain_nova_config('DEFAULT/rpc_backend').with_value('qpid')
-          is_expected.to contain_nova_config('DEFAULT/qpid_hostname').with_value('localhost')
-          is_expected.to contain_nova_config('DEFAULT/qpid_port').with_value('5672')
-          is_expected.to contain_nova_config('DEFAULT/qpid_username').with_value('guest')
-          is_expected.to contain_nova_config('DEFAULT/qpid_password').with_value('guest').with_secret(true)
-          is_expected.to contain_nova_config('DEFAULT/qpid_heartbeat').with_value('60')
-          is_expected.to contain_nova_config('DEFAULT/qpid_protocol').with_value('tcp')
-          is_expected.to contain_nova_config('DEFAULT/qpid_tcp_nodelay').with_value(true)
+          is_expected.to contain_nova_config('oslo_messaging_qpid/qpid_hostname').with_value('localhost')
+          is_expected.to contain_nova_config('oslo_messaging_qpid/qpid_port').with_value('5672')
+          is_expected.to contain_nova_config('oslo_messaging_qpid/qpid_username').with_value('guest')
+          is_expected.to contain_nova_config('oslo_messaging_qpid/qpid_password').with_value('guest').with_secret(true)
+          is_expected.to contain_nova_config('oslo_messaging_qpid/qpid_heartbeat').with_value('60')
+          is_expected.to contain_nova_config('oslo_messaging_qpid/qpid_protocol').with_value('tcp')
+          is_expected.to contain_nova_config('oslo_messaging_qpid/qpid_tcp_nodelay').with_value(true)
         end
       end
 
@@ -345,7 +345,7 @@ describe 'nova' do
         before do
           params.merge!({ :qpid_password => 'guest' })
         end
-        it { is_expected.to contain_nova_config('DEFAULT/qpid_sasl_mechanisms').with_ensure('absent') }
+        it { is_expected.to contain_nova_config('oslo_messaging_qpid/qpid_sasl_mechanisms').with_ensure('absent') }
       end
 
       context 'with qpid_password parameter (with qpid_sasl_mechanisms)' do
@@ -355,7 +355,7 @@ describe 'nova' do
             :qpid_sasl_mechanisms => 'A'
           })
         end
-        it { is_expected.to contain_nova_config('DEFAULT/qpid_sasl_mechanisms').with_value('A') }
+        it { is_expected.to contain_nova_config('oslo_messaging_qpid/qpid_sasl_mechanisms').with_value('A') }
       end
 
       context 'with qpid_password parameter (with array of qpid_sasl_mechanisms)' do
@@ -365,7 +365,7 @@ describe 'nova' do
             :qpid_sasl_mechanisms => [ 'DIGEST-MD5', 'GSSAPI', 'PLAIN' ]
           })
         end
-        it { is_expected.to contain_nova_config('DEFAULT/qpid_sasl_mechanisms').with_value('DIGEST-MD5 GSSAPI PLAIN') }
+        it { is_expected.to contain_nova_config('oslo_messaging_qpid/qpid_sasl_mechanisms').with_value('DIGEST-MD5 GSSAPI PLAIN') }
       end
     end
 
