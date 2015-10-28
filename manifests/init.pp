@@ -257,9 +257,6 @@
 #   'key-data' }, where 'key-type' is one of (ssh-rsa, ssh-dsa, ssh-ecdsa) and
 #   'key-data' is the contents of the private key file.
 #
-# [*mysql_module*]
-#   (optional) Deprecated. Does nothing.
-#
 # [*notification_driver*]
 #   (optional) Driver or drivers to handle sending notifications.
 #   Value can be a string or a list.
@@ -363,16 +360,11 @@ class nova(
   $os_region_name                     = undef,
   $cinder_catalog_info                = 'volumev2:cinderv2:publicURL',
   # DEPRECATED PARAMETERS
-  $mysql_module                       = undef,
 ) inherits nova::params {
 
   # maintain backward compatibility
   include ::nova::db
   include ::nova::logging
-
-  if $mysql_module {
-    warning('The mysql_module parameter is deprecated. The latest 2.x mysql module will be used.')
-  }
 
   validate_array($enabled_ssl_apis)
   if empty($enabled_ssl_apis) and $use_ssl {
