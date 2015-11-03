@@ -11,13 +11,9 @@ describe 'nova' do
      end
 
       it 'installs packages' do
-        is_expected.to contain_package('python-greenlet').with(
-          :ensure  => 'present',
-        )
         is_expected.to contain_package('python-nova').with(
-          :ensure  => 'present',
-          :require => 'Package[python-greenlet]',
-          :tag     => ['openstack']
+          :ensure => 'present',
+          :tag    => ['openstack']
         )
         is_expected.to contain_package('nova-common').with(
           :name    => platform_params[:nova_common_package],

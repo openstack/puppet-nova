@@ -444,12 +444,6 @@ class nova(
 
   Nova_config<| |> ~> Exec['post-nova_config']
 
-  # TODO - see if these packages can be removed
-  # they should be handled as package deps by the OS
-  package { 'python-greenlet':
-    ensure  => present,
-  }
-
   if $install_utilities {
     class { '::nova::utilities': }
   }
@@ -459,9 +453,8 @@ class nova(
   anchor { 'nova-start': }
 
   package { 'python-nova':
-    ensure  => $ensure_package,
-    require => Package['python-greenlet'],
-    tag     => ['openstack'],
+    ensure => $ensure_package,
+    tag    => ['openstack'],
   }
 
   package { 'nova-common':
