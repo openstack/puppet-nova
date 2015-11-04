@@ -56,7 +56,9 @@ describe 'nova::vncproxy' do
 
   describe 'on debian OS' do
       let :facts do
-        { :osfamily => 'Debian', :operatingsystem => 'Debian' }
+        { :osfamily        => 'Debian',
+          :operatingsystem => 'Debian',
+          :os_package_type => 'debian' }
       end
       it { is_expected.to contain_package('nova-vncproxy').with(
         :name   => "nova-consoleproxy",
@@ -69,6 +71,22 @@ describe 'nova::vncproxy' do
       )}
   end
 
+  describe 'on Ubuntu OS with Debian packages' do
+      let :facts do
+        { :osfamily        => 'Debian',
+          :operatingsystem => 'Ubuntu',
+          :os_package_type => 'debian' }
+      end
+      it { is_expected.to contain_package('nova-vncproxy').with(
+        :name   => "nova-consoleproxy",
+        :ensure => 'present'
+      )}
+      it { is_expected.to contain_service('nova-vncproxy').with(
+        :name      => 'nova-novncproxy',
+        :hasstatus => true,
+        :ensure    => 'running'
+      )}
+  end
 
   describe 'on Redhatish platforms' do
 

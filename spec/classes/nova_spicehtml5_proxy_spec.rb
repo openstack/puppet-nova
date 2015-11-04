@@ -47,7 +47,8 @@ describe 'nova::spicehtml5proxy' do
   context 'on Ubuntu system' do
     let :facts do
       { :osfamily        => 'Debian',
-        :operatingsystem => 'Ubuntu' }
+        :operatingsystem => 'Ubuntu',
+        :os_package_type => 'ubuntu' }
     end
 
     let :platform_params do
@@ -61,7 +62,8 @@ describe 'nova::spicehtml5proxy' do
   context 'on Debian system' do
     let :facts do
       { :osfamily        => 'Debian',
-        :operatingsystem => 'Debian' }
+        :operatingsystem => 'Debian',
+        :os_package_type => 'debian' }
     end
 
     let :platform_params do
@@ -71,6 +73,22 @@ describe 'nova::spicehtml5proxy' do
 
     it_configures 'nova-spicehtml5proxy'
   end
+
+  context 'on Ubuntu system with Debian packages' do
+    let :facts do
+      { :osfamily        => 'Debian',
+        :operatingsystem => 'Ubuntu',
+        :os_package_type => 'debian' }
+    end
+
+    let :platform_params do
+      { :spicehtml5proxy_package_name => 'nova-consoleproxy',
+        :spicehtml5proxy_service_name => 'nova-spicehtml5proxy' }
+    end
+
+    it_configures 'nova-spicehtml5proxy'
+  end
+
 
   context 'on Redhat platforms' do
     let :facts do
