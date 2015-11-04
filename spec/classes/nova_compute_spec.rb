@@ -25,7 +25,9 @@ describe 'nova::compute' do
       end
 
       it { is_expected.to contain_nova_config('DEFAULT/network_device_mtu').with(:ensure => 'absent') }
+      it { is_expected.to contain_nova_config('DEFAULT/allow_resize_to_same_host').with(:value => 'false') }
       it { is_expected.to_not contain_nova_config('DEFAULT/novncproxy_base_url') }
+
 
       it { is_expected.to_not contain_package('bridge-utils').with(
         :ensure => 'present',

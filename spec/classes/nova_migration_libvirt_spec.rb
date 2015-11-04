@@ -51,6 +51,17 @@ describe 'nova::migration::libvirt' do
       it { is_expected.to contain_nova_config('libvirt/live_migration_uri').with_value('qemu+tls://%s/system')}
     end
 
+    context 'with migration flags set' do
+      let :params do
+        {
+          :live_migration_flag => 'live migration flag',
+          :block_migration_flag => 'block migration flag',
+        }
+      end
+      it { is_expected.to contain_nova_config('libvirt/live_migration_flag').with(:value => 'live migration flag') }
+      it { is_expected.to contain_nova_config('libvirt/block_migration_flag').with(:value => 'block migration flag') }
+    end
+
     context 'with auth set to sasl' do
       let :params do
         {

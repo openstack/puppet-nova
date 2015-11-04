@@ -75,23 +75,34 @@
 #   (optional) Second DNS server
 #   Defaults to undef
 #
+# [*multi_host*]
+#   (optional) Default value for multi_host in networks.
+#   Also, if set, some rpc network calls will be sent directly to host.
+#   Defaults to false.
+#
+# [*auto_assign_floating_ip*]
+#   (optional) Autoassigning floating IP to VM
+#   Defaults to false.
+#
 class nova::network(
-  $private_interface = undef,
-  $fixed_range       = '10.0.0.0/8',
-  $public_interface  = undef,
-  $num_networks      = 1,
-  $network_size      = 255,
-  $floating_range    = false,
-  $enabled           = true,
-  $network_manager   = 'nova.network.manager.FlatDHCPManager',
-  $config_overrides  = {},
-  $create_networks   = true,
-  $ensure_package    = 'present',
-  $install_service   = true,
-  $allowed_start     = undef,
-  $allowed_end       = undef,
-  $dns1              = undef,
-  $dns2              = undef
+  $private_interface       = undef,
+  $fixed_range             = '10.0.0.0/8',
+  $public_interface        = undef,
+  $num_networks            = 1,
+  $network_size            = 255,
+  $floating_range          = false,
+  $enabled                 = true,
+  $network_manager         = 'nova.network.manager.FlatDHCPManager',
+  $config_overrides        = {},
+  $create_networks         = true,
+  $ensure_package          = 'present',
+  $install_service         = true,
+  $allowed_start           = undef,
+  $allowed_end             = undef,
+  $dns1                    = undef,
+  $dns2                    = undef,
+  $multi_host              = false,
+  $auto_assign_floating_ip = false,
 ) {
 
   include ::nova::params
@@ -106,7 +117,14 @@ class nova::network(
   ensure_resource('sysctl::value', 'net.ipv4.ip_forward', { value => '1' })
 
   if $floating_range {
-    nova_config { 'DEFAULT/floating_range':   value => $floating_range }
+    nova_config {
+      'DEFAULT/floating_range':          value => $floating_range;
+      'DEFAULT/auto_assign_floating_ip': value => $auto_assign_floating_ip;
+    }
+  }
+
+  nova_config {
+    'DEFAULT/multi_host': value => $multi_host;
   }
 
   if has_key($config_overrides, 'vlan_start') {
