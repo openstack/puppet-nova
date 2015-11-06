@@ -56,6 +56,8 @@ describe 'nova::api' do
           'keystone_authtoken/admin_password').with_value('passw0rd').with_secret(true)
       end
 
+      it { is_expected.to contain_nova_config('DEFAULT/instance_name_template').with_ensure('absent')}
+
       it 'configures various stuff' do
         is_expected.to contain_nova_config('DEFAULT/ec2_listen').with('value' => '0.0.0.0')
         is_expected.to contain_nova_config('DEFAULT/ec2_listen_port').with('value' => '8773')
@@ -268,6 +270,17 @@ describe 'nova::api' do
       it { is_expected.to contain_nova_config('database/connection').with_value('mysql://user:pass@db/db').with_secret(true) }
       it { is_expected.to contain_nova_config('database/slave_connection').with_value('mysql://user:pass@slave/db').with_secret(true) }
       it { is_expected.to contain_nova_config('database/idle_timeout').with_value('30') }
+    end
+
+    context 'with custom instance_name_template' do
+      before do
+        params.merge!({
+          :instance_name_template => 'instance-%08x',
+        })
+      end
+      it 'configures instance_name_template' do
+        is_expected.to contain_nova_config('DEFAULT/instance_name_template').with_value('instance-%08x');
+      end
     end
 
     context 'with custom keystone identity_uri' do

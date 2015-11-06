@@ -110,6 +110,10 @@
 #   Class instead.
 #   Defaults to undef
 #
+# [*instance_name_template*]
+#   (optional) Template string to be used to generate instance names
+#   Defaults to undef
+#
 # [*sync_db*]
 #   (optional) Run nova-manage db sync on api nodes after installing the package.
 #   Defaults to true
@@ -194,6 +198,7 @@ class nova::api(
     'nova.api.openstack.compute.limits:RateLimitingMiddleware.factory',
   $validate                  = false,
   $validation_options        = {},
+  $instance_name_template    = undef,
   # DEPRECATED PARAMETER
   $auth_protocol             = 'http',
   $auth_port                 = 35357,
@@ -218,6 +223,16 @@ class nova::api(
 
   if $conductor_workers {
     warning('The conductor_workers parameter is deprecated and has no effect. Use workers parameter of nova::conductor class instead.')
+  }
+
+  if $instance_name_template {
+    nova_config {
+      'DEFAULT/instance_name_template': value => $instance_name_template;
+    }
+  } else {
+    nova_config{
+      'DEFAULT/instance_name_template': ensure => absent;
+    }
   }
 
   nova::generic_service { 'api':
