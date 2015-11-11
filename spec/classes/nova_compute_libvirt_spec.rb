@@ -5,11 +5,7 @@ describe 'nova::compute::libvirt' do
     "include nova\ninclude nova::compute"
   end
 
-  describe 'on debian platforms' do
-    let :facts do
-      { :osfamily => 'Debian' }
-    end
-
+  shared_examples 'debian-nova-compute-libvirt' do
     describe 'with default parameters' do
 
       it { is_expected.to contain_class('nova::params')}
@@ -149,11 +145,11 @@ describe 'nova::compute::libvirt' do
   end
 
 
-  describe 'on rhel platforms' do
-    let :facts do
-      { :operatingsystem => 'RedHat', :osfamily => 'RedHat',
+  shared_examples 'redhat-nova-compute-libvirt' do
+    before do
+      facts.merge!({ :operatingsystem => 'RedHat', :osfamily => 'RedHat',
         :operatingsystemrelease => 6.5,
-        :operatingsystemmajrelease => '6' }
+        :operatingsystemmajrelease => '6' })
     end
 
     describe 'with default parameters' do
@@ -188,9 +184,11 @@ describe 'nova::compute::libvirt' do
       ) }
 
       describe 'on rhel 7' do
-        let :facts do
-          super().merge(:operatingsystemrelease => 7.0)
-          super().merge(:operatingsystemmajrelease => '7')
+        before do
+          facts.merge!({
+            :operatingsystemrelease => 7.0,
+            :operatingsystemmajrelease => '7'
+          })
         end
 
         it { is_expected.to contain_service('libvirt').with(
@@ -282,8 +280,8 @@ describe 'nova::compute::libvirt' do
     end
 
     describe 'with default parameters on Fedora' do
-      let :facts do
-        { :operatingsystem => 'Fedora', :osfamily => 'RedHat' }
+      before do
+        facts.merge!({ :operatingsystem => 'Fedora', :osfamily => 'RedHat' })
       end
 
       it { is_expected.to contain_class('nova::params')}
@@ -314,4 +312,41 @@ describe 'nova::compute::libvirt' do
     end
 
   end
+
+  context 'on Debian platforms' do
+    let (:facts) do
+      {
+        :osfamily => 'Debian',
+        :operatingsystem => 'Debian',
+        :os_package_family => 'debian'
+      }
+    end
+
+    it_behaves_like 'debian-nova-compute-libvirt'
+  end
+
+  context 'on Debian platforms' do
+    let (:facts) do
+      {
+        :osfamily => 'Debian',
+        :operatingsystem => 'Ubuntu',
+        :os_package_family => 'ubuntu'
+      }
+    end
+
+    it_behaves_like 'debian-nova-compute-libvirt'
+  end
+
+  context 'on RedHat platforms' do
+    let (:facts) do
+      {
+        :osfamily => 'RedHat',
+        :os_package_type => 'rpm'
+      }
+    end
+
+    it_behaves_like 'redhat-nova-compute-libvirt'
+  end
+
+
 end
