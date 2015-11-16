@@ -217,19 +217,12 @@ class nova::api(
   $conductor_workers         = undef,
 ) {
 
+  include ::nova::deps
   include ::nova::db
   include ::nova::params
   include ::nova::policy
   require ::keystone::python
   include ::cinder::client
-
-  Package<| title == 'nova-common' |> -> Class['nova::api']
-  Package<| title == 'nova-common' |> -> Class['nova::policy']
-
-  Nova_paste_api_ini<| |> ~> Exec['post-nova_config']
-
-  Nova_paste_api_ini<| |> ~> Service['nova-api']
-  Class['nova::policy'] ~> Service['nova-api']
 
   if $conductor_workers {
     warning('The conductor_workers parameter is deprecated and has no effect. Use workers parameter of nova::conductor class instead.')

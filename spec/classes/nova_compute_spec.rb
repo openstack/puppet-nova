@@ -31,7 +31,6 @@ describe 'nova::compute' do
 
       it { is_expected.to_not contain_package('bridge-utils').with(
         :ensure => 'present',
-        :before => 'Nova::Generic_service[compute]'
       ) }
 
       it { is_expected.to contain_package('pm-utils').with(
@@ -126,8 +125,9 @@ describe 'nova::compute' do
       it 'installs bridge-utils package for nova-network' do
         is_expected.to contain_package('bridge-utils').with(
           :ensure => 'present',
-          :before => 'Nova::Generic_service[compute]'
         )
+        is_expected.to contain_package('bridge-utils').that_requires('Anchor[nova::install::begin]')
+        is_expected.to contain_package('bridge-utils').that_comes_before('Anchor[nova::install::end]')
       end
 
     end
@@ -140,7 +140,6 @@ describe 'nova::compute' do
       it 'does not install bridge-utils package for nova-network' do
         is_expected.to_not contain_package('bridge-utils').with(
           :ensure => 'present',
-          :before => 'Nova::Generic_service[compute]'
         )
       end
 

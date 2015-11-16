@@ -30,7 +30,7 @@ describe 'nova::network' do
       it { is_expected.to contain_package('nova-network').with(
         'name'   => 'nova-network',
         'ensure' => 'present',
-        'notify' => 'Service[nova-network]'
+        'notify' => ['Anchor[nova::install::end]'],
       ) }
 
       describe 'with enabled as true' do

@@ -60,6 +60,8 @@ class nova::cron::archive_deleted_rows (
   $destination = '/var/log/nova/nova-rowsflush.log'
 ) {
 
+  include ::nova::deps
+
   cron { 'nova-manage db archive_deleted_rows':
     command     => "nova-manage db archive_deleted_rows --max_rows ${max_rows} >>${destination} 2>&1",
     environment => 'PATH=/bin:/usr/bin:/usr/sbin SHELL=/bin/sh',
@@ -69,6 +71,6 @@ class nova::cron::archive_deleted_rows (
     monthday    => $monthday,
     month       => $month,
     weekday     => $weekday,
-    require     => Package['nova-common'],
+    require     => Anchor['nova::dbsync::end']
   }
 }

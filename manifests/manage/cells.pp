@@ -71,8 +71,7 @@ define nova::manage::cells (
   $weight_scale        = '1.0'
 ) {
 
-  File['/etc/nova/nova.conf'] -> Nova_cells[$name]
-  Exec<| title == 'nova-db-sync' |> -> Nova_cells[$name]
+  include ::nova::deps
 
   nova_cells { $name:
     ensure              => present,

@@ -36,6 +36,7 @@ class nova::spicehtml5proxy(
   $ensure_package = 'present'
 ) {
 
+  include ::nova::deps
   include ::nova::params
 
   nova_config {

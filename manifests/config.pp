@@ -32,6 +32,8 @@ class nova::config (
   $nova_paste_api_ini = {},
 ) {
 
+  include ::nova::deps
+
   validate_hash($nova_config)
   validate_hash($nova_paste_api_ini)
 

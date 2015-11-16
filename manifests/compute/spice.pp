@@ -48,6 +48,8 @@ class nova::compute::spice(
   $proxy_path                       = '/spice_auto.html'
 ) {
 
+  include ::nova::deps
+
   if $proxy_host {
     $html5proxy_base_url = "${proxy_protocol}://${proxy_host}:${proxy_port}${proxy_path}"
     nova_config {

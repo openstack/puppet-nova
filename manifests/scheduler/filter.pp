@@ -82,6 +82,8 @@ class nova::scheduler::filter (
   $scheduler_use_baremetal_filters     = false,
 ) {
 
+  include ::nova::deps
+
   nova_config {
     'DEFAULT/scheduler_host_manager':          value => $scheduler_host_manager;
     'DEFAULT/scheduler_max_attempts':          value => $scheduler_max_attempts;

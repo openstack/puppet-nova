@@ -10,25 +10,34 @@ describe 'nova::compute::libvirt' do
 
       it { is_expected.to contain_class('nova::params')}
 
-      it { is_expected.to contain_package('nova-compute-kvm').with(
-        :ensure => 'present',
-        :before => 'Package[nova-compute]',
-        :tag    => ['openstack']
-      ) }
+      it {
+        is_expected.to contain_package('nova-compute-kvm').with(
+          :ensure => 'present',
+          :tag    => ['openstack', 'nova-package']
+        )
+        is_expected.to contain_package('nova-compute-kvm').that_requires('Anchor[nova::install::begin]')
+        is_expected.to contain_package('nova-compute-kvm').that_notifies('Anchor[nova::install::end]')
+      }
 
-      it { is_expected.to contain_package('libvirt').with(
-        :name   => 'libvirt-bin',
-        :ensure => 'present'
-      ) }
+      it {
+        is_expected.to contain_package('libvirt').with(
+          :name   => 'libvirt-bin',
+          :ensure => 'present'
+        )
+        is_expected.to contain_package('libvirt').that_requires('Anchor[nova::install::begin]')
+        is_expected.to contain_package('libvirt').that_comes_before('Anchor[nova::install::end]')
+      }
 
-      it { is_expected.to contain_service('libvirt').with(
-        :name     => 'libvirt-bin',
-        :enable   => true,
-        :ensure   => 'running',
-        :provider => 'upstart',
-        :require  => 'Package[libvirt]',
-        :before   => ['Service[nova-compute]']
-      )}
+      it {
+        is_expected.to contain_service('libvirt').with(
+          :name     => 'libvirt-bin',
+          :enable   => true,
+          :ensure   => 'running',
+          :provider => 'upstart',
+        )
+
+        is_expected.to contain_service('libvirt').that_requires('Anchor[nova::config::end]')
+      }
 
       it { is_expected.to contain_nova_config('DEFAULT/compute_driver').with_value('libvirt.LibvirtDriver')}
       it { is_expected.to contain_nova_config('libvirt/virt_type').with_value('kvm')}
@@ -71,13 +80,15 @@ describe 'nova::compute::libvirt' do
       it { is_expected.to contain_nova_config('DEFAULT/remove_unused_original_minimum_age_seconds').with_value(3600)}
       it { is_expected.to contain_nova_config('libvirt/remove_unused_kernels').with_value(true)}
       it { is_expected.to contain_nova_config('libvirt/remove_unused_resized_minimum_age_seconds').with_value(3600)}
-      it { is_expected.to contain_service('libvirt').with(
-        :name     => 'custom_service',
-        :enable   => true,
-        :ensure   => 'running',
-        :require  => 'Package[libvirt]',
-        :before   => ['Service[nova-compute]']
-      )}
+      it {
+        is_expected.to contain_service('libvirt').with(
+          :name     => 'custom_service',
+          :enable   => true,
+          :ensure   => 'running',
+          :before   => ['Service[nova-compute]']
+        )
+        is_expected.to contain_service('libvirt').that_requires('Anchor[nova::config::end]')
+      }
     end
 
     describe 'with custom cpu_mode' do
@@ -164,7 +175,7 @@ describe 'nova::compute::libvirt' do
       it { is_expected.to contain_package('libvirt-nwfilter').with(
         :name   => 'libvirt-daemon-config-nwfilter',
         :ensure => 'present',
-        :before  => 'Service[libvirt]',
+        :before  => ['Service[libvirt]', 'Anchor[nova::install::end]'],
       ) }
 
       it { is_expected.to contain_service('libvirt').with(
@@ -172,8 +183,8 @@ describe 'nova::compute::libvirt' do
         :enable   => true,
         :ensure   => 'running',
         :provider => 'init',
-        :require  => 'Package[libvirt]',
-        :before   => ['Service[nova-compute]']
+        :require  => 'Anchor[nova::config::end]',
+        :before   => ['Service[nova-compute]'],
       )}
       it { is_expected.to contain_service('messagebus').with(
         :ensure   => 'running',
@@ -294,7 +305,7 @@ describe 'nova::compute::libvirt' do
       it { is_expected.to contain_package('libvirt-nwfilter').with(
         :name   => 'libvirt-daemon-config-nwfilter',
         :ensure => 'present',
-        :before  => 'Service[libvirt]',
+        :before  => ['Service[libvirt]', 'Anchor[nova::install::end]'],
       ) }
 
       it { is_expected.to contain_service('libvirt').with(
@@ -302,7 +313,7 @@ describe 'nova::compute::libvirt' do
         :enable   => true,
         :ensure   => 'running',
         :provider => nil,
-        :require  => 'Package[libvirt]',
+        :require  => 'Anchor[nova::config::end]',
         :before   => ['Service[nova-compute]']
       )}
 

@@ -28,6 +28,7 @@ class nova::compute::serial(
   $proxyclient_address   = '127.0.0.1',
 ) {
 
+  include ::nova::deps
 
   nova_config {
     'serial_console/enabled':             value => true;

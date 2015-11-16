@@ -150,6 +150,7 @@ class nova::compute (
   $allow_resize_to_same_host          = false,
 ) {
 
+  include ::nova::deps
   include ::nova::params
 
   nova_config {
@@ -173,7 +174,7 @@ class nova::compute (
     # Install bridge-utils if we use nova-network
     package { 'bridge-utils':
       ensure => present,
-      before => Nova::Generic_service['compute'],
+      tag    => ['openstack', 'nova-support-package'],
     }
   }
 
@@ -221,6 +222,7 @@ class nova::compute (
 
   package { 'pm-utils':
     ensure => present,
+    tag    => ['openstack', 'nova-support-package'],
   }
 
   nova_config {

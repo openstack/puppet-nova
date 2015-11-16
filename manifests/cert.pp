@@ -22,6 +22,7 @@ class nova::cert(
   $ensure_package = 'present'
 ) {
 
+  include ::nova::deps
   include ::nova::params
 
   nova::generic_service { 'cert':

@@ -29,6 +29,8 @@ class nova::compute::xenserver(
   $xenapi_inject_image = undef,
 ) {
 
+  include ::nova::deps
+
   if $xenapi_inject_image != undef {
     warning('The xenapi_inject_image parameter is deprecated and has no effect.')
   }
@@ -44,7 +46,8 @@ class nova::compute::xenserver(
 
   package { 'xenapi':
     ensure   => present,
-    provider => pip
+    provider => pip,
+    tag      => ['openstack', 'nova-support-package'],
   }
 
   Package['python-pip'] -> Package['xenapi']

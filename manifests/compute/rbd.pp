@@ -65,6 +65,7 @@ class nova::compute::rbd (
   $ephemeral_storage            = true,
 ) {
 
+  include ::nova::deps
   include ::nova::params
 
   nova_config {
@@ -78,7 +79,7 @@ class nova::compute::rbd (
 
     file { '/etc/nova/secret.xml':
       content => template('nova/secret.xml-compute.erb'),
-      require => Class['::nova']
+      require => Anchor['nova::config::begin'],
     }
 
     exec { 'get-or-set virsh secret':
@@ -95,9 +96,9 @@ class nova::compute::rbd (
     exec { 'set-secret-value virsh':
       command => "/usr/bin/virsh secret-set-value --secret ${libvirt_rbd_secret_uuid} --base64 ${libvirt_key}",
       unless  => "/usr/bin/virsh secret-get-value ${libvirt_rbd_secret_uuid}",
-      require => Exec['get-or-set virsh secret']
+      require => Exec['get-or-set virsh secret'],
+      before  => Achor['nova::config::end'],
     }
-
   }
 
   if $ephemeral_storage {

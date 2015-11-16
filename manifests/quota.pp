@@ -127,6 +127,7 @@ class nova::quota(
   $quota_max_injected_file_content_bytes = undef,
   $quota_max_injected_file_path_bytes = undef
 ) {
+  include ::nova::deps
 
   if $quota_volumes {
     warning('The quota_volumes parameter is deprecated and has no effect.')

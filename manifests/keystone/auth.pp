@@ -188,6 +188,8 @@ class nova::keystone::auth(
   $internal_address        = undef,
 ) {
 
+  include ::nova::deps
+
   if $compute_version {
     warning('The compute_version parameter is deprecated, use public_url, internal_url and admin_url instead.')
   }

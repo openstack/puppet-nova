@@ -106,6 +106,7 @@ class nova::compute::libvirt (
   $compute_driver                             = 'libvirt.LibvirtDriver'
 ) inherits nova::params {
 
+  include ::nova::deps
   include ::nova::params
 
   Service['libvirt'] -> Service['nova-compute']
@@ -126,10 +127,8 @@ class nova::compute::libvirt (
 
   if($::osfamily == 'Debian') {
     package { "nova-compute-${libvirt_virt_type}":
-      ensure  => present,
-      before  => Package['nova-compute'],
-      require => Package['nova-common'],
-      tag     => ['openstack'],
+      ensure => present,
+      tag    => ['openstack', 'nova-package'],
     }
   }
 
@@ -156,6 +155,7 @@ class nova::compute::libvirt (
       ensure => present,
       name   => $::nova::params::libvirt_nwfilter_package_name,
       before => Service['libvirt'],
+      tag    => ['openstack', 'nova-support-package'],
     }
     case $libvirt_virt_type {
       'qemu': {
@@ -172,6 +172,7 @@ class nova::compute::libvirt (
   package { 'libvirt':
     ensure => present,
     name   => $libvirt_package_name_real,
+    tag    => ['openstack', 'nova-support-package'],
   }
 
   service { 'libvirt' :
@@ -179,7 +180,7 @@ class nova::compute::libvirt (
     enable   => true,
     name     => $libvirt_service_name,
     provider => $::nova::params::special_service_provider,
-    require  => Package['libvirt'],
+    require  => Anchor['nova::config::end'],
   }
 
   nova_config {

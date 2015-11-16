@@ -31,7 +31,8 @@ describe 'nova::api' do
           :ensure => 'present',
           :tag    => ['openstack', 'nova-package'],
         )
-        is_expected.to contain_package('nova-api').that_notifies('Service[nova-api]')
+        is_expected.to contain_package('nova-api').that_requires('Anchor[nova::install::begin]')
+        is_expected.to contain_package('nova-api').that_notifies('Anchor[nova::install::end]')
         is_expected.to_not contain_exec('validate_nova_api')
       end
 

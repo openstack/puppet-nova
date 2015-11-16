@@ -13,6 +13,7 @@ define nova::network::bridge (
   $ip,
   $netmask = '255.255.255.0'
 ) {
+  include ::nova::deps
 
   case $::osfamily {
 

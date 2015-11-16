@@ -172,6 +172,7 @@ class nova::cells (
   $weight_scale                  = '1.0'
 ) {
 
+  include ::nova::deps
   include ::nova::params
 
   case $cell_type {

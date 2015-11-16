@@ -32,6 +32,8 @@ class nova::db::postgresql(
   $privileges = 'ALL',
 ) {
 
+  include ::nova::deps
+
   ::openstacklib::db::postgresql { 'nova':
     password_hash => postgresql_password($user, $password),
     dbname        => $dbname,
@@ -40,7 +42,7 @@ class nova::db::postgresql(
     privileges    => $privileges,
   }
 
-  ::Openstacklib::Db::Postgresql['nova'] ~> Exec<| title == 'nova-db-sync' |>
-  ::Openstacklib::Db::Postgresql['nova'] -> Anchor<| title == 'nova-start' |>
-
+  Anchor['nova::db::begin']
+  ~> Class['nova::db::postgresql']
+  ~> Anchor['nova::db::end']
 }

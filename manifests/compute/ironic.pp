@@ -46,6 +46,8 @@ class nova::compute::ironic (
   $compute_driver       = 'ironic.IronicDriver'
 ) {
 
+  include ::nova::deps
+
   if $admin_user {
     warning('The admin_user parameter is deprecated, use admin_username instead.')
   }

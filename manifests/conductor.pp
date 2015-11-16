@@ -32,6 +32,7 @@ class nova::conductor(
   $use_local      = false,
 ) {
 
+  include ::nova::deps
   include ::nova::db
   include ::nova::params
 

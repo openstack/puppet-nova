@@ -409,6 +409,8 @@ class nova(
   $qpid_tcp_nodelay                   = undef,
 ) inherits nova::params {
 
+  include ::nova::deps
+
   # maintain backward compatibility
   include ::nova::db
   include ::nova::logging
@@ -446,7 +448,8 @@ class nova(
       mode    => '0700',
       owner   => 'nova',
       group   => 'nova',
-      require => Package['nova-common'],
+      require => Anchor['nova::config::begin'],
+      before  => Anchor['nova::config::end'],
     }
 
     if $nova_public_key {
@@ -484,35 +487,25 @@ class nova(
         mode    => '0600',
         owner   => 'nova',
         group   => 'nova',
-        require => [ File['/var/lib/nova/.ssh'], Package['nova-common'] ],
+        require => File['/var/lib/nova/.ssh'],
       }
     }
   }
-
-  Nova_config<| |> ~> Exec['post-nova_config']
 
   if $install_utilities {
     class { '::nova::utilities': }
   }
 
-  # this anchor is used to simplify the graph between nova components by
-  # allowing a resource to serve as a point where the configuration of nova begins
-  anchor { 'nova-start': }
-
   package { 'python-nova':
     ensure => $ensure_package,
-    tag    => ['openstack'],
+    tag    => ['openstack', 'nova-package'],
   }
 
   package { 'nova-common':
     ensure  => $ensure_package,
     name    => $::nova::params::common_package_name,
-    require => [Package['python-nova'], Anchor['nova-start']],
+    require => Package['python-nova'],
     tag     => ['openstack', 'nova-package'],
-  }
-
-  file { '/etc/nova/nova.conf':
-    require => Package['nova-common'],
   }
 
   # used by debian/ubuntu in nova::network_bridge to refresh
@@ -781,10 +774,4 @@ class nova(
   nova_config {
     'DEFAULT/os_region_name':       ensure => absent;
   }
-
-  exec { 'post-nova_config':
-    command     => '/bin/echo "Nova config has changed"',
-    refreshonly => true,
-  }
-
 }

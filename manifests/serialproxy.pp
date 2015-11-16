@@ -32,6 +32,7 @@ class nova::serialproxy(
   $ensure_package       = 'present'
 ) {
 
+  include ::nova::deps
   include ::nova::params
 
   nova_config {

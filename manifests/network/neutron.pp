@@ -112,6 +112,8 @@ class nova::network::neutron (
   $dhcp_domain                     = 'novalocal',
 ) {
 
+  include ::nova::deps
+
   nova_config {
     'DEFAULT/dhcp_domain':             value => $dhcp_domain;
     'DEFAULT/firewall_driver':         value => $firewall_driver;

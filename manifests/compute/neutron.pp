@@ -19,6 +19,7 @@ class nova::compute::neutron (
   $libvirt_vif_driver = 'nova.virt.libvirt.vif.LibvirtGenericVIFDriver',
   $force_snat_range   = '0.0.0.0/0',
 ) {
+  include ::nova::deps
 
   if $libvirt_vif_driver == 'nova.virt.libvirt.vif.LibvirtOpenVswitchDriver' {
     fail('nova.virt.libvirt.vif.LibvirtOpenVswitchDriver as vif_driver is removed from Icehouse')

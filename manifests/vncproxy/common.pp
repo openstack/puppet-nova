@@ -23,6 +23,8 @@ class nova::vncproxy::common (
   $vncproxy_path     = undef,
 ) {
 
+  include ::nova::deps
+
   $vncproxy_host_real     = pick(
     $vncproxy_host,
     $::nova::compute::vncproxy_host,

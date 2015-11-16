@@ -27,7 +27,7 @@ describe 'nova::cron::archive_deleted_rows' do
       :monthday    => params[:monthday],
       :month       => params[:month],
       :weekday     => params[:weekday],
-      :require     => 'Package[nova-common]',
+      :require     => 'Anchor[nova::dbsync::end]',
     )
   end
 end

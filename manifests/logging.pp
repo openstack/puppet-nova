@@ -110,6 +110,8 @@ class nova::logging(
   $log_date_format               = $::os_service_default,
 ) {
 
+  include ::nova::deps
+
   # NOTE(spredzy): In order to keep backward compatibility we rely on the pick function
   # to use nova::<myparam> first then nova::logging::<myparam>.
   $use_syslog_real = pick($::nova::use_syslog,$use_syslog)

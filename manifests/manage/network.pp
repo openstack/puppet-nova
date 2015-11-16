@@ -52,8 +52,7 @@ define nova::manage::network (
   $dns2          = undef
 ) {
 
-  File['/etc/nova/nova.conf'] -> Nova_network[$name]
-  Exec<| title == 'nova-db-sync' |> -> Nova_network[$name]
+  include ::nova::deps
 
   nova_network { $name:
     ensure        => present,

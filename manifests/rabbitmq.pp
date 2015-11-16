@@ -43,6 +43,8 @@ class nova::rabbitmq(
   $port               ='5672',
 ) {
 
+  include ::nova::deps
+
   if ($enabled) {
     if $userid == 'guest' {
       $delete_guest_user = false
@@ -59,10 +61,13 @@ class nova::rabbitmq(
         write_permission     => '.*',
         read_permission      => '.*',
         provider             => 'rabbitmqctl',
-      }->Anchor<| title == 'nova-start' |>
+      }
     }
     rabbitmq_vhost { $virtual_host:
       provider => 'rabbitmqctl',
     }
   }
+
+  # Only start Nova after the queue is up
+  Class['nova::rabbitmq'] -> Anchor['nova::service::end']
 }

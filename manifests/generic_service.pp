@@ -38,16 +38,10 @@ define nova::generic_service(
   $ensure_package = 'present'
 ) {
 
+  include ::nova::deps
   include ::nova::params
 
   $nova_title = "nova-${name}"
-  # ensure that the service is only started after
-  # all nova config entries have been set
-  Exec['post-nova_config'] ~> Service<| title == $nova_title |>
-  # ensure that the service has only been started
-  # after the initial db sync
-  Exec<| title == 'nova-db-sync' |> ~> Service<| title == $nova_title |>
-
 
   # I need to mark that ths package should be
   # installed before nova_config
@@ -56,17 +50,8 @@ define nova::generic_service(
       package { $nova_title:
         ensure => $ensure_package,
         name   => $package_name,
-        notify => Service[$nova_title],
         tag    => ['openstack', 'nova-package'],
       }
-    }
-
-    if $service_name {
-      # Do the dependency relationship here in case the package
-      # has been defined elsewhere, either as Package[$nova_title]
-      # or Package[$package_name]
-      Package<| title == $nova_title |> -> Service[$nova_title]
-      Package<| title == $package_name |> -> Service[$nova_title]
     }
   }
 
@@ -84,7 +69,6 @@ define nova::generic_service(
       name      => $service_name,
       enable    => $enabled,
       hasstatus => true,
-      require   => [Package['nova-common']],
       tag       => 'nova-service',
     }
   }

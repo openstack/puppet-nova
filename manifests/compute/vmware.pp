@@ -60,6 +60,8 @@ class nova::compute::vmware(
   $compute_driver = 'vmwareapi.VMwareVCDriver'
 ) {
 
+  include ::nova::deps
+
   nova_config {
     'DEFAULT/compute_driver':      value => $compute_driver;
     'VMWARE/host_ip':              value => $host_ip;
@@ -79,6 +81,7 @@ class nova::compute::vmware(
   }
 
   package { 'python-suds':
-    ensure   => present
+    ensure => present,
+    tag    => ['openstack', 'nova-support-package'],
   }
 }

@@ -26,6 +26,8 @@ class nova::network::flat (
   $flat_network_bridge = 'br100'
 ) {
 
+  include ::nova::deps
+
   if $public_interface {
     nova_config { 'DEFAULT/public_interface': value => $public_interface }
   }

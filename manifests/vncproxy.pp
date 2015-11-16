@@ -43,6 +43,7 @@ class nova::vncproxy(
   $ensure_package    = 'present'
 ) {
 
+  include ::nova::deps
   include ::nova::params
 
   # See http://nova.openstack.org/runnova/vncconsole.html for more details.
@@ -58,6 +59,7 @@ class nova::vncproxy(
     package { 'python-numpy':
       ensure => present,
       name   => $::nova::params::numpy_package_name,
+      tag    => ['openstack', 'nova-support-package'],
     }
   }
   nova::generic_service { 'vncproxy':

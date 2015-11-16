@@ -27,8 +27,11 @@ describe 'nova::generic_service' do
       'enable'  => true
     )}
 
-    it { is_expected.to contain_service('nova-foo').that_requires(
-      ['Package[nova-common]', 'Package[nova-foo]']
+    it { is_expected.to contain_service('nova-foo').that_subscribes_to(
+      'Anchor[nova::service::begin]',
+    )}
+    it { is_expected.to contain_service('nova-foo').that_notifies(
+      'Anchor[nova::service::end]',
     )}
   end
 end

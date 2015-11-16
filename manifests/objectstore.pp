@@ -27,6 +27,7 @@ class nova::objectstore(
   $bind_address   = '0.0.0.0'
 ) {
 
+  include ::nova::deps
   include ::nova::params
 
   nova::generic_service { 'objectstore':
@@ -35,7 +36,6 @@ class nova::objectstore(
     package_name   => $::nova::params::objectstore_package_name,
     service_name   => $::nova::params::objectstore_service_name,
     ensure_package => $ensure_package,
-    require        => Package['nova-common'],
   }
 
   nova_config {

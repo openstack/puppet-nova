@@ -11,10 +11,11 @@
 class nova::client(
   $ensure = 'present'
 ) {
+  include ::nova::deps
 
   package { 'python-novaclient':
     ensure => $ensure,
-    tag    => ['openstack'],
+    tag    => ['openstack', 'nova-support-package'],
   }
 
 }

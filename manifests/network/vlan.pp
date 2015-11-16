@@ -45,8 +45,13 @@ class nova::network::vlan (
   $dhcpbridge_flagfile = '/etc/nova/nova.conf'
 ) {
 
+  include ::nova::deps
+
   if $::osfamily == 'RedHat' and $::operatingsystem != 'Fedora' {
-    package { 'dnsmasq-utils': ensure => present }
+    package { 'dnsmasq-utils':
+      ensure => present,
+      tag    => ['openstack', 'nova-support-package'],
+    }
   }
 
   if $public_interface {

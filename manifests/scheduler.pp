@@ -27,6 +27,7 @@ class nova::scheduler(
   $scheduler_driver = 'nova.scheduler.filter_scheduler.FilterScheduler',
 ) {
 
+  include ::nova::deps
   include ::nova::db
   include ::nova::params
 
@@ -41,7 +42,4 @@ class nova::scheduler(
   nova_config {
     'DEFAULT/scheduler_driver': value => $scheduler_driver;
   }
-
-  Nova_config['DEFAULT/scheduler_driver'] ~> Service <| title == 'nova-scheduler' |>
-
 }

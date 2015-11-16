@@ -105,6 +105,7 @@ class nova::network(
   $auto_assign_floating_ip = false,
 ) {
 
+  include ::nova::deps
   include ::nova::params
 
   # forward all ipv4 traffic

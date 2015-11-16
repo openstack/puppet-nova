@@ -89,7 +89,7 @@ describe 'nova::db' do
         is_expected.to contain_package('nova-backend-package').with(
           :ensure => 'present',
           :name   => 'python-pymysql',
-          :tag    => 'openstack'
+          :tag    => ['openstack', 'nova-package'],
         )
       end
     end
@@ -103,7 +103,7 @@ describe 'nova::db' do
         is_expected.to contain_package('nova-backend-package').with(
           :ensure => 'present',
           :name   => 'python-pysqlite2',
-          :tag    => 'openstack'
+          :tag    => ['openstack', 'nova-package'],
         )
       end
 

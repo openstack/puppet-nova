@@ -13,18 +13,12 @@ describe 'nova' do
       it 'installs packages' do
         is_expected.to contain_package('python-nova').with(
           :ensure => 'present',
-          :tag    => ['openstack']
+          :tag    => ['openstack', 'nova-package']
         )
         is_expected.to contain_package('nova-common').with(
           :name    => platform_params[:nova_common_package],
           :ensure  => 'present',
           :tag     => ['openstack', 'nova-package']
-        )
-      end
-
-      it 'creates various files and folders' do
-        is_expected.to contain_file('/etc/nova/nova.conf').with(
-          :require => 'Package[nova-common]'
         )
       end
 
