@@ -20,17 +20,18 @@ describe 'nova::db' do
     context 'with overriden parameters' do
       before :each do
         params.merge!(
-          :database_connection   => 'mysql://user:pass@db/db',
-          :slave_connection      => 'mysql://user:pass@slave/db',
+          :database_connection   => 'mysql+pymysql://user:pass@db/db',
+          :slave_connection      => 'mysql+pymysql://user:pass@slave/db',
         )
       end
 
-      it { is_expected.to contain_nova_config('database/connection').with_value('mysql://user:pass@db/db').with_secret(true) }
-      it { is_expected.to contain_nova_config('database/slave_connection').with_value('mysql://user:pass@slave/db').with_secret(true) }
+      it { is_expected.to contain_nova_config('database/connection').with_value('mysql+pymysql://user:pass@db/db').with_secret(true) }
+      it { is_expected.to contain_nova_config('database/slave_connection').with_value('mysql+pymysql://user:pass@slave/db').with_secret(true) }
       it { is_expected.to contain_nova_config('database/idle_timeout').with_value('3600') }
       it { is_expected.to contain_nova_config('database/min_pool_size').with_value('1') }
       it { is_expected.to contain_nova_config('database/max_retries').with_value('10') }
       it { is_expected.to contain_nova_config('database/retry_interval').with_value('10') }
+      it { is_expected.to contain_package('nova-backend-package').with({ :ensure => 'present', :name => platform_params[:pymysql_package_name] }) }
     end
 
 
@@ -45,6 +46,14 @@ describe 'nova::db' do
 
     end
 
+    context 'with MySQL-python library as backend package' do
+      let :params do
+        { :database_connection     => 'mysql://user:pass@db/db', }
+      end
+
+      it { is_expected.to contain_package('python-mysqldb').with(:ensure => 'present') }
+    end
+
     context 'with incorrect database_connection string' do
       let :params do
         { :database_connection     => 'redis://nova:nova@localhost/nova', }
@@ -53,6 +62,13 @@ describe 'nova::db' do
       it_raises 'a Puppet::Error', /validate_re/
     end
 
+    context 'with incorrect pymysql database_connection string' do
+      let :params do
+        { :database_connection     => 'foo+pymysql://user:pass@db/db', }
+      end
+
+      it_raises 'a Puppet::Error', /validate_re/
+    end
   end
 
   context 'on Debian platforms' do
@@ -61,6 +77,10 @@ describe 'nova::db' do
         :operatingsystem => 'Debian',
         :operatingsystemrelease => 'jessie',
       }
+    end
+
+    let :platform_params do
+      { :pymysql_package_name => 'python-pymysql' }
     end
 
     it_configures 'nova::db'
@@ -86,6 +106,10 @@ describe 'nova::db' do
       { :osfamily => 'RedHat',
         :operatingsystemrelease => '7.1',
       }
+    end
+
+    let :platform_params do
+      { :pymysql_package_name => 'python2-PyMySQL' }
     end
 
     it_configures 'nova::db'

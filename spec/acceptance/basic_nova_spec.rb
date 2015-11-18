@@ -29,7 +29,7 @@ describe 'basic nova' do
 
       # Nova resources
       class { '::nova':
-        database_connection => 'mysql://nova:a_big_secret@127.0.0.1/nova?charset=utf8',
+        database_connection => 'mysql+pymysql://nova:a_big_secret@127.0.0.1/nova?charset=utf8',
         rabbit_userid       => 'nova',
         rabbit_password     => 'an_even_bigger_secret',
         image_service       => 'nova.image.glance.GlanceImageService',
