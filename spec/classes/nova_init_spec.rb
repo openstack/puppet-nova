@@ -101,7 +101,16 @@ describe 'nova' do
           :notification_topics                => 'openstack',
           :notify_api_faults                  => true,
           :report_interval                    => '60',
-          :os_region_name                     => 'MyRegion' }
+          :os_region_name                     => 'MyRegion',
+          :upgrade_level_cells                => '1.0.0',
+          :upgrade_level_cert                 => '1.0.0',
+          :upgrade_level_compute              => '1.0.0',
+          :upgrade_level_conductor            => '1.0.0',
+          :upgrade_level_console              => '1.0.0',
+          :upgrade_level_consoleauth          => '1.0.0',
+          :upgrade_level_intercell            => '1.0.0',
+          :upgrade_level_network              => '1.0.0',
+          :upgrade_level_scheduler            => '1.0.0' }
       end
 
       it 'installs packages' do
@@ -132,6 +141,18 @@ describe 'nova' do
 
       it 'configures memcached_servers' do
         is_expected.to contain_nova_config('DEFAULT/memcached_servers').with_value('memcached01:11211,memcached02:11211')
+      end
+
+      it 'configures upgrade_levels' do
+        is_expected.to contain_nova_config('upgrade_levels/cells').with_value('1.0.0')
+        is_expected.to contain_nova_config('upgrade_levels/cert').with_value('1.0.0')
+        is_expected.to contain_nova_config('upgrade_levels/compute').with_value('1.0.0')
+        is_expected.to contain_nova_config('upgrade_levels/conductor').with_value('1.0.0')
+        is_expected.to contain_nova_config('upgrade_levels/console').with_value('1.0.0')
+        is_expected.to contain_nova_config('upgrade_levels/consoleauth').with_value('1.0.0')
+        is_expected.to contain_nova_config('upgrade_levels/intercell').with_value('1.0.0')
+        is_expected.to contain_nova_config('upgrade_levels/network').with_value('1.0.0')
+        is_expected.to contain_nova_config('upgrade_levels/scheduler').with_value('1.0.0')
       end
 
       it 'configures various things' do

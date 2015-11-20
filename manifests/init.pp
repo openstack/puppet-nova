@@ -292,6 +292,43 @@
 #   <service_type>:<service_name>:<endpoint_type>
 #   Defaults to 'volumev2:cinderv2:publicURL'
 #
+# [*upgrade_level_cells*]
+#  (optional) Sets a version cap for messages sent to local cells services
+#  Defaults to undef
+#
+# [*upgrade_level_cert*]
+#  (optional) Sets a version cap for messages sent to cert services
+#  Defaults to undef
+#
+# [*upgrade_level_compute*]
+#  (optional) Sets a version cap for messages sent to compute services
+#  Defaults to undef
+#
+# [*upgrade_level_conductor*]
+#  (optional) Sets a version cap for messages sent to conductor services
+#  Defaults to undef
+#
+# [*upgrade_level_console*]
+#  (optional) Sets a version cap for messages sent to console services
+#  Defaults to undef
+#
+# [*upgrade_level_consoleauth*]
+#  (optional) Sets a version cap for messages sent to consoleauth services
+#  Defaults to undef
+#
+# [*upgrade_level_intercell*]
+#  (optional) Sets a version cap for messages sent between cells services
+#  Defaults to undef
+#
+# [*upgrade_level_network*]
+#  (optional) Sets a version cap for messages sent to network services
+#  Defaults to undef
+#
+# [*upgrade_level_scheduler*]
+#  (optional) Sets a version cap for messages sent to scheduler services
+#  Defaults to undef
+#
+
 class nova(
   $ensure_package                     = 'present',
   $database_connection                = undef,
@@ -359,7 +396,15 @@ class nova(
   $notify_on_state_change             = undef,
   $os_region_name                     = undef,
   $cinder_catalog_info                = 'volumev2:cinderv2:publicURL',
-  # DEPRECATED PARAMETERS
+  $upgrade_level_cells                = undef,
+  $upgrade_level_cert                 = undef,
+  $upgrade_level_compute              = undef,
+  $upgrade_level_conductor            = undef,
+  $upgrade_level_console              = undef,
+  $upgrade_level_consoleauth          = undef,
+  $upgrade_level_intercell            = undef,
+  $upgrade_level_network              = undef,
+  $upgrade_level_scheduler            = undef,
 ) inherits nova::params {
 
   # maintain backward compatibility
@@ -645,14 +690,114 @@ class nova(
 
   if $os_region_name {
     nova_config {
-      'cinder/os_region_name':       value => $os_region_name;
+      'cinder/os_region_name':    value => $os_region_name;
     }
   }
   else {
     nova_config {
-      'cinder/os_region_name':        ensure => absent;
+      'cinder/os_region_name':    ensure => absent;
     }
   }
+
+  if $upgrade_level_cells {
+    nova_config {
+      'upgrade_levels/cells':   value => $upgrade_level_cells;
+    }
+  }
+  else {
+    nova_config {
+      'upgrade_levels/cells':   ensure => absent;
+    }
+  }
+
+  if $upgrade_level_cert {
+    nova_config {
+      'upgrade_levels/cert':   value => $upgrade_level_cert;
+    }
+  }
+  else {
+    nova_config {
+      'upgrade_levels/cert':   ensure => absent;
+    }
+  }
+
+  if $upgrade_level_compute {
+    nova_config {
+      'upgrade_levels/compute':   value => $upgrade_level_compute;
+    }
+  }
+  else {
+    nova_config {
+      'upgrade_levels/compute':   ensure => absent;
+    }
+  }
+
+  if $upgrade_level_conductor {
+    nova_config {
+      'upgrade_levels/conductor':   value => $upgrade_level_conductor;
+    }
+  }
+  else {
+    nova_config {
+      'upgrade_levels/conductor':   ensure => absent;
+    }
+  }
+
+  if $upgrade_level_console {
+    nova_config {
+      'upgrade_levels/console':   value => $upgrade_level_console;
+    }
+  }
+  else {
+    nova_config {
+      'upgrade_levels/console':   ensure => absent;
+    }
+  }
+
+  if $upgrade_level_consoleauth {
+    nova_config {
+      'upgrade_levels/consoleauth':   value => $upgrade_level_consoleauth;
+    }
+  }
+  else {
+    nova_config {
+      'upgrade_levels/consoleauth':   ensure => absent;
+    }
+  }
+
+  if $upgrade_level_intercell {
+    nova_config {
+      'upgrade_levels/intercell':   value => $upgrade_level_intercell;
+    }
+  }
+  else {
+    nova_config {
+      'upgrade_levels/intercell':   ensure => absent;
+    }
+  }
+
+  if $upgrade_level_network {
+    nova_config {
+      'upgrade_levels/network':   value => $upgrade_level_network;
+    }
+  }
+  else {
+    nova_config {
+      'upgrade_levels/network':   ensure => absent;
+    }
+  }
+
+  if $upgrade_level_scheduler {
+    nova_config {
+      'upgrade_levels/scheduler':   value => $upgrade_level_scheduler;
+    }
+  }
+  else {
+    nova_config {
+      'upgrade_levels/scheduler':   ensure => absent;
+    }
+  }
+
   # Deprecated in Juno, removed in Kilo
   nova_config {
     'DEFAULT/os_region_name':       ensure => absent;
