@@ -568,8 +568,10 @@ describe 'nova' do
 
   context 'on Debian platforms' do
     let :facts do
-      { :osfamily => 'Debian',
-        :operatingsystem => 'Debian' }
+      @default_facts.merge({
+        :osfamily => 'Debian',
+        :operatingsystem => 'Debian'
+      })
     end
 
     let :platform_params do
@@ -582,8 +584,10 @@ describe 'nova' do
 
   context 'on Ubuntu platforms' do
     let :facts do
-      { :osfamily => 'Debian',
-        :operatingsystem => 'Ubuntu' }
+      @default_facts.merge({
+        :osfamily => 'Debian',
+        :operatingsystem => 'Ubuntu'
+      })
     end
 
     let :platform_params do
@@ -596,7 +600,7 @@ describe 'nova' do
 
   context 'on RedHat platforms' do
     let :facts do
-      { :osfamily => 'RedHat' }
+      @default_facts.merge({ :osfamily => 'RedHat' })
     end
 
     let :platform_params do

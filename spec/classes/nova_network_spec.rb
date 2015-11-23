@@ -20,7 +20,7 @@ describe 'nova::network' do
   describe 'on debian platforms' do
 
     let :facts do
-      { :osfamily => 'Debian' }
+      @default_facts.merge({ :osfamily => 'Debian' })
     end
 
     it { is_expected.to contain_sysctl__value('net.ipv4.ip_forward').with_value('1') }
@@ -224,7 +224,7 @@ describe 'nova::network' do
   end
   describe 'on rhel' do
     let :facts do
-      { :osfamily => 'RedHat' }
+      @default_facts.merge({ :osfamily => 'RedHat' })
     end
     it { is_expected.to contain_service('nova-network').with(
       'name'      => 'openstack-nova-network',

@@ -8,7 +8,7 @@ describe 'nova::objectstore' do
 
   context 'on Debian platforms' do
     let :facts do
-      { :osfamily => 'Debian' }
+      @default_facts.merge({ :osfamily => 'Debian' })
     end
 
     it_behaves_like 'generic nova service', {
@@ -28,7 +28,7 @@ describe 'nova::objectstore' do
 
   context 'on RedHat platforms' do
     let :facts do
-      { :osfamily => 'RedHat' }
+      @default_facts.merge({ :osfamily => 'RedHat' })
     end
 
     it_behaves_like 'generic nova service', {

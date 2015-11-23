@@ -56,7 +56,7 @@ describe 'nova::scheduler' do
 
       it { is_expected.to_not contain_nova_config('database/connection') }
       it { is_expected.to_not contain_nova_config('database/slave_connection') }
-      it { is_expected.to_not contain_nova_config('database/idle_timeout').with_value('3600') }
+      it { is_expected.to_not contain_nova_config('database/idle_timeout').with_value('<SERVICE DEFAULT>') }
     end
 
     context 'with overridden database parameters' do
@@ -78,7 +78,7 @@ describe 'nova::scheduler' do
 
   context 'on Debian platforms' do
     let :facts do
-      { :osfamily => 'Debian' }
+      @default_facts.merge({ :osfamily => 'Debian' })
     end
 
     let :platform_params do
@@ -91,7 +91,7 @@ describe 'nova::scheduler' do
 
   context 'on Redhat platforms' do
     let :facts do
-      { :osfamily => 'RedHat' }
+      @default_facts.merge({ :osfamily => 'RedHat' })
     end
 
     let :platform_params do

@@ -3,7 +3,7 @@ require 'spec_helper'
 describe 'nova::qpid' do
 
   let :facts do
-    {:puppetversion => '2.7'}
+    @default_facts.merge({:puppetversion => '2.7'})
   end
 
   describe 'with defaults' do

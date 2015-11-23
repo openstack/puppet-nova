@@ -27,11 +27,10 @@ describe 'nova::db' do
 
       it { is_expected.to contain_nova_config('database/connection').with_value('mysql+pymysql://user:pass@db/db').with_secret(true) }
       it { is_expected.to contain_nova_config('database/slave_connection').with_value('mysql+pymysql://user:pass@slave/db').with_secret(true) }
-      it { is_expected.to contain_nova_config('database/idle_timeout').with_value('3600') }
-      it { is_expected.to contain_nova_config('database/min_pool_size').with_value('1') }
-      it { is_expected.to contain_nova_config('database/max_retries').with_value('10') }
-      it { is_expected.to contain_nova_config('database/retry_interval').with_value('10') }
-      it { is_expected.to contain_package('nova-backend-package').with({ :ensure => 'present', :name => platform_params[:pymysql_package_name] }) }
+      it { is_expected.to contain_nova_config('database/idle_timeout').with_value('<SERVICE DEFAULT>') }
+      it { is_expected.to contain_nova_config('database/min_pool_size').with_value('<SERVICE DEFAULT>') }
+      it { is_expected.to contain_nova_config('database/max_retries').with_value('<SERVICE DEFAULT>') }
+      it { is_expected.to contain_nova_config('database/retry_interval').with_value('<SERVICE DEFAULT>') }
     end
 
 
@@ -73,10 +72,11 @@ describe 'nova::db' do
 
   context 'on Debian platforms' do
     let :facts do
-      { :osfamily => 'Debian',
+      @default_facts.merge({
+        :osfamily => 'Debian',
         :operatingsystem => 'Debian',
         :operatingsystemrelease => 'jessie',
-      }
+      })
     end
 
     let :platform_params do
@@ -103,9 +103,10 @@ describe 'nova::db' do
 
   context 'on Redhat platforms' do
     let :facts do
-      { :osfamily => 'RedHat',
+      @default_facts.merge({
+        :osfamily => 'RedHat',
         :operatingsystemrelease => '7.1',
-      }
+      })
     end
 
     let :platform_params do

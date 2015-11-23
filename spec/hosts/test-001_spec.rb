@@ -4,7 +4,7 @@ describe 'test-001.example.org' do
 
   context 'on RedHat platforms' do
     let :facts do
-      { :osfamily => 'RedHat' }
+      @default_facts.merge({ :osfamily => 'RedHat' })
     end
 
     # Bug #1278452

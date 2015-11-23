@@ -3,10 +3,10 @@ require 'spec_helper'
 describe 'nova::rabbitmq' do
 
   let :facts do
-    {
+    @default_facts.merge({
       :puppetversion => '2.7',
       :osfamily => 'Debian'
-    }
+    })
   end
 
   describe 'with defaults' do

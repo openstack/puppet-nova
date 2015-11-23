@@ -23,46 +23,46 @@
 #
 # [*database_connection*]
 #   (optional) Connection url to connect to nova database.
-#   Defaults to false.
+#   Defaults to $::os_service_default
 #
 # [*slave_connection*]
 #   (optional) Connection url to connect to nova slave database (read-only).
-#   Defaults to false.
+#   Defaults to $::os_service_default
 #
 # [*database_idle_timeout*]
 #   Timeout when db connections should be reaped.
-#   (Optional) Defaults to 3600.
+#   (Optional) Defaults to $::os_service_default
 #
 # [*database_min_pool_size*]
 #   Minimum number of SQL connections to keep open in a pool.
-#   (Optional) Defaults to 1.
+#   (Optional) Defaults to $::os_service_default
 #
 # [*database_max_pool_size*]
 #   Maximum number of SQL connections to keep open in a pool.
-#   (Optional) Defaults to 10.
+#   (Optional) Defaults to $::os_service_default
 #
 # [*database_max_retries*]
 #   Maximum db connection retries during startup.
 #   Setting -1 implies an infinite retry count.
-#   (Optional) Defaults to 10.
+#   (Optional) Defaults to $::os_service_default
 #
 # [*database_retry_interval*]
 #   Interval between retries of opening a sql connection.
-#   (Optional) Defaults to 10.
+#   (Optional) Defaults to $::os_service_default
 #
 # [*database_max_overflow*]
 #   If set, use this value for max_overflow with sqlalchemy.
-#   (Optional) Defaults to 20.
+#   (Optional) Defaults to $::os_service_default
 #
 class nova::db (
-  $database_connection     = false,
-  $slave_connection        = false,
-  $database_idle_timeout   = 3600,
-  $database_min_pool_size  = 1,
-  $database_max_pool_size  = 10,
-  $database_max_retries    = 10,
-  $database_retry_interval = 10,
-  $database_max_overflow   = 20,
+  $database_connection     = $::os_service_default,
+  $slave_connection        = $::os_service_default,
+  $database_idle_timeout   = $::os_service_default,
+  $database_min_pool_size  = $::os_service_default,
+  $database_max_pool_size  = $::os_service_default,
+  $database_max_retries    = $::os_service_default,
+  $database_retry_interval = $::os_service_default,
+  $database_max_overflow   = $::os_service_default,
 ) {
 
   include ::nova::params
@@ -78,7 +78,7 @@ class nova::db (
   $database_retry_interval_real = pick($::nova::database_retry_interval, $database_retry_interval)
   $database_max_overflow_real = pick($::nova::database_max_overflow, $database_max_overflow)
 
-  if $database_connection_real {
+  if !is_service_default($database_connection_real) {
 
     validate_re($database_connection_real,
       '^(sqlite|mysql(\+pymysql)?|postgresql):\/\/(\S+:\S+@\S+\/\S+)?')
@@ -114,24 +114,16 @@ class nova::db (
     }
 
     nova_config {
-      'database/connection':     value => $database_connection_real, secret => true;
-      'database/idle_timeout':   value => $database_idle_timeout_real;
-      'database/min_pool_size':  value => $database_min_pool_size_real;
-      'database/max_retries':    value => $database_max_retries_real;
-      'database/retry_interval': value => $database_retry_interval_real;
-      'database/max_pool_size':  value => $database_max_pool_size_real;
-      'database/max_overflow':   value => $database_max_overflow_real;
+      'database/connection':       value => $database_connection_real, secret => true;
+      'database/idle_timeout':     value => $database_idle_timeout_real;
+      'database/min_pool_size':    value => $database_min_pool_size_real;
+      'database/max_retries':      value => $database_max_retries_real;
+      'database/retry_interval':   value => $database_retry_interval_real;
+      'database/max_pool_size':    value => $database_max_pool_size_real;
+      'database/max_overflow':     value => $database_max_overflow_real;
+      'database/slave_connection': value => $slave_connection_real, secret => true;
     }
 
-    if $slave_connection_real {
-      nova_config {
-        'database/slave_connection': value => $slave_connection_real, secret => true;
-      }
-    } else {
-      nova_config {
-        'database/slave_connection': ensure => absent;
-      }
-    }
   }
 
 }

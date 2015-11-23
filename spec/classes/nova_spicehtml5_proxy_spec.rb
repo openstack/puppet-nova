@@ -46,9 +46,11 @@ describe 'nova::spicehtml5proxy' do
 
   context 'on Ubuntu system' do
     let :facts do
-      { :osfamily        => 'Debian',
+      @default_facts.merge({
+        :osfamily        => 'Debian',
         :operatingsystem => 'Ubuntu',
-        :os_package_type => 'ubuntu' }
+        :os_package_type => 'ubuntu'
+       })
     end
 
     let :platform_params do
@@ -61,9 +63,11 @@ describe 'nova::spicehtml5proxy' do
 
   context 'on Debian system' do
     let :facts do
-      { :osfamily        => 'Debian',
+      @default_facts.merge({
+        :osfamily        => 'Debian',
         :operatingsystem => 'Debian',
-        :os_package_type => 'debian' }
+        :os_package_type => 'debian'
+      })
     end
 
     let :platform_params do
@@ -76,9 +80,11 @@ describe 'nova::spicehtml5proxy' do
 
   context 'on Ubuntu system with Debian packages' do
     let :facts do
-      { :osfamily        => 'Debian',
+      @default_facts.merge({
+        :osfamily        => 'Debian',
         :operatingsystem => 'Ubuntu',
-        :os_package_type => 'debian' }
+        :os_package_type => 'debian'
+      })
     end
 
     let :platform_params do
@@ -92,7 +98,7 @@ describe 'nova::spicehtml5proxy' do
 
   context 'on Redhat platforms' do
     let :facts do
-      { :osfamily => 'RedHat' }
+      @default_facts.merge({ :osfamily => 'RedHat' })
     end
 
     let :platform_params do

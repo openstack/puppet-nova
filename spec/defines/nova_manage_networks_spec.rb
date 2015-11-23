@@ -3,7 +3,7 @@ require 'spec_helper'
 describe 'nova::manage::network' do
 
   let :facts do
-    {:osfamily => 'RedHat'}
+    @default_facts.merge({:osfamily => 'RedHat'})
   end
 
   let :pre_condition do

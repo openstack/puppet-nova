@@ -12,11 +12,11 @@ describe 'nova::db::postgresql' do
 
   context 'on a RedHat osfamily' do
     let :facts do
-      {
+      @default_facts.merge({
         :osfamily                 => 'RedHat',
         :operatingsystemrelease   => '7.0',
         :concat_basedir => '/var/lib/puppet/concat'
-      }
+      })
     end
 
     context 'with only required parameters' do
@@ -34,12 +34,12 @@ describe 'nova::db::postgresql' do
 
   context 'on a Debian osfamily' do
     let :facts do
-      {
+      @default_facts.merge({
         :operatingsystemrelease => '7.8',
         :operatingsystem        => 'Debian',
         :osfamily               => 'Debian',
         :concat_basedir => '/var/lib/puppet/concat'
-      }
+      })
     end
 
     context 'with only required parameters' do

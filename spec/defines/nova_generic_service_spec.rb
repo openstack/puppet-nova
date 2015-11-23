@@ -14,7 +14,7 @@ describe 'nova::generic_service' do
     end
 
     let :facts do
-      { :osfamily => 'Debian' }
+      @default_facts.merge({ :osfamily => 'Debian' })
     end
 
     let :title do

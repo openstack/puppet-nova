@@ -315,11 +315,11 @@ describe 'nova::compute::libvirt' do
 
   context 'on Debian platforms' do
     let (:facts) do
-      {
+      @default_facts.merge({
         :osfamily => 'Debian',
         :operatingsystem => 'Debian',
         :os_package_family => 'debian'
-      }
+      })
     end
 
     it_behaves_like 'debian-nova-compute-libvirt'
@@ -327,11 +327,11 @@ describe 'nova::compute::libvirt' do
 
   context 'on Debian platforms' do
     let (:facts) do
-      {
+      @default_facts.merge({
         :osfamily => 'Debian',
         :operatingsystem => 'Ubuntu',
         :os_package_family => 'ubuntu'
-      }
+      })
     end
 
     it_behaves_like 'debian-nova-compute-libvirt'
@@ -339,10 +339,10 @@ describe 'nova::compute::libvirt' do
 
   context 'on RedHat platforms' do
     let (:facts) do
-      {
+      @default_facts.merge({
         :osfamily => 'RedHat',
         :os_package_type => 'rpm'
-      }
+      })
     end
 
     it_behaves_like 'redhat-nova-compute-libvirt'

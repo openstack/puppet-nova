@@ -4,7 +4,7 @@ describe 'nova::utilities' do
 
   describe 'on debian platforms' do
     let :facts do
-      { :osfamily => 'Debian' }
+      @default_facts.merge({ :osfamily => 'Debian' })
     end
 
     it 'installes utilities' do

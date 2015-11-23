@@ -12,7 +12,7 @@ describe 'nova::vncproxy' do
 
       describe 'on debian platforms' do
         let :facts do
-          { :osfamily => 'Debian' }
+          @default_facts.merge({ :osfamily => 'Debian' })
       end
 
       it { is_expected.to contain_package('python-numpy').with(
@@ -56,9 +56,11 @@ describe 'nova::vncproxy' do
 
   describe 'on debian OS' do
       let :facts do
-        { :osfamily        => 'Debian',
+        @default_facts.merge({
+          :osfamily        => 'Debian',
           :operatingsystem => 'Debian',
-          :os_package_type => 'debian' }
+          :os_package_type => 'debian'
+        })
       end
       it { is_expected.to contain_package('nova-vncproxy').with(
         :name   => "nova-consoleproxy",
@@ -73,9 +75,11 @@ describe 'nova::vncproxy' do
 
   describe 'on Ubuntu OS with Debian packages' do
       let :facts do
-        { :osfamily        => 'Debian',
+        @default_facts.merge({
+          :osfamily        => 'Debian',
           :operatingsystem => 'Ubuntu',
-          :os_package_type => 'debian' }
+          :os_package_type => 'debian'
+        })
       end
       it { is_expected.to contain_package('nova-vncproxy').with(
         :name   => "nova-consoleproxy",
@@ -91,7 +95,7 @@ describe 'nova::vncproxy' do
   describe 'on Redhatish platforms' do
 
     let :facts do
-      { :osfamily => 'Redhat' }
+      @default_facts.merge({ :osfamily => 'Redhat' })
     end
 
     it { is_expected.to contain_package('python-numpy').with(

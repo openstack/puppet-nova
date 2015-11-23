@@ -11,7 +11,7 @@ describe 'nova::api' do
   end
 
   let :facts do
-    { :processorcount => 5 }
+    @default_facts.merge({ :processorcount => 5 })
   end
 
   shared_examples 'nova-api' do
@@ -256,7 +256,7 @@ describe 'nova::api' do
 
       it { is_expected.to_not contain_nova_config('database/connection') }
       it { is_expected.to_not contain_nova_config('database/slave_connection') }
-      it { is_expected.to_not contain_nova_config('database/idle_timeout').with_value('3600') }
+      it { is_expected.to_not contain_nova_config('database/idle_timeout').with_value('<SERVICE DEFAULT>') }
     end
 
     context 'with overridden database parameters' do

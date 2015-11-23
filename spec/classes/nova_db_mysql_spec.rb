@@ -12,7 +12,7 @@ describe 'nova::db::mysql' do
 
   context 'on a Debian osfamily' do
     let :facts do
-      { :osfamily => "Debian" }
+      @default_facts.merge({ :osfamily => "Debian" })
     end
 
     context 'with only required parameters' do
@@ -39,7 +39,7 @@ describe 'nova::db::mysql' do
 
   context 'on a RedHat osfamily' do
     let :facts do
-      { :osfamily => 'RedHat' }
+      @default_facts.merge({ :osfamily => 'RedHat' })
     end
 
     context 'with only required parameters' do
@@ -66,7 +66,7 @@ describe 'nova::db::mysql' do
 
   describe "overriding allowed_hosts param to array" do
     let :facts do
-      { :osfamily => "Debian" }
+      @default_facts.merge({ :osfamily => "Debian" })
     end
     let :params do
       {
@@ -79,7 +79,7 @@ describe 'nova::db::mysql' do
 
   describe "overriding allowed_hosts param to string" do
     let :facts do
-      { :osfamily => 'RedHat' }
+      @default_facts.merge({ :osfamily => 'RedHat' })
     end
     let :params do
       {
@@ -92,7 +92,7 @@ describe 'nova::db::mysql' do
 
   describe "overriding allowed_hosts param equals to host param " do
     let :facts do
-      { :osfamily => 'RedHat' }
+      @default_facts.merge({ :osfamily => 'RedHat' })
     end
     let :params do
       {
