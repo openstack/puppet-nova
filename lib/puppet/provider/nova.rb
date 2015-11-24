@@ -44,8 +44,12 @@ class Puppet::Provider::Nova < Puppet::Provider
     conf = nova_conf
     if conf and conf['keystone_authtoken'] and
         auth_keys.all?{|k| !conf['keystone_authtoken'][k].nil?}
-      return Hash[ auth_keys.map \
+      creds = Hash[ auth_keys.map \
                    { |k| [k, conf['keystone_authtoken'][k].strip] } ]
+      if conf['neutron'] and conf['neutron']['region_name']
+        creds['region_name'] = conf['neutron']['region_name'].strip
+      end
+      return creds
     else
       raise(Puppet::Error, "File: #{conf_filename} does not contain all " +
             "required sections.  Nova types will not work if nova is not " +
@@ -70,6 +74,9 @@ class Puppet::Provider::Nova < Puppet::Provider
       :OS_TENANT_NAME => q['admin_tenant_name'],
       :OS_PASSWORD    => q['admin_password']
     }
+    if q.key?('region_name')
+      authenv[:OS_REGION_NAME] = q['region_name']
+    end
     begin
       withenv authenv do
         nova(args)
