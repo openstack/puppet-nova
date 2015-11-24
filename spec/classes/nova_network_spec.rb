@@ -91,6 +91,8 @@ describe 'nova::network' do
           default_params.merge(:floating_range => '10.0.0.0/30')
         end
         it { is_expected.to contain_nova_config('DEFAULT/floating_range').with_value('10.0.0.0/30') }
+        it { is_expected.to contain_nova_config('DEFAULT/auto_assign_floating_ip').with_value('false') }
+        it { is_expected.to contain_nova_config('DEFAULT/multi_host').with_value('false') }
         it { is_expected.to contain_nova__manage__floating('nova-vm-floating').with_network('10.0.0.0/30') }
       end
     end

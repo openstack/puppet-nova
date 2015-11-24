@@ -59,6 +59,7 @@ describe 'nova::api' do
       it { is_expected.to contain_nova_config('DEFAULT/instance_name_template').with_ensure('absent')}
 
       it 'configures various stuff' do
+        is_expected.to contain_nova_config('DEFAULT/api_paste_config').with('value' => 'api-paste.ini')
         is_expected.to contain_nova_config('DEFAULT/ec2_listen').with('value' => '0.0.0.0')
         is_expected.to contain_nova_config('DEFAULT/ec2_listen_port').with('value' => '8773')
         is_expected.to contain_nova_config('DEFAULT/osapi_compute_listen').with('value' => '0.0.0.0')
@@ -70,6 +71,7 @@ describe 'nova::api' do
         is_expected.to contain_nova_config('DEFAULT/ec2_workers').with('value' => '5')
         is_expected.to contain_nova_config('DEFAULT/metadata_workers').with('value' => '5')
         is_expected.to contain_nova_config('DEFAULT/default_floating_pool').with('value' => 'nova')
+        is_expected.to contain_nova_config('DEFAULT/fping_path').with('value' => '/usr/sbin/fping')
       end
 
       it 'do not configure v3 api' do

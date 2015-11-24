@@ -13,9 +13,19 @@
 #   Valid options are none and sasl.
 #   Defaults to 'none'
 #
+# [*live_migration_flag*]
+#   (optional) Migration flags to be set for live migration (string value)
+#   Defaults to undef
+#
+# [*block_migration_flag*]
+#   (optional) Migration flags to be set for block migration (string value)
+#   Defaults to undef
+#
 class nova::migration::libvirt(
-  $use_tls = false,
-  $auth    = 'none',
+  $use_tls              = false,
+  $auth                 = 'none',
+  $live_migration_flag  = undef,
+  $block_migration_flag = undef,
 ){
   if $use_tls {
     $listen_tls = '1'
@@ -26,6 +36,18 @@ class nova::migration::libvirt(
   } else {
     $listen_tls = '0'
     $listen_tcp = '1'
+  }
+
+  if $live_migration_flag {
+    nova_config {
+    'libvirt/live_migration_flag': value => $live_migration_flag
+    }
+  }
+
+  if $block_migration_flag {
+    nova_config {
+    'libvirt/block_migration_flag': value => $block_migration_flag
+    }
   }
 
   validate_re($auth, [ '^sasl$', '^none$' ], 'Valid options for auth are none and sasl.')

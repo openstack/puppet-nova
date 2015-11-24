@@ -20,6 +20,8 @@ describe 'nova::conductor' do
       :ensure    => 'running'
     )}
 
+    it { is_expected.to contain_nova_config('conductor/use_local').with_value('false') }
+
     context 'with manage_service as false' do
       let :params do
         { :enabled        => true,
