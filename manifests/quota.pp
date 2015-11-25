@@ -76,6 +76,14 @@
 #   (optional) Number of key pairs
 #   Defaults to 100
 #
+# [*quota_server_groups*]
+#   (optional) Number of server groups per project
+#   Defaults to 10
+#
+# [*quota_server_group_members*]
+#   (optional) Number of servers per server group
+#   Defaults to 10
+#
 # [*reservation_expire*]
 #   (optional) Time until reservations expire in seconds
 #   Defaults to 86400
@@ -105,6 +113,8 @@ class nova::quota(
   $quota_security_groups = 10,
   $quota_security_group_rules = 20,
   $quota_key_pairs = 100,
+  $quota_server_groups = 10,
+  $quota_server_group_members = 10,
   $reservation_expire = 86400,
   $until_refresh = 0,
   $max_age = 0,
@@ -164,6 +174,8 @@ class nova::quota(
     'DEFAULT/quota_security_groups':             value => $quota_security_groups;
     'DEFAULT/quota_security_group_rules':        value => $quota_security_group_rules;
     'DEFAULT/quota_key_pairs':                   value => $quota_key_pairs;
+    'DEFAULT/quota_server_groups':               value => $quota_server_groups;
+    'DEFAULT/quota_server_group_members':        value => $quota_server_group_members;
     'DEFAULT/reservation_expire':                value => $reservation_expire;
     'DEFAULT/until_refresh':                     value => $until_refresh;
     'DEFAULT/max_age':                           value => $max_age;

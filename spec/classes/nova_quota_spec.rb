@@ -19,6 +19,8 @@ describe 'nova::quota' do
       :quota_security_groups => 10,
       :quota_security_group_rules => 20,
       :quota_key_pairs => 100,
+      :quota_server_groups => 10,
+      :quota_server_group_members => 10,
       :reservation_expire => 86400,
       :until_refresh => 0,
       :max_age => 0,
@@ -56,6 +58,8 @@ describe 'nova::quota' do
         :quota_security_groups => 20,
         :quota_security_group_rules => 40,
         :quota_key_pairs => 200,
+        :quota_server_groups => 20,
+        :quota_server_group_members => 20,
         :reservation_expire => 6400,
         :until_refresh => 30,
         :max_age => 60
