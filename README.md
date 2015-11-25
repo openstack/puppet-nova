@@ -1,7 +1,7 @@
 nova
 ====
 
-6.1.0 - 2015.1 - Kilo
+7.0.0 - 2015.2.0 - Liberty
 
 #### Table of Contents
 

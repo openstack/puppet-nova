@@ -1,3 +1,63 @@
+##2015-11-25 - 7.0.0
+###Summary
+
+This is a backwards-incompatible major release for OpenStack Liberty.
+
+####Backwards-incompatible changes
+- change section name for AMQP qpid parameters
+- change section name for AMQP rabbit parameters
+- remove deprecated mysql_module
+- do not manage python-greenlet anymore
+- rabbitmq: do not manage rabbitmq service anymore
+- remove openstackocci installation feature
+- enable nova service by default
+
+####Features
+- add tag to package and service resources
+- add nova::db::sync
+- add an ability to manage use_stderr parameter
+- reflect provider change in puppet-openstacklib
+- add nameservers (dns) parameters
+- move os_region_name config option
+- use auth_nova method to create nova network
+- api: add default_floating_pool parameter
+- db: Use postgresql lib class for psycopg package
+- add support for RabbitMQ connection heartbeat
+- move cinder_catalog_info to init
+- don't add non-existent hosts to host aggregates
+- make libvirt migration security configurable
+- add region support to nova providers
+- floating IP range support in Nova network
+- rename neuton/url_timeout to neutron/timeout
+- add upgrade_levels configuration options
+- switch nova to leverage os_package_type fact
+- use os_package_type for libvirt service name
+- making instance_name_template configurable
+- remove POSIX users, groups, and file modes
+- allows the modification of the nova-api ports
+- put all the logging related parameters to the logging class
+- add kombu_reconnect_delay option
+- update nova::db class to match other module pattern
+- volume: allow to change catalog_info
+- add config_drive_format option to nova_compute
+- handle libvirt/cpu_model option
+- add ability to set default baremetal filters
+
+####Bugfixes
+- rely on autorequire for config resource ordering
+- avoid empty notification driver
+- fixed issue with rabbit_hosts parameter
+- docfix: update default image_service param in doc
+
+####Maintenance
+- fix rspec 3.x syntax
+- acceptance: enable debug & verbosity for OpenStack logs
+- initial msync run for all Puppet OpenStack modules
+- try to use zuul-cloner to prepare fixtures
+- remove class_parameter_defaults puppet-lint check
+- acceptance: use common bits from puppet-openstack-integration
+- spec: enable webmock connect to IPv4 link-local
+
 ##2015-10-10 - 6.1.0
 ###Summary
 

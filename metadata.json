@@ -1,6 +1,6 @@
 {
   "name": "openstack-nova",
-  "version": "6.1.0",
+  "version": "7.0.0",
   "author": "Puppet Labs and OpenStack Contributors",
   "summary": "Puppet module for OpenStack Nova",
   "license": "Apache-2.0",
@@ -33,12 +33,12 @@
   "dependencies": [
     { "name": "dprince/qpid", "version_requirement": ">=1.0.0 <2.0.0" },
     { "name": "duritong/sysctl", "version_requirement": ">=0.0.1 <1.0.0" },
-    { "name": "openstack/cinder", "version_requirement": ">=6.0.0 <7.0.0" },
-    { "name": "openstack/glance", "version_requirement": ">=6.0.0 <7.0.0" },
+    { "name": "openstack/cinder", "version_requirement": ">=7.0.0 <8.0.0" },
+    { "name": "openstack/glance", "version_requirement": ">=7.0.0 <8.0.0" },
     { "name": "puppetlabs/inifile", "version_requirement": ">=1.0.0 <2.0.0" },
-    { "name": "openstack/keystone", "version_requirement": ">=6.0.0 <7.0.0" },
+    { "name": "openstack/keystone", "version_requirement": ">=7.0.0 <8.0.0" },
     { "name": "puppetlabs/rabbitmq", "version_requirement": ">=2.0.2 <6.0.0" },
     { "name": "puppetlabs/stdlib", "version_requirement": ">=4.0.0 <5.0.0" },
-    { "name": "openstack/openstacklib", "version_requirement": ">=6.0.0 <7.0.0" }
+    { "name": "openstack/openstacklib", "version_requirement": ">=7.0.0 <8.0.0" }
   ]
 }
