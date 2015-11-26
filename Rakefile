@@ -58,7 +58,7 @@ task :spec_prep do
       zuul_clone_cmd += ['git://git.openstack.org', "#{repo}"]
       sh(*zuul_clone_cmd)
     else
-      sh("git clone https://git.openstack.org/#{repo} -b stable/liberty #{repo}")
+      sh("git clone https://git.openstack.org/#{repo} #{repo}")
     end
     script = ['env']
     script += ["PUPPETFILE_DIR=#{Dir.pwd}/spec/fixtures/modules"]
