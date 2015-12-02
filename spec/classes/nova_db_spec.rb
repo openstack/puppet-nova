@@ -79,11 +79,20 @@ describe 'nova::db' do
       })
     end
 
-    let :platform_params do
-      { :pymysql_package_name => 'python-pymysql' }
-    end
-
     it_configures 'nova::db'
+
+    context 'using pymysql driver' do
+      let :params do
+        { :database_connection   => 'mysql+pymysql://user:pass@db/db', }
+      end
+      it 'install the proper backend package' do
+        is_expected.to contain_package('nova-backend-package').with(
+          :ensure => 'present',
+          :name   => 'python-pymysql',
+          :tag    => 'openstack'
+        )
+      end
+    end
 
     context 'with sqlite backend' do
       let :params do
@@ -109,11 +118,15 @@ describe 'nova::db' do
       })
     end
 
-    let :platform_params do
-      { :pymysql_package_name => 'python2-PyMySQL' }
-    end
-
     it_configures 'nova::db'
+
+    context 'using pymysql driver' do
+      let :params do
+        { :database_connection   => 'mysql+pymysql://user:pass@db/db', }
+      end
+
+      it { is_expected.not_to contain_package('nova-backend-package') }
+    end
   end
 
 end
