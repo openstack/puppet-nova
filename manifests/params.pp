@@ -27,7 +27,7 @@ class nova::params {
       $serialproxy_package_name      = 'openstack-nova-serialproxy'
       $spicehtml5proxy_package_name  = 'openstack-nova-console'
       $sqlite_package_name           = undef
-      $pymysql_package_name          = 'python2-PyMySQL'
+      $pymysql_package_name          = undef
       # service names
       $api_service_name             = 'openstack-nova-api'
       $cells_service_name           = 'openstack-nova-cells'
