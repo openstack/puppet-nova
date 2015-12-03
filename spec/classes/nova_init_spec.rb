@@ -340,60 +340,6 @@ describe 'nova' do
       end
     end
 
-    context 'with qpid rpc_backend' do
-      let :params do
-        { :rpc_backend => 'qpid' }
-      end
-
-      context 'with default parameters' do
-        it 'configures qpid' do
-          is_expected.to contain_nova_config('DEFAULT/rpc_backend').with_value('qpid')
-          is_expected.to contain_nova_config('oslo_messaging_qpid/qpid_hostname').with_value('localhost')
-          is_expected.to contain_nova_config('oslo_messaging_qpid/qpid_port').with_value('5672')
-          is_expected.to contain_nova_config('oslo_messaging_qpid/qpid_username').with_value('guest')
-          is_expected.to contain_nova_config('oslo_messaging_qpid/qpid_password').with_value('guest').with_secret(true)
-          is_expected.to contain_nova_config('oslo_messaging_qpid/qpid_heartbeat').with_value('60')
-          is_expected.to contain_nova_config('oslo_messaging_qpid/qpid_protocol').with_value('tcp')
-          is_expected.to contain_nova_config('oslo_messaging_qpid/qpid_tcp_nodelay').with_value(true)
-        end
-      end
-
-      context 'with qpid_password parameter (without qpid_sasl_mechanisms)' do
-        before do
-          params.merge!({ :qpid_password => 'guest' })
-        end
-        it { is_expected.to contain_nova_config('oslo_messaging_qpid/qpid_sasl_mechanisms').with_ensure('absent') }
-      end
-
-      context 'with qpid_password parameter (with qpid_sasl_mechanisms)' do
-        before do
-          params.merge!({
-            :qpid_password        => 'guest',
-            :qpid_sasl_mechanisms => 'A'
-          })
-        end
-        it { is_expected.to contain_nova_config('oslo_messaging_qpid/qpid_sasl_mechanisms').with_value('A') }
-      end
-
-      context 'with qpid_password parameter (with array of qpid_sasl_mechanisms)' do
-        before do
-          params.merge!({
-            :qpid_password        => 'guest',
-            :qpid_sasl_mechanisms => [ 'DIGEST-MD5', 'GSSAPI', 'PLAIN' ]
-          })
-        end
-        it { is_expected.to contain_nova_config('oslo_messaging_qpid/qpid_sasl_mechanisms').with_value('DIGEST-MD5 GSSAPI PLAIN') }
-      end
-    end
-
-    context 'with qpid rpc_backend with old parameter' do
-      let :params do
-        { :rpc_backend => 'nova.openstack.common.rpc.impl_qpid' }
-      end
-
-      it { is_expected.to contain_nova_config('DEFAULT/rpc_backend').with_value('nova.openstack.common.rpc.impl_qpid') }
-    end
-
     context 'with rabbitmq rpc_backend with old parameter' do
       let :params do
         { :rpc_backend => 'nova.openstack.common.rpc.impl_kombu' }
