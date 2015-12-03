@@ -1,5 +1,3 @@
-require 'netaddr'
-
 Puppet::Type.type(:nova_floating).provide(:nova_manage) do
 
   desc "Manage nova floating"
@@ -48,6 +46,7 @@ Puppet::Type.type(:nova_floating).provide(:nova_manage) do
   # Create range in cidr, including first and last ip
   # Nova will create this range, excluding network and broadcast IPs
   def mixed_range
+    require 'netaddr'
     range = []
     NetAddr.merge(operate_range).each do |cidr|
       tmp_range = NetAddr::CIDR.create(cidr).enumerate
@@ -74,6 +73,7 @@ Puppet::Type.type(:nova_floating).provide(:nova_manage) do
   end
 
   def ip_range
+    require 'netaddr'
     ip_range = []
     Array(@resource[:network]).each do |rng|
       ip = rng.split('-')
