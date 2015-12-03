@@ -31,10 +31,6 @@
 #   (optional) Additional hosts that are allowed to access this DB
 #   Defaults to undef
 #
-# [*cluster_id*]
-#   (optional) Deprecated. Does nothing
-#   Defaults to 'localzone'
-#
 class nova::db::mysql(
   $password,
   $dbname        = 'nova',
