@@ -6,13 +6,30 @@ describe 'nova::db::sync' do
 
     it 'runs nova-db-sync' do
       is_expected.to contain_exec('nova-db-sync').with(
-        :command     => '/usr/bin/nova-manage db sync',
+        :command     => '/usr/bin/nova-manage  db sync',
         :refreshonly => 'true',
         :logoutput   => 'on_failure'
       )
     end
 
+    describe "overriding extra_params" do
+      let :params do
+        {
+          :extra_params => '--config-file /etc/nova/nova.conf',
+        }
+      end
+
+      it {
+        is_expected.to contain_exec('nova-db-sync').with(
+          :command     => '/usr/bin/nova-manage --config-file /etc/nova/nova.conf db sync',
+          :refreshonly => 'true',
+          :logoutput   => 'on_failure'
+        )
+        }
+      end
+
   end
+
 
   context 'on a RedHat osfamily' do
     let :facts do

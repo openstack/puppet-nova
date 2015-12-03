@@ -1,7 +1,17 @@
 #
 # Class to execute nova dbsync
 #
-class nova::db::sync {
+# ==Parameters
+#
+# [*extra_params*]
+#   (optional) String of extra command line parameters to append
+#   to the nova-manage db sync command. These will be inserted in
+#   the command line between 'nova-manage' and 'db sync'.
+#   Defaults to undef
+#
+class nova::db::sync(
+  $extra_params = undef,
+) {
 
   include ::nova::params
 
@@ -14,7 +24,7 @@ class nova::db::sync {
   Exec<| title == 'post-nova_config' |> ~> Exec['nova-db-sync']
 
   exec { 'nova-db-sync':
-    command     => '/usr/bin/nova-manage db sync',
+    command     => "/usr/bin/nova-manage ${extra_params} db sync",
     refreshonly => true,
     logoutput   => on_failure,
   }
