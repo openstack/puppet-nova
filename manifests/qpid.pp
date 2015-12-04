@@ -32,6 +32,8 @@ class nova::qpid(
   $realm    = 'OPENSTACK'
 ) {
 
+  warning('Qpid driver is removed from Oslo.messaging in the Mitaka release')
+
   # only configure nova after the queue is up
   Class['qpid::server'] -> Package<| title == 'nova-common' |>
 

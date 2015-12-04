@@ -608,6 +608,9 @@ class nova(
   # we keep "nova.openstack.common.rpc.impl_qpid" for backward compatibility
   # but since Icehouse, "qpid" is enough.
   if $rpc_backend == 'nova.openstack.common.rpc.impl_qpid' or $rpc_backend == 'qpid' {
+
+    warning('Qpid driver is removed from Oslo.messaging in the Mitaka release')
+
     nova_config {
       'oslo_messaging_qpid/qpid_hostname':               value => $qpid_hostname;
       'oslo_messaging_qpid/qpid_port':                   value => $qpid_port;
