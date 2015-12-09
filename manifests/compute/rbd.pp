@@ -97,7 +97,7 @@ class nova::compute::rbd (
       command => "/usr/bin/virsh secret-set-value --secret ${libvirt_rbd_secret_uuid} --base64 ${libvirt_key}",
       unless  => "/usr/bin/virsh secret-get-value ${libvirt_rbd_secret_uuid}",
       require => Exec['get-or-set virsh secret'],
-      before  => Achor['nova::config::end'],
+      before  => Anchor['nova::config::end'],
     }
   }
 
