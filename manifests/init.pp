@@ -188,10 +188,6 @@
 #   (optional) Syslog facility to receive log lines.
 #   Defaults to undef
 #
-# [*install_utilities*]
-#   (optional) Install nova utilities (Extra packages used by nova tools)
-#   Defaults to true,
-#
 # [*use_ssl*]
 #   (optional) Enable SSL on the API server
 #   Defaults to false, not set
@@ -330,6 +326,10 @@
 #   (optional) Disable Nagle algorithm
 #   Defaults to undef
 #
+# [*install_utilities*]
+#   (optional) Install nova utilities (Extra packages used by nova tools)
+#   Defaults to undef
+#
 class nova(
   $ensure_package                     = 'present',
   $database_connection                = undef,
@@ -382,7 +382,6 @@ class nova(
   $use_syslog                         = undef,
   $use_stderr                         = undef,
   $log_facility                       = undef,
-  $install_utilities                  = true,
   $notification_driver                = undef,
   $notification_topics                = 'notifications',
   $notify_api_faults                  = false,
@@ -407,6 +406,7 @@ class nova(
   $qpid_heartbeat                     = undef,
   $qpid_protocol                      = undef,
   $qpid_tcp_nodelay                   = undef,
+  $install_utilities                  = undef,
 ) inherits nova::params {
 
   include ::nova::deps

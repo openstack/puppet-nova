@@ -64,8 +64,8 @@ describe 'nova' do
         is_expected.to contain_nova_config('cinder/catalog_info').with('value' => 'volumev2:cinderv2:publicURL')
       end
 
-      it 'installs utilities' do
-        is_expected.to contain_class('nova::utilities')
+      it 'does not install utilities' do
+        is_expected.to_not contain_class('nova::utilities')
       end
 
     end
@@ -90,7 +90,7 @@ describe 'nova' do
           :auth_strategy                      => 'foo',
           :ensure_package                     => '2012.1.1-15.el6',
           :memcached_servers                  => ['memcached01:11211', 'memcached02:11211'],
-          :install_utilities                  => false,
+          :install_utilities                  => true,
           :notification_driver                => 'ceilometer.compute.nova_notifier',
           :notification_topics                => 'openstack',
           :notify_api_faults                  => true,
@@ -169,8 +169,8 @@ describe 'nova' do
         ) }
       end
 
-      it 'does not install utilities' do
-        is_expected.to_not contain_class('nova::utilities')
+      it 'installs utilities' do
+        is_expected.to contain_class('nova::utilities')
       end
 
     end
