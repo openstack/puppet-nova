@@ -319,7 +319,7 @@ class nova::keystone::auth(
   }
 
   if $configure_endpoint {
-    Keystone_endpoint["${region}/${real_service_name}"] ~> Service <| name == 'nova-api' |>
+    Keystone_endpoint["${region}/${real_service_name}::compute"] ~> Service <| name == 'nova-api' |>
   }
 
   keystone::resource::service_identity { "nova service, user ${auth_name}":
