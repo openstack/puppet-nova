@@ -10,7 +10,7 @@
 #   Defaults to 'present'
 #
 # [*database_connection*]
-#   (optional) Connection url for the heat database.
+#   (optional) Connection url for the nova database.
 #   Defaults to undef.
 #
 # [*slave_connection*]
