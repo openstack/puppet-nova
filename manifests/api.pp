@@ -65,8 +65,8 @@
 #   Defaults to '0.0.0.0'
 #
 # [*ec2_listen_port*]
-#   (optional) The port on which the EC2 API will listen.
-#   Defaults to port 8773
+#   (optional) DEPRECATED. The port on which the EC2 API will listen.
+#   Defaults to port undef
 #
 # [*metadata_listen*]
 #   (optional) IP address  for metadata server to listen
@@ -78,11 +78,11 @@
 #
 # [*enabled_apis*]
 #   (optional) A comma separated list of apis to enable
-#   Defaults to 'ec2,osapi_compute,metadata'
+#   Defaults to 'osapi_compute,metadata'
 #
 # [*keystone_ec2_url*]
-#   (optional) The keystone url where nova should send requests for ec2tokens
-#   Defaults to false
+#   (optional) DEPRECATED. The keystone url where nova should send requests for ec2tokens
+#   Defaults to undef
 #
 # [*volume_api_class*]
 #   (optional) The name of the class that nova will use to access volumes. Cinder is the only option.
@@ -102,8 +102,8 @@
 #   Defaults to port 8774
 #
 # [*ec2_workers*]
-#   (optional) Number of workers for EC2 service
-#   Defaults to $::processorcount
+#   (optional) DEPRECATED. Number of workers for EC2 service
+#   Defaults to undef
 #
 # [*metadata_workers*]
 #   (optional) Number of workers for metadata service
@@ -186,16 +186,13 @@ class nova::api(
   $admin_tenant_name         = 'services',
   $admin_user                = 'nova',
   $api_bind_address          = '0.0.0.0',
-  $ec2_listen_port           = 8773,
   $osapi_compute_listen_port = 8774,
   $metadata_listen           = '0.0.0.0',
   $metadata_listen_port      = 8775,
-  $enabled_apis              = 'ec2,osapi_compute,metadata',
-  $keystone_ec2_url          = false,
+  $enabled_apis              = 'osapi_compute,metadata',
   $volume_api_class          = 'nova.volume.cinder.API',
   $use_forwarded_for         = false,
   $osapi_compute_workers     = $::processorcount,
-  $ec2_workers               = $::processorcount,
   $metadata_workers          = $::processorcount,
   $sync_db                   = true,
   $neutron_metadata_proxy_shared_secret = undef,
@@ -215,6 +212,9 @@ class nova::api(
   $auth_host                 = '127.0.0.1',
   $auth_admin_prefix         = false,
   $conductor_workers         = undef,
+  $ec2_listen_port           = undef,
+  $ec2_workers               = undef,
+  $keystone_ec2_url          = undef,
 ) {
 
   include ::nova::deps
@@ -223,6 +223,10 @@ class nova::api(
   include ::nova::policy
   require ::keystone::python
   include ::cinder::client
+
+  if $ec2_listen_port or $ec2_workers or $keystone_ec2_url {
+    warning('ec2_listen_port, ec2_workers and keystone_ec2_url are deprecated and have no effect. Deploy openstack/ec2-api instead.')
+  }
 
   if $conductor_workers {
     warning('The conductor_workers parameter is deprecated and has no effect. Use workers parameter of nova::conductor class instead.')
@@ -251,15 +255,12 @@ class nova::api(
     'DEFAULT/enabled_apis':              value => $enabled_apis;
     'DEFAULT/api_paste_config':          value => $api_paste_config;
     'DEFAULT/volume_api_class':          value => $volume_api_class;
-    'DEFAULT/ec2_listen':                value => $api_bind_address;
-    'DEFAULT/ec2_listen_port':           value => $ec2_listen_port;
     'DEFAULT/osapi_compute_listen':      value => $api_bind_address;
     'DEFAULT/metadata_listen':           value => $metadata_listen;
     'DEFAULT/metadata_listen_port':      value => $metadata_listen_port;
     'DEFAULT/osapi_compute_listen_port': value => $osapi_compute_listen_port;
     'DEFAULT/osapi_volume_listen':       value => $api_bind_address;
     'DEFAULT/osapi_compute_workers':     value => $osapi_compute_workers;
-    'DEFAULT/ec2_workers':               value => $ec2_workers;
     'DEFAULT/metadata_workers':          value => $metadata_workers;
     'DEFAULT/use_forwarded_for':         value => $use_forwarded_for;
     'DEFAULT/default_floating_pool':     value => $default_floating_pool;
@@ -346,16 +347,6 @@ class nova::api(
     'keystone_authtoken/admin_tenant_name': value => $admin_tenant_name;
     'keystone_authtoken/admin_user':        value => $admin_user;
     'keystone_authtoken/admin_password':    value => $admin_password, secret => true;
-  }
-
-  if $keystone_ec2_url {
-    nova_config {
-      'DEFAULT/keystone_ec2_url': value => $keystone_ec2_url;
-    }
-  } else {
-    nova_config {
-      'DEFAULT/keystone_ec2_url': ensure => absent;
-    }
   }
 
   if ($ratelimits != undef) {

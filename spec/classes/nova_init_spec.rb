@@ -461,14 +461,14 @@ describe 'nova' do
       let :params do
         {
           :use_ssl          => true,
-          :enabled_ssl_apis => ['ec2', 'osapi_compute'],
+          :enabled_ssl_apis => ['osapi_compute'],
           :cert_file        => '/path/to/cert',
           :ca_file          => '/path/to/ca',
           :key_file         => '/path/to/key',
         }
       end
 
-      it { is_expected.to contain_nova_config('DEFAULT/enabled_ssl_apis').with_value('ec2,osapi_compute') }
+      it { is_expected.to contain_nova_config('DEFAULT/enabled_ssl_apis').with_value('osapi_compute') }
       it { is_expected.to contain_nova_config('DEFAULT/ssl_ca_file').with_value('/path/to/ca') }
       it { is_expected.to contain_nova_config('DEFAULT/ssl_cert_file').with_value('/path/to/cert') }
       it { is_expected.to contain_nova_config('DEFAULT/ssl_key_file').with_value('/path/to/key') }
@@ -478,7 +478,7 @@ describe 'nova' do
       let :params do
         {
           :use_ssl          => true,
-          :enabled_ssl_apis => ['ec2'],
+          :enabled_ssl_apis => ['osapi_compute'],
           :ca_file          => '/path/to/ca',
           :key_file         => '/path/to/key',
         }

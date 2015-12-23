@@ -70,10 +70,6 @@ describe 'basic nova' do
       apply_manifest(pp, :catch_changes => true)
     end
 
-    describe port(8773) do
-      it { is_expected.to be_listening.with('tcp') }
-    end
-
     describe port(8774) do
       it { is_expected.to be_listening.with('tcp') }
     end

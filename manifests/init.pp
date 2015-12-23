@@ -199,7 +199,7 @@
 # [*enabled_ssl_apis*]
 #   (optional) List of APIs to SSL enable
 #   Defaults to []
-#   Possible values : 'ec2', 'osapi_compute', 'metadata'
+#   Possible values : 'osapi_compute', 'metadata'
 #
 # [*cert_file*]
 #   (optinal) Certificate file to use when starting API server securely
@@ -373,7 +373,7 @@ class nova(
   $report_interval                    = '10',
   $rootwrap_config                    = '/etc/nova/rootwrap.conf',
   $use_ssl                            = false,
-  $enabled_ssl_apis                   = ['ec2', 'metadata', 'osapi_compute'],
+  $enabled_ssl_apis                   = ['metadata', 'osapi_compute'],
   $ca_file                            = false,
   $cert_file                          = false,
   $key_file                           = false,

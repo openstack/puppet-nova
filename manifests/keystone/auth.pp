@@ -34,8 +34,8 @@
 #   Defaults to 'Openstack Compute Service v3'.
 #
 # [*service_description_ec2*]
-#   (optional) Description for keystone ec2 service.
-#   Defaults to 'EC2 Service'.
+#   (optional) DEPRECATED. Description for keystone ec2 service.
+#   Defaults to undef.
 #
 # [*public_url*]
 #   (optional) The endpoint's public url. (Defaults to 'http://127.0.0.1:8774/v2/%(tenant_id)s')
@@ -62,16 +62,16 @@
 #   This url should *not* contain any version or trailing '/'.
 #
 # [*ec2_public_url*]
-#   (optional) The endpoint's public url for EC2.
-#   (Defaults to 'http://127.0.0.1:8773/services/Cloud')
+#   (optional) DEPRECATED. The endpoint's public url for EC2.
+#   Defaults to undef
 #
 # [*ec2_internal_url*]
-#   (optional) The endpoint's internal url for EC2.
-#   (Defaults to 'http://127.0.0.1:8773/services/Cloud')
+#   (optional) DEPRECATED. The endpoint's internal url for EC2.
+#   Defaults to undef
 #
 # [*ec2_admin_url*]
-#   (optional) The endpoint's admin url for EC2.
-#   (Defaults to 'http://127.0.0.1:8773/services/Admin')
+#   (optional) DEPRECATED. The endpoint's admin url for EC2.
+#   Defaults to undef
 #
 # [*region*]
 #   (optional) The region in which to place the endpoints
@@ -86,8 +86,8 @@
 #   Defaults to 'nova@localhost'
 #
 # [*configure_ec2_endpoint*]
-#   (optional) Whether to create an ec2 endpoint
-#   Defaults to true
+#   (optional) DEPRECATED. Whether to create an ec2 endpoint
+#   Defaults to undef
 #
 # [*configure_endpoint*]
 #   (optional) Whether to create the endpoint.
@@ -117,38 +117,38 @@
 #   Setting this parameter overrides public_url, internal_url and admin_url parameters.
 #
 # [*ec2_port*]
-#   (optional) DEPRECATED: Use ec2_public_url, ec2_internal_url and ec2_admin_url instead.
-#   (optional) The port to use for the ec2 endpoint. (Defaults to 8773)
+#   (optional) DEPRECATED. The port to use for the ec2 endpoint.
+#   Defaults to undef
 #
 # [*public_protocol*]
-#   (optional) DEPRECATED: Use public_url and ec2_public_url instead.
+#   (optional) DEPRECATED: Use public_url instead.
 #   Protocol for public endpoint. (Defaults to 'http')
-#   Setting this parameter overrides public_url and ec2_public_url parameters.
+#   Setting this parameter overrides public_url parameter.
 #
 # [*public_address*]
-#   (optional) DEPRECATED: Use public_url and ec2_public_url instead.
+#   (optional) DEPRECATED: Use public_url instead.
 #   Public address for endpoint. (Defaults to '127.0.0.1')
-#   Setting this parameter overrides public_url and ec2_public_url parameters.
+#   Setting this parameter overrides public_url parameter.
 #
 # [*internal_protocol*]
-#   (optional) DEPRECATED: Use internal_url and ec2_internal_url instead.
+#   (optional) DEPRECATED: Use internal_url instead.
 #   Protocol for internal endpoint. (Defaults to 'http')
-#   Setting this parameter overrides internal_url and ec2_internal_url parameters.
+#   Setting this parameter overrides internal_url parameter.
 #
 # [*internal_address*]
-#   (optional) DEPRECATED: Use internal_url and ec2_internal_url instead.
+#   (optional) DEPRECATED: Use internal_url instead.
 #   Internal address for endpoint. (Defaults to '127.0.0.1')
-#   Setting this parameter overrides internal_url and ec2_internal_url parameters.
+#   Setting this parameter overrides internal_url parameter.
 #
 # [*admin_protocol*]
-#   (optional) DEPRECATED: Use admin_url and ec2_admin_url instead.
+#   (optional) DEPRECATED: Use admin_url instead.
 #   Protocol for admin endpoint. (Defaults to 'http')
-#   Setting this parameter overrides admin_url and ec2_admin_url parameters.
+#   Setting this parameter overrides admin_url parameter.
 #
 # [*admin_address*]
 #   (optional) DEPRECATED: Use admin_url and ec2_admin_url instead.
 #   Admin address for endpoint. (Defaults to '127.0.0.1')
-#   Setting this parameter overrides admin_url and ec2_admin_url parameters.
+#   Setting this parameter overrides admin_url parameter.
 #
 class nova::keystone::auth(
   $password,
@@ -158,7 +158,6 @@ class nova::keystone::auth(
   $service_name_v3         = undef,
   $service_description     = 'Openstack Compute Service',
   $service_description_v3  = 'Openstack Compute Service v3',
-  $service_description_ec2 = 'EC2 Service',
   $region                  = 'RegionOne',
   $tenant                  = 'services',
   $email                   = 'nova@localhost',
@@ -168,10 +167,6 @@ class nova::keystone::auth(
   $public_url_v3           = 'http://127.0.0.1:8774/v3',
   $internal_url_v3         = 'http://127.0.0.1:8774/v3',
   $admin_url_v3            = 'http://127.0.0.1:8774/v3',
-  $ec2_public_url          = 'http://127.0.0.1:8773/services/Cloud',
-  $ec2_internal_url        = 'http://127.0.0.1:8773/services/Cloud',
-  $ec2_admin_url           = 'http://127.0.0.1:8773/services/Admin',
-  $configure_ec2_endpoint  = true,
   $configure_endpoint      = true,
   $configure_endpoint_v3   = true,
   $configure_user          = true,
@@ -186,6 +181,11 @@ class nova::keystone::auth(
   $admin_address           = undef,
   $internal_protocol       = undef,
   $internal_address        = undef,
+  $service_description_ec2 = undef,
+  $ec2_public_url          = undef,
+  $ec2_internal_url        = undef,
+  $ec2_admin_url           = undef,
+  $configure_ec2_endpoint  = undef,
 ) {
 
   include ::nova::deps
@@ -198,50 +198,32 @@ class nova::keystone::auth(
     warning('The compute_port parameter is deprecated, use public_url, internal_url and admin_url instead.')
   }
 
-  if $ec2_port {
-    warning('The ec2_port parameter is deprecated, use ec2_public_url, ec2_internal_url and ec2_admin_url instead.')
+  if $ec2_port or $service_description_ec2 or $ec2_public_url or $ec2_internal_url or $ec2_admin_url or $configure_ec2_endpoint {
+    warning('ec2_port, service_description_ec2, ec2_public_url, ec2_internal_url, ec2_admin_url and configure_ec2_endpoint are deprecated and have no effect..')
   }
 
   if $public_protocol {
     warning('The public_protocol parameter is deprecated, use public_url instead.')
-    if $configure_ec2_endpoint {
-      warning('The public_protocol parameter is deprecated, use ec2_public_url instead.')
-    }
   }
 
   if $internal_protocol {
     warning('The internal_protocol parameter is deprecated, use internal_url instead.')
-    if $configure_ec2_endpoint {
-      warning('The internal_protocol parameter is deprecated, use ec2_public_url instead.')
-    }
   }
 
   if $admin_protocol {
     warning('The admin_protocol parameter is deprecated, use admin_url instead.')
-    if $configure_ec2_endpoint {
-      warning('The admin_protocol parameter is deprecated, use ec2_admin_url instead.')
-    }
   }
 
   if $public_address {
     warning('The public_address parameter is deprecated, use public_url instead.')
-    if $configure_ec2_endpoint {
-      warning('The public_address parameter is deprecated, use ec2_public_url instead.')
-    }
   }
 
   if $internal_address {
     warning('The internal_address parameter is deprecated, use internal_url instead.')
-    if $configure_ec2_endpoint {
-      warning('The internal_address parameter is deprecated, use ec2_internal_url instead.')
-    }
   }
 
   if $admin_address {
     warning('The admin_address parameter is deprecated, use admin_url instead.')
-    if $configure_ec2_endpoint {
-      warning('The admin_address parameter is deprecated, use ec2_admin_url instead.')
-    }
   }
 
   if $service_name == undef {
@@ -290,34 +272,6 @@ class nova::keystone::auth(
     $admin_url_real = $admin_url
   }
 
-  # EC2 endpoints
-  if ($public_protocol or $public_address or $ec2_port) {
-    $ec2_public_url_real = sprintf('%s://%s:%s/services/Cloud',
-      pick($public_protocol, 'http'),
-      pick($public_address, '127.0.0.1'),
-      pick($ec2_port, '8773'))
-  } else {
-    $ec2_public_url_real = $ec2_public_url
-  }
-
-  if ($internal_protocol or $internal_address or $ec2_port) {
-    $ec2_internal_url_real = sprintf('%s://%s:%s/services/Cloud',
-      pick($internal_protocol, 'http'),
-      pick($internal_address, '127.0.0.1'),
-      pick($ec2_port, '8773'))
-  } else {
-    $ec2_internal_url_real = $ec2_internal_url
-  }
-
-  if ($admin_protocol or $admin_address or $ec2_port) {
-    $ec2_admin_url_real = sprintf('%s://%s:%s/services/Admin',
-      pick($admin_protocol, 'http'),
-      pick($admin_address, '127.0.0.1'),
-      pick($ec2_port, '8773'))
-  } else {
-    $ec2_admin_url_real = $ec2_admin_url
-  }
-
   if $configure_endpoint {
     Keystone_endpoint["${region}/${real_service_name}::compute"] ~> Service <| name == 'nova-api' |>
   }
@@ -353,20 +307,4 @@ class nova::keystone::auth(
     admin_url           => $admin_url_v3,
     internal_url        => $internal_url_v3,
   }
-
-  keystone::resource::service_identity { "nova ec2 service, user ${auth_name}_ec2":
-    configure_user      => false,
-    configure_user_role => false,
-    configure_endpoint  => $configure_ec2_endpoint,
-    configure_service   => $configure_ec2_endpoint,
-    service_type        => 'ec2',
-    service_description => $service_description_ec2,
-    service_name        => "${real_service_name}_ec2",
-    region              => $region,
-    auth_name           => "${auth_name}_ec2",
-    public_url          => $ec2_public_url_real,
-    admin_url           => $ec2_admin_url_real,
-    internal_url        => $ec2_internal_url_real,
-  }
-
 }

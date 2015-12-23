@@ -61,15 +61,12 @@ describe 'nova::api' do
 
       it 'configures various stuff' do
         is_expected.to contain_nova_config('DEFAULT/api_paste_config').with('value' => 'api-paste.ini')
-        is_expected.to contain_nova_config('DEFAULT/ec2_listen').with('value' => '0.0.0.0')
-        is_expected.to contain_nova_config('DEFAULT/ec2_listen_port').with('value' => '8773')
         is_expected.to contain_nova_config('DEFAULT/osapi_compute_listen').with('value' => '0.0.0.0')
         is_expected.to contain_nova_config('DEFAULT/osapi_compute_listen_port').with('value' => '8774')
         is_expected.to contain_nova_config('DEFAULT/metadata_listen').with('value' => '0.0.0.0')
         is_expected.to contain_nova_config('DEFAULT/metadata_listen_port').with('value' => '8775')
         is_expected.to contain_nova_config('DEFAULT/osapi_volume_listen').with('value' => '0.0.0.0')
         is_expected.to contain_nova_config('DEFAULT/osapi_compute_workers').with('value' => '5')
-        is_expected.to contain_nova_config('DEFAULT/ec2_workers').with('value' => '5')
         is_expected.to contain_nova_config('DEFAULT/metadata_workers').with('value' => '5')
         is_expected.to contain_nova_config('DEFAULT/default_floating_pool').with('value' => 'nova')
         is_expected.to contain_nova_config('DEFAULT/fping_path').with('value' => '/usr/sbin/fping')
@@ -103,7 +100,6 @@ describe 'nova::api' do
           :metadata_listen                      => '127.0.0.1',
           :metadata_listen_port                 => 8875,
           :osapi_compute_listen_port            => 8874,
-          :ec2_listen_port                      => 8873,
           :volume_api_class                     => 'nova.volume.cinder.API',
           :use_forwarded_for                    => false,
           :ratelimits                           => '(GET, "*", .*, 100, MINUTE);(POST, "*", .*, 200, MINUTE)',
@@ -112,7 +108,6 @@ describe 'nova::api' do
           :metadata_workers                     => 2,
           :default_floating_pool                => 'public',
           :osapi_v3                             => true,
-          :keystone_ec2_url                     => 'https://example.com:5000/v2.0/ec2tokens',
           :pci_alias                            => "[{\"vendor_id\":\"8086\",\"product_id\":\"0126\",\"name\":\"graphic_card\"},{\"vendor_id\":\"9096\",\"product_id\":\"1520\",\"name\":\"network_card\"}]"
         })
       end
@@ -156,8 +151,6 @@ describe 'nova::api' do
       end
 
       it 'configures various stuff' do
-        is_expected.to contain_nova_config('DEFAULT/ec2_listen').with('value' => '192.168.56.210')
-        is_expected.to contain_nova_config('DEFAULT/ec2_listen_port').with('value' => '8873')
         is_expected.to contain_nova_config('DEFAULT/osapi_compute_listen').with('value' => '192.168.56.210')
         is_expected.to contain_nova_config('DEFAULT/osapi_compute_listen_port').with('value' => '8874')
         is_expected.to contain_nova_config('DEFAULT/metadata_listen').with('value' => '127.0.0.1')
@@ -169,7 +162,6 @@ describe 'nova::api' do
         is_expected.to contain_nova_config('DEFAULT/default_floating_pool').with('value' => 'public')
         is_expected.to contain_nova_config('neutron/service_metadata_proxy').with('value' => true)
         is_expected.to contain_nova_config('neutron/metadata_proxy_shared_secret').with('value' => 'secrete')
-        is_expected.to contain_nova_config('DEFAULT/keystone_ec2_url').with('value' => 'https://example.com:5000/v2.0/ec2tokens')
       end
 
       it 'configure nova api v3' do
