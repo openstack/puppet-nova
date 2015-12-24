@@ -92,18 +92,6 @@
 #   The driver that will manage the running instances.
 #   Defaults to nova.compute.manager.ComputeManager
 #
-#  [*default_availability_zone*]
-#   (optional) Default compute node availability zone.
-#   Defaults to nova
-#
-#  [*default_schedule_zone*]
-#   (optional) Availability zone to use when user doesn't specify one.
-#   Defaults to undef
-#
-#  [*internal_service_availability_zone*]
-#   (optional) The availability zone to show internal services under.
-#   Defaults to internal
-#
 #  [*pci_passthrough*]
 #   (optional) Pci passthrough hash in format of:
 #   Defaults to undef
@@ -119,6 +107,20 @@
 #    (optional) Allow destination machine to match source for resize.
 #    Useful when testing in single-host environments.
 #    Defaults to false
+#
+# DEPRECATED PARAMETERS
+#
+#  [*default_availability_zone*]
+#   (optional) Default compute node availability zone.
+#   Defaults to undef
+#
+#  [*default_schedule_zone*]
+#   (optional) Availability zone to use when user doesn't specify one.
+#   Defaults to undef
+#
+#  [*internal_service_availability_zone*]
+#   (optional) The availability zone to show internal services under.
+#   Defaults to undef
 #
 class nova::compute (
   $enabled                            = true,
@@ -141,17 +143,32 @@ class nova::compute (
   $force_raw_images                   = true,
   $reserved_host_memory               = '512',
   $compute_manager                    = 'nova.compute.manager.ComputeManager',
-  $default_availability_zone          = 'nova',
-  $default_schedule_zone              = undef,
-  $internal_service_availability_zone = 'internal',
   $heal_instance_info_cache_interval  = '60',
   $pci_passthrough                    = undef,
   $config_drive_format                = undef,
   $allow_resize_to_same_host          = false,
+  # DEPRECATED PARAMETERS
+  $default_availability_zone          = undef,
+  $default_schedule_zone              = undef,
+  $internal_service_availability_zone = undef,
 ) {
 
   include ::nova::deps
   include ::nova::params
+
+  if $default_availability_zone {
+    warning('The default_availability_zone parameter is deprecated and will be removed in a future release. Use default_availability_zone parameter of nova class instead.')
+  }
+
+  if $default_schedule_zone {
+    warning('The default_schedule_zone parameter is deprecated and will be removed in a future release. Use default_schedule_zone parameter of nova class instead.')
+  }
+
+  if $internal_service_availability_zone {
+    warning('The internal_service_availability_zone parameter is deprecated and will be removed in a future release. Use internal_service_availability_zone parameter of nova class instead.')
+  }
+
+  include ::nova::availability_zone
 
   nova_config {
     'DEFAULT/reserved_host_memory_mb':           value => $reserved_host_memory;
@@ -230,17 +247,6 @@ class nova::compute (
 
   nova_config {
     'DEFAULT/force_raw_images': value => $force_raw_images;
-  }
-
-  nova_config {
-    'DEFAULT/default_availability_zone':          value => $default_availability_zone;
-    'DEFAULT/internal_service_availability_zone': value => $internal_service_availability_zone;
-  }
-
-  if $default_schedule_zone {
-    nova_config {
-      'DEFAULT/default_schedule_zone': value => $default_schedule_zone;
-    }
   }
 
   if ($pci_passthrough) {
