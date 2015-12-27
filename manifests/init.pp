@@ -773,5 +773,7 @@ class nova(
   # Deprecated in Juno, removed in Kilo
   nova_config {
     'DEFAULT/os_region_name':       ensure => absent;
+    'DEFAULT/rabbit_userid':        ensure => absent;
+    'DEFAULT/rabbit_host':          ensure => absent;
   }
 }
