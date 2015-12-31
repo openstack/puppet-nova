@@ -37,18 +37,10 @@ describe 'nova::api' do
       end
 
       it 'configures keystone_authtoken middleware' do
-        is_expected.to contain_nova_config(
-         'keystone_authtoken/auth_host').with_value('127.0.0.1')
-        is_expected.to contain_nova_config(
-          'keystone_authtoken/auth_port').with_value('35357')
-        is_expected.to contain_nova_config(
-          'keystone_authtoken/auth_protocol').with_value('http')
-        is_expected.to contain_nova_config(
+       is_expected.to contain_nova_config(
           'keystone_authtoken/auth_uri').with_value('http://127.0.0.1:5000/')
-        is_expected.to contain_nova_config(
-          'keystone_authtoken/auth_admin_prefix').with_ensure('absent')
-        is_expected.to contain_nova_config(
-          'keystone_authtoken/auth_version').with_ensure('absent')
+       is_expected.to contain_nova_config(
+          'keystone_authtoken/identity_uri').with_value('http://127.0.0.1:35357/')
         is_expected.to contain_nova_config(
           'keystone_authtoken/admin_tenant_name').with_value('services')
         is_expected.to contain_nova_config(
@@ -87,12 +79,8 @@ describe 'nova::api' do
         params.merge!({
           :enabled                              => false,
           :ensure_package                       => '2012.1-2',
-          :auth_host                            => '10.0.0.1',
-          :auth_port                            => 1234,
-          :auth_protocol                        => 'https',
-          :auth_admin_prefix                    => '/keystone/admin',
           :auth_uri                             => 'https://10.0.0.1:9999/',
-          :auth_version                         => 'v3.0',
+          :identity_uri                         => 'https://10.0.0.1:8888/',
           :admin_tenant_name                    => 'service2',
           :admin_user                           => 'nova2',
           :admin_password                       => 'passw0rd2',
@@ -129,17 +117,9 @@ describe 'nova::api' do
 
       it 'configures keystone_authtoken middleware' do
         is_expected.to contain_nova_config(
-          'keystone_authtoken/auth_host').with_value('10.0.0.1')
-        is_expected.to contain_nova_config(
-          'keystone_authtoken/auth_port').with_value('1234')
-        is_expected.to contain_nova_config(
-          'keystone_authtoken/auth_protocol').with_value('https')
-        is_expected.to contain_nova_config(
-          'keystone_authtoken/auth_admin_prefix').with_value('/keystone/admin')
-        is_expected.to contain_nova_config(
           'keystone_authtoken/auth_uri').with_value('https://10.0.0.1:9999/')
         is_expected.to contain_nova_config(
-          'keystone_authtoken/auth_version').with_value('v3.0')
+          'keystone_authtoken/identity_uri').with_value('https://10.0.0.1:8888/')
         is_expected.to contain_nova_config(
           'keystone_authtoken/admin_tenant_name').with_value('service2')
         is_expected.to contain_nova_config(
@@ -172,23 +152,6 @@ describe 'nova::api' do
         is_expected.to contain_nova_config('DEFAULT/pci_alias').with(
           'value' => "[{\"vendor_id\":\"8086\",\"product_id\":\"0126\",\"name\":\"graphic_card\"},{\"vendor_id\":\"9096\",\"product_id\":\"1520\",\"name\":\"network_card\"}]"
         )
-      end
-    end
-
-    [
-      '/keystone/',
-      'keystone/',
-      'keystone',
-      '/keystone/admin/',
-      'keystone/admin/',
-      'keystone/admin'
-    ].each do |auth_admin_prefix|
-      context "with auth_admin_prefix_containing incorrect value #{auth_admin_prefix}" do
-        before do
-          params.merge!({ :auth_admin_prefix => auth_admin_prefix })
-        end
-        it { expect { is_expected.to contain_nova_config('keystone_authtoken/auth_admin_prefix') }.to \
-          raise_error(Puppet::Error, /validate_re\(\): "#{auth_admin_prefix}" does not match/) }
       end
     end
 
@@ -286,15 +249,10 @@ describe 'nova::api' do
       end
       it 'configures identity_uri' do
         is_expected.to contain_nova_config('keystone_authtoken/identity_uri').with_value("https://foo.bar:1234/");
-        # since only auth_uri is set the deprecated auth parameters is_expected.to
-        # still get set in case they are still in use
-        is_expected.to contain_nova_config('keystone_authtoken/auth_host').with_value('127.0.0.1');
-        is_expected.to contain_nova_config('keystone_authtoken/auth_port').with_value('35357');
-        is_expected.to contain_nova_config('keystone_authtoken/auth_protocol').with_value('http');
       end
     end
 
-    context 'with custom keystone identity_uri and auth_uri' do
+    context 'with custom keystone identity_uri and auth_uri ' do
       before do
         params.merge!({
           :identity_uri => 'https://foo.bar:35357/',
@@ -304,10 +262,6 @@ describe 'nova::api' do
       it 'configures identity_uri' do
         is_expected.to contain_nova_config('keystone_authtoken/identity_uri').with_value("https://foo.bar:35357/");
         is_expected.to contain_nova_config('keystone_authtoken/auth_uri').with_value("https://foo.bar:5000/v2.0/");
-        is_expected.to contain_nova_config('keystone_authtoken/auth_host').with_ensure('absent')
-        is_expected.to contain_nova_config('keystone_authtoken/auth_port').with_ensure('absent')
-        is_expected.to contain_nova_config('keystone_authtoken/auth_protocol').with_ensure('absent')
-        is_expected.to contain_nova_config('keystone_authtoken/auth_admin_prefix').with_ensure('absent')
       end
     end
 
