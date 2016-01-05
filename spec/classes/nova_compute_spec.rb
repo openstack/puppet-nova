@@ -92,6 +92,7 @@ describe 'nova::compute' do
       it 'configures vnc in nova.conf' do
         is_expected.to contain_nova_config('DEFAULT/vnc_enabled').with_value(true)
         is_expected.to contain_nova_config('DEFAULT/vncserver_proxyclient_address').with_value('127.0.0.1')
+        is_expected.to contain_nova_config('DEFAULT/vnc_keymap').with_value('en-us')
         is_expected.to contain_nova_config('DEFAULT/novncproxy_base_url').with_value(
           'http://127.0.0.1:6080/vnc_auto.html'
         )
@@ -152,7 +153,8 @@ describe 'nova::compute' do
 
       it 'disables vnc in nova.conf' do
         is_expected.to contain_nova_config('DEFAULT/vnc_enabled').with_value(false)
-        is_expected.to contain_nova_config('DEFAULT/vncserver_proxyclient_address').with_value('127.0.0.1')
+        is_expected.to contain_nova_config('DEFAULT/vncserver_proxyclient_address').with_ensure('absent')
+        is_expected.to contain_nova_config('DEFAULT/vnc_keymap').with_ensure('absent')
         is_expected.to_not contain_nova_config('DEFAULT/novncproxy_base_url')
       end
     end
