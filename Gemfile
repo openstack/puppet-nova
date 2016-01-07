@@ -3,6 +3,7 @@ source ENV['GEM_SOURCE'] || "https://rubygems.org"
 group :development, :test do
   gem 'puppetlabs_spec_helper',               :require => 'false'
   gem 'rspec-puppet', '~> 2.2.0',             :require => 'false'
+  gem 'rspec-puppet-facts',                   :require => 'false'
   gem 'metadata-json-lint',                   :require => 'false'
   gem 'puppet-lint-param-docs',               :require => 'false'
   gem 'puppet-lint-absolute_classname-check', :require => 'false'
@@ -14,13 +15,13 @@ group :development, :test do
   gem 'puppet-lint-numericvariable',          :require => 'false'
   gem 'json',                                 :require => 'false'
   gem 'webmock',                              :require => 'false'
-  gem 'r10k',                                 :require => 'false'
   gem 'netaddr',                              :require => 'false'
 end
 
 group :system_tests do
   gem 'beaker-rspec',                 :require => 'false'
   gem 'beaker-puppet_install_helper', :require => 'false'
+  gem 'r10k',                         :require => 'false'
 end
 
 if facterversion = ENV['FACTER_GEM_VERSION']
