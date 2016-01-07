@@ -101,4 +101,16 @@ describe 'nova::vncproxy' do
 
   end
 
+  describe 'Support IPv6' do
+    let :facts do
+      { :osfamily => 'Debian' }
+    end
+    let :params do
+      { :host => '2001::1' }
+    end
+    it { is_expected.to contain_nova_config('DEFAULT/novncproxy_base_url').with(
+      :value => 'http://[2001::1]:6080/vnc_auto.html'
+    )}
+  end
+
 end
