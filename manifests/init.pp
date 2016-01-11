@@ -328,7 +328,10 @@
 #  (optional) Sets a version cap for messages sent to scheduler services
 #  Defaults to undef
 #
-
+# [*use_ipv6*]
+#   (optional) Use IPv6 or not.
+#   Defaults to false
+#
 class nova(
   $ensure_package                     = 'present',
   $database_connection                = undef,
@@ -405,6 +408,7 @@ class nova(
   $upgrade_level_intercell            = undef,
   $upgrade_level_network              = undef,
   $upgrade_level_scheduler            = undef,
+  $use_ipv6                           = false,
 ) inherits nova::params {
 
   # maintain backward compatibility
@@ -681,6 +685,7 @@ class nova(
     'DEFAULT/service_down_time':   value => $service_down_time;
     'DEFAULT/rootwrap_config':     value => $rootwrap_config;
     'DEFAULT/report_interval':     value => $report_interval;
+    'DEFAULT/use_ipv6':            value => $use_ipv6;
   }
 
   if $notify_on_state_change and $notify_on_state_change in ['vm_state', 'vm_and_task_state'] {
