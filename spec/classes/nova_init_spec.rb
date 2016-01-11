@@ -73,6 +73,7 @@ describe 'nova' do
         is_expected.to contain_nova_config('DEFAULT/service_down_time').with_value('60')
         is_expected.to contain_nova_config('DEFAULT/rootwrap_config').with_value('/etc/nova/rootwrap.conf')
         is_expected.to contain_nova_config('DEFAULT/report_interval').with_value('10')
+        is_expected.to contain_nova_config('DEFAULT/use_ipv6').with_value('false')
         is_expected.to contain_nova_config('DEFAULT/os_region_name').with_ensure('absent')
       end
 
@@ -108,6 +109,7 @@ describe 'nova' do
           :notification_topics      => 'openstack',
           :notify_api_faults        => true,
           :report_interval          => '60',
+          :use_ipv6                 => true,
           :os_region_name           => 'MyRegion' }
       end
 
@@ -151,6 +153,7 @@ describe 'nova' do
         is_expected.to contain_nova_config('DEFAULT/notify_api_faults').with_value(true)
         is_expected.to contain_nova_config('DEFAULT/report_interval').with_value('60')
         is_expected.to contain_nova_config('DEFAULT/os_region_name').with_value('MyRegion')
+        is_expected.to contain_nova_config('DEFAULT/use_ipv6').with_value('true')
       end
 
       context 'with multiple notification_driver' do

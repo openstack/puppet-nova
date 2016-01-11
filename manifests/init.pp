@@ -245,6 +245,10 @@
 #   exceptions in the nova API service.
 #   Defaults to undef
 #
+# [*use_ipv6*]
+#   (optional) Use IPv6 or not.
+#   Defaults to false
+#
 class nova(
   $ensure_package           = 'present',
   $database_connection      = false,
@@ -301,6 +305,7 @@ class nova(
   $notification_topics      = 'notifications',
   $notify_api_faults        = false,
   $notify_on_state_change   = undef,
+  $use_ipv6                 = false,
   # DEPRECATED PARAMETERS
   $mysql_module             = undef,
   $os_region_name           = undef,
@@ -604,6 +609,7 @@ class nova(
     'DEFAULT/service_down_time':   value => $service_down_time;
     'DEFAULT/rootwrap_config':     value => $rootwrap_config;
     'DEFAULT/report_interval':     value => $report_interval;
+    'DEFAULT/use_ipv6':            value => $use_ipv6;
   }
 
   if $notify_on_state_change and $notify_on_state_change in ['vm_state', 'vm_and_task_state'] {
