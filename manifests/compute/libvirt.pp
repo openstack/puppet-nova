@@ -185,7 +185,7 @@ class nova::compute::libvirt (
 
   nova_config {
     'DEFAULT/compute_driver':   value => $compute_driver;
-    'DEFAULT/vncserver_listen': value => $vncserver_listen;
+    'vnc/vncserver_listen':     value => $vncserver_listen;
     'libvirt/virt_type':        value => $libvirt_virt_type;
     'libvirt/cpu_mode':         value => $libvirt_cpu_mode_real;
     'libvirt/inject_password':  value => $libvirt_inject_password;

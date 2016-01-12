@@ -26,7 +26,7 @@ describe 'nova::compute' do
 
       it { is_expected.to contain_nova_config('DEFAULT/network_device_mtu').with(:ensure => 'absent') }
       it { is_expected.to contain_nova_config('DEFAULT/allow_resize_to_same_host').with(:value => 'false') }
-      it { is_expected.to_not contain_nova_config('DEFAULT/novncproxy_base_url') }
+      it { is_expected.to_not contain_nova_config('vnc/novncproxy_base_url') }
 
 
       it { is_expected.to_not contain_package('bridge-utils').with(
@@ -90,10 +90,10 @@ describe 'nova::compute' do
       end
 
       it 'configures vnc in nova.conf' do
-        is_expected.to contain_nova_config('DEFAULT/vnc_enabled').with_value(true)
-        is_expected.to contain_nova_config('DEFAULT/vncserver_proxyclient_address').with_value('127.0.0.1')
-        is_expected.to contain_nova_config('DEFAULT/vnc_keymap').with_value('en-us')
-        is_expected.to contain_nova_config('DEFAULT/novncproxy_base_url').with_value(
+        is_expected.to contain_nova_config('vnc/enabled').with_value(true)
+        is_expected.to contain_nova_config('vnc/vncserver_proxyclient_address').with_value('127.0.0.1')
+        is_expected.to contain_nova_config('vnc/keymap').with_value('en-us')
+        is_expected.to contain_nova_config('vnc/novncproxy_base_url').with_value(
           'http://127.0.0.1:6080/vnc_auto.html'
         )
       end
@@ -152,10 +152,10 @@ describe 'nova::compute' do
       end
 
       it 'disables vnc in nova.conf' do
-        is_expected.to contain_nova_config('DEFAULT/vnc_enabled').with_value(false)
-        is_expected.to contain_nova_config('DEFAULT/vncserver_proxyclient_address').with_ensure('absent')
-        is_expected.to contain_nova_config('DEFAULT/vnc_keymap').with_ensure('absent')
-        is_expected.to_not contain_nova_config('DEFAULT/novncproxy_base_url')
+        is_expected.to contain_nova_config('vnc/enabled').with_value(false)
+        is_expected.to contain_nova_config('vnc/vncserver_proxyclient_address').with_ensure('absent')
+        is_expected.to contain_nova_config('vnc/keymap').with_ensure('absent')
+        is_expected.to_not contain_nova_config('vnc/novncproxy_base_url')
       end
     end
 
@@ -210,7 +210,7 @@ describe 'nova::compute' do
         { :vnc_keymap => 'fr', }
       end
 
-      it { is_expected.to contain_nova_config('DEFAULT/vnc_keymap').with_value('fr') }
+      it { is_expected.to contain_nova_config('vnc/keymap').with_value('fr') }
     end
   end
 

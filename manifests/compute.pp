@@ -164,18 +164,18 @@ class nova::compute (
     include ::nova::vncproxy::common
 
     nova_config {
-      'DEFAULT/vncserver_proxyclient_address': value =>
+      'vnc/vncserver_proxyclient_address': value =>
         $vncserver_proxyclient_address;
-      'DEFAULT/vnc_keymap':                    value => $vnc_keymap;
+      'vnc/keymap':                        value => $vnc_keymap;
     }
   } else {
     nova_config {
-      'DEFAULT/vncserver_proxyclient_address': ensure => absent;
-      'DEFAULT/vnc_keymap':                    ensure => absent;
+      'vnc/vncserver_proxyclient_address': ensure => absent;
+      'vnc/keymap':                        ensure => absent;
     }
   }
   nova_config {
-    'DEFAULT/vnc_enabled': value => $vnc_enabled;
+    'vnc/enabled': value => $vnc_enabled;
   }
 
   if $neutron_enabled != true and $install_bridge_utils {
