@@ -39,8 +39,8 @@ class Puppet::Provider::Nova < Puppet::Provider
 
   def self.get_nova_credentials
     #needed keys for authentication
-    auth_keys = ['auth_host', 'auth_port', 'auth_protocol',
-                 'admin_tenant_name', 'admin_user', 'admin_password']
+    auth_keys = ['auth_uri', 'admin_tenant_name', 'admin_user',
+                 'admin_password']
     conf = nova_conf
     if conf and conf['keystone_authtoken'] and
         auth_keys.all?{|k| !conf['keystone_authtoken'][k].nil?}
@@ -59,7 +59,7 @@ class Puppet::Provider::Nova < Puppet::Provider
 
   def self.get_auth_endpoint
     q = nova_credentials
-    "#{q['auth_protocol']}://#{q['auth_host']}:#{q['auth_port']}/v2.0/"
+    "#{q['auth_uri']}"
   end
 
   def self.auth_endpoint
