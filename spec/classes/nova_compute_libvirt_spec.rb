@@ -56,7 +56,8 @@ describe 'nova::compute::libvirt' do
 
     describe 'with params' do
       let :params do
-        { :libvirt_virt_type                          => 'qemu',
+        { :ensure_package                             => 'latest',
+          :libvirt_virt_type                          => 'qemu',
           :vncserver_listen                           => '0.0.0.0',
           :libvirt_cpu_mode                           => 'host-passthrough',
           :libvirt_cpu_model                          => 'kvm64',
@@ -70,6 +71,10 @@ describe 'nova::compute::libvirt' do
         }
       end
 
+      it { is_expected.to contain_package('nova-compute-qemu').with(
+        :name   => 'nova-compute-qemu',
+        :ensure => 'latest'
+      ) }
       it { is_expected.to contain_nova_config('DEFAULT/compute_driver').with_value('libvirt.FoobarDriver')}
       it { is_expected.to contain_nova_config('libvirt/virt_type').with_value('qemu')}
       it { is_expected.to contain_nova_config('libvirt/cpu_mode').with_value('host-passthrough')}

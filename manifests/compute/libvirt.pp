@@ -5,6 +5,10 @@
 #
 # === Parameters:
 #
+# [*ensure_package*]
+#   (optional) The state of nova packages
+#   Defaults to 'present'
+#
 # [*libvirt_virt_type*]
 #   (optional) Libvirt domain type. Options are: kvm, lxc, qemu, uml, xen
 #   Defaults to 'kvm'
@@ -89,6 +93,7 @@
 #   Defaults to 'libvirt.LibvirtDriver'
 #
 class nova::compute::libvirt (
+  $ensure_package                             = 'present',
   $libvirt_virt_type                          = 'kvm',
   $vncserver_listen                           = '127.0.0.1',
   $migration_support                          = false,
@@ -127,7 +132,7 @@ class nova::compute::libvirt (
 
   if($::osfamily == 'Debian') {
     package { "nova-compute-${libvirt_virt_type}":
-      ensure => present,
+      ensure => $ensure_package,
       tag    => ['openstack', 'nova-package'],
     }
   }
