@@ -472,9 +472,9 @@ describe 'nova' do
       end
 
       it { is_expected.to contain_nova_config('DEFAULT/enabled_ssl_apis').with_value('osapi_compute') }
-      it { is_expected.to contain_nova_config('DEFAULT/ssl_ca_file').with_value('/path/to/ca') }
-      it { is_expected.to contain_nova_config('DEFAULT/ssl_cert_file').with_value('/path/to/cert') }
-      it { is_expected.to contain_nova_config('DEFAULT/ssl_key_file').with_value('/path/to/key') }
+      it { is_expected.to contain_nova_config('ssl/ca_file').with_value('/path/to/ca') }
+      it { is_expected.to contain_nova_config('ssl/cert_file').with_value('/path/to/cert') }
+      it { is_expected.to contain_nova_config('ssl/key_file').with_value('/path/to/key') }
     end
 
     context 'with SSL socket options set with wrong parameters' do
@@ -502,9 +502,9 @@ describe 'nova' do
       end
 
       it { is_expected.to contain_nova_config('DEFAULT/enabled_ssl_apis').with_ensure('absent') }
-      it { is_expected.to contain_nova_config('DEFAULT/ssl_ca_file').with_ensure('absent') }
-      it { is_expected.to contain_nova_config('DEFAULT/ssl_cert_file').with_ensure('absent') }
-      it { is_expected.to contain_nova_config('DEFAULT/ssl_key_file').with_ensure('absent') }
+      it { is_expected.to contain_nova_config('ssl/ca_file').with_ensure('absent') }
+      it { is_expected.to contain_nova_config('ssl/cert_file').with_ensure('absent') }
+      it { is_expected.to contain_nova_config('ssl/key_file').with_ensure('absent') }
     end
 
   end

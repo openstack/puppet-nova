@@ -615,24 +615,24 @@ class nova(
   if $use_ssl {
     nova_config {
       'DEFAULT/enabled_ssl_apis' : value => join($enabled_ssl_apis, ',');
-      'DEFAULT/ssl_cert_file' :    value => $cert_file;
-      'DEFAULT/ssl_key_file' :     value => $key_file;
+      'ssl/cert_file' :    value => $cert_file;
+      'ssl/key_file' :     value => $key_file;
     }
     if $ca_file {
-      nova_config { 'DEFAULT/ssl_ca_file' :
+      nova_config { 'ssl/ca_file' :
         value => $ca_file,
       }
     } else {
-      nova_config { 'DEFAULT/ssl_ca_file' :
+      nova_config { 'ssl/ca_file' :
         ensure => absent,
       }
     }
   } else {
     nova_config {
       'DEFAULT/enabled_ssl_apis' : ensure => absent;
-      'DEFAULT/ssl_cert_file' :    ensure => absent;
-      'DEFAULT/ssl_key_file' :     ensure => absent;
-      'DEFAULT/ssl_ca_file' :      ensure => absent;
+      'ssl/cert_file' :            ensure => absent;
+      'ssl/key_file' :             ensure => absent;
+      'ssl/ca_file' :              ensure => absent;
     }
   }
 
