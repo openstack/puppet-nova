@@ -214,6 +214,76 @@ EOT
     end
   end
 
+  describe 'when parsing cli output with cells enabled' do
+
+    it 'should return a list with hashes' do
+      output = <<-EOT
++-------------+----------------+-------------------+
+| Id          | Name           | Availability Zone |
++-------------+----------------+-------------------+
+| api!cell@1  | api!cell@haha  | haha2             |
+| api!cell@2  | api!cell@haha2 | -                 |
++-------------+----------------+-------------------+
+      EOT
+      res = klass.cliout2list(output)
+      expect(res).to eq([{"Id"=>"api!cell@1", "Name"=>"api!cell@haha", "Availability Zone"=>"haha2"},
+                     {"Id"=>"api!cell@2", "Name"=>"api!cell@haha2", "Availability Zone"=>""}])
+    end
+
+    it 'should return a list with hashes' do
+      output = <<-EOT
++-------------+----------------+-------------------+-------+--------------------------------------------------+
+| Id          | Name           | Availability Zone | Hosts | Metadata                                         |
++-------------+----------------+-------------------+-------+--------------------------------------------------+
+| api!cell@16 | api!cell@agg94 |  my_-zone1        |       | 'a=b', 'availability_zone= my_-zone1', 'x_q-r=y' |
++-------------+----------------+-------------------+-------+--------------------------------------------------+
+EOT
+      res = klass.cliout2list(output)
+      expect(res).to eq([{"Id"=>"api!cell@16",
+                       "Name"=>"api!cell@agg94",
+                       "Availability Zone"=>"my_-zone1",
+                       "Hosts"=>"",
+                       "Metadata"=> {
+                         "a"=>"b",
+                         "availability_zone"=>" my_-zone1",
+                         "x_q-r"=>"y"
+                         }
+                     }])
+    end
+
+    it 'should return a empty list' do
+      output = <<-EOT
++----+------+-------------------+
+| Id | Name | Availability Zone |
++----+------+-------------------+
++----+------+-------------------+
+      EOT
+      res = klass.cliout2list(output)
+      expect(res).to eq([])
+    end
+
+    it 'should return a empty list because no input available' do
+      output = <<-EOT
+      EOT
+      res = klass.cliout2list(output)
+      expect(res).to eq([])
+    end
+
+    it 'should return a list with hashes' do
+      output = <<-EOT
++-------------+-------------------------+-------------------+
+| Id          | Name                    | Availability Zone |
++-------------+-------------------------+-------------------+
+| api!cell@6  | api!cell@my             | zone1             |
+| api!cell@8  | api!cell@my2            | -                 |
++-------------+-------------------------+-------------------+
+      EOT
+      res = klass.cliout2list(output)
+      expect(res).to eq([{"Id"=>"api!cell@6", "Name"=>"api!cell@my", "Availability Zone"=>"zone1"},
+                     {"Id"=>"api!cell@8", "Name"=>"api!cell@my2", "Availability Zone"=>""}])
+    end
+  end
+
   describe 'when handling cli output' do
     it 'should return the availble Id' do
       output = <<-EOT
@@ -245,6 +315,37 @@ EOT
     end
   end
 
+  describe 'when handling cli output with cells enabled' do
+    it 'should return the availble Id' do
+      output = <<-EOT
++-------------+----------------+-------------------+
+| Id          | Name           | Availability Zone |
++-------------+----------------+-------------------+
+| api!cell@1  | api!cell@haha  | haha2             |
+| api!cell@2  | api!cell@haha2 | -                 |
++-------------+----------------+-------------------+
+      EOT
+      klass.expects(:auth_nova).returns(output)
+      res = klass.nova_aggregate_resources_get_name_by_id("api!cell@haha2", true)
+      expect(res).to eq("api!cell@2")
+    end
+
+    it 'should return nil because given name is not available' do
+      output = <<-EOT
++----+-------+-------------------+
+| Id | Name  | Availability Zone |
++----+-------+-------------------+
+| api!cell@1  | api!cell@haha  | haha2             |
+| api!cell@2  | api!cell@haha2 | -                 |
++----+-------+-------------------+
+      EOT
+      # used the cache copy, don't call nova again
+      klass.expects(:auth_nova).never()
+      res = klass.nova_aggregate_resources_get_name_by_id("notavailable")
+      expect(res).to eql(nil)
+    end
+  end
+
   describe 'when getting details for given Id' do
     it 'should return a Hash with the details' do
       output = <<-EOT
@@ -259,6 +360,31 @@ EOT
       expect(res).to eq({
         "Id"=>"16",
         "Name"=>"agg94",
+        "Availability Zone"=>"my_-zone1",
+        "Hosts"=>[],
+        "Metadata"=>{
+          "a"=>"b",
+          "availability_zone"=>" my_-zone1",
+          "x_q-r"=>"y"
+        }
+      })
+    end
+  end
+
+  describe 'when getting details for given Id with cells enabled' do
+    it 'should return a Hash with the details' do
+      output = <<-EOT
++-------------+----------------+-------------------+-------+--------------------------------------------------+
+| Id          | Name           | Availability Zone | Hosts | Metadata                                         |
++-------------+----------------+-------------------+-------+--------------------------------------------------+
+| api!cell@16 | api!cell@agg94 |  my_-zone1        |       | 'a=b', 'availability_zone= my_-zone1', 'x_q-r=y' |
++-------------+----------------+-------------------+-------+--------------------------------------------------+
+        EOT
+      klass.expects(:auth_nova).returns(output)
+      res = klass.nova_aggregate_resources_attr(16)
+      expect(res).to eq({
+        "Id"=>"api!cell@16",
+        "Name"=>"api!cell@agg94",
         "Availability Zone"=>"my_-zone1",
         "Hosts"=>[],
         "Metadata"=>{
