@@ -99,7 +99,7 @@ Puppet::Type.newtype(:nova_aggregate) do
     desc 'Single host or comma seperated list of hosts'
     #convert DSL/string form to internal form
     munge do |value|
-      return value.split(",").map{|el| el.strip()}
+      return value.split(",").map{|el| el.strip()}.sort
     end
   end
 
