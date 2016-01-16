@@ -228,11 +228,6 @@ class nova::compute (
     }
   }
 
-  package { 'pm-utils':
-    ensure => present,
-    tag    => ['openstack', 'nova-support-package'],
-  }
-
   nova_config {
     'DEFAULT/force_raw_images': value => $force_raw_images;
   }

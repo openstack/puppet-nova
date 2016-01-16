@@ -33,10 +33,6 @@ describe 'nova::compute' do
         :ensure => 'present',
       ) }
 
-      it { is_expected.to contain_package('pm-utils').with(
-        :ensure => 'present'
-      ) }
-
       it { is_expected.to contain_nova_config('DEFAULT/force_raw_images').with(:value => true) }
 
       it 'configures availability zones' do
