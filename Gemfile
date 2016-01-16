@@ -16,6 +16,9 @@ group :development, :test do
   gem 'json',                                 :require => 'false'
   gem 'webmock',                              :require => 'false'
   gem 'netaddr',                              :require => 'false'
+  gem 'puppet-openstack_spec_helper',
+      :git => 'https://git.openstack.org/openstack/puppet-openstack_spec_helper',
+      :require => false
 end
 
 group :system_tests do
