@@ -54,7 +54,7 @@ describe 'nova' do
 
       it 'configures various things' do
         is_expected.to contain_nova_config('DEFAULT/state_path').with_value('/var/lib/nova')
-        is_expected.to contain_nova_config('DEFAULT/lock_path').with_value(platform_params[:lock_path])
+        is_expected.to contain_nova_config('oslo_concurrency/lock_path').with_value(platform_params[:lock_path])
         is_expected.to contain_nova_config('DEFAULT/service_down_time').with_value('60')
         is_expected.to contain_nova_config('DEFAULT/notification_driver').with_ensure('absent')
         is_expected.to contain_nova_config('DEFAULT/rootwrap_config').with_value('/etc/nova/rootwrap.conf')
@@ -153,7 +153,7 @@ describe 'nova' do
 
       it 'configures various things' do
         is_expected.to contain_nova_config('DEFAULT/state_path').with_value('/var/lib/nova2')
-        is_expected.to contain_nova_config('DEFAULT/lock_path').with_value('/var/locky/path')
+        is_expected.to contain_nova_config('oslo_concurrency/lock_path').with_value('/var/locky/path')
         is_expected.to contain_nova_config('DEFAULT/service_down_time').with_value('120')
         is_expected.to contain_nova_config('DEFAULT/notification_driver').with_value('ceilometer.compute.nova_notifier')
         is_expected.to contain_nova_config('DEFAULT/notification_topics').with_value('openstack')

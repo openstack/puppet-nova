@@ -651,7 +651,7 @@ class nova(
     'DEFAULT/notify_api_faults':   value => $notify_api_faults;
     # Following may need to be broken out to different nova services
     'DEFAULT/state_path':          value => $state_path;
-    'DEFAULT/lock_path':           value => $lock_path;
+    'oslo_concurrency/lock_path':  value => $lock_path;
     'DEFAULT/service_down_time':   value => $service_down_time;
     'DEFAULT/rootwrap_config':     value => $rootwrap_config;
     'DEFAULT/report_interval':     value => $report_interval;
