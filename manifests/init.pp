@@ -58,7 +58,7 @@
 #
 # [*memcached_servers*]
 #   (optional) Use memcached instead of in-process cache. Supply a list of memcached server IP's:Memcached Port.
-#   Defaults to false
+#   Defaults to $::os_service_default.
 #
 # [*rabbit_host*]
 #   (optional) Location of rabbitmq installation.
@@ -349,7 +349,7 @@ class nova(
   # these glance params should be optional
   # this should probably just be configured as a glance client
   $glance_api_servers                 = 'localhost:9292',
-  $memcached_servers                  = false,
+  $memcached_servers                  = $::os_service_default,
   $rabbit_host                        = 'localhost',
   $rabbit_hosts                       = undef,
   $rabbit_password                    = 'guest',
@@ -520,20 +520,16 @@ class nova(
     refreshonly => true,
   }
 
-  nova_config { 'DEFAULT/image_service': value => $image_service }
-
   if $image_service == 'nova.image.glance.GlanceImageService' {
     if $glance_api_servers {
       nova_config { 'glance/api_servers': value => $glance_api_servers }
     }
   }
 
-  nova_config { 'DEFAULT/auth_strategy': value => $auth_strategy }
-
-  if $memcached_servers {
-    nova_config { 'DEFAULT/memcached_servers': value  => join($memcached_servers, ',') }
-  } else {
-    nova_config { 'DEFAULT/memcached_servers': ensure => absent }
+  nova_config {
+    'DEFAULT/image_service':                value => $image_service;
+    'DEFAULT/auth_strategy':                value => $auth_strategy;
+    'keystone_authtoken/memcached_servers': value => join(any2array($memcached_servers), ',');
   }
 
   # we keep "nova.openstack.common.rpc.impl_kombu" for backward compatibility

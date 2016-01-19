@@ -136,7 +136,7 @@ describe 'nova' do
       end
 
       it 'configures memcached_servers' do
-        is_expected.to contain_nova_config('DEFAULT/memcached_servers').with_value('memcached01:11211,memcached02:11211')
+        is_expected.to contain_nova_config('keystone_authtoken/memcached_servers').with_value('memcached01:11211,memcached02:11211')
       end
 
       it 'configures upgrade_levels' do
