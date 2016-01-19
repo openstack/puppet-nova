@@ -40,6 +40,11 @@
 #   will be removed from nova.conf completely.
 #   Defaults to an empty list
 #
+# [*libvirt_hw_disk_discard*]
+#   (optional) Discard option for nova managed disks. Need Libvirt(1.0.6)
+#   Qemu1.5 (raw format) Qemu1.6(qcow2 format).
+#   Defaults to $::os_service_default
+#
 # [*libvirt_inject_password*]
 #   (optional) Inject the admin password at boot time, without an agent.
 #   Defaults to false
@@ -100,6 +105,7 @@ class nova::compute::libvirt (
   $libvirt_cpu_mode                           = false,
   $libvirt_cpu_model                          = undef,
   $libvirt_disk_cachemodes                    = [],
+  $libvirt_hw_disk_discard                    = $::os_service_default,
   $libvirt_inject_password                    = false,
   $libvirt_inject_key                         = false,
   $libvirt_inject_partition                   = -2,
@@ -196,6 +202,7 @@ class nova::compute::libvirt (
     'libvirt/inject_password':  value => $libvirt_inject_password;
     'libvirt/inject_key':       value => $libvirt_inject_key;
     'libvirt/inject_partition': value => $libvirt_inject_partition;
+    'libvirt/hw_disk_discard':  value => $libvirt_hw_disk_discard;
   }
 
   # cpu_model param is only valid if cpu_mode=custom
