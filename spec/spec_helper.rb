@@ -1,6 +1,5 @@
 require 'puppetlabs_spec_helper/module_spec_helper'
 require 'shared_examples'
-require 'webmock/rspec'
 
 require 'puppet-openstack_spec_helper/defaults'
 require 'rspec-puppet-facts'
