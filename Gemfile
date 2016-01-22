@@ -13,14 +13,13 @@ group :development, :test do
   gem 'puppet-lint-variable_contains_upcase', :require => 'false'
   gem 'puppet-lint-numericvariable',          :require => 'false'
   gem 'json',                                 :require => 'false'
-  gem 'webmock',                              :require => 'false'
-  gem 'r10k',                                 :require => 'false'
   gem 'netaddr',                              :require => 'false'
 end
 
 group :system_tests do
   gem 'beaker-rspec',                 :require => 'false'
   gem 'beaker-puppet_install_helper', :require => 'false'
+  gem 'r10k',                         :require => 'false'
 end
 
 if facterversion = ENV['FACTER_GEM_VERSION']
