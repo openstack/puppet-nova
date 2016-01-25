@@ -21,7 +21,7 @@ Puppet::Type.type(:nova_aggregate).provide(
           :id => attrs['Id'],
           :availability_zone => attrs['Availability Zone'],
           :metadata => attrs['Metadata'],
-          :hosts => attrs['Hosts']
+          :hosts => attrs['Hosts'].sort
           )
     end
   end
