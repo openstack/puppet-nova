@@ -226,14 +226,18 @@ class nova::keystone::auth(
     warning('The admin_address parameter is deprecated, use admin_url instead.')
   }
 
+
+  # TODO(mmagr): change default service names according to default_catalog in next (M) cycle
   if $service_name == undef {
     $real_service_name = $auth_name
+    warning('Note that service_name parameter default value will be changed to "Compute Service" (according to Keystone default catalog) in a future release. In case you use different value, please update your manifests accordingly.')
   } else {
     $real_service_name = $service_name
   }
 
   if $service_name_v3 == undef {
     $real_service_name_v3 = $auth_name_v3
+    warning('Note that service_name_v3 parameter default value will be changed to "Compute Service v3" (according to Keystone default catalog) in a future release. In case you use different value, please update your manifests accordingly.')
   } else {
     $real_service_name_v3 = $service_name_v3
   }
