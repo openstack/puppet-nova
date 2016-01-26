@@ -186,9 +186,10 @@ class Puppet::Provider::Nova < Puppet::Provider
   def self.nova_get_host_by_name_and_type(host_name, service_type)
     #find the host by name and service type
     nova_hosts.each do |entry|
-      if entry["host_name"] == host_name
+      # (mdorman) Support api!cell_name@host_name -style output of nova host-list under nova cells
+      if entry["host_name"] =~ /^([a-zA-Z0-9\-_]+![a-zA-Z0-9\-_]+@)?#{Regexp.quote(host_name)}$/
         if entry["service"] == service_type
-            return entry["host_name"]
+            return host_name
         end
       end
     end
@@ -209,7 +210,10 @@ class Puppet::Provider::Nova < Puppet::Provider
     @nova_aggregate_resources_ids = cliout2list(cmd_output)
     #only interessted in Id and Name
     @nova_aggregate_resources_ids.map{ |e| e.delete("Availability Zone")}
-    @nova_aggregate_resources_ids.map{ |e| e['Id'] = e['Id'].to_i}
+    @nova_aggregate_resources_ids.map{ |e|
+      if e['Id'] =~ /^[0-9]+$/
+        e['Id'] = e['Id'].to_i
+      end }
     @nova_aggregate_resources_ids
   end
 
