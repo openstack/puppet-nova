@@ -121,12 +121,23 @@ class Puppet::Provider::Nova < Puppet::Provider
       else
         new = []
       end
-      s.split(",").each do |el|
-        ret = str2hash(el.strip())
-        if s.include? "="
-          new.update(ret)
-        else
-          new.push(ret)
+      if s =~ /^'.+'$/
+        s.split("', '").each do |el|
+          ret = str2hash(el.strip())
+          if s.include? "="
+            new.update(ret)
+          else
+            new.push(ret)
+          end
+        end
+      else
+        s.split(",").each do |el|
+          ret = str2hash(el.strip())
+          if s.include? "="
+            new.update(ret)
+          else
+            new.push(ret)
+          end
         end
       end
       return new
