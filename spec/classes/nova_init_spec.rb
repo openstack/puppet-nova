@@ -61,6 +61,11 @@ describe 'nova' do
         is_expected.to contain_nova_config('DEFAULT/report_interval').with_value('10')
         is_expected.to contain_nova_config('DEFAULT/use_ipv6').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('DEFAULT/os_region_name').with_ensure('absent')
+        is_expected.to contain_nova_config('DEFAULT/rabbit_userid').with_ensure('absent')
+        is_expected.to contain_nova_config('DEFAULT/rabbit_host').with_ensure('absent')
+        is_expected.to contain_nova_config('DEFAULT/rabbit_port').with_ensure('absent')
+        is_expected.to contain_nova_config('DEFAULT/rabbit_password').with_ensure('absent')
+        is_expected.to contain_nova_config('DEFAULT/rabbit_virtual_host').with_ensure('absent')
         is_expected.to contain_nova_config('cinder/os_region_name').with_ensure('absent')
         is_expected.to contain_nova_config('cinder/catalog_info').with('value' => 'volumev2:cinderv2:publicURL')
       end
@@ -162,6 +167,11 @@ describe 'nova' do
         is_expected.to contain_nova_config('DEFAULT/use_ipv6').with_value('true')
         is_expected.to contain_nova_config('cinder/os_region_name').with_value('MyRegion')
         is_expected.to contain_nova_config('DEFAULT/os_region_name').with_ensure('absent')
+        is_expected.to contain_nova_config('DEFAULT/rabbit_userid').with_ensure('absent')
+        is_expected.to contain_nova_config('DEFAULT/rabbit_host').with_ensure('absent')
+        is_expected.to contain_nova_config('DEFAULT/rabbit_port').with_ensure('absent')
+        is_expected.to contain_nova_config('DEFAULT/rabbit_password').with_ensure('absent')
+        is_expected.to contain_nova_config('DEFAULT/rabbit_virtual_host').with_ensure('absent')
       end
 
       context 'with multiple notification_driver' do
