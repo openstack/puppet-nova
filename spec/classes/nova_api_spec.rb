@@ -212,21 +212,32 @@ describe 'nova::api' do
 
       it { is_expected.to_not contain_nova_config('database/connection') }
       it { is_expected.to_not contain_nova_config('database/slave_connection') }
+      it { is_expected.to_not contain_nova_config('api_database/connection') }
+      it { is_expected.to_not contain_nova_config('api_database/slave_connection') }
       it { is_expected.to_not contain_nova_config('database/idle_timeout').with_value('<SERVICE DEFAULT>') }
     end
 
     context 'with overridden database parameters' do
       let :pre_condition do
         "class { 'nova':
-           database_connection   => 'mysql://user:pass@db/db',
-           slave_connection      => 'mysql://user:pass@slave/db',
-           database_idle_timeout => '30',
+           database_connection     => 'mysql://user:pass@db/db1',
+           slave_connection        => 'mysql://user:pass@slave/db1',
+           api_database_connection => 'mysql://user:pass@db/db2',
+           api_slave_connection    => 'mysql://user:pass@slave/db2',
+           database_idle_timeout   => '30',
          }
         "
       end
+      before do
+        params.merge!({
+          :sync_db_api => true,
+        })
+      end
 
-      it { is_expected.to contain_nova_config('database/connection').with_value('mysql://user:pass@db/db').with_secret(true) }
-      it { is_expected.to contain_nova_config('database/slave_connection').with_value('mysql://user:pass@slave/db').with_secret(true) }
+      it { is_expected.to contain_nova_config('database/connection').with_value('mysql://user:pass@db/db1').with_secret(true) }
+      it { is_expected.to contain_nova_config('database/slave_connection').with_value('mysql://user:pass@slave/db1').with_secret(true) }
+      it { is_expected.to contain_nova_config('api_database/connection').with_value('mysql://user:pass@db/db2').with_secret(true) }
+      it { is_expected.to contain_nova_config('api_database/slave_connection').with_value('mysql://user:pass@slave/db2').with_secret(true) }
       it { is_expected.to contain_nova_config('database/idle_timeout').with_value('30') }
     end
 

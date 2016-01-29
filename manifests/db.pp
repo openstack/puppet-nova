@@ -29,6 +29,14 @@
 #   (optional) Connection url to connect to nova slave database (read-only).
 #   Defaults to $::os_service_default
 #
+# [*api_database_connection*]
+#   (optional) Connection url to connect to nova api database.
+#   Defaults to $::os_service_default
+#
+# [*api_slave_connection*]
+#   (optional) Connection url to connect to nova api slave database (read-only).
+#   Defaults to $::os_service_default
+#
 # [*database_idle_timeout*]
 #   Timeout when db connections should be reaped.
 #   (Optional) Defaults to $::os_service_default
@@ -57,6 +65,8 @@
 class nova::db (
   $database_connection     = $::os_service_default,
   $slave_connection        = $::os_service_default,
+  $api_database_connection = $::os_service_default,
+  $api_slave_connection    = $::os_service_default,
   $database_idle_timeout   = $::os_service_default,
   $database_min_pool_size  = $::os_service_default,
   $database_max_pool_size  = $::os_service_default,
@@ -72,6 +82,8 @@ class nova::db (
   # to use nova::<myparam> first the nova::db::<myparam>
   $database_connection_real = pick($::nova::database_connection, $database_connection)
   $slave_connection_real = pick($::nova::slave_connection, $slave_connection)
+  $api_database_connection_real = pick($::nova::api_database_connection, $api_database_connection)
+  $api_slave_connection_real = pick($::nova::api_slave_connection, $api_slave_connection)
   $database_idle_timeout_real = pick($::nova::database_idle_timeout, $database_idle_timeout)
   $database_min_pool_size_real = pick($::nova::database_min_pool_size, $database_min_pool_size)
   $database_max_pool_size_real = pick($::nova::database_max_pool_size, $database_max_pool_size)
@@ -123,6 +135,18 @@ class nova::db (
       'database/max_pool_size':    value => $database_max_pool_size_real;
       'database/max_overflow':     value => $database_max_overflow_real;
       'database/slave_connection': value => $slave_connection_real, secret => true;
+    }
+
+  }
+
+  if !is_service_default($api_database_connection_real) {
+
+    validate_re($api_database_connection_real,
+      '^(sqlite|mysql(\+pymysql)?|postgresql):\/\/(\S+:\S+@\S+\/\S+)?')
+
+    nova_config {
+      'api_database/connection':       value => $api_database_connection_real, secret => true;
+      'api_database/slave_connection': value => $api_slave_connection_real, secret => true;
     }
 
   }

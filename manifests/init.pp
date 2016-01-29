@@ -17,6 +17,14 @@
 #   (optional) Connection url to connect to nova slave database (read-only).
 #   Defaults to undef.
 #
+# [*api_database_connection*]
+#   (optional) Connection url for the nova API database.
+#   Defaults to undef.
+#
+# [*api_slave_connection*]
+#   (optional) Connection url to connect to nova API slave database (read-only).
+#   Defaults to undef.
+#
 # [*database_max_retries*]
 #   (optional) Maximum database connection retries during startup.
 #   Defaults to undef.
@@ -338,6 +346,8 @@ class nova(
   $ensure_package                     = 'present',
   $database_connection                = undef,
   $slave_connection                   = undef,
+  $api_database_connection            = undef,
+  $api_slave_connection               = undef,
   $database_idle_timeout              = undef,
   $database_min_pool_size             = undef,
   $database_max_pool_size             = undef,

@@ -106,6 +106,10 @@
 #   (optional) Run nova-manage db sync on api nodes after installing the package.
 #   Defaults to true
 #
+# [*sync_db_api*]
+#   (optional) Run nova-manage api_db sync on api nodes after installing the package.
+#   Defaults to false
+#
 # [*neutron_metadata_proxy_shared_secret*]
 #   (optional) Shared secret to validate proxies Neutron metadata requests
 #   Defaults to undef
@@ -178,6 +182,7 @@ class nova::api(
   $osapi_compute_workers     = $::processorcount,
   $metadata_workers          = $::processorcount,
   $sync_db                   = true,
+  $sync_db_api               = false,
   $neutron_metadata_proxy_shared_secret = undef,
   $osapi_v3                  = false,
   $default_floating_pool     = 'nova',
@@ -287,6 +292,9 @@ class nova::api(
   # where db is not active i.e. the compute
   if $sync_db {
     include ::nova::db::sync
+  }
+  if $sync_db_api {
+    include ::nova::db::sync_api
   }
 
   # Remove auth configuration from api-paste.ini
