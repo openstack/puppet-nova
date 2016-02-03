@@ -20,6 +20,8 @@ class nova::deps {
   -> anchor { 'nova::db::end': }
   ~> anchor { 'nova::dbsync::begin': }
   -> anchor { 'nova::dbsync::end': }
+  ~> anchor { 'nova::dbsync_api::begin': }
+  -> anchor { 'nova::dbsync_api::end': }
   ~> anchor { 'nova::service::begin': }
   ~> Service<| tag == 'nova-service' |>
   ~> anchor { 'nova::service::end': }
@@ -43,10 +45,13 @@ class nova::deps {
   # The following resourcs are managed by calling 'nova manage' and so the
   # database must be provisioned before they can be applied.
   Anchor['nova::dbsync::end']
+  -> Anchor['nova::dbsync_api::end']
   -> Nova_cells<||>
   Anchor['nova::dbsync::end']
+  -> Anchor['nova::dbsync_api::end']
   -> Nova_floating<||>
   Anchor['nova::dbsync::end']
+  -> Anchor['nova::dbsync_api::end']
   -> Nova_network<||>
 
   # Installation or config changes will always restart services.
