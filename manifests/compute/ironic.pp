@@ -34,16 +34,21 @@
 # [*admin_passwd*]
 #   (optional) DEPRECATED: Use admin_password instead.
 #
+# [*max_concurrent_builds*]
+#   (optional) Maximum number of instance builds to run concurrently
+#   Defaults to $::os_service_default.
+#
 class nova::compute::ironic (
-  $admin_username       = 'admin',
-  $admin_password       = 'ironic',
-  $admin_url            = 'http://127.0.0.1:35357/v2.0',
-  $admin_tenant_name    = 'services',
-  $api_endpoint         = 'http://127.0.0.1:6385/v1',
+  $admin_username        = 'admin',
+  $admin_password        = 'ironic',
+  $admin_url             = 'http://127.0.0.1:35357/v2.0',
+  $admin_tenant_name     = 'services',
+  $api_endpoint          = 'http://127.0.0.1:6385/v1',
+  $max_concurrent_builds = $::os_service_default,
   # DEPRECATED PARAMETERS
-  $admin_user           = undef,
-  $admin_passwd         = undef,
-  $compute_driver       = 'ironic.IronicDriver'
+  $admin_user            = undef,
+  $admin_passwd          = undef,
+  $compute_driver        = 'ironic.IronicDriver'
 ) {
 
   include ::nova::deps
@@ -66,5 +71,6 @@ class nova::compute::ironic (
     'ironic/admin_tenant_name':         value => $admin_tenant_name;
     'ironic/api_endpoint':              value => $api_endpoint;
     'DEFAULT/compute_driver':           value => $compute_driver;
+    'DEFAULT/max_concurrent_builds':    value => $max_concurrent_builds;
   }
 }
