@@ -10,7 +10,7 @@
 #
 # [*neutron_auth_plugin*]
 #   Name of the plugin to load (string value)
-#   Defaults to 'password'
+#   Defaults to 'v3password'
 #
 # [*neutron_url*]
 #   (optional) URL for connecting to the Neutron networking service.
@@ -20,14 +20,20 @@
 #   (optional) Timeout value for connecting to neutron in seconds.
 #   Defaults to '30'
 #
-# [*neutron_tenant_name*]
-#   (optional) Tenant name for connecting to Neutron network services in
+# [*neutron_project_name*]
+#   (optional) Project name for connecting to Neutron network services in
 #   admin context through the OpenStack Identity service.
 #   Defaults to 'services'
 #
-# [*neutron_default_tenant_id*]
-#   (optional) Default tenant id when creating neutron networks
-#   Defaults to 'default'
+# [*neutron_project_domain_name*]
+#   (optional) Project Domain name for connecting to Neutron network services in
+#   admin context through the OpenStack Identity service.
+#   Defaults to 'Default'
+#
+# [*neutron_user_domain_name*]
+#   (optional) User Domain name for connecting to Neutron network services in
+#   admin context through the OpenStack Identity service.
+#   Defaults to 'Default'
 #
 # [*neutron_region_name*]
 #   (optional) Region name for connecting to neutron in admin context
@@ -55,7 +61,7 @@
 #   (optional) Points to the OpenStack Identity server IP and port.
 #   This is the Identity (keystone) admin API server IP and port value,
 #   and not the Identity service API IP and port.
-#   Defaults to 'http://127.0.0.1:35357'
+#   Defaults to 'http://127.0.0.1:35357/v3'
 #
 # [*network_api_class*]
 #   (optional) The full class name of the network API class.
@@ -116,15 +122,19 @@
 #   and not the Identity service API IP and port.
 #   Use neutron_auth_url instead.
 #
+# [*neutron_default_tenant_id*]
+#   (optional) DEPRECATED. Default tenant id when creating neutron networks
+#
 class nova::network::neutron (
   $neutron_password                = false,
-  $neutron_auth_plugin             = 'password',
-  $neutron_tenant_name             = 'services',
+  $neutron_auth_plugin             = 'v3password',
+  $neutron_project_name            = 'services',
+  $neutron_project_domain_name     = 'Default',
   $neutron_username                = 'neutron',
-  $neutron_auth_url                = 'http://127.0.0.1:35357',
+  $neutron_user_domain_name        = 'Default',
+  $neutron_auth_url                = 'http://127.0.0.1:35357/v3',
   $neutron_url                     = 'http://127.0.0.1:9696',
   $neutron_url_timeout             = '30',
-  $neutron_default_tenant_id       = 'default',
   $neutron_region_name             = 'RegionOne',
   $neutron_ovs_bridge              = 'br-int',
   $neutron_extension_sync_interval = '600',
@@ -141,6 +151,7 @@ class nova::network::neutron (
   $neutron_admin_tenant_name       = undef,
   $neutron_admin_username          = undef,
   $neutron_admin_auth_url          = undef,
+  $neutron_default_tenant_id       = undef,
 ) {
 
   include ::nova::deps
@@ -158,10 +169,10 @@ class nova::network::neutron (
   }
 
   if $neutron_admin_tenant_name {
-    warning('neutron_admin_tenant_name is deprecated. Use neutron_tenant_name')
-    $neutron_tenant_name_real = $neutron_admin_tenant_name
+    warning('neutron_admin_tenant_name is deprecated. Use neutron_project_name')
+    $neutron_project_name_real = $neutron_admin_tenant_name
   } else {
-    $neutron_tenant_name_real = $neutron_tenant_name
+    $neutron_project_name_real = $neutron_project_name
   }
 
   if $neutron_admin_username {
@@ -186,6 +197,19 @@ class nova::network::neutron (
     'neutron/auth_strategy': ensure => absent;
   }
 
+  # neutron_default_tenant_id removed in Mitaka
+  # the parameter is deprecated but still can be used if needed
+  if $neutron_default_tenant_id {
+    warning('neutron_default_tenant_id is deprecated')
+    nova_config {
+      'neutron/default_tenant_id': value => $neutron_default_tenant_id;
+    }
+  } else {
+    nova_config {
+      'neutron/default_tenant_id': ensure => absent;
+    }
+  }
+
   nova_config {
     'DEFAULT/dhcp_domain':             value => $dhcp_domain;
     'DEFAULT/firewall_driver':         value => $firewall_driver;
@@ -195,10 +219,11 @@ class nova::network::neutron (
     'DEFAULT/vif_plugging_timeout':    value => $vif_plugging_timeout;
     'neutron/url':                     value => $neutron_url;
     'neutron/timeout':                 value => $neutron_url_timeout;
-    'neutron/tenant_name':             value => $neutron_tenant_name_real;
-    'neutron/default_tenant_id':       value => $neutron_default_tenant_id;
+    'neutron/project_name':            value => $neutron_project_name_real;
+    'neutron/project_domain_name':     value => $neutron_project_domain_name;
     'neutron/region_name':             value => $neutron_region_name;
     'neutron/username':                value => $neutron_username_real;
+    'neutron/user_domain_name':        value => $neutron_user_domain_name;
     'neutron/password':                value => $neutron_password_real, secret => true;
     'neutron/auth_url':                value => $neutron_auth_url_real;
     'neutron/ovs_bridge':              value => $neutron_ovs_bridge;
