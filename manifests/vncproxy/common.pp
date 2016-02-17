@@ -25,11 +25,11 @@ class nova::vncproxy::common (
 
   include ::nova::deps
 
-  $vncproxy_host_real     = pick(
+  $vncproxy_host_real     = normalize_ip_for_uri(pick(
     $vncproxy_host,
     $::nova::compute::vncproxy_host,
     $::nova::vncproxy::host,
-    false)
+    false))
   $vncproxy_protocol_real = pick(
     $vncproxy_protocol,
     $::nova::compute::vncproxy_protocol,
