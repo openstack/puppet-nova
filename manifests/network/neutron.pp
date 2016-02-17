@@ -109,7 +109,7 @@
 # [*neutron_admin_tenant_name*]
 #   (optional) DEPRECATED. Tenant name for connecting to Neutron network
 #   services in admin context through the OpenStack Identity service.
-#   Use neutron_tenant_name instead.
+#   Use neutron_project_name instead.
 #
 # [*neutron_admin_username*]
 #   (optional) DEPRECATED. Username for connecting to Neutron network services
