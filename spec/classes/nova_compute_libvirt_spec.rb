@@ -35,8 +35,6 @@ describe 'nova::compute::libvirt' do
           :ensure   => 'running',
           :provider => 'upstart',
         )
-
-        is_expected.to contain_service('libvirt').that_requires('Anchor[nova::config::end]')
       }
 
       it { is_expected.to contain_nova_config('DEFAULT/compute_driver').with_value('libvirt.LibvirtDriver')}
@@ -94,7 +92,6 @@ describe 'nova::compute::libvirt' do
           :ensure   => 'running',
           :before   => ['Service[nova-compute]']
         )
-        is_expected.to contain_service('libvirt').that_requires('Anchor[nova::config::end]')
       }
     end
 
@@ -190,7 +187,6 @@ describe 'nova::compute::libvirt' do
         :enable   => true,
         :ensure   => 'running',
         :provider => 'init',
-        :require  => 'Anchor[nova::config::end]',
         :before   => ['Service[nova-compute]'],
       )}
       it { is_expected.to contain_service('messagebus').with(
@@ -320,7 +316,6 @@ describe 'nova::compute::libvirt' do
         :enable   => true,
         :ensure   => 'running',
         :provider => nil,
-        :require  => 'Anchor[nova::config::end]',
         :before   => ['Service[nova-compute]']
       )}
 
