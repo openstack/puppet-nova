@@ -103,7 +103,7 @@ class nova::compute::rbd (
     exec { 'get-or-set virsh secret':
       command => '/usr/bin/virsh secret-define --file /etc/nova/secret.xml | /usr/bin/awk \'{print $2}\' | sed \'/^$/d\' > /etc/nova/virsh.secret',
       creates => '/etc/nova/virsh.secret',
-      require => [File['/etc/nova/secret.xml'], Package['ceph-client-package']],
+      require => [File['/etc/nova/secret.xml'], Service['libvirt']],
     }
 
     if $libvirt_rbd_secret_key {

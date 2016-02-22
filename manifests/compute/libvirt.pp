@@ -191,7 +191,6 @@ class nova::compute::libvirt (
     enable   => true,
     name     => $libvirt_service_name,
     provider => $::nova::params::special_service_provider,
-    require  => Anchor['nova::config::end'],
   }
 
   nova_config {
