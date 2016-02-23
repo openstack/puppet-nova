@@ -33,7 +33,7 @@ describe 'nova' do
 
       it 'configures image service' do
         is_expected.to contain_nova_config('DEFAULT/image_service').with_value('nova.image.glance.GlanceImageService')
-        is_expected.to contain_nova_config('glance/api_servers').with_value('localhost:9292')
+        is_expected.to contain_nova_config('glance/api_servers').with_value('http://localhost:9292')
       end
 
       it 'configures auth_strategy' do

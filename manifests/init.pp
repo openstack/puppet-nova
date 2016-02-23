@@ -62,7 +62,7 @@
 #
 # [*glance_api_servers*]
 #   (optional) List of addresses for api servers.
-#   Defaults to 'localhost:9292'
+#   Defaults to 'http://localhost:9292'
 #
 # [*memcached_servers*]
 #   (optional) Use memcached instead of in-process cache. Supply a list of memcached server IP's:Memcached Port.
@@ -358,7 +358,7 @@ class nova(
   $image_service                      = 'nova.image.glance.GlanceImageService',
   # these glance params should be optional
   # this should probably just be configured as a glance client
-  $glance_api_servers                 = 'localhost:9292',
+  $glance_api_servers                 = 'http://localhost:9292',
   $memcached_servers                  = $::os_service_default,
   $rabbit_host                        = 'localhost',
   $rabbit_hosts                       = undef,
