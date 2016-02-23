@@ -206,7 +206,6 @@ class nova::api(
   include ::nova::db
   include ::nova::params
   include ::nova::policy
-  require ::keystone::python
   include ::cinder::client
 
   if $ec2_listen_port or $ec2_workers or $keystone_ec2_url {
