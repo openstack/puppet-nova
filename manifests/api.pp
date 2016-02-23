@@ -221,7 +221,6 @@ class nova::api(
   include ::nova::db
   include ::nova::params
   include ::nova::policy
-  require ::keystone::python
   include ::cinder::client
 
   if $conductor_workers {
