@@ -108,6 +108,11 @@
 #    Useful when testing in single-host environments.
 #    Defaults to false
 #
+#  [*vcpu_pin_set*]
+#    (optional) A list or range of physical CPU cores to reserve
+#    for virtual machine processes
+#    Defaults to $::os_service_default
+#
 # DEPRECATED PARAMETERS
 #
 #  [*default_availability_zone*]
@@ -147,6 +152,7 @@ class nova::compute (
   $pci_passthrough                    = undef,
   $config_drive_format                = undef,
   $allow_resize_to_same_host          = false,
+  $vcpu_pin_set                       = $::os_service_default,
   # DEPRECATED PARAMETERS
   $default_availability_zone          = undef,
   $default_schedule_zone              = undef,
@@ -175,6 +181,7 @@ class nova::compute (
     'DEFAULT/compute_manager':                   value => $compute_manager;
     'DEFAULT/heal_instance_info_cache_interval': value => $heal_instance_info_cache_interval;
     'DEFAULT/allow_resize_to_same_host':         value => $allow_resize_to_same_host;
+    'DEFAULT/vcpu_pin_set':                      value => join(any2array($vcpu_pin_set), ',');
   }
 
   if ($vnc_enabled) {
