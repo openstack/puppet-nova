@@ -113,16 +113,6 @@
 #    for virtual machine processes
 #    Defaults to $::os_service_default
 #
-#  [*cpu_allocation_ratio*]
-#    (optional) Virtual CPU to physical CPU allocation ratio which
-#    affects all CPU filters.
-#    Defaults to $::os_service_default
-#
-#  [*ram_allocation_ratio*]
-#    (optional) Virtual ram to physical ram allocation ratio which
-#    affects all ram filters.
-#    Defaults to $::os_service_default
-#
 # DEPRECATED PARAMETERS
 #
 #  [*default_availability_zone*]
@@ -163,8 +153,6 @@ class nova::compute (
   $config_drive_format                = undef,
   $allow_resize_to_same_host          = false,
   $vcpu_pin_set                       = $::os_service_default,
-  $cpu_allocation_ratio               = $::os_service_default,
-  $ram_allocation_ratio               = $::os_service_default,
   # DEPRECATED PARAMETERS
   $default_availability_zone          = undef,
   $default_schedule_zone              = undef,
@@ -194,8 +182,6 @@ class nova::compute (
     'DEFAULT/heal_instance_info_cache_interval': value => $heal_instance_info_cache_interval;
     'DEFAULT/allow_resize_to_same_host':         value => $allow_resize_to_same_host;
     'DEFAULT/vcpu_pin_set':                      value => join(any2array($vcpu_pin_set), ',');
-    'DEFAULT/cpu_allocation_ratio':              value => $cpu_allocation_ratio;
-    'DEFAULT/ram_allocation_ratio':              value => $ram_allocation_ratio;
   }
 
   if ($vnc_enabled) {
