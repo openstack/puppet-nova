@@ -61,6 +61,8 @@ describe 'nova::compute' do
           :pci_passthrough                    => "[{\"vendor_id\":\"8086\",\"product_id\":\"0126\"},{\"vendor_id\":\"9096\",\"product_id\":\"1520\",\"physical_network\":\"physnet1\"}]",
           :config_drive_format                => 'vfat',
           :vcpu_pin_set                       => ['4-12','^8','15'],
+          :cpu_allocation_ratio               => '32.0',
+          :ram_allocation_ratio               => '2.0',
         }
       end
 
@@ -108,6 +110,10 @@ describe 'nova::compute' do
       it { is_expected.to contain_nova_config('DEFAULT/force_raw_images').with(:value => false) }
 
       it { is_expected.to contain_nova_config('DEFAULT/vcpu_pin_set').with(:value => '4-12,^8,15') }
+
+      it { is_expected.to contain_nova_config('DEFAULT/cpu_allocation_ratio').with(:value => '32.0') }
+
+      it { is_expected.to contain_nova_config('DEFAULT/ram_allocation_ratio').with(:value => '2.0') }
 
       it 'configures nova pci_passthrough_whitelist entries' do
         is_expected.to contain_nova_config('DEFAULT/pci_passthrough_whitelist').with(
