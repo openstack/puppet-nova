@@ -69,78 +69,85 @@
 #   Defaults to $::os_service_default.
 #
 # [*rabbit_host*]
-#   (optional) Location of rabbitmq installation.
+#   (optional) Location of rabbitmq installation. (string value)
 #   Defaults to 'localhost'
 #
 # [*rabbit_hosts*]
-#   (optional) List of clustered rabbit servers.
-#   Defaults to undef
+#   (optional) List of clustered rabbit servers. (string value)
+#   Defaults to $::os_service_default
 #
 # [*rabbit_port*]
-#   (optional) Port for rabbitmq instance.
-#   Defaults to '5672'
+#   (optional) Port for rabbitmq instance. (port value)
+#   Defaults to $::os_service_default
 #
 # [*rabbit_password*]
-#   (optional) Password used to connect to rabbitmq.
-#   Defaults to 'guest'
+#   (optional) Password used to connect to rabbitmq. (string value)
+#   Defaults to $::os_service_default
 #
 # [*rabbit_userid*]
-#   (optional) User used to connect to rabbitmq.
-#   Defaults to 'guest'
+#   (optional) User used to connect to rabbitmq. (string value)
+#   Defaults to $::os_service_default
 #
 # [*rabbit_virtual_host*]
-#   (optional) The RabbitMQ virtual host.
-#   Defaults to '/'
+#   (optional) The RabbitMQ virtual host. (string value)
+#   Defaults to $::os_service_default
 #
 # [*rabbit_use_ssl*]
-#   (optional) Connect over SSL for RabbitMQ
-#   Defaults to false
+#   (optional) Boolean. Connect over SSL for RabbitMQ. (boolean value)
+#   Defaults to $::os_service_default
 #
 # [*rabbit_ha_queues*]
-#   (optional) Use HA queues in RabbitMQ.
-#   Defaults to undef
+#   (optional) Use HA queues in RabbitMQ. (boolean value)
+#   Defaults to $::os_service_default
 #
 # [*rabbit_heartbeat_timeout_threshold*]
 #   (optional) Number of seconds after which the RabbitMQ broker is considered
 #   down if the heartbeat keepalive fails.  Any value >0 enables heartbeats.
 #   Heartbeating helps to ensure the TCP connection to RabbitMQ isn't silently
 #   closed, resulting in missed or lost messages from the queue.
-#   (Requires kombu >= 3.0.7 and amqp >= 1.4.0)
-#   Defaults to 0
+#   Requires kombu >= 3.0.7 and amqp >= 1.4.0. (integer value)
+#   Defaults to $::os_service_default
 #
 # [*rabbit_heartbeat_rate*]
-#   (optional) How often during the rabbit_heartbeat_timeout_threshold period to
-#   check the heartbeat on RabbitMQ connection.  (i.e. rabbit_heartbeat_rate=2
-#   when rabbit_heartbeat_timeout_threshold=60, the heartbeat will be checked
-#   every 30 seconds.
-#   Defaults to 2
+#   (optional) How often during the rabbit_heartbeat_timeout_threshold period
+#   to check the heartbeat on RabbitMQ connection.
+#   i.e. rabbit_heartbeat_rate=2 when rabbit_heartbeat_timeout_threshold=60,
+#   the heartbeat will be checked every 30 seconds. (integer value)
+#   Defaults to $::os_service_default
 #
 # [*kombu_ssl_ca_certs*]
 #   (optional) SSL certification authority file (valid only if SSL enabled).
-#   Defaults to undef
+#   (string value)
+#   Defaults to $::os_service_default
 #
 # [*kombu_ssl_certfile*]
-#   (optional) SSL cert file (valid only if SSL enabled).
-#   Defaults to undef
+#   (optional) SSL cert file (valid only if SSL enabled). (string value)
+#   Defaults to $::os_service_default
 #
 # [*kombu_ssl_keyfile*]
-#   (optional) SSL key file (valid only if SSL enabled).
-#   Defaults to undef
+#   (optional) SSL key file (valid only if SSL enabled). (string value)
+#   Defaults to $::os_service_default
 #
 # [*kombu_ssl_version*]
 #   (optional) SSL version to use (valid only if SSL enabled).
 #   Valid values are TLSv1, SSLv23 and SSLv3. SSLv2 may be
-#   available on some distributions.
-#   Defaults to 'TLSv1'
+#   available on some distributions. (string value)
+#   Defaults to $::os_service_default
 #
 # [*kombu_reconnect_delay*]
 #   (optional) How long to wait before reconnecting in response to an AMQP
-#   consumer cancel notification.
-#   Defaults to '1.0'
+#   consumer cancel notification. (floating point value)
+#   Defaults to $::os_service_default
+#
+# [*kombu_compression*]
+#   (optional) Possible values are: gzip, bz2. If not set compression will not
+#   be used. This option may notbe available in future versions. EXPERIMENTAL.
+#   (string value)
+#   Defaults to $::os_service_default
 #
 # [*amqp_durable_queues*]
-#   (optional) Define queues as "durable" to rabbitmq.
-#   Defaults to false
+#   (optional) Define queues as "durable" to rabbitmq. (boolean value)
+#   Defaults to $::os_service_default
 #
 # [*auth_strategy*]
 #   (optional) The strategy to use for auth: noauth or keystone.
@@ -354,28 +361,29 @@ class nova(
   $database_max_retries               = undef,
   $database_retry_interval            = undef,
   $database_max_overflow              = undef,
-  $rpc_backend                        = 'rabbit',
+  $rpc_backend                        = $::os_service_default,
   $image_service                      = 'nova.image.glance.GlanceImageService',
   # these glance params should be optional
   # this should probably just be configured as a glance client
   $glance_api_servers                 = 'http://localhost:9292',
   $memcached_servers                  = $::os_service_default,
-  $rabbit_host                        = 'localhost',
-  $rabbit_hosts                       = undef,
-  $rabbit_password                    = 'guest',
-  $rabbit_port                        = '5672',
-  $rabbit_userid                      = 'guest',
-  $rabbit_virtual_host                = '/',
-  $rabbit_use_ssl                     = false,
-  $rabbit_heartbeat_timeout_threshold = 0,
-  $rabbit_heartbeat_rate              = 2,
-  $rabbit_ha_queues                   = undef,
-  $kombu_ssl_ca_certs                 = undef,
-  $kombu_ssl_certfile                 = undef,
-  $kombu_ssl_keyfile                  = undef,
-  $kombu_ssl_version                  = 'TLSv1',
-  $kombu_reconnect_delay              = '1.0',
-  $amqp_durable_queues                = false,
+  $rabbit_host                        = $::os_service_default,
+  $rabbit_hosts                       = $::os_service_default,
+  $rabbit_password                    = $::os_service_default,
+  $rabbit_port                        = $::os_service_default,
+  $rabbit_userid                      = $::os_service_default,
+  $rabbit_virtual_host                = $::os_service_default,
+  $rabbit_use_ssl                     = $::os_service_default,
+  $rabbit_heartbeat_timeout_threshold = $::os_service_default,
+  $rabbit_heartbeat_rate              = $::os_service_default,
+  $rabbit_ha_queues                   = $::os_service_default,
+  $kombu_ssl_ca_certs                 = $::os_service_default,
+  $kombu_ssl_certfile                 = $::os_service_default,
+  $kombu_ssl_keyfile                  = $::os_service_default,
+  $kombu_ssl_version                  = $::os_service_default,
+  $kombu_reconnect_delay              = $::os_service_default,
+  $kombu_compression                  = $::os_service_default,
+  $amqp_durable_queues                = $::os_service_default,
   $auth_strategy                      = 'keystone',
   $service_down_time                  = 60,
   $log_dir                            = undef,
@@ -442,19 +450,6 @@ class nova(
     if !$key_file {
       fail('The key_file parameter is required when use_ssl is set to true')
     }
-  }
-
-  if $kombu_ssl_ca_certs and !$rabbit_use_ssl {
-    fail('The kombu_ssl_ca_certs parameter requires rabbit_use_ssl to be set to true')
-  }
-  if $kombu_ssl_certfile and !$rabbit_use_ssl {
-    fail('The kombu_ssl_certfile parameter requires rabbit_use_ssl to be set to true')
-  }
-  if $kombu_ssl_keyfile and !$rabbit_use_ssl {
-    fail('The kombu_ssl_keyfile parameter requires rabbit_use_ssl to be set to true')
-  }
-  if ($kombu_ssl_certfile and !$kombu_ssl_keyfile) or ($kombu_ssl_keyfile and !$kombu_ssl_certfile) {
-    fail('The kombu_ssl_certfile and kombu_ssl_keyfile parameters must be used together')
   }
 
   if $nova_public_key or $nova_private_key {
@@ -544,71 +539,28 @@ class nova(
 
   # we keep "nova.openstack.common.rpc.impl_kombu" for backward compatibility
   # but since Icehouse, "rabbit" is enough.
-  if $rpc_backend == 'nova.openstack.common.rpc.impl_kombu' or $rpc_backend == 'rabbit' {
-    # I may want to support exporting and collecting these
-    nova_config {
-      'oslo_messaging_rabbit/rabbit_password':              value => $rabbit_password, secret => true;
-      'oslo_messaging_rabbit/rabbit_userid':                value => $rabbit_userid;
-      'oslo_messaging_rabbit/rabbit_virtual_host':          value => $rabbit_virtual_host;
-      'oslo_messaging_rabbit/rabbit_use_ssl':               value => $rabbit_use_ssl;
-      'oslo_messaging_rabbit/heartbeat_timeout_threshold':  value => $rabbit_heartbeat_timeout_threshold;
-      'oslo_messaging_rabbit/heartbeat_rate':               value => $rabbit_heartbeat_rate;
-      'oslo_messaging_rabbit/kombu_reconnect_delay':        value => $kombu_reconnect_delay;
-      'oslo_messaging_rabbit/amqp_durable_queues':          value => $amqp_durable_queues;
+  if $rpc_backend in [$::os_service_default, 'nova.openstack.common.rpc.impl_kombu', 'rabbit'] {
+    oslo::messaging::rabbit {'nova_config':
+      rabbit_password             => $rabbit_password,
+      rabbit_userid               => $rabbit_userid,
+      rabbit_virtual_host         => $rabbit_virtual_host,
+      rabbit_use_ssl              => $rabbit_use_ssl,
+      heartbeat_timeout_threshold => $rabbit_heartbeat_timeout_threshold,
+      heartbeat_rate              => $rabbit_heartbeat_rate,
+      kombu_reconnect_delay       => $kombu_reconnect_delay,
+      amqp_durable_queues         => $amqp_durable_queues,
+      kombu_compression           => $kombu_compression,
+      kombu_ssl_ca_certs          => $kombu_ssl_ca_certs,
+      kombu_ssl_certfile          => $kombu_ssl_certfile,
+      kombu_ssl_keyfile           => $kombu_ssl_keyfile,
+      kombu_ssl_version           => $kombu_ssl_version,
+      rabbit_hosts                => $rabbit_hosts,
+      rabbit_host                 => $rabbit_host,
+      rabbit_port                 => $rabbit_port,
+      rabbit_ha_queues            => $rabbit_ha_queues,
     }
-
-    if $rabbit_use_ssl {
-
-      if $kombu_ssl_ca_certs {
-        nova_config { 'oslo_messaging_rabbit/kombu_ssl_ca_certs': value => $kombu_ssl_ca_certs; }
-      } else {
-        nova_config { 'oslo_messaging_rabbit/kombu_ssl_ca_certs': ensure => absent; }
-      }
-
-      if $kombu_ssl_certfile or $kombu_ssl_keyfile {
-        nova_config {
-          'oslo_messaging_rabbit/kombu_ssl_certfile': value => $kombu_ssl_certfile;
-          'oslo_messaging_rabbit/kombu_ssl_keyfile':  value => $kombu_ssl_keyfile;
-        }
-      } else {
-        nova_config {
-          'oslo_messaging_rabbit/kombu_ssl_certfile': ensure => absent;
-          'oslo_messaging_rabbit/kombu_ssl_keyfile':  ensure => absent;
-        }
-      }
-
-      if $kombu_ssl_version {
-        nova_config { 'oslo_messaging_rabbit/kombu_ssl_version':  value => $kombu_ssl_version; }
-      } else {
-        nova_config { 'oslo_messaging_rabbit/kombu_ssl_version':  ensure => absent; }
-      }
-
-    } else {
-      nova_config {
-        'oslo_messaging_rabbit/kombu_ssl_ca_certs': ensure => absent;
-        'oslo_messaging_rabbit/kombu_ssl_certfile': ensure => absent;
-        'oslo_messaging_rabbit/kombu_ssl_keyfile':  ensure => absent;
-        'oslo_messaging_rabbit/kombu_ssl_version':  ensure => absent;
-      }
-    }
-
-    if $rabbit_hosts {
-      nova_config { 'oslo_messaging_rabbit/rabbit_hosts':     value => join($rabbit_hosts, ',') }
-    } else {
-      nova_config { 'oslo_messaging_rabbit/rabbit_host':      value => $rabbit_host }
-      nova_config { 'oslo_messaging_rabbit/rabbit_port':      value => $rabbit_port }
-      nova_config { 'oslo_messaging_rabbit/rabbit_hosts':     value => "${rabbit_host}:${rabbit_port}" }
-    }
-
-    if $rabbit_ha_queues == undef {
-      if $rabbit_hosts {
-        nova_config { 'oslo_messaging_rabbit/rabbit_ha_queues': value => true }
-      } else {
-        nova_config { 'oslo_messaging_rabbit/rabbit_ha_queues': value => false }
-      }
-    } else {
-      nova_config { 'oslo_messaging_rabbit/rabbit_ha_queues': value => $rabbit_ha_queues }
-    }
+  } else {
+    nova_config { 'DEFAULT/rpc_backend': value => $rpc_backend }
   }
 
   # we keep "nova.openstack.common.rpc.impl_qpid" for backward compatibility
@@ -657,7 +609,6 @@ class nova(
 
   nova_config {
     'cinder/catalog_info':         value => $cinder_catalog_info;
-    'DEFAULT/rpc_backend':         value => $rpc_backend;
     'DEFAULT/notification_topics': value => $notification_topics;
     'DEFAULT/notify_api_faults':   value => $notify_api_faults;
     # Following may need to be broken out to different nova services

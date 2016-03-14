@@ -1,0 +1,5 @@
+---
+features:
+  - Use oslo module for messaging (rabbit) configuration.
+    Messaging related parameters were switched to $::os_service_default.
+    Docs string for parameter were updated according to oslo module.
