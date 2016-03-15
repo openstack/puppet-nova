@@ -63,11 +63,6 @@
 #   and not the Identity service API IP and port.
 #   Defaults to 'http://127.0.0.1:35357/v3'
 #
-# [*network_api_class*]
-#   (optional) The full class name of the network API class.
-#   The default configures Nova to use Neutron for the network API.
-#   Defaults to 'nova.network.neutronv2.api.API'
-#
 # [*security_group_api*]
 #   (optional) The full class name of the security API class.
 #   The default configures Nova to use Neutron for security groups.
@@ -125,6 +120,10 @@
 # [*neutron_default_tenant_id*]
 #   (optional) DEPRECATED. Default tenant id when creating neutron networks
 #
+# [*network_api_class*]
+#   (optional) DEPRECATED. The full class name of the network API class.
+#   This parameter has no effect
+#
 class nova::network::neutron (
   $neutron_password                = false,
   $neutron_auth_plugin             = 'v3password',
@@ -139,7 +138,6 @@ class nova::network::neutron (
   $neutron_ovs_bridge              = 'br-int',
   $neutron_extension_sync_interval = '600',
   $neutron_ca_certificates_file    = undef,
-  $network_api_class               = 'nova.network.neutronv2.api.API',
   $security_group_api              = 'neutron',
   $firewall_driver                 = 'nova.virt.firewall.NoopFirewallDriver',
   $vif_plugging_is_fatal           = true,
@@ -152,9 +150,14 @@ class nova::network::neutron (
   $neutron_admin_username          = undef,
   $neutron_admin_auth_url          = undef,
   $neutron_default_tenant_id       = undef,
+  $network_api_class               = undef,
 ) {
 
   include ::nova::deps
+
+  if $network_api_class != undef {
+    warning('network_api_class has no effect')
+  }
 
   # neutron_admin params removed in Mitaka
   if $neutron_password {
@@ -213,10 +216,10 @@ class nova::network::neutron (
   nova_config {
     'DEFAULT/dhcp_domain':             value => $dhcp_domain;
     'DEFAULT/firewall_driver':         value => $firewall_driver;
-    'DEFAULT/network_api_class':       value => $network_api_class;
     'DEFAULT/security_group_api':      value => $security_group_api;
     'DEFAULT/vif_plugging_is_fatal':   value => $vif_plugging_is_fatal;
     'DEFAULT/vif_plugging_timeout':    value => $vif_plugging_timeout;
+    'DEFAULT/use_neutron':             value => true;
     'neutron/url':                     value => $neutron_url;
     'neutron/timeout':                 value => $neutron_url_timeout;
     'neutron/project_name':            value => $neutron_project_name_real;
