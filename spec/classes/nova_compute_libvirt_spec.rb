@@ -206,11 +206,11 @@ describe 'nova::compute::libvirt' do
         end
 
         it { is_expected.to contain_service('libvirt').with(
-          :provider => nil
+          :provider => 'redhat'
         )}
 
         it { is_expected.to contain_service('messagebus').with(
-          :provider => nil,
+          :provider => 'redhat',
           :name     => 'dbus'
         )}
       end

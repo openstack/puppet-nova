@@ -60,7 +60,7 @@ class nova::params {
             $special_service_provider = 'init'
           } else {
             $messagebus_service_name = 'dbus'
-            $special_service_provider = undef
+            $special_service_provider = 'redhat'
           }
         }
         default: {
