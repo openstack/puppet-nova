@@ -71,7 +71,8 @@ class nova::migration::libvirt(
     if ! $::libvirt_uuid {
       $host_uuid = generate('/bin/cat', '/proc/sys/kernel/random/uuid')
       file { '/etc/libvirt/libvirt_uuid':
-        content => $host_uuid
+        content => $host_uuid,
+        require => Package['libvirt'],
       }
     } else {
       $host_uuid = $::libvirt_uuid
