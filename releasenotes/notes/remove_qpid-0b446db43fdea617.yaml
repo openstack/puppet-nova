@@ -1,0 +1,5 @@
+---
+deprecations:
+  - Remove QPID messaging support.
+    Qpid messaging driver is removed from oslo.messaging so we won't support
+    anymore.

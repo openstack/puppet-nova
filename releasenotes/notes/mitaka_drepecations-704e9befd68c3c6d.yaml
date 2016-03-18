@@ -1,0 +1,13 @@
+---
+deprecations:
+  - Preparation for default endpoint names rename.
+    In a future release, service_name parameter default value will be
+    changed to "Compute Service".
+  - Deprecate nova::utilities.
+  - Remove EC2 support.
+  - Drop use of deprecated neutron auth options.
+  - Use identity_uri and auth_uri by default.
+  - Remove installation of pm-utils.
+  - Move availability zone parameters to a new class, with deprecation support.
+    Parameters affected are default_availability_zone, default_schedule_zone,
+    and internal_service_availability_zone.

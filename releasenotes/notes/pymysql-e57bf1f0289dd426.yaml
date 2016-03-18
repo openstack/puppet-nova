@@ -1,0 +1,3 @@
+---
+features:
+  - Support of PyMySQL driver for MySQL backend.

@@ -1,0 +1,11 @@
+---
+features:
+  - Add WSGI support for Nova API with Apache.
+  - Add support for CPU pinning.
+  - Add support for IPv6 in VNC proxy.
+  - Add support for new Nova API database.
+  - Allow to enable/disable IPv6 support.
+  - Add hooks for external install & svc management.
+  - Extend quota support.
+  - Nova Cells support for nova_aggregate provider.
+  - Add missing parameters in nova.conf for SSL
