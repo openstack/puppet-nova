@@ -53,6 +53,10 @@ describe 'nova::migration::libvirt' do
         }
       end
 
+      it { is_expected.to contain_file('/etc/libvirt/libvirt_uuid').with({
+        :content => '0000-111-111',
+      }).that_requires('Package[libvirt]') }
+
       it { is_expected.to contain_augeas('libvirt-conf-uuid').with({
         :context => '/files/etc/libvirt/libvirtd.conf',
         :changes => [ "set host_uuid 0000-111-111" ],
