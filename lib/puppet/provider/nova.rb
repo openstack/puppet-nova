@@ -241,5 +241,4 @@ class Puppet::Provider::Nova < Puppet::Provider
     end
     return list
   end
-
 end
