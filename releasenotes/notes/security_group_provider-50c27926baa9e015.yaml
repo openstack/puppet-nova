@@ -1,0 +1,3 @@
+---
+features:
+  - Add ability to manage security groups from a Puppet provider.
