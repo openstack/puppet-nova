@@ -80,4 +80,26 @@ describe 'Puppet::Type.type(:nova_security_group)' do
                                                :ip_range => '192.168.1.0/24',
                                                :security_group => 'scg0')
   end
+
+  it 'should autorequire the related nova security group' do
+    catalog = Puppet::Resource::Catalog.new
+    s_group = Puppet::Type.type(:nova_security_group).new(
+      :name        => 'allow_all',
+      :description => 'Allow all traffic'
+    )
+    s_rule = Puppet::Type.type(:nova_security_rule).new(
+      :name           => 'all_01',
+      :ip_protocol    => 'tcp',
+      :from_port      => '1',
+      :to_port        => '65535',
+      :ip_range       => '0.0.0.0/0',
+      :security_group => 'allow_all'
+    )
+    catalog.add_resource s_group, s_rule
+    dependency = s_rule.autorequire
+    expect(dependency.size).to eq(1)
+    expect(dependency[0].target).to eq(s_rule)
+    expect(dependency[0].source).to eq(s_group)
+  end
+
 end

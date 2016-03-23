@@ -134,4 +134,8 @@ Puppet::Type.newtype(:nova_security_rule) do
     end
   end
 
+  autorequire(:nova_security_group) do
+    self[:security_group]
+  end
+
 end
