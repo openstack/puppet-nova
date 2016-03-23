@@ -150,7 +150,7 @@ class nova::compute (
   $compute_manager                    = 'nova.compute.manager.ComputeManager',
   $heal_instance_info_cache_interval  = '60',
   $pci_passthrough                    = undef,
-  $config_drive_format                = undef,
+  $config_drive_format                = $::os_service_default,
   $allow_resize_to_same_host          = false,
   $vcpu_pin_set                       = $::os_service_default,
   # DEPRECATED PARAMETERS
@@ -262,9 +262,14 @@ class nova::compute (
     }
   }
 
-  if ($config_drive_format) {
-    nova_config {
-      'DEFAULT/config_drive_format': value => $config_drive_format;
-    }
+  if is_service_default($config_drive_format) or $config_drive_format == 'iso9660' {
+    ensure_packages($::nova::params::genisoimage_package_name, {
+      tag => ['openstack', 'nova-support-package'],
+    })
   }
+
+  nova_config {
+    'DEFAULT/config_drive_format': value => $config_drive_format;
+  }
+
 }

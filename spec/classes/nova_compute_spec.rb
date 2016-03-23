@@ -43,6 +43,15 @@ describe 'nova::compute' do
       end
 
       it { is_expected.to contain_nova_config('DEFAULT/heal_instance_info_cache_interval').with_value('60') }
+
+      it 'installs genisoimage package and sets config_drive_format' do
+        is_expected.to contain_nova_config('DEFAULT/config_drive_format').with(:value => '<SERVICE DEFAULT>')
+        is_expected.to contain_package('genisoimage').with(
+          :ensure => 'present',
+        )
+        is_expected.to contain_package('genisoimage').that_requires('Anchor[nova::install::begin]')
+        is_expected.to contain_package('genisoimage').that_comes_before('Anchor[nova::install::end]')
+      end
     end
 
     context 'with overridden parameters' do
@@ -116,6 +125,9 @@ describe 'nova::compute' do
       end
       it 'configures nova config_drive_format to vfat' do
         is_expected.to contain_nova_config('DEFAULT/config_drive_format').with_value('vfat')
+        is_expected.to_not contain_package('genisoimage').with(
+          :ensure => 'present',
+        )
       end
     end
 

@@ -29,6 +29,7 @@ class nova::params {
       $sqlite_package_name           = undef
       $pymysql_package_name          = undef
       $ceph_client_package_name      = 'ceph-common'
+      $genisoimage_package_name      = 'genisoimage'
       # service names
       $api_service_name              = 'openstack-nova-api'
       $cells_service_name            = 'openstack-nova-cells'
@@ -88,6 +89,7 @@ class nova::params {
       $sqlite_package_name          = 'python-pysqlite2'
       $pymysql_package_name         = 'python-pymysql'
       $ceph_client_package_name     = 'ceph'
+      $genisoimage_package_name     = 'genisoimage'
       # service names
       $api_service_name             = 'nova-api'
       $cells_service_name           = 'nova-cells'
