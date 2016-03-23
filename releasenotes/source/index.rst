@@ -1,8 +1,18 @@
-=========================
-puppet-nova Release Notes
-=========================
+=====================================
+Welcome to puppet-nova Release Notes!
+=====================================
+
+Contents
+========
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
 
    unreleased
+
+
+Indices and tables
+==================
+
+* :ref:`genindex`
+* :ref:`search`
