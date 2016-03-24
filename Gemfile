@@ -16,7 +16,8 @@ group :development, :test do
   gem 'json',                                 :require => 'false'
   gem 'netaddr',                              :require => 'false'
   gem 'puppet-openstack_spec_helper',
-      :git => 'https://git.openstack.org/openstack/puppet-openstack_spec_helper',
+      :git     => 'https://git.openstack.org/openstack/puppet-openstack_spec_helper',
+      :branch  => 'stable/mitaka',
       :require => false
 end
 
