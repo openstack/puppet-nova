@@ -1,0 +1,3 @@
+---
+other:
+  - Add support of OpenStack client for Nova providers.
