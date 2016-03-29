@@ -1,13 +1,37 @@
 # Run test ie with: rspec spec/unit/provider/nova_spec.rb
 
 require 'puppet/util/inifile'
+require 'puppet/provider/openstack'
+require 'puppet/provider/openstack/auth'
+require 'puppet/provider/openstack/credentials'
 
-class Puppet::Provider::Nova < Puppet::Provider
+class Puppet::Provider::Nova < Puppet::Provider::Openstack
+
+  extend Puppet::Provider::Openstack::Auth
+
+  def self.request(service, action, properties=nil)
+    begin
+      super
+    rescue Puppet::Error::OpenstackAuthInputError => error
+      nova_request(service, action, error, properties)
+    end
+  end
+
+  def self.nova_request(service, action, error, properties=nil)
+    properties ||= []
+    @credentials.username = nova_credentials['admin_user']
+    @credentials.password = nova_credentials['admin_password']
+    @credentials.project_name = nova_credentials['admin_tenant_name']
+    @credentials.auth_url = auth_endpoint
+    raise error unless @credentials.set?
+    Puppet::Provider::Openstack.request(service, action, properties, @credentials)
+  end
 
   def self.conf_filename
     '/etc/nova/nova.conf'
   end
 
+  # deprecated: method for old nova cli auth
   def self.withenv(hash, &block)
     saved = ENV.to_hash
     hash.each do |name, val|
@@ -66,6 +90,7 @@ class Puppet::Provider::Nova < Puppet::Provider
     @auth_endpoint ||= get_auth_endpoint
   end
 
+  # deprecated: method for old nova cli auth
   def self.auth_nova(*args)
     q = nova_credentials
     authenv = {
@@ -94,6 +119,7 @@ class Puppet::Provider::Nova < Puppet::Provider
     end
   end
 
+  # deprecated: method for old nova cli auth
   def auth_nova(*args)
     self.class.auth_nova(args)
   end
@@ -113,6 +139,7 @@ class Puppet::Provider::Nova < Puppet::Provider
     end
   end
 
+  # deprecated: string to list for nova cli
   def self.str2list(s)
     #parse string
     if s.include? ","
@@ -146,6 +173,7 @@ class Puppet::Provider::Nova < Puppet::Provider
     end
   end
 
+  # deprecated: nova cli to list
   def self.cliout2list(output)
     #don't proceed with empty output
     if output.empty?
@@ -176,69 +204,4 @@ class Puppet::Provider::Nova < Puppet::Provider
     return hash_list
   end
 
-  def self.nova_hosts
-    return @nova_hosts if @nova_hosts
-    cmd_output = auth_nova("host-list")
-    @nova_hosts = cliout2list(cmd_output)
-    @nova_hosts
-  end
-
-  def self.nova_get_host_by_name_and_type(host_name, service_type)
-    #find the host by name and service type
-    nova_hosts.each do |entry|
-      # (mdorman) Support api!cell_name@host_name -style output of nova host-list under nova cells
-      if entry["host_name"] =~ /^([a-zA-Z0-9\-_]+![a-zA-Z0-9\-_]+@)?#{Regexp.quote(host_name)}$/
-        if entry["service"] == service_type
-            return host_name
-        end
-      end
-    end
-    #name/service combo not found
-    return nil
-  end
-
-  def self.nova_aggregate_resources_ids(force_refresh=false)
-    # return the cached list unless requested
-    if not force_refresh
-      return @nova_aggregate_resources_ids if @nova_aggregate_resources_ids
-    end
-    #produce a list of hashes with Id=>Name pairs
-    lines = []
-    #run command
-    cmd_output = auth_nova("aggregate-list")
-    #parse output
-    @nova_aggregate_resources_ids = cliout2list(cmd_output)
-    #only interessted in Id and Name
-    @nova_aggregate_resources_ids.map{ |e| e.delete("Availability Zone")}
-    @nova_aggregate_resources_ids.map{ |e|
-      if e['Id'] =~ /^[0-9]+$/
-        e['Id'] = e['Id'].to_i
-      end }
-    @nova_aggregate_resources_ids
-  end
-
-  def self.nova_aggregate_resources_get_name_by_id(name, force_refresh=false)
-    #find the id by the given name
-    nova_aggregate_resources_ids(force_refresh).each do |entry|
-      if entry["Name"] == name
-        return entry["Id"]
-      end
-    end
-    #name not found
-    return nil
-  end
-
-  def self.nova_aggregate_resources_attr(id)
-    #run command to get details for given Id
-    cmd_output = auth_nova("aggregate-details", id)
-    list = cliout2list(cmd_output)[0]
-    if ! list["Hosts"].is_a?(Array)
-      if list["Hosts"] == ""
-        list["Hosts"] = []
-      else
-        list["Hosts"] = [ list["Hosts"] ]
-      end
-    end
-    return list
-  end
 end
