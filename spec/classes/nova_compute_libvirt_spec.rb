@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'puppet/util/package'
 describe 'nova::compute::libvirt' do
 
   let :pre_condition do
@@ -6,6 +7,14 @@ describe 'nova::compute::libvirt' do
   end
 
   shared_examples 'debian-nova-compute-libvirt' do
+    let(:libvirt_options) do
+      if facts[:operatingsystem] == 'Ubuntu' and Puppet::Util::Package.versioncmp(facts[:operatingsystemmajrelease], '16') >= 0
+        'libvirtd_opts="-l"'
+      else
+        'libvirtd_opts="-d -l"'
+      end
+    end
+
     describe 'with default parameters' do
 
       it { is_expected.to contain_class('nova::params')}
@@ -127,7 +136,7 @@ describe 'nova::compute::libvirt' do
 
         it { is_expected.to contain_class('nova::migration::libvirt')}
         it { is_expected.to contain_nova_config('vnc/vncserver_listen').with_value('0.0.0.0')}
-        it { is_expected.to contain_file_line('/etc/default/libvirt-bin libvirtd opts').with(:line => 'libvirtd_opts="-d -l"') }
+        it { is_expected.to contain_file_line('/etc/default/libvirt-bin libvirtd opts').with(:line => libvirt_options) }
         it { is_expected.to contain_file_line('/etc/libvirt/libvirtd.conf listen_tls').with(:line => "listen_tls = 0") }
         it { is_expected.to contain_file_line('/etc/libvirt/libvirtd.conf listen_tcp').with(:line => "listen_tcp = 1") }
         it { is_expected.not_to contain_file_line('/etc/libvirt/libvirtd.conf auth_tls')}
@@ -142,7 +151,7 @@ describe 'nova::compute::libvirt' do
 
         it { is_expected.to contain_class('nova::migration::libvirt')}
         it { is_expected.to contain_nova_config('vnc/vncserver_listen').with_value('::0')}
-        it { is_expected.to contain_file_line('/etc/default/libvirt-bin libvirtd opts').with(:line => 'libvirtd_opts="-d -l"') }
+        it { is_expected.to contain_file_line('/etc/default/libvirt-bin libvirtd opts').with(:line => libvirt_options) }
         it { is_expected.to contain_file_line('/etc/libvirt/libvirtd.conf listen_tls').with(:line => "listen_tls = 0") }
         it { is_expected.to contain_file_line('/etc/libvirt/libvirtd.conf listen_tcp').with(:line => "listen_tcp = 1") }
         it { is_expected.not_to contain_file_line('/etc/libvirt/libvirtd.conf auth_tls')}
@@ -165,7 +174,7 @@ describe 'nova::compute::libvirt' do
             :vncserver_listen      => '0.0.0.0',
             :migration_support     => true }
         end
-        it { is_expected.to contain_file_line('/etc/default/libvirtd libvirtd opts').with(:line => 'libvirtd_opts="-d -l"') }
+        it { is_expected.to contain_file_line('/etc/default/libvirtd libvirtd opts').with(:line => libvirt_options) }
 
       end
     end
@@ -337,19 +346,21 @@ describe 'nova::compute::libvirt' do
       @default_facts.merge({
         :osfamily => 'Debian',
         :operatingsystem => 'Debian',
-        :os_package_family => 'debian'
+        :os_package_family => 'debian',
+        :operatingsystemmajrelease => '8'
       })
     end
 
     it_behaves_like 'debian-nova-compute-libvirt'
   end
 
-  context 'on Debian platforms' do
+  context 'on Ubuntu platforms' do
     let (:facts) do
       @default_facts.merge({
         :osfamily => 'Debian',
         :operatingsystem => 'Ubuntu',
-        :os_package_family => 'ubuntu'
+        :os_package_family => 'ubuntu',
+        :operatingsystemmajrelease => '16.04'
       })
     end
 
@@ -360,7 +371,7 @@ describe 'nova::compute::libvirt' do
     let (:facts) do
       @default_facts.merge({
         :osfamily => 'RedHat',
-        :os_package_type => 'rpm'
+        :os_package_type => 'rpm',
       })
     end
 
