@@ -26,8 +26,6 @@ class nova::params {
       $vncproxy_package_name         = 'openstack-nova-novncproxy'
       $serialproxy_package_name      = 'openstack-nova-serialproxy'
       $spicehtml5proxy_package_name  = 'openstack-nova-console'
-      $sqlite_package_name           = undef
-      $pymysql_package_name          = undef
       $ceph_client_package_name      = 'ceph-common'
       $genisoimage_package_name      = 'genisoimage'
       # service names
@@ -86,8 +84,6 @@ class nova::params {
       $scheduler_package_name       = 'nova-scheduler'
       $tgt_package_name             = 'tgt'
       $serialproxy_package_name     = 'nova-serialproxy'
-      $sqlite_package_name          = 'python-pysqlite2'
-      $pymysql_package_name         = 'python-pymysql'
       $ceph_client_package_name     = 'ceph'
       $genisoimage_package_name     = 'genisoimage'
       # service names

@@ -56,7 +56,6 @@ describe 'nova' do
         is_expected.to contain_nova_config('DEFAULT/state_path').with_value('/var/lib/nova')
         is_expected.to contain_nova_config('oslo_concurrency/lock_path').with_value(platform_params[:lock_path])
         is_expected.to contain_nova_config('DEFAULT/service_down_time').with_value('60')
-        is_expected.to contain_nova_config('DEFAULT/notification_driver').with_ensure('absent')
         is_expected.to contain_nova_config('DEFAULT/rootwrap_config').with_value('/etc/nova/rootwrap.conf')
         is_expected.to contain_nova_config('DEFAULT/report_interval').with_value('10')
         is_expected.to contain_nova_config('DEFAULT/use_ipv6').with_value('<SERVICE DEFAULT>')
@@ -160,8 +159,8 @@ describe 'nova' do
         is_expected.to contain_nova_config('DEFAULT/state_path').with_value('/var/lib/nova2')
         is_expected.to contain_nova_config('oslo_concurrency/lock_path').with_value('/var/locky/path')
         is_expected.to contain_nova_config('DEFAULT/service_down_time').with_value('120')
-        is_expected.to contain_nova_config('DEFAULT/notification_driver').with_value('ceilometer.compute.nova_notifier')
-        is_expected.to contain_nova_config('DEFAULT/notification_topics').with_value('openstack')
+        is_expected.to contain_nova_config('oslo_messaging_notifications/driver').with_value('ceilometer.compute.nova_notifier')
+        is_expected.to contain_nova_config('oslo_messaging_notifications/topics').with_value('openstack')
         is_expected.to contain_nova_config('DEFAULT/notify_api_faults').with_value(true)
         is_expected.to contain_nova_config('DEFAULT/report_interval').with_value('60')
         is_expected.to contain_nova_config('DEFAULT/use_ipv6').with_value('true')
@@ -177,7 +176,7 @@ describe 'nova' do
       context 'with multiple notification_driver' do
         before { params.merge!( :notification_driver => ['ceilometer.compute.nova_notifier', 'nova.openstack.common.notifier.rpc_notifier']) }
 
-        it { is_expected.to contain_nova_config('DEFAULT/notification_driver').with_value(
+        it { is_expected.to contain_nova_config('oslo_messaging_notifications/driver').with_value(
           'ceilometer.compute.nova_notifier,nova.openstack.common.notifier.rpc_notifier'
         ) }
       end

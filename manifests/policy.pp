@@ -38,4 +38,6 @@ class nova::policy (
 
   create_resources('openstacklib::policy::base', $policies, $policy_defaults)
 
+  oslo::policy { 'nova_config': policy_file => $policy_path }
+
 }

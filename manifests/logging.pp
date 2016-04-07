@@ -121,31 +121,25 @@ class nova::logging(
   $verbose_real  = pick($::nova::verbose,$verbose)
   $debug_real = pick($::nova::debug,$debug)
 
-  if is_service_default($default_log_levels) {
-    $default_log_levels_real = $default_log_levels
-  } else {
-    $default_log_levels_real = join(sort(join_keys_to_values($default_log_levels, '=')), ',')
-  }
 
-  nova_config {
-    'DEFAULT/debug':                         value => $debug_real;
-    'DEFAULT/verbose':                       value => $verbose_real;
-    'DEFAULT/use_stderr':                    value => $use_stderr_real;
-    'DEFAULT/use_syslog':                    value => $use_syslog_real;
-    'DEFAULT/log_dir':                       value => $log_dir_real;
-    'DEFAULT/syslog_log_facility':           value => $log_facility_real;
-    'DEFAULT/logging_context_format_string': value => $logging_context_format_string;
-    'DEFAULT/logging_default_format_string': value => $logging_default_format_string;
-    'DEFAULT/logging_debug_format_suffix':   value => $logging_debug_format_suffix;
-    'DEFAULT/logging_exception_prefix':      value => $logging_exception_prefix;
-    'DEFAULT/log_config_append':             value => $log_config_append;
-    'DEFAULT/default_log_levels':            value => $default_log_levels_real;
-    'DEFAULT/publish_errors':                value => $publish_errors;
-    'DEFAULT/fatal_deprecations':            value => $fatal_deprecations;
-    'DEFAULT/instance_format':               value => $instance_format;
-    'DEFAULT/instance_uuid_format':          value => $instance_uuid_format;
-    'DEFAULT/log_date_format':               value => $log_date_format;
+  oslo::log { 'nova_config':
+    debug                         => $debug_real,
+    verbose                       => $verbose_real,
+    use_stderr                    => $use_stderr_real,
+    use_syslog                    => $use_syslog_real,
+    log_dir                       => $log_dir_real,
+    syslog_log_facility           => $log_facility_real,
+    logging_context_format_string => $logging_context_format_string,
+    logging_default_format_string => $logging_default_format_string,
+    logging_debug_format_suffix   => $logging_debug_format_suffix,
+    logging_exception_prefix      => $logging_exception_prefix,
+    log_config_append             => $log_config_append,
+    default_log_levels            => $default_log_levels,
+    publish_errors                => $publish_errors,
+    fatal_deprecations            => $fatal_deprecations,
+    instance_format               => $instance_format,
+    instance_uuid_format          => $instance_uuid_format,
+    log_date_format               => $log_date_format,
   }
-
 
 }

@@ -239,11 +239,11 @@
 # [*notification_driver*]
 #   (optional) Driver or drivers to handle sending notifications.
 #   Value can be a string or a list.
-#   Defaults to undef
+#   Defaults to $::os_service_default.
 #
 # [*notification_topics*]
 #   (optional) AMQP topic used for OpenStack notifications
-#   Defaults to 'notifications'
+#   Defaults to ::os_service_default
 #
 # [*notify_api_faults*]
 #   (optional) If set, send api.fault notifications on caught
@@ -404,8 +404,8 @@ class nova(
   $use_syslog                         = undef,
   $use_stderr                         = undef,
   $log_facility                       = undef,
-  $notification_driver                = undef,
-  $notification_topics                = 'notifications',
+  $notification_driver                = $::os_service_default,
+  $notification_topics                = $::os_service_default,
   $notify_api_faults                  = false,
   $notify_on_state_change             = undef,
   $os_region_name                     = undef,
@@ -599,26 +599,23 @@ class nova(
     }
   }
 
-  if $notification_driver {
-    nova_config {
-      'DEFAULT/notification_driver': value => join(any2array($notification_driver), ',');
-    }
-  } else {
-    nova_config { 'DEFAULT/notification_driver': ensure => absent; }
+  oslo::messaging::notifications { 'nova_config':
+    driver => $notification_driver,
+    topics => $notification_topics,
   }
 
   nova_config {
     'cinder/catalog_info':         value => $cinder_catalog_info;
-    'DEFAULT/notification_topics': value => $notification_topics;
     'DEFAULT/notify_api_faults':   value => $notify_api_faults;
     # Following may need to be broken out to different nova services
     'DEFAULT/state_path':          value => $state_path;
-    'oslo_concurrency/lock_path':  value => $lock_path;
     'DEFAULT/service_down_time':   value => $service_down_time;
     'DEFAULT/rootwrap_config':     value => $rootwrap_config;
     'DEFAULT/report_interval':     value => $report_interval;
     'DEFAULT/use_ipv6':            value => $use_ipv6;
   }
+
+  oslo::concurrency { 'nova_config': lock_path => $lock_path }
 
   if $notify_on_state_change and $notify_on_state_change in ['vm_state', 'vm_and_task_state'] {
     nova_config {
