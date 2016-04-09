@@ -1,0 +1,8 @@
+---
+features:
+  - Make the nova_api database creation default to "true" since it is
+    now required in Mitaka
+
+upgrade:
+  - When upgrading, be aware that the default value of sync_db_api has
+    changed from "false" to "true" for this database.
