@@ -1,0 +1,4 @@
+---
+deprecations:
+  - Drop all qpid references in code since it's been
+    deprecated already.

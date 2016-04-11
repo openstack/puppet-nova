@@ -32,7 +32,6 @@
   "description": "Installs and configures OpenStack Nova (Compute).",
   "dependencies": [
     { "name": "puppetlabs/apache", "version_requirement": ">=1.0.0 <2.0.0" },
-    { "name": "dprince/qpid", "version_requirement": ">=1.0.0 <2.0.0" },
     { "name": "duritong/sysctl", "version_requirement": ">=0.0.1 <1.0.0" },
     { "name": "openstack/cinder", "version_requirement": ">=8.0.0 <9.0.0" },
     { "name": "openstack/glance", "version_requirement": ">=8.0.0 <9.0.0" },
