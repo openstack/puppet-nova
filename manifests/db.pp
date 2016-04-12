@@ -93,6 +93,9 @@ class nova::db (
 
   if !is_service_default($database_connection_real) {
 
+    validate_re($database_connection_real,
+      '^(sqlite|mysql(\+pymysql)?|postgresql):\/\/(\S+:\S+@\S+\/\S+)?')
+
     oslo::db { 'nova_config':
       connection       => $database_connection_real,
       idle_timeout     => $database_idle_timeout_real,
