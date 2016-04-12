@@ -110,7 +110,7 @@
 #
 # [*sync_db_api*]
 #   (optional) Run nova-manage api_db sync on api nodes after installing the package.
-#   Defaults to false
+#   Defaults to true
 #
 # [*neutron_metadata_proxy_shared_secret*]
 #   (optional) Shared secret to validate proxies Neutron metadata requests
@@ -193,7 +193,7 @@ class nova::api(
   $osapi_compute_workers     = $::processorcount,
   $metadata_workers          = $::processorcount,
   $sync_db                   = true,
-  $sync_db_api               = false,
+  $sync_db_api               = true,
   $neutron_metadata_proxy_shared_secret = undef,
   $osapi_v3                  = false,
   $default_floating_pool     = 'nova',
