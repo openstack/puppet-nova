@@ -28,7 +28,6 @@ describe 'nova::logging' do
      :use_stderr => false,
      :log_facility => 'LOG_FOO',
      :log_dir => '/var/log',
-     :verbose => true,
      :debug => true,
     }
   end
@@ -60,7 +59,6 @@ describe 'nova::logging' do
       is_expected.to contain_nova_config('DEFAULT/use_syslog').with(:value => '<SERVICE DEFAULT>')
       is_expected.to contain_nova_config('DEFAULT/use_stderr').with(:value => '<SERVICE DEFAULT>')
       is_expected.to contain_nova_config('DEFAULT/log_dir').with(:value => '/var/log/nova')
-      is_expected.to contain_nova_config('DEFAULT/verbose').with(:value => '<SERVICE DEFAULT>')
       is_expected.to contain_nova_config('DEFAULT/debug').with(:value => '<SERVICE DEFAULT>')
     end
   end
@@ -71,7 +69,6 @@ describe 'nova::logging' do
       is_expected.to contain_nova_config('DEFAULT/use_stderr').with(:value => 'false')
       is_expected.to contain_nova_config('DEFAULT/syslog_log_facility').with(:value => 'LOG_FOO')
       is_expected.to contain_nova_config('DEFAULT/log_dir').with(:value => '/var/log')
-      is_expected.to contain_nova_config('DEFAULT/verbose').with(:value => 'true')
       is_expected.to contain_nova_config('DEFAULT/debug').with(:value => 'true')
     end
   end

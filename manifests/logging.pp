@@ -4,10 +4,6 @@
 #
 # == parameters
 #
-#  [*verbose*]
-#    (Optional) Should the daemons log verbose messages
-#    Defaults to $::os_service_default
-#
 #  [*debug*]
 #    (Optional) Should the daemons log debug messages
 #    Defaults to $::os_service_default
@@ -89,13 +85,19 @@
 #    (optional) Format string for %%(asctime)s in log records.
 #    Defaults to $::os_service_default
 #    Example: 'Y-%m-%d %H:%M:%S'
-
+#
+# DEPRECATED PARAMETERS
+#
+# [*verbose*]
+#   (optional) Should the daemons log verbose messages
+#   DEPRECATED: Parameter has no effect
+#   Defaults to undef
+#
 class nova::logging(
   $use_syslog                    = $::os_service_default,
   $use_stderr                    = $::os_service_default,
   $log_facility                  = $::os_service_default,
   $log_dir                       = '/var/log/nova',
-  $verbose                       = $::os_service_default,
   $debug                         = $::os_service_default,
   $logging_context_format_string = $::os_service_default,
   $logging_default_format_string = $::os_service_default,
@@ -108,6 +110,8 @@ class nova::logging(
   $instance_format               = $::os_service_default,
   $instance_uuid_format          = $::os_service_default,
   $log_date_format               = $::os_service_default,
+  # DEPRECATED PARAMETERS
+  $verbose                       = undef,
 ) {
 
   include ::nova::deps
@@ -118,13 +122,14 @@ class nova::logging(
   $use_stderr_real = pick($::nova::use_stderr,$use_stderr)
   $log_facility_real = pick($::nova::log_facility,$log_facility)
   $log_dir_real = pick($::nova::log_dir,$log_dir)
-  $verbose_real  = pick($::nova::verbose,$verbose)
   $debug_real = pick($::nova::debug,$debug)
 
+  if $verbose {
+    warning('verbose parameter is deprecated and has no effect. It\'s value will be ignored.')
+  }
 
   oslo::log { 'nova_config':
     debug                         => $debug_real,
-    verbose                       => $verbose_real,
     use_stderr                    => $use_stderr_real,
     use_syslog                    => $use_syslog_real,
     log_dir                       => $log_dir_real,
