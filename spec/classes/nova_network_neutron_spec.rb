@@ -29,8 +29,8 @@ describe 'nova::network::neutron' do
   context 'with required parameters' do
     it 'configures neutron endpoint in nova.conf' do
       is_expected.to contain_nova_config('neutron/password').with_value(params[:neutron_password]).with_secret(true)
-      is_expected.to contain_nova_config('DEFAULT/network_api_class').with_value('nova.network.neutronv2.api.API')
       is_expected.to contain_nova_config('DEFAULT/dhcp_domain').with_value(default_params[:dhcp_domain])
+      is_expected.to contain_nova_config('DEFAULT/use_neutron').with_value(true)
       is_expected.to contain_nova_config('neutron/auth_plugin').with_value(default_params[:neutron_auth_plugin])
       is_expected.to contain_nova_config('neutron/url').with_value(default_params[:neutron_url])
       is_expected.to contain_nova_config('neutron/timeout').with_value(default_params[:neutron_url_timeout])
@@ -65,7 +65,6 @@ describe 'nova::network::neutron' do
         :neutron_username                => 'neutron2',
         :neutron_user_domain_name        => 'neutron_domain',
         :neutron_auth_url                => 'http://10.0.0.1:35357/v2',
-        :network_api_class               => 'network.api.class',
         :security_group_api              => 'nova',
         :firewall_driver                 => 'nova.virt.firewall.IptablesFirewallDriver',
         :neutron_ovs_bridge              => 'br-int',
@@ -79,7 +78,6 @@ describe 'nova::network::neutron' do
     it 'configures neutron endpoint in nova.conf' do
       is_expected.to contain_nova_config('neutron/auth_strategy').with_ensure('absent')
       is_expected.to contain_nova_config('neutron/password').with_value(params[:neutron_password]).with_secret(true)
-      is_expected.to contain_nova_config('DEFAULT/network_api_class').with_value('network.api.class')
       is_expected.to contain_nova_config('DEFAULT/dhcp_domain').with_value(params[:dhcp_domain])
       is_expected.to contain_nova_config('neutron/url').with_value(params[:neutron_url])
       is_expected.to contain_nova_config('neutron/timeout').with_value(params[:neutron_url_timeout])
@@ -113,7 +111,6 @@ describe 'nova::network::neutron' do
         :neutron_region_name             => 'RegionTwo',
         :neutron_admin_username          => 'neutron2',
         :neutron_admin_auth_url          => 'http://10.0.0.1:35357',
-        :network_api_class               => 'network.api.class',
         :security_group_api              => 'nova',
         :firewall_driver                 => 'nova.virt.firewall.IptablesFirewallDriver',
         :neutron_ovs_bridge              => 'br-int',
@@ -127,7 +124,6 @@ describe 'nova::network::neutron' do
     it 'configures neutron endpoint in nova.conf' do
       is_expected.to contain_nova_config('neutron/auth_strategy').with_ensure('absent')
       is_expected.to contain_nova_config('neutron/password').with_value(params[:neutron_password]).with_secret(true)
-      is_expected.to contain_nova_config('DEFAULT/network_api_class').with_value('network.api.class')
       is_expected.to contain_nova_config('DEFAULT/dhcp_domain').with_value(params[:dhcp_domain])
       is_expected.to contain_nova_config('neutron/url').with_value(params[:neutron_url])
       is_expected.to contain_nova_config('neutron/timeout').with_value(params[:neutron_url_timeout])

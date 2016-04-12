@@ -1,0 +1,6 @@
+---
+deprecations:
+  - network_api_class parameter from nova::network::neutron doesn't take effect
+    anymore and will be removed in future.
+    Set use_neutron always to true as nova::network::neutron is
+    a Neutron-specific class
