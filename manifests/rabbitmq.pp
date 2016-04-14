@@ -43,6 +43,8 @@ class nova::rabbitmq(
   $port               ='5672',
 ) {
 
+  warning('nova::rabbitmq class is deprecated and will be removed in next release. Make other plans to configure rabbitmq resources.')
+
   include ::nova::deps
 
   if ($enabled) {
