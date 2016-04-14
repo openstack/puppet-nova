@@ -30,7 +30,7 @@ describe 'basic nova' do
       # Nova resources
       class { '::nova':
         database_connection     => 'mysql+pymysql://nova:a_big_secret@127.0.0.1/nova?charset=utf8',
-	api_database_connection => 'mysql+pymysql://nova_api:a_big_secret@127.0.0.1/nova_api?charset=utf8',
+        api_database_connection => 'mysql+pymysql://nova_api:a_big_secret@127.0.0.1/nova_api?charset=utf8',
         rabbit_userid           => 'nova',
         rabbit_password         => 'an_even_bigger_secret',
         image_service           => 'nova.image.glance.GlanceImageService',
@@ -78,6 +78,16 @@ describe 'basic nova' do
         require           => Class['nova::api'],
       }
 
+      nova_flavor { 'test_flavor':
+        ensure  => present,
+        name    => 'test_flavor',
+        id      => '9999',
+        ram     => '512',
+        disk    => '1',
+        vcpus   => '1',
+        require => [ Class['nova::api'], Class['nova::keystone::auth'] ],
+      }
+
       # TODO: networking with neutron
       EOS
 
@@ -107,6 +117,14 @@ describe 'basic nova' do
       it 'should create new aggregate' do
         shell('openstack --os-username nova --os-password a_big_secret --os-tenant-name services --os-auth-url http://127.0.0.1:5000/v2.0 aggregate list') do |r|
           expect(r.stdout).to match(/test_aggregate/)
+          expect(r.stderr).to be_empty
+        end
+      end
+    end
+    describe 'nova flavor' do
+      it 'should create new flavor' do
+        shell('openstack --os-username nova --os-password a_big_secret --os-tenant-name services --os-auth-url http://127.0.0.1:5000/v2.0 flavor list') do |r|
+          expect(r.stdout).to match(/test_flavor/)
           expect(r.stderr).to be_empty
         end
       end

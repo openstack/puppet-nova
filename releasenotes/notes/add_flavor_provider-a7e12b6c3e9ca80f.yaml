@@ -1,0 +1,6 @@
+---
+features:
+  - Added flavor provider and type for creating and deleting
+    because nova no longer comes with flavors by default.
+    The provider can be used to add/delete flavors and manage
+    flavor properties.
