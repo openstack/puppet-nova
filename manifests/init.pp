@@ -171,10 +171,6 @@
 #   On RHEL will be '/var/lib/nova/tmp' and on Debian '/var/lock/nova'
 #   Defaults to $::nova::params::lock_path
 #
-# [*verbose*]
-#   (optional) Set log output to verbose output.
-#   Defaults to undef
-#
 # [*debug*]
 #   (optional) Set log output to debug output.
 #   Defaults to undef
@@ -349,6 +345,10 @@
 #   (optional) Install nova utilities (Extra packages used by nova tools)
 #   Defaults to undef
 #
+# [*verbose*]
+#   (optional) Set log output to verbose output.
+#   Defaults to undef
+#
 class nova(
   $ensure_package                     = 'present',
   $database_connection                = undef,
@@ -389,7 +389,6 @@ class nova(
   $log_dir                            = undef,
   $state_path                         = '/var/lib/nova',
   $lock_path                          = $::nova::params::lock_path,
-  $verbose                            = undef,
   $debug                              = undef,
   $periodic_interval                  = '60',
   $report_interval                    = '10',
@@ -430,6 +429,7 @@ class nova(
   $qpid_protocol                      = undef,
   $qpid_tcp_nodelay                   = undef,
   $install_utilities                  = undef,
+  $verbose                            = undef,
 ) inherits nova::params {
 
   include ::nova::deps
