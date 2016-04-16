@@ -36,6 +36,8 @@ class nova::params {
       $conductor_service_name        = 'openstack-nova-conductor'
       $consoleauth_service_name      = 'openstack-nova-consoleauth'
       $libvirt_service_name          = 'libvirtd'
+      $virtlock_service_name         = 'virtlockd'
+      $virtlog_service_name          = undef
       $network_service_name          = 'openstack-nova-network'
       $objectstore_service_name      = 'openstack-nova-objectstore'
       $scheduler_service_name        = 'openstack-nova-scheduler'
@@ -113,6 +115,8 @@ class nova::params {
           # Use default provider on Debian
           $special_service_provider = undef
           $libvirt_service_name         = 'libvirtd'
+          $virtlock_service_name        = undef
+          $virtlog_service_name         = undef
         }
         default: {
           $spicehtml5proxy_package_name = 'nova-spiceproxy'
@@ -121,6 +125,8 @@ class nova::params {
           # some of the services need to be started form the special upstart provider
           $special_service_provider = 'upstart'
           $libvirt_service_name         = 'libvirt-bin'
+          $virtlock_service_name        = 'virtlockd'
+          $virtlog_service_name         = 'virtlogd'
         }
       }
     }

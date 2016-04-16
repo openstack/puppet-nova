@@ -66,6 +66,8 @@ describe 'nova::compute::libvirt' do
           :remove_unused_resized_minimum_age_seconds  => 3600,
           :remove_unused_original_minimum_age_seconds => 3600,
           :libvirt_service_name                       => 'custom_service',
+          :virtlock_service_name                      => 'virtlock',
+          :virtlog_service_name                       => 'virtlog',
           :compute_driver                             => 'libvirt.FoobarDriver',
         }
       end
@@ -92,6 +94,17 @@ describe 'nova::compute::libvirt' do
           :ensure   => 'running',
           :before   => ['Service[nova-compute]']
         )
+        is_expected.to contain_service('virtlockd').with(
+          :name     => 'virtlock',
+          :enable   => true,
+          :ensure => 'running'
+        )
+        is_expected.to contain_service('virtlogd').with(
+          :name     => 'virtlog',
+          :enable   => true,
+          :ensure => 'running'
+        )
+
       }
     end
 

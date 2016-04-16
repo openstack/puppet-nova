@@ -1,0 +1,9 @@
+---
+fixes:
+  - Manage virtlockd and virtlogd services as part of
+    the nova::compute::libvirt as they are needed for
+    nova. The virtlockd service is currently managed
+    for RedHat and Ubuntu but skipped under Debian.
+    The virtlogd service is Ubuntu specific but can
+    be managed if the virtlog_service_name is provided
+    to the nova::compute::libvirt class.

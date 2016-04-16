@@ -93,6 +93,14 @@
 #   (optional) libvirt service name.
 #   Defaults to $::nova::params::libvirt_service_name
 #
+# [*virtlock_service_name*]
+#   (optional) virtlock service name.
+#   Defaults to $::nova::params::virtlock_service_name
+#
+# [*virtlog_service_name*]
+#   (optional) virtlog service name.
+#   Defaults to $::nova::params::virtlog_service_name
+#
 # [*compute_driver*]
 #   (optional) Compute driver.
 #   Defaults to 'libvirt.LibvirtDriver'
@@ -114,6 +122,8 @@ class nova::compute::libvirt (
   $remove_unused_resized_minimum_age_seconds  = undef,
   $remove_unused_original_minimum_age_seconds = undef,
   $libvirt_service_name                       = $::nova::params::libvirt_service_name,
+  $virtlock_service_name                      = $::nova::params::virtlock_service_name,
+  $virtlog_service_name                       = $::nova::params::virtlog_service_name,
   $compute_driver                             = 'libvirt.LibvirtDriver'
 ) inherits nova::params {
 
@@ -192,6 +202,26 @@ class nova::compute::libvirt (
     name     => $libvirt_service_name,
     provider => $::nova::params::special_service_provider,
     require  => Package['libvirt'],
+  }
+
+  if $virtlock_service_name {
+    service { 'virtlockd':
+      ensure   => running,
+      enable   => true,
+      name     => $virtlock_service_name,
+      provider => $::nova::params::special_service_provider,
+      require  => Package['libvirt']
+    }
+  }
+
+  if $virtlog_service_name {
+    service { 'virtlogd':
+      ensure   => running,
+      enable   => true,
+      name     => $virtlog_service_name,
+      provider => $::nova::params::special_service_provider,
+      require  => Package['libvirt']
+    }
   }
 
   nova_config {
