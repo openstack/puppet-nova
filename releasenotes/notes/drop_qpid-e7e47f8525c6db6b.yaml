@@ -1,0 +1,3 @@
+---
+other:
+  - Drop all Qpid support, it was removed from Oslo in Mitaka.
