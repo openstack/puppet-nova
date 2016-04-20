@@ -3,7 +3,7 @@ require 'spec_helper'
 describe 'nova::network::neutron' do
 
   let :default_params do
-    { :neutron_auth_plugin             => 'v3password',
+    { :neutron_auth_type               => 'v3password',
       :neutron_url                     => 'http://127.0.0.1:9696',
       :neutron_url_timeout             => '30',
       :neutron_project_name            => 'services',
@@ -14,7 +14,6 @@ describe 'nova::network::neutron' do
       :neutron_auth_url                => 'http://127.0.0.1:35357/v3',
       :neutron_ovs_bridge              => 'br-int',
       :neutron_extension_sync_interval => '600',
-      :security_group_api              => 'neutron',
       :firewall_driver                 => 'nova.virt.firewall.NoopFirewallDriver',
       :vif_plugging_is_fatal           => true,
       :vif_plugging_timeout            => '300',
@@ -31,7 +30,7 @@ describe 'nova::network::neutron' do
       is_expected.to contain_nova_config('neutron/password').with_value(params[:neutron_password]).with_secret(true)
       is_expected.to contain_nova_config('DEFAULT/dhcp_domain').with_value(default_params[:dhcp_domain])
       is_expected.to contain_nova_config('DEFAULT/use_neutron').with_value(true)
-      is_expected.to contain_nova_config('neutron/auth_plugin').with_value(default_params[:neutron_auth_plugin])
+      is_expected.to contain_nova_config('neutron/auth_type').with_value(default_params[:neutron_auth_type])
       is_expected.to contain_nova_config('neutron/url').with_value(default_params[:neutron_url])
       is_expected.to contain_nova_config('neutron/timeout').with_value(default_params[:neutron_url_timeout])
       is_expected.to contain_nova_config('neutron/project_name').with_value(default_params[:neutron_project_name])
@@ -45,7 +44,6 @@ describe 'nova::network::neutron' do
     end
     it 'configures Nova to use Neutron Bridge Security Groups and Firewall' do
       is_expected.to contain_nova_config('DEFAULT/firewall_driver').with_value(default_params[:firewall_driver])
-      is_expected.to contain_nova_config('DEFAULT/security_group_api').with_value(default_params[:security_group_api])
       is_expected.to contain_nova_config('neutron/ovs_bridge').with_value(default_params[:neutron_ovs_bridge])
     end
     it 'configures neutron vif plugging events in nova.conf' do
@@ -65,7 +63,6 @@ describe 'nova::network::neutron' do
         :neutron_username                => 'neutron2',
         :neutron_user_domain_name        => 'neutron_domain',
         :neutron_auth_url                => 'http://10.0.0.1:35357/v2',
-        :security_group_api              => 'nova',
         :firewall_driver                 => 'nova.virt.firewall.IptablesFirewallDriver',
         :neutron_ovs_bridge              => 'br-int',
         :neutron_extension_sync_interval => '600',
@@ -92,7 +89,6 @@ describe 'nova::network::neutron' do
     end
     it 'configures Nova to use Neutron Security Groups and Firewall' do
       is_expected.to contain_nova_config('DEFAULT/firewall_driver').with_value(params[:firewall_driver])
-      is_expected.to contain_nova_config('DEFAULT/security_group_api').with_value(params[:security_group_api])
       is_expected.to contain_nova_config('neutron/ovs_bridge').with_value(params[:neutron_ovs_bridge])
     end
     it 'configures neutron vif plugging events in nova.conf' do
@@ -111,13 +107,13 @@ describe 'nova::network::neutron' do
         :neutron_region_name             => 'RegionTwo',
         :neutron_admin_username          => 'neutron2',
         :neutron_admin_auth_url          => 'http://10.0.0.1:35357',
-        :security_group_api              => 'nova',
         :firewall_driver                 => 'nova.virt.firewall.IptablesFirewallDriver',
         :neutron_ovs_bridge              => 'br-int',
         :neutron_extension_sync_interval => '600',
         :vif_plugging_is_fatal           => false,
         :vif_plugging_timeout            => '0',
-        :dhcp_domain                     => 'foo'
+        :dhcp_domain                     => 'foo',
+        :neutron_auth_plugin             => 'oldparam',
       )
     end
 
@@ -133,10 +129,10 @@ describe 'nova::network::neutron' do
       is_expected.to contain_nova_config('neutron/username').with_value(params[:neutron_admin_username])
       is_expected.to contain_nova_config('neutron/auth_url').with_value(params[:neutron_admin_auth_url])
       is_expected.to contain_nova_config('neutron/extension_sync_interval').with_value(params[:neutron_extension_sync_interval])
+      is_expected.to contain_nova_config('neutron/auth_type').with_value(params[:neutron_auth_plugin])
     end
     it 'configures Nova to use Neutron Security Groups and Firewall' do
       is_expected.to contain_nova_config('DEFAULT/firewall_driver').with_value(params[:firewall_driver])
-      is_expected.to contain_nova_config('DEFAULT/security_group_api').with_value(params[:security_group_api])
       is_expected.to contain_nova_config('neutron/ovs_bridge').with_value(params[:neutron_ovs_bridge])
     end
     it 'configures neutron vif plugging events in nova.conf' do

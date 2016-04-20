@@ -71,8 +71,8 @@
 #   Defaults to undef
 #
 # [*volume_api_class*]
-#   (optional) The name of the class that nova will use to access volumes. Cinder is the only option.
-#   Defaults to 'nova.volume.cinder.API'
+#   (optional) DEPRECATED. The name of the class that nova will use to access volumes. Cinder is the only option.
+#   Defaults to undef
 #
 # [*use_forwarded_for*]
 #   (optional) Treat X-Forwarded-For as the canonical remote address. Only
@@ -188,7 +188,6 @@ class nova::api(
   $metadata_listen           = '0.0.0.0',
   $metadata_listen_port      = 8775,
   $enabled_apis              = ['osapi_compute', 'metadata'],
-  $volume_api_class          = 'nova.volume.cinder.API',
   $use_forwarded_for         = false,
   $osapi_compute_workers     = $::processorcount,
   $metadata_workers          = $::processorcount,
@@ -212,12 +211,17 @@ class nova::api(
   $ec2_workers               = undef,
   $keystone_ec2_url          = undef,
   $auth_version              = false,
+  $volume_api_class          = undef,
 ) inherits nova::params {
 
   include ::nova::deps
   include ::nova::db
   include ::nova::policy
   include ::cinder::client
+
+  if $volume_api_class {
+    warning('volume_api_class parameter is deprecated, has no effect and will be removed in a future release.')
+  }
 
   if $ec2_listen_port or $ec2_workers or $keystone_ec2_url {
     warning('ec2_listen_port, ec2_workers and keystone_ec2_url are deprecated and have no effect. Deploy openstack/ec2-api instead.')
@@ -292,9 +296,8 @@ class nova::api(
   }
 
   nova_config {
-    'DEFAULT/api_paste_config':          value => $api_paste_config;
+    'wsgi/api_paste_config':             value => $api_paste_config;
     'DEFAULT/enabled_apis':              value => $enabled_apis_real;
-    'DEFAULT/volume_api_class':          value => $volume_api_class;
     'DEFAULT/osapi_compute_listen':      value => $api_bind_address;
     'DEFAULT/metadata_listen':           value => $metadata_listen;
     'DEFAULT/metadata_listen_port':      value => $metadata_listen_port;
