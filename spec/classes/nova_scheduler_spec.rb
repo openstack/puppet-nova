@@ -20,7 +20,7 @@ describe 'nova::scheduler' do
       :ensure    => 'running'
     )}
 
-    it { is_expected.to contain_nova_config('DEFAULT/scheduler_driver').with_value('nova.scheduler.filter_scheduler.FilterScheduler') }
+    it { is_expected.to contain_nova_config('DEFAULT/scheduler_driver').with_value('filter_scheduler') }
 
     context 'with manage_service as false' do
       let :params do

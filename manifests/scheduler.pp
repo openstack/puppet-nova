@@ -18,13 +18,13 @@
 #
 # [*scheduler_driver*]
 #   (optional) Default driver to use for the scheduler
-#   Defaults to 'nova.scheduler.filter_scheduler.FilterScheduler'
+#   Defaults to 'filter_scheduler'
 #
 class nova::scheduler(
   $enabled          = true,
   $manage_service   = true,
   $ensure_package   = 'present',
-  $scheduler_driver = 'nova.scheduler.filter_scheduler.FilterScheduler',
+  $scheduler_driver = 'filter_scheduler',
 ) {
 
   include ::nova::deps

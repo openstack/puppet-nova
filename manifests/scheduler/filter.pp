@@ -6,7 +6,7 @@
 #
 # [*scheduler_host_manager*]
 #   (optional) The scheduler host manager class to use
-#   Defaults to 'nova.scheduler.host_manager.HostManager'
+#   Defaults to 'host_manager'
 #
 # [*scheduler_max_attempts*]
 #   (optional) Maximum number of attempts to schedule an instance
@@ -65,7 +65,7 @@
 #   Defaults to false
 #
 class nova::scheduler::filter (
-  $scheduler_host_manager              = 'nova.scheduler.host_manager.HostManager',
+  $scheduler_host_manager              = 'host_manager',
   $scheduler_max_attempts              = '3',
   $scheduler_host_subset_size          = '1',
   $cpu_allocation_ratio                = '16.0',
