@@ -232,11 +232,6 @@ describe 'nova::api' do
          }
         "
       end
-      before do
-        params.merge!({
-          :sync_db_api => true,
-        })
-      end
 
       it { is_expected.to contain_nova_config('database/connection').with_value('mysql://user:pass@db/db1').with_secret(true) }
       it { is_expected.to contain_nova_config('database/slave_connection').with_value('mysql://user:pass@slave/db1').with_secret(true) }
