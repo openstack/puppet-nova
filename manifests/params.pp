@@ -52,20 +52,16 @@ class nova::params {
       $nova_wsgi_script_path         = '/var/www/cgi-bin/nova'
       $nova_api_wsgi_script_source   = '/usr/lib/python2.7/site-packages/nova/wsgi/nova-api.py'
       case $::operatingsystem {
-        'Fedora': {
-          $special_service_provider = undef
-        }
         'RedHat', 'CentOS', 'Scientific', 'OracleLinux': {
           if (versioncmp($::operatingsystemmajrelease, '7') < 0) {
             $messagebus_service_name = 'messagebus'
-            $special_service_provider = 'init'
           } else {
             $messagebus_service_name = 'dbus'
-            $special_service_provider = 'redhat'
           }
         }
         default: {
-          $special_service_provider = 'init'
+          # not packaged on Fedora
+          $messagebus_service_name = undef
         }
       }
     }
@@ -112,8 +108,6 @@ class nova::params {
           $spicehtml5proxy_package_name = 'nova-consoleproxy'
           $spicehtml5proxy_service_name = 'nova-spicehtml5proxy'
           $vncproxy_package_name    = 'nova-consoleproxy'
-          # Use default provider on Debian
-          $special_service_provider = undef
           $libvirt_service_name         = 'libvirtd'
           $virtlock_service_name        = undef
           $virtlog_service_name         = undef
@@ -122,8 +116,6 @@ class nova::params {
           $spicehtml5proxy_package_name = 'nova-spiceproxy'
           $spicehtml5proxy_service_name = 'nova-spiceproxy'
           $vncproxy_package_name    = 'nova-novncproxy'
-          # some of the services need to be started form the special upstart provider
-          $special_service_provider = 'upstart'
           $libvirt_service_name         = 'libvirt-bin'
           $virtlock_service_name        = 'virtlockd'
           $virtlog_service_name         = 'virtlogd'
