@@ -1,0 +1,4 @@
+---
+upgrade:
+  - Change default values for scheduler_driver and scheduler_host_manager to match
+    defaults values in Nova, so now we use entrypoints.

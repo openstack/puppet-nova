@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe 'nova::scheduler::filter' do
 
-  it { is_expected.to contain_nova_config('DEFAULT/scheduler_host_manager').with_value('nova.scheduler.host_manager.HostManager') }
+  it { is_expected.to contain_nova_config('DEFAULT/scheduler_host_manager').with_value('host_manager') }
   it { is_expected.to contain_nova_config('DEFAULT/scheduler_max_attempts').with_value('3') }
   it { is_expected.to contain_nova_config('DEFAULT/scheduler_host_subset_size').with_value('1') }
   it { is_expected.to contain_nova_config('DEFAULT/cpu_allocation_ratio').with_value('16.0') }
