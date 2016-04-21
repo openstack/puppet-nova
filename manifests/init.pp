@@ -53,7 +53,7 @@
 #   (optional) The rpc backend implementation to use, can be:
 #     rabbit (for rabbitmq)
 #     zmq (for zeromq)
-#   Defaults to 'rabbit'
+#   Defaults to $::os_service_default
 #
 # [*image_service*]
 #   (optional) Service used to search for and retrieve images.
