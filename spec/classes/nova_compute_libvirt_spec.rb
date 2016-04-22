@@ -30,10 +30,9 @@ describe 'nova::compute::libvirt' do
 
       it {
         is_expected.to contain_service('libvirt').with(
-          :name     => 'libvirt-bin',
-          :enable   => true,
-          :ensure   => 'running',
-          :provider => 'upstart',
+          :name   => 'libvirt-bin',
+          :enable => true,
+          :ensure => 'running',
         )
       }
 
@@ -196,18 +195,16 @@ describe 'nova::compute::libvirt' do
       ) }
 
       it { is_expected.to contain_service('libvirt').with(
-        :name     => 'libvirtd',
-        :enable   => true,
-        :ensure   => 'running',
-        :provider => 'init',
-        :before   => ['Service[nova-compute]'],
+        :name   => 'libvirtd',
+        :enable => true,
+        :ensure => 'running',
+        :before => ['Service[nova-compute]'],
       )}
       it { is_expected.to contain_service('messagebus').with(
-        :ensure   => 'running',
-        :enable   => true,
-        :before   => ['Service[libvirt]'],
-        :provider => 'init',
-        :name     => 'messagebus'
+        :ensure => 'running',
+        :enable => true,
+        :before => ['Service[libvirt]'],
+        :name   => 'messagebus'
       ) }
 
       describe 'on rhel 7' do
@@ -218,13 +215,10 @@ describe 'nova::compute::libvirt' do
           })
         end
 
-        it { is_expected.to contain_service('libvirt').with(
-          :provider => 'redhat'
-        )}
+        it { is_expected.to contain_service('libvirt')}
 
         it { is_expected.to contain_service('messagebus').with(
-          :provider => 'redhat',
-          :name     => 'dbus'
+          :name => 'dbus'
         )}
       end
 
@@ -325,11 +319,10 @@ describe 'nova::compute::libvirt' do
       ) }
 
       it { is_expected.to contain_service('libvirt').with(
-        :name     => 'libvirtd',
-        :enable   => true,
-        :ensure   => 'running',
-        :provider => nil,
-        :before   => ['Service[nova-compute]']
+        :name   => 'libvirtd',
+        :enable => true,
+        :ensure => 'running',
+        :before => ['Service[nova-compute]']
       )}
 
       it { is_expected.to contain_nova_config('DEFAULT/compute_driver').with_value('libvirt.LibvirtDriver')}
