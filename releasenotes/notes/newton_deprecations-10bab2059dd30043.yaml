@@ -1,0 +1,6 @@
+---
+deprecations:
+  - volume_api_class, use_local and security_group_api parameters are deprecated.
+    They have no effect and will be removed in a future release.
+  - neutron_auth_plugin is deprecated but is still usable. It will be removed
+    in a future release.

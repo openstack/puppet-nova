@@ -20,17 +20,24 @@
 #   (optional) Number of workers for OpenStack Conductor service
 #   Defaults to undef (i.e. parameter will not be present)
 #
+# DEPRECATED PARAMETERS
+#
 # [*use_local*]
 #   (optional) Perform nova-conductor operations locally
-#   Defaults to false
+#   Defaults to undef
 #
 class nova::conductor(
   $enabled        = true,
   $manage_service = true,
   $ensure_package = 'present',
   $workers        = undef,
-  $use_local      = false,
+  # DEPREACTED PARAMETERS
+  $use_local      = undef,
 ) {
+
+  if $use_local {
+    warning('use_local parameter is deprecated, has no effect and will be dropped in a future release.')
+  }
 
   include ::nova::deps
   include ::nova::db
@@ -48,9 +55,5 @@ class nova::conductor(
     nova_config {
       'conductor/workers': value => $workers;
     }
-  }
-
-  nova_config {
-      'conductor/use_local': value => $use_local;
   }
 }
