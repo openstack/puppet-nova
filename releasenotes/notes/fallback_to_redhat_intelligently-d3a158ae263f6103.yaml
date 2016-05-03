@@ -1,0 +1,3 @@
+---
+features:
+  - Fallback to deprecated "redhat" service provider in an intellegent way to get around https://tickets.puppetlabs.com/browse/PUP-5353 on Puppet versions from 4.0 through 4.4.

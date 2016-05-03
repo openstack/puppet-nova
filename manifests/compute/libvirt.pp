@@ -155,9 +155,11 @@ class nova::compute::libvirt (
 
   if($::osfamily == 'RedHat' and $::operatingsystem != 'Fedora') {
     service { 'messagebus':
-      ensure => running,
-      enable => true,
-      name   => $::nova::params::messagebus_service_name,
+      ensure   => running,
+      enable   => true,
+      name     => $::nova::params::messagebus_service_name,
+      provider => $::nova::params::special_service_provider,
+
     }
     Package['libvirt'] -> Service['messagebus'] -> Service['libvirt']
   }
@@ -196,27 +198,30 @@ class nova::compute::libvirt (
   }
 
   service { 'libvirt' :
-    ensure  => running,
-    enable  => true,
-    name    => $libvirt_service_name,
-    require => Package['libvirt'],
+    ensure   => running,
+    enable   => true,
+    name     => $libvirt_service_name,
+    provider => $::nova::params::special_service_provider,
+    require  => Package['libvirt'],
   }
 
   if $virtlock_service_name {
     service { 'virtlockd':
-      ensure  => running,
-      enable  => true,
-      name    => $virtlock_service_name,
-      require => Package['libvirt']
+      ensure   => running,
+      enable   => true,
+      name     => $virtlock_service_name,
+      provider => $::nova::params::special_service_provider,
+      require  => Package['libvirt']
     }
   }
 
   if $virtlog_service_name {
     service { 'virtlogd':
-      ensure  => running,
-      enable  => true,
-      name    => $virtlog_service_name,
-      require => Package['libvirt']
+      ensure   => running,
+      enable   => true,
+      name     => $virtlog_service_name,
+      provider => $::nova::params::special_service_provider,
+      require  => Package['libvirt']
     }
   }
 

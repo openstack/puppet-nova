@@ -1,3 +1,0 @@
----
-features:
-  - Stop overriding service providers, and let Puppet finds which one is the best.

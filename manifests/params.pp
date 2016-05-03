@@ -54,14 +54,21 @@ class nova::params {
       case $::operatingsystem {
         'RedHat', 'CentOS', 'Scientific', 'OracleLinux': {
           if (versioncmp($::operatingsystemmajrelease, '7') < 0) {
-            $messagebus_service_name = 'messagebus'
+            $messagebus_service_name  = 'messagebus'
+            $special_service_provider = undef
           } else {
+            if (versioncmp($::puppetversion, '4.5') < 0) {
+              $special_service_provider = 'redhat'
+            } else {
+              $special_service_provider = undef
+            }
             $messagebus_service_name = 'dbus'
           }
         }
         default: {
-          # not packaged on Fedora
-          $messagebus_service_name = undef
+          # not required on Fedora
+          $special_service_provider = undef
+          $messagebus_service_name  = undef
         }
       }
     }
@@ -105,20 +112,24 @@ class nova::params {
       $lock_path                    = '/var/lock/nova'
       case $::os_package_type {
         'debian': {
-          $spicehtml5proxy_package_name = 'nova-consoleproxy'
-          $spicehtml5proxy_service_name = 'nova-spicehtml5proxy'
-          $vncproxy_package_name    = 'nova-consoleproxy'
-          $libvirt_service_name         = 'libvirtd'
-          $virtlock_service_name        = undef
-          $virtlog_service_name         = undef
+          $spicehtml5proxy_package_name    = 'nova-consoleproxy'
+          $spicehtml5proxy_service_name    = 'nova-spicehtml5proxy'
+          $vncproxy_package_name           = 'nova-consoleproxy'
+          # Use default provider on Debian
+          $special_service_provider        = undef
+          $libvirt_service_name            = 'libvirtd'
+          $virtlock_service_name           = undef
+          $virtlog_service_name            = undef
         }
         default: {
-          $spicehtml5proxy_package_name = 'nova-spiceproxy'
-          $spicehtml5proxy_service_name = 'nova-spiceproxy'
-          $vncproxy_package_name    = 'nova-novncproxy'
-          $libvirt_service_name         = 'libvirt-bin'
-          $virtlock_service_name        = 'virtlockd'
-          $virtlog_service_name         = 'virtlogd'
+          $spicehtml5proxy_package_name    = 'nova-spiceproxy'
+          $spicehtml5proxy_service_name    = 'nova-spiceproxy'
+          $vncproxy_package_name           = 'nova-novncproxy'
+          # Use default provider on Debian
+          $special_service_provider        = undef
+          $libvirt_service_name            = 'libvirt-bin'
+          $virtlock_service_name           = 'virtlockd'
+          $virtlog_service_name            = 'virtlogd'
         }
       }
     }
