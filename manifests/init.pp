@@ -342,6 +342,11 @@
 #   (optional) Install nova utilities (Extra packages used by nova tools)
 #   Defaults to undef
 #
+# [*purge_config*]
+#   (optional) Whether to set only the specified config options
+#   in the nova config.
+#   Defaults to false.
+#
 class nova(
   $ensure_package                     = 'present',
   $database_connection                = undef,
@@ -412,6 +417,7 @@ class nova(
   $upgrade_level_network              = undef,
   $upgrade_level_scheduler            = undef,
   $use_ipv6                           = $::os_service_default,
+  $purge_config                       = false,
   # DEPRECATED PARAMETERS
   $qpid_hostname                      = undef,
   $qpid_port                          = undef,
@@ -528,6 +534,10 @@ class nova(
   exec { 'networking-refresh':
     command     => '/sbin/ifdown -a ; /sbin/ifup -a',
     refreshonly => true,
+  }
+
+  resources { 'nova_config':
+    purge => $purge_config,
   }
 
   if $image_service == 'nova.image.glance.GlanceImageService' {

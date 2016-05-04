@@ -111,12 +111,19 @@ describe 'nova' do
           :upgrade_level_consoleauth          => '1.0.0',
           :upgrade_level_intercell            => '1.0.0',
           :upgrade_level_network              => '1.0.0',
-          :upgrade_level_scheduler            => '1.0.0' }
+          :upgrade_level_scheduler            => '1.0.0',
+          :purge_config                       => false, }
       end
 
       it 'installs packages' do
         is_expected.to contain_package('nova-common').with('ensure' => '2012.1.1-15.el6')
         is_expected.to contain_package('python-nova').with('ensure' => '2012.1.1-15.el6')
+      end
+
+      it 'passes purge to resource' do
+        is_expected.to contain_resources('nova_config').with({
+          :purge => false
+        })
       end
 
       it 'configures image service' do
