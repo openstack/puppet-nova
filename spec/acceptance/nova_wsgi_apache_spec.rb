@@ -117,7 +117,6 @@ describe 'basic nova' do
       it 'should create new aggregate' do
         shell('openstack --os-username nova --os-password a_big_secret --os-tenant-name services --os-auth-url http://127.0.0.1:5000/v2.0 aggregate list') do |r|
           expect(r.stdout).to match(/test_aggregate/)
-          expect(r.stderr).to be_empty
         end
       end
     end
@@ -125,7 +124,6 @@ describe 'basic nova' do
       it 'should create new flavor' do
         shell('openstack --os-username nova --os-password a_big_secret --os-tenant-name services --os-auth-url http://127.0.0.1:5000/v2.0 flavor list') do |r|
           expect(r.stdout).to match(/test_flavor/)
-          expect(r.stderr).to be_empty
         end
       end
     end
