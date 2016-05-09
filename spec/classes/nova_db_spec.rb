@@ -9,6 +9,7 @@ describe 'nova::db' do
   shared_examples 'nova::db' do
 
     context 'with default parameters' do
+      it { is_expected.to_not contain_nova_config('database/db_max_retries') }
       it { is_expected.to_not contain_nova_config('database/connection') }
       it { is_expected.to_not contain_nova_config('database/slave_connection') }
       it { is_expected.to_not contain_nova_config('api_database/connection') }
@@ -29,6 +30,7 @@ describe 'nova::db' do
         )
       end
 
+      it { is_expected.to contain_nova_config('database/db_max_retries').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('database/connection').with_value('mysql+pymysql://user:pass@db/db1').with_secret(true) }
       it { is_expected.to contain_nova_config('database/slave_connection').with_value('mysql+pymysql://user:pass@slave/db1').with_secret(true) }
       it { is_expected.to contain_nova_config('api_database/connection').with_value('mysql+pymysql://user:pass@db/db2').with_secret(true) }

@@ -21,6 +21,11 @@
 #
 # == Parameters
 #
+# [*database_db_max_retries*]
+#   (optional) Maximum retries in case of connection error or deadlock error
+#   before error is raised. Set to -1 to specify an infinite retry count.
+#   Defaults to $::os_service_default
+#
 # [*database_connection*]
 #   (optional) Connection url to connect to nova database.
 #   Defaults to $::os_service_default
@@ -63,6 +68,7 @@
 #   (Optional) Defaults to $::os_service_default
 #
 class nova::db (
+  $database_db_max_retries = $::os_service_default,
   $database_connection     = $::os_service_default,
   $slave_connection        = $::os_service_default,
   $api_database_connection = $::os_service_default,
@@ -97,6 +103,7 @@ class nova::db (
       '^(sqlite|mysql(\+pymysql)?|postgresql):\/\/(\S+:\S+@\S+\/\S+)?')
 
     oslo::db { 'nova_config':
+      db_max_retries   => $database_db_max_retries,
       connection       => $database_connection_real,
       idle_timeout     => $database_idle_timeout_real,
       min_pool_size    => $database_min_pool_size_real,
