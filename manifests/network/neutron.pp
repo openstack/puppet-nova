@@ -10,7 +10,7 @@
 #
 # [*neutron_auth_type*]
 #   Name of the auth type to load (string value)
-#   Defaults to 'password'
+#   Defaults to 'v3password'
 #
 # [*neutron_url*]
 #   (optional) URL for connecting to the Neutron networking service.
@@ -128,7 +128,7 @@
 #
 class nova::network::neutron (
   $neutron_password                = false,
-  $neutron_auth_type               = 'password',
+  $neutron_auth_type               = 'v3password',
   $neutron_project_name            = 'services',
   $neutron_project_domain_name     = 'Default',
   $neutron_username                = 'neutron',
