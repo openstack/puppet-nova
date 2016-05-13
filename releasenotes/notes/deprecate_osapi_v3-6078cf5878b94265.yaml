@@ -1,0 +1,3 @@
+---
+deprecations:
+  - osapi_v3 parameter is deprecated, has no effect and will be removed in a future release..

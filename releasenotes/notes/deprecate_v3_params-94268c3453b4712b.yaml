@@ -1,0 +1,5 @@
+---
+deprecations:
+  - In nova::keystone::auth, all parameters related to v3 endpoint are deprecated and have no effect,
+    since we bumped the default version to v2.1 that is what v3 started out as.
+    They'll be dropped after Newton cycle.

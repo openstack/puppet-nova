@@ -69,10 +69,6 @@ describe 'nova::api' do
         is_expected.to contain_nova_config('oslo_middleware/enable_proxy_headers_parsing').with('value' => '<SERVICE DEFAULT>')
       end
 
-      it 'do not configure v3 api' do
-        is_expected.to contain_nova_config('osapi_v3/enabled').with('value' => false)
-      end
-
       it 'unconfigures neutron_metadata proxy' do
         is_expected.to contain_nova_config('neutron/service_metadata_proxy').with(:value => false)
         is_expected.to contain_nova_config('neutron/metadata_proxy_shared_secret').with(:ensure => 'absent')
@@ -100,9 +96,8 @@ describe 'nova::api' do
           :osapi_compute_workers                => 1,
           :metadata_workers                     => 2,
           :default_floating_pool                => 'public',
-          :osapi_v3                             => true,
-          :pci_alias                            => "[{\"vendor_id\":\"8086\",\"product_id\":\"0126\",\"name\":\"graphic_card\"},{\"vendor_id\":\"9096\",\"product_id\":\"1520\",\"name\":\"network_card\"}]",
-          :enable_proxy_headers_parsing         => true
+          :enable_proxy_headers_parsing         => true,
+          :pci_alias                            => "[{\"vendor_id\":\"8086\",\"product_id\":\"0126\",\"name\":\"graphic_card\"},{\"vendor_id\":\"9096\",\"product_id\":\"1520\",\"name\":\"network_card\"}]"
         })
       end
 
@@ -149,10 +144,6 @@ describe 'nova::api' do
         is_expected.to contain_nova_config('neutron/service_metadata_proxy').with('value' => true)
         is_expected.to contain_nova_config('neutron/metadata_proxy_shared_secret').with('value' => 'secrete')
         is_expected.to contain_nova_config('oslo_middleware/enable_proxy_headers_parsing').with('value' => true)
-      end
-
-      it 'configure nova api v3' do
-        is_expected.to contain_nova_config('osapi_v3/enabled').with('value' => true)
       end
 
       it 'configures nova pci_alias entries' do

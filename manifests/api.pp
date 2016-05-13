@@ -31,11 +31,6 @@
 #   (optional) Complete admin Identity API endpoint.
 #   Defaults to: 'http://127.0.0.1:35357/'
 #
-# [*auth_version*]
-#   (optional) DEPRECATED. API version of the admin Identity API endpoint
-#   for example, use 'v3.0' for the keystone version 3.0 api
-#   Defaults to false
-#
 # [*admin_tenant_name*]
 #   (optional) The name of the tenant to create in keystone for use by the nova services
 #   Defaults to 'services'
@@ -47,10 +42,6 @@
 # [*api_bind_address*]
 #   (optional) IP address for nova-api server to listen
 #   Defaults to '0.0.0.0'
-#
-# [*ec2_listen_port*]
-#   (optional) DEPRECATED. The port on which the EC2 API will listen.
-#   Defaults to port undef
 #
 # [*metadata_listen*]
 #   (optional) IP address  for metadata server to listen
@@ -66,14 +57,6 @@
 #   To avoid a warning, use an array, like ['osapi_compute', metadata'] for example.
 #   Defaults to ['osapi_compute', 'metadata']
 #
-# [*keystone_ec2_url*]
-#   (optional) DEPRECATED. The keystone url where nova should send requests for ec2tokens
-#   Defaults to undef
-#
-# [*volume_api_class*]
-#   (optional) DEPRECATED. The name of the class that nova will use to access volumes. Cinder is the only option.
-#   Defaults to undef
-#
 # [*use_forwarded_for*]
 #   (optional) Treat X-Forwarded-For as the canonical remote address. Only
 #   enable this if you have a sanitizing proxy.
@@ -87,18 +70,9 @@
 #   (optional) The port on which the OpenStack API will listen.
 #   Defaults to port 8774
 #
-# [*ec2_workers*]
-#   (optional) DEPRECATED. Number of workers for EC2 service
-#   Defaults to undef
-#
 # [*metadata_workers*]
 #   (optional) Number of workers for metadata service
 #   Defaults to $::processorcount
-#
-# [*conductor_workers*]
-#   (optional) DEPRECATED. Use workers parameter of nova::conductor
-#   Class instead.
-#   Defaults to undef
 #
 # [*instance_name_template*]
 #   (optional) Template string to be used to generate instance names
@@ -131,10 +105,6 @@
 # [*ratelimits_factory*]
 #   (optional) The rate limiting factory to use
 #   Defaults to 'nova.api.openstack.compute.limits:RateLimitingMiddleware.factory'
-#
-# [*osapi_v3*]
-#   (optional) Enable or not Nova API v3
-#   Defaults to false
 #
 # [*enable_proxy_headers_parsing*]
 #   (optional) This determines if the HTTPProxyToWSGI
@@ -178,6 +148,38 @@
 #   to make nova be a web app using apache mod_wsgi.
 #   Defaults to '$::nova::params::api_service_name'
 #
+# DEPRECATED
+#
+# [*keystone_ec2_url*]
+#   (optional) DEPRECATED. The keystone url where nova should send requests for ec2tokens
+#   Defaults to undef
+#
+# [*volume_api_class*]
+#   (optional) DEPRECATED. The name of the class that nova will use to access volumes. Cinder is the only option.
+#   Defaults to undef
+#
+# [*ec2_listen_port*]
+#   (optional) DEPRECATED. The port on which the EC2 API will listen.
+#   Defaults to port undef
+#
+# [*auth_version*]
+#   (optional) DEPRECATED. API version of the admin Identity API endpoint
+#   for example, use 'v3.0' for the keystone version 3.0 api
+#   Defaults to false
+#
+# [*osapi_v3*]
+#   (optional) DEPRECATED. Enable or not Nova API v3
+#   Defaults to undef
+#
+# [*ec2_workers*]
+#   (optional) DEPRECATED. Number of workers for EC2 service
+#   Defaults to undef
+#
+# [*conductor_workers*]
+#   (optional) DEPRECATED. Use workers parameter of nova::conductor
+#   Class instead.
+#   Defaults to undef
+#
 class nova::api(
   $admin_password,
   $enabled                      = true,
@@ -199,7 +201,6 @@ class nova::api(
   $sync_db                      = true,
   $sync_db_api                  = true,
   $neutron_metadata_proxy_shared_secret = undef,
-  $osapi_v3                     = false,
   $default_floating_pool        = 'nova',
   $pci_alias                    = undef,
   $ratelimits                   = undef,
@@ -218,12 +219,17 @@ class nova::api(
   $keystone_ec2_url             = undef,
   $auth_version                 = false,
   $volume_api_class             = undef,
+  $osapi_v3                     = undef,
 ) inherits nova::params {
 
   include ::nova::deps
   include ::nova::db
   include ::nova::policy
   include ::cinder::client
+
+  if $osapi_v3 {
+    warning('osapi_v3 is deprecated, has no effect and will be removed in a future release.')
+  }
 
   if $volume_api_class {
     warning('volume_api_class parameter is deprecated, has no effect and will be removed in a future release.')
@@ -314,7 +320,6 @@ class nova::api(
     'DEFAULT/use_forwarded_for':         value => $use_forwarded_for;
     'DEFAULT/default_floating_pool':     value => $default_floating_pool;
     'DEFAULT/fping_path':                value => $fping_path;
-    'osapi_v3/enabled':                  value => $osapi_v3;
   }
 
   oslo::middleware {'nova_config':

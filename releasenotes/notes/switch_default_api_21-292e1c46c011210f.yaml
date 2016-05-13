@@ -1,0 +1,3 @@
+---
+upgrade:
+  - Change default Nova API endpoints from v2 to v2.1. v2 was deprecated in Liberty and will be removed in Newton.
