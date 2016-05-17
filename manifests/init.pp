@@ -69,7 +69,7 @@
 #
 # [*rabbit_host*]
 #   (optional) Location of rabbitmq installation. (string value)
-#   Defaults to 'localhost'
+#   Defaults to $::os_service_default
 #
 # [*rabbit_hosts*]
 #   (optional) List of clustered rabbit servers. (string value)
