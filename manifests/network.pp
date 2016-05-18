@@ -108,6 +108,8 @@ class nova::network(
   include ::nova::deps
   include ::nova::params
 
+  warning('nova-network is deprecated in Newton and will be removed in the future.')
+
   # forward all ipv4 traffic
   # this is required for the vms to pass through the gateways
   # public interface
