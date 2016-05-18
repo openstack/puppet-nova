@@ -1,0 +1,3 @@
+---
+other:
+  - Remove nova::utilities class and tests.
