@@ -145,6 +145,7 @@ class nova::network(
 
     # because nova_network provider uses nova client, so it assumes
     # that nova-network service is running already
+    Service<| title == 'nova-network' |> -> Nova_network<| |>
     if $create_networks {
       if $enabled {
         nova::manage::network { 'nova-vm-net':
