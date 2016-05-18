@@ -136,6 +136,11 @@
 #   (optional) Enable or not Nova API v3
 #   Defaults to false
 #
+# [*enable_proxy_headers_parsing*]
+#   (optional) This determines if the HTTPProxyToWSGI
+#   middleware should parse the proxy headers or not.(boolean value)
+#   Defaults to $::os_service_default
+#
 # [*default_floating_pool*]
 #   (optional) Default pool for floating IPs
 #   Defaults to 'nova'
@@ -175,43 +180,44 @@
 #
 class nova::api(
   $admin_password,
-  $enabled                   = true,
-  $manage_service            = true,
-  $api_paste_config          = 'api-paste.ini',
-  $ensure_package            = 'present',
-  $auth_uri                  = 'http://127.0.0.1:5000/',
-  $identity_uri              = 'http://127.0.0.1:35357/',
-  $admin_tenant_name         = 'services',
-  $admin_user                = 'nova',
-  $api_bind_address          = '0.0.0.0',
-  $osapi_compute_listen_port = 8774,
-  $metadata_listen           = '0.0.0.0',
-  $metadata_listen_port      = 8775,
-  $enabled_apis              = ['osapi_compute', 'metadata'],
-  $use_forwarded_for         = false,
-  $osapi_compute_workers     = $::processorcount,
-  $metadata_workers          = $::processorcount,
-  $sync_db                   = true,
-  $sync_db_api               = true,
+  $enabled                      = true,
+  $manage_service               = true,
+  $api_paste_config             = 'api-paste.ini',
+  $ensure_package               = 'present',
+  $auth_uri                     = 'http://127.0.0.1:5000/',
+  $identity_uri                 = 'http://127.0.0.1:35357/',
+  $admin_tenant_name            = 'services',
+  $admin_user                   = 'nova',
+  $api_bind_address             = '0.0.0.0',
+  $osapi_compute_listen_port    = 8774,
+  $metadata_listen              = '0.0.0.0',
+  $metadata_listen_port         = 8775,
+  $enabled_apis                 = ['osapi_compute', 'metadata'],
+  $use_forwarded_for            = false,
+  $osapi_compute_workers        = $::processorcount,
+  $metadata_workers             = $::processorcount,
+  $sync_db                      = true,
+  $sync_db_api                  = true,
   $neutron_metadata_proxy_shared_secret = undef,
-  $osapi_v3                  = false,
-  $default_floating_pool     = 'nova',
-  $pci_alias                 = undef,
-  $ratelimits                = undef,
-  $ratelimits_factory        =
+  $osapi_v3                     = false,
+  $default_floating_pool        = 'nova',
+  $pci_alias                    = undef,
+  $ratelimits                   = undef,
+  $ratelimits_factory           =
     'nova.api.openstack.compute.limits:RateLimitingMiddleware.factory',
-  $validate                  = false,
-  $validation_options        = {},
-  $instance_name_template    = undef,
-  $fping_path                = '/usr/sbin/fping',
-  $service_name              = $::nova::params::api_service_name,
+  $validate                     = false,
+  $validation_options           = {},
+  $instance_name_template       = undef,
+  $fping_path                   = '/usr/sbin/fping',
+  $service_name                 = $::nova::params::api_service_name,
+  $enable_proxy_headers_parsing = $::os_service_default,
   # DEPRECATED PARAMETER
-  $conductor_workers         = undef,
-  $ec2_listen_port           = undef,
-  $ec2_workers               = undef,
-  $keystone_ec2_url          = undef,
-  $auth_version              = false,
-  $volume_api_class          = undef,
+  $conductor_workers            = undef,
+  $ec2_listen_port              = undef,
+  $ec2_workers                  = undef,
+  $keystone_ec2_url             = undef,
+  $auth_version                 = false,
+  $volume_api_class             = undef,
 ) inherits nova::params {
 
   include ::nova::deps
@@ -309,6 +315,10 @@ class nova::api(
     'DEFAULT/default_floating_pool':     value => $default_floating_pool;
     'DEFAULT/fping_path':                value => $fping_path;
     'osapi_v3/enabled':                  value => $osapi_v3;
+  }
+
+  oslo::middleware {'nova_config':
+    enable_proxy_headers_parsing => $enable_proxy_headers_parsing,
   }
 
   if ($neutron_metadata_proxy_shared_secret){
