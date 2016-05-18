@@ -78,8 +78,7 @@ describe 'nova' do
     context 'with overridden parameters' do
 
       let :params do
-        { :verbose                            => true,
-          :debug                              => true,
+        { :debug                              => true,
           :log_dir                            => '/var/log/nova2',
           :image_service                      => 'nova.image.local.LocalImageService',
           :rpc_backend                        => 'rabbit',
