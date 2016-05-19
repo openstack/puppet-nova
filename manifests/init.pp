@@ -488,6 +488,10 @@ class nova(
       warning('enabled_ssl_apis is empty but use_ssl is set to true')
   }
 
+  if $verbose {
+    warning('verbose is deprecated, has no effect and will be removed after Newton cycle.')
+  }
+
   if $use_ssl {
     if !$cert_file {
       fail('The cert_file parameter is required when use_ssl is set to true')

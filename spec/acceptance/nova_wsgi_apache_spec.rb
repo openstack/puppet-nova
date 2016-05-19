@@ -35,7 +35,6 @@ describe 'basic nova' do
         rabbit_password         => 'an_even_bigger_secret',
         image_service           => 'nova.image.glance.GlanceImageService',
         glance_api_servers      => 'localhost:9292',
-        verbose                 => true,
         debug                   => true,
         rabbit_host             => '127.0.0.1',
       }

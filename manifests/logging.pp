@@ -124,7 +124,7 @@ class nova::logging(
   $debug_real = pick($::nova::debug,$debug)
 
   if $verbose {
-    warning('verbose parameter is deprecated and has no effect. It\'s value will be ignored.')
+    warning('verbose is deprecated, has no effect and will be removed after Newton cycle.')
   }
 
   oslo::log { 'nova_config':

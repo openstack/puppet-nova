@@ -1,0 +1,4 @@
+---
+deprecations:
+  - verbose option is now deprecated for removal, the
+    parameter has no effect.
