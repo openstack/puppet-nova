@@ -372,10 +372,6 @@
 #
 # DEPRECATED PARAMETERS
 #
-# [*install_utilities*]
-#   (optional) Install nova utilities (Extra packages used by nova tools)
-#   Defaults to undef
-#
 # [*verbose*]
 #   (optional) Set log output to verbose output.
 #   Defaults to undef
@@ -473,7 +469,6 @@ class nova(
   $use_ipv6                           = $::os_service_default,
   $purge_config                       = false,
   # DEPRECATED PARAMETERS
-  $install_utilities                  = undef,
   $verbose                            = undef,
 ) inherits nova::params {
 
@@ -549,10 +544,6 @@ class nova(
         require => File['/var/lib/nova/.ssh'],
       }
     }
-  }
-
-  if $install_utilities {
-    class { '::nova::utilities': }
   }
 
   package { 'python-nova':

@@ -69,10 +69,6 @@ describe 'nova' do
         is_expected.to contain_nova_config('cinder/catalog_info').with('value' => 'volumev2:cinderv2:publicURL')
       end
 
-      it 'does not install utilities' do
-        is_expected.to_not contain_class('nova::utilities')
-      end
-
     end
 
     context 'with overridden parameters' do
@@ -94,7 +90,6 @@ describe 'nova' do
           :auth_strategy                      => 'foo',
           :ensure_package                     => '2012.1.1-15.el6',
           :memcached_servers                  => ['memcached01:11211', 'memcached02:11211'],
-          :install_utilities                  => true,
           :notification_driver                => 'ceilometer.compute.nova_notifier',
           :notification_topics                => 'openstack',
           :notify_api_faults                  => true,
@@ -185,10 +180,6 @@ describe 'nova' do
         it { is_expected.to contain_nova_config('oslo_messaging_notifications/driver').with_value(
           'ceilometer.compute.nova_notifier,nova.openstack.common.notifier.rpc_notifier'
         ) }
-      end
-
-      it 'installs utilities' do
-        is_expected.to contain_class('nova::utilities')
       end
 
     end
