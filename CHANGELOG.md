@@ -1,3 +1,21 @@
+##2016-05-20 - 7.1.0
+
+###Summary
+
+This is a feature and bugfix release in the Liberty series.
+
+####Features
+
+- Follow-up on PyMySQL support for Red Hat platforms
+- Supports IPv6 in vnc proxy
+- Allow to enable/disable IPv6 support
+
+####Maintenance
+
+- Remove installation of pm-utils
+- Add deprecation warning for Qpid rpc driver
+
+
 ##2015-11-25 - 7.0.0
 ###Summary
 
