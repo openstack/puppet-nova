@@ -65,10 +65,6 @@
 #   Applicable only for cases when Neutron was disabled
 #   Defaults to true
 #
-# [*network_device_mtu*]
-#   (optional) The MTU size for the interfaces managed by nova
-#   Defaults to undef
-#
 # [*instance_usage_audit*]
 #   (optional) Generate periodic compute.instance.exists notifications.
 #   Defaults to false
@@ -86,11 +82,6 @@
 #   Reserved host memory
 #   The amount of memory in MB reserved for the host.
 #   Defaults to '512'
-#
-#  [*compute_manager*]
-#   Compute manager
-#   The driver that will manage the running instances.
-#   Defaults to nova.compute.manager.ComputeManager
 #
 #  [*pci_passthrough*]
 #   (optional) Pci passthrough hash in format of:
@@ -127,6 +118,15 @@
 #   (optional) The availability zone to show internal services under.
 #   Defaults to undef
 #
+#  [*network_device_mtu*]
+#   (optional) Deprecated. The MTU size for the interfaces managed by nova
+#   Defaults to undef
+#
+#  [*compute_manager*]
+#   Deprecated. Compute manager
+#   The driver that will manage the running instances.
+#   Defaults to $::os_service_default
+#
 class nova::compute (
   $enabled                            = true,
   $manage_service                     = true,
@@ -142,12 +142,10 @@ class nova::compute (
   $virtio_nic                         = false,
   $neutron_enabled                    = true,
   $install_bridge_utils               = true,
-  $network_device_mtu                 = undef,
   $instance_usage_audit               = false,
   $instance_usage_audit_period        = 'month',
   $force_raw_images                   = true,
   $reserved_host_memory               = '512',
-  $compute_manager                    = 'nova.compute.manager.ComputeManager',
   $heal_instance_info_cache_interval  = '60',
   $pci_passthrough                    = undef,
   $config_drive_format                = $::os_service_default,
@@ -157,6 +155,8 @@ class nova::compute (
   $default_availability_zone          = undef,
   $default_schedule_zone              = undef,
   $internal_service_availability_zone = undef,
+  $network_device_mtu                 = undef,
+  $compute_manager                    = $::os_service_default,
 ) {
 
   include ::nova::deps
@@ -172,6 +172,14 @@ class nova::compute (
 
   if $internal_service_availability_zone {
     warning('The internal_service_availability_zone parameter is deprecated and will be removed in a future release. Use internal_service_availability_zone parameter of nova class instead.')
+  }
+
+  if $network_device_mtu {
+    warning('network_device_mtu parameter is deprecated, has no effect and will be removed in a future release.')
+  }
+
+  if $compute_manager {
+    warning('compute_manager is marked as deprecated in Nova but still needed when Ironic is used. It will be removed once Nova removes it.')
   }
 
   include ::nova::availability_zone
@@ -228,16 +236,6 @@ class nova::compute (
   if $virtio_nic {
     # Enable the virtio network card for instances
     nova_config { 'DEFAULT/libvirt_use_virtio_for_bridges': value => true }
-  }
-
-  if $network_device_mtu {
-    nova_config {
-      'DEFAULT/network_device_mtu':   value => $network_device_mtu;
-    }
-  } else {
-    nova_config {
-      'DEFAULT/network_device_mtu':   ensure => absent;
-    }
   }
 
   if $instance_usage_audit and $instance_usage_audit_period in ['hour', 'day', 'month', 'year'] {

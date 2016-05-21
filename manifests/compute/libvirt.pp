@@ -65,14 +65,6 @@
 #   otherwise, use a boolean to remove or not the base images.
 #   Defaults to undef
 #
-# [*remove_unused_kernels*]
-#   (optional) Should unused kernel images be removed?
-#   This is only safe to enable if all compute nodes
-#   have been updated to support this option.
-#   If undef is specified, remove the line in nova.conf
-#   otherwise, use a boolean to remove or not the kernels.
-#   Defaults to undef
-#
 # [*remove_unused_resized_minimum_age_seconds*]
 #   (optional) Unused resized base images younger
 #   than this will not be removed
@@ -105,6 +97,16 @@
 #   (optional) Compute driver.
 #   Defaults to 'libvirt.LibvirtDriver'
 #
+# DEPRECATED
+#
+# [*remove_unused_kernels*]
+#   (optional) DEPRECATED. Should unused kernel images be removed?
+#   This is only safe to enable if all compute nodes
+#   have been updated to support this option.
+#   If undef is specified, remove the line in nova.conf
+#   otherwise, use a boolean to remove or not the kernels.
+#   Defaults to undef
+#
 class nova::compute::libvirt (
   $ensure_package                             = 'present',
   $libvirt_virt_type                          = 'kvm',
@@ -118,13 +120,14 @@ class nova::compute::libvirt (
   $libvirt_inject_key                         = false,
   $libvirt_inject_partition                   = -2,
   $remove_unused_base_images                  = undef,
-  $remove_unused_kernels                      = undef,
   $remove_unused_resized_minimum_age_seconds  = undef,
   $remove_unused_original_minimum_age_seconds = undef,
   $libvirt_service_name                       = $::nova::params::libvirt_service_name,
   $virtlock_service_name                      = $::nova::params::virtlock_service_name,
   $virtlog_service_name                       = $::nova::params::virtlog_service_name,
-  $compute_driver                             = 'libvirt.LibvirtDriver'
+  $compute_driver                             = 'libvirt.LibvirtDriver',
+  # Deprecated
+  $remove_unused_kernels                      = undef,
 ) inherits nova::params {
 
   include ::nova::deps
@@ -262,14 +265,8 @@ class nova::compute::libvirt (
     }
   }
 
-  if $remove_unused_kernels != undef {
-    nova_config {
-      'libvirt/remove_unused_kernels': value => $remove_unused_kernels;
-    }
-  } else {
-    nova_config {
-      'libvirt/remove_unused_kernels': ensure => absent;
-    }
+  if $remove_unused_kernels {
+    warning('remove_unused_kernels parameter is deprecated, has no effect and will be removed in a future release.')
   }
 
   if $remove_unused_resized_minimum_age_seconds != undef {
