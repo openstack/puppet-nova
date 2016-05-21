@@ -1,0 +1,3 @@
+---
+upgrade:
+  - enabled_apis in api.pp now only accepts list values.

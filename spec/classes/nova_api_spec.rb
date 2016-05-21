@@ -314,28 +314,6 @@ describe 'nova::api' do
       end
     end
 
-    context 'when enabled_apis is not an array' do
-      before do
-        params.merge!({
-          :service_name => 'httpd',
-          :enabled_apis => 'osapi_compute' })
-      end
-
-      let :pre_condition do
-        "include ::apache
-         include ::nova"
-      end
-
-      it 'disable nova API service' do
-        is_expected.to contain_service('nova-api').with(
-          :ensure     => 'stopped',
-          :name       => platform_params[:nova_api_service],
-          :enable     => false,
-          :tag        => 'nova-service',
-        )
-      end
-    end
-
     context 'when service_name is not valid' do
       before do
         params.merge!({ :service_name   => 'foobar' })

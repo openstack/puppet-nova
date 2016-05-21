@@ -53,8 +53,6 @@
 #
 # [*enabled_apis*]
 #   (optional) A list of apis to enable
-#   It was a string until now but will be an array.
-#   To avoid a warning, use an array, like ['osapi_compute', metadata'] for example.
 #   Defaults to ['osapi_compute', 'metadata']
 #
 # [*use_forwarded_for*]
@@ -253,20 +251,6 @@ class nova::api(
     }
   }
 
-  # In N release, enabled_apis should be an array by default
-  if is_array($enabled_apis) {
-    # let's transform the array in a string
-    # ['osapi_compute', 'metadata'] would become 'osapi_compute,metadata'
-    $enabled_apis_string = join($enabled_apis, ',')
-  } else {
-    # But for Mitaka cycle, we maintain backward compatibility:
-    # when running wsgi, we need to know what to exactly enable or not.
-    # since enabled_apis is not an array, so we need to grep services
-    # so we can detect what is actually activated for eventlet or not.
-    $enabled_apis_string = $enabled_apis
-    warning('In N cycle, enabled_apis will have to be an array of APIs to enable.')
-  }
-
   # metadata can't be run in wsgi so we have to enable it in eventlet anyway.
   if ('metadata' in $enabled_apis and $service_name == 'httpd') {
     $enable_metadata = true
@@ -278,16 +262,16 @@ class nova::api(
   if $service_name == $::nova::params::api_service_name {
     # if running evenlet, we use the original puppet parameter
     # so people can enable custom service names and we keep backward compatibility.
-    $enabled_apis_real = $enabled_apis_string
+    $enabled_apis_real = $enabled_apis
     $service_enabled   = $enabled
   } elsif $service_name == 'httpd' {
     # when running wsgi, we want to enable metadata in eventlet if part of enabled_apis
     if $enable_metadata {
-      $enabled_apis_real = 'metadata'
+      $enabled_apis_real = ['metadata']
       $service_enabled   = $enabled
     } else {
-      # otherwise, set it to undef
-      $enabled_apis_real = undef
+      # otherwise, set it to empty list
+      $enabled_apis_real = []
       # if running wsgi for compute, and metadata disabled
       # we don't need to enable nova-api service.
       $service_enabled   = false
@@ -309,7 +293,7 @@ class nova::api(
 
   nova_config {
     'wsgi/api_paste_config':             value => $api_paste_config;
-    'DEFAULT/enabled_apis':              value => $enabled_apis_real;
+    'DEFAULT/enabled_apis':              value => join($enabled_apis_real, ',');
     'DEFAULT/osapi_compute_listen':      value => $api_bind_address;
     'DEFAULT/metadata_listen':           value => $metadata_listen;
     'DEFAULT/metadata_listen_port':      value => $metadata_listen_port;
