@@ -12,29 +12,38 @@
 #   (optional) URL that gets passed to the clients
 #   Defaults to 'ws://127.0.0.1:6083/'
 #
-# [*listen*]
-#   IP address on which instance serial console should listen
-#   Defaults to 127.0.0.1
-#
 # [*proxyclient_address*]
 #   The address to which proxy clients (like nova-serialproxy)
 #   should connect (string value)
 #   Defaults to 127.0.0.1
 #
+# DEPRECATED PARAMETERS
+# [*listen*]
+#  This option has no effect anymore. Please use "proxyclient_address" instead
+#  This option is deprecated and will be removed in future releases
+#  Defaults to undef
+#
 class nova::compute::serial(
   $port_range            = '10000:20000',
   $base_url              = 'ws://127.0.0.1:6083/',
-  $listen                = '127.0.0.1',
   $proxyclient_address   = '127.0.0.1',
+  # DEPRECATED PARAMETERS
+  $listen                = undef,
 ) {
 
   include ::nova::deps
+
+  if $listen {
+    warning('The listen parameter has no effect anymore, please use proxyclient_address instead.')
+    $proxyclient_address_real = $listen
+  } else {
+    $proxyclient_address_real = $proxyclient_address
+  }
 
   nova_config {
     'serial_console/enabled':             value => true;
     'serial_console/port_range':          value => $port_range;
     'serial_console/base_url':            value => $base_url;
-    'serial_console/listen':              value => $listen;
-    'serial_console/proxyclient_address': value => $proxyclient_address;
+    'serial_console/proxyclient_address': value => $proxyclient_address_real;
   }
 }
