@@ -66,6 +66,7 @@ describe 'nova::api' do
         is_expected.to contain_nova_config('DEFAULT/metadata_workers').with('value' => '5')
         is_expected.to contain_nova_config('DEFAULT/default_floating_pool').with('value' => 'nova')
         is_expected.to contain_nova_config('DEFAULT/fping_path').with('value' => '/usr/sbin/fping')
+        is_expected.to contain_nova_config('oslo_middleware/secure_proxy_ssl_header').with('value' => '<SERVICE DEFAULT>')
       end
 
       it 'do not configure v3 api' do
@@ -100,7 +101,8 @@ describe 'nova::api' do
           :metadata_workers                     => 2,
           :default_floating_pool                => 'public',
           :osapi_v3                             => true,
-          :pci_alias                            => "[{\"vendor_id\":\"8086\",\"product_id\":\"0126\",\"name\":\"graphic_card\"},{\"vendor_id\":\"9096\",\"product_id\":\"1520\",\"name\":\"network_card\"}]"
+          :pci_alias                            => "[{\"vendor_id\":\"8086\",\"product_id\":\"0126\",\"name\":\"graphic_card\"},{\"vendor_id\":\"9096\",\"product_id\":\"1520\",\"name\":\"network_card\"}]",
+          :secure_proxy_ssl_header              => "HTTP-X-Forwarded-Proto"
         })
       end
 
@@ -146,6 +148,7 @@ describe 'nova::api' do
         is_expected.to contain_nova_config('DEFAULT/default_floating_pool').with('value' => 'public')
         is_expected.to contain_nova_config('neutron/service_metadata_proxy').with('value' => true)
         is_expected.to contain_nova_config('neutron/metadata_proxy_shared_secret').with('value' => 'secrete')
+        is_expected.to contain_nova_config('oslo_middleware/secure_proxy_ssl_header').with('value' => 'HTTP-X-Forwarded-Proto')
       end
 
       it 'configure nova api v3' do
