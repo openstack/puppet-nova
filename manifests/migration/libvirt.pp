@@ -159,9 +159,17 @@ class nova::migration::libvirt(
         }
       }
 
+      if $::operatingsystem == 'Ubuntu' and versioncmp($::operatingsystemmajrelease, '16') >= 0 {
+        # If systemd is being used then libvirtd is already being launched correctly and
+        # adding -d causes a second consecutive start to fail which causes puppet to fail.
+        $libvirtd_opts = 'libvirtd_opts="-l"'
+      } else {
+        $libvirtd_opts = 'libvirtd_opts="-d -l"'
+      }
+
       file_line { "/etc/default/${::nova::compute::libvirt::libvirt_service_name} libvirtd opts":
         path  => "/etc/default/${::nova::compute::libvirt::libvirt_service_name}",
-        line  => 'libvirtd_opts="-d -l"',
+        line  => $libvirtd_opts,
         match => 'libvirtd_opts=',
         tag   => 'libvirt-file_line',
       }

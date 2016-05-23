@@ -119,9 +119,27 @@ describe 'nova::migration::libvirt' do
     end
   end
 
-  context 'on Debian platforms' do
+  # TODO (degorenko): switch to on_supported_os function when we got Xenial
+  context 'on Debian platforms with Ubuntu release 16' do
     let :facts do
-      @default_facts.merge({ :osfamily => 'Debian' })
+      @default_facts.merge({
+        :osfamily => 'Debian',
+        :operatingsystem => 'Ubuntu',
+        :operatingsystemmajrelease => '16'
+      })
+    end
+
+    it_configures 'nova migration with libvirt'
+    it { is_expected.to contain_file_line('/etc/default/libvirt-bin libvirtd opts').with(:line => 'libvirtd_opts="-l"') }
+  end
+
+  context 'on Debian platforms release' do
+    let :facts do
+      @default_facts.merge({
+        :osfamily => 'Debian',
+        :operatingsystem => 'Debian',
+        :operatingsystemmajrelease => '8'
+      })
     end
 
     it_configures 'nova migration with libvirt'
@@ -130,7 +148,11 @@ describe 'nova::migration::libvirt' do
 
   context 'on RedHat platforms' do
     let :facts do
-      @default_facts.merge({ :osfamily => 'RedHat' })
+      @default_facts.merge({
+        :osfamily => 'RedHat',
+        :operatingsystem => 'CentOS',
+        :operatingsystemmajrelease => '7.0'
+      })
     end
 
     it_configures 'nova migration with libvirt'
