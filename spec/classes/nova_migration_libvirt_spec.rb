@@ -44,6 +44,7 @@ describe 'nova::migration::libvirt' do
       it { is_expected.to contain_file_line('/etc/libvirt/libvirtd.conf listen_tcp').with(:line => "listen_tcp = 1") }
       it { is_expected.not_to contain_file_line('/etc/libvirt/libvirtd.conf auth_tls')}
       it { is_expected.to contain_file_line('/etc/libvirt/libvirtd.conf auth_tcp').with(:line => "auth_tcp = \"none\"") }
+      it { is_expected.to contain_nova_config('libvirt/live_migration_tunnelled').with_value('<SERVICE DEFAULT>') }
     end
 
     context 'with override_uuid enabled' do
@@ -79,12 +80,14 @@ describe 'nova::migration::libvirt' do
     context 'with migration flags set' do
       let :params do
         {
-          :live_migration_flag => 'live migration flag',
-          :block_migration_flag => 'block migration flag',
+          :live_migration_flag      => 'live migration flag',
+          :block_migration_flag     => 'block migration flag',
+          :live_migration_tunnelled => true,
         }
       end
       it { is_expected.to contain_nova_config('libvirt/live_migration_flag').with(:value => 'live migration flag') }
       it { is_expected.to contain_nova_config('libvirt/block_migration_flag').with(:value => 'block migration flag') }
+      it { is_expected.to contain_nova_config('libvirt/live_migration_tunnelled').with(:value => true) }
     end
 
     context 'with auth set to sasl' do

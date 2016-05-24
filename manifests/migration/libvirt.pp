@@ -21,16 +21,28 @@
 #   (optional) Migration flags to be set for block migration (string value)
 #   Defaults to undef
 #
+# [*live_migration_tunnelled*]
+#   (optional) Whether to use tunnelled migration, where migration data is
+#   transported over the libvirtd connection.
+#   If True, we use the VIR_MIGRATE_TUNNELLED migration flag, avoiding the
+#   need to configure the network to allow direct hypervisor to hypervisor
+#   communication.
+#   If False, use the native transport.
+#   If not set, Nova will choose a sensible default based on, for example
+#   the availability of native encryption support in the hypervisor.
+#   Defaults to $::os_service_default
+#
 # [*override_uuid*]
 #   (optional) Set uuid not equal to output from dmidecode (boolean)
 #   Defaults to false
 #
 class nova::migration::libvirt(
-  $use_tls              = false,
-  $auth                 = 'none',
-  $live_migration_flag  = undef,
-  $block_migration_flag = undef,
-  $override_uuid        = false,
+  $use_tls                  = false,
+  $auth                     = 'none',
+  $live_migration_flag      = undef,
+  $block_migration_flag     = undef,
+  $live_migration_tunnelled = $::os_service_default,
+  $override_uuid            = false,
 ){
 
   include ::nova::deps
@@ -48,14 +60,18 @@ class nova::migration::libvirt(
 
   if $live_migration_flag {
     nova_config {
-    'libvirt/live_migration_flag': value => $live_migration_flag
+      'libvirt/live_migration_flag': value => $live_migration_flag
     }
   }
 
   if $block_migration_flag {
     nova_config {
-    'libvirt/block_migration_flag': value => $block_migration_flag
+      'libvirt/block_migration_flag': value => $block_migration_flag
     }
+  }
+
+  nova_config {
+    'libvirt/live_migration_tunnelled': value => $live_migration_tunnelled
   }
 
   validate_re($auth, [ '^sasl$', '^none$' ], 'Valid options for auth are none and sasl.')

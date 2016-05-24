@@ -1,0 +1,5 @@
+---
+features:
+  - Add live_migration_tunnelled option in order to Whether to use
+    tunnelled migration, where migration data is transported over
+    the libvirtd connection.
