@@ -65,7 +65,7 @@ describe 'nova::wsgi::apache' do
         'wsgi_script_aliases'         => { '/' => "#{platform_parameters[:wsgi_script_path]}/nova-api" },
         'require'                     => 'File[nova_api_wsgi]'
       )}
-      it { is_expected.to contain_file("#{platform_parameters[:httpd_ports_file]}") }
+      it { is_expected.to contain_concat("#{platform_parameters[:httpd_ports_file]}") }
 
       it { is_expected.to contain_file('nova_api_wsgi').with(
         'ensure'  => 'file',
@@ -77,7 +77,7 @@ describe 'nova::wsgi::apache' do
       )}
       it { is_expected.to contain_file('nova_api_wsgi').that_requires("File[#{platform_parameters[:wsgi_script_path]}]") }
 
-      it { is_expected.to contain_file("#{platform_parameters[:httpd_ports_file]}") }
+      it { is_expected.to contain_concat("#{platform_parameters[:httpd_ports_file]}") }
     end
 
     describe 'when overriding parameters using different ports' do
