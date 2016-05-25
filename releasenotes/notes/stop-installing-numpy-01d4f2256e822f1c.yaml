@@ -1,0 +1,4 @@
+---
+other:
+  - Stop installing python-numpy for vncproxy. In the context of noVNC,
+    numpy adds little performance according to websockify maintainer.
