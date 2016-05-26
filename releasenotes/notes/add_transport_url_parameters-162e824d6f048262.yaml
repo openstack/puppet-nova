@@ -1,0 +1,3 @@
+---
+features:
+  - Add oslo.messaging transport_url parameters via puppet-oslo resource
