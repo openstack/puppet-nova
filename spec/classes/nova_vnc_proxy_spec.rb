@@ -13,11 +13,6 @@ describe 'nova::vncproxy' do
           @default_facts.merge({ :osfamily => 'Debian' })
       end
 
-      it { is_expected.to contain_package('python-numpy').with(
-        :ensure => 'present',
-        :name   => 'python-numpy'
-      )}
-
       it { is_expected.to contain_nova_config('vnc/novncproxy_host').with(:value => '0.0.0.0') }
       it { is_expected.to contain_nova_config('vnc/novncproxy_port').with(:value => '6080') }
       it { is_expected.to contain_nova_config('vnc/novncproxy_base_url').with(:value => 'http://0.0.0.0:6080/vnc_auto.html') }
@@ -95,11 +90,6 @@ describe 'nova::vncproxy' do
     let :facts do
       @default_facts.merge({ :osfamily => 'Redhat' })
     end
-
-    it { is_expected.to contain_package('python-numpy').with(
-      :name   => 'numpy',
-      :ensure => 'present'
-    )}
 
     it { is_expected.to compile.with_all_deps }
 
