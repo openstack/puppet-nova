@@ -36,7 +36,6 @@ describe 'nova::cells' do
      :driver                        => 'nova.cells.rpc_driver.CellsRPCDriver',
      :instance_updated_at_threshold => '3600',
      :instance_update_num_instances => '1',
-     :manager                       => 'nova.cells.manager.CellsManager',
      :max_hop_count                 => '10',
      :mute_child_interval           => '300',
      :mute_weight_multiplier        => '-10.0',
@@ -81,7 +80,6 @@ describe 'nova::cells' do
       is_expected.to contain_nova_config('cells/driver').with(:value => 'nova.cells.rpc_driver.CellsRPCDriver')
       is_expected.to contain_nova_config('cells/instance_updated_at_threshold').with(:value => '3600')
       is_expected.to contain_nova_config('cells/instance_update_num_instances').with(:value => '1')
-      is_expected.to contain_nova_config('cells/manager').with(:value => 'nova.cells.manager.CellsManager')
       is_expected.to contain_nova_config('cells/max_hop_count').with(:value => '10')
       is_expected.to contain_nova_config('cells/mute_child_interval').with(:value => '300')
       is_expected.to contain_nova_config('cells/mute_weight_multiplier').with(:value => '-10.0')

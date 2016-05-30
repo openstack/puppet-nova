@@ -24,7 +24,6 @@ describe 'nova::compute' do
         })
       end
 
-      it { is_expected.to contain_nova_config('DEFAULT/network_device_mtu').with(:ensure => 'absent') }
       it { is_expected.to contain_nova_config('DEFAULT/allow_resize_to_same_host').with(:value => 'false') }
       it { is_expected.to contain_nova_config('DEFAULT/vcpu_pin_set').with(:value => '<SERVICE DEFAULT>') }
       it { is_expected.to_not contain_nova_config('vnc/novncproxy_base_url') }
@@ -59,7 +58,6 @@ describe 'nova::compute' do
         { :enabled                            => false,
           :ensure_package                     => '2012.1-2',
           :vncproxy_host                      => '127.0.0.1',
-          :network_device_mtu                 => 9999,
           :force_raw_images                   => false,
           :reserved_host_memory               => '0',
           :compute_manager                    => 'ironic.nova.compute.manager.ClusteredComputeManager',
@@ -91,10 +89,6 @@ describe 'nova::compute' do
       it 'configures ironic in nova.conf' do
         is_expected.to contain_nova_config('DEFAULT/reserved_host_memory_mb').with_value('0')
         is_expected.to contain_nova_config('DEFAULT/compute_manager').with_value('ironic.nova.compute.manager.ClusteredComputeManager')
-      end
-
-      it 'configures network_device_mtu' do
-        is_expected.to contain_nova_config('DEFAULT/network_device_mtu').with_value('9999')
       end
 
       it 'configures vnc in nova.conf' do

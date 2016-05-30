@@ -56,7 +56,6 @@ describe 'nova::compute::libvirt' do
       it { is_expected.to contain_nova_config('vnc/vncserver_listen').with_value('127.0.0.1')}
       it { is_expected.to contain_nova_config('DEFAULT/remove_unused_base_images').with_ensure('absent')}
       it { is_expected.to contain_nova_config('DEFAULT/remove_unused_original_minimum_age_seconds').with_ensure('absent')}
-      it { is_expected.to contain_nova_config('libvirt/remove_unused_kernels').with_ensure('absent')}
       it { is_expected.to contain_nova_config('libvirt/remove_unused_resized_minimum_age_seconds').with_ensure('absent')}
     end
 
@@ -70,7 +69,6 @@ describe 'nova::compute::libvirt' do
           :libvirt_disk_cachemodes                    => ['file=directsync','block=none'],
           :libvirt_hw_disk_discard                    => 'unmap',
           :remove_unused_base_images                  => true,
-          :remove_unused_kernels                      => true,
           :remove_unused_resized_minimum_age_seconds  => 3600,
           :remove_unused_original_minimum_age_seconds => 3600,
           :libvirt_service_name                       => 'custom_service',
@@ -93,7 +91,6 @@ describe 'nova::compute::libvirt' do
       it { is_expected.to contain_nova_config('vnc/vncserver_listen').with_value('0.0.0.0')}
       it { is_expected.to contain_nova_config('DEFAULT/remove_unused_base_images').with_value(true)}
       it { is_expected.to contain_nova_config('DEFAULT/remove_unused_original_minimum_age_seconds').with_value(3600)}
-      it { is_expected.to contain_nova_config('libvirt/remove_unused_kernels').with_value(true)}
       it { is_expected.to contain_nova_config('libvirt/remove_unused_resized_minimum_age_seconds').with_value(3600)}
       it {
         is_expected.to contain_service('libvirt').with(
@@ -239,7 +236,6 @@ describe 'nova::compute::libvirt' do
       it { is_expected.to contain_nova_config('vnc/vncserver_listen').with_value('127.0.0.1')}
       it { is_expected.to contain_nova_config('DEFAULT/remove_unused_base_images').with_ensure('absent')}
       it { is_expected.to contain_nova_config('DEFAULT/remove_unused_original_minimum_age_seconds').with_ensure('absent')}
-      it { is_expected.to contain_nova_config('libvirt/remove_unused_kernels').with_ensure('absent')}
       it { is_expected.to contain_nova_config('libvirt/remove_unused_resized_minimum_age_seconds').with_ensure('absent')}
     end
 
@@ -248,7 +244,6 @@ describe 'nova::compute::libvirt' do
         { :libvirt_virt_type                          => 'qemu',
           :vncserver_listen                           => '0.0.0.0',
           :remove_unused_base_images                  => true,
-          :remove_unused_kernels                      => true,
           :remove_unused_resized_minimum_age_seconds  => 3600,
           :remove_unused_original_minimum_age_seconds => 3600
         }
@@ -258,7 +253,6 @@ describe 'nova::compute::libvirt' do
       it { is_expected.to contain_nova_config('vnc/vncserver_listen').with_value('0.0.0.0')}
       it { is_expected.to contain_nova_config('DEFAULT/remove_unused_base_images').with_value(true)}
       it { is_expected.to contain_nova_config('DEFAULT/remove_unused_original_minimum_age_seconds').with_value(3600)}
-      it { is_expected.to contain_nova_config('libvirt/remove_unused_kernels').with_value(true)}
       it { is_expected.to contain_nova_config('libvirt/remove_unused_resized_minimum_age_seconds').with_value(3600)}
       it { is_expected.to contain_package('libvirt').with(
         :name   => 'libvirt-daemon-kvm',

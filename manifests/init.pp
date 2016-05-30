@@ -250,10 +250,6 @@
 #   (optional) Path to the rootwrap configuration file to use for running commands as root
 #   Defaults to '/etc/nova/rootwrap.conf'
 #
-# [*use_syslog*]
-#   (optional) Use syslog for logging
-#   Defaults to undef
-#
 # [*use_stderr*]
 #   (optional) Use stderr for logging
 #   Defaults to undef
@@ -370,16 +366,20 @@
 #   (optional) Use IPv6 or not.
 #   Defaults to $::os_service_default
 #
+# [*purge_config*]
+#   (optional) Whether to set only the specified config options
+#   in the nova config.
+#   Defaults to false.
+#
 # DEPRECATED PARAMETERS
 #
 # [*verbose*]
 #   (optional) Set log output to verbose output.
 #   Defaults to undef
 #
-# [*purge_config*]
-#   (optional) Whether to set only the specified config options
-#   in the nova config.
-#   Defaults to false.
+# [*use_syslog*]
+#   (optional) Deprecated. Use syslog for logging
+#   Defaults to undef
 #
 class nova(
   $ensure_package                     = 'present',
@@ -448,7 +448,6 @@ class nova(
   $key_file                           = false,
   $nova_public_key                    = undef,
   $nova_private_key                   = undef,
-  $use_syslog                         = undef,
   $use_stderr                         = undef,
   $log_facility                       = undef,
   $notification_driver                = $::os_service_default,
@@ -470,6 +469,7 @@ class nova(
   $purge_config                       = false,
   # DEPRECATED PARAMETERS
   $verbose                            = undef,
+  $use_syslog                         = undef,
 ) inherits nova::params {
 
   include ::nova::deps
@@ -485,6 +485,10 @@ class nova(
 
   if $verbose {
     warning('verbose is deprecated, has no effect and will be removed after Newton cycle.')
+  }
+
+  if $use_syslog {
+    warning('use_syslog parameter is deprecated, has no effect and will be removed in a future release.')
   }
 
   if $use_ssl {

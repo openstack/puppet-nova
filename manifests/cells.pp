@@ -58,10 +58,6 @@
 #    Number of instances to update per periodic task run
 #    Defaults to '1'
 #
-#  [*manager*]
-#    Number of instances to update per periodic task run
-#    Defaults to 'nova.cells.manager.CellsManager'
-#
 #  [*cell_name*]
 #    name of this cell
 #    Defaults to 'nova'
@@ -140,6 +136,12 @@
 #    It might be used by some cell scheduling code in the future
 #    Defaults to '1.0'
 #
+# DEPRECATED
+#
+#  [*manager*]
+#    DEPRECATED. Number of instances to update per periodic task run
+#    Defaults to undef
+#
 class nova::cells (
   $bandwidth_update_interval     = '600',
   $call_timeout                  = '60',
@@ -155,7 +157,6 @@ class nova::cells (
   $instance_updated_at_threshold = '3600',
   $instance_update_num_instances = '1',
   $manage_service                = true,
-  $manager                       = 'nova.cells.manager.CellsManager',
   $max_hop_count                 = '10',
   $mute_child_interval           = '300',
   $mute_weight_multiplier        = '-10.0',
@@ -169,11 +170,17 @@ class nova::cells (
   $scheduler_retry_delay         = '2',
   $scheduler_weight_classes      = 'nova.cells.weights.all_weighers',
   $weight_offset                 = '1.0',
-  $weight_scale                  = '1.0'
+  $weight_scale                  = '1.0',
+  # Deprecated
+  $manager                       = undef,
 ) {
 
   include ::nova::deps
   include ::nova::params
+
+  if $manager {
+    warning('manager parameter is deprecated, has no effect and will be removed in a future release.')
+  }
 
   case $cell_type {
     'parent': {
@@ -196,7 +203,6 @@ class nova::cells (
     'cells/enable':                        value => $enabled;
     'cells/instance_updated_at_threshold': value => $instance_updated_at_threshold;
     'cells/instance_update_num_instances': value => $instance_update_num_instances;
-    'cells/manager':                       value => $manager;
     'cells/max_hop_count':                 value => $max_hop_count;
     'cells/mute_child_interval':           value => $mute_child_interval;
     'cells/mute_weight_multiplier':        value => $mute_weight_multiplier;
