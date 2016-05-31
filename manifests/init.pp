@@ -212,6 +212,11 @@
 #   (Optional) Password for message broker authentication
 #   Defaults to $::os_service_default.
 #
+# [*host*]
+#   (Optional) Name of this node. This is typically a hostname, FQDN, or
+#   IP address.
+#   Defaults to $::os_service_default.
+#
 # [*auth_strategy*]
 #   (optional) The strategy to use for auth: noauth or keystone.
 #   Defaults to 'keystone'
@@ -432,6 +437,7 @@ class nova(
   $amqp_sasl_config_name              = $::os_service_default,
   $amqp_username                      = $::os_service_default,
   $amqp_password                      = $::os_service_default,
+  $host                               = $::os_service_default,
   $auth_strategy                      = 'keystone',
   $service_down_time                  = 60,
   $log_dir                            = undef,
@@ -583,6 +589,7 @@ class nova(
     'DEFAULT/image_service':                value => $image_service;
     'DEFAULT/auth_strategy':                value => $auth_strategy;
     'keystone_authtoken/memcached_servers': value => join(any2array($memcached_servers), ',');
+    'DEFAULT/host':                         value => $host;
   }
 
   # we keep "nova.openstack.common.rpc.impl_kombu" for backward compatibility
