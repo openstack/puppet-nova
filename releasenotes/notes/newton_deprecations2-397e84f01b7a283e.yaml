@@ -3,6 +3,6 @@ deprecations:
   - libvirt remove_unused_kernels, cells manager
     are deprecated. They have no effect and will be removed in a future
     release.
-  - DEFAULT use_syslog/network_device_mtu/compute_manager
+  - DEFAULT network_device_mtu/compute_manager
     are deprecated. Only compute_manager has effect, because Ironic use.
     They will be removed in a future release.
