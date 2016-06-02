@@ -299,21 +299,21 @@ class nova::api(
   }
 
   nova_config {
-    'DEFAULT/api_paste_config':                value => $api_paste_config;
-    'DEFAULT/enabled_apis':                    value => $enabled_apis_real;
-    'DEFAULT/volume_api_class':                value => $volume_api_class;
-    'DEFAULT/osapi_compute_listen':            value => $api_bind_address;
-    'DEFAULT/metadata_listen':                 value => $metadata_listen;
-    'DEFAULT/metadata_listen_port':            value => $metadata_listen_port;
-    'DEFAULT/osapi_compute_listen_port':       value => $osapi_compute_listen_port;
-    'DEFAULT/osapi_volume_listen':             value => $api_bind_address;
-    'DEFAULT/osapi_compute_workers':           value => $osapi_compute_workers;
-    'DEFAULT/metadata_workers':                value => $metadata_workers;
-    'DEFAULT/use_forwarded_for':               value => $use_forwarded_for;
-    'DEFAULT/default_floating_pool':           value => $default_floating_pool;
-    'DEFAULT/fping_path':                      value => $fping_path;
-    'osapi_v3/enabled':                        value => $osapi_v3;
-    'oslo_middleware/secure_proxy_ssl_header': value => $secure_proxy_ssl_header;
+    'DEFAULT/api_paste_config':          value => $api_paste_config;
+    'DEFAULT/enabled_apis':              value => $enabled_apis_real;
+    'DEFAULT/volume_api_class':          value => $volume_api_class;
+    'DEFAULT/osapi_compute_listen':      value => $api_bind_address;
+    'DEFAULT/metadata_listen':           value => $metadata_listen;
+    'DEFAULT/metadata_listen_port':      value => $metadata_listen_port;
+    'DEFAULT/osapi_compute_listen_port': value => $osapi_compute_listen_port;
+    'DEFAULT/osapi_volume_listen':       value => $api_bind_address;
+    'DEFAULT/osapi_compute_workers':     value => $osapi_compute_workers;
+    'DEFAULT/metadata_workers':          value => $metadata_workers;
+    'DEFAULT/use_forwarded_for':         value => $use_forwarded_for;
+    'DEFAULT/default_floating_pool':     value => $default_floating_pool;
+    'DEFAULT/fping_path':                value => $fping_path;
+    'DEFAULT/secure_proxy_ssl_header':   value => $secure_proxy_ssl_header;
+    'osapi_v3/enabled':                  value => $osapi_v3;
   }
 
   if ($neutron_metadata_proxy_shared_secret){

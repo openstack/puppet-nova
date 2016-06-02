@@ -66,7 +66,7 @@ describe 'nova::api' do
         is_expected.to contain_nova_config('DEFAULT/metadata_workers').with('value' => '5')
         is_expected.to contain_nova_config('DEFAULT/default_floating_pool').with('value' => 'nova')
         is_expected.to contain_nova_config('DEFAULT/fping_path').with('value' => '/usr/sbin/fping')
-        is_expected.to contain_nova_config('oslo_middleware/secure_proxy_ssl_header').with('value' => '<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('DEFAULT/secure_proxy_ssl_header').with('value' => '<SERVICE DEFAULT>')
       end
 
       it 'do not configure v3 api' do
@@ -146,9 +146,9 @@ describe 'nova::api' do
         is_expected.to contain_nova_config('DEFAULT/osapi_compute_workers').with('value' => '1')
         is_expected.to contain_nova_config('DEFAULT/metadata_workers').with('value' => '2')
         is_expected.to contain_nova_config('DEFAULT/default_floating_pool').with('value' => 'public')
+        is_expected.to contain_nova_config('DEFAULT/secure_proxy_ssl_header').with('value' => 'HTTP-X-Forwarded-Proto')
         is_expected.to contain_nova_config('neutron/service_metadata_proxy').with('value' => true)
         is_expected.to contain_nova_config('neutron/metadata_proxy_shared_secret').with('value' => 'secrete')
-        is_expected.to contain_nova_config('oslo_middleware/secure_proxy_ssl_header').with('value' => 'HTTP-X-Forwarded-Proto')
       end
 
       it 'configure nova api v3' do
