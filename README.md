@@ -106,8 +106,7 @@ Development
 
 Developer documentation for the entire puppet-openstack project.
 
-* https://wiki.openstack.org/wiki/Puppet-openstack#Developer_documentation
-
+* http://docs.openstack.org/developer/puppet-openstack-guide/
 
 Beaker-Rspec
 ------------
