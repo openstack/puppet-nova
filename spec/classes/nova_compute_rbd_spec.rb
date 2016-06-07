@@ -160,28 +160,24 @@ describe 'nova::compute::rbd' do
     end
   end
 
-  context 'on Debian platforms' do
-    let :facts do
-      @default_facts.merge({ :osfamily => 'Debian' })
+  on_supported_os({
+    :supported_os => OSDefaults.get_supported_os
+  }).each do |os,facts|
+    context "on #{os}" do
+      let (:facts) do
+        facts.merge!(OSDefaults.get_facts())
+      end
+
+      let (:platform_params) do
+        case facts[:osfamily]
+        when 'Debian'
+          { :ceph_client_package => 'ceph' }
+        when 'RedHat'
+          { :ceph_client_package => 'ceph-common' }
+        end
+      end
+      it_configures 'nova compute rbd'
     end
-
-    let :platform_params do
-      { :ceph_client_package => 'ceph'}
-    end
-
-    it_configures 'nova compute rbd'
-  end
-
-  context 'on RedHat platforms' do
-    let :facts do
-      @default_facts.merge({ :osfamily => 'RedHat' })
-    end
-
-    let :platform_params do
-      { :ceph_client_package => 'ceph-common' }
-    end
-
-    it_configures 'nova compute rbd'
   end
 
 end

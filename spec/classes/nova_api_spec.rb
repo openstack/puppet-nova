@@ -10,10 +10,6 @@ describe 'nova::api' do
     { :admin_password => 'passw0rd' }
   end
 
-  let :facts do
-    @default_facts.merge({ :processorcount => 5 })
-  end
-
   shared_examples 'nova-api' do
 
     context 'with default parameters' do
@@ -329,44 +325,25 @@ describe 'nova::api' do
 
   end
 
-  context 'on Debian platforms' do
-    before do
-      facts.merge!(
-        :osfamily                  => 'Debian',
-        :operatingsystem           => 'Debian',
-        :operatingsystemrelease    => '8.0',
-        :operatingsystemmajrelease => '8',
-        :concat_basedir            => '/var/lib/puppet/concat',
-        :fqdn                      => 'some.host.tld',
-      )
-    end
+  on_supported_os({
+    :supported_os => OSDefaults.get_supported_os
+  }).each do |os,facts|
+    context "on #{os}" do
+      let (:facts) do
+        facts.merge!(OSDefaults.get_facts({ :processorcount => 5 }))
+      end
 
-    let :platform_params do
-      { :nova_api_package => 'nova-api',
-        :nova_api_service => 'nova-api' }
+      let (:platform_params) do
+        case facts[:osfamily]
+        when 'Debian'
+          { :nova_api_package => 'nova-api',
+            :nova_api_service => 'nova-api' }
+        when 'RedHat'
+          { :nova_api_package => 'openstack-nova-api',
+            :nova_api_service => 'openstack-nova-api' }
+        end
+      end
+      it_behaves_like 'nova-api'
     end
-
-    it_behaves_like 'nova-api'
   end
-
-  context 'on RedHat platforms' do
-    before do
-      facts.merge!(
-        :osfamily                  => 'RedHat',
-        :operatingsystem           => 'RedHat',
-        :operatingsystemrelease    => '7.0',
-        :operatingsystemmajrelease => '7',
-        :concat_basedir            => '/var/lib/puppet/concat',
-        :fqdn                      => 'some.host.tld',
-      )
-    end
-
-    let :platform_params do
-      { :nova_api_package => 'openstack-nova-api',
-        :nova_api_service => 'openstack-nova-api' }
-    end
-
-    it_behaves_like 'nova-api'
-  end
-
 end
