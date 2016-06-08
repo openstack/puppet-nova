@@ -8,6 +8,7 @@ describe 'nova::keystone::auth' do
 
   let :default_params do
     { :auth_name              => 'nova',
+      :service_name           => 'nova',
       :region                 => 'RegionOne',
       :tenant                 => 'services',
       :email                  => 'nova@localhost',
@@ -57,7 +58,7 @@ describe 'nova::keystone::auth' do
       :roles  => ['admin']
     )}
 
-    it { is_expected.to contain_keystone_service('foo::compute').with(
+    it { is_expected.to contain_keystone_service('nova::compute').with(
       :ensure      => 'present',
       :description => 'Openstack Compute Service'
     )}

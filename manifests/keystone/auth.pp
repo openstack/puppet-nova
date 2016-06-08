@@ -13,7 +13,7 @@
 #
 # [*service_name*]
 #   (optional) Name of the service.
-#   Defaults to the value of auth_name.
+#   Defaults to 'nova'.
 #
 # [*service_description*]
 #   (optional) Description for keystone service.
@@ -88,7 +88,7 @@
 class nova::keystone::auth(
   $password,
   $auth_name               = 'nova',
-  $service_name            = undef,
+  $service_name            = 'nova',
   $service_description     = 'Openstack Compute Service',
   $region                  = 'RegionOne',
   $tenant                  = 'services',
@@ -115,25 +115,17 @@ class nova::keystone::auth(
     warning('all parameters related to v3 API in nova::keystone::auth are deprecated, have no effect and will be removed after Newton release.')
   }
 
-  # TODO(mmagr): change default service names according to default_catalog in next (M) cycle
-  if $service_name == undef {
-    $real_service_name = $auth_name
-    warning('Note that service_name parameter default value will be changed to "Compute Service" (according to Keystone default catalog) in a future release. In case you use different value, please update your manifests accordingly.')
-  } else {
-    $real_service_name = $service_name
-  }
-
   if $configure_endpoint {
-    Keystone_endpoint["${region}/${real_service_name}::compute"] ~> Service <| name == 'nova-api' |>
+    Keystone_endpoint["${region}/${service_name}::compute"] ~> Service <| name == 'nova-api' |>
   }
 
-  keystone::resource::service_identity { "nova service, user ${auth_name}":
+  keystone::resource::service_identity { 'nova':
     configure_user      => $configure_user,
     configure_user_role => $configure_user_role,
     configure_endpoint  => $configure_endpoint,
     service_type        => 'compute',
     service_description => $service_description,
-    service_name        => $real_service_name,
+    service_name        => $service_name,
     region              => $region,
     auth_name           => $auth_name,
     password            => $password,

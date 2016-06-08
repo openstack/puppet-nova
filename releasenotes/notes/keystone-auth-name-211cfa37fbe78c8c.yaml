@@ -1,0 +1,5 @@
+---
+fixes:
+  - The keystone auth class has been updated to provide a default service_name
+    to allow a user to specify a custom auth_name that may not contain the
+    name of the service.
