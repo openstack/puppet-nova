@@ -49,6 +49,16 @@
 #   (optional) If set, use this value for max_overflow with sqlalchemy.
 #   Defaults to: undef.
 #
+# [*default_transport_url*]
+#    (optional) A URL representing the messaging driver to use and its full
+#    configuration. Transport URLs take the form:
+#      transport://user:pass@host1:port[,hostN:portN]/virtual_host
+#    Defaults to $::os_service_default
+#
+# [*rpc_response_timeout*]
+#   (Optional) Seconds to wait for a response from a call. (integer value)
+#   Defaults to $::os_service_default.
+#
 # [*rpc_backend*]
 #   (optional) The rpc backend implementation to use, can be:
 #     rabbit (for rabbitmq)
@@ -300,6 +310,12 @@
 #   'key-data' }, where 'key-type' is one of (ssh-rsa, ssh-dsa, ssh-ecdsa) and
 #   'key-data' is the contents of the private key file.
 #
+# [*notification_transport_url*]
+#   (optional) A URL representing the messaging driver to use for notifications
+#   and its full configuration. Transport URLs take the form:
+#     transport://user:pass@host1:port[,hostN:portN]/virtual_host
+#   Defaults to $::os_service_default
+#
 # [*notification_driver*]
 #   (optional) Driver or drivers to handle sending notifications.
 #   Value can be a string or a list.
@@ -398,6 +414,8 @@ class nova(
   $database_max_retries               = undef,
   $database_retry_interval            = undef,
   $database_max_overflow              = undef,
+  $default_transport_url              = $::os_service_default,
+  $rpc_response_timeout               = $::os_service_default,
   $rpc_backend                        = $::os_service_default,
   $image_service                      = 'nova.image.glance.GlanceImageService',
   # these glance params should be optional
@@ -457,6 +475,7 @@ class nova(
   $use_syslog                         = undef,
   $use_stderr                         = undef,
   $log_facility                       = undef,
+  $notification_transport_url         = $::os_service_default,
   $notification_driver                = $::os_service_default,
   $notification_topics                = $::os_service_default,
   $notify_api_faults                  = false,
@@ -663,9 +682,15 @@ class nova(
     }
   }
 
+  oslo::messaging::default { 'nova_config':
+    transport_url        => $default_transport_url,
+    rpc_response_timeout => $rpc_response_timeout,
+  }
+
   oslo::messaging::notifications { 'nova_config':
-    driver => $notification_driver,
-    topics => $notification_topics,
+    transport_url => $notification_transport_url,
+    driver        => $notification_driver,
+    topics        => $notification_topics,
   }
 
   nova_config {

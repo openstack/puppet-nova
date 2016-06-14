@@ -59,6 +59,8 @@ describe 'nova' do
         is_expected.to contain_nova_config('DEFAULT/rootwrap_config').with_value('/etc/nova/rootwrap.conf')
         is_expected.to contain_nova_config('DEFAULT/report_interval').with_value('10')
         is_expected.to contain_nova_config('DEFAULT/use_ipv6').with_value('<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('DEFAULT/transport_url').with_value('<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('DEFAULT/rpc_response_timeout').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('cinder/os_region_name').with_ensure('absent')
         is_expected.to contain_nova_config('cinder/catalog_info').with('value' => 'volumev2:cinderv2:publicURL')
       end
@@ -71,6 +73,8 @@ describe 'nova' do
         { :debug                              => true,
           :log_dir                            => '/var/log/nova2',
           :image_service                      => 'nova.image.local.LocalImageService',
+          :default_transport_url              => 'rabbit://rabbit_user:password@localhost:5673',
+          :rpc_response_timeout               => '30',
           :rpc_backend                        => 'rabbit',
           :rabbit_host                        => 'rabbit',
           :rabbit_userid                      => 'rabbit_user',
@@ -85,6 +89,7 @@ describe 'nova' do
           :ensure_package                     => '2012.1.1-15.el6',
           :memcached_servers                  => ['memcached01:11211', 'memcached02:11211'],
           :host                               => 'test-001.example.org',
+          :notification_transport_url         => 'rabbit://rabbit_user:password@localhost:5673',
           :notification_driver                => 'ceilometer.compute.nova_notifier',
           :notification_topics                => 'openstack',
           :notify_api_faults                  => true,
@@ -126,6 +131,7 @@ describe 'nova' do
 
       it 'configures rabbit' do
         is_expected.to contain_nova_config('DEFAULT/rpc_backend').with_value('rabbit')
+        is_expected.to contain_nova_config('DEFAULT/transport_url').with_value('rabbit://rabbit_user:password@localhost:5673')
         is_expected.to contain_nova_config('oslo_messaging_rabbit/rabbit_host').with_value('rabbit')
         is_expected.to contain_nova_config('oslo_messaging_rabbit/rabbit_password').with_value('password').with_secret(true)
         is_expected.to contain_nova_config('oslo_messaging_rabbit/rabbit_port').with_value('5673')
@@ -159,6 +165,8 @@ describe 'nova' do
         is_expected.to contain_nova_config('DEFAULT/state_path').with_value('/var/lib/nova2')
         is_expected.to contain_nova_config('oslo_concurrency/lock_path').with_value('/var/locky/path')
         is_expected.to contain_nova_config('DEFAULT/service_down_time').with_value('120')
+        is_expected.to contain_nova_config('DEFAULT/rpc_response_timeout').with_value('30')
+        is_expected.to contain_nova_config('oslo_messaging_notifications/transport_url').with_value('rabbit://rabbit_user:password@localhost:5673')
         is_expected.to contain_nova_config('oslo_messaging_notifications/driver').with_value('ceilometer.compute.nova_notifier')
         is_expected.to contain_nova_config('oslo_messaging_notifications/topics').with_value('openstack')
         is_expected.to contain_nova_config('DEFAULT/notify_api_faults').with_value(true)
