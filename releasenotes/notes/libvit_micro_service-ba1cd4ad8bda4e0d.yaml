@@ -1,0 +1,7 @@
+---
+features:
+  - Enable puppet-nova to deploy micro-services where libvirt & nova-compute
+    are separated. With a new class, nova::compute::libvirt::services, we're now
+    able to manage libvirt packages & services outside nova-compute.
+    This class is included by default in nova::compute::libvirt for backward
+    compatibility but can be disabled if you deploy compute services on containers.
