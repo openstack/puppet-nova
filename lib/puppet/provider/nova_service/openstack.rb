@@ -1,4 +1,4 @@
-require 'puppet/provider/nova'
+require File.join(File.dirname(__FILE__), '..','..','..', 'puppet/provider/nova')
 
 Puppet::Type.type(:nova_service).provide(
   :openstack,
