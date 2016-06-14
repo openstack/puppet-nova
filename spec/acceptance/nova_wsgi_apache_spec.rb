@@ -64,8 +64,12 @@ describe 'basic nova' do
       class { '::nova::cron::archive_deleted_rows': }
       class { '::nova::compute': vnc_enabled => true }
       class { '::nova::compute::libvirt':
-        migration_support => true,
-        vncserver_listen  => '0.0.0.0',
+        migration_support     => true,
+        vncserver_listen      => '0.0.0.0',
+        # TODO: enable it again when puppet 4.5 will be idempotent
+        # https://tickets.puppetlabs.com/browse/PUP-6370
+        virtlock_service_name => false,
+        virtlog_service_name  => false,
       }
       class { '::nova::scheduler': }
       class { '::nova::vncproxy': }
