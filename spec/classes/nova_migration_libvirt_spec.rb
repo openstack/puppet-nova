@@ -120,6 +120,25 @@ describe 'nova::migration::libvirt' do
       it { expect { is_expected.to contain_class('nova::compute::libvirt') }.to \
         raise_error(Puppet::Error, /Valid options for auth are none and sasl./) }
     end
+
+    context 'when not configuring libvirt' do
+      let :params do
+        {
+          :configure_libvirt => false
+        }
+      end
+      it { is_expected.not_to contain_file_line('/etc/libvirt/libvirtd.conf listen_tls') }
+    end
+
+    context 'when not configuring nova and tls enabled' do
+      let :params do
+        {
+          :configure_nova => false,
+          :use_tls        => true,
+        }
+      end
+      it { is_expected.not_to contain_nova_config('libvirt/live_migration_uri').with_value('qemu+tls://%s/system') }
+    end
   end
 
   # TODO (degorenko): switch to on_supported_os function when we got Xenial

@@ -166,8 +166,6 @@ class nova::compute::libvirt (
     if $vncserver_listen != '0.0.0.0' and $vncserver_listen != '::0' {
       fail('For migration support to work, you MUST set vncserver_listen to \'0.0.0.0\' or \'::0\'')
     } else {
-      # TODO(emilien): explode ::nova::migration::libvirt to select what bits we want to configure
-      # and allow micro services between libvirt & nova-compute.
       include ::nova::migration::libvirt
     }
   }
