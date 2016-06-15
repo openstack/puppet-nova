@@ -33,8 +33,9 @@
 #   Defaults to '50'
 #
 # [*scheduler_available_filters*]
-#   (optional) Filter classes available to the scheduler
-#   Defaults to 'nova.scheduler.filters.all_filters'
+#   (optional) An array with filter classes available to the scheduler.
+#   Example: ['first.filter.class', 'second.filter.class']
+#   Defaults to ['nova.scheduler.filters.all_filters']
 #
 # [*scheduler_default_filters*]
 #   (optional) An array of filters to be used by default
@@ -74,7 +75,7 @@ class nova::scheduler::filter (
   $max_instances_per_host              = '50',
   $isolated_images                     = $::os_service_default,
   $isolated_hosts                      = $::os_service_default,
-  $scheduler_available_filters         = 'nova.scheduler.filters.all_filters',
+  $scheduler_available_filters         = ['nova.scheduler.filters.all_filters'],
   $scheduler_default_filters           = $::os_service_default,
   $scheduler_weight_classes            = 'nova.scheduler.weights.all_weighers',
   $baremetal_scheduler_default_filters = $::os_service_default,
@@ -97,6 +98,14 @@ class nova::scheduler::filter (
   } else {
     $scheduler_default_filters_real = $::os_service_default
   }
+
+  if is_array($scheduler_available_filters) {
+    $scheduler_available_filters_real = $scheduler_available_filters
+  } else {
+    warning('scheduler_available_filters must be an array and will fail in the future')
+    $scheduler_available_filters_real = any2array($scheduler_available_filters)
+  }
+
   if !is_service_default($baremetal_scheduler_default_filters) and !empty($baremetal_scheduler_default_filters){
     validate_array($baremetal_scheduler_default_filters)
     $baremetal_scheduler_default_filters_real = join($baremetal_scheduler_default_filters, ',')
@@ -134,7 +143,7 @@ class nova::scheduler::filter (
     'DEFAULT/scheduler_host_subset_size':          value => $scheduler_host_subset_size;
     'DEFAULT/max_io_ops_per_host':                 value => $max_io_ops_per_host;
     'DEFAULT/max_instances_per_host':              value => $max_instances_per_host;
-    'DEFAULT/scheduler_available_filters':         value => $scheduler_available_filters;
+    'DEFAULT/scheduler_available_filters':         value => $scheduler_available_filters_real;
     'DEFAULT/scheduler_weight_classes':            value => $scheduler_weight_classes;
     'DEFAULT/scheduler_use_baremetal_filters':     value => $scheduler_use_baremetal_filters;
     'DEFAULT/scheduler_default_filters':           value => $scheduler_default_filters_real;

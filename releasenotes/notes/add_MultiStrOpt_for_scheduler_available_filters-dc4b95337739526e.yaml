@@ -1,0 +1,3 @@
+---
+upgrade:
+  - Add MultiStrOpt for scheduler_available_filters parameter.
