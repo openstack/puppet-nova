@@ -78,21 +78,23 @@ describe 'nova::db' do
     end
   end
 
-  context 'on Debian platforms' do
-    let :facts do
-      @default_facts.merge({
-        :osfamily => 'Debian',
-        :operatingsystem => 'Debian',
-        :operatingsystemrelease => 'jessie',
-      })
-    end
+  shared_examples_for 'nova::db RedHat' do
+    context 'using pymysql driver' do
+      let :params do
+        { :database_connection   => 'mysql+pymysql://user:pass@db/db', }
+      end
 
-    it_configures 'nova::db'
+      it { is_expected.not_to contain_package('db_backend_package') }
+    end
+  end
+
+  shared_examples_for 'nova::db Debian' do
 
     context 'using pymysql driver' do
       let :params do
         { :database_connection   => 'mysql+pymysql://user:pass@db/db', }
       end
+
       it 'install the proper backend package' do
         is_expected.to contain_package('db_backend_package').with(
           :ensure => 'present',
@@ -104,7 +106,7 @@ describe 'nova::db' do
 
     context 'with sqlite backend' do
       let :params do
-        { :database_connection     => 'sqlite:///var/lib/nova/nova.sqlite', }
+        { :database_connection => 'sqlite:///var/lib/nova/nova.sqlite', }
       end
 
       it 'install the proper backend package' do
@@ -114,26 +116,20 @@ describe 'nova::db' do
           :tag    => ['openstack'],
         )
       end
-
     end
+
   end
 
-  context 'on Redhat platforms' do
-    let :facts do
-      @default_facts.merge({
-        :osfamily => 'RedHat',
-        :operatingsystemrelease => '7.1',
-      })
-    end
-
-    it_configures 'nova::db'
-
-    context 'using pymysql driver' do
-      let :params do
-        { :database_connection   => 'mysql+pymysql://user:pass@db/db', }
+  on_supported_os({
+    :supported_os => OSDefaults.get_supported_os
+  }).each do |os,facts|
+    context "on #{os}" do
+      let (:facts) do
+        facts.merge!(OSDefaults.get_facts())
       end
 
-      it { is_expected.not_to contain_package('db_backend_package') }
+      it_configures 'nova::db'
+      it_configures "nova::db #{facts[:osfamily]}"
     end
   end
 

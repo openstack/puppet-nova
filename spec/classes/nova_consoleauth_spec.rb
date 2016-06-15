@@ -6,25 +6,29 @@ describe 'nova::consoleauth' do
     'include nova'
   end
 
-  context 'on Debian platforms' do
-    let :facts do
-      @default_facts.merge({ :osfamily => 'Debian' })
-    end
+  on_supported_os({
+    :supported_os => OSDefaults.get_supported_os
+  }).each do |os,facts|
+    context "on #{os}" do
+      let (:facts) do
+        facts.merge!(OSDefaults.get_facts())
+      end
 
-    it_behaves_like 'generic nova service', {
-      :name         => 'nova-consoleauth',
-      :package_name => 'nova-consoleauth',
-      :service_name => 'nova-consoleauth' }
+      let (:platform_params) do
+        case facts[:osfamily]
+        when 'Debian'
+          it_behaves_like 'generic nova service', {
+            :name         => 'nova-consoleauth',
+            :package_name => 'nova-consoleauth',
+            :service_name => 'nova-consoleauth' }
+        when 'RedHat'
+          it_behaves_like 'generic nova service', {
+            :name         => 'nova-consoleauth',
+            :package_name => 'openstack-nova-console',
+            :service_name => 'openstack-nova-consoleauth' }
+        end
+      end
+    end
   end
 
-  context 'on RedHat platforms' do
-    let :facts do
-      @default_facts.merge({ :osfamily => 'RedHat' })
-    end
-
-    it_behaves_like 'generic nova service', {
-      :name         => 'nova-consoleauth',
-      :package_name => 'openstack-nova-console',
-      :service_name => 'openstack-nova-consoleauth' }
-  end
 end

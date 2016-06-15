@@ -138,38 +138,35 @@ describe 'nova::cells' do
     it_configures 'nova-cells'
   end
 
+  on_supported_os({
+    :supported_os => OSDefaults.get_supported_os
+  }).each do |os,facts|
+    context "on #{os}" do
+      let (:facts) do
+        facts.merge!(OSDefaults.get_facts())
+      end
 
-  context 'on Debian platforms' do
-    let :facts do
-      @default_facts.merge({ :osfamily => 'Debian' })
+      case facts[:osfamily]
+      when 'Debian'
+        let (:platform_params) do
+          {
+              :cells_package_name => 'nova-cells',
+              :cells_service_name => 'nova-cells'
+          }
+        end
+        it_configures 'a parent cell with manage_service as false'
+      when 'RedHat'
+        let (:platform_params) do
+          {
+              :cells_package_name => 'openstack-nova-cells',
+              :cells_service_name => 'openstack-nova-cells'
+          }
+        end
+      end
+
+      it_configures 'a parent cell'
+      it_configures 'a child cell'
     end
-
-    let :platform_params do
-      {
-        :cells_package_name => 'nova-cells',
-        :cells_service_name => 'nova-cells'
-      }
-    end
-
-    it_configures 'a parent cell'
-    it_configures 'a parent cell with manage_service as false'
-    it_configures 'a child cell'
-  end
-
-  context 'on RedHat platforms' do
-    let :facts do
-      @default_facts.merge({ :osfamily => 'RedHat' })
-    end
-
-    let :platform_params do
-      {
-        :cells_package_name => 'openstack-nova-cells',
-        :cells_service_name => 'openstack-nova-cells'
-      }
-    end
-
-    it_configures 'a parent cell'
-    it_configures 'a child cell'
   end
 
 end

@@ -553,49 +553,31 @@ describe 'nova' do
 
   end
 
-  context 'on Debian platforms' do
-    let :facts do
-      @default_facts.merge({
-        :osfamily => 'Debian',
-        :operatingsystem => 'Debian'
-      })
-    end
 
-    let :platform_params do
-      { :nova_common_package => 'nova-common',
-        :lock_path           => '/var/lock/nova' }
-    end
+  on_supported_os({
+    :supported_oos => OSDefaults.get_supported_os
+  }).each do |os,facts|
+    context "on #{os}" do
+      let (:facts) do
+        facts.merge!(OSDefaults.get_facts())
+      end
 
-    it_behaves_like 'nova'
+      case facts[:osfamily]
+      when 'Debian'
+        let (:platform_params) do
+          { :nova_common_package => 'nova-common',
+            :lock_path           => '/var/lock/nova' }
+        end
+      when 'RedHat'
+        let (:platform_params) do
+          { :nova_common_package => 'openstack-nova-common',
+            :lock_path           => '/var/lib/nova/tmp' }
+        end
+      end
+
+      it_behaves_like 'nova'
+
+    end
   end
 
-  context 'on Ubuntu platforms' do
-    let :facts do
-      @default_facts.merge({
-        :osfamily => 'Debian',
-        :operatingsystem => 'Ubuntu'
-      })
-    end
-
-    let :platform_params do
-      { :nova_common_package => 'nova-common',
-        :lock_path           => '/var/lock/nova' }
-    end
-
-    it_behaves_like 'nova'
-  end
-
-  context 'on RedHat platforms' do
-    let :facts do
-      @default_facts.merge({ :osfamily => 'RedHat' })
-    end
-
-    let :platform_params do
-      { :nova_common_package => 'openstack-nova-common',
-        :lock_path           => '/var/lib/nova/tmp' }
-    end
-
-    it_behaves_like 'nova'
-
-  end
 end

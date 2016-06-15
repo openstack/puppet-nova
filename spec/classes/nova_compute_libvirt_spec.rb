@@ -335,42 +335,38 @@ describe 'nova::compute::libvirt' do
 
   end
 
-  context 'on Debian platforms' do
-    let (:facts) do
-      @default_facts.merge({
-        :osfamily => 'Debian',
-        :operatingsystem => 'Debian',
-        :os_package_family => 'debian',
-        :operatingsystemmajrelease => '8'
-      })
+  on_supported_os({
+    :supported_oos => OSDefaults.get_supported_os
+  }).each do |os,facts|
+    context "on #{os}" do
+
+      case [:osfamily]
+      when 'Debian'
+
+        case [:operatingsystem]
+        when 'Debian'
+          let (:facts) do
+            facts.merge!(OSDefaults.get_facts({
+              :os_package_family => 'debian',
+              :operatingsystemmajrelease => '8'}))
+          end
+          it_behaves_like 'debian-nova-compute-libvirt'
+        when 'Ubuntu'
+          let (:facts) do
+            facts.merge!(OSDefaults.get_facts({
+              :os_package_family => 'ubuntu',
+              :operatingsystemmajrelease => '16.04'}))
+          end
+          it_behaves_like 'debian-nova-compute-libvirt'
+        end
+
+      when 'RedHat'
+        let (:facts) do
+          facts.merge!(OSDefaults.get_facts({ :os_package_type => 'rpm' }))
+        end
+        it_behaves_like 'redhat-nova-compute-libvirt'
+      end
     end
-
-    it_behaves_like 'debian-nova-compute-libvirt'
   end
-
-  context 'on Ubuntu platforms' do
-    let (:facts) do
-      @default_facts.merge({
-        :osfamily => 'Debian',
-        :operatingsystem => 'Ubuntu',
-        :os_package_family => 'ubuntu',
-        :operatingsystemmajrelease => '16.04'
-      })
-    end
-
-    it_behaves_like 'debian-nova-compute-libvirt'
-  end
-
-  context 'on RedHat platforms' do
-    let (:facts) do
-      @default_facts.merge({
-        :osfamily => 'RedHat',
-        :os_package_type => 'rpm',
-      })
-    end
-
-    it_behaves_like 'redhat-nova-compute-libvirt'
-  end
-
 
 end

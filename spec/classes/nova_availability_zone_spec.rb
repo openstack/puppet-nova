@@ -29,29 +29,15 @@ describe 'nova::availability_zone' do
 
   end
 
-  context 'on Debian platforms' do
-    let :facts do
-      @default_facts.merge({
-        :osfamily => 'Debian',
-        :operatingsystem => 'Debian',
-        :operatingsystemrelease => 'jessie',
-      })
+  on_supported_os({
+    :supported_os => OSDefaults.get_supported_os
+  }).each do |os,facts|
+    context "on #{os}" do
+      let (:facts) do
+        facts.merge!(OSDefaults.get_facts())
+      end
+
+      it_configures 'nova::availability_zone'
     end
-
-    it_configures 'nova::availability_zone'
-
   end
-
-  context 'on Redhat platforms' do
-    let :facts do
-      @default_facts.merge({
-        :osfamily => 'RedHat',
-        :operatingsystemrelease => '7.1',
-      })
-    end
-
-    it_configures 'nova::availability_zone'
-
-  end
-
 end
