@@ -97,6 +97,13 @@
 #   (optional) Compute driver.
 #   Defaults to 'libvirt.LibvirtDriver'
 #
+# [*manage_libvirt_services*]
+#   (optional) Whether or not deploy Libvirt services.
+#   In the case of micro-services, set it to False and use
+#   nova::compute::libvirt::services + hiera to select what
+#   you actually want to deploy.
+#   Defaults to true for backward compatibility.
+#
 # DEPRECATED
 #
 # [*remove_unused_kernels*]
@@ -126,14 +133,13 @@ class nova::compute::libvirt (
   $virtlock_service_name                      = $::nova::params::virtlock_service_name,
   $virtlog_service_name                       = $::nova::params::virtlog_service_name,
   $compute_driver                             = 'libvirt.LibvirtDriver',
+  $manage_libvirt_services                    = true,
   # Deprecated
   $remove_unused_kernels                      = undef,
 ) inherits nova::params {
 
   include ::nova::deps
   include ::nova::params
-
-  Service['libvirt'] -> Service['nova-compute']
 
   # libvirt_cpu_mode has different defaults depending on hypervisor.
   if !$libvirt_cpu_mode {
@@ -156,75 +162,35 @@ class nova::compute::libvirt (
     }
   }
 
-  if($::osfamily == 'RedHat' and $::operatingsystem != 'Fedora') {
-    service { 'messagebus':
-      ensure   => running,
-      enable   => true,
-      name     => $::nova::params::messagebus_service_name,
-      provider => $::nova::params::special_service_provider,
-
-    }
-    Package['libvirt'] -> Service['messagebus'] -> Service['libvirt']
-  }
-
   if $migration_support {
     if $vncserver_listen != '0.0.0.0' and $vncserver_listen != '::0' {
       fail('For migration support to work, you MUST set vncserver_listen to \'0.0.0.0\' or \'::0\'')
     } else {
+      # TODO(emilien): explode ::nova::migration::libvirt to select what bits we want to configure
+      # and allow micro services between libvirt & nova-compute.
       include ::nova::migration::libvirt
     }
   }
 
-  if $::osfamily == 'RedHat' {
-    package { 'libvirt-nwfilter':
-      ensure => present,
-      name   => $::nova::params::libvirt_nwfilter_package_name,
-      before => Service['libvirt'],
-      tag    => ['openstack', 'nova-support-package'],
-    }
-    case $libvirt_virt_type {
-      'qemu': {
-        $libvirt_package_name_real = "${::nova::params::libvirt_daemon_package_prefix}kvm"
-      }
-      default: {
-        $libvirt_package_name_real = "${::nova::params::libvirt_daemon_package_prefix}${libvirt_virt_type}"
-      }
-    }
-  } else {
-    $libvirt_package_name_real = $::nova::params::libvirt_package_name
-  }
-
-  package { 'libvirt':
-    ensure => present,
-    name   => $libvirt_package_name_real,
-    tag    => ['openstack', 'nova-support-package'],
-  }
-
-  service { 'libvirt' :
-    ensure   => running,
-    enable   => true,
-    name     => $libvirt_service_name,
-    provider => $::nova::params::special_service_provider,
-    require  => Package['libvirt'],
-  }
-
-  if $virtlock_service_name {
-    service { 'virtlockd':
-      ensure   => running,
-      enable   => true,
-      name     => $virtlock_service_name,
-      provider => $::nova::params::special_service_provider,
-      require  => Package['libvirt']
-    }
-  }
-
-  if $virtlog_service_name {
-    service { 'virtlogd':
-      ensure   => running,
-      enable   => true,
-      name     => $virtlog_service_name,
-      provider => $::nova::params::special_service_provider,
-      require  => Package['libvirt']
+  # manage_libvirt_services is here for backward compatibility to support
+  # deployments that do not include nova::compute::libvirt::services
+  #
+  # If you're using hiera:
+  #  - set nova::compute::libvirt::manage_libvirt_services to false
+  #  - include ::nova::compute::libvirt::services in your composition layer
+  #  - select which services you want to deploy with
+  #    ::nova::compute::libvirt::services:* parameters.
+  #
+  # If you're not using hiera:
+  #  - set nova::compute::libvirt::manage_libvirt_services to true (default).
+  #  - select which services you want to deploy with
+  #    ::nova::compute::libvirt::*_service_name parameters.
+  if $manage_libvirt_services {
+    class { '::nova::compute::libvirt::services':
+      libvirt_service_name  => $libvirt_service_name,
+      virtlock_service_name => $virtlock_service_name,
+      virtlog_service_name  => $virtlog_service_name,
+      libvirt_virt_type     => $libvirt_virt_type,
     }
   }
 

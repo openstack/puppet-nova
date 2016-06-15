@@ -175,6 +175,21 @@ describe 'nova::compute::libvirt' do
 
       end
     end
+
+    describe 'when manage_libvirt_services is set to false' do
+      context 'without libvirt packages & services' do
+        let :params do
+          { :manage_libvirt_services => false }
+        end
+
+        it { is_expected.not_to contain_package('libvirt') }
+        it { is_expected.not_to contain_service('libvirt') }
+        it { is_expected.not_to contain_package('libvirt-nwfilter') }
+        it { is_expected.not_to contain_service('messagebus') }
+        it { is_expected.not_to contain_service('virtlockd') }
+        it { is_expected.not_to contain_service('virtlogd') }
+      end
+    end
   end
 
 
@@ -300,6 +315,21 @@ describe 'nova::compute::libvirt' do
 
         it { expect { is_expected.to contain_class('nova::compute::libvirt') }.to \
           raise_error(Puppet::Error, /For migration support to work, you MUST set vncserver_listen to '0.0.0.0'/) }
+      end
+    end
+
+    describe 'when manage_libvirt_services is set to false' do
+      context 'without libvirt packages & services' do
+        let :params do
+          { :manage_libvirt_services => false }
+        end
+
+        it { is_expected.not_to contain_package('libvirt') }
+        it { is_expected.not_to contain_service('libvirt') }
+        it { is_expected.not_to contain_package('libvirt-nwfilter') }
+        it { is_expected.not_to contain_service('messagebus') }
+        it { is_expected.not_to contain_service('virtlockd') }
+        it { is_expected.not_to contain_service('virtlogd') }
       end
     end
 
