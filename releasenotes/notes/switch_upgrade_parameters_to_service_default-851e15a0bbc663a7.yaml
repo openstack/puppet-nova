@@ -1,0 +1,6 @@
+---
+other:
+  - Switch nova upgrade parameters to $::os_service_default fact.
+    This change will help to reduce lines of code and also by
+    default all values have 'undef' value and can be easily switched
+    to common fact.

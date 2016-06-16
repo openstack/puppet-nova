@@ -343,7 +343,7 @@
 #   things such as cinder volume attach work. If you don't set this
 #   and you have multiple endpoints, you will get AmbiguousEndpoint
 #   exceptions in the nova API service.
-#   Defaults to undef
+#   Defaults to $::os_service_default
 #
 # [*cinder_catalog_info*]
 #   (optional) Info to match when looking for cinder in the service
@@ -353,39 +353,39 @@
 #
 # [*upgrade_level_cells*]
 #  (optional) Sets a version cap for messages sent to local cells services
-#  Defaults to undef
+#  Defaults to $::os_service_default
 #
 # [*upgrade_level_cert*]
 #  (optional) Sets a version cap for messages sent to cert services
-#  Defaults to undef
+#  Defaults to $::os_service_default
 #
 # [*upgrade_level_compute*]
 #  (optional) Sets a version cap for messages sent to compute services
-#  Defaults to undef
+#  Defaults to $::os_service_default
 #
 # [*upgrade_level_conductor*]
 #  (optional) Sets a version cap for messages sent to conductor services
-#  Defaults to undef
+#  Defaults to $::os_service_default
 #
 # [*upgrade_level_console*]
 #  (optional) Sets a version cap for messages sent to console services
-#  Defaults to undef
+#  Defaults to $::os_service_default
 #
 # [*upgrade_level_consoleauth*]
 #  (optional) Sets a version cap for messages sent to consoleauth services
-#  Defaults to undef
+#  Defaults to $::os_service_default
 #
 # [*upgrade_level_intercell*]
 #  (optional) Sets a version cap for messages sent between cells services
-#  Defaults to undef
+#  Defaults to $::os_service_default
 #
 # [*upgrade_level_network*]
 #  (optional) Sets a version cap for messages sent to network services
-#  Defaults to undef
+#  Defaults to $::os_service_default
 #
 # [*upgrade_level_scheduler*]
 #  (optional) Sets a version cap for messages sent to scheduler services
-#  Defaults to undef
+#  Defaults to $::os_service_default
 #
 # [*use_ipv6*]
 #   (optional) Use IPv6 or not.
@@ -491,17 +491,17 @@ class nova(
   $notification_topics                    = $::os_service_default,
   $notify_api_faults                      = false,
   $notify_on_state_change                 = undef,
-  $os_region_name                         = undef,
+  $os_region_name                         = $::os_service_default,
   $cinder_catalog_info                    = 'volumev2:cinderv2:publicURL',
-  $upgrade_level_cells                    = undef,
-  $upgrade_level_cert                     = undef,
-  $upgrade_level_compute                  = undef,
-  $upgrade_level_conductor                = undef,
-  $upgrade_level_console                  = undef,
-  $upgrade_level_consoleauth              = undef,
-  $upgrade_level_intercell                = undef,
-  $upgrade_level_network                  = undef,
-  $upgrade_level_scheduler                = undef,
+  $upgrade_level_cells                    = $::os_service_default,
+  $upgrade_level_cert                     = $::os_service_default,
+  $upgrade_level_compute                  = $::os_service_default,
+  $upgrade_level_conductor                = $::os_service_default,
+  $upgrade_level_console                  = $::os_service_default,
+  $upgrade_level_consoleauth              = $::os_service_default,
+  $upgrade_level_intercell                = $::os_service_default,
+  $upgrade_level_network                  = $::os_service_default,
+  $upgrade_level_scheduler                = $::os_service_default,
   $use_ipv6                               = $::os_service_default,
   $purge_config                           = false,
   # DEPRECATED PARAMETERS
@@ -727,114 +727,17 @@ class nova(
     nova_config { 'DEFAULT/notify_on_state_change': ensure => absent; }
   }
 
-  if $os_region_name {
-    nova_config {
-      'cinder/os_region_name':    value => $os_region_name;
-    }
-  }
-  else {
-    nova_config {
-      'cinder/os_region_name':    ensure => absent;
-    }
-  }
-
-  if $upgrade_level_cells {
-    nova_config {
-      'upgrade_levels/cells':   value => $upgrade_level_cells;
-    }
-  }
-  else {
-    nova_config {
-      'upgrade_levels/cells':   ensure => absent;
-    }
-  }
-
-  if $upgrade_level_cert {
-    nova_config {
-      'upgrade_levels/cert':   value => $upgrade_level_cert;
-    }
-  }
-  else {
-    nova_config {
-      'upgrade_levels/cert':   ensure => absent;
-    }
-  }
-
-  if $upgrade_level_compute {
-    nova_config {
-      'upgrade_levels/compute':   value => $upgrade_level_compute;
-    }
-  }
-  else {
-    nova_config {
-      'upgrade_levels/compute':   ensure => absent;
-    }
-  }
-
-  if $upgrade_level_conductor {
-    nova_config {
-      'upgrade_levels/conductor':   value => $upgrade_level_conductor;
-    }
-  }
-  else {
-    nova_config {
-      'upgrade_levels/conductor':   ensure => absent;
-    }
-  }
-
-  if $upgrade_level_console {
-    nova_config {
-      'upgrade_levels/console':   value => $upgrade_level_console;
-    }
-  }
-  else {
-    nova_config {
-      'upgrade_levels/console':   ensure => absent;
-    }
-  }
-
-  if $upgrade_level_consoleauth {
-    nova_config {
-      'upgrade_levels/consoleauth':   value => $upgrade_level_consoleauth;
-    }
-  }
-  else {
-    nova_config {
-      'upgrade_levels/consoleauth':   ensure => absent;
-    }
-  }
-
-  if $upgrade_level_intercell {
-    nova_config {
-      'upgrade_levels/intercell':   value => $upgrade_level_intercell;
-    }
-  }
-  else {
-    nova_config {
-      'upgrade_levels/intercell':   ensure => absent;
-    }
-  }
-
-  if $upgrade_level_network {
-    nova_config {
-      'upgrade_levels/network':   value => $upgrade_level_network;
-    }
-  }
-  else {
-    nova_config {
-      'upgrade_levels/network':   ensure => absent;
-    }
-  }
-
-  if $upgrade_level_scheduler {
-    nova_config {
-      'upgrade_levels/scheduler':   value => $upgrade_level_scheduler;
-    }
-  }
-  else {
-    nova_config {
-      'upgrade_levels/scheduler':   ensure => absent;
-    }
+  nova_config {
+    'cinder/os_region_name':      value => $os_region_name;
+    'upgrade_levels/cells':       value => $upgrade_level_cells;
+    'upgrade_levels/cert':        value => $upgrade_level_cert;
+    'upgrade_levels/compute':     value => $upgrade_level_compute;
+    'upgrade_levels/conductor':   value => $upgrade_level_conductor;
+    'upgrade_levels/console':     value => $upgrade_level_console;
+    'upgrade_levels/consoleauth': value => $upgrade_level_consoleauth;
+    'upgrade_levels/intercell':   value => $upgrade_level_intercell;
+    'upgrade_levels/network':     value => $upgrade_level_network;
+    'upgrade_levels/scheduler':   value => $upgrade_level_scheduler;
   }
 
 }
