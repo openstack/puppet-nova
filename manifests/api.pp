@@ -283,6 +283,11 @@ class nova::api(
       # we don't need to enable nova-api service.
       $service_enabled   = false
     }
+    policy_rcd { 'nova-api':
+      ensure   => present,
+      set_code => '101',
+      before   => Package['nova-api'],
+    }
     # make sure we start apache before nova-api to avoid binding issues
     Service[$service_name] -> Service['nova-api']
   } else {
