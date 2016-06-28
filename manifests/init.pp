@@ -396,6 +396,15 @@
 #   in the nova config.
 #   Defaults to false.
 #
+# [*block_device_allocate_retries*]
+#   (optional) Number of times to retry block device allocation on failures
+#   Defaults to $::os_service_default
+#
+# [*block_device_allocate_retries_interval*]
+#   (optional) Waiting time interval (seconds) between block device allocation
+#   retries on failures
+#   Defaults to $::os_service_default
+#
 # DEPRECATED PARAMETERS
 #
 # [*verbose*]
@@ -403,98 +412,100 @@
 #   Defaults to undef
 #
 class nova(
-  $ensure_package                     = 'present',
-  $database_connection                = undef,
-  $slave_connection                   = undef,
-  $api_database_connection            = undef,
-  $api_slave_connection               = undef,
-  $database_idle_timeout              = undef,
-  $database_min_pool_size             = undef,
-  $database_max_pool_size             = undef,
-  $database_max_retries               = undef,
-  $database_retry_interval            = undef,
-  $database_max_overflow              = undef,
-  $default_transport_url              = $::os_service_default,
-  $rpc_response_timeout               = $::os_service_default,
-  $rpc_backend                        = $::os_service_default,
-  $image_service                      = 'nova.image.glance.GlanceImageService',
+  $ensure_package                         = 'present',
+  $database_connection                    = undef,
+  $slave_connection                       = undef,
+  $api_database_connection                = undef,
+  $api_slave_connection                   = undef,
+  $block_device_allocate_retries          = $::os_service_default,
+  $block_device_allocate_retries_interval = $::os_service_default,
+  $database_idle_timeout                  = undef,
+  $database_min_pool_size                 = undef,
+  $database_max_pool_size                 = undef,
+  $database_max_retries                   = undef,
+  $database_retry_interval                = undef,
+  $database_max_overflow                  = undef,
+  $default_transport_url                  = $::os_service_default,
+  $rpc_response_timeout                   = $::os_service_default,
+  $rpc_backend                            = $::os_service_default,
+  $image_service                          = 'nova.image.glance.GlanceImageService',
   # these glance params should be optional
   # this should probably just be configured as a glance client
-  $glance_api_servers                 = 'http://localhost:9292',
-  $memcached_servers                  = $::os_service_default,
-  $rabbit_host                        = $::os_service_default,
-  $rabbit_hosts                       = $::os_service_default,
-  $rabbit_password                    = $::os_service_default,
-  $rabbit_port                        = $::os_service_default,
-  $rabbit_userid                      = $::os_service_default,
-  $rabbit_virtual_host                = $::os_service_default,
-  $rabbit_use_ssl                     = $::os_service_default,
-  $rabbit_heartbeat_timeout_threshold = $::os_service_default,
-  $rabbit_heartbeat_rate              = $::os_service_default,
-  $rabbit_ha_queues                   = $::os_service_default,
-  $kombu_ssl_ca_certs                 = $::os_service_default,
-  $kombu_ssl_certfile                 = $::os_service_default,
-  $kombu_ssl_keyfile                  = $::os_service_default,
-  $kombu_ssl_version                  = $::os_service_default,
-  $kombu_reconnect_delay              = $::os_service_default,
-  $kombu_compression                  = $::os_service_default,
-  $amqp_durable_queues                = $::os_service_default,
-  $amqp_server_request_prefix         = $::os_service_default,
-  $amqp_broadcast_prefix              = $::os_service_default,
-  $amqp_group_request_prefix          = $::os_service_default,
-  $amqp_container_name                = $::os_service_default,
-  $amqp_idle_timeout                  = $::os_service_default,
-  $amqp_trace                         = $::os_service_default,
-  $amqp_ssl_ca_file                   = $::os_service_default,
-  $amqp_ssl_cert_file                 = $::os_service_default,
-  $amqp_ssl_key_file                  = $::os_service_default,
-  $amqp_ssl_key_password              = $::os_service_default,
-  $amqp_allow_insecure_clients        = $::os_service_default,
-  $amqp_sasl_mechanisms               = $::os_service_default,
-  $amqp_sasl_config_dir               = $::os_service_default,
-  $amqp_sasl_config_name              = $::os_service_default,
-  $amqp_username                      = $::os_service_default,
-  $amqp_password                      = $::os_service_default,
-  $host                               = $::os_service_default,
-  $auth_strategy                      = 'keystone',
-  $service_down_time                  = 60,
-  $log_dir                            = undef,
-  $state_path                         = '/var/lib/nova',
-  $lock_path                          = $::nova::params::lock_path,
-  $debug                              = undef,
-  $periodic_interval                  = '60',
-  $report_interval                    = '10',
-  $rootwrap_config                    = '/etc/nova/rootwrap.conf',
-  $use_ssl                            = false,
-  $enabled_ssl_apis                   = ['metadata', 'osapi_compute'],
-  $ca_file                            = false,
-  $cert_file                          = false,
-  $key_file                           = false,
-  $nova_public_key                    = undef,
-  $nova_private_key                   = undef,
-  $use_syslog                         = undef,
-  $use_stderr                         = undef,
-  $log_facility                       = undef,
-  $notification_transport_url         = $::os_service_default,
-  $notification_driver                = $::os_service_default,
-  $notification_topics                = $::os_service_default,
-  $notify_api_faults                  = false,
-  $notify_on_state_change             = undef,
-  $os_region_name                     = undef,
-  $cinder_catalog_info                = 'volumev2:cinderv2:publicURL',
-  $upgrade_level_cells                = undef,
-  $upgrade_level_cert                 = undef,
-  $upgrade_level_compute              = undef,
-  $upgrade_level_conductor            = undef,
-  $upgrade_level_console              = undef,
-  $upgrade_level_consoleauth          = undef,
-  $upgrade_level_intercell            = undef,
-  $upgrade_level_network              = undef,
-  $upgrade_level_scheduler            = undef,
-  $use_ipv6                           = $::os_service_default,
-  $purge_config                       = false,
+  $glance_api_servers                     = 'http://localhost:9292',
+  $memcached_servers                      = $::os_service_default,
+  $rabbit_host                            = $::os_service_default,
+  $rabbit_hosts                           = $::os_service_default,
+  $rabbit_password                        = $::os_service_default,
+  $rabbit_port                            = $::os_service_default,
+  $rabbit_userid                          = $::os_service_default,
+  $rabbit_virtual_host                    = $::os_service_default,
+  $rabbit_use_ssl                         = $::os_service_default,
+  $rabbit_heartbeat_timeout_threshold     = $::os_service_default,
+  $rabbit_heartbeat_rate                  = $::os_service_default,
+  $rabbit_ha_queues                       = $::os_service_default,
+  $kombu_ssl_ca_certs                     = $::os_service_default,
+  $kombu_ssl_certfile                     = $::os_service_default,
+  $kombu_ssl_keyfile                      = $::os_service_default,
+  $kombu_ssl_version                      = $::os_service_default,
+  $kombu_reconnect_delay                  = $::os_service_default,
+  $kombu_compression                      = $::os_service_default,
+  $amqp_durable_queues                    = $::os_service_default,
+  $amqp_server_request_prefix             = $::os_service_default,
+  $amqp_broadcast_prefix                  = $::os_service_default,
+  $amqp_group_request_prefix              = $::os_service_default,
+  $amqp_container_name                    = $::os_service_default,
+  $amqp_idle_timeout                      = $::os_service_default,
+  $amqp_trace                             = $::os_service_default,
+  $amqp_ssl_ca_file                       = $::os_service_default,
+  $amqp_ssl_cert_file                     = $::os_service_default,
+  $amqp_ssl_key_file                      = $::os_service_default,
+  $amqp_ssl_key_password                  = $::os_service_default,
+  $amqp_allow_insecure_clients            = $::os_service_default,
+  $amqp_sasl_mechanisms                   = $::os_service_default,
+  $amqp_sasl_config_dir                   = $::os_service_default,
+  $amqp_sasl_config_name                  = $::os_service_default,
+  $amqp_username                          = $::os_service_default,
+  $amqp_password                          = $::os_service_default,
+  $host                                   = $::os_service_default,
+  $auth_strategy                          = 'keystone',
+  $service_down_time                      = 60,
+  $log_dir                                = undef,
+  $state_path                             = '/var/lib/nova',
+  $lock_path                              = $::nova::params::lock_path,
+  $debug                                  = undef,
+  $periodic_interval                      = '60',
+  $report_interval                        = '10',
+  $rootwrap_config                        = '/etc/nova/rootwrap.conf',
+  $use_ssl                                = false,
+  $enabled_ssl_apis                       = ['metadata', 'osapi_compute'],
+  $ca_file                                = false,
+  $cert_file                              = false,
+  $key_file                               = false,
+  $nova_public_key                        = undef,
+  $nova_private_key                       = undef,
+  $use_syslog                             = undef,
+  $use_stderr                             = undef,
+  $log_facility                           = undef,
+  $notification_transport_url             = $::os_service_default,
+  $notification_driver                    = $::os_service_default,
+  $notification_topics                    = $::os_service_default,
+  $notify_api_faults                      = false,
+  $notify_on_state_change                 = undef,
+  $os_region_name                         = undef,
+  $cinder_catalog_info                    = 'volumev2:cinderv2:publicURL',
+  $upgrade_level_cells                    = undef,
+  $upgrade_level_cert                     = undef,
+  $upgrade_level_compute                  = undef,
+  $upgrade_level_conductor                = undef,
+  $upgrade_level_console                  = undef,
+  $upgrade_level_consoleauth              = undef,
+  $upgrade_level_intercell                = undef,
+  $upgrade_level_network                  = undef,
+  $upgrade_level_scheduler                = undef,
+  $use_ipv6                               = $::os_service_default,
+  $purge_config                           = false,
   # DEPRECATED PARAMETERS
-  $verbose                            = undef,
+  $verbose                                = undef,
 ) inherits nova::params {
 
   include ::nova::deps
@@ -694,14 +705,16 @@ class nova(
   }
 
   nova_config {
-    'cinder/catalog_info':         value => $cinder_catalog_info;
-    'DEFAULT/notify_api_faults':   value => $notify_api_faults;
+    'cinder/catalog_info':                            value => $cinder_catalog_info;
+    'DEFAULT/notify_api_faults':                      value => $notify_api_faults;
     # Following may need to be broken out to different nova services
-    'DEFAULT/state_path':          value => $state_path;
-    'DEFAULT/service_down_time':   value => $service_down_time;
-    'DEFAULT/rootwrap_config':     value => $rootwrap_config;
-    'DEFAULT/report_interval':     value => $report_interval;
-    'DEFAULT/use_ipv6':            value => $use_ipv6;
+    'DEFAULT/state_path':                             value => $state_path;
+    'DEFAULT/service_down_time':                      value => $service_down_time;
+    'DEFAULT/rootwrap_config':                        value => $rootwrap_config;
+    'DEFAULT/report_interval':                        value => $report_interval;
+    'DEFAULT/use_ipv6':                               value => $use_ipv6;
+    'DEFAULT/block_device_allocate_retries':          value => $block_device_allocate_retries;
+    'DEFAULT/block_device_allocate_retries_interval': value => $block_device_allocate_retries_interval;
   }
 
   oslo::concurrency { 'nova_config': lock_path => $lock_path }

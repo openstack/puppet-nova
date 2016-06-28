@@ -65,47 +65,54 @@ describe 'nova' do
         is_expected.to contain_nova_config('cinder/catalog_info').with('value' => 'volumev2:cinderv2:publicURL')
       end
 
+      it 'configures block_device_allocate params' do
+        is_expected.to contain_nova_config('DEFAULT/block_device_allocate_retries').with_value('<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('DEFAULT/block_device_allocate_retries_interval').with_value('<SERVICE DEFAULT>')
+      end
     end
 
     context 'with overridden parameters' do
 
       let :params do
-        { :debug                              => true,
-          :log_dir                            => '/var/log/nova2',
-          :image_service                      => 'nova.image.local.LocalImageService',
-          :default_transport_url              => 'rabbit://rabbit_user:password@localhost:5673',
-          :rpc_response_timeout               => '30',
-          :rpc_backend                        => 'rabbit',
-          :rabbit_host                        => 'rabbit',
-          :rabbit_userid                      => 'rabbit_user',
-          :rabbit_port                        => '5673',
-          :rabbit_password                    => 'password',
-          :rabbit_heartbeat_timeout_threshold => '60',
-          :rabbit_heartbeat_rate              => '10',
-          :lock_path                          => '/var/locky/path',
-          :state_path                         => '/var/lib/nova2',
-          :service_down_time                  => '120',
-          :auth_strategy                      => 'foo',
-          :ensure_package                     => '2012.1.1-15.el6',
-          :memcached_servers                  => ['memcached01:11211', 'memcached02:11211'],
-          :host                               => 'test-001.example.org',
-          :notification_transport_url         => 'rabbit://rabbit_user:password@localhost:5673',
-          :notification_driver                => 'ceilometer.compute.nova_notifier',
-          :notification_topics                => 'openstack',
-          :notify_api_faults                  => true,
-          :report_interval                    => '60',
-          :os_region_name                     => 'MyRegion',
-          :use_ipv6                           => true,
-          :upgrade_level_cells                => '1.0.0',
-          :upgrade_level_cert                 => '1.0.0',
-          :upgrade_level_compute              => '1.0.0',
-          :upgrade_level_conductor            => '1.0.0',
-          :upgrade_level_console              => '1.0.0',
-          :upgrade_level_consoleauth          => '1.0.0',
-          :upgrade_level_intercell            => '1.0.0',
-          :upgrade_level_network              => '1.0.0',
-          :upgrade_level_scheduler            => '1.0.0',
-          :purge_config                       => false, }
+        { :debug                                   => true,
+          :log_dir                                 => '/var/log/nova2',
+          :image_service                           => 'nova.image.local.LocalImageService',
+          :default_transport_url                   => 'rabbit://rabbit_user:password@localhost:5673',
+          :rpc_response_timeout                    => '30',
+          :rpc_backend                             => 'rabbit',
+          :rabbit_host                             => 'rabbit',
+          :rabbit_userid                           => 'rabbit_user',
+          :rabbit_port                             => '5673',
+          :rabbit_password                         => 'password',
+          :rabbit_heartbeat_timeout_threshold      => '60',
+          :rabbit_heartbeat_rate                   => '10',
+          :lock_path                               => '/var/locky/path',
+          :state_path                              => '/var/lib/nova2',
+          :service_down_time                       => '120',
+          :auth_strategy                           => 'foo',
+          :ensure_package                          => '2012.1.1-15.el6',
+          :memcached_servers                       => ['memcached01:11211', 'memcached02:11211'],
+          :host                                    => 'test-001.example.org',
+          :notification_transport_url              => 'rabbit://rabbit_user:password@localhost:5673',
+          :notification_driver                     => 'ceilometer.compute.nova_notifier',
+          :notification_topics                     => 'openstack',
+          :notify_api_faults                       => true,
+          :report_interval                         => '60',
+          :os_region_name                          => 'MyRegion',
+          :use_ipv6                                => true,
+          :upgrade_level_cells                     => '1.0.0',
+          :upgrade_level_cert                      => '1.0.0',
+          :upgrade_level_compute                   => '1.0.0',
+          :upgrade_level_conductor                 => '1.0.0',
+          :upgrade_level_console                   => '1.0.0',
+          :upgrade_level_consoleauth               => '1.0.0',
+          :upgrade_level_intercell                 => '1.0.0',
+          :upgrade_level_network                   => '1.0.0',
+          :upgrade_level_scheduler                 => '1.0.0',
+          :purge_config                            => false,
+          :block_device_allocate_retries           => '60',
+          :block_device_allocate_retries_interval  => '3',
+        }
       end
 
       it 'installs packages' do
@@ -183,6 +190,10 @@ describe 'nova' do
         ) }
       end
 
+      it 'configures block_device_allocate params' do
+        is_expected.to contain_nova_config('DEFAULT/block_device_allocate_retries').with_value('60')
+        is_expected.to contain_nova_config('DEFAULT/block_device_allocate_retries_interval').with_value('3')
+      end
     end
 
     context 'with wrong notify_on_state_change parameter' do
