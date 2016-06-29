@@ -20,6 +20,7 @@ describe 'nova::policy' do
         :key   => 'context_is_admin',
         :value => 'foo:bar'
       })
+      is_expected.to contain_nova_config('oslo_policy/policy_file').with_value('/etc/nova/policy.json')
     end
   end
 
