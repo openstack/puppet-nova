@@ -63,6 +63,11 @@ describe 'nova::api' do
         is_expected.to contain_nova_config('DEFAULT/default_floating_pool').with('value' => 'nova')
         is_expected.to contain_nova_config('DEFAULT/fping_path').with('value' => '/usr/sbin/fping')
         is_expected.to contain_nova_config('oslo_middleware/enable_proxy_headers_parsing').with('value' => '<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('DEFAULT/metadata_cache_expiration').with('value' => '<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('DEFAULT/vendordata_jsonfile_path').with('value' => '<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('DEFAULT/osapi_max_limit').with('value' => '<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('DEFAULT/osapi_compute_link_prefix').with('value' => '<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('DEFAULT/osapi_glance_link_prefix').with('value' => '<SERVICE DEFAULT>')
       end
 
       it 'unconfigures neutron_metadata proxy' do
@@ -93,6 +98,11 @@ describe 'nova::api' do
           :metadata_workers                     => 2,
           :default_floating_pool                => 'public',
           :enable_proxy_headers_parsing         => true,
+          :metadata_cache_expiration            => 15,
+          :vendordata_jsonfile_path             => '/tmp',
+          :osapi_max_limit                      => 1000,
+          :osapi_compute_link_prefix            => 'https://10.0.0.1:7777/',
+          :osapi_glance_link_prefix             => 'https://10.0.0.1:6666/',
           :pci_alias                            => "[{\"vendor_id\":\"8086\",\"product_id\":\"0126\",\"name\":\"graphic_card\"},{\"vendor_id\":\"9096\",\"product_id\":\"1520\",\"name\":\"network_card\"}]"
         })
       end
@@ -137,6 +147,11 @@ describe 'nova::api' do
         is_expected.to contain_nova_config('DEFAULT/osapi_compute_workers').with('value' => '1')
         is_expected.to contain_nova_config('DEFAULT/metadata_workers').with('value' => '2')
         is_expected.to contain_nova_config('DEFAULT/default_floating_pool').with('value' => 'public')
+        is_expected.to contain_nova_config('DEFAULT/metadata_cache_expiration').with('value' => '15')
+        is_expected.to contain_nova_config('DEFAULT/vendordata_jsonfile_path').with('value' => '/tmp')
+        is_expected.to contain_nova_config('DEFAULT/osapi_max_limit').with('value' => '1000')
+        is_expected.to contain_nova_config('DEFAULT/osapi_compute_link_prefix').with('value' => 'https://10.0.0.1:7777/')
+        is_expected.to contain_nova_config('DEFAULT/osapi_glance_link_prefix').with('value' => 'https://10.0.0.1:6666/')
         is_expected.to contain_nova_config('neutron/service_metadata_proxy').with('value' => true)
         is_expected.to contain_nova_config('neutron/metadata_proxy_shared_secret').with('value' => 'secrete')
         is_expected.to contain_nova_config('oslo_middleware/enable_proxy_headers_parsing').with('value' => true)

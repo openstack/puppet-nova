@@ -146,6 +146,32 @@
 #   to make nova be a web app using apache mod_wsgi.
 #   Defaults to '$::nova::params::api_service_name'
 #
+# [*metadata_cache_expiration*]
+#   (optional) This option is the time (in seconds) to cache metadata.
+#   Defaults to $::os_service_default
+#
+# [*vendordata_jsonfile_path*]
+#   (optional) Represent the path to the data file.
+#   Cloud providers may store custom data in vendor data file that will then be
+#   available to the instances via the metadata service, and to the rendering of
+#   config-drive. The default class for this, JsonFileVendorData, loads this
+#   information from a JSON file, whose path is configured by this option
+#   Defaults to $::os_service_default
+#
+# [*osapi_max_limit*]
+#   (optional) This option is limit the maximum number of items in a single response.
+#   Defaults to $::os_service_default
+#
+# [*osapi_compute_link_prefix*]
+#   (optional) This string is prepended to the normal URL that is returned in links
+#   to the OpenStack Compute API.
+#   Defaults to $::os_service_default
+#
+# [*osapi_glance_link_prefix*]
+#   (optional) This string is prepended to the normal URL that is returned in links
+#   to Glance resources.
+#   Defaults to $::os_service_default
+#
 # DEPRECATED
 #
 # [*keystone_ec2_url*]
@@ -210,6 +236,11 @@ class nova::api(
   $fping_path                   = '/usr/sbin/fping',
   $service_name                 = $::nova::params::api_service_name,
   $enable_proxy_headers_parsing = $::os_service_default,
+  $metadata_cache_expiration    = $::os_service_default,
+  $vendordata_jsonfile_path     = $::os_service_default,
+  $osapi_max_limit              = $::os_service_default,
+  $osapi_compute_link_prefix    = $::os_service_default,
+  $osapi_glance_link_prefix     = $::os_service_default,
   # DEPRECATED PARAMETER
   $conductor_workers            = undef,
   $ec2_listen_port              = undef,
@@ -309,6 +340,11 @@ class nova::api(
     'DEFAULT/use_forwarded_for':         value => $use_forwarded_for;
     'DEFAULT/default_floating_pool':     value => $default_floating_pool;
     'DEFAULT/fping_path':                value => $fping_path;
+    'DEFAULT/metadata_cache_expiration': value => $metadata_cache_expiration;
+    'DEFAULT/vendordata_jsonfile_path':  value => $vendordata_jsonfile_path;
+    'DEFAULT/osapi_max_limit':           value => $osapi_max_limit;
+    'DEFAULT/osapi_compute_link_prefix': value => $osapi_compute_link_prefix;
+    'DEFAULT/osapi_glance_link_prefix':  value => $osapi_glance_link_prefix;
   }
 
   oslo::middleware {'nova_config':
