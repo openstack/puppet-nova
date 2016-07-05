@@ -1,0 +1,4 @@
+---
+deprecations:
+  - The live_migration_flag and block_migration_flag parameters
+    are deprecated.

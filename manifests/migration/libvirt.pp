@@ -13,14 +13,6 @@
 #   Valid options are none and sasl.
 #   Defaults to 'none'
 #
-# [*live_migration_flag*]
-#   (optional) Migration flags to be set for live migration (string value)
-#   Defaults to undef
-#
-# [*block_migration_flag*]
-#   (optional) Migration flags to be set for block migration (string value)
-#   Defaults to undef
-#
 # [*live_migration_tunnelled*]
 #   (optional) Whether to use tunnelled migration, where migration data is
 #   transported over the libvirtd connection.
@@ -44,15 +36,26 @@
 #   (optional) Whether or not configure libvirt bits.
 #   Defaults to true.
 #
+#DEPRECATED PARAMETERS
+#
+# [*live_migration_flag*]
+#   (optional) Migration flags to be set for live migration (string value)
+#   Defaults to undef
+#
+# [*block_migration_flag*]
+#   (optional) Migration flags to be set for block migration (string value)
+#   Defaults to undef
+#
 class nova::migration::libvirt(
   $use_tls                  = false,
   $auth                     = 'none',
-  $live_migration_flag      = undef,
-  $block_migration_flag     = undef,
   $live_migration_tunnelled = $::os_service_default,
   $override_uuid            = false,
   $configure_libvirt        = true,
   $configure_nova           = true,
+  #DEPRECATED PARAMETERS
+  $live_migration_flag      = undef,
+  $block_migration_flag     = undef,
 ){
 
   include ::nova::deps
@@ -67,21 +70,18 @@ class nova::migration::libvirt(
     $listen_tcp = '1'
   }
 
+  if $live_migration_flag {
+    warning('live_migration_flag parameter is deprecated, has no effect and will be removed in a future release.')
+  }
+
+  if $block_migration_flag {
+    warning('block_migration_flag parameter is deprecated, has no effect and will be removed in a future release.')
+  }
+
   if $configure_nova {
     if $use_tls {
       nova_config {
         'libvirt/live_migration_uri': value => 'qemu+tls://%s/system';
-      }
-    }
-    if $live_migration_flag {
-      nova_config {
-        'libvirt/live_migration_flag': value => $live_migration_flag
-      }
-    }
-
-    if $block_migration_flag {
-      nova_config {
-        'libvirt/block_migration_flag': value => $block_migration_flag
       }
     }
 
