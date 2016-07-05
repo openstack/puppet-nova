@@ -73,10 +73,6 @@
 #   (optional) List of addresses for api servers.
 #   Defaults to 'http://localhost:9292'
 #
-# [*memcached_servers*]
-#   (optional) Use memcached instead of in-process cache. Supply a list of memcached server IP's:Memcached Port.
-#   Defaults to $::os_service_default.
-#
 # [*rabbit_host*]
 #   (optional) Location of rabbitmq installation. (string value)
 #   Defaults to $::os_service_default
@@ -429,6 +425,12 @@
 #   (optional) Set log output to verbose output.
 #   Defaults to undef
 #
+# [*memcached_servers*]
+#   (optional) DEPRECATED. Use memcached_servers from
+#   nova::keystone::authtoken class instead.
+#   memcached server IP's:Memcached Port.
+#   Defaults to undef
+#
 class nova(
   $ensure_package                         = 'present',
   $database_connection                    = undef,
@@ -450,7 +452,6 @@ class nova(
   # these glance params should be optional
   # this should probably just be configured as a glance client
   $glance_api_servers                     = 'http://localhost:9292',
-  $memcached_servers                      = $::os_service_default,
   $rabbit_host                            = $::os_service_default,
   $rabbit_hosts                           = $::os_service_default,
   $rabbit_password                        = $::os_service_default,
@@ -527,6 +528,7 @@ class nova(
   $purge_config                           = false,
   # DEPRECATED PARAMETERS
   $verbose                                = undef,
+  $memcached_servers                      = undef,
 ) inherits nova::params {
 
   include ::nova::deps
@@ -544,6 +546,9 @@ class nova(
     warning('verbose is deprecated, has no effect and will be removed after Newton cycle.')
   }
 
+  if $memcached_servers {
+    warning('nova::memcached_servers is deprecated, use nova::keystone::authtoken::memcached_servers instead.')
+  }
   if $use_ssl {
     if !$cert_file {
       fail('The cert_file parameter is required when use_ssl is set to true')
@@ -643,7 +648,6 @@ class nova(
   nova_config {
     'DEFAULT/image_service':                value => $image_service;
     'DEFAULT/auth_strategy':                value => $auth_strategy;
-    'keystone_authtoken/memcached_servers': value => join(any2array($memcached_servers), ',');
     'DEFAULT/host':                         value => $host;
   }
 

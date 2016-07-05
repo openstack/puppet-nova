@@ -12,9 +12,9 @@ describe Puppet::Provider::Nova do
   let :credential_hash do
     {
       'auth_uri'     => 'https://192.168.56.210:35357/v2.0/',
-      'admin_tenant_name' => 'admin_tenant',
-      'admin_user'        => 'admin',
-      'admin_password'    => 'password',
+      'project_name' => 'admin_tenant',
+      'username'     => 'admin',
+      'password'     => 'password',
     }
   end
 
@@ -68,10 +68,10 @@ describe Puppet::Provider::Nova do
 
     it 'should set auth credentials in the environment' do
       authenv = {
-        :OS_AUTH_URL    => auth_endpoint,
-        :OS_USERNAME    => credential_hash['admin_user'],
-        :OS_TENANT_NAME => credential_hash['admin_tenant_name'],
-        :OS_PASSWORD    => credential_hash['admin_password'],
+        :OS_AUTH_URL     => auth_endpoint,
+        :OS_USERNAME     => credential_hash['username'],
+        :OS_PROJECT_NAME => credential_hash['project_name'],
+        :OS_PASSWORD     => credential_hash['password'],
       }
       klass.expects(:get_nova_credentials).with().returns(credential_hash)
       klass.expects(:withenv).with(authenv)

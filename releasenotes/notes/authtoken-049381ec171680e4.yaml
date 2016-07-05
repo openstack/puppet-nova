@@ -1,0 +1,11 @@
+---
+features:
+  - Configure keystonemiddleware in a consistent way with all options required for Keystone v3.
+deprecations:
+ - nova::api::admin_tenant_name is deprecated in favor of nova::keystone::authtoken::project_name.
+ - nova::api::admin_user is deprecated in favor of nova::keystone::authtoken::username.
+ - nova::api::admin_password is deprecated in favor of nova::keystone::authtoken::password.
+ - nova::api::identity_uri is deprecated in favor of nova::keystone::authtoken::auth_url.
+ - nova::api::auth_version is deprecated in favor of nova::keystone::authtoken::auth_version
+ - nova::api::auth_uri is deprecated in favor of nova::keystone::authtoken::auth_uri
+ - nova::memcached_servers is deprecated in favor of nova::keystone::authtoken::memcached_servers.

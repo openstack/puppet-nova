@@ -4,9 +4,6 @@
 #
 # === Parameters
 #
-# [*admin_password*]
-#   (required) The password to set for the nova admin user in keystone
-#
 # [*enabled*]
 #   (optional) Whether the nova api service will be run
 #   Defaults to true
@@ -22,22 +19,6 @@
 # [*ensure_package*]
 #   (optional) Whether the nova api package will be installed
 #   Defaults to 'present'
-#
-# [*auth_uri*]
-#   (optional) Complete public Identity API endpoint.
-#   Defaults to 'http://127.0.0.1:5000/'
-#
-# [*identity_uri*]
-#   (optional) Complete admin Identity API endpoint.
-#   Defaults to: 'http://127.0.0.1:35357/'
-#
-# [*admin_tenant_name*]
-#   (optional) The name of the tenant to create in keystone for use by the nova services
-#   Defaults to 'services'
-#
-# [*admin_user*]
-#   (optional) The name of the user to create in keystone for use by the nova services
-#   Defaults to 'nova'
 #
 # [*api_bind_address*]
 #   (optional) IP address for nova-api server to listen
@@ -209,9 +190,9 @@
 #   Defaults to port undef
 #
 # [*auth_version*]
-#   (optional) DEPRECATED. API version of the admin Identity API endpoint
-#   for example, use 'v3.0' for the keystone version 3.0 api
-#   Defaults to false
+#   (optional) DEPRECATED. Use auth_token from
+#   nova::keystone::authtoken class instead.
+#   Defaults to undef
 #
 # [*osapi_v3*]
 #   (optional) DEPRECATED. Enable or not Nova API v3
@@ -226,16 +207,36 @@
 #   Class instead.
 #   Defaults to undef
 #
+# [*admin_tenant_name*]
+#   (optional) DEPRECATED. Use project_name from
+#   nova::keystone::authtoken class instead.
+#   Defaults to undef
+#
+# [*admin_user*]
+#   (optional) DEPRECATED. Use username from
+#   nova::keystone::authtoken class instead.
+#   Defaults to undef
+#
+# [*admin_password*]
+#   (optional) DEPRECATED. Use password from
+#   nova::keystone::authtoken class instead.
+#   Defaults to undef
+#
+# [*identity_uri*]
+#   (optional) DEPRECATED. Use auth_url from
+#   nova::keystone::authtoken class instead.
+#   Defaults to undef
+#
+# [*auth_uri*]
+#   (optional) DEPRECATED. Use auth_uri from
+#   nova::keystone::authtoken class instead.
+#   Defaults to undef
+#
 class nova::api(
-  $admin_password,
   $enabled                              = true,
   $manage_service                       = true,
   $api_paste_config                     = 'api-paste.ini',
   $ensure_package                       = 'present',
-  $auth_uri                             = 'http://127.0.0.1:5000/',
-  $identity_uri                         = 'http://127.0.0.1:35357/',
-  $admin_tenant_name                    = 'services',
-  $admin_user                           = 'nova',
   $api_bind_address                     = '0.0.0.0',
   $osapi_compute_listen_port            = 8774,
   $metadata_listen                      = '0.0.0.0',
@@ -273,15 +274,21 @@ class nova::api(
   $ec2_listen_port                      = undef,
   $ec2_workers                          = undef,
   $keystone_ec2_url                     = undef,
-  $auth_version                         = false,
+  $auth_version                         = undef,
   $volume_api_class                     = undef,
   $osapi_v3                             = undef,
+  $admin_password                       = undef,
+  $auth_uri                             = undef,
+  $identity_uri                         = undef,
+  $admin_tenant_name                    = undef,
+  $admin_user                           = undef,
 ) inherits nova::params {
 
   include ::nova::deps
   include ::nova::db
   include ::nova::policy
   include ::cinder::client
+  include ::nova::keystone::authtoken
 
   if $osapi_v3 {
     warning('osapi_v3 is deprecated, has no effect and will be removed in a future release.')
@@ -308,6 +315,31 @@ class nova::api(
       'DEFAULT/instance_name_template': ensure => absent;
     }
   }
+
+  if $auth_version {
+    warning('nova::api::auth_version is deprecated, use nova::keystone::authtoken::auth_version instead.')
+  }
+
+  if $identity_uri {
+    warning('nova::api::identity_uri is deprecated, use nova::keystone::authtoken::auth_url instead.')
+  }
+
+  if $auth_uri {
+    warning('nova::api::auth_uri is deprecated, use nova::keystone::authtoken::auth_uri instead.')
+  }
+
+  if $admin_tenant_name {
+    warning('nova::api::admin_tenant_name is deprecated, use nova::keystone::authtoken::project_name instead.')
+  }
+
+  if $admin_user {
+    warning('nova::api::admin_user is deprecated, use nova::keystone::authtoken::username instead.')
+  }
+
+  if $admin_password {
+    warning('nova::api::admin_password is deprecated, use nova::keystone::authtoken::password instead.')
+  }
+
 
   # metadata can't be run in wsgi so we have to enable it in eventlet anyway.
   if ('metadata' in $enabled_apis and $service_name == 'httpd') {
@@ -396,21 +428,6 @@ class nova::api(
     }
   }
 
-  if $auth_version {
-    warning('auth_version parameter is deprecated and has no effect during Mitaka and will be dropped during N cycle.')
-  }
-
-  nova_config {
-    'keystone_authtoken/auth_uri'    : value => $auth_uri;
-    'keystone_authtoken/identity_uri': value => $identity_uri;
-  }
-
-  nova_config {
-    'keystone_authtoken/admin_tenant_name': value => $admin_tenant_name;
-    'keystone_authtoken/admin_user':        value => $admin_user;
-    'keystone_authtoken/admin_password':    value => $admin_password, secret => true;
-  }
-
   if ($ratelimits != undef) {
     nova_paste_api_ini {
       'filter:ratelimit/paste.filter_factory': value => $ratelimits_factory;
@@ -446,9 +463,12 @@ class nova::api(
   }
 
   if $validate {
+    $admin_user_real = pick($admin_user, $::nova::keystone::authtoken::username)
+    $admin_password_real = pick($admin_password, $::nova::keystone::authtoken::password)
+    $admin_tenant_name_real = pick($admin_tenant_name, $::nova::keystone::authtoken::project_name)
     $defaults = {
       'nova-api' => {
-        'command'  => "nova --os-auth-url ${auth_uri} --os-tenant-name ${admin_tenant_name} --os-username ${admin_user} --os-password ${admin_password} flavor-list",
+        'command'  => "nova --os-auth-url ${::nova::keystone::authtoken::auth_uri} --os-project-name ${admin_tenant_name_real} --os-username ${admin_user_real} --os-password ${admin_password_real} flavor-list",
       }
     }
     $validation_options_hash = merge ($defaults, $validation_options)

@@ -19,10 +19,14 @@ class Puppet::Provider::Nova < Puppet::Provider::Openstack
 
   def self.nova_request(service, action, error, properties=nil)
     properties ||= []
-    @credentials.username = nova_credentials['admin_user']
-    @credentials.password = nova_credentials['admin_password']
-    @credentials.project_name = nova_credentials['admin_tenant_name']
+    @credentials.username = nova_credentials['username']
+    @credentials.password = nova_credentials['password']
+    @credentials.project_name = nova_credentials['project_name']
     @credentials.auth_url = auth_endpoint
+    if @credentials.version == '3'
+      @credentials.user_domain_name = nova_credentials['user_domain_name']
+      @credentials.project_domain_name = nova_credentials['project_domain_name']
+    end
     raise error unless @credentials.set?
     Puppet::Provider::Openstack.request(service, action, properties, @credentials)
   end
@@ -63,8 +67,7 @@ class Puppet::Provider::Nova < Puppet::Provider::Openstack
 
   def self.get_nova_credentials
     #needed keys for authentication
-    auth_keys = ['auth_uri', 'admin_tenant_name', 'admin_user',
-                 'admin_password']
+    auth_keys = ['auth_uri', 'project_name', 'username', 'password']
     conf = nova_conf
     if conf and conf['keystone_authtoken'] and
         auth_keys.all?{|k| !conf['keystone_authtoken'][k].nil?}
@@ -72,6 +75,16 @@ class Puppet::Provider::Nova < Puppet::Provider::Openstack
                    { |k| [k, conf['keystone_authtoken'][k].strip] } ]
       if conf['neutron'] and conf['neutron']['region_name']
         creds['region_name'] = conf['neutron']['region_name'].strip
+      end
+      if !conf['keystone_authtoken']['project_domain_name'].nil?
+        creds['project_domain_name'] = conf['keystone_authtoken']['project_domain_name'].strip
+      else
+        creds['project_domain_name'] = 'Default'
+      end
+      if !conf['keystone_authtoken']['user_domain_name'].nil?
+        creds['user_domain_name'] = conf['keystone_authtoken']['user_domain_name'].strip
+      else
+        creds['user_domain_name'] = 'Default'
       end
       return creds
     else
@@ -94,10 +107,10 @@ class Puppet::Provider::Nova < Puppet::Provider::Openstack
   def self.auth_nova(*args)
     q = nova_credentials
     authenv = {
-      :OS_AUTH_URL    => self.auth_endpoint,
-      :OS_USERNAME    => q['admin_user'],
-      :OS_TENANT_NAME => q['admin_tenant_name'],
-      :OS_PASSWORD    => q['admin_password']
+      :OS_AUTH_URL     => self.auth_endpoint,
+      :OS_USERNAME     => q['username'],
+      :OS_PROJECT_NAME => q['project_name'],
+      :OS_PASSWORD     => q['password']
     }
     if q.key?('region_name')
       authenv[:OS_REGION_NAME] = q['region_name']
