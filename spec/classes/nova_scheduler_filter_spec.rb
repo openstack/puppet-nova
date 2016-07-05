@@ -12,11 +12,8 @@ describe 'nova::scheduler::filter' do
       it { is_expected.to contain_nova_config('DEFAULT/scheduler_host_manager').with_value('host_manager') }
       it { is_expected.to contain_nova_config('DEFAULT/scheduler_max_attempts').with_value('3') }
       it { is_expected.to contain_nova_config('DEFAULT/scheduler_host_subset_size').with_value('1') }
-      it { is_expected.to contain_nova_config('DEFAULT/cpu_allocation_ratio').with_value('16.0') }
-      it { is_expected.to contain_nova_config('DEFAULT/disk_allocation_ratio').with_value('1.0') }
       it { is_expected.to contain_nova_config('DEFAULT/max_io_ops_per_host').with_value('8') }
       it { is_expected.to contain_nova_config('DEFAULT/max_instances_per_host').with_value('50') }
-      it { is_expected.to contain_nova_config('DEFAULT/ram_allocation_ratio').with_value('1.5') }
       it { is_expected.to contain_nova_config('DEFAULT/scheduler_available_filters').with_value('nova.scheduler.filters.all_filters') }
       it { is_expected.to contain_nova_config('DEFAULT/scheduler_weight_classes').with_value('nova.scheduler.weights.all_weighers') }
       it { is_expected.to contain_nova_config('DEFAULT/scheduler_use_baremetal_filters').with_value(false) }

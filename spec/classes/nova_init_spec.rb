@@ -63,6 +63,9 @@ describe 'nova' do
         is_expected.to contain_nova_config('DEFAULT/rpc_response_timeout').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('cinder/os_region_name').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('cinder/catalog_info').with('value' => 'volumev2:cinderv2:publicURL')
+        is_expected.to contain_nova_config('DEFAULT/cpu_allocation_ratio').with_value('<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('DEFAULT/ram_allocation_ratio').with_value('<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('DEFAULT/disk_allocation_ratio').with_value('<SERVICE DEFAULT>')
       end
 
       it 'configures block_device_allocate params' do
@@ -560,6 +563,20 @@ describe 'nova' do
       it { is_expected.to contain_nova_config('ssl/ca_file').with_ensure('absent') }
       it { is_expected.to contain_nova_config('ssl/cert_file').with_ensure('absent') }
       it { is_expected.to contain_nova_config('ssl/key_file').with_ensure('absent') }
+    end
+
+    context 'with allocation ratios set' do
+      let :params do
+        {
+          :cpu_allocation_ratio  => 32.0,
+          :ram_allocation_ratio  => 2.0,
+          :disk_allocation_ratio => 1.5,
+        }
+      end
+
+      it { is_expected.to contain_nova_config('DEFAULT/cpu_allocation_ratio').with_value('32.0') }
+      it { is_expected.to contain_nova_config('DEFAULT/ram_allocation_ratio').with_value('2.0') }
+      it { is_expected.to contain_nova_config('DEFAULT/disk_allocation_ratio').with_value('1.5') }
     end
 
   end

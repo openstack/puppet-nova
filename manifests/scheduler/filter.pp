@@ -16,14 +16,6 @@
 #   (optional) defines the subset size that a host is chosen from
 #   Defaults to '1'
 #
-# [*cpu_allocation_ratio*]
-#   (optional) Virtual CPU to Physical CPU allocation ratio
-#   Defaults to '16.0'
-#
-# [*disk_allocation_ratio*]
-#   (optional) Virtual disk to physical disk allocation ratio
-#   Defaults to '1.0'
-#
 # [*max_io_ops_per_host*]
 #   (optional) Ignore hosts that have too many builds/resizes/snaps/migrations
 #   Defaults to '8'
@@ -39,10 +31,6 @@
 # [*max_instances_per_host*]
 #   (optional) Ignore hosts that have too many instances
 #   Defaults to '50'
-#
-# [*ram_allocation_ratio*]
-#   (optional) Virtual ram to physical ram allocation ratio
-#   Defaults to '1.5'
 #
 # [*scheduler_available_filters*]
 #   (optional) Filter classes available to the scheduler
@@ -64,15 +52,26 @@
 #   (optional) Use baremetal_scheduler_default_filters or not.
 #   Defaults to false
 #
+# DEPRECATED PARAMETERS
+#
+# [*cpu_allocation_ratio*]
+#   (optional) Virtual CPU to Physical CPU allocation ratio
+#   Defaults to undef
+#
+# [*ram_allocation_ratio*]
+#   (optional) Virtual ram to physical ram allocation ratio
+#   Defaults to undef
+#
+# [*disk_allocation_ratio*]
+#   (optional) Virtual disk to physical disk allocation ratio
+#   Defaults to undef
+#
 class nova::scheduler::filter (
   $scheduler_host_manager              = 'host_manager',
   $scheduler_max_attempts              = '3',
   $scheduler_host_subset_size          = '1',
-  $cpu_allocation_ratio                = '16.0',
-  $disk_allocation_ratio               = '1.0',
   $max_io_ops_per_host                 = '8',
   $max_instances_per_host              = '50',
-  $ram_allocation_ratio                = '1.5',
   $isolated_images                     = $::os_service_default,
   $isolated_hosts                      = $::os_service_default,
   $scheduler_available_filters         = 'nova.scheduler.filters.all_filters',
@@ -80,6 +79,10 @@ class nova::scheduler::filter (
   $scheduler_weight_classes            = 'nova.scheduler.weights.all_weighers',
   $baremetal_scheduler_default_filters = $::os_service_default,
   $scheduler_use_baremetal_filters     = false,
+  # DEPRECATED PARAMETERS
+  $cpu_allocation_ratio                = undef,
+  $ram_allocation_ratio                = undef,
+  $disk_allocation_ratio               = undef,
 ) {
 
   include ::nova::deps
@@ -113,15 +116,24 @@ class nova::scheduler::filter (
     $isolated_hosts_real = $::os_service_default
   }
 
+  if $cpu_allocation_ratio {
+    warning('cpu_allocation_ratio is deprecated in nova::scheduler::filter, please add to nova::init instead')
+  }
+
+  if $ram_allocation_ratio {
+    warning('ram_allocation_ratio is deprecated in nova::scheduler::filter, please add to nova::init instead')
+  }
+
+  if $disk_allocation_ratio {
+    warning('disk_allocation_ratio is deprecated in nova::scheduler::filter, please add to nova::init instead')
+  }
+
   nova_config {
     'DEFAULT/scheduler_host_manager':              value => $scheduler_host_manager;
     'DEFAULT/scheduler_max_attempts':              value => $scheduler_max_attempts;
     'DEFAULT/scheduler_host_subset_size':          value => $scheduler_host_subset_size;
-    'DEFAULT/cpu_allocation_ratio':                value => $cpu_allocation_ratio;
-    'DEFAULT/disk_allocation_ratio':               value => $disk_allocation_ratio;
     'DEFAULT/max_io_ops_per_host':                 value => $max_io_ops_per_host;
     'DEFAULT/max_instances_per_host':              value => $max_instances_per_host;
-    'DEFAULT/ram_allocation_ratio':                value => $ram_allocation_ratio;
     'DEFAULT/scheduler_available_filters':         value => $scheduler_available_filters;
     'DEFAULT/scheduler_weight_classes':            value => $scheduler_weight_classes;
     'DEFAULT/scheduler_use_baremetal_filters':     value => $scheduler_use_baremetal_filters;

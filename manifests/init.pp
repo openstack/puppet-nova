@@ -405,6 +405,24 @@
 #   retries on failures
 #   Defaults to $::os_service_default
 #
+# [*cpu_allocation_ratio*]
+#   (optional) Virtual CPU to physical CPU allocation ratio which affects all
+#   CPU filters.  This can be set on the scheduler, or can be overridden
+#   per compute node.
+#   Defaults to $::os_service_default
+#
+# [*ram_allocation_ratio*]
+#   (optional) Virtual ram to physical ram allocation ratio which affects all
+#   ram filters. This can be set on the scheduler, or can be overridden
+#   per compute node.
+#   Defaults to $::os_service_default
+#
+# [*disk_allocation_ratio*]
+#   (optional) Virtual disk to physical disk allocation ratio which is used
+#   by the disk filter. This can be set on the scheduler, or can be overridden
+#   per compute node.
+#   Defaults to $::os_service_default
+#
 # DEPRECATED PARAMETERS
 #
 # [*verbose*]
@@ -503,6 +521,9 @@ class nova(
   $upgrade_level_network                  = $::os_service_default,
   $upgrade_level_scheduler                = $::os_service_default,
   $use_ipv6                               = $::os_service_default,
+  $cpu_allocation_ratio                   = $::os_service_default,
+  $ram_allocation_ratio                   = $::os_service_default,
+  $disk_allocation_ratio                  = $::os_service_default,
   $purge_config                           = false,
   # DEPRECATED PARAMETERS
   $verbose                                = undef,
@@ -610,6 +631,14 @@ class nova(
       nova_config { 'glance/api_servers': value => $glance_api_servers }
     }
   }
+
+  # maintain backwards compatibility
+  $real_cpu_allocation_ratio = pick($::nova::scheduler::filter::cpu_allocation_ratio, $cpu_allocation_ratio)
+  ensure_resource('nova_config', 'DEFAULT/cpu_allocation_ratio', { value => $real_cpu_allocation_ratio })
+  $real_ram_allocation_ratio = pick($::nova::scheduler::filter::ram_allocation_ratio, $ram_allocation_ratio)
+  ensure_resource('nova_config', 'DEFAULT/ram_allocation_ratio', { value => $real_ram_allocation_ratio })
+  $real_disk_allocation_ratio = pick($::nova::scheduler::filter::disk_allocation_ratio, $disk_allocation_ratio)
+  ensure_resource('nova_config', 'DEFAULT/disk_allocation_ratio', { value => $real_disk_allocation_ratio })
 
   nova_config {
     'DEFAULT/image_service':                value => $image_service;

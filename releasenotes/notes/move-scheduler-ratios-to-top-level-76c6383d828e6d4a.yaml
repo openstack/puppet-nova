@@ -1,0 +1,5 @@
+---
+  deprecations:
+    - The following parameters moved from ::nova::scheduler::filter to
+      ::nova so they can be configured at top level - cpu_allocation_ratio,
+      ram_allocation_ratio and disk_allocation_ratio
