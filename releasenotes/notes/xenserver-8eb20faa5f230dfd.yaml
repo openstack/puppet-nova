@@ -1,0 +1,8 @@
+---
+features:
+  - All parameters from xenserver config have been
+    added to class definition.
+deprecations:
+  - Following parameters gets deprecated
+    xenapi_connection_url, xenapi_connection_username,
+    xenapi_connection_password.
