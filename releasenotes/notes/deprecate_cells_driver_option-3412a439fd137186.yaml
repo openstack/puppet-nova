@@ -1,0 +1,4 @@
+---
+deprecations:
+  - The cells.driver configuration option is now deprecated and
+    will be removed at Ocata cycle.
