@@ -29,12 +29,12 @@
 #   Defaults to '8'
 #
 # [*isolated_images*]
-#   (optional) Images to run on isolated host
-#   Defaults to false
+#   (optional) An array of images to run on isolated host
+#   Defaults to $::os_service_default
 #
 # [*isolated_hosts*]
-#   (optional) Host reserved for specific images
-#   Defaults to false
+#   (optional) An array of hosts reserved for specific images
+#   Defaults to $::os_service_default
 #
 # [*max_instances_per_host*]
 #   (optional) Ignore hosts that have too many instances
@@ -50,7 +50,7 @@
 #
 # [*scheduler_default_filters*]
 #   (optional) An array of filters to be used by default
-#   Defaults to false
+#   Defaults to $::os_service_default
 #
 # [*scheduler_weight_classes*]
 #   (optional) Which weight class names to use for weighing hosts
@@ -58,7 +58,7 @@
 #
 # [*baremetal_scheduler_default_filters*]
 #   (optional) An array of filters to be used by default for baremetal hosts
-#   Defaults to undef
+#   Defaults to $::os_service_default
 #
 # [*scheduler_use_baremetal_filters*]
 #   (optional) Use baremetal_scheduler_default_filters or not.
@@ -73,60 +73,62 @@ class nova::scheduler::filter (
   $max_io_ops_per_host                 = '8',
   $max_instances_per_host              = '50',
   $ram_allocation_ratio                = '1.5',
-  $isolated_images                     = false,
-  $isolated_hosts                      = false,
+  $isolated_images                     = $::os_service_default,
+  $isolated_hosts                      = $::os_service_default,
   $scheduler_available_filters         = 'nova.scheduler.filters.all_filters',
-  $scheduler_default_filters           = false,
+  $scheduler_default_filters           = $::os_service_default,
   $scheduler_weight_classes            = 'nova.scheduler.weights.all_weighers',
-  $baremetal_scheduler_default_filters = undef,
+  $baremetal_scheduler_default_filters = $::os_service_default,
   $scheduler_use_baremetal_filters     = false,
 ) {
 
   include ::nova::deps
 
+  # The following values are following this rule:
+  # - default is $::os_service_default so Puppet won't try to configure it.
+  # - if set, we'll validate it's an array that is not empty and configure the parameter.
+  # - Otherwise, fallback to default.
+  if !is_service_default($scheduler_default_filters) and !empty($scheduler_default_filters){
+    validate_array($scheduler_default_filters)
+    $scheduler_default_filters_real = join($scheduler_default_filters, ',')
+  } else {
+    $scheduler_default_filters_real = $::os_service_default
+  }
+  if !is_service_default($baremetal_scheduler_default_filters) and !empty($baremetal_scheduler_default_filters){
+    validate_array($baremetal_scheduler_default_filters)
+    $baremetal_scheduler_default_filters_real = join($baremetal_scheduler_default_filters, ',')
+  } else {
+    $baremetal_scheduler_default_filters_real = $::os_service_default
+  }
+  if !is_service_default($isolated_images) and !empty($isolated_images){
+    validate_array($isolated_images)
+    $isolated_images_real = join($isolated_images, ',')
+  } else {
+    $isolated_images_real = $::os_service_default
+  }
+  if !is_service_default($isolated_hosts) and !empty($isolated_hosts){
+    validate_array($isolated_hosts)
+    $isolated_hosts_real = join($isolated_hosts, ',')
+  } else {
+    $isolated_hosts_real = $::os_service_default
+  }
+
   nova_config {
-    'DEFAULT/scheduler_host_manager':          value => $scheduler_host_manager;
-    'DEFAULT/scheduler_max_attempts':          value => $scheduler_max_attempts;
-    'DEFAULT/scheduler_host_subset_size':      value => $scheduler_host_subset_size;
-    'DEFAULT/cpu_allocation_ratio':            value => $cpu_allocation_ratio;
-    'DEFAULT/disk_allocation_ratio':           value => $disk_allocation_ratio;
-    'DEFAULT/max_io_ops_per_host':             value => $max_io_ops_per_host;
-    'DEFAULT/max_instances_per_host':          value => $max_instances_per_host;
-    'DEFAULT/ram_allocation_ratio':            value => $ram_allocation_ratio;
-    'DEFAULT/scheduler_available_filters':     value => $scheduler_available_filters;
-    'DEFAULT/scheduler_weight_classes':        value => $scheduler_weight_classes;
-    'DEFAULT/scheduler_use_baremetal_filters': value => $scheduler_use_baremetal_filters;
+    'DEFAULT/scheduler_host_manager':              value => $scheduler_host_manager;
+    'DEFAULT/scheduler_max_attempts':              value => $scheduler_max_attempts;
+    'DEFAULT/scheduler_host_subset_size':          value => $scheduler_host_subset_size;
+    'DEFAULT/cpu_allocation_ratio':                value => $cpu_allocation_ratio;
+    'DEFAULT/disk_allocation_ratio':               value => $disk_allocation_ratio;
+    'DEFAULT/max_io_ops_per_host':                 value => $max_io_ops_per_host;
+    'DEFAULT/max_instances_per_host':              value => $max_instances_per_host;
+    'DEFAULT/ram_allocation_ratio':                value => $ram_allocation_ratio;
+    'DEFAULT/scheduler_available_filters':         value => $scheduler_available_filters;
+    'DEFAULT/scheduler_weight_classes':            value => $scheduler_weight_classes;
+    'DEFAULT/scheduler_use_baremetal_filters':     value => $scheduler_use_baremetal_filters;
+    'DEFAULT/scheduler_default_filters':           value => $scheduler_default_filters_real;
+    'DEFAULT/baremetal_scheduler_default_filters': value => $baremetal_scheduler_default_filters_real;
+    'DEFAULT/isolated_images':                     value => $isolated_images_real;
+    'DEFAULT/isolated_hosts':                      value => $isolated_hosts_real;
   }
-  if ($scheduler_default_filters)  {
-    nova_config { 'DEFAULT/scheduler_default_filters': value => join($scheduler_default_filters,',')
-    }
-  } else {
-    nova_config { 'DEFAULT/scheduler_default_filters': ensure => absent
-    }
-  }
-  if ($baremetal_scheduler_default_filters)  {
-    nova_config { 'DEFAULT/baremetal_scheduler_default_filters': value => join($baremetal_scheduler_default_filters,',')
-    }
-  } else {
-    nova_config { 'DEFAULT/baremetal_scheduler_default_filters': ensure => absent
-    }
-  }
-  if ($isolated_images) {
-    nova_config {
-      'DEFAULT/isolated_images':    value => join($isolated_images,',')
-    }
-  } else {
-    nova_config {
-      'DEFAULT/isolated_images':   ensure => absent
-    }
-  }
-  if ($isolated_hosts) {
-    nova_config {
-      'DEFAULT/isolated_hosts':    value => join($isolated_hosts,',')
-    }
-  }  else {
-    nova_config {
-      'DEFAULT/isolated_hosts':    ensure => absent
-    }
-  }
+
 }
