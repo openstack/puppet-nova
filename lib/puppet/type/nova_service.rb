@@ -62,11 +62,12 @@ Puppet::Type.newtype(:nova_service) do
   newproperty(:service_name, :array_matching => :all) do
     desc "String or Array of services on a host to modify"
     validate do |value|
-      if not value.is_a? String and not value.is_a? Array
-        raise ArgumentError, "service_name parameter must be String or Array"
-      end
+      raise(
+        ArgumentError,
+        'service_name parameter must be String or Array'
+      ) unless [String, Array].any? { |type| value.is_a? type }
     end
-    defaultto ''
+    defaultto []
   end
 
 end

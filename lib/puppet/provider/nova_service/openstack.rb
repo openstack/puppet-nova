@@ -51,8 +51,8 @@ Puppet::Type.type(:nova_service).provide(
     return unless @property_hash[:ids].kind_of?(Array)
     svcname_id_map = @property_hash[:service_name].zip(@property_hash[:ids]) || {}
     svcname_id_map.each do |service_name, id|
-      if (@resource[:service_name] == '' ||
-          (@resource[:service_name] == service_name))
+      if (@resource[:service_name].empty? ||
+          (@resource[:service_name].include? service_name))
         self.class.request('compute service', 'delete', id)
       end
     end
