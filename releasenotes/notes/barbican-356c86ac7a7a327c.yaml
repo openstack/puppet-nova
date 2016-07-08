@@ -1,0 +1,4 @@
+---
+features:
+  - Allow to configure Key Manager api class parameter to communicate with Barbican.
+    If Barbican is enabled, cryptsetup will be deployed on compute nodes.
