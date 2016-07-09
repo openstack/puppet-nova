@@ -50,7 +50,6 @@ describe 'basic nova' do
       class { '::nova::api':
         admin_password => 'a_big_secret',
         identity_uri   => 'http://127.0.0.1:35357/',
-        osapi_v3       => true,
         service_name   => 'httpd',
       }
       include ::apache
