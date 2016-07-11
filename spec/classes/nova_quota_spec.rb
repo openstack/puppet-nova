@@ -23,8 +23,7 @@ describe 'nova::quota' do
       :quota_server_group_members => 10,
       :reservation_expire => 86400,
       :until_refresh => 0,
-      :max_age => 0,
-      :quota_driver => 'nova.quota.DbQuotaDriver' }
+      :max_age => 0 }
   end
 
   shared_examples_for 'nova quota' do
