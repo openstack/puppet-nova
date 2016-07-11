@@ -131,7 +131,6 @@ describe 'nova::cells' do
       default_params.merge(params)
     end
     it { is_expected.to contain_nova_config('cells/name').with_value(expected_params[:cell_name]) }
-    it { is_expected.to contain_nova_config('DEFAULT/quota_driver').with_value('nova.quota.NoopQuotaDriver')}
     it { is_expected.to contain_nova_config('cells/cell_type').with_value('compute')}
     it_configures 'nova-cells'
   end

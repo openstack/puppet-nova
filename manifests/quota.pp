@@ -97,8 +97,8 @@
 #   Defaults to 0
 #
 # [*quota_driver*]
-#   (optional) Driver to use for quota checks
-#   Defaults to 'nova.quota.DbQuotaDriver'
+#   (optional) Deprecated. Driver to use for quota checks
+#   Defaults to undef
 #
 class nova::quota(
   $quota_instances = 10,
@@ -118,14 +118,14 @@ class nova::quota(
   $reservation_expire = 86400,
   $until_refresh = 0,
   $max_age = 0,
-  $quota_driver = 'nova.quota.DbQuotaDriver',
   # DEPRECATED PARAMETERS
   $quota_volumes = undef,
   $quota_gigabytes = undef,
   $quota_max_injected_files = undef,
   $quota_injected_file_path_bytes = undef,
   $quota_max_injected_file_content_bytes = undef,
-  $quota_max_injected_file_path_bytes = undef
+  $quota_max_injected_file_path_bytes = undef,
+  $quota_driver = undef,
 ) {
   include ::nova::deps
 
@@ -135,6 +135,10 @@ class nova::quota(
 
   if $quota_gigabytes {
     warning('The quota_gigabytes parameter is deprecated and has no effect.')
+  }
+
+  if $quota_driver {
+    warning('The quota_driver parameter is deprecated and has no effect.')
   }
 
   if $quota_max_injected_files {
@@ -180,7 +184,6 @@ class nova::quota(
     'DEFAULT/reservation_expire':                value => $reservation_expire;
     'DEFAULT/until_refresh':                     value => $until_refresh;
     'DEFAULT/max_age':                           value => $max_age;
-    'DEFAULT/quota_driver':                      value => $quota_driver
   }
 
 }

@@ -1,0 +1,3 @@
+---
+deprecations:
+  - quota_driver parameter was deprecated in Nova, so we also deprecate it in puppet-nova.

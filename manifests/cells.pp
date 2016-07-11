@@ -192,7 +192,6 @@ class nova::cells (
       nova_config { 'cells/cell_type': value         => 'api' }
     }
     'child': {
-      nova_config { 'DEFAULT/quota_driver': value => 'nova.quota.NoopQuotaDriver' }
       nova_config { 'cells/cell_type': value    => 'compute' }
     }
     default: { fail("Unsupported cell_type parameter value: '${cell_type}'. Should be 'parent' or 'child'.") }
