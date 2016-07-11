@@ -34,10 +34,6 @@
 #    Create cells with nova-manage
 #    Defaults to 'True'
 #
-#  [*driver*]
-#    Cells communication driver to use
-#    Defaults to 'nova.cells.rpc_driver.CellsRPCDriver'
-#
 #  [*ensure_package*]
 #    Desired ensure state of packages.
 #    Defaults to present
@@ -142,6 +138,10 @@
 #    DEPRECATED. Number of instances to update per periodic task run
 #    Defaults to undef
 #
+#  [*driver*]
+#    Cells communication driver to use
+#    Defaults to undef
+#
 class nova::cells (
   $bandwidth_update_interval     = '600',
   $call_timeout                  = '60',
@@ -151,7 +151,6 @@ class nova::cells (
   $cell_parent_name              = undef,
   $create_cells                  = true,
   $db_check_interval             = '60',
-  $driver                        = 'nova.cells.rpc_driver.CellsRPCDriver',
   $enabled                       = true,
   $ensure_package                = 'present',
   $instance_updated_at_threshold = '3600',
@@ -173,6 +172,7 @@ class nova::cells (
   $weight_scale                  = '1.0',
   # Deprecated
   $manager                       = undef,
+  $driver                        = undef,
 ) {
 
   include ::nova::deps
@@ -180,6 +180,10 @@ class nova::cells (
 
   if $manager {
     warning('manager parameter is deprecated, has no effect and will be removed in a future release.')
+  }
+
+  if $driver {
+    warning('driver parameter is now deprecated, has no effect and will be removed at Ocata cycle.')
   }
 
   case $cell_type {
@@ -199,7 +203,6 @@ class nova::cells (
     'cells/call_timeout':                  value => $call_timeout;
     'cells/capabilities':                  value => join($capabilities, ',');
     'cells/db_check_interval':             value => $db_check_interval;
-    'cells/driver':                        value => $driver;
     'cells/enable':                        value => $enabled;
     'cells/instance_updated_at_threshold': value => $instance_updated_at_threshold;
     'cells/instance_update_num_instances': value => $instance_update_num_instances;

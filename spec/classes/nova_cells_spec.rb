@@ -33,7 +33,6 @@ describe 'nova::cells' do
      :call_timeout                  => '60',
      :capabilities                  => ['hypervisor=xenserver;kvm','os=linux;windows'],
      :db_check_interval             => '60',
-     :driver                        => 'nova.cells.rpc_driver.CellsRPCDriver',
      :instance_updated_at_threshold => '3600',
      :instance_update_num_instances => '1',
      :max_hop_count                 => '10',
@@ -77,7 +76,6 @@ describe 'nova::cells' do
       is_expected.to contain_nova_config('cells/call_timeout').with(:value => '60')
       is_expected.to contain_nova_config('cells/capabilities').with(:value => 'hypervisor=xenserver;kvm,os=linux;windows')
       is_expected.to contain_nova_config('cells/db_check_interval').with(:value => '60')
-      is_expected.to contain_nova_config('cells/driver').with(:value => 'nova.cells.rpc_driver.CellsRPCDriver')
       is_expected.to contain_nova_config('cells/instance_updated_at_threshold').with(:value => '3600')
       is_expected.to contain_nova_config('cells/instance_update_num_instances').with(:value => '1')
       is_expected.to contain_nova_config('cells/max_hop_count').with(:value => '10')
