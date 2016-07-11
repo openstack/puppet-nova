@@ -27,7 +27,9 @@ describe 'nova::compute' do
       it { is_expected.to contain_nova_config('DEFAULT/allow_resize_to_same_host').with(:value => 'false') }
       it { is_expected.to contain_nova_config('DEFAULT/vcpu_pin_set').with(:value => '<SERVICE DEFAULT>') }
       it { is_expected.to_not contain_nova_config('vnc/novncproxy_base_url') }
+      it { is_expected.to contain_nova_config('keymgr/api_class').with_value('<SERVICE DEFAULT>') }
 
+      it { is_expected.to_not contain_package('cryptsetup').with( :ensure => 'present' )}
 
       it { is_expected.to_not contain_package('bridge-utils').with(
         :ensure => 'present',
@@ -68,6 +70,7 @@ describe 'nova::compute' do
           :pci_passthrough                    => "[{\"vendor_id\":\"8086\",\"product_id\":\"0126\"},{\"vendor_id\":\"9096\",\"product_id\":\"1520\",\"physical_network\":\"physnet1\"}]",
           :config_drive_format                => 'vfat',
           :vcpu_pin_set                       => ['4-12','^8','15'],
+          :keymgr_api_class                   => 'nova.keymgr.barbican.BarbicanKeyManager',
         }
       end
 
@@ -89,6 +92,11 @@ describe 'nova::compute' do
       it 'configures ironic in nova.conf' do
         is_expected.to contain_nova_config('DEFAULT/reserved_host_memory_mb').with_value('0')
         is_expected.to contain_nova_config('DEFAULT/compute_manager').with_value('ironic.nova.compute.manager.ClusteredComputeManager')
+      end
+
+      it 'configures barbican service' do
+        is_expected.to contain_nova_config('keymgr/api_class').with_value('nova.keymgr.barbican.BarbicanKeyManager')
+        is_expected.to contain_package('cryptsetup').with( :ensure => 'present' )
       end
 
       it 'configures vnc in nova.conf' do

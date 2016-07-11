@@ -104,6 +104,11 @@
 #    for virtual machine processes
 #    Defaults to $::os_service_default
 #
+# [*keymgr_api_class*]
+#   (optional) Key Manager service.
+#   Example of valid value: nova.keymgr.barbican.BarbicanKeyManager
+#   Defaults to $::os_service_default
+#
 # DEPRECATED PARAMETERS
 #
 #  [*default_availability_zone*]
@@ -151,6 +156,7 @@ class nova::compute (
   $config_drive_format                = $::os_service_default,
   $allow_resize_to_same_host          = false,
   $vcpu_pin_set                       = $::os_service_default,
+  $keymgr_api_class                   = $::os_service_default,
   # DEPRECATED PARAMETERS
   $default_availability_zone          = undef,
   $default_schedule_zone              = undef,
@@ -182,6 +188,14 @@ class nova::compute (
     warning('compute_manager is marked as deprecated in Nova but still needed when Ironic is used. It will be removed once Nova removes it.')
   }
 
+  # cryptsetup is required when Barbican is encrypting volumes
+  if $keymgr_api_class =~ /barbican/ {
+    ensure_packages('cryptsetup', {
+      ensure => present,
+      tag    => 'openstack',
+    })
+  }
+
   include ::nova::availability_zone
 
   nova_config {
@@ -190,6 +204,7 @@ class nova::compute (
     'DEFAULT/heal_instance_info_cache_interval': value => $heal_instance_info_cache_interval;
     'DEFAULT/allow_resize_to_same_host':         value => $allow_resize_to_same_host;
     'DEFAULT/vcpu_pin_set':                      value => join(any2array($vcpu_pin_set), ',');
+    'keymgr/api_class':                          value => $keymgr_api_class;
   }
 
   if ($vnc_enabled) {
