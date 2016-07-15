@@ -70,7 +70,7 @@ describe 'nova::compute' do
           :pci_passthrough                    => "[{\"vendor_id\":\"8086\",\"product_id\":\"0126\"},{\"vendor_id\":\"9096\",\"product_id\":\"1520\",\"physical_network\":\"physnet1\"}]",
           :config_drive_format                => 'vfat',
           :vcpu_pin_set                       => ['4-12','^8','15'],
-          :keymgr_api_class                   => 'nova.keymgr.barbican.BarbicanKeyManager',
+          :keymgr_api_class                   => 'castellan.key_manager.barbican_key_manager.BarbicanKeyManager',
         }
       end
 
@@ -95,7 +95,7 @@ describe 'nova::compute' do
       end
 
       it 'configures barbican service' do
-        is_expected.to contain_nova_config('keymgr/api_class').with_value('nova.keymgr.barbican.BarbicanKeyManager')
+        is_expected.to contain_nova_config('keymgr/api_class').with_value('castellan.key_manager.barbican_key_manager.BarbicanKeyManager')
         is_expected.to contain_package('cryptsetup').with( :ensure => 'present' )
       end
 

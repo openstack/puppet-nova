@@ -106,7 +106,7 @@
 #
 # [*keymgr_api_class*]
 #   (optional) Key Manager service.
-#   Example of valid value: nova.keymgr.barbican.BarbicanKeyManager
+#   Example of valid value: castellan.key_manager.barbican_key_manager.BarbicanKeyManager
 #   Defaults to $::os_service_default
 #
 # DEPRECATED PARAMETERS
