@@ -109,6 +109,19 @@
 #   Example of valid value: castellan.key_manager.barbican_key_manager.BarbicanKeyManager
 #   Defaults to $::os_service_default
 #
+# [*barbican_auth_endpoint*]
+#   (optional) Keystone v3 API URL.
+#   Example: http://localhost:5000/v3
+#   Defaults to $::os_service_default
+#
+# [*barbican_endpoint*]
+#   (optional) Barbican URL.
+#   Defaults to $::os_service_default
+#
+# [*barbican_api_version*]
+#   (optional) Barbican API version.
+#   Defaults to $::os_service_default
+#
 # DEPRECATED PARAMETERS
 #
 #  [*default_availability_zone*]
@@ -157,6 +170,9 @@ class nova::compute (
   $allow_resize_to_same_host          = false,
   $vcpu_pin_set                       = $::os_service_default,
   $keymgr_api_class                   = $::os_service_default,
+  $barbican_auth_endpoint             = $::os_service_default,
+  $barbican_endpoint                  = $::os_service_default,
+  $barbican_api_version               = $::os_service_default,
   # DEPRECATED PARAMETERS
   $default_availability_zone          = undef,
   $default_schedule_zone              = undef,
@@ -204,7 +220,10 @@ class nova::compute (
     'DEFAULT/heal_instance_info_cache_interval': value => $heal_instance_info_cache_interval;
     'DEFAULT/allow_resize_to_same_host':         value => $allow_resize_to_same_host;
     'DEFAULT/vcpu_pin_set':                      value => join(any2array($vcpu_pin_set), ',');
-    'keymgr/api_class':                          value => $keymgr_api_class;
+    'key_manager/api_class':                     value => $keymgr_api_class;
+    'barbican/auth_endpoint':                    value => $barbican_auth_endpoint;
+    'barbican/barbican_endpoint':                value => $barbican_endpoint;
+    'barbican/barbican_api_version':             value => $barbican_api_version;
   }
 
   if ($vnc_enabled) {

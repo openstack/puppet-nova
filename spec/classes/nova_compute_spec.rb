@@ -27,7 +27,10 @@ describe 'nova::compute' do
       it { is_expected.to contain_nova_config('DEFAULT/allow_resize_to_same_host').with(:value => 'false') }
       it { is_expected.to contain_nova_config('DEFAULT/vcpu_pin_set').with(:value => '<SERVICE DEFAULT>') }
       it { is_expected.to_not contain_nova_config('vnc/novncproxy_base_url') }
-      it { is_expected.to contain_nova_config('keymgr/api_class').with_value('<SERVICE DEFAULT>') }
+      it { is_expected.to contain_nova_config('key_manager/api_class').with_value('<SERVICE DEFAULT>') }
+      it { is_expected.to contain_nova_config('barbican/barbican_endpoint').with_value('<SERVICE DEFAULT>') }
+      it { is_expected.to contain_nova_config('barbican/barbican_api_version').with_value('<SERVICE DEFAULT>') }
+      it { is_expected.to contain_nova_config('barbican/auth_endpoint').with_value('<SERVICE DEFAULT>') }
 
       it { is_expected.to_not contain_package('cryptsetup').with( :ensure => 'present' )}
 
@@ -71,6 +74,9 @@ describe 'nova::compute' do
           :config_drive_format                => 'vfat',
           :vcpu_pin_set                       => ['4-12','^8','15'],
           :keymgr_api_class                   => 'castellan.key_manager.barbican_key_manager.BarbicanKeyManager',
+          :barbican_endpoint                  => 'http://localhost',
+          :barbican_api_version               => 'v1',
+          :barbican_auth_endpoint             => 'http://127.0.0.1:5000/v3',
         }
       end
 
@@ -95,7 +101,10 @@ describe 'nova::compute' do
       end
 
       it 'configures barbican service' do
-        is_expected.to contain_nova_config('keymgr/api_class').with_value('castellan.key_manager.barbican_key_manager.BarbicanKeyManager')
+        is_expected.to contain_nova_config('key_manager/api_class').with_value('castellan.key_manager.barbican_key_manager.BarbicanKeyManager')
+        is_expected.to contain_nova_config('barbican/barbican_endpoint').with_value('http://localhost')
+        is_expected.to contain_nova_config('barbican/barbican_api_version').with_value('v1')
+        is_expected.to contain_nova_config('barbican/auth_endpoint').with_value('http://127.0.0.1:5000/v3')
         is_expected.to contain_package('cryptsetup').with( :ensure => 'present' )
       end
 
