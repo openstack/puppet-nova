@@ -219,11 +219,16 @@ class nova::compute (
     'DEFAULT/compute_manager':                   value => $compute_manager;
     'DEFAULT/heal_instance_info_cache_interval': value => $heal_instance_info_cache_interval;
     'DEFAULT/allow_resize_to_same_host':         value => $allow_resize_to_same_host;
-    'DEFAULT/vcpu_pin_set':                      value => join(any2array($vcpu_pin_set), ',');
     'key_manager/api_class':                     value => $keymgr_api_class;
     'barbican/auth_endpoint':                    value => $barbican_auth_endpoint;
     'barbican/barbican_endpoint':                value => $barbican_endpoint;
     'barbican/barbican_api_version':             value => $barbican_api_version;
+  }
+
+  $vcpu_pin_set_real = pick(join(any2array($vcpu_pin_set), ','), $::os_service_default)
+
+  nova_config {
+    'DEFAULT/vcpu_pin_set': value => $vcpu_pin_set_real;
   }
 
   if ($vnc_enabled) {

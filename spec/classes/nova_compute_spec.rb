@@ -142,6 +142,17 @@ describe 'nova::compute' do
       end
     end
 
+
+    context 'when vcpu_pin_set is empty' do
+      let :params do
+        { :vcpu_pin_set => "" }
+      end
+
+      it 'clears vcpu_pin_set configuration' do
+        is_expected.to contain_nova_config('DEFAULT/vcpu_pin_set').with(:value => '<SERVICE DEFAULT>')
+      end
+    end
+
     context 'with neutron_enabled set to false' do
       let :params do
         { :neutron_enabled => false }
