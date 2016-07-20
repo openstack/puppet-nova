@@ -172,6 +172,28 @@
 #   to Glance resources.
 #   Defaults to $::os_service_default
 #
+# [*osapi_hide_server_address_states*]
+#   (optional) This option is a list of all instance states for which network address
+#   information should not be returned from the API.
+#   Defaults to $::os_service_default
+#
+# [*allow_instance_snapshots*]
+#   (optional) Operators can turn off the ability for a user to take snapshots of their
+#   instances by setting this option to False
+#   Defaults to $::os_service_default
+#
+# [*enable_network_quota*]
+#   (optional) This option is used to enable or disable quota checking for tenant networks
+#   Defaults to $::os_service_default
+#
+# [*enable_instance_password*]
+#   (optional) Enables returning of the instance password by the relevant server API calls
+#   Defaults to $::os_service_default
+#
+# [*password_length*]
+#   (optional) Length of generated instance admin passwords (integer value)
+#   Defaults to $::os_service_default
+#
 # DEPRECATED
 #
 # [*keystone_ec2_url*]
@@ -206,49 +228,54 @@
 #
 class nova::api(
   $admin_password,
-  $enabled                      = true,
-  $manage_service               = true,
-  $api_paste_config             = 'api-paste.ini',
-  $ensure_package               = 'present',
-  $auth_uri                     = 'http://127.0.0.1:5000/',
-  $identity_uri                 = 'http://127.0.0.1:35357/',
-  $admin_tenant_name            = 'services',
-  $admin_user                   = 'nova',
-  $api_bind_address             = '0.0.0.0',
-  $osapi_compute_listen_port    = 8774,
-  $metadata_listen              = '0.0.0.0',
-  $metadata_listen_port         = 8775,
-  $enabled_apis                 = ['osapi_compute', 'metadata'],
-  $use_forwarded_for            = false,
-  $osapi_compute_workers        = $::processorcount,
-  $metadata_workers             = $::processorcount,
-  $sync_db                      = true,
-  $sync_db_api                  = true,
+  $enabled                              = true,
+  $manage_service                       = true,
+  $api_paste_config                     = 'api-paste.ini',
+  $ensure_package                       = 'present',
+  $auth_uri                             = 'http://127.0.0.1:5000/',
+  $identity_uri                         = 'http://127.0.0.1:35357/',
+  $admin_tenant_name                    = 'services',
+  $admin_user                           = 'nova',
+  $api_bind_address                     = '0.0.0.0',
+  $osapi_compute_listen_port            = 8774,
+  $metadata_listen                      = '0.0.0.0',
+  $metadata_listen_port                 = 8775,
+  $enabled_apis                         = ['osapi_compute', 'metadata'],
+  $use_forwarded_for                    = false,
+  $osapi_compute_workers                = $::processorcount,
+  $metadata_workers                     = $::processorcount,
+  $sync_db                              = true,
+  $sync_db_api                          = true,
   $neutron_metadata_proxy_shared_secret = undef,
-  $default_floating_pool        = 'nova',
-  $pci_alias                    = undef,
-  $ratelimits                   = undef,
-  $ratelimits_factory           =
+  $default_floating_pool                = 'nova',
+  $pci_alias                            = undef,
+  $ratelimits                           = undef,
+  $ratelimits_factory                   =
     'nova.api.openstack.compute.limits:RateLimitingMiddleware.factory',
-  $validate                     = false,
-  $validation_options           = {},
-  $instance_name_template       = undef,
-  $fping_path                   = '/usr/sbin/fping',
-  $service_name                 = $::nova::params::api_service_name,
-  $enable_proxy_headers_parsing = $::os_service_default,
-  $metadata_cache_expiration    = $::os_service_default,
-  $vendordata_jsonfile_path     = $::os_service_default,
-  $osapi_max_limit              = $::os_service_default,
-  $osapi_compute_link_prefix    = $::os_service_default,
-  $osapi_glance_link_prefix     = $::os_service_default,
+  $validate                             = false,
+  $validation_options                   = {},
+  $instance_name_template               = undef,
+  $fping_path                           = '/usr/sbin/fping',
+  $service_name                         = $::nova::params::api_service_name,
+  $enable_proxy_headers_parsing         = $::os_service_default,
+  $metadata_cache_expiration            = $::os_service_default,
+  $vendordata_jsonfile_path             = $::os_service_default,
+  $osapi_max_limit                      = $::os_service_default,
+  $osapi_compute_link_prefix            = $::os_service_default,
+  $osapi_glance_link_prefix             = $::os_service_default,
+  $osapi_hide_server_address_states     = $::os_service_default,
+  $allow_instance_snapshots             = $::os_service_default,
+  $enable_network_quota                 = $::os_service_default,
+  $enable_instance_password             = $::os_service_default,
+  $password_length                      = $::os_service_default,
   # DEPRECATED PARAMETER
-  $conductor_workers            = undef,
-  $ec2_listen_port              = undef,
-  $ec2_workers                  = undef,
-  $keystone_ec2_url             = undef,
-  $auth_version                 = false,
-  $volume_api_class             = undef,
-  $osapi_v3                     = undef,
+  $conductor_workers                    = undef,
+  $ec2_listen_port                      = undef,
+  $ec2_workers                          = undef,
+  $keystone_ec2_url                     = undef,
+  $auth_version                         = false,
+  $volume_api_class                     = undef,
+  $osapi_v3                             = undef,
 ) inherits nova::params {
 
   include ::nova::deps
@@ -328,23 +355,28 @@ class nova::api(
   }
 
   nova_config {
-    'wsgi/api_paste_config':             value => $api_paste_config;
-    'DEFAULT/enabled_apis':              value => join($enabled_apis_real, ',');
-    'DEFAULT/osapi_compute_listen':      value => $api_bind_address;
-    'DEFAULT/metadata_listen':           value => $metadata_listen;
-    'DEFAULT/metadata_listen_port':      value => $metadata_listen_port;
-    'DEFAULT/osapi_compute_listen_port': value => $osapi_compute_listen_port;
-    'DEFAULT/osapi_volume_listen':       value => $api_bind_address;
-    'DEFAULT/osapi_compute_workers':     value => $osapi_compute_workers;
-    'DEFAULT/metadata_workers':          value => $metadata_workers;
-    'DEFAULT/use_forwarded_for':         value => $use_forwarded_for;
-    'DEFAULT/default_floating_pool':     value => $default_floating_pool;
-    'DEFAULT/fping_path':                value => $fping_path;
-    'DEFAULT/metadata_cache_expiration': value => $metadata_cache_expiration;
-    'DEFAULT/vendordata_jsonfile_path':  value => $vendordata_jsonfile_path;
-    'DEFAULT/osapi_max_limit':           value => $osapi_max_limit;
-    'DEFAULT/osapi_compute_link_prefix': value => $osapi_compute_link_prefix;
-    'DEFAULT/osapi_glance_link_prefix':  value => $osapi_glance_link_prefix;
+    'wsgi/api_paste_config':                     value => $api_paste_config;
+    'DEFAULT/enabled_apis':                      value => join($enabled_apis_real, ',');
+    'DEFAULT/osapi_compute_listen':              value => $api_bind_address;
+    'DEFAULT/metadata_listen':                   value => $metadata_listen;
+    'DEFAULT/metadata_listen_port':              value => $metadata_listen_port;
+    'DEFAULT/osapi_compute_listen_port':         value => $osapi_compute_listen_port;
+    'DEFAULT/osapi_volume_listen':               value => $api_bind_address;
+    'DEFAULT/osapi_compute_workers':             value => $osapi_compute_workers;
+    'DEFAULT/metadata_workers':                  value => $metadata_workers;
+    'DEFAULT/use_forwarded_for':                 value => $use_forwarded_for;
+    'DEFAULT/default_floating_pool':             value => $default_floating_pool;
+    'DEFAULT/fping_path':                        value => $fping_path;
+    'DEFAULT/metadata_cache_expiration':         value => $metadata_cache_expiration;
+    'DEFAULT/vendordata_jsonfile_path':          value => $vendordata_jsonfile_path;
+    'DEFAULT/osapi_max_limit':                   value => $osapi_max_limit;
+    'DEFAULT/osapi_compute_link_prefix':         value => $osapi_compute_link_prefix;
+    'DEFAULT/osapi_glance_link_prefix':          value => $osapi_glance_link_prefix;
+    'DEFAULT/osapi_hide_server_address_states':  value => $osapi_hide_server_address_states;
+    'DEFAULT/allow_instance_snapshots':          value => $allow_instance_snapshots;
+    'DEFAULT/enable_network_quota':              value => $enable_network_quota;
+    'DEFAULT/enable_instance_password':          value => $enable_instance_password;
+    'DEFAULT/password_length':                   value => $password_length;
   }
 
   oslo::middleware {'nova_config':

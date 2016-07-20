@@ -68,6 +68,11 @@ describe 'nova::api' do
         is_expected.to contain_nova_config('DEFAULT/osapi_max_limit').with('value' => '<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('DEFAULT/osapi_compute_link_prefix').with('value' => '<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('DEFAULT/osapi_glance_link_prefix').with('value' => '<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('DEFAULT/osapi_hide_server_address_states').with('value' => '<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('DEFAULT/allow_instance_snapshots').with('value' => '<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('DEFAULT/enable_network_quota').with('value' => '<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('DEFAULT/enable_instance_password').with('value' => '<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('DEFAULT/password_length').with('value' => '<SERVICE DEFAULT>')
       end
 
       it 'unconfigures neutron_metadata proxy' do
@@ -103,6 +108,11 @@ describe 'nova::api' do
           :osapi_max_limit                      => 1000,
           :osapi_compute_link_prefix            => 'https://10.0.0.1:7777/',
           :osapi_glance_link_prefix             => 'https://10.0.0.1:6666/',
+          :osapi_hide_server_address_states     => 'building',
+          :allow_instance_snapshots             => true,
+          :enable_network_quota                 => false,
+          :enable_instance_password             => true,
+          :password_length                      => 12,
           :pci_alias                            => "[{\"vendor_id\":\"8086\",\"product_id\":\"0126\",\"name\":\"graphic_card\"},{\"vendor_id\":\"9096\",\"product_id\":\"1520\",\"name\":\"network_card\"}]"
         })
       end
@@ -155,6 +165,11 @@ describe 'nova::api' do
         is_expected.to contain_nova_config('neutron/service_metadata_proxy').with('value' => true)
         is_expected.to contain_nova_config('neutron/metadata_proxy_shared_secret').with('value' => 'secrete')
         is_expected.to contain_nova_config('oslo_middleware/enable_proxy_headers_parsing').with('value' => true)
+        is_expected.to contain_nova_config('DEFAULT/osapi_hide_server_address_states').with('value' => 'building')
+        is_expected.to contain_nova_config('DEFAULT/allow_instance_snapshots').with('value' => true)
+        is_expected.to contain_nova_config('DEFAULT/enable_network_quota').with('value' => false)
+        is_expected.to contain_nova_config('DEFAULT/enable_instance_password').with('value' => true)
+        is_expected.to contain_nova_config('DEFAULT/password_length').with('value' => '12')
       end
 
       it 'configures nova pci_alias entries' do
