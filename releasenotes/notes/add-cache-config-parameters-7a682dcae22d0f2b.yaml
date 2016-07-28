@@ -1,0 +1,7 @@
+---
+features:
+  - Add ability to configure cache parameters.
+    This feature was implemented in puppet-nova during Newton but
+    backported in Mitaka because Nova deprecated memcached_servers
+    in Mitaka. The backport is not using puppet-oslo but the results
+    are the same.
