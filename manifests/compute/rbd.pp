@@ -102,7 +102,7 @@ class nova::compute::rbd (
 
     exec { 'get-or-set virsh secret':
       command => '/usr/bin/virsh secret-define --file /etc/nova/secret.xml | /usr/bin/awk \'{print $2}\' | sed \'/^$/d\' > /etc/nova/virsh.secret',
-      creates => '/etc/nova/virsh.secret',
+      unless  => "/usr/bin/virsh secret-list | grep ${libvirt_rbd_secret_uuid}",
       require => [File['/etc/nova/secret.xml'], Service['libvirt']],
     }
 
@@ -113,7 +113,7 @@ class nova::compute::rbd (
     }
     exec { 'set-secret-value virsh':
       command => "/usr/bin/virsh secret-set-value --secret ${libvirt_rbd_secret_uuid} --base64 ${libvirt_key}",
-      unless  => "/usr/bin/virsh secret-get-value ${libvirt_rbd_secret_uuid}",
+      unless  => "/usr/bin/virsh secret-get-value ${libvirt_rbd_secret_uuid} | grep ${libvirt_key}",
       require => Exec['get-or-set virsh secret'],
       before  => Anchor['nova::config::end'],
     }
