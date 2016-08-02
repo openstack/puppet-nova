@@ -195,6 +195,10 @@
 #   (optional) Length of generated instance admin passwords (integer value)
 #   Defaults to $::os_service_default
 #
+# [*install_cinder_client*]
+#   (optional) Whether the cinder::client class should be used to install the cinder client.
+#   Defaults to true
+#
 # DEPRECATED
 #
 # [*keystone_ec2_url*]
@@ -293,6 +297,7 @@ class nova::api(
   $enable_network_quota                 = $::os_service_default,
   $enable_instance_password             = $::os_service_default,
   $password_length                      = $::os_service_default,
+  $install_cinder_client                = true,
   # DEPRECATED PARAMETER
   $conductor_workers                    = undef,
   $ec2_listen_port                      = undef,
@@ -311,8 +316,12 @@ class nova::api(
   include ::nova::deps
   include ::nova::db
   include ::nova::policy
-  include ::cinder::client
   include ::nova::keystone::authtoken
+
+  if $install_cinder_client {
+    include ::cinder::client
+    Class['cinder::client'] ~> Nova::Generic_service['api']
+  }
 
   if $osapi_v3 {
     warning('osapi_v3 is deprecated, has no effect and will be removed in a future release.')
@@ -421,7 +430,6 @@ class nova::api(
     ensure_package => $ensure_package,
     package_name   => $::nova::params::api_package_name,
     service_name   => $::nova::params::api_service_name,
-    subscribe      => Class['cinder::client'],
   }
 
   nova_config {
