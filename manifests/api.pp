@@ -412,7 +412,8 @@ class nova::api(
     # make sure we start apache before nova-api to avoid binding issues
     Service[$service_name] -> Service['nova-api']
   } else {
-    fail('Invalid service_name. Either nova-api/openstack-nova-api for running as a standalone service, or httpd for being run by a httpd server')
+    fail('Invalid service_name. Either nova-api/openstack-nova-api for running \
+          as a standalone service, or httpd for being run by a httpd server')
   }
 
   nova::generic_service { 'api':
@@ -505,12 +506,19 @@ class nova::api(
   }
 
   if $validate {
-    $admin_user_real = pick($admin_user, $::nova::keystone::authtoken::username)
-    $admin_password_real = pick($admin_password, $::nova::keystone::authtoken::password)
-    $admin_tenant_name_real = pick($admin_tenant_name, $::nova::keystone::authtoken::project_name)
+    #Shrinking the variables names in favor of not
+    #having more than 140 chars per line
+    #Admin user real
+    $aur = pick($admin_user, $::nova::keystone::authtoken::username)
+    #Admin password real
+    $apr = pick($admin_password, $::nova::keystone::authtoken::password)
+    #Admin tenan name real
+    $atnr = pick($admin_tenant_name, $::nova::keystone::authtoken::project_name)
+    #Keystone Auth URI
+    $kau = $::nova::keystone::authtoken::auth_uri
     $defaults = {
       'nova-api' => {
-        'command'  => "nova --os-auth-url ${::nova::keystone::authtoken::auth_uri} --os-project-name ${admin_tenant_name_real} --os-username ${admin_user_real} --os-password ${admin_password_real} flavor-list",
+        'command'  => "nova --os-auth-url ${kau} --os-project-name ${atnr} --os-username ${aur} --os-password ${apr} flavor-list",
       }
     }
     $validation_options_hash = merge ($defaults, $validation_options)

@@ -100,8 +100,13 @@ class nova::compute::rbd (
       require => Anchor['nova::config::begin'],
     }
 
+    #Variable name shrinked in favor of removing
+    #the more than 140 chars puppet-lint warning.
+    #variable used in the get-or-set virsh secret
+    #resource.
+    $cm = '/usr/bin/virsh secret-define --file /etc/nova/secret.xml | /usr/bin/awk \'{print $2}\' | sed \'/^$/d\' > /etc/nova/virsh.secret'
     exec { 'get-or-set virsh secret':
-      command => '/usr/bin/virsh secret-define --file /etc/nova/secret.xml | /usr/bin/awk \'{print $2}\' | sed \'/^$/d\' > /etc/nova/virsh.secret',
+      command => "${cm}",
       unless  => "/usr/bin/virsh secret-list | grep ${libvirt_rbd_secret_uuid}",
       require => [File['/etc/nova/secret.xml'], Service['libvirt']],
     }
