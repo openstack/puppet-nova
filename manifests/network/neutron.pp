@@ -118,10 +118,6 @@
 #   (optional) DEPRECATED. The full class name of the network API class.
 #   This parameter has no effect
 #
-# [*security_group_api*]
-#   (optional) DEPRECATED. The full class name of the security API class.
-#   This parameter has no effect.
-#
 # [*neutron_auth_plugin*]
 #   Name of the plugin to load (string value)
 #   Defaults to undef
@@ -152,7 +148,6 @@ class nova::network::neutron (
   $neutron_admin_auth_url          = undef,
   $neutron_default_tenant_id       = undef,
   $network_api_class               = undef,
-  $security_group_api              = undef,
   $neutron_auth_plugin             = undef,
 ) {
 
@@ -160,10 +155,6 @@ class nova::network::neutron (
 
   if $network_api_class != undef {
     warning('network_api_class has no effect and will be dropped in a future release.')
-  }
-
-  if $security_group_api != undef {
-    warning('security_group_api has no effect and will be dropped in a future release.')
   }
 
   # neutron_admin params removed in Mitaka
