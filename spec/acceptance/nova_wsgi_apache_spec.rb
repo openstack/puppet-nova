@@ -47,9 +47,10 @@ describe 'basic nova' do
       class { '::nova::keystone::auth':
         password => 'a_big_secret',
       }
+      class { '::nova::keystone::authtoken':
+        password => 'a_big_secret',
+      }
       class { '::nova::api':
-        admin_password => 'a_big_secret',
-        identity_uri   => 'http://127.0.0.1:35357/',
         service_name   => 'httpd',
       }
       include ::apache

@@ -151,10 +151,6 @@ describe 'nova' do
         is_expected.to contain_nova_config('oslo_messaging_rabbit/heartbeat_rate').with_value('10')
       end
 
-      it 'configures memcached_servers' do
-        is_expected.to contain_nova_config('keystone_authtoken/memcached_servers').with_value('memcached01:11211,memcached02:11211')
-      end
-
       it 'configures host' do
         is_expected.to contain_nova_config('DEFAULT/host').with_value('test-001.example.org')
       end

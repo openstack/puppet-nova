@@ -14,6 +14,8 @@ describe 'nova::api' do
 
     context 'with default parameters' do
 
+      it { is_expected.to contain_class('nova::keystone::authtoken') }
+
       it 'installs nova-api package and service' do
         is_expected.to contain_service('nova-api').with(
           :name      => platform_params[:nova_api_service],
@@ -36,13 +38,13 @@ describe 'nova::api' do
        is_expected.to contain_nova_config(
           'keystone_authtoken/auth_uri').with_value('http://127.0.0.1:5000/')
        is_expected.to contain_nova_config(
-          'keystone_authtoken/identity_uri').with_value('http://127.0.0.1:35357/')
+          'keystone_authtoken/auth_url').with_value('http://127.0.0.1:35357/')
         is_expected.to contain_nova_config(
-          'keystone_authtoken/admin_tenant_name').with_value('services')
+          'keystone_authtoken/project_name').with_value('services')
         is_expected.to contain_nova_config(
-          'keystone_authtoken/admin_user').with_value('nova')
+          'keystone_authtoken/username').with_value('nova')
         is_expected.to contain_nova_config(
-          'keystone_authtoken/admin_password').with_value('passw0rd').with_secret(true)
+          'keystone_authtoken/password').with_value('passw0rd').with_secret(true)
       end
 
       it 'enable metadata in evenlet configuration' do
@@ -136,13 +138,13 @@ describe 'nova::api' do
         is_expected.to contain_nova_config(
           'keystone_authtoken/auth_uri').with_value('https://10.0.0.1:9999/')
         is_expected.to contain_nova_config(
-          'keystone_authtoken/identity_uri').with_value('https://10.0.0.1:8888/')
+          'keystone_authtoken/auth_url').with_value('https://10.0.0.1:8888/')
         is_expected.to contain_nova_config(
-          'keystone_authtoken/admin_tenant_name').with_value('service2')
+          'keystone_authtoken/project_name').with_value('service2')
         is_expected.to contain_nova_config(
-          'keystone_authtoken/admin_user').with_value('nova2')
+          'keystone_authtoken/username').with_value('nova2')
         is_expected.to contain_nova_config(
-          'keystone_authtoken/admin_password').with_value('passw0rd2').with_secret(true)
+          'keystone_authtoken/password').with_value('passw0rd2').with_secret(true)
         is_expected.to contain_nova_paste_api_ini(
           'filter:ratelimit/limits').with_value('(GET, "*", .*, 100, MINUTE);(POST, "*", .*, 200, MINUTE)')
       end
@@ -190,7 +192,7 @@ describe 'nova::api' do
         :provider    => 'shell',
         :tries       => '10',
         :try_sleep   => '2',
-        :command     => 'nova --os-auth-url http://127.0.0.1:5000/ --os-tenant-name services --os-username nova --os-password passw0rd flavor-list',
+        :command     => 'nova --os-auth-url http://127.0.0.1:5000/ --os-project-name services --os-username nova --os-password passw0rd flavor-list',
       )}
 
       it { is_expected.to contain_anchor('create nova-api anchor').with(
@@ -268,30 +270,6 @@ describe 'nova::api' do
       end
       it 'configures instance_name_template' do
         is_expected.to contain_nova_config('DEFAULT/instance_name_template').with_value('instance-%08x');
-      end
-    end
-
-    context 'with custom keystone identity_uri' do
-      before do
-        params.merge!({
-          :identity_uri => 'https://foo.bar:1234/',
-        })
-      end
-      it 'configures identity_uri' do
-        is_expected.to contain_nova_config('keystone_authtoken/identity_uri').with_value("https://foo.bar:1234/");
-      end
-    end
-
-    context 'with custom keystone identity_uri and auth_uri ' do
-      before do
-        params.merge!({
-          :identity_uri => 'https://foo.bar:35357/',
-          :auth_uri => 'https://foo.bar:5000/v2.0/',
-        })
-      end
-      it 'configures identity_uri' do
-        is_expected.to contain_nova_config('keystone_authtoken/identity_uri').with_value("https://foo.bar:35357/");
-        is_expected.to contain_nova_config('keystone_authtoken/auth_uri').with_value("https://foo.bar:5000/v2.0/");
       end
     end
 
