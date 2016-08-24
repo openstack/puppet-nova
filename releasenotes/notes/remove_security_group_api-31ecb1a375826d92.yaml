@@ -1,0 +1,4 @@
+---
+deprecations:
+  - The security_group_api option that was deprecated in Mitaka
+    has been removed in Newton.
