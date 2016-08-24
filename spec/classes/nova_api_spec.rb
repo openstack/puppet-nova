@@ -67,6 +67,10 @@ describe 'nova::api' do
         is_expected.to contain_nova_config('oslo_middleware/enable_proxy_headers_parsing').with('value' => '<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('DEFAULT/metadata_cache_expiration').with('value' => '<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('DEFAULT/vendordata_jsonfile_path').with('value' => '<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('DEFAULT/vendordata_providers').with('value' => '<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('DEFAULT/vendordata_dynamic_targets').with('value' => '<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('DEFAULT/vendordata_dynamic_connect_timeout').with('value' => '<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('DEFAULT/vendordata_dynamic_read_timeout').with('value' => '<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('DEFAULT/osapi_max_limit').with('value' => '<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('DEFAULT/osapi_compute_link_prefix').with('value' => '<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('DEFAULT/osapi_glance_link_prefix').with('value' => '<SERVICE DEFAULT>')
@@ -107,6 +111,10 @@ describe 'nova::api' do
           :enable_proxy_headers_parsing         => true,
           :metadata_cache_expiration            => 15,
           :vendordata_jsonfile_path             => '/tmp',
+          :vendordata_providers                 => ['StaticJSON', 'DynamicJSON'],
+          :vendordata_dynamic_targets           => ['join@http://127.0.0.1:9999/v1/'],
+          :vendordata_dynamic_connect_timeout   => 30,
+          :vendordata_dynamic_read_timeout      => 30,
           :osapi_max_limit                      => 1000,
           :osapi_compute_link_prefix            => 'https://10.0.0.1:7777/',
           :osapi_glance_link_prefix             => 'https://10.0.0.1:6666/',
@@ -161,6 +169,10 @@ describe 'nova::api' do
         is_expected.to contain_nova_config('DEFAULT/default_floating_pool').with('value' => 'public')
         is_expected.to contain_nova_config('DEFAULT/metadata_cache_expiration').with('value' => '15')
         is_expected.to contain_nova_config('DEFAULT/vendordata_jsonfile_path').with('value' => '/tmp')
+        is_expected.to contain_nova_config('DEFAULT/vendordata_providers').with('value' => 'StaticJSON,DynamicJSON')
+        is_expected.to contain_nova_config('DEFAULT/vendordata_dynamic_targets').with('value' => 'join@http://127.0.0.1:9999/v1/')
+        is_expected.to contain_nova_config('DEFAULT/vendordata_dynamic_connect_timeout').with('value' => '30')
+        is_expected.to contain_nova_config('DEFAULT/vendordata_dynamic_read_timeout').with('value' => '30')
         is_expected.to contain_nova_config('DEFAULT/osapi_max_limit').with('value' => '1000')
         is_expected.to contain_nova_config('DEFAULT/osapi_compute_link_prefix').with('value' => 'https://10.0.0.1:7777/')
         is_expected.to contain_nova_config('DEFAULT/osapi_glance_link_prefix').with('value' => 'https://10.0.0.1:6666/')
