@@ -134,10 +134,6 @@
 #
 # DEPRECATED
 #
-#  [*manager*]
-#    DEPRECATED. Number of instances to update per periodic task run
-#    Defaults to undef
-#
 #  [*driver*]
 #    Cells communication driver to use
 #    Defaults to undef
@@ -171,16 +167,11 @@ class nova::cells (
   $weight_offset                 = '1.0',
   $weight_scale                  = '1.0',
   # Deprecated
-  $manager                       = undef,
   $driver                        = undef,
 ) {
 
   include ::nova::deps
   include ::nova::params
-
-  if $manager {
-    warning('manager parameter is deprecated, has no effect and will be removed in a future release.')
-  }
 
   if $driver {
     warning('driver parameter is now deprecated, has no effect and will be removed at Ocata cycle.')
