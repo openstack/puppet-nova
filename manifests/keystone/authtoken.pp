@@ -223,8 +223,6 @@ class nova::keystone::authtoken(
   $token_cache_time               = $::os_service_default,
 ) {
 
-  include ::nova
-
   if is_service_default($password) and ! $::nova::api::admin_password {
     fail('Please set password for nova service user')
   }
