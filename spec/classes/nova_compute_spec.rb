@@ -143,13 +143,17 @@ describe 'nova::compute' do
     end
 
 
-    context 'when vcpu_pin_set is empty' do
+    context 'when vcpu_pin_set and pci_passthrough are empty' do
       let :params do
-        { :vcpu_pin_set => "" }
+        { :vcpu_pin_set    => "",
+          :pci_passthrough => "" }
       end
 
       it 'clears vcpu_pin_set configuration' do
         is_expected.to contain_nova_config('DEFAULT/vcpu_pin_set').with(:value => '<SERVICE DEFAULT>')
+      end
+      it 'clears pci_passthrough configuration' do
+        is_expected.to contain_nova_config('DEFAULT/pci_passthrough_whitelist').with(:value => '<SERVICE DEFAULT>')
       end
     end
 

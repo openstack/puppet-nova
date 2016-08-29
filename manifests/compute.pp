@@ -84,9 +84,9 @@
 #   Defaults to '512'
 #
 #  [*pci_passthrough*]
-#   (optional) Pci passthrough hash in format of:
-#   Defaults to undef
-#   Example
+#   (optional) Pci passthrough list of hash.
+#   Defaults to $::os_service_default
+#   Example of format:
 #  "[ { 'vendor_id':'1234','product_id':'5678' },
 #     { 'vendor_id':'4321','product_id':'8765','physical_network':'default' } ] "
 #
@@ -165,7 +165,7 @@ class nova::compute (
   $force_raw_images                   = true,
   $reserved_host_memory               = '512',
   $heal_instance_info_cache_interval  = '60',
-  $pci_passthrough                    = undef,
+  $pci_passthrough                    = $::os_service_default,
   $config_drive_format                = $::os_service_default,
   $allow_resize_to_same_host          = false,
   $vcpu_pin_set                       = $::os_service_default,
@@ -204,6 +204,17 @@ class nova::compute (
     warning('compute_manager is marked as deprecated in Nova but still needed when Ironic is used. It will be removed once Nova removes it.')
   }
 
+  $vcpu_pin_set_real = pick(join(any2array($vcpu_pin_set), ','), $::os_service_default)
+
+  # in the case of pci_passthrough, we can't use the same mechanism as vcpu_pin_set because
+  # the value is computed in a function and it makes things more complex. Let's just check if
+  # a value is set or if it's empty.
+  if !is_service_default($pci_passthrough) and !empty($pci_passthrough) {
+    $pci_passthrough_real = check_array_of_hash($pci_passthrough)
+  } else {
+    $pci_passthrough_real = $::os_service_default
+  }
+
   # cryptsetup is required when Barbican is encrypting volumes
   if $keymgr_api_class =~ /barbican/ {
     ensure_packages('cryptsetup', {
@@ -219,16 +230,12 @@ class nova::compute (
     'DEFAULT/compute_manager':                   value => $compute_manager;
     'DEFAULT/heal_instance_info_cache_interval': value => $heal_instance_info_cache_interval;
     'DEFAULT/allow_resize_to_same_host':         value => $allow_resize_to_same_host;
+    'DEFAULT/pci_passthrough_whitelist':         value => $pci_passthrough_real;
+    'DEFAULT/vcpu_pin_set':                      value => $vcpu_pin_set_real;
     'key_manager/api_class':                     value => $keymgr_api_class;
     'barbican/auth_endpoint':                    value => $barbican_auth_endpoint;
     'barbican/barbican_endpoint':                value => $barbican_endpoint;
     'barbican/barbican_api_version':             value => $barbican_api_version;
-  }
-
-  $vcpu_pin_set_real = pick(join(any2array($vcpu_pin_set), ','), $::os_service_default)
-
-  nova_config {
-    'DEFAULT/vcpu_pin_set': value => $vcpu_pin_set_real;
   }
 
   if ($vnc_enabled) {
@@ -291,12 +298,6 @@ class nova::compute (
 
   nova_config {
     'DEFAULT/force_raw_images': value => $force_raw_images;
-  }
-
-  if ($pci_passthrough) {
-    nova_config {
-      'DEFAULT/pci_passthrough_whitelist': value => check_array_of_hash($pci_passthrough);
-    }
   }
 
   if is_service_default($config_drive_format) or $config_drive_format == 'iso9660' {
