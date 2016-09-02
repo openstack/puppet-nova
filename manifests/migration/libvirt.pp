@@ -24,6 +24,19 @@
 #   the availability of native encryption support in the hypervisor.
 #   Defaults to $::os_service_default
 #
+# [*live_migration_completion_timeout*]
+#   (optional) Time to wait, in seconds, for migration to successfully complete
+#   transferring data before aborting the operation. Value is per GiB of guest
+#   RAM + disk to be transferred, with lower bound of a minimum of 2 GiB. Set
+#   to 0 to disable timeouts.
+#   Defaults to $::os_service_default
+#
+# [*live_migration_progress_timeout*]
+#   (optional) Time to wait, in seconds, for migration to make forward progress
+#   in transferring data before aborting the operation. Set to 0 to disable
+#   timeouts.
+#   Defaults to $::os_service_default
+#
 # [*override_uuid*]
 #   (optional) Set uuid not equal to output from dmidecode (boolean)
 #   Defaults to false
@@ -47,15 +60,17 @@
 #   Defaults to undef
 #
 class nova::migration::libvirt(
-  $use_tls                  = false,
-  $auth                     = 'none',
-  $live_migration_tunnelled = $::os_service_default,
-  $override_uuid            = false,
-  $configure_libvirt        = true,
-  $configure_nova           = true,
+  $use_tls                           = false,
+  $auth                              = 'none',
+  $live_migration_tunnelled          = $::os_service_default,
+  $live_migration_completion_timeout = $::os_service_default,
+  $live_migration_progress_timeout   = $::os_service_default,
+  $override_uuid                     = false,
+  $configure_libvirt                 = true,
+  $configure_nova                    = true,
   #DEPRECATED PARAMETERS
-  $live_migration_flag      = undef,
-  $block_migration_flag     = undef,
+  $live_migration_flag               = undef,
+  $block_migration_flag              = undef,
 ){
 
   include ::nova::deps
@@ -86,7 +101,9 @@ class nova::migration::libvirt(
     }
 
     nova_config {
-      'libvirt/live_migration_tunnelled': value => $live_migration_tunnelled
+      'libvirt/live_migration_tunnelled':          value => $live_migration_tunnelled;
+      'libvirt/live_migration_completion_timeout': value => $live_migration_completion_timeout;
+      'libvirt/live_migration_progress_timeout':   value => $live_migration_progress_timeout;
     }
   }
 
