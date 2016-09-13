@@ -202,7 +202,8 @@ class nova::network(
       create_resources('class', $vlan_resource)
     }
     default: {
-      fail("Unsupported network manager: ${nova::network_manager} The supported network managers are nova.network.manager.FlatManager, nova.network.FlatDHCPManager and nova.network.manager.VlanManager")
+      fail("Unsupported network manager: ${nova::network_manager} The supported network managers are \
+            nova.network.manager.FlatManager, nova.network.FlatDHCPManager and nova.network.manager.VlanManager")
     }
   }
 

@@ -111,8 +111,10 @@ class nova::keystone::auth(
 
   include ::nova::deps
 
-  if $auth_name_v3 or $service_description_v3 or $service_name_v3 or $public_url_v3 or $internal_url_v3 or $admin_url_v3 or $configure_endpoint_v3 {
-    warning('all parameters related to v3 API in nova::keystone::auth are deprecated, have no effect and will be removed after Newton release.')
+  if $auth_name_v3 or $service_description_v3 or $service_name_v3 or
+      $public_url_v3 or $internal_url_v3 or $admin_url_v3 or $configure_endpoint_v3 {
+    warning('all parameters related to v3 API in nova::keystone::auth are \
+              deprecated, have no effect and will be removed after Newton release.')
   }
 
   if $configure_endpoint {
