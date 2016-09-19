@@ -53,10 +53,6 @@
 #   (optional) Number of seconds before querying neutron for extensions
 #   Defaults to '600'
 #
-# [*neutron_ca_certificates_file*]
-#   (optional) Location of ca certicates file to use for neutronclient requests.
-#   Defaults to 'None'
-#
 # [*neutron_auth_url*]
 #   (optional) Points to the OpenStack Identity server IP and port.
 #   This is the Identity (keystone) admin API server IP and port value,
@@ -122,6 +118,10 @@
 #   Name of the plugin to load (string value)
 #   Defaults to undef
 #
+# [*neutron_ca_certificates_file*]
+#   (optional) Location of ca certicates file to use for neutronclient requests.
+#   Defaults to undef
+#
 class nova::network::neutron (
   $neutron_password                = false,
   $neutron_auth_type               = 'v3password',
@@ -135,7 +135,6 @@ class nova::network::neutron (
   $neutron_region_name             = 'RegionOne',
   $neutron_ovs_bridge              = 'br-int',
   $neutron_extension_sync_interval = '600',
-  $neutron_ca_certificates_file    = undef,
   $firewall_driver                 = 'nova.virt.firewall.NoopFirewallDriver',
   $vif_plugging_is_fatal           = true,
   $vif_plugging_timeout            = '300',
@@ -149,6 +148,7 @@ class nova::network::neutron (
   $neutron_default_tenant_id       = undef,
   $network_api_class               = undef,
   $neutron_auth_plugin             = undef,
+  $neutron_ca_certificates_file    = undef,
 ) {
 
   include ::nova::deps
@@ -239,10 +239,8 @@ class nova::network::neutron (
     'neutron/auth_type':               value => $neutron_auth_type_real;
   }
 
-  if ! $neutron_ca_certificates_file {
-    nova_config { 'neutron/ca_certificates_file': ensure => absent }
-  } else {
-    nova_config { 'neutron/ca_certificates_file': value => $neutron_ca_certificates_file }
+  if $neutron_ca_certificates_file {
+    warning('neutron_ca_certificates_file parameter is deprecated, has no effect and will be dropped in a future release.')
   }
 
 }
