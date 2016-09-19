@@ -1,0 +1,4 @@
+---
+fixes:
+  - Fix vmware section name, should be vmware and not VMWARE.
+  - Add missing insecure, ca_file and datastore_regex parameters
