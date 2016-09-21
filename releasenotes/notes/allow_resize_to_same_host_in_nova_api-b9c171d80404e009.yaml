@@ -1,0 +1,6 @@
+---
+features:
+  - allow_resize_to_same_host can now be set in nova-api.
+    For ephemeral nodes, this needs to only be set
+    in nova-api and so including the other classes is
+    overkill.

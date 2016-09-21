@@ -199,6 +199,12 @@
 #   (optional) Whether the cinder::client class should be used to install the cinder client.
 #   Defaults to true
 #
+#  [*allow_resize_to_same_host*]
+#   (optional) Allow destination machine to match source for resize. Note that this
+#   is also settable in the compute class. In some sitautions you need it set here
+#   and in others you need it set there.
+#   Defaults to false
+#
 # DEPRECATED
 #
 # [*keystone_ec2_url*]
@@ -298,6 +304,7 @@ class nova::api(
   $enable_instance_password             = $::os_service_default,
   $password_length                      = $::os_service_default,
   $install_cinder_client                = true,
+  $allow_resize_to_same_host            = false,
   # DEPRECATED PARAMETER
   $conductor_workers                    = undef,
   $ec2_listen_port                      = undef,
@@ -532,4 +539,6 @@ as a standalone service, or httpd for being run by a httpd server")
     $validation_options_hash = merge ($defaults, $validation_options)
     create_resources('openstacklib::service_validation', $validation_options_hash, {'subscribe' => 'Service[nova-api]'})
   }
+
+  ensure_resource('nova_config', 'DEFAULT/allow_resize_to_same_host', { value => $allow_resize_to_same_host })
 }
