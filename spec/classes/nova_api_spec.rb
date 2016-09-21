@@ -80,6 +80,7 @@ describe 'nova::api' do
         is_expected.to contain_nova_config('DEFAULT/enable_network_quota').with('value' => '<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('DEFAULT/enable_instance_password').with('value' => '<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('DEFAULT/password_length').with('value' => '<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('DEFAULT/allow_resize_to_same_host').with('value' => false)
       end
 
       it 'unconfigures neutron_metadata proxy' do
@@ -124,7 +125,8 @@ describe 'nova::api' do
           :enable_network_quota                 => false,
           :enable_instance_password             => true,
           :password_length                      => 12,
-          :pci_alias                            => "[{\"vendor_id\":\"8086\",\"product_id\":\"0126\",\"name\":\"graphic_card\"},{\"vendor_id\":\"9096\",\"product_id\":\"1520\",\"name\":\"network_card\"}]"
+          :pci_alias                            => "[{\"vendor_id\":\"8086\",\"product_id\":\"0126\",\"name\":\"graphic_card\"},{\"vendor_id\":\"9096\",\"product_id\":\"1520\",\"name\":\"network_card\"}]",
+          :allow_resize_to_same_host            => true,
         })
       end
 
@@ -185,6 +187,7 @@ describe 'nova::api' do
         is_expected.to contain_nova_config('DEFAULT/enable_network_quota').with('value' => false)
         is_expected.to contain_nova_config('DEFAULT/enable_instance_password').with('value' => true)
         is_expected.to contain_nova_config('DEFAULT/password_length').with('value' => '12')
+        is_expected.to contain_nova_config('DEFAULT/allow_resize_to_same_host').with('value' => true)
       end
 
       it 'configures nova pci_alias entries' do
