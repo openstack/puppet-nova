@@ -596,7 +596,7 @@ class nova(
 
       if ! $nova_private_key_file {
         fail("Unable to determine name of private key file.  Type specified was '${nova_private_key['type']}' \
-              but should be one of: ssh-rsa, ssh-dsa, ssh-ecdsa.")
+but should be one of: ssh-rsa, ssh-dsa, ssh-ecdsa.")
       }
 
       file { $nova_private_key_file:

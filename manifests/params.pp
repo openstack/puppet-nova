@@ -134,7 +134,7 @@ class nova::params {
     }
     default: {
       fail("Unsupported osfamily: ${::osfamily} operatingsystem: ${::operatingsystem}, \
-            module ${module_name} only support osfamily RedHat and Debian")
+module ${module_name} only support osfamily RedHat and Debian")
     }
   }
 

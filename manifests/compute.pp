@@ -185,18 +185,18 @@ class nova::compute (
   include ::nova::params
 
   if $default_availability_zone {
-    warning('The default_availability_zone parameter is deprecated and will be removed in a \
-              future release. Use default_availability_zone parameter of nova class instead.')
+    warning("The default_availability_zone parameter is deprecated and will be removed in a \
+future release. Use default_availability_zone parameter of nova class instead.")
   }
 
   if $default_schedule_zone {
-    warning('The default_schedule_zone parameter is deprecated and will be removed in a \
-              future release. Use default_schedule_zone parameter of nova class instead.')
+    warning("The default_schedule_zone parameter is deprecated and will be removed in a \
+future release. Use default_schedule_zone parameter of nova class instead.")
   }
 
   if $internal_service_availability_zone {
-    warning('The internal_service_availability_zone parameter is deprecated and will be \
-              removed in a future release. Use internal_service_availability_zone parameter of nova class instead.')
+    warning("The internal_service_availability_zone parameter is deprecated and will be \
+removed in a future release. Use internal_service_availability_zone parameter of nova class instead.")
   }
 
   if $network_device_mtu {
@@ -204,8 +204,8 @@ class nova::compute (
   }
 
   if $compute_manager {
-    warning('compute_manager is marked as deprecated in Nova but still needed when Ironic \
-              is used. It will be removed once Nova removes it.')
+    warning("compute_manager is marked as deprecated in Nova but still needed when Ironic \
+is used. It will be removed once Nova removes it.")
   }
 
   $vcpu_pin_set_real = pick(join(any2array($vcpu_pin_set), ','), $::os_service_default)

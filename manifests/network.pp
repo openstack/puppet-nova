@@ -203,7 +203,7 @@ class nova::network(
     }
     default: {
       fail("Unsupported network manager: ${nova::network_manager} The supported network managers are \
-            nova.network.manager.FlatManager, nova.network.FlatDHCPManager and nova.network.manager.VlanManager")
+nova.network.manager.FlatManager, nova.network.FlatDHCPManager and nova.network.manager.VlanManager")
     }
   }
 
