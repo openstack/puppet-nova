@@ -421,10 +421,6 @@
 #
 # DEPRECATED PARAMETERS
 #
-# [*verbose*]
-#   (optional) Set log output to verbose output.
-#   Defaults to undef
-#
 # [*memcached_servers*]
 #   (optional) DEPRECATED. Use memcached_servers from
 #   nova::keystone::authtoken class instead.
@@ -527,7 +523,6 @@ class nova(
   $disk_allocation_ratio                  = $::os_service_default,
   $purge_config                           = false,
   # DEPRECATED PARAMETERS
-  $verbose                                = undef,
   $memcached_servers                      = undef,
 ) inherits nova::params {
 
@@ -540,10 +535,6 @@ class nova(
   validate_array($enabled_ssl_apis)
   if empty($enabled_ssl_apis) and $use_ssl {
       warning('enabled_ssl_apis is empty but use_ssl is set to true')
-  }
-
-  if $verbose {
-    warning('verbose is deprecated, has no effect and will be removed after Newton cycle.')
   }
 
   if $memcached_servers {

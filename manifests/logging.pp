@@ -85,13 +85,6 @@
 #    Defaults to $::os_service_default
 #    Example: 'Y-%m-%d %H:%M:%S'
 #
-# DEPRECATED PARAMETERS
-#
-# [*verbose*]
-#   (optional) Should the daemons log verbose messages
-#   DEPRECATED: Parameter has no effect
-#   Defaults to undef
-#
 class nova::logging(
   $use_syslog                    = $::os_service_default,
   $use_stderr                    = $::os_service_default,
@@ -109,8 +102,6 @@ class nova::logging(
   $instance_format               = $::os_service_default,
   $instance_uuid_format          = $::os_service_default,
   $log_date_format               = $::os_service_default,
-  # DEPRECATED PARAMETERS
-  $verbose                       = undef,
 ) {
 
   include ::nova::deps
@@ -122,10 +113,6 @@ class nova::logging(
   $log_facility_real = pick($::nova::log_facility,$log_facility)
   $log_dir_real = pick($::nova::log_dir,$log_dir)
   $debug_real = pick($::nova::debug,$debug)
-
-  if $verbose {
-    warning('verbose is deprecated, has no effect and will be removed after Newton cycle.')
-  }
 
   oslo::log { 'nova_config':
     debug                         => $debug_real,

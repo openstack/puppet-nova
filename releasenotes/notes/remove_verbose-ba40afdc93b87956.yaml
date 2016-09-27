@@ -1,0 +1,4 @@
+---
+other:
+  - The verbose option was marked to be removed in Ocata,
+    in Newton the option was deprecated.
