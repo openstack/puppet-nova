@@ -1,5 +1,9 @@
 # Run test ie with: rspec spec/unit/provider/nova_spec.rb
 
+# Add openstacklib code to $LOAD_PATH so that we can load this during
+# standalone compiles without error.
+File.expand_path('../../../../openstacklib/lib', File.dirname(__FILE__)).tap { |dir| $LOAD_PATH.unshift(dir) unless $LOAD_PATH.include?(dir) }
+
 require 'puppet/util/inifile'
 require 'puppet/provider/openstack'
 require 'puppet/provider/openstack/auth'
