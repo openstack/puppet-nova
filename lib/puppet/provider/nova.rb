@@ -31,6 +31,9 @@ class Puppet::Provider::Nova < Puppet::Provider::Openstack
       @credentials.user_domain_name = nova_credentials['user_domain_name']
       @credentials.project_domain_name = nova_credentials['project_domain_name']
     end
+    if nova_credentials['region_name']
+      @credentials.region_name = nova_credentials['region_name']
+    end
     raise error unless @credentials.set?
     Puppet::Provider::Openstack.request(service, action, properties, @credentials)
   end

@@ -1,0 +1,6 @@
+---
+fixes:
+  - When some of the nova providers (such as nova_aggregate) were switched over
+    to use the shared provider code in puppet-openstacklib, region support was
+    inadvertently dropped.  This restores support for regions for all
+    providers.

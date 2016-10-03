@@ -15,6 +15,7 @@ describe Puppet::Provider::Nova do
       'project_name' => 'admin_tenant',
       'username'     => 'admin',
       'password'     => 'password',
+      'region_name'  => 'Region1',
     }
   end
 
@@ -72,6 +73,7 @@ describe Puppet::Provider::Nova do
         :OS_USERNAME     => credential_hash['username'],
         :OS_PROJECT_NAME => credential_hash['project_name'],
         :OS_PASSWORD     => credential_hash['password'],
+        :OS_REGION_NAME => credential_hash['region_name'],
       }
       klass.expects(:get_nova_credentials).with().returns(credential_hash)
       klass.expects(:withenv).with(authenv)
