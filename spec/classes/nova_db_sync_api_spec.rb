@@ -73,7 +73,9 @@ describe 'nova::db::sync_api' do
   }).each do |os,facts|
     context "on #{os}" do
       let (:facts) do
-        facts.merge(OSDefaults.get_facts())
+        facts.merge(OSDefaults.get_facts({
+          :os_workers     => 8,
+        }))
       end
 
       it_configures 'nova-dbsync-api'
