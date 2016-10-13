@@ -1,4 +1,4 @@
-# == Class: nova:serialproxy
+# == Class: nova::serialproxy
 #
 # Configures nova serialproxy
 #

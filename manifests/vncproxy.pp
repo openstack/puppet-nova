@@ -1,4 +1,4 @@
-# == Class: nova:vncproxy
+# == Class: nova::vncproxy
 #
 # Configures nova vnc proxy
 #

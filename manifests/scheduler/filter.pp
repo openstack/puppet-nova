@@ -1,4 +1,4 @@
-# == Class: nova:scheduler::filter
+# == Class: nova::scheduler::filter
 #
 # This class is aim to configure nova.scheduler filter
 #
