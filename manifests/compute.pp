@@ -137,10 +137,6 @@
 #   (optional) The availability zone to show internal services under.
 #   Defaults to undef
 #
-#  [*network_device_mtu*]
-#   (optional) Deprecated. The MTU size for the interfaces managed by nova
-#   Defaults to undef
-#
 #  [*compute_manager*]
 #   Deprecated. Compute manager
 #   The driver that will manage the running instances.
@@ -178,7 +174,6 @@ class nova::compute (
   $default_availability_zone          = undef,
   $default_schedule_zone              = undef,
   $internal_service_availability_zone = undef,
-  $network_device_mtu                 = undef,
   $compute_manager                    = $::os_service_default,
 ) {
 
@@ -198,10 +193,6 @@ future release. Use default_schedule_zone parameter of nova class instead.")
   if $internal_service_availability_zone {
     warning("The internal_service_availability_zone parameter is deprecated and will be \
 removed in a future release. Use internal_service_availability_zone parameter of nova class instead.")
-  }
-
-  if $network_device_mtu {
-    warning('network_device_mtu parameter is deprecated, has no effect and will be removed in a future release.')
   }
 
   if $compute_manager {
