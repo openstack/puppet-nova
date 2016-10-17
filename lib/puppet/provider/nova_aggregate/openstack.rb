@@ -8,7 +8,7 @@ Puppet::Type.type(:nova_aggregate).provide(
     Provider to manage nova aggregations
   EOT
 
-  @credentials = Puppet::Provider::Openstack::CredentialsV2_0.new
+  @credentials = Puppet::Provider::Openstack::CredentialsV3.new
 
   mk_resource_methods
 

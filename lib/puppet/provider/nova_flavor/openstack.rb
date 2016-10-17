@@ -8,7 +8,7 @@ Puppet::Type.type(:nova_flavor).provide(
      Manage Nova flavor
   EOT
 
-  @credentials = Puppet::Provider::Openstack::CredentialsV2_0.new
+  @credentials = Puppet::Provider::Openstack::CredentialsV3.new
 
   def initialize(value={})
     super(value)
