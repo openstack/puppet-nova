@@ -14,7 +14,6 @@ describe 'nova::compute::vmware' do
      :maximum_objects => 100,
      :task_poll_interval => 10.5,
      :use_linked_clone => false,
-     :wsdl_location => 'http://127.0.0.1:8080/vmware/SDK/wsdl/vim25/vimService.wsdl',
      :compute_driver => 'vmwareapi.FoobarDriver',
      :insecure => true,
      :datastore_regex => '/(?:[^:]|:[^:])+/' }
@@ -33,7 +32,6 @@ describe 'nova::compute::vmware' do
         is_expected.to contain_nova_config('vmware/maximum_objects').with_value(100)
         is_expected.to contain_nova_config('vmware/task_poll_interval').with_value(5.0)
         is_expected.to contain_nova_config('vmware/use_linked_clone').with_value(true)
-        is_expected.to contain_nova_config('vmware/wsdl_location').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('vmware/insecure').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('vmware/ca_file').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('vmware/datastore_regex').with_value('<SERVICE DEFAULT>')
@@ -58,7 +56,6 @@ describe 'nova::compute::vmware' do
       is_expected.to contain_nova_config('vmware/maximum_objects').with_value(params[:maximum_objects])
       is_expected.to contain_nova_config('vmware/task_poll_interval').with_value(params[:task_poll_interval])
       is_expected.to contain_nova_config('vmware/use_linked_clone').with_value(false)
-      is_expected.to contain_nova_config('vmware/wsdl_location').with_value(params[:wsdl_location])
       is_expected.to contain_nova_config('vmware/insecure').with_value(params[:insecure])
       is_expected.to contain_nova_config('vmware/datastore_regex').with_value(params[:datastore_regex])
     end
