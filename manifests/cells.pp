@@ -132,12 +132,6 @@
 #    It might be used by some cell scheduling code in the future
 #    Defaults to '1.0'
 #
-# DEPRECATED
-#
-#  [*driver*]
-#    Cells communication driver to use
-#    Defaults to undef
-#
 class nova::cells (
   $bandwidth_update_interval     = '600',
   $call_timeout                  = '60',
@@ -166,16 +160,10 @@ class nova::cells (
   $scheduler_weight_classes      = 'nova.cells.weights.all_weighers',
   $weight_offset                 = '1.0',
   $weight_scale                  = '1.0',
-  # Deprecated
-  $driver                        = undef,
 ) {
 
   include ::nova::deps
   include ::nova::params
-
-  if $driver {
-    warning('driver parameter is now deprecated, has no effect and will be removed at Ocata cycle.')
-  }
 
   case $cell_type {
     'parent': {
