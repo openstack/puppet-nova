@@ -1,0 +1,3 @@
+---
+deprecations:
+  - Deprecate the VMware driver's ``wsdl_location`` config option.
