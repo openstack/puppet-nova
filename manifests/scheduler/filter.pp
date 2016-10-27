@@ -5,7 +5,8 @@
 # === Parameters:
 #
 # [*scheduler_host_manager*]
-#   (optional) The scheduler host manager class to use
+#   (optional) The scheduler host manager class to use. Should be either
+#   'host_manager' or 'ironic_host_manager'
 #   Defaults to 'host_manager'
 #
 # [*scheduler_max_attempts*]
@@ -53,6 +54,51 @@
 #   (optional) Use baremetal_scheduler_default_filters or not.
 #   Defaults to false
 #
+# [*periodic_task_interval*]
+#   (optional) This value controls how often (in seconds) to run periodic tasks
+#   in the scheduler. The specific tasks that are run for each period are
+#   determined by the particular scheduler being used.
+#   Defaults to $::os_service_default
+#
+# [*track_instance_changes*]
+#   (optional) Enable querying of individual hosts for instance information.
+#   Defaults to $::os_service_default
+#
+# [*ram_weight_multiplier*]
+#   (optional) Ram weight multipler ratio. This option determines how hosts
+#   with more or less available RAM are weighed.
+#   Defaults to $::os_service_default
+#
+# [*disk_weight_multiplier*]
+#   (optional) Disk weight multipler ratio. Multiplier used for weighing free
+#   disk space. Negative numbers mean to stack vs spread.
+#   Defaults to $::os_service_default
+#
+# [*io_ops_weight_multiplier*]
+#   (optional) IO operations weight multipler ratio. This option determines
+#   how hosts with differing workloads are weighed
+#   Defaults to $::os_service_default
+#
+# [*soft_affinity_weight_multiplier*]
+#   (optional) Multiplier used for weighing hosts for group soft-affinity
+#   Defaults to $::os_service_default
+#
+# [*soft_anti_affinity_weight_multiplier*]
+#   (optional) Multiplier used for weighing hosts for group soft-anti-affinity
+#   Defaults to $::os_service_default
+#
+# [*restrict_isolated_hosts_to_isolated_images*]
+#   (optional) Prevent non-isolated images from being built on isolated hosts.
+#   Defaults to $::os_service_default
+#
+# [*aggregate_image_properties_isolation_namespace*]
+#   (optional) Image property namespace for use in the host aggregate
+#   Defaults to $::os_service_default
+#
+# [*aggregate_image_properties_isolation_separator*]
+#   (optional) Separator character(s) for image property namespace and name
+#   Defaults to $::os_service_default
+#
 # DEPRECATED PARAMETERS
 #
 # [*cpu_allocation_ratio*]
@@ -68,22 +114,32 @@
 #   Defaults to undef
 #
 class nova::scheduler::filter (
-  $scheduler_host_manager              = 'host_manager',
-  $scheduler_max_attempts              = '3',
-  $scheduler_host_subset_size          = '1',
-  $max_io_ops_per_host                 = '8',
-  $max_instances_per_host              = '50',
-  $isolated_images                     = $::os_service_default,
-  $isolated_hosts                      = $::os_service_default,
-  $scheduler_available_filters         = ['nova.scheduler.filters.all_filters'],
-  $scheduler_default_filters           = $::os_service_default,
-  $scheduler_weight_classes            = 'nova.scheduler.weights.all_weighers',
-  $baremetal_scheduler_default_filters = $::os_service_default,
-  $scheduler_use_baremetal_filters     = false,
+  $scheduler_host_manager                         = 'host_manager',
+  $scheduler_max_attempts                         = '3',
+  $scheduler_host_subset_size                     = '1',
+  $max_io_ops_per_host                            = '8',
+  $max_instances_per_host                         = '50',
+  $isolated_images                                = $::os_service_default,
+  $isolated_hosts                                 = $::os_service_default,
+  $scheduler_available_filters                    = ['nova.scheduler.filters.all_filters'],
+  $scheduler_default_filters                      = $::os_service_default,
+  $scheduler_weight_classes                       = 'nova.scheduler.weights.all_weighers',
+  $baremetal_scheduler_default_filters            = $::os_service_default,
+  $scheduler_use_baremetal_filters                = false,
+  $periodic_task_interval                         = $::os_service_default,
+  $track_instance_changes                         = $::os_service_default,
+  $ram_weight_multiplier                          = $::os_service_default,
+  $disk_weight_multiplier                         = $::os_service_default,
+  $io_ops_weight_multiplier                       = $::os_service_default,
+  $soft_affinity_weight_multiplier                = $::os_service_default,
+  $soft_anti_affinity_weight_multiplier           = $::os_service_default,
+  $restrict_isolated_hosts_to_isolated_images     = $::os_service_default,
+  $aggregate_image_properties_isolation_namespace = $::os_service_default,
+  $aggregate_image_properties_isolation_separator = $::os_service_default,
   # DEPRECATED PARAMETERS
-  $cpu_allocation_ratio                = undef,
-  $ram_allocation_ratio                = undef,
-  $disk_allocation_ratio               = undef,
+  $cpu_allocation_ratio                           = undef,
+  $ram_allocation_ratio                           = undef,
+  $disk_allocation_ratio                          = undef,
 ) {
 
   include ::nova::deps
@@ -137,19 +193,68 @@ class nova::scheduler::filter (
     warning('disk_allocation_ratio is deprecated in nova::scheduler::filter, please add to nova::init instead')
   }
 
+  # TODO(aschultz): these should probably be in nova::scheduler ...
   nova_config {
-    'DEFAULT/scheduler_host_manager':              value => $scheduler_host_manager;
-    'DEFAULT/scheduler_max_attempts':              value => $scheduler_max_attempts;
-    'DEFAULT/scheduler_host_subset_size':          value => $scheduler_host_subset_size;
-    'DEFAULT/max_io_ops_per_host':                 value => $max_io_ops_per_host;
-    'DEFAULT/max_instances_per_host':              value => $max_instances_per_host;
-    'DEFAULT/scheduler_available_filters':         value => $scheduler_available_filters_real;
-    'DEFAULT/scheduler_weight_classes':            value => $scheduler_weight_classes;
-    'DEFAULT/scheduler_use_baremetal_filters':     value => $scheduler_use_baremetal_filters;
-    'DEFAULT/scheduler_default_filters':           value => $scheduler_default_filters_real;
-    'DEFAULT/baremetal_scheduler_default_filters': value => $baremetal_scheduler_default_filters_real;
-    'DEFAULT/isolated_images':                     value => $isolated_images_real;
-    'DEFAULT/isolated_hosts':                      value => $isolated_hosts_real;
+    'scheduler/host_manager':           value => $scheduler_host_manager;
+    'scheduler/max_attempts':           value => $scheduler_max_attempts;
+    'scheduler/periodic_task_interval': value => $periodic_task_interval;
+  }
+
+  nova_config {
+    'filter_scheduler/host_subset_size':
+      value => $scheduler_host_subset_size;
+    'filter_scheduler/max_io_ops_per_host':
+      value => $max_io_ops_per_host;
+    'filter_scheduler/max_instances_per_host':
+      value => $max_instances_per_host;
+    'filter_scheduler/track_instance_changes':
+      value => $track_instance_changes;
+    'filter_scheduler/available_filters':
+      value => $scheduler_available_filters_real;
+    'filter_scheduler/weight_classes':
+      value => $scheduler_weight_classes;
+    'filter_scheduler/use_baremetal_filters':
+      value => $scheduler_use_baremetal_filters;
+    'filter_scheduler/enabled_filters':
+      value => $scheduler_default_filters_real;
+    'filter_scheduler/baremetal_enabled_filters':
+      value => $baremetal_scheduler_default_filters_real;
+    'filter_scheduler/isolated_images':
+      value => $isolated_images_real;
+    'filter_scheduler/isolated_hosts':
+      value => $isolated_hosts_real;
+    'filter_scheduler/ram_weight_multiplier':
+      value => $ram_weight_multiplier;
+    'filter_scheduler/disk_weight_multiplier':
+      value => $disk_weight_multiplier;
+    'filter_scheduler/io_ops_weight_multiplier':
+      value => $io_ops_weight_multiplier;
+    'filter_scheduler/soft_affinity_weight_multiplier':
+      value => $soft_affinity_weight_multiplier;
+    'filter_scheduler/soft_anti_affinity_weight_multiplier':
+      value => $soft_anti_affinity_weight_multiplier;
+    'filter_scheduler/restrict_isolated_hosts_to_isolated_images':
+      value => $restrict_isolated_hosts_to_isolated_images;
+    'filter_scheduler/aggregate_image_properties_isolation_namespace':
+      value => $aggregate_image_properties_isolation_namespace;
+    'filter_scheduler/aggregate_image_properties_isolation_separator':
+      value => $aggregate_image_properties_isolation_separator;
+  }
+
+  # TODO(aschultz): old options, remove in P
+  nova_config {
+    'DEFAULT/scheduler_host_manager':              ensure => 'absent';
+    'DEFAULT/scheduler_max_attempts':              ensure => 'absent';
+    'DEFAULT/scheduler_host_subset_size':          ensure => 'absent';
+    'DEFAULT/max_io_ops_per_host':                 ensure => 'absent';
+    'DEFAULT/max_instances_per_host':              ensure => 'absent';
+    'DEFAULT/scheduler_available_filters':         ensure => 'absent';
+    'DEFAULT/scheduler_weight_classes':            ensure => 'absent';
+    'DEFAULT/scheduler_use_baremetal_filters':     ensure => 'absent';
+    'DEFAULT/scheduler_default_filters':           ensure => 'absent';
+    'DEFAULT/baremetal_scheduler_default_filters': ensure => 'absent';
+    'DEFAULT/isolated_images':                     ensure => 'absent';
+    'DEFAULT/isolated_hosts':                      ensure => 'absent';
   }
 
 }

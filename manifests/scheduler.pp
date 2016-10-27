@@ -40,6 +40,11 @@ class nova::scheduler(
   }
 
   nova_config {
-    'DEFAULT/scheduler_driver': value => $scheduler_driver;
+    'scheduler/driver': value => $scheduler_driver;
+  }
+
+  # TODO(aschultz): old options, remove in P
+  nova_config {
+    'DEFAULT/scheduler_driver': ensure => 'absent';
   }
 }

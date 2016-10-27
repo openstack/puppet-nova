@@ -20,7 +20,8 @@ describe 'nova::scheduler' do
       :ensure    => 'running'
     )}
 
-    it { is_expected.to contain_nova_config('DEFAULT/scheduler_driver').with_value('filter_scheduler') }
+    it { is_expected.to contain_nova_config('DEFAULT/scheduler_driver').with_ensure('absent') }
+    it { is_expected.to contain_nova_config('scheduler/driver').with_value('filter_scheduler') }
 
     context 'with manage_service as false' do
       let :params do
@@ -46,7 +47,7 @@ describe 'nova::scheduler' do
         { :scheduler_driver => 'custom driver' }
       end
 
-      it { is_expected.to contain_nova_config('DEFAULT/scheduler_driver').with_value('custom driver') }
+      it { is_expected.to contain_nova_config('scheduler/driver').with_value('custom driver') }
     end
 
     context 'with default database parameters' do
