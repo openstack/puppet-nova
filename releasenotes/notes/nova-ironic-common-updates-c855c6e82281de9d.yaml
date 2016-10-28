@@ -1,0 +1,10 @@
+---
+deprecation:
+  - nova::ironic::common::admin_username, nova::ironic::common::admin_password,
+    nova::ironic::common::admin_url, nova::ironic::common::admin_tenant_name
+    have been deprecated in favor of nova::ironic::common::username,
+    nova::ironic::common::password, nova::ironic::common::auth_url,
+    nova::ironic::common::project_name.
+upgrade:
+  - Deprecated options from nova::compute::ironic have been removed. Please
+    use the options available via nova::ironic::common.
