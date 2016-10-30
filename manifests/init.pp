@@ -731,13 +731,13 @@ but should be one of: ssh-rsa, ssh-dsa, ssh-ecdsa.")
 
   nova_config {
     'cinder/catalog_info':                            value => $cinder_catalog_info;
+    'os_vif_linux_bridge/use_ipv6':                   value => $use_ipv6;
     'DEFAULT/notify_api_faults':                      value => $notify_api_faults;
     # Following may need to be broken out to different nova services
     'DEFAULT/state_path':                             value => $state_path;
     'DEFAULT/service_down_time':                      value => $service_down_time;
     'DEFAULT/rootwrap_config':                        value => $rootwrap_config;
     'DEFAULT/report_interval':                        value => $report_interval;
-    'DEFAULT/use_ipv6':                               value => $use_ipv6;
     'DEFAULT/block_device_allocate_retries':          value => $block_device_allocate_retries;
     'DEFAULT/block_device_allocate_retries_interval': value => $block_device_allocate_retries_interval;
   }
