@@ -1,0 +1,4 @@
+---
+deprecations:
+  - The deprecated ``volume_api_class`` config option has been
+    removed.
