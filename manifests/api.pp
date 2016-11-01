@@ -211,10 +211,6 @@
 #   (optional) DEPRECATED. The keystone url where nova should send requests for ec2tokens
 #   Defaults to undef
 #
-# [*volume_api_class*]
-#   (optional) DEPRECATED. The name of the class that nova will use to access volumes. Cinder is the only option.
-#   Defaults to undef
-#
 # [*ec2_listen_port*]
 #   (optional) DEPRECATED. The port on which the EC2 API will listen.
 #   Defaults to port undef
@@ -311,7 +307,6 @@ class nova::api(
   $ec2_workers                          = undef,
   $keystone_ec2_url                     = undef,
   $auth_version                         = undef,
-  $volume_api_class                     = undef,
   $osapi_v3                             = undef,
   $admin_password                       = undef,
   $auth_uri                             = undef,
@@ -332,10 +327,6 @@ class nova::api(
 
   if $osapi_v3 {
     warning('osapi_v3 is deprecated, has no effect and will be removed in a future release.')
-  }
-
-  if $volume_api_class {
-    warning('volume_api_class parameter is deprecated, has no effect and will be removed in a future release.')
   }
 
   if $ec2_listen_port or $ec2_workers or $keystone_ec2_url {

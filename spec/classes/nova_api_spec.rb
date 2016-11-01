@@ -103,7 +103,6 @@ describe 'nova::api' do
           :metadata_listen                      => '127.0.0.1',
           :metadata_listen_port                 => 8875,
           :osapi_compute_listen_port            => 8874,
-          :volume_api_class                     => 'nova.volume.cinder.API',
           :use_forwarded_for                    => false,
           :ratelimits                           => '(GET, "*", .*, 100, MINUTE);(POST, "*", .*, 200, MINUTE)',
           :neutron_metadata_proxy_shared_secret => 'secrete',
@@ -204,11 +203,11 @@ describe 'nova::api' do
         })
       end
       it { is_expected.to contain_exec('execute nova-api validation').with(
-        :path        => '/usr/bin:/bin:/usr/sbin:/sbin',
-        :provider    => 'shell',
-        :tries       => '10',
-        :try_sleep   => '2',
-        :command     => 'nova --os-auth-url http://127.0.0.1:5000/ --os-project-name services --os-username nova --os-password passw0rd flavor-list',
+        :path      => '/usr/bin:/bin:/usr/sbin:/sbin',
+        :provider  => 'shell',
+        :tries     => '10',
+        :try_sleep => '2',
+        :command   => 'nova --os-auth-url http://127.0.0.1:5000/ --os-project-name services --os-username nova --os-password passw0rd flavor-list',
       )}
 
       it { is_expected.to contain_anchor('create nova-api anchor').with(
@@ -224,11 +223,11 @@ describe 'nova::api' do
         })
       end
       it { is_expected.to contain_exec('execute nova-api validation').with(
-        :path        => '/usr/bin:/bin:/usr/sbin:/sbin',
-        :provider    => 'shell',
-        :tries       => '10',
-        :try_sleep   => '2',
-        :command     => 'my-script',
+        :path      => '/usr/bin:/bin:/usr/sbin:/sbin',
+        :provider  => 'shell',
+        :tries     => '10',
+        :try_sleep => '2',
+        :command   => 'my-script',
       )}
 
       it { is_expected.to contain_anchor('create nova-api anchor').with(
@@ -239,8 +238,8 @@ describe 'nova::api' do
     context 'while not managing service state' do
       before do
         params.merge!({
-          :enabled           => false,
-          :manage_service    => false,
+          :enabled        => false,
+          :manage_service => false,
         })
       end
 
@@ -301,10 +300,10 @@ describe 'nova::api' do
 
       it 'enable nova API service' do
         is_expected.to contain_service('nova-api').with(
-          :ensure     => 'running',
-          :name       => platform_params[:nova_api_service],
-          :enable     => true,
-          :tag        => 'nova-service',
+          :ensure => 'running',
+          :name   => platform_params[:nova_api_service],
+          :enable => true,
+          :tag    => 'nova-service',
         )
       end
       it 'enable metadata in evenlet configuration' do
@@ -326,10 +325,10 @@ describe 'nova::api' do
 
       it 'disable nova API service' do
         is_expected.to contain_service('nova-api').with(
-          :ensure     => 'stopped',
-          :name       => platform_params[:nova_api_service],
-          :enable     => false,
-          :tag        => 'nova-service',
+          :ensure => 'stopped',
+          :name   => platform_params[:nova_api_service],
+          :enable => false,
+          :tag    => 'nova-service',
         )
       end
     end
