@@ -1,0 +1,4 @@
+---
+deprecations:
+  - The previously deprecated config option ``listen```of the group
+    ``serial_console`` has been removed.
