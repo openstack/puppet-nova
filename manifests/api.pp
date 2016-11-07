@@ -220,10 +220,6 @@
 #   nova::keystone::authtoken class instead.
 #   Defaults to undef
 #
-# [*osapi_v3*]
-#   (optional) DEPRECATED. Enable or not Nova API v3
-#   Defaults to undef
-#
 # [*ec2_workers*]
 #   (optional) DEPRECATED. Number of workers for EC2 service
 #   Defaults to undef
@@ -307,7 +303,6 @@ class nova::api(
   $ec2_workers                          = undef,
   $keystone_ec2_url                     = undef,
   $auth_version                         = undef,
-  $osapi_v3                             = undef,
   $admin_password                       = undef,
   $auth_uri                             = undef,
   $identity_uri                         = undef,
@@ -323,10 +318,6 @@ class nova::api(
   if $install_cinder_client {
     include ::cinder::client
     Class['cinder::client'] ~> Nova::Generic_service['api']
-  }
-
-  if $osapi_v3 {
-    warning('osapi_v3 is deprecated, has no effect and will be removed in a future release.')
   }
 
   if $ec2_listen_port or $ec2_workers or $keystone_ec2_url {
