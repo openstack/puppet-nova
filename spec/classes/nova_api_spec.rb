@@ -3,11 +3,14 @@ require 'spec_helper'
 describe 'nova::api' do
 
   let :pre_condition do
-    'include nova'
+    "include nova
+     class { '::nova::keystone::authtoken':
+       password => 'passw0rd',
+     }"
   end
 
   let :params do
-    { :admin_password => 'passw0rd' }
+    {}
   end
 
   shared_examples 'nova-api' do
@@ -33,19 +36,6 @@ describe 'nova::api' do
         is_expected.to contain_package('nova-api').that_requires('Anchor[nova::install::begin]')
         is_expected.to contain_package('nova-api').that_notifies('Anchor[nova::install::end]')
         is_expected.to_not contain_exec('validate_nova_api')
-      end
-
-      it 'configures keystone_authtoken middleware' do
-       is_expected.to contain_nova_config(
-          'keystone_authtoken/auth_uri').with_value('http://127.0.0.1:5000/')
-       is_expected.to contain_nova_config(
-          'keystone_authtoken/auth_url').with_value('http://127.0.0.1:35357/')
-        is_expected.to contain_nova_config(
-          'keystone_authtoken/project_name').with_value('services')
-        is_expected.to contain_nova_config(
-          'keystone_authtoken/username').with_value('nova')
-        is_expected.to contain_nova_config(
-          'keystone_authtoken/password').with_value('passw0rd').with_secret(true)
       end
 
       it 'enable metadata in evenlet configuration' do
@@ -94,11 +84,6 @@ describe 'nova::api' do
         params.merge!({
           :enabled                              => false,
           :ensure_package                       => '2012.1-2',
-          :auth_uri                             => 'https://10.0.0.1:9999/',
-          :identity_uri                         => 'https://10.0.0.1:8888/',
-          :admin_tenant_name                    => 'service2',
-          :admin_user                           => 'nova2',
-          :admin_password                       => 'passw0rd2',
           :api_bind_address                     => '192.168.56.210',
           :metadata_listen                      => '127.0.0.1',
           :metadata_listen_port                 => 8875,
@@ -142,21 +127,6 @@ describe 'nova::api' do
           :enable    => false,
           :tag       => 'nova-service',
         )
-      end
-
-      it 'configures keystone_authtoken middleware' do
-        is_expected.to contain_nova_config(
-          'keystone_authtoken/auth_uri').with_value('https://10.0.0.1:9999/')
-        is_expected.to contain_nova_config(
-          'keystone_authtoken/auth_url').with_value('https://10.0.0.1:8888/')
-        is_expected.to contain_nova_config(
-          'keystone_authtoken/project_name').with_value('service2')
-        is_expected.to contain_nova_config(
-          'keystone_authtoken/username').with_value('nova2')
-        is_expected.to contain_nova_config(
-          'keystone_authtoken/password').with_value('passw0rd2').with_secret(true)
-        is_expected.to contain_nova_paste_api_ini(
-          'filter:ratelimit/limits').with_value('(GET, "*", .*, 100, MINUTE);(POST, "*", .*, 200, MINUTE)')
       end
 
       it 'configures various stuff' do
@@ -248,7 +218,10 @@ describe 'nova::api' do
 
     context 'with default database parameters' do
       let :pre_condition do
-        "include nova"
+        "include nova
+         class { '::nova::keystone::authtoken':
+           password => 'a_big_secret',
+         }"
       end
 
       it { is_expected.to_not contain_nova_config('database/connection') }
@@ -266,6 +239,9 @@ describe 'nova::api' do
            api_database_connection => 'mysql://user:pass@db/db2',
            api_slave_connection    => 'mysql://user:pass@slave/db2',
            database_idle_timeout   => '30',
+         }
+         class { '::nova::keystone::authtoken':
+           password => 'passw0rd',
          }
         "
       end
@@ -295,7 +271,10 @@ describe 'nova::api' do
 
       let :pre_condition do
         "include ::apache
-         include ::nova"
+         include ::nova
+         class { '::nova::keystone::authtoken':
+           password => 'a_big_secret',
+         }"
       end
 
       it 'enable nova API service' do
@@ -320,7 +299,10 @@ describe 'nova::api' do
 
       let :pre_condition do
         "include ::apache
-         include ::nova"
+         include ::nova
+         class { '::nova::keystone::authtoken':
+           password => 'a_big_secret',
+         }"
       end
 
       it 'disable nova API service' do
@@ -349,7 +331,10 @@ describe 'nova::api' do
 
       let :pre_condition do
         "include ::apache
-         include ::nova"
+         include ::nova
+         class { '::nova::keystone::authtoken':
+           password => 'a_big_secret',
+         }"
       end
 
       it_raises 'a Puppet::Error', /Invalid service_name/

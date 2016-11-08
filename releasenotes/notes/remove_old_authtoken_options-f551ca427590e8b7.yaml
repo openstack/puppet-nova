@@ -1,0 +1,9 @@
+---
+other:
+  - removed deprecated nova::api::admin_tenant_name
+  - removed deprecated nova::api::admin_user
+  - removed deprecated nova::api::admin_password
+  - removed deprecated nova::api::identity_uri
+  - removed deprecated nova::api::auth_uri
+  - removed deprecated nova::api::auth_version
+  - removed deprecated nova::memcached_servers
