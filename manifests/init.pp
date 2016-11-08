@@ -73,30 +73,6 @@
 #   (optional) List of addresses for api servers.
 #   Defaults to 'http://localhost:9292'
 #
-# [*rabbit_host*]
-#   (optional) Location of rabbitmq installation. (string value)
-#   Defaults to $::os_service_default
-#
-# [*rabbit_hosts*]
-#   (optional) List of clustered rabbit servers. (string value)
-#   Defaults to $::os_service_default
-#
-# [*rabbit_port*]
-#   (optional) Port for rabbitmq instance. (port value)
-#   Defaults to $::os_service_default
-#
-# [*rabbit_password*]
-#   (optional) Password used to connect to rabbitmq. (string value)
-#   Defaults to $::os_service_default
-#
-# [*rabbit_userid*]
-#   (optional) User used to connect to rabbitmq. (string value)
-#   Defaults to $::os_service_default
-#
-# [*rabbit_virtual_host*]
-#   (optional) The RabbitMQ virtual host. (string value)
-#   Defaults to $::os_service_default
-#
 # [*rabbit_use_ssl*]
 #   (optional) Boolean. Connect over SSL for RabbitMQ. (boolean value)
 #   Defaults to $::os_service_default
@@ -427,6 +403,30 @@
 #   memcached server IP's:Memcached Port.
 #   Defaults to undef
 #
+# [*rabbit_host*]
+#   (optional) Location of rabbitmq installation. (string value)
+#   Defaults to $::os_service_default
+#
+# [*rabbit_hosts*]
+#   (optional) List of clustered rabbit servers. (string value)
+#   Defaults to $::os_service_default
+#
+# [*rabbit_port*]
+#   (optional) Port for rabbitmq instance. (port value)
+#   Defaults to $::os_service_default
+#
+# [*rabbit_password*]
+#   (optional) Password used to connect to rabbitmq. (string value)
+#   Defaults to $::os_service_default
+#
+# [*rabbit_userid*]
+#   (optional) User used to connect to rabbitmq. (string value)
+#   Defaults to $::os_service_default
+#
+# [*rabbit_virtual_host*]
+#   (optional) The RabbitMQ virtual host. (string value)
+#   Defaults to $::os_service_default
+#
 class nova(
   $ensure_package                         = 'present',
   $database_connection                    = undef,
@@ -448,12 +448,6 @@ class nova(
   # these glance params should be optional
   # this should probably just be configured as a glance client
   $glance_api_servers                     = 'http://localhost:9292',
-  $rabbit_host                            = $::os_service_default,
-  $rabbit_hosts                           = $::os_service_default,
-  $rabbit_password                        = $::os_service_default,
-  $rabbit_port                            = $::os_service_default,
-  $rabbit_userid                          = $::os_service_default,
-  $rabbit_virtual_host                    = $::os_service_default,
   $rabbit_use_ssl                         = $::os_service_default,
   $rabbit_heartbeat_timeout_threshold     = $::os_service_default,
   $rabbit_heartbeat_rate                  = $::os_service_default,
@@ -524,6 +518,12 @@ class nova(
   $purge_config                           = false,
   # DEPRECATED PARAMETERS
   $memcached_servers                      = undef,
+  $rabbit_host                            = $::os_service_default,
+  $rabbit_hosts                           = $::os_service_default,
+  $rabbit_password                        = $::os_service_default,
+  $rabbit_port                            = $::os_service_default,
+  $rabbit_userid                          = $::os_service_default,
+  $rabbit_virtual_host                    = $::os_service_default,
 ) inherits nova::params {
 
   include ::nova::deps
@@ -540,6 +540,18 @@ class nova(
   if $memcached_servers {
     warning('nova::memcached_servers is deprecated, use nova::keystone::authtoken::memcached_servers instead.')
   }
+
+  if !is_service_default($rabbit_host) or
+    !is_service_default($rabbit_hosts) or
+    !is_service_default($rabbit_password) or
+    !is_service_default($rabbit_port) or
+    !is_service_default($rabbit_userid) or
+    !is_service_default($rabbit_virtual_host) {
+    warning("nova::rabbit_host, nova::rabbit_hosts, nova::rabbit_password, \
+nova::rabbit_port, nova::rabbit_userid and nova::rabbit_virtual_host are \
+deprecated. Please use nova::default_transport_url instead.")
+  }
+
   if $use_ssl {
     if !$cert_file {
       fail('The cert_file parameter is required when use_ssl is set to true')

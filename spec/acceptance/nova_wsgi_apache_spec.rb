@@ -31,12 +31,10 @@ describe 'basic nova' do
       class { '::nova':
         database_connection     => 'mysql+pymysql://nova:a_big_secret@127.0.0.1/nova?charset=utf8',
         api_database_connection => 'mysql+pymysql://nova_api:a_big_secret@127.0.0.1/nova_api?charset=utf8',
-        rabbit_userid           => 'nova',
-        rabbit_password         => 'an_even_bigger_secret',
+        default_transport_url   => 'rabbit://nova:an_even_bigger_secret@127.0.0.1:5672/',
         image_service           => 'nova.image.glance.GlanceImageService',
         glance_api_servers      => 'localhost:9292',
         debug                   => true,
-        rabbit_host             => '127.0.0.1',
       }
       class { '::nova::db::mysql':
         password => 'a_big_secret',
