@@ -45,6 +45,10 @@
 #   Qemu1.5 (raw format) Qemu1.6(qcow2 format).
 #   Defaults to $::os_service_default
 #
+# [*libvirt_hw_machine_type*]
+#   (optional) Option to specify a default machine type per host architecture.
+#   Defaults to $::os_service_default
+#
 # [*libvirt_inject_password*]
 #   (optional) Inject the admin password at boot time, without an agent.
 #   Defaults to false
@@ -113,6 +117,7 @@ class nova::compute::libvirt (
   $libvirt_cpu_model                          = undef,
   $libvirt_disk_cachemodes                    = [],
   $libvirt_hw_disk_discard                    = $::os_service_default,
+  $libvirt_hw_machine_type                    = $::os_service_default,
   $libvirt_inject_password                    = false,
   $libvirt_inject_key                         = false,
   $libvirt_inject_partition                   = -2,
@@ -189,6 +194,7 @@ class nova::compute::libvirt (
     'libvirt/inject_key':       value => $libvirt_inject_key;
     'libvirt/inject_partition': value => $libvirt_inject_partition;
     'libvirt/hw_disk_discard':  value => $libvirt_hw_disk_discard;
+    'libvirt/hw_machine_type':  value => $libvirt_hw_machine_type;
   }
 
   # cpu_model param is only valid if cpu_mode=custom
