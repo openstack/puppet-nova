@@ -70,6 +70,7 @@ describe 'nova::compute::libvirt' do
           :libvirt_snapshot_image_format              => 'raw',
           :libvirt_disk_cachemodes                    => ['file=directsync','block=none'],
           :libvirt_hw_disk_discard                    => 'unmap',
+          :libvirt_hw_machine_type                    => 'x86_64=machinetype1,armv7l=machinetype2',
           :remove_unused_base_images                  => true,
           :remove_unused_resized_minimum_age_seconds  => 3600,
           :remove_unused_original_minimum_age_seconds => 3600,
@@ -91,6 +92,7 @@ describe 'nova::compute::libvirt' do
       it { is_expected.to contain_nova_config('libvirt/snapshot_image_format').with_ensure('absent')}
       it { is_expected.to contain_nova_config('libvirt/disk_cachemodes').with_value('file=directsync,block=none')}
       it { is_expected.to contain_nova_config('libvirt/hw_disk_discard').with_value('unmap')}
+      it { is_expected.to contain_nova_config('libvirt/hw_machine_type').with_value('x86_64=machinetype1,armv7l=machinetype2')}
       it { is_expected.to contain_nova_config('vnc/vncserver_listen').with_value('0.0.0.0')}
       it { is_expected.to contain_nova_config('DEFAULT/remove_unused_base_images').with_value(true)}
       it { is_expected.to contain_nova_config('DEFAULT/remove_unused_original_minimum_age_seconds').with_value(3600)}

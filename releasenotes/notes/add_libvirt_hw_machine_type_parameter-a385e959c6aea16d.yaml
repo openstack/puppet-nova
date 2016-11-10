@@ -1,0 +1,5 @@
+---
+features:
+  - Add libvirt_hw_machine_type parameter to
+    nova::compute::libvirt to allow setting the
+    libvirt/hw_machine_type option in nova.conf
