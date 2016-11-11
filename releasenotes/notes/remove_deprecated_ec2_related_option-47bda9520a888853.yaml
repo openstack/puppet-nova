@@ -1,0 +1,8 @@
+---
+deprecations:
+  - remove ec2 related options
+    previously deprecated config option
+    ''ec2_listen_port''
+    ''ec2_workers''
+    ''keystone_ec2_url''
+    to be removed, as they were never used in code.
