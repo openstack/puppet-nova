@@ -1,0 +1,6 @@
+---
+deprecations:
+  - nova::rabbit_host, nova::rabbit_hosts, nova::rabbit_password,
+    nova::rabbit_port, nova::rabbit_userid and
+    nova::rabbit_virtual_host are deprecated.
+    nova::default_transport_url should be used instead.
