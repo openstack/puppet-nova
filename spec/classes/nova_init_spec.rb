@@ -94,7 +94,6 @@ describe 'nova' do
           :service_down_time                       => '120',
           :auth_strategy                           => 'foo',
           :ensure_package                          => '2012.1.1-15.el6',
-          :memcached_servers                       => ['memcached01:11211', 'memcached02:11211'],
           :host                                    => 'test-001.example.org',
           :notification_transport_url              => 'rabbit://rabbit_user:password@localhost:5673',
           :notification_driver                     => 'ceilometer.compute.nova_notifier',

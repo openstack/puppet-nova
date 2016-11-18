@@ -397,12 +397,6 @@
 #
 # DEPRECATED PARAMETERS
 #
-# [*memcached_servers*]
-#   (optional) DEPRECATED. Use memcached_servers from
-#   nova::keystone::authtoken class instead.
-#   memcached server IP's:Memcached Port.
-#   Defaults to undef
-#
 # [*rabbit_host*]
 #   (optional) Location of rabbitmq installation. (string value)
 #   Defaults to $::os_service_default
@@ -517,7 +511,6 @@ class nova(
   $disk_allocation_ratio                  = $::os_service_default,
   $purge_config                           = false,
   # DEPRECATED PARAMETERS
-  $memcached_servers                      = undef,
   $rabbit_host                            = $::os_service_default,
   $rabbit_hosts                           = $::os_service_default,
   $rabbit_password                        = $::os_service_default,
@@ -535,10 +528,6 @@ class nova(
   validate_array($enabled_ssl_apis)
   if empty($enabled_ssl_apis) and $use_ssl {
       warning('enabled_ssl_apis is empty but use_ssl is set to true')
-  }
-
-  if $memcached_servers {
-    warning('nova::memcached_servers is deprecated, use nova::keystone::authtoken::memcached_servers instead.')
   }
 
   if !is_service_default($rabbit_host) or

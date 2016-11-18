@@ -215,11 +215,6 @@
 #   (optional) DEPRECATED. The port on which the EC2 API will listen.
 #   Defaults to port undef
 #
-# [*auth_version*]
-#   (optional) DEPRECATED. Use auth_token from
-#   nova::keystone::authtoken class instead.
-#   Defaults to undef
-#
 # [*ec2_workers*]
 #   (optional) DEPRECATED. Number of workers for EC2 service
 #   Defaults to undef
@@ -227,31 +222,6 @@
 # [*conductor_workers*]
 #   (optional) DEPRECATED. Use workers parameter of nova::conductor
 #   Class instead.
-#   Defaults to undef
-#
-# [*admin_tenant_name*]
-#   (optional) DEPRECATED. Use project_name from
-#   nova::keystone::authtoken class instead.
-#   Defaults to undef
-#
-# [*admin_user*]
-#   (optional) DEPRECATED. Use username from
-#   nova::keystone::authtoken class instead.
-#   Defaults to undef
-#
-# [*admin_password*]
-#   (optional) DEPRECATED. Use password from
-#   nova::keystone::authtoken class instead.
-#   Defaults to undef
-#
-# [*identity_uri*]
-#   (optional) DEPRECATED. Use auth_url from
-#   nova::keystone::authtoken class instead.
-#   Defaults to undef
-#
-# [*auth_uri*]
-#   (optional) DEPRECATED. Use auth_uri from
-#   nova::keystone::authtoken class instead.
 #   Defaults to undef
 #
 class nova::api(
@@ -302,12 +272,6 @@ class nova::api(
   $ec2_listen_port                      = undef,
   $ec2_workers                          = undef,
   $keystone_ec2_url                     = undef,
-  $auth_version                         = undef,
-  $admin_password                       = undef,
-  $auth_uri                             = undef,
-  $identity_uri                         = undef,
-  $admin_tenant_name                    = undef,
-  $admin_user                           = undef,
 ) inherits nova::params {
 
   include ::nova::deps
@@ -337,31 +301,6 @@ class nova::api(
       'DEFAULT/instance_name_template': ensure => absent;
     }
   }
-
-  if $auth_version {
-    warning('nova::api::auth_version is deprecated, use nova::keystone::authtoken::auth_version instead.')
-  }
-
-  if $identity_uri {
-    warning('nova::api::identity_uri is deprecated, use nova::keystone::authtoken::auth_url instead.')
-  }
-
-  if $auth_uri {
-    warning('nova::api::auth_uri is deprecated, use nova::keystone::authtoken::auth_uri instead.')
-  }
-
-  if $admin_tenant_name {
-    warning('nova::api::admin_tenant_name is deprecated, use nova::keystone::authtoken::project_name instead.')
-  }
-
-  if $admin_user {
-    warning('nova::api::admin_user is deprecated, use nova::keystone::authtoken::username instead.')
-  }
-
-  if $admin_password {
-    warning('nova::api::admin_password is deprecated, use nova::keystone::authtoken::password instead.')
-  }
-
 
   if !is_service_default($vendordata_providers) and !empty($vendordata_providers){
     validate_array($vendordata_providers)
@@ -506,11 +445,11 @@ as a standalone service, or httpd for being run by a httpd server")
     #Shrinking the variables names in favor of not
     #having more than 140 chars per line
     #Admin user real
-    $aur = pick($admin_user, $::nova::keystone::authtoken::username)
+    $aur = $::nova::keystone::authtoken::username
     #Admin password real
-    $apr = pick($admin_password, $::nova::keystone::authtoken::password)
+    $apr = $::nova::keystone::authtoken::password
     #Admin tenan name real
-    $atnr = pick($admin_tenant_name, $::nova::keystone::authtoken::project_name)
+    $atnr = $::nova::keystone::authtoken::project_name
     #Keystone Auth URI
     $kau = $::nova::keystone::authtoken::auth_uri
     $defaults = {
