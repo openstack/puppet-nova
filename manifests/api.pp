@@ -207,18 +207,6 @@
 #
 # DEPRECATED
 #
-# [*keystone_ec2_url*]
-#   (optional) DEPRECATED. The keystone url where nova should send requests for ec2tokens
-#   Defaults to undef
-#
-# [*ec2_listen_port*]
-#   (optional) DEPRECATED. The port on which the EC2 API will listen.
-#   Defaults to port undef
-#
-# [*ec2_workers*]
-#   (optional) DEPRECATED. Number of workers for EC2 service
-#   Defaults to undef
-#
 # [*conductor_workers*]
 #   (optional) DEPRECATED. Use workers parameter of nova::conductor
 #   Class instead.
@@ -269,9 +257,6 @@ class nova::api(
   $allow_resize_to_same_host            = false,
   # DEPRECATED PARAMETER
   $conductor_workers                    = undef,
-  $ec2_listen_port                      = undef,
-  $ec2_workers                          = undef,
-  $keystone_ec2_url                     = undef,
 ) inherits nova::params {
 
   include ::nova::deps
@@ -282,10 +267,6 @@ class nova::api(
   if $install_cinder_client {
     include ::cinder::client
     Class['cinder::client'] ~> Nova::Generic_service['api']
-  }
-
-  if $ec2_listen_port or $ec2_workers or $keystone_ec2_url {
-    warning('ec2_listen_port, ec2_workers and keystone_ec2_url are deprecated and have no effect. Deploy openstack/ec2-api instead.')
   }
 
   if $conductor_workers {
