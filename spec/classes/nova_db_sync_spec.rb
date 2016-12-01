@@ -8,7 +8,13 @@ describe 'nova::db::sync' do
       is_expected.to contain_exec('nova-db-sync').with(
         :command     => '/usr/bin/nova-manage  db sync',
         :refreshonly => 'true',
-        :logoutput   => 'on_failure'
+        :try_sleep   => 5,
+        :tries       => 10,
+        :logoutput   => 'on_failure',
+        :subscribe   => ['Anchor[nova::install::end]',
+                         'Anchor[nova::config::end]',
+                         'Anchor[nova::dbsync::begin]'],
+        :notify      => 'Anchor[nova::dbsync::end]',
       )
     end
 
@@ -23,7 +29,13 @@ describe 'nova::db::sync' do
         is_expected.to contain_exec('nova-db-sync').with(
           :command     => '/usr/bin/nova-manage --config-file /etc/nova/nova.conf db sync',
           :refreshonly => 'true',
-          :logoutput   => 'on_failure'
+          :try_sleep   => 5,
+          :tries       => 10,
+          :logoutput   => 'on_failure',
+          :subscribe   => ['Anchor[nova::install::end]',
+                           'Anchor[nova::config::end]',
+                           'Anchor[nova::dbsync::begin]'],
+          :notify      => 'Anchor[nova::dbsync::end]',
         )
         }
       end

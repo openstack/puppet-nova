@@ -8,7 +8,11 @@ describe 'nova::db::sync_api' do
       is_expected.to contain_exec('nova-db-sync-api').with(
         :command     => '/usr/bin/nova-manage  api_db sync',
         :refreshonly => 'true',
-        :logoutput   => 'on_failure'
+        :logoutput   => 'on_failure',
+        :subscribe   => ['Anchor[nova::install::end]',
+                         'Anchor[nova::config::end]',
+                         'Anchor[nova::dbsync_api::begin]'],
+        :notify      => 'Anchor[nova::dbsync_api::end]',
       )
     end
 
@@ -23,7 +27,11 @@ describe 'nova::db::sync_api' do
         is_expected.to contain_exec('nova-db-sync-api').with(
           :command     => '/usr/bin/nova-manage --config-file /etc/nova/nova.conf api_db sync',
           :refreshonly => 'true',
-          :logoutput   => 'on_failure'
+          :logoutput   => 'on_failure',
+          :subscribe   => ['Anchor[nova::install::end]',
+                           'Anchor[nova::config::end]',
+                           'Anchor[nova::dbsync_api::begin]'],
+          :notify      => 'Anchor[nova::dbsync_api::end]',
         )
         }
       end
