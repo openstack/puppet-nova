@@ -1,0 +1,7 @@
+---
+other:
+  - The scheduler and scheduler filter options have been moved out
+    of the DEFAULT namespace to the scheduler and filter_scheduler
+    namespaces.  The module has been updated with the current options
+    setable for Ocata and removes the old DEFAULT/* options under the
+    covers.
