@@ -1,7 +1,14 @@
-# This class is deprecated, we'll remove the test in a future release.
 require 'spec_helper'
 
-describe 'nova::wsgi::apache' do
+describe 'nova::wsgi::apache_api' do
+
+  let :global_facts do
+    @default_facts.merge({
+      :processorcount => 42,
+      :concat_basedir => '/var/lib/puppet/concat',
+      :fqdn           => 'some.host.tld'
+    })
+  end
 
  let :pre_condition do
    "include nova
@@ -19,7 +26,7 @@ describe 'nova::wsgi::apache' do
     it { is_expected.to contain_class('apache') }
     it { is_expected.to contain_class('apache::mod::wsgi') }
 
-    context 'with default parameters' do
+    describe 'with default parameters' do
 
       let :pre_condition do
         "include nova
@@ -77,7 +84,7 @@ describe 'nova::wsgi::apache' do
       it { is_expected.to contain_concat("#{platform_params[:httpd_ports_file]}") }
     end
 
-    context 'when overriding parameters using different ports' do
+    describe 'when overriding parameters using different ports' do
       let :pre_condition do
         "include nova
          class { '::nova::keystone::authtoken':
@@ -113,7 +120,7 @@ describe 'nova::wsgi::apache' do
       )}
     end
 
-    context 'when ::nova::api is missing in the composition layer' do
+    describe 'when ::nova::api is missing in the composition layer' do
 
       let :pre_condition do
         "include nova"
@@ -125,14 +132,18 @@ describe 'nova::wsgi::apache' do
   end
 
   on_supported_os({
-    :supported_os => OSDefaults.get_supported_os
+    :supported_os   => OSDefaults.get_supported_os
   }).each do |os,facts|
     context "on #{os}" do
       let (:facts) do
-        facts.merge!(OSDefaults.get_facts({ :fqdn => 'some.host.tld'}))
+        facts.merge!(OSDefaults.get_facts({
+          :os_workers     => 42,
+          :concat_basedir => '/var/lib/puppet/concat',
+          :fqdn           => 'some.host.tld',
+        }))
       end
 
-      let (:platform_params) do
+      let(:platform_params) do
         case facts[:osfamily]
         when 'Debian'
           {
@@ -150,8 +161,8 @@ describe 'nova::wsgi::apache' do
           }
         end
       end
+
       it_behaves_like 'apache serving nova with mod_wsgi'
     end
   end
-
 end

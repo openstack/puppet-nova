@@ -1,7 +1,14 @@
-# This class is deprecated, we'll remove the test in a future release.
 require 'spec_helper'
 
-describe 'nova::wsgi::apache' do
+describe 'nova::wsgi::apache_placement' do
+
+  let :global_facts do
+    @default_facts.merge({
+      :processorcount => 42,
+      :concat_basedir => '/var/lib/puppet/concat',
+      :fqdn           => 'some.host.tld'
+    })
+  end
 
  let :pre_condition do
    "include nova
@@ -19,7 +26,7 @@ describe 'nova::wsgi::apache' do
     it { is_expected.to contain_class('apache') }
     it { is_expected.to contain_class('apache::mod::wsgi') }
 
-    context 'with default parameters' do
+    describe 'with default parameters' do
 
       let :pre_condition do
         "include nova
@@ -31,6 +38,12 @@ describe 'nova::wsgi::apache' do
          }"
       end
 
+      it { is_expected.to contain_package('nova-placement-api').with(
+        :name   => "#{platform_params[:placement_package_name]}",
+        :ensure => 'present',
+        :tag    => ['openstack', 'nova-package'],
+      )}
+
       it { is_expected.to contain_file("#{platform_params[:wsgi_script_path]}").with(
         'ensure'  => 'directory',
         'owner'   => 'nova',
@@ -39,45 +52,45 @@ describe 'nova::wsgi::apache' do
       )}
 
 
-      it { is_expected.to contain_file('nova_api_wsgi').with(
+      it { is_expected.to contain_file('placement_wsgi').with(
         'ensure'  => 'file',
-        'path'    => "#{platform_params[:wsgi_script_path]}/nova-api",
-        'source'  => platform_params[:api_wsgi_script_source],
+        'path'    => "#{platform_params[:wsgi_script_path]}/nova-placement-api",
+        'source'  => platform_params[:placement_wsgi_script_source],
         'owner'   => 'nova',
         'group'   => 'nova',
         'mode'    => '0644'
       )}
-      it { is_expected.to contain_file('nova_api_wsgi').that_requires("File[#{platform_params[:wsgi_script_path]}]") }
+      it { is_expected.to contain_file('placement_wsgi').that_requires("File[#{platform_params[:wsgi_script_path]}]") }
 
-      it { is_expected.to contain_apache__vhost('nova_api_wsgi').with(
+      it { is_expected.to contain_apache__vhost('placement_wsgi').with(
         'servername'                  => 'some.host.tld',
         'ip'                          => nil,
-        'port'                        => '8774',
+        'port'                        => '8778',
         'docroot'                     => "#{platform_params[:wsgi_script_path]}",
         'docroot_owner'               => 'nova',
         'docroot_group'               => 'nova',
         'ssl'                         => 'true',
-        'wsgi_daemon_process'         => 'nova-api',
-        'wsgi_process_group'          => 'nova-api',
-        'wsgi_script_aliases'         => { '/' => "#{platform_params[:wsgi_script_path]}/nova-api" },
-        'require'                     => 'File[nova_api_wsgi]'
+        'wsgi_daemon_process'         => 'placement-api',
+        'wsgi_process_group'          => 'placement-api',
+        'wsgi_script_aliases'         => { '/' => "#{platform_params[:wsgi_script_path]}/nova-placement-api" },
+        'require'                     => 'File[placement_wsgi]'
       )}
       it { is_expected.to contain_concat("#{platform_params[:httpd_ports_file]}") }
 
-      it { is_expected.to contain_file('nova_api_wsgi').with(
+      it { is_expected.to contain_file('placement_wsgi').with(
         'ensure'  => 'file',
-        'path'    => "#{platform_params[:wsgi_script_path]}/nova-api",
-        'source'  => platform_params[:api_wsgi_script_source],
+        'path'    => "#{platform_params[:wsgi_script_path]}/nova-placement-api",
+        'source'  => platform_params[:placement_wsgi_script_source],
         'owner'   => 'nova',
         'group'   => 'nova',
         'mode'    => '0644'
       )}
-      it { is_expected.to contain_file('nova_api_wsgi').that_requires("File[#{platform_params[:wsgi_script_path]}]") }
+      it { is_expected.to contain_file('placement_wsgi').that_requires("File[#{platform_params[:wsgi_script_path]}]") }
 
       it { is_expected.to contain_concat("#{platform_params[:httpd_ports_file]}") }
     end
 
-    context 'when overriding parameters using different ports' do
+    describe 'when overriding parameters using different ports' do
       let :pre_condition do
         "include nova
          class { '::nova::keystone::authtoken':
@@ -98,7 +111,7 @@ describe 'nova::wsgi::apache' do
         }
       end
 
-      it { is_expected.to contain_apache__vhost('nova_api_wsgi').with(
+      it { is_expected.to contain_apache__vhost('placement_wsgi').with(
         'servername'                  => 'dummy.host',
         'ip'                          => '10.42.51.1',
         'port'                        => '12345',
@@ -106,14 +119,14 @@ describe 'nova::wsgi::apache' do
         'docroot_owner'               => 'nova',
         'docroot_group'               => 'nova',
         'ssl'                         => 'false',
-        'wsgi_daemon_process'         => 'nova-api',
-        'wsgi_process_group'          => 'nova-api',
-        'wsgi_script_aliases'         => { '/' => "#{platform_params[:wsgi_script_path]}/nova-api" },
-        'require'                     => 'File[nova_api_wsgi]'
+        'wsgi_daemon_process'         => 'placement-api',
+        'wsgi_process_group'          => 'placement-api',
+        'wsgi_script_aliases'         => { '/' => "#{platform_params[:wsgi_script_path]}/nova-placement-api" },
+        'require'                     => 'File[placement_wsgi]'
       )}
     end
 
-    context 'when ::nova::api is missing in the composition layer' do
+    describe 'when ::nova::api is missing in the composition layer' do
 
       let :pre_condition do
         "include nova"
@@ -125,33 +138,39 @@ describe 'nova::wsgi::apache' do
   end
 
   on_supported_os({
-    :supported_os => OSDefaults.get_supported_os
+    :supported_os   => OSDefaults.get_supported_os
   }).each do |os,facts|
     context "on #{os}" do
       let (:facts) do
-        facts.merge!(OSDefaults.get_facts({ :fqdn => 'some.host.tld'}))
+        facts.merge!(OSDefaults.get_facts({
+          :os_workers     => 42,
+          :concat_basedir => '/var/lib/puppet/concat',
+          :fqdn           => 'some.host.tld',
+        }))
       end
 
-      let (:platform_params) do
+      let(:platform_params) do
         case facts[:osfamily]
         when 'Debian'
           {
-            :httpd_service_name     => 'apache2',
-            :httpd_ports_file       => '/etc/apache2/ports.conf',
-            :wsgi_script_path       => '/usr/lib/cgi-bin/nova',
-            :api_wsgi_script_source => '/usr/lib/python2.7/dist-packages/nova/wsgi/nova-api.py',
+            :httpd_service_name           => 'apache2',
+            :httpd_ports_file             => '/etc/apache2/ports.conf',
+            :wsgi_script_path             => '/usr/lib/cgi-bin/nova',
+            :placement_wsgi_script_source => '/usr/bin/nova-placement-api',
+            :placement_package_name       => 'nova-placement-api',
           }
         when 'RedHat'
           {
-            :httpd_service_name     => 'httpd',
-            :httpd_ports_file       => '/etc/httpd/conf/ports.conf',
-            :wsgi_script_path       => '/var/www/cgi-bin/nova',
-            :api_wsgi_script_source => '/usr/lib/python2.7/site-packages/nova/wsgi/nova-api.py',
+            :httpd_service_name           => 'httpd',
+            :httpd_ports_file             => '/etc/httpd/conf/ports.conf',
+            :wsgi_script_path             => '/var/www/cgi-bin/nova',
+            :placement_wsgi_script_source => '/usr/bin/nova-placement-api',
+            :placement_package_name       => 'openstack-nova-placement-api',
           }
         end
       end
+
       it_behaves_like 'apache serving nova with mod_wsgi'
     end
   end
-
 end

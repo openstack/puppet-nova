@@ -9,6 +9,7 @@ class nova::params {
     'RedHat': {
       # package names
       $api_package_name              = 'openstack-nova-api'
+      $placement_package_name        = 'openstack-nova-placement-api'
       $cells_package_name            = 'openstack-nova-cells'
       $cert_package_name             = 'openstack-nova-cert'
       $common_package_name           = 'openstack-nova-common'
@@ -51,6 +52,7 @@ class nova::params {
       $nova_log_group                = 'nova'
       $nova_wsgi_script_path         = '/var/www/cgi-bin/nova'
       $nova_api_wsgi_script_source   = '/usr/lib/python2.7/site-packages/nova/wsgi/nova-api.py'
+      $placement_wsgi_script_source  = '/usr/bin/nova-placement-api'
       case $::operatingsystem {
         'RedHat', 'CentOS', 'Scientific', 'OracleLinux': {
           if (versioncmp($::operatingsystemmajrelease, '7') < 0) {
@@ -75,6 +77,7 @@ class nova::params {
     'Debian': {
       # package names
       $api_package_name             = 'nova-api'
+      $placement_package_name       = 'nova-placement-api'
       $cells_package_name           = 'nova-cells'
       $cert_package_name            = 'nova-cert'
       $common_package_name          = 'nova-common'
@@ -106,6 +109,7 @@ class nova::params {
       $nova_log_group               = 'adm'
       $nova_wsgi_script_path        = '/usr/lib/cgi-bin/nova'
       $nova_api_wsgi_script_source  = '/usr/lib/python2.7/dist-packages/nova/wsgi/nova-api.py'
+      $placement_wsgi_script_source = '/usr/bin/nova-placement-api'
       # debian specific nova config
       $root_helper                  = 'sudo nova-rootwrap'
       $lock_path                    = '/var/lock/nova'

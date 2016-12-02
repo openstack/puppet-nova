@@ -45,6 +45,9 @@ describe 'basic nova' do
       class { '::nova::keystone::auth':
         password => 'a_big_secret',
       }
+      class { '::nova::keystone::auth_placement':
+        password => 'a_big_secret',
+      }
       class { '::nova::keystone::authtoken':
         password => 'a_big_secret',
       }
@@ -52,8 +55,18 @@ describe 'basic nova' do
         service_name   => 'httpd',
       }
       include ::apache
-      class { '::nova::wsgi::apache':
+      class { '::nova::wsgi::apache_api':
         ssl => false,
+      }
+      # The Ubuntu package is now broken, it tries to run the app with systemd.
+      # Until it's fixed, let's test it on Red Hat only.
+      if $::osfamily == 'RedHat' {
+        class { '::nova::wsgi::apache_placement':
+          ssl => false,
+        }
+        class { '::nova::placement':
+          password => 'a_big_secret',
+        }
       }
       class { '::nova::cert': }
       class { '::nova::client': }
@@ -104,6 +117,12 @@ describe 'basic nova' do
 
     describe port(8775) do
       it { is_expected.to be_listening }
+    end
+
+    if os[:family].casecmp('RedHat') == 0
+      describe port(8778) do
+        it { is_expected.to be_listening }
+      end
     end
 
     describe port(6080) do
