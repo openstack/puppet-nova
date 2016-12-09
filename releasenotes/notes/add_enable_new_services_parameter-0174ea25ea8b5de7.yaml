@@ -1,0 +1,3 @@
+---
+features:
+  - Adds the enable_new_services config parameter to nova conductor

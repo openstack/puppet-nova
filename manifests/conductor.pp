@@ -20,6 +20,13 @@
 #   (optional) Number of workers for OpenStack Conductor service
 #   Defaults to undef (i.e. parameter will not be present)
 #
+# [*enable_new_services*]
+#   (optional) When a new service (for example "nova-compute") start up, it gets
+#   registered in the database as an enabled service. Setting this to false will
+#   cause new services to be disabled when added. This config option is only used
+#   by the conductor service which is responsible for creating the service entries.
+#   Defaults to $::os_service_default
+#
 # DEPRECATED PARAMETERS
 #
 # [*use_local*]
@@ -27,12 +34,13 @@
 #   Defaults to undef
 #
 class nova::conductor(
-  $enabled        = true,
-  $manage_service = true,
-  $ensure_package = 'present',
-  $workers        = undef,
+  $enabled             = true,
+  $manage_service      = true,
+  $ensure_package      = 'present',
+  $workers             = undef,
+  $enable_new_services = $::os_service_default,
   # DEPREACTED PARAMETERS
-  $use_local      = undef,
+  $use_local           = undef,
 ) {
 
   if $use_local {
@@ -55,5 +63,9 @@ class nova::conductor(
     nova_config {
       'conductor/workers': value => $workers;
     }
+  }
+
+  nova_config {
+    'DEFAULT/enable_new_services': value => $enable_new_services
   }
 }
