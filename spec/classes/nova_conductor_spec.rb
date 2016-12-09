@@ -46,6 +46,18 @@ describe 'nova::conductor' do
       it { is_expected.to contain_nova_config('conductor/workers').with_value('5') }
     end
 
+    context 'with default enable_new_services parameter' do
+      it { is_expected.to contain_nova_config('DEFAULT/enable_new_services').with_value('<SERVICE DEFAULT>') }
+    end
+
+    context 'with enable_new_services parameter set to false' do
+      let :params do
+        { :enable_new_services => false }
+      end
+
+      it { is_expected.to contain_nova_config('DEFAULT/enable_new_services').with_value(false) }
+    end
+
     context 'with default database parameters' do
       let :pre_condition do
         "include nova"
