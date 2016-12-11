@@ -10,7 +10,7 @@
 #
 # [*heal_instance_info_cache_interval*]
 #   (optional) Controls how often the instance info should be updated.
-#    Defaults to '60' , to disable you can set the value to zero.
+#   Defaults to '60' , to disable you can set the value to zero.
 #
 # [*manage_service*]
 #   (optional) Whether to start/stop the service
@@ -91,8 +91,8 @@
 #     { 'vendor_id':'4321','product_id':'8765','physical_network':'default' } ] "
 #
 #  [*config_drive_format*]
-#    (optional) Config drive format. One of iso9660 (default) or vfat
-#    Defaults to undef
+#   (optional) Config drive format. One of iso9660 (default) or vfat
+#   Defaults to undef
 #
 #  [*allow_resize_to_same_host*]
 #   (optional) Allow destination machine to match source for resize.
@@ -101,9 +101,9 @@
 #   Defaults to false
 #
 #  [*vcpu_pin_set*]
-#    (optional) A list or range of physical CPU cores to reserve
-#    for virtual machine processes
-#    Defaults to $::os_service_default
+#   (optional) A list or range of physical CPU cores to reserve
+#   for virtual machine processes
+#   Defaults to $::os_service_default
 #
 # [*keymgr_api_class*]
 #   (optional) Key Manager service.
