@@ -31,6 +31,11 @@
 #   (optional) Additional hosts that are allowed to access this DB
 #   Defaults to undef
 #
+# [*setup_cell0*]
+#   (optional) Setup a cell0 for the cell_v2 functionality. This option will
+#   be set to true by default in Ocata when the cell v2 setup is mandatory.
+#   Defaults to false
+#
 class nova::db::mysql_api(
   $password,
   $dbname        = 'nova_api',
@@ -39,6 +44,7 @@ class nova::db::mysql_api(
   $charset       = 'utf8',
   $collate       = 'utf8_general_ci',
   $allowed_hosts = undef,
+  $setup_cell0   = false,
 ) {
 
   include ::nova::deps
@@ -51,6 +57,20 @@ class nova::db::mysql_api(
     charset       => $charset,
     collate       => $collate,
     allowed_hosts => $allowed_hosts,
+  }
+
+  if $setup_cell0 {
+    # need for cell_v2
+    ::openstacklib::db::mysql { 'nova_api_cell0':
+      user          => $user,
+      password_hash => mysql_password($password),
+      dbname        => "${dbname}_cell0",
+      host          => $host,
+      charset       => $charset,
+      collate       => $collate,
+      allowed_hosts => $allowed_hosts,
+      create_user   => false,
+    }
   }
 
   Anchor['nova::db::begin']
