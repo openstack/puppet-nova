@@ -22,6 +22,8 @@ class nova::deps {
   -> anchor { 'nova::dbsync::end': }
   ~> anchor { 'nova::dbsync_api::begin': }
   -> anchor { 'nova::dbsync_api::end': }
+  ~> anchor { 'nova::cell_v2::begin': }
+  -> anchor { 'nova::cell_v2::end': }
   ~> anchor { 'nova::service::begin': }
   ~> Service<| tag == 'nova-service' |>
   ~> anchor { 'nova::service::end': }
