@@ -11,13 +11,12 @@
 #
 # [*cellv2_setup*]
 #   (optional) This flag toggles if we run the cell_v2 simple_cell_setup action
-#   with nova-manage. This flag will be set to true in Ocata when the cell v2
-#   setup is mandatory.
-#   Defaults to false.
+#   with nova-manage.
+#   Defaults to true.
 #
 class nova::db::sync_api(
   $extra_params = undef,
-  $cellv2_setup = false,
+  $cellv2_setup = true,
 ) {
 
   include ::nova::deps

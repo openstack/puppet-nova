@@ -32,9 +32,8 @@
 #   Defaults to undef
 #
 # [*setup_cell0*]
-#   (optional) Setup a cell0 for the cell_v2 functionality. This option will
-#   be set to true by default in Ocata when the cell v2 setup is mandatory.
-#   Defaults to false
+#   (optional) Setup a cell0 for the cell_v2 functionality.
+#   Defaults to true
 #
 class nova::db::mysql_api(
   $password,
@@ -44,7 +43,7 @@ class nova::db::mysql_api(
   $charset       = 'utf8',
   $collate       = 'utf8_general_ci',
   $allowed_hosts = undef,
-  $setup_cell0   = false,
+  $setup_cell0   = true,
 ) {
 
   include ::nova::deps
