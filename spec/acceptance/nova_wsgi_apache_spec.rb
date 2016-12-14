@@ -68,6 +68,12 @@ describe 'basic nova' do
         migration_support => true,
         vncserver_listen  => '0.0.0.0',
       }
+      # FIXME(jpena): this is only here to avoid an attempted downgrade
+      # of qemu-kvm-ev. Remove after https://review.openstack.org/411179
+      # is merged
+      if $::osfamily == 'RedHat' {
+          Package['qemu-kvm-ev'] -> Package['libvirt']
+      }
       class { '::nova::scheduler': }
       class { '::nova::vncproxy': }
       # TODO: networking with neutron
