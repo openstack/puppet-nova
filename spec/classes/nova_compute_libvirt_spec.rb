@@ -123,6 +123,14 @@ describe 'nova::compute::libvirt' do
       it { is_expected.to contain_nova_config('libvirt/cpu_model').with_value('kvm64')}
     end
 
+    describe 'with qemu as virt_type' do
+      let :params do
+        { :libvirt_virt_type => 'qemu' }
+      end
+
+      it { is_expected.to contain_nova_config('libvirt/cpu_mode').with_value('none')}
+    end
+
     describe 'with migration_support enabled' do
 
       context 'with vncserver_listen set to 0.0.0.0' do

@@ -24,8 +24,8 @@
 # [*libvirt_cpu_mode*]
 #   (optional) The libvirt CPU mode to configure.  Possible values
 #   include custom, host-model, none, host-passthrough.
-#   Defaults to 'host-model' if libvirt_virt_type is set to either
-#   kvm or qemu, otherwise defaults to 'none'.
+#   Defaults to 'host-model' if libvirt_virt_type is set to kvm,
+#   otherwise defaults to 'none'.
 #
 # [*libvirt_cpu_model*]
 #   (optional) The named libvirt CPU model (see names listed in
@@ -132,7 +132,7 @@ class nova::compute::libvirt (
   # libvirt_cpu_mode has different defaults depending on hypervisor.
   if !$libvirt_cpu_mode {
     case $libvirt_virt_type {
-      'kvm','qemu': {
+      'kvm': {
         $libvirt_cpu_mode_real = 'host-model'
       }
       default: {
