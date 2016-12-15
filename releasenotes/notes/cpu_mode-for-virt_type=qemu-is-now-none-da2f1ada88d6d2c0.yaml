@@ -1,0 +1,10 @@
+---
+upgrade:
+  - The default value for nova::compute::libvirt::libvirt_cpu_mode
+    when nova::compute::libvirt::libvirt_virt_type is set to 'qemu'
+    has been changed from 'host-model' to 'none'. The Nova gate
+    does not really test the 'host-model' option in their CI, but
+    'none' due to Devstack configuration, and it is known to create
+    issues with QEMU 2.6 (see 
+    https://bugzilla.redhat.com/show_bug.cgi?id=1404627).
+
