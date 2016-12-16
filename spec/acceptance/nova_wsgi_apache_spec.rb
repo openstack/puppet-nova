@@ -71,12 +71,6 @@ describe 'basic nova' do
         virtlock_service_name => false,
         virtlog_service_name  => false,
       }
-      # FIXME(jpena): this is only here to avoid an attempted downgrade
-      # of qemu-kvm-ev. Remove after https://review.openstack.org/411179
-      # is merged
-      if $::osfamily == 'RedHat' {
-          Package['qemu-kvm-ev'] -> Class['nova::compute::libvirt::services']
-      }
       class { '::nova::scheduler': }
       class { '::nova::vncproxy': }
 
