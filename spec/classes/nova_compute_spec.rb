@@ -27,6 +27,7 @@ describe 'nova::compute' do
       it { is_expected.to contain_nova_config('DEFAULT/allow_resize_to_same_host').with(:value => 'false') }
       it { is_expected.to contain_nova_config('DEFAULT/resize_confirm_window').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('DEFAULT/vcpu_pin_set').with(:value => '<SERVICE DEFAULT>') }
+      it { is_expected.to contain_nova_config('DEFAULT/resume_guests_state_on_host_boot').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to_not contain_nova_config('vnc/novncproxy_base_url') }
       it { is_expected.to contain_nova_config('key_manager/api_class').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('barbican/barbican_endpoint').with_value('<SERVICE DEFAULT>') }
@@ -76,6 +77,7 @@ describe 'nova::compute' do
           :config_drive_format                => 'vfat',
           :resize_confirm_window              => '3',
           :vcpu_pin_set                       => ['4-12','^8','15'],
+          :resume_guests_state_on_host_boot   => true,
           :keymgr_api_class                   => 'castellan.key_manager.barbican_key_manager.BarbicanKeyManager',
           :barbican_endpoint                  => 'http://localhost',
           :barbican_api_version               => 'v1',
@@ -137,11 +139,14 @@ describe 'nova::compute' do
 
       it { is_expected.to contain_nova_config('DEFAULT/max_concurrent_live_migrations').with_value('4') }
 
+      it { is_expected.to contain_nova_config('DEFAULT/resume_guests_state_on_host_boot').with_value(true) }
+
       it 'configures nova pci_passthrough_whitelist entries' do
         is_expected.to contain_nova_config('DEFAULT/pci_passthrough_whitelist').with(
           'value' => "[{\"vendor_id\":\"8086\",\"product_id\":\"0126\"},{\"vendor_id\":\"9096\",\"product_id\":\"1520\",\"physical_network\":\"physnet1\"}]"
         )
       end
+
       it 'configures nova config_drive_format to vfat' do
         is_expected.to contain_nova_config('DEFAULT/config_drive_format').with_value('vfat')
         is_expected.to_not contain_package('genisoimage').with(
@@ -252,6 +257,7 @@ describe 'nova::compute' do
       it { is_expected.to contain_nova_config('DEFAULT/instance_usage_audit').with_value(true) }
       it { is_expected.to contain_nova_config('DEFAULT/instance_usage_audit_period').with_value('year') }
     end
+
     context 'with vnc_keymap set to fr' do
       let :params do
         { :vnc_keymap => 'fr', }

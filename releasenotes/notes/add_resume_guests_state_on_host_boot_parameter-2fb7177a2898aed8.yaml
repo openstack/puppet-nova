@@ -1,0 +1,3 @@
+---
+features:
+  - Adds the resume_guests_state_on_host_boot config parameter to nova compute
