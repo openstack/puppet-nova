@@ -104,6 +104,12 @@
 #    for virtual machine processes
 #    Defaults to $::os_service_default
 #
+#  [*resume_guests_state_on_host_boot*]
+#   (optional) This option specifies whether to start guests that were running before the
+#   host rebooted. It ensures that all of the instances on a Nova compute node
+#   resume their state each time the compute node boots or restarts.
+#   Defaults to $::os_service_default
+#
 # [*keymgr_api_class*]
 #   (optional) Key Manager service.
 #   Example of valid value: castellan.key_manager.barbican_key_manager.BarbicanKeyManager
@@ -169,6 +175,7 @@ class nova::compute (
   $config_drive_format                = $::os_service_default,
   $allow_resize_to_same_host          = false,
   $vcpu_pin_set                       = $::os_service_default,
+  $resume_guests_state_on_host_boot   = $::os_service_default,
   $keymgr_api_class                   = $::os_service_default,
   $barbican_auth_endpoint             = $::os_service_default,
   $barbican_endpoint                  = $::os_service_default,
@@ -236,6 +243,7 @@ is used. It will be removed once Nova removes it.")
     'DEFAULT/allow_resize_to_same_host':         value => $allow_resize_to_same_host;
     'DEFAULT/pci_passthrough_whitelist':         value => $pci_passthrough_real;
     'DEFAULT/vcpu_pin_set':                      value => $vcpu_pin_set_real;
+    'DEFAULT/resume_guests_state_on_host_boot':  value => $resume_guests_state_on_host_boot;
     'key_manager/api_class':                     value => $keymgr_api_class;
     'barbican/auth_endpoint':                    value => $barbican_auth_endpoint;
     'barbican/barbican_endpoint':                value => $barbican_endpoint;
