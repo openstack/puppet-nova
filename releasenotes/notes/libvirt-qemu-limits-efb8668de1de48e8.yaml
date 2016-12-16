@@ -1,0 +1,5 @@
+---
+features:
+  - A new nova::compute::libvirt::qemu class has been added
+    with the initial purpose of configuring the max_files
+    and max_processes limits in qemu.conf
