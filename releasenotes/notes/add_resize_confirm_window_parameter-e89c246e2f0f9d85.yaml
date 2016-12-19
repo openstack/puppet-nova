@@ -1,0 +1,3 @@
+---
+features:
+  - Adds the resize_confirm_window parameter to nova configuration for compute service.
