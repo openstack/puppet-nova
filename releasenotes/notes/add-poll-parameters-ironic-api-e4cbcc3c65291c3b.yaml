@@ -1,0 +1,5 @@
+---
+features:
+  - Adds the api_max_retries and api_retry_interval config
+    parameters for nova ironic driver to poll ironic api.
+    If not specify explicitly, use service's default value.
