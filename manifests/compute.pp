@@ -123,6 +123,10 @@
 #   (optional) Barbican API version.
 #   Defaults to $::os_service_default
 #
+# [*max_concurrent_live_migrations*]
+#   (optional) Maximum number of live migrations to run in parallel.
+#   Defaults to $::os_service_default
+#
 # DEPRECATED PARAMETERS
 #
 #  [*default_availability_zone*]
@@ -170,6 +174,7 @@ class nova::compute (
   $barbican_auth_endpoint             = $::os_service_default,
   $barbican_endpoint                  = $::os_service_default,
   $barbican_api_version               = $::os_service_default,
+  $max_concurrent_live_migrations     = $::os_service_default,
   # DEPRECATED PARAMETERS
   $default_availability_zone          = undef,
   $default_schedule_zone              = undef,
@@ -231,6 +236,7 @@ is used. It will be removed once Nova removes it.")
     'barbican/auth_endpoint':                    value => $barbican_auth_endpoint;
     'barbican/barbican_endpoint':                value => $barbican_endpoint;
     'barbican/barbican_api_version':             value => $barbican_api_version;
+    'DEFAULT/max_concurrent_live_migrations':    value => $max_concurrent_live_migrations;
   }
 
   ensure_resource('nova_config', 'DEFAULT/allow_resize_to_same_host', { value => $allow_resize_to_same_host })
