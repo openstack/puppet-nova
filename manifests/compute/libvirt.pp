@@ -101,6 +101,11 @@
 #   (optional) Compute driver.
 #   Defaults to 'libvirt.LibvirtDriver'
 #
+# [*preallocate_images*]
+#   (optional) The image preallocation mode to use.
+#   Valid values are 'none' or 'space'.
+#   Defaults to $::os_service_default
+#
 # [*manage_libvirt_services*]
 #   (optional) Whether or not deploy Libvirt services.
 #   In the case of micro-services, set it to False and use
@@ -128,6 +133,7 @@ class nova::compute::libvirt (
   $virtlock_service_name                      = $::nova::params::virtlock_service_name,
   $virtlog_service_name                       = $::nova::params::virtlog_service_name,
   $compute_driver                             = 'libvirt.LibvirtDriver',
+  $preallocate_images                         = $::os_service_default,
   $manage_libvirt_services                    = true,
 ) inherits nova::params {
 
@@ -186,15 +192,16 @@ class nova::compute::libvirt (
   }
 
   nova_config {
-    'DEFAULT/compute_driver':   value => $compute_driver;
-    'vnc/vncserver_listen':     value => $vncserver_listen;
-    'libvirt/virt_type':        value => $libvirt_virt_type;
-    'libvirt/cpu_mode':         value => $libvirt_cpu_mode_real;
-    'libvirt/inject_password':  value => $libvirt_inject_password;
-    'libvirt/inject_key':       value => $libvirt_inject_key;
-    'libvirt/inject_partition': value => $libvirt_inject_partition;
-    'libvirt/hw_disk_discard':  value => $libvirt_hw_disk_discard;
-    'libvirt/hw_machine_type':  value => $libvirt_hw_machine_type;
+    'DEFAULT/compute_driver':     value => $compute_driver;
+    'DEFAULT/preallocate_images': value => $preallocate_images;
+    'vnc/vncserver_listen':       value => $vncserver_listen;
+    'libvirt/virt_type':          value => $libvirt_virt_type;
+    'libvirt/cpu_mode':           value => $libvirt_cpu_mode_real;
+    'libvirt/inject_password':    value => $libvirt_inject_password;
+    'libvirt/inject_key':         value => $libvirt_inject_key;
+    'libvirt/inject_partition':   value => $libvirt_inject_partition;
+    'libvirt/hw_disk_discard':    value => $libvirt_hw_disk_discard;
+    'libvirt/hw_machine_type':    value => $libvirt_hw_machine_type;
   }
 
   # cpu_model param is only valid if cpu_mode=custom

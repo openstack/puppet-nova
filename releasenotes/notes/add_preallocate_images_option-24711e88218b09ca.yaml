@@ -1,0 +1,5 @@
+---
+features:
+  - Added preallocate_images option which allows storage for instance images
+    to be allocated up front when the instance is initially provisioned.
+    This should significantly improve performance on writes to new blocks.

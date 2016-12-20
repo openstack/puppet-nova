@@ -46,6 +46,7 @@ describe 'nova::compute::libvirt' do
       }
 
       it { is_expected.to contain_nova_config('DEFAULT/compute_driver').with_value('libvirt.LibvirtDriver')}
+      it { is_expected.to contain_nova_config('DEFAULT/preallocate_images').with_value('<SERVICE DEFAULT>')}
       it { is_expected.to contain_nova_config('libvirt/virt_type').with_value('kvm')}
       it { is_expected.to contain_nova_config('libvirt/cpu_mode').with_value('host-model')}
       it { is_expected.to contain_nova_config('libvirt/cpu_model').with_ensure('absent')}
@@ -76,6 +77,7 @@ describe 'nova::compute::libvirt' do
           :virtlock_service_name                      => 'virtlock',
           :virtlog_service_name                       => 'virtlog',
           :compute_driver                             => 'libvirt.FoobarDriver',
+          :preallocate_images                         => 'space',
         }
       end
 
@@ -84,6 +86,7 @@ describe 'nova::compute::libvirt' do
         :ensure => 'latest'
       ) }
       it { is_expected.to contain_nova_config('DEFAULT/compute_driver').with_value('libvirt.FoobarDriver')}
+      it { is_expected.to contain_nova_config('DEFAULT/preallocate_images').with_value('space')}
       it { is_expected.to contain_nova_config('libvirt/virt_type').with_value('qemu')}
       it { is_expected.to contain_nova_config('libvirt/cpu_mode').with_value('host-passthrough')}
       it { is_expected.to contain_nova_config('libvirt/cpu_model').with_ensure('absent')}
