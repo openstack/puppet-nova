@@ -2,14 +2,6 @@ require 'spec_helper'
 
 describe 'nova::wsgi::apache' do
 
-  let :global_facts do
-    @default_facts.merge({
-      :processorcount => 42,
-      :concat_basedir => '/var/lib/puppet/concat',
-      :fqdn           => 'some.host.tld'
-    })
-  end
-
  let :pre_condition do
    "include nova
     class { '::nova::keystone::authtoken':
@@ -26,7 +18,7 @@ describe 'nova::wsgi::apache' do
     it { is_expected.to contain_class('apache') }
     it { is_expected.to contain_class('apache::mod::wsgi') }
 
-    describe 'with default parameters' do
+    context 'with default parameters' do
 
       let :pre_condition do
         "include nova
@@ -84,7 +76,7 @@ describe 'nova::wsgi::apache' do
       it { is_expected.to contain_concat("#{platform_parameters[:httpd_ports_file]}") }
     end
 
-    describe 'when overriding parameters using different ports' do
+    context 'when overriding parameters using different ports' do
       let :pre_condition do
         "include nova
          class { '::nova::keystone::authtoken':
@@ -120,7 +112,7 @@ describe 'nova::wsgi::apache' do
       )}
     end
 
-    describe 'when ::nova::api is missing in the composition layer' do
+    context 'when ::nova::api is missing in the composition layer' do
 
       let :pre_condition do
         "include nova"
@@ -131,44 +123,34 @@ describe 'nova::wsgi::apache' do
 
   end
 
-  context 'on RedHat platforms' do
-    let :facts do
-      global_facts.merge({
-        :osfamily               => 'RedHat',
-        :operatingsystemrelease => '7.0'
-      })
-    end
+  on_supported_os({
+    :supported_os => OSDefaults.get_supported_os
+  }).each do |os,facts|
+    context "on #{os}" do
+      let (:facts) do
+        facts.merge!(OSDefaults.get_facts({ :fqdn => 'some.host.tld'}))
+      end
 
-    let :platform_parameters do
-      {
-        :httpd_service_name     => 'httpd',
-        :httpd_ports_file       => '/etc/httpd/conf/ports.conf',
-        :wsgi_script_path       => '/var/www/cgi-bin/nova',
-        :api_wsgi_script_source => '/usr/lib/python2.7/site-packages/nova/wsgi/nova-api.py',
-      }
+      let (:platform_parameters) do
+        case facts[:osfamily]
+        when 'Debian'
+          {
+            :httpd_service_name     => 'apache2',
+            :httpd_ports_file       => '/etc/apache2/ports.conf',
+            :wsgi_script_path       => '/usr/lib/cgi-bin/nova',
+            :api_wsgi_script_source => '/usr/lib/python2.7/dist-packages/nova/wsgi/nova-api.py',
+          }
+        when 'RedHat'
+          {
+            :httpd_service_name     => 'httpd',
+            :httpd_ports_file       => '/etc/httpd/conf/ports.conf',
+            :wsgi_script_path       => '/var/www/cgi-bin/nova',
+            :api_wsgi_script_source => '/usr/lib/python2.7/site-packages/nova/wsgi/nova-api.py',
+          }
+        end
+      end
+      it_behaves_like 'apache serving nova with mod_wsgi'
     end
-
-    it_configures 'apache serving nova with mod_wsgi'
   end
 
-  context 'on Debian platforms' do
-    let :facts do
-      global_facts.merge({
-        :osfamily               => 'Debian',
-        :operatingsystem        => 'Debian',
-        :operatingsystemrelease => '7.0'
-      })
-    end
-
-    let :platform_parameters do
-      {
-        :httpd_service_name     => 'apache2',
-        :httpd_ports_file       => '/etc/apache2/ports.conf',
-        :wsgi_script_path       => '/usr/lib/cgi-bin/nova',
-        :api_wsgi_script_source => '/usr/lib/python2.7/dist-packages/nova/wsgi/nova-api.py',
-      }
-    end
-
-    it_configures 'apache serving nova with mod_wsgi'
-  end
 end
