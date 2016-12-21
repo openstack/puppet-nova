@@ -15,8 +15,7 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 #
-# Deprecated Class to serve Nova API and EC2 with apache mod_wsgi in place of nova-api and nova-api-ec2 services.
-# Use ::nova::wsgi::apache::api.
+# Class to serve Nova API and EC2 with apache mod_wsgi in place of nova-api and nova-api-ec2 services.
 #
 # Serving Nova API and Nova API EC2 from apache is the recommended way to go for production
 # because of limited performance for concurrent accesses.
@@ -77,9 +76,7 @@
 #
 #   class { 'nova::wsgi::apache': }
 #
-# Note: we can't transform this class in a define for backward compatibility.
-#       though this class might become a define in the future.
-class nova::wsgi::apache (
+class nova::wsgi::apache_api (
   $servername    = $::fqdn,
   $api_port      = 8774,
   $bind_host     = undef,
@@ -108,24 +105,29 @@ class nova::wsgi::apache (
     fail('::nova::api class must be declared in composition layer.')
   }
 
-  warning('nova::wsgi::apache is deprecated and will be removed in a future release, please use nova::wsgi::apache::api')
-
-  class { '::nova::wsgi::apache_api':
-    servername    => $servername,
-    api_port      => $api_port,
-    bind_host     => $bind_host,
-    path          => $path,
-    ssl           => $ssl,
-    workers       => $workers,
-    ssl_cert      => $ssl_cert,
-    ssl_key       => $ssl_key,
-    ssl_chain     => $ssl_chain,
-    ssl_ca        => $ssl_ca,
-    ssl_crl_path  => $ssl_crl_path,
-    ssl_crl       => $ssl_crl,
-    ssl_certs_dir => $ssl_certs_dir,
-    threads       => $threads,
-    priority      => $priority,
+  ::openstacklib::wsgi::apache { 'nova_api_wsgi':
+    bind_host           => $bind_host,
+    bind_port           => $api_port,
+    group               => 'nova',
+    path                => $path,
+    priority            => $priority,
+    servername          => $servername,
+    ssl                 => $ssl,
+    ssl_ca              => $ssl_ca,
+    ssl_cert            => $ssl_cert,
+    ssl_certs_dir       => $ssl_certs_dir,
+    ssl_chain           => $ssl_chain,
+    ssl_crl             => $ssl_crl,
+    ssl_crl_path        => $ssl_crl_path,
+    ssl_key             => $ssl_key,
+    threads             => $threads,
+    user                => 'nova',
+    workers             => $workers,
+    wsgi_daemon_process => 'nova-api',
+    wsgi_process_group  => 'nova-api',
+    wsgi_script_dir     => $::nova::params::nova_wsgi_script_path,
+    wsgi_script_file    => 'nova-api',
+    wsgi_script_source  => $::nova::params::nova_api_wsgi_script_source,
   }
 
 }
