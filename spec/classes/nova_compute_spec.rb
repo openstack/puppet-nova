@@ -31,6 +31,7 @@ describe 'nova::compute' do
       it { is_expected.to contain_nova_config('barbican/barbican_endpoint').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('barbican/barbican_api_version').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('barbican/auth_endpoint').with_value('<SERVICE DEFAULT>') }
+      it { is_expected.to contain_nova_config('DEFAULT/max_concurrent_live_migrations').with_value('<SERVICE DEFAULT>') }
 
       it { is_expected.to_not contain_package('cryptsetup').with( :ensure => 'present' )}
 
@@ -77,6 +78,7 @@ describe 'nova::compute' do
           :barbican_endpoint                  => 'http://localhost',
           :barbican_api_version               => 'v1',
           :barbican_auth_endpoint             => 'http://127.0.0.1:5000/v3',
+          :max_concurrent_live_migrations     => '4',
         }
       end
 
@@ -128,6 +130,8 @@ describe 'nova::compute' do
       it { is_expected.to contain_nova_config('DEFAULT/force_raw_images').with(:value => false) }
 
       it { is_expected.to contain_nova_config('DEFAULT/vcpu_pin_set').with(:value => '4-12,^8,15') }
+
+      it { is_expected.to contain_nova_config('DEFAULT/max_concurrent_live_migrations').with_value('4') }
 
       it 'configures nova pci_passthrough_whitelist entries' do
         is_expected.to contain_nova_config('DEFAULT/pci_passthrough_whitelist').with(
