@@ -54,6 +54,10 @@
 #     (optional) The number of threads for the vhost.
 #     Defaults to $::os_workers
 #
+#   [*wsgi_process_display_name*]
+#     (optional) Name of the WSGI process display-name.
+#     Defaults to undef
+#
 #   [*ensure_package*]
 #     (optional) Control the ensure parameter for the Nova Placement API package ressource.
 #     Defaults to 'present'
@@ -79,22 +83,23 @@
 #   class { 'nova::wsgi::apache': }
 #
 class nova::wsgi::apache_placement (
-  $servername     = $::fqdn,
-  $api_port       = 8778,
-  $bind_host      = undef,
-  $path           = '/',
-  $ssl            = true,
-  $workers        = 1,
-  $ssl_cert       = undef,
-  $ssl_key        = undef,
-  $ssl_chain      = undef,
-  $ssl_ca         = undef,
-  $ssl_crl_path   = undef,
-  $ssl_crl        = undef,
-  $ssl_certs_dir  = undef,
-  $threads        = $::os_workers,
-  $priority       = '10',
-  $ensure_package = 'present',
+  $servername                 = $::fqdn,
+  $api_port                   = 8778,
+  $bind_host                  = undef,
+  $path                       = '/',
+  $ssl                        = true,
+  $workers                    = 1,
+  $ssl_cert                   = undef,
+  $ssl_key                    = undef,
+  $ssl_chain                  = undef,
+  $ssl_ca                     = undef,
+  $ssl_crl_path               = undef,
+  $ssl_crl                    = undef,
+  $ssl_certs_dir              = undef,
+  $wsgi_process_display_name  = undef,
+  $threads                    = $::os_workers,
+  $priority                   = '10',
+  $ensure_package             = 'present',
 ) {
 
   include ::nova::params
@@ -117,28 +122,29 @@ class nova::wsgi::apache_placement (
   Package<| title == 'nova-placement-api'|> -> Package<| title == 'httpd'|>
 
   ::openstacklib::wsgi::apache { 'placement_wsgi':
-    bind_host           => $bind_host,
-    bind_port           => $api_port,
-    group               => 'nova',
-    path                => $path,
-    priority            => $priority,
-    servername          => $servername,
-    ssl                 => $ssl,
-    ssl_ca              => $ssl_ca,
-    ssl_cert            => $ssl_cert,
-    ssl_certs_dir       => $ssl_certs_dir,
-    ssl_chain           => $ssl_chain,
-    ssl_crl             => $ssl_crl,
-    ssl_crl_path        => $ssl_crl_path,
-    ssl_key             => $ssl_key,
-    threads             => $threads,
-    user                => 'nova',
-    workers             => $workers,
-    wsgi_daemon_process => 'placement-api',
-    wsgi_process_group  => 'placement-api',
-    wsgi_script_dir     => $::nova::params::nova_wsgi_script_path,
-    wsgi_script_file    => 'nova-placement-api',
-    wsgi_script_source  => $::nova::params::placement_wsgi_script_source,
+    bind_host                 => $bind_host,
+    bind_port                 => $api_port,
+    group                     => 'nova',
+    path                      => $path,
+    priority                  => $priority,
+    servername                => $servername,
+    ssl                       => $ssl,
+    ssl_ca                    => $ssl_ca,
+    ssl_cert                  => $ssl_cert,
+    ssl_certs_dir             => $ssl_certs_dir,
+    ssl_chain                 => $ssl_chain,
+    ssl_crl                   => $ssl_crl,
+    ssl_crl_path              => $ssl_crl_path,
+    ssl_key                   => $ssl_key,
+    threads                   => $threads,
+    user                      => 'nova',
+    workers                   => $workers,
+    wsgi_daemon_process       => 'placement-api',
+    wsgi_process_display_name => $wsgi_process_display_name,
+    wsgi_process_group        => 'placement-api',
+    wsgi_script_dir           => $::nova::params::nova_wsgi_script_path,
+    wsgi_script_file          => 'nova-placement-api',
+    wsgi_script_source        => $::nova::params::placement_wsgi_script_source,
   }
 
 }

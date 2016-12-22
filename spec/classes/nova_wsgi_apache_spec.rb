@@ -58,6 +58,13 @@ describe 'nova::wsgi::apache' do
         'docroot_group'               => 'nova',
         'ssl'                         => 'true',
         'wsgi_daemon_process'         => 'nova-api',
+        'wsgi_daemon_process_options' => {
+          'user'         => 'nova',
+          'group'        => 'nova',
+          'processes'    => 1,
+          'threads'      => '8',
+          'display-name' => 'nova_api_wsgi',
+        },
         'wsgi_process_group'          => 'nova-api',
         'wsgi_script_aliases'         => { '/' => "#{platform_params[:wsgi_script_path]}/nova-api" },
         'require'                     => 'File[nova_api_wsgi]'
@@ -90,11 +97,12 @@ describe 'nova::wsgi::apache' do
 
       let :params do
         {
-          :servername  => 'dummy.host',
-          :bind_host   => '10.42.51.1',
-          :api_port    => 12345,
-          :ssl         => false,
-          :workers     => 37,
+          :servername                => 'dummy.host',
+          :bind_host                 => '10.42.51.1',
+          :api_port                  => 12345,
+          :ssl                       => false,
+          :wsgi_process_display_name => 'nova-api',
+          :workers                   => 37,
         }
       end
 
@@ -107,6 +115,13 @@ describe 'nova::wsgi::apache' do
         'docroot_group'               => 'nova',
         'ssl'                         => 'false',
         'wsgi_daemon_process'         => 'nova-api',
+        'wsgi_daemon_process_options' => {
+            'user'         => 'nova',
+            'group'        => 'nova',
+            'processes'    => '37',
+            'threads'      => '8',
+            'display-name' => 'nova-api',
+        },
         'wsgi_process_group'          => 'nova-api',
         'wsgi_script_aliases'         => { '/' => "#{platform_params[:wsgi_script_path]}/nova-api" },
         'require'                     => 'File[nova_api_wsgi]'
@@ -129,7 +144,10 @@ describe 'nova::wsgi::apache' do
   }).each do |os,facts|
     context "on #{os}" do
       let (:facts) do
-        facts.merge!(OSDefaults.get_facts({ :fqdn => 'some.host.tld'}))
+        facts.merge!(OSDefaults.get_facts({
+          :os_workers     => 8,
+          :fqdn           => 'some.host.tld'
+        }))
       end
 
       let (:platform_params) do

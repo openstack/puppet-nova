@@ -71,6 +71,13 @@ describe 'nova::wsgi::apache_placement' do
         'docroot_group'               => 'nova',
         'ssl'                         => 'true',
         'wsgi_daemon_process'         => 'placement-api',
+        'wsgi_daemon_process_options' => {
+          'user'         => 'nova',
+          'group'        => 'nova',
+          'processes'    => 1,
+          'threads'      => '42',
+          'display-name' => 'placement_wsgi',
+        },
         'wsgi_process_group'          => 'placement-api',
         'wsgi_script_aliases'         => { '/' => "#{platform_params[:wsgi_script_path]}/nova-placement-api" },
         'require'                     => 'File[placement_wsgi]'
@@ -103,11 +110,12 @@ describe 'nova::wsgi::apache_placement' do
 
       let :params do
         {
-          :servername  => 'dummy.host',
-          :bind_host   => '10.42.51.1',
-          :api_port    => 12345,
-          :ssl         => false,
-          :workers     => 37,
+          :servername                => 'dummy.host',
+          :bind_host                 => '10.42.51.1',
+          :api_port                  => 12345,
+          :ssl                       => false,
+          :wsgi_process_display_name => 'placement-api',
+          :workers                   => 37,
         }
       end
 
@@ -120,6 +128,13 @@ describe 'nova::wsgi::apache_placement' do
         'docroot_group'               => 'nova',
         'ssl'                         => 'false',
         'wsgi_daemon_process'         => 'placement-api',
+        'wsgi_daemon_process_options' => {
+          'user'         => 'nova',
+          'group'        => 'nova',
+          'processes'    => 37,
+          'threads'      => '42',
+          'display-name' => 'placement-api',
+        },
         'wsgi_process_group'          => 'placement-api',
         'wsgi_script_aliases'         => { '/' => "#{platform_params[:wsgi_script_path]}/nova-placement-api" },
         'require'                     => 'File[placement_wsgi]'
