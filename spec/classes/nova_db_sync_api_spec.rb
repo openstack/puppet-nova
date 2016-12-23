@@ -8,6 +8,7 @@ describe 'nova::db::sync_api' do
         is_expected.to contain_exec('nova-db-sync-api').with(
           :command     => '/usr/bin/nova-manage  api_db sync',
           :refreshonly => 'true',
+          :timeout     => 300,
           :logoutput   => 'on_failure',
           :subscribe   => ['Anchor[nova::install::end]',
                            'Anchor[nova::config::end]',
@@ -30,6 +31,7 @@ describe 'nova::db::sync_api' do
         is_expected.to contain_exec('nova-db-sync-api').with(
           :command     => '/usr/bin/nova-manage --config-file /etc/nova/nova.conf api_db sync',
           :refreshonly => 'true',
+          :timeout     => 300,
           :logoutput   => 'on_failure',
           :subscribe   => ['Anchor[nova::install::end]',
                            'Anchor[nova::config::end]',
@@ -38,6 +40,27 @@ describe 'nova::db::sync_api' do
         )
       }
       it { is_expected.to_not contain_class('nova::db::sync_cell_v2') }
+    end
+
+    context "overriding db_sync_timeout" do
+      let :params do
+        {
+          :db_sync_timeout => 750
+        }
+      end
+
+      it {
+        is_expected.to contain_exec('nova-db-sync-api').with(
+          :command     => '/usr/bin/nova-manage  api_db sync',
+          :refreshonly => 'true',
+          :timeout     => 750,
+          :logoutput   => 'on_failure',
+          :subscribe   => ['Anchor[nova::install::end]',
+                           'Anchor[nova::config::end]',
+                           'Anchor[nova::dbsync_api::begin]'],
+          :notify      => 'Anchor[nova::dbsync_api::end]',
+        )
+      }
     end
   end
 
