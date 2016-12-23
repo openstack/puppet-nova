@@ -28,7 +28,7 @@
 #
 #   [*api_port*]
 #     The port for Novai Placement API service.
-#     Optional. Defaults to 8778
+#     Optional. Defaults to 80
 #
 #   [*bind_host*]
 #     The host/ip address Apache will listen on.
@@ -36,7 +36,7 @@
 #
 #   [*path*]
 #     The prefix for the endpoint.
-#     Optional. Defaults to '/'
+#     Optional. Defaults to '/placement'
 #
 #   [*ssl*]
 #     Use ssl ? (boolean)
@@ -84,9 +84,9 @@
 #
 class nova::wsgi::apache_placement (
   $servername                 = $::fqdn,
-  $api_port                   = 8778,
+  $api_port                   = 80,
   $bind_host                  = undef,
-  $path                       = '/',
+  $path                       = '/placement',
   $ssl                        = true,
   $workers                    = 1,
   $ssl_cert                   = undef,

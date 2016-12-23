@@ -65,7 +65,7 @@ describe 'nova::wsgi::apache_placement' do
       it { is_expected.to contain_apache__vhost('placement_wsgi').with(
         'servername'                  => 'some.host.tld',
         'ip'                          => nil,
-        'port'                        => '8778',
+        'port'                        => '80',
         'docroot'                     => "#{platform_params[:wsgi_script_path]}",
         'docroot_owner'               => 'nova',
         'docroot_group'               => 'nova',
@@ -79,7 +79,7 @@ describe 'nova::wsgi::apache_placement' do
           'display-name' => 'placement_wsgi',
         },
         'wsgi_process_group'          => 'placement-api',
-        'wsgi_script_aliases'         => { '/' => "#{platform_params[:wsgi_script_path]}/nova-placement-api" },
+        'wsgi_script_aliases'         => { '/placement' => "#{platform_params[:wsgi_script_path]}/nova-placement-api" },
         'require'                     => 'File[placement_wsgi]'
       )}
       it { is_expected.to contain_concat("#{platform_params[:httpd_ports_file]}") }
@@ -136,7 +136,7 @@ describe 'nova::wsgi::apache_placement' do
           'display-name' => 'placement-api',
         },
         'wsgi_process_group'          => 'placement-api',
-        'wsgi_script_aliases'         => { '/' => "#{platform_params[:wsgi_script_path]}/nova-placement-api" },
+        'wsgi_script_aliases'         => { '/placement' => "#{platform_params[:wsgi_script_path]}/nova-placement-api" },
         'require'                     => 'File[placement_wsgi]'
       )}
     end

@@ -21,15 +21,15 @@
 #
 # [*public_url*]
 #   (optional) The endpoint's public url.
-#   Defaults to 'http://127.0.0.1:8778'
+#   Defaults to 'http://127.0.0.1/placement'
 #
 # [*internal_url*]
 #   (optional) The endpoint's internal url.
-#   Defaults to 'http://127.0.0.1:8778'
+#   Defaults to 'http://127.0.0.1/placement'
 #
 # [*admin_url*]
 #   (optional) The endpoint's admin url.
-#   Defaults to 'http://127.0.0.1:8778'
+#   Defaults to 'http://127.0.0.1/placement'
 #
 # [*region*]
 #   (optional) The region in which to place the endpoints
@@ -63,9 +63,9 @@ class nova::keystone::auth_placement(
   $region                  = 'RegionOne',
   $tenant                  = 'services',
   $email                   = 'placement@localhost',
-  $public_url              = 'http://127.0.0.1:8778',
-  $internal_url            = 'http://127.0.0.1:8778',
-  $admin_url               = 'http://127.0.0.1:8778',
+  $public_url              = 'http://127.0.0.1/placement',
+  $internal_url            = 'http://127.0.0.1/placement',
+  $admin_url               = 'http://127.0.0.1/placement',
   $configure_endpoint      = true,
   $configure_user          = true,
   $configure_user_role     = true,

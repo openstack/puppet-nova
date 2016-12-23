@@ -12,9 +12,9 @@ describe 'nova::keystone::auth_placement' do
       :region                 => 'RegionOne',
       :tenant                 => 'services',
       :email                  => 'placement@localhost',
-      :public_url             => 'http://127.0.0.1:8778',
-      :internal_url           => 'http://127.0.0.1:8778',
-      :admin_url              => 'http://127.0.0.1:8778' }
+      :public_url             => 'http://127.0.0.1/placement',
+      :internal_url           => 'http://127.0.0.1/placement',
+      :admin_url              => 'http://127.0.0.1/placement' }
   end
 
   context 'with default parameters' do
@@ -36,9 +36,9 @@ describe 'nova::keystone::auth_placement' do
 
     it { is_expected.to contain_keystone_endpoint('RegionOne/placement::placement').with(
       :ensure       => 'present',
-      :public_url   => 'http://127.0.0.1:8778',
-      :admin_url    => 'http://127.0.0.1:8778',
-      :internal_url => 'http://127.0.0.1:8778'
+      :public_url   => 'http://127.0.0.1/placement',
+      :admin_url    => 'http://127.0.0.1/placement',
+      :internal_url => 'http://127.0.0.1/placement'
     )}
 
   end
