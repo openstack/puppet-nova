@@ -1,0 +1,6 @@
+---
+features:
+  - Adds --until_complete to the archive command
+    based on an empty_table boolean flag.
+    If true, it will run in batches of max_rows
+    until the table is empty.
