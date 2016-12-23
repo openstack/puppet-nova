@@ -25,6 +25,7 @@ describe 'nova::compute' do
       end
 
       it { is_expected.to contain_nova_config('DEFAULT/allow_resize_to_same_host').with(:value => 'false') }
+      it { is_expected.to contain_nova_config('DEFAULT/resize_confirm_window').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('DEFAULT/vcpu_pin_set').with(:value => '<SERVICE DEFAULT>') }
       it { is_expected.to_not contain_nova_config('vnc/novncproxy_base_url') }
       it { is_expected.to contain_nova_config('key_manager/api_class').with_value('<SERVICE DEFAULT>') }
@@ -73,6 +74,7 @@ describe 'nova::compute' do
           :heal_instance_info_cache_interval  => '120',
           :pci_passthrough                    => "[{\"vendor_id\":\"8086\",\"product_id\":\"0126\"},{\"vendor_id\":\"9096\",\"product_id\":\"1520\",\"physical_network\":\"physnet1\"}]",
           :config_drive_format                => 'vfat',
+          :resize_confirm_window              => '3',
           :vcpu_pin_set                       => ['4-12','^8','15'],
           :keymgr_api_class                   => 'castellan.key_manager.barbican_key_manager.BarbicanKeyManager',
           :barbican_endpoint                  => 'http://localhost',
@@ -128,6 +130,8 @@ describe 'nova::compute' do
       it { is_expected.to contain_nova_config('DEFAULT/heal_instance_info_cache_interval').with_value('120') }
 
       it { is_expected.to contain_nova_config('DEFAULT/force_raw_images').with(:value => false) }
+
+      it { is_expected.to contain_nova_config('DEFAULT/resize_confirm_window').with_value('3') }
 
       it { is_expected.to contain_nova_config('DEFAULT/vcpu_pin_set').with(:value => '4-12,^8,15') }
 
