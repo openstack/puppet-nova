@@ -110,10 +110,6 @@
 # [*neutron_default_tenant_id*]
 #   (optional) DEPRECATED. Default tenant id when creating neutron networks
 #
-# [*network_api_class*]
-#   (optional) DEPRECATED. The full class name of the network API class.
-#   This parameter has no effect
-#
 # [*neutron_auth_plugin*]
 #   Name of the plugin to load (string value)
 #   Defaults to undef
@@ -146,16 +142,11 @@ class nova::network::neutron (
   $neutron_admin_username          = undef,
   $neutron_admin_auth_url          = undef,
   $neutron_default_tenant_id       = undef,
-  $network_api_class               = undef,
   $neutron_auth_plugin             = undef,
   $neutron_ca_certificates_file    = undef,
 ) {
 
   include ::nova::deps
-
-  if $network_api_class != undef {
-    warning('network_api_class has no effect and will be dropped in a future release.')
-  }
 
   # neutron_admin params removed in Mitaka
   if $neutron_password {
