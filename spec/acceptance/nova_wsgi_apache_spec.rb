@@ -124,7 +124,7 @@ describe 'basic nova' do
     end
 
     if os[:family].casecmp('RedHat') == 0
-      describe port(8778) do
+      describe port(80) do
         it { is_expected.to be_listening }
       end
     end
