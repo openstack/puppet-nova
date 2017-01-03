@@ -1,0 +1,4 @@
+---
+deprecations:
+  - signing_dir option is now deprecated for removal, the
+    parameter has no effect.
