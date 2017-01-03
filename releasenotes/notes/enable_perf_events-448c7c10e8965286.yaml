@@ -1,0 +1,5 @@
+---
+features:
+  - Expose enabled_perf_events option so it can be set in
+    libvirt nova config. This is required for cache
+    monitoring technologu feature to work end to end.
