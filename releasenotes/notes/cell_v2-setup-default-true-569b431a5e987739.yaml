@@ -1,0 +1,6 @@
+---
+upgrade:
+  - The cell_v2 setup has been enabled by default. To skip it or
+    prevent it from running, set nova::db::mysql_api::setup_cell0 and
+    nova::db::sync_api::cellv2_setup to false.
+    as the prelude. This may mean repeating some details.

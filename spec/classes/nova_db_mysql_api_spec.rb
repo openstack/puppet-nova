@@ -23,7 +23,13 @@ describe 'nova::db::mysql_api' do
         :collate       => 'utf8_general_ci',
       )}
 
-      it { is_expected.to_not contain_openstacklib__db__mysql('nova_api_cell0') }
+      it { is_expected.to contain_openstacklib__db__mysql('nova_api_cell0').with(
+        :user          => 'nova_api',
+        :password_hash => '*AA1420F182E88B9E5F874F6FBE7459291E8F4601',
+        :charset       => 'utf8',
+        :collate       => 'utf8_general_ci',
+        :create_user   => false,
+      )}
     end
 
     context 'overriding allowed_hosts param to array' do
@@ -34,6 +40,13 @@ describe 'nova::db::mysql_api' do
       end
 
       it { is_expected.to contain_openstacklib__db__mysql('nova_api').with(
+        :user          => 'nova_api',
+        :password_hash => '*AA1420F182E88B9E5F874F6FBE7459291E8F4601',
+        :charset       => 'utf8',
+        :collate       => 'utf8_general_ci',
+        :allowed_hosts => ['127.0.0.1','%'],
+      )}
+      it { is_expected.to contain_openstacklib__db__mysql('nova_api_cell0').with(
         :user          => 'nova_api',
         :password_hash => '*AA1420F182E88B9E5F874F6FBE7459291E8F4601',
         :charset       => 'utf8',
@@ -56,6 +69,13 @@ describe 'nova::db::mysql_api' do
         :collate       => 'utf8_general_ci',
         :allowed_hosts => '192.168.1.1',
       )}
+      it { is_expected.to contain_openstacklib__db__mysql('nova_api_cell0').with(
+        :user          => 'nova_api',
+        :password_hash => '*AA1420F182E88B9E5F874F6FBE7459291E8F4601',
+        :charset       => 'utf8',
+        :collate       => 'utf8_general_ci',
+        :allowed_hosts => '192.168.1.1',
+      )}
     end
 
     context 'when overriding charset' do
@@ -68,20 +88,17 @@ describe 'nova::db::mysql_api' do
       it { is_expected.to contain_openstacklib__db__mysql('nova_api').with(
         :charset => 'latin1',
       )}
+      it { is_expected.to contain_openstacklib__db__mysql('nova_api_cell0').with(
+        :charset => 'latin1',
+      )}
     end
 
-    context 'when enabling cell0 setup' do
+    context 'when disabling cell0 setup' do
       let :params do
-        { :setup_cell0 => true }.merge(required_params)
+        { :setup_cell0 => false }.merge(required_params)
       end
 
-      it { is_expected.to contain_openstacklib__db__mysql('nova_api_cell0').with(
-        :user          => 'nova_api',
-        :password_hash => '*AA1420F182E88B9E5F874F6FBE7459291E8F4601',
-        :charset       => 'utf8',
-        :collate       => 'utf8_general_ci',
-        :create_user   => false,
-      )}
+      it { is_expected.to_not contain_openstacklib__db__mysql('nova_api_cell0') }
     end
 
   end
