@@ -63,6 +63,14 @@
 #   number (integer value)
 #   Defaults to -2
 #
+# [*libvirt_enabled_perf_events*]
+#   (optional) This is a performance event list which could be used as monitor.
+#   A string list. For example: ``enabled_perf_events = cmt, mbml, mbmt``
+#   The supported events list can be found in
+#   https://libvirt.org/html/libvirt-libvirt-domain.html ,
+#   which you may need to search key words ``VIR_PERF_PARAM_*``
+#   Defaults to $::os_service_default
+#
 # [*remove_unused_base_images*]
 #   (optional) Should unused base images be removed?
 #   If undef is specified, remove the line in nova.conf
@@ -126,6 +134,7 @@ class nova::compute::libvirt (
   $libvirt_inject_password                    = false,
   $libvirt_inject_key                         = false,
   $libvirt_inject_partition                   = -2,
+  $libvirt_enabled_perf_events                = $::os_service_default,
   $remove_unused_base_images                  = undef,
   $remove_unused_resized_minimum_age_seconds  = undef,
   $remove_unused_original_minimum_age_seconds = undef,
@@ -192,16 +201,17 @@ class nova::compute::libvirt (
   }
 
   nova_config {
-    'DEFAULT/compute_driver':     value => $compute_driver;
-    'DEFAULT/preallocate_images': value => $preallocate_images;
-    'vnc/vncserver_listen':       value => $vncserver_listen;
-    'libvirt/virt_type':          value => $libvirt_virt_type;
-    'libvirt/cpu_mode':           value => $libvirt_cpu_mode_real;
-    'libvirt/inject_password':    value => $libvirt_inject_password;
-    'libvirt/inject_key':         value => $libvirt_inject_key;
-    'libvirt/inject_partition':   value => $libvirt_inject_partition;
-    'libvirt/hw_disk_discard':    value => $libvirt_hw_disk_discard;
-    'libvirt/hw_machine_type':    value => $libvirt_hw_machine_type;
+    'DEFAULT/compute_driver':      value => $compute_driver;
+    'DEFAULT/preallocate_images':  value => $preallocate_images;
+    'vnc/vncserver_listen':        value => $vncserver_listen;
+    'libvirt/virt_type':           value => $libvirt_virt_type;
+    'libvirt/cpu_mode':            value => $libvirt_cpu_mode_real;
+    'libvirt/inject_password':     value => $libvirt_inject_password;
+    'libvirt/inject_key':          value => $libvirt_inject_key;
+    'libvirt/inject_partition':    value => $libvirt_inject_partition;
+    'libvirt/hw_disk_discard':     value => $libvirt_hw_disk_discard;
+    'libvirt/hw_machine_type':     value => $libvirt_hw_machine_type;
+    'libvirt/enabled_perf_events': value => $libvirt_enabled_perf_events;
   }
 
   # cpu_model param is only valid if cpu_mode=custom
