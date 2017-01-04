@@ -12,6 +12,8 @@ describe 'nova::ironic::common' do
         is_expected.to contain_nova_config('ironic/auth_url').with_value('http://127.0.0.1:35357/')
         is_expected.to contain_nova_config('ironic/project_name').with_value('services')
         is_expected.to contain_nova_config('ironic/api_endpoint').with_value('http://127.0.0.1:6385/v1')
+        is_expected.to contain_nova_config('ironic/api_max_retries').with('value' => '<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('ironic/api_retry_interval').with('value' => '<SERVICE DEFAULT>')
 
         is_expected.to contain_nova_config('ironic/admin_username').with_value('admin')
         is_expected.to contain_nova_config('ironic/admin_password').with_value('ironic')
@@ -23,11 +25,13 @@ describe 'nova::ironic::common' do
     context 'with parameters' do
       let :params do
         {
-          :username     => 'ironic',
-          :password     => 's3cr3t',
-          :auth_url     => 'http://10.0.0.10:35357/',
-          :project_name => 'services2',
-          :api_endpoint => 'http://10.0.0.10:6385/v1',
+          :username           => 'ironic',
+          :password           => 's3cr3t',
+          :auth_url           => 'http://10.0.0.10:35357/',
+          :project_name       => 'services2',
+          :api_endpoint       => 'http://10.0.0.10:6385/v1',
+          :api_max_retries    => 60,
+          :api_retry_interval => 2,
         }
       end
 
@@ -38,6 +42,8 @@ describe 'nova::ironic::common' do
         is_expected.to contain_nova_config('ironic/auth_url').with_value('http://10.0.0.10:35357/')
         is_expected.to contain_nova_config('ironic/project_name').with_value('services2')
         is_expected.to contain_nova_config('ironic/api_endpoint').with_value('http://10.0.0.10:6385/v1')
+        is_expected.to contain_nova_config('ironic/api_max_retries').with('value' => '60')
+        is_expected.to contain_nova_config('ironic/api_retry_interval').with('value' => '2')
 
         is_expected.to contain_nova_config('ironic/admin_username').with_value('ironic')
         is_expected.to contain_nova_config('ironic/admin_password').with_value('s3cr3t')
