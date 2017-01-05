@@ -3,5 +3,6 @@ features:
   - Nova Placement API deployment in WSGI with Apache by using nova::wsgi::apache_placement.
   - Keystone resources support for Nova Placement API by using nova::keystone::auth_placement.
   - Allow to configure [placement] section in nova.conf by using nova::placement.
+  - Allow to create and use a database dedicated for Nova Placement (recommended).
 deprecations:
   - nova::wsgi::apache is deprecated in favor of nova::wsgi::apache_api.

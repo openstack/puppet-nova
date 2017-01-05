@@ -14,6 +14,8 @@ describe 'nova::db' do
       it { is_expected.to_not contain_nova_config('database/slave_connection') }
       it { is_expected.to_not contain_nova_config('api_database/connection') }
       it { is_expected.to_not contain_nova_config('api_database/slave_connection') }
+      it { is_expected.to_not contain_nova_config('placement_database/connection') }
+      it { is_expected.to_not contain_nova_config('placement_database/slave_connection') }
       it { is_expected.to_not contain_nova_config('database/idle_timeout') }
       it { is_expected.to_not contain_nova_config('database/min_pool_size') }
       it { is_expected.to_not contain_nova_config('database/max_retries') }
@@ -23,10 +25,12 @@ describe 'nova::db' do
     context 'with overriden parameters' do
       before :each do
         params.merge!(
-          :database_connection     => 'mysql+pymysql://user:pass@db/db1',
-          :slave_connection        => 'mysql+pymysql://user:pass@slave/db1',
-          :api_database_connection => 'mysql+pymysql://user:pass@db/db2',
-          :api_slave_connection    => 'mysql+pymysql://user:pass@slave/db2',
+          :database_connection           => 'mysql+pymysql://user:pass@db/db1',
+          :slave_connection              => 'mysql+pymysql://user:pass@slave/db1',
+          :api_database_connection       => 'mysql+pymysql://user:pass@db/db2',
+          :api_slave_connection          => 'mysql+pymysql://user:pass@slave/db2',
+          :placement_database_connection => 'mysql+pymysql://user:pass@db/db2',
+          :placement_slave_connection    => 'mysql+pymysql://user:pass@slave/db2',
         )
       end
 
@@ -35,6 +39,8 @@ describe 'nova::db' do
       it { is_expected.to contain_nova_config('database/slave_connection').with_value('mysql+pymysql://user:pass@slave/db1').with_secret(true) }
       it { is_expected.to contain_nova_config('api_database/connection').with_value('mysql+pymysql://user:pass@db/db2').with_secret(true) }
       it { is_expected.to contain_nova_config('api_database/slave_connection').with_value('mysql+pymysql://user:pass@slave/db2').with_secret(true) }
+      it { is_expected.to contain_nova_config('placement_database/connection').with_value('mysql+pymysql://user:pass@db/db2').with_secret(true) }
+      it { is_expected.to contain_nova_config('placement_database/slave_connection').with_value('mysql+pymysql://user:pass@slave/db2').with_secret(true) }
       it { is_expected.to contain_nova_config('database/idle_timeout').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('database/min_pool_size').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('database/max_retries').with_value('<SERVICE DEFAULT>') }
