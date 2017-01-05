@@ -113,7 +113,7 @@ class nova::wsgi::apache (
     fail('::nova::api class must be declared in composition layer.')
   }
 
-  warning('nova::wsgi::apache is deprecated and will be removed in a future release, please use nova::wsgi::apache::api')
+  warning('nova::wsgi::apache is deprecated and will be removed in a future release, please use nova::wsgi::apache_api')
 
   class { '::nova::wsgi::apache_api':
     servername                => $servername,
