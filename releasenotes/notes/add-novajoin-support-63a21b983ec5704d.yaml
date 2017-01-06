@@ -1,0 +1,6 @@
+---
+features:
+  - Adds support to configure a vendordata plugin called
+    novajoin, which is a micro-service that registers
+    instances in FreeIPA, and listens to nofications to
+    unregister the instance when the instance is removed.
