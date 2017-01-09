@@ -34,6 +34,7 @@ describe 'nova::metadata::novajoin::api' do
       :ipa_domain                => 'EXAMPLE.COM',
       :keystone_auth_url         => 'https://keystone.example.com:35357',
       :nova_password             => 'my_secret_password',
+      :transport_url             => 'rabbit:rabbit_pass@rabbit_host',
     }
   end
 
@@ -59,6 +60,7 @@ describe 'nova::metadata::novajoin::api' do
       :ipa_domain                => 'EXAMPLE2.COM',
       :keystone_auth_url         => 'https://keystone2.example.com:35357',
       :nova_password             => 'my_secret_password2',
+      :transport_url             => 'rabbit:rabbit_pass2@rabbit_host',
     }
   ].each do |param_set|
 
@@ -98,6 +100,7 @@ describe 'nova::metadata::novajoin::api' do
         is_expected.to contain_novajoin_config('DEFAULT/keytab').with_value(param_hash[:keytab])
         is_expected.to contain_novajoin_config('DEFAULT/log_dir').with_value(param_hash[:log_dir])
         is_expected.to contain_novajoin_config('DEFAULT/domain').with_value(param_hash[:ipa_domain])
+        is_expected.to contain_novajoin_config('DEFAULT/transport_url').with_value(param_hash[:transport_url])
       end
 
       it 'is_expected.to configure service credentials' do
@@ -126,6 +129,7 @@ describe 'nova::metadata::novajoin::api' do
         :enabled        => false,
         :ipa_domain     => 'EXAMPLE.COM',
         :nova_password  => 'my_secret_password',
+        :transport_url  => 'rabbit:rabbit_pass@rabbit_host',
       }
     end
 

@@ -8,6 +8,10 @@
 # [*nova_password*]
 #   (required) Password for the nova service user.
 #
+# [*transport_url*]
+#   (required) Transport URL for notifier service to talk to
+#   the messaging queue.
+#
 # [*api_paste_config*]
 #   (optional) Filename for the paste deploy file.
 #   Defaults to '/etc/nova/join-api-paste.ini'.
@@ -86,6 +90,7 @@
 #
 class nova::metadata::novajoin::api (
   $nova_password,
+  $transport_url,
   $api_paste_config          = '/etc/nova/join-api-paste.ini',
   $auth_strategy             = $::os_service_default,
   $auth_type                 = 'password',
@@ -146,6 +151,7 @@ class nova::metadata::novajoin::api (
     'DEFAULT/join_listen_port':                value => $join_listen_port;
     'DEFAULT/keytab':                          value => $keytab;
     'DEFAULT/log_dir':                         value => $log_dir;
+    'DEFAULT/transport_url':                   value => $transport_url;
     'service_credentials/auth_type':           value => $auth_type;
     'service_credentials/auth_url':            value => $keystone_auth_url;
     'service_credentials/password':            value => $nova_password;
