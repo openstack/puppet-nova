@@ -5,9 +5,10 @@ describe 'nova::metadata::novajoin::api' do
   let :facts do
     @default_facts.merge(
       {
-        :osfamily       => 'RedHat',
-        :processorcount => '7',
-        :fqdn           => "undercloud.example.com",
+        :osfamily               => 'RedHat',
+        :processorcount         => '7',
+        :fqdn                   => "undercloud.example.com",
+        :operatingsystemrelease => '7.0',
       }
     )
   end
@@ -74,6 +75,10 @@ describe 'nova::metadata::novajoin::api' do
         param_hash
       end
 
+      let :pre_condition do
+        'class { "::ipaclient": password => "join_otp", }'
+      end
+
       it { is_expected.to contain_service('novajoin-server').with(
         'ensure'     => (param_hash[:manage_service] && param_hash[:enabled]) ? 'running': 'stopped',
         'enable'     => param_hash[:enabled],
@@ -123,6 +128,14 @@ describe 'nova::metadata::novajoin::api' do
   end
 
   describe 'with disabled service managing' do
+    let :facts do
+      OSDefaults.get_facts({
+        :osfamily               => 'RedHat',
+        :operatingsystem        => 'RedHat',
+        :operatingsystemrelease => '7.0',
+      })
+    end
+
     let :params do
       {
         :manage_service => false,
@@ -131,6 +144,10 @@ describe 'nova::metadata::novajoin::api' do
         :nova_password  => 'my_secret_password',
         :transport_url  => 'rabbit:rabbit_pass@rabbit_host',
       }
+    end
+
+    let :pre_condition do
+      'class { "::ipaclient": password => "join_otp", }'
     end
 
     it { is_expected.to contain_service('novajoin-server').with(
@@ -153,11 +170,16 @@ describe 'nova::metadata::novajoin::api' do
   describe 'on RedHat platforms' do
     let :facts do
       OSDefaults.get_facts({
-        :osfamily        => 'RedHat',
-        :operatingsystem => 'RedHat',
+        :osfamily               => 'RedHat',
+        :operatingsystem        => 'RedHat',
+        :operatingsystemrelease => '7.0',
       })
     end
     let(:params) { default_params }
+
+    let :pre_condition do
+      'class { "::ipaclient": password => "join_otp", }'
+    end
 
     it { is_expected.to contain_package('python-novajoin').with(
         :tag => ['openstack', 'novajoin-package'],

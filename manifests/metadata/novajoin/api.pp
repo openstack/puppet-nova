@@ -123,12 +123,9 @@ class nova::metadata::novajoin::api (
     }
   } # Case $::osfamily
 
-  # Keep this commented out until puppet-ipaclient is available
-  # This will invoke ipa-client-install
-  #
-  # if $enable_ipa_client_install {
-  #   require ::ipaclient
-  # }
+  if $enable_ipa_client_install {
+    require ::ipaclient
+  }
 
   package { 'python-novajoin':
     ensure => $ensure_package,
