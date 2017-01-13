@@ -11,8 +11,9 @@
 #
 # [*cellv2_setup*]
 #   (optional) This flag toggles if we run the cell_v2 simple_cell_setup action
-#   with nova-manage.
-#   Defaults to true.
+#   with nova-manage. This flag will be set to true in Ocata when the cell v2
+#   setup is mandatory.
+#   Defaults to false.
 #
 # [*db_sync_timeout*]
 #   (optional) Timeout for the execution of the db_sync
@@ -21,7 +22,7 @@
 class nova::db::sync_api(
   $extra_params    = undef,
   $db_sync_timeout = 300,
-  $cellv2_setup    = true,
+  $cellv2_setup    = false,
 ) {
 
   include ::nova::deps
