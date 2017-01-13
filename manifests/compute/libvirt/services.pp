@@ -55,6 +55,9 @@ class nova::compute::libvirt::services (
         'qemu': {
           $libvirt_package_name_real = "${::nova::params::libvirt_daemon_package_prefix}kvm"
         }
+        'parallels': {
+          $libvirt_package_name_real = $::nova::params::libvirt_package_name
+        }
         default: {
           $libvirt_package_name_real = "${::nova::params::libvirt_daemon_package_prefix}${libvirt_virt_type}"
         }
