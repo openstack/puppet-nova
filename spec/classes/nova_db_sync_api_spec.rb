@@ -16,14 +16,14 @@ describe 'nova::db::sync_api' do
           :notify      => 'Anchor[nova::dbsync_api::end]',
         )
       }
-      it { is_expected.to contain_class('nova::db::sync_cell_v2') }
+      it { is_expected.to_not contain_class('nova::db::sync_cell_v2') }
     end
 
     context "overriding extra_params" do
       let :params do
         {
           :extra_params => '--config-file /etc/nova/nova.conf',
-          :cellv2_setup => false
+          :cellv2_setup => true
         }
       end
 
@@ -39,7 +39,7 @@ describe 'nova::db::sync_api' do
           :notify      => 'Anchor[nova::dbsync_api::end]',
         )
       }
-      it { is_expected.to_not contain_class('nova::db::sync_cell_v2') }
+      it { is_expected.to contain_class('nova::db::sync_cell_v2') }
     end
 
     context "overriding db_sync_timeout" do
