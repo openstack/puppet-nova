@@ -1,6 +1,6 @@
 {
   "name": "openstack-nova",
-  "version": "10.1.0",
+  "version": "10.2.0",
   "author": "Puppet Labs and OpenStack Contributors",
   "summary": "Puppet module for OpenStack Nova",
   "license": "Apache-2.0",
@@ -61,11 +61,11 @@
     },
     {
       "name": "openstack/cinder",
-      "version_requirement": ">=10.1.0 <11.0.0"
+      "version_requirement": ">=10.2.0 <11.0.0"
     },
     {
       "name": "openstack/glance",
-      "version_requirement": ">=10.1.0 <11.0.0"
+      "version_requirement": ">=10.2.0 <11.0.0"
     },
     {
       "name": "puppetlabs/inifile",
@@ -73,7 +73,7 @@
     },
     {
       "name": "openstack/keystone",
-      "version_requirement": ">=10.1.0 <11.0.0"
+      "version_requirement": ">=10.2.0 <11.0.0"
     },
     {
       "name": "puppetlabs/rabbitmq",
@@ -85,11 +85,11 @@
     },
     {
       "name": "openstack/openstacklib",
-      "version_requirement": ">=10.1.0 <11.0.0"
+      "version_requirement": ">=10.2.0 <11.0.0"
     },
     {
       "name": "openstack/oslo",
-      "version_requirement": ">=10.1.0 <11.0.0"
+      "version_requirement": ">=10.2.0 <11.0.0"
     }
   ]
 }
