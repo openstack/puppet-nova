@@ -30,7 +30,7 @@ describe 'nova::compute::libvirt' do
 
       it {
         is_expected.to contain_package('libvirt').with(
-          :name   => 'libvirt-bin',
+          :name   => 'libvirtd',
           :ensure => 'present'
         )
         is_expected.to contain_package('libvirt').that_requires('Anchor[nova::install::begin]')
@@ -39,7 +39,7 @@ describe 'nova::compute::libvirt' do
 
       it {
         is_expected.to contain_service('libvirt').with(
-          :name   => 'libvirt-bin',
+          :name   => 'libvirtd',
           :enable => true,
           :ensure => 'running',
         )
@@ -148,7 +148,7 @@ describe 'nova::compute::libvirt' do
 
         it { is_expected.to contain_class('nova::migration::libvirt')}
         it { is_expected.to contain_nova_config('vnc/vncserver_listen').with_value('0.0.0.0')}
-        it { is_expected.to contain_file_line('/etc/default/libvirt-bin libvirtd opts').with(:line => libvirt_options) }
+        it { is_expected.to contain_file_line('/etc/default/libvirtd libvirtd opts').with(:line => libvirt_options) }
         it { is_expected.to contain_file_line('/etc/libvirt/libvirtd.conf listen_tls').with(:line => "listen_tls = 0") }
         it { is_expected.to contain_file_line('/etc/libvirt/libvirtd.conf listen_tcp').with(:line => "listen_tcp = 1") }
         it { is_expected.not_to contain_file_line('/etc/libvirt/libvirtd.conf auth_tls')}
@@ -163,7 +163,7 @@ describe 'nova::compute::libvirt' do
 
         it { is_expected.to contain_class('nova::migration::libvirt')}
         it { is_expected.to contain_nova_config('vnc/vncserver_listen').with_value('::0')}
-        it { is_expected.to contain_file_line('/etc/default/libvirt-bin libvirtd opts').with(:line => libvirt_options) }
+        it { is_expected.to contain_file_line('/etc/default/libvirtd libvirtd opts').with(:line => libvirt_options) }
         it { is_expected.to contain_file_line('/etc/libvirt/libvirtd.conf listen_tls').with(:line => "listen_tls = 0") }
         it { is_expected.to contain_file_line('/etc/libvirt/libvirtd.conf listen_tcp').with(:line => "listen_tcp = 1") }
         it { is_expected.not_to contain_file_line('/etc/libvirt/libvirtd.conf auth_tls')}

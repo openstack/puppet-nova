@@ -120,7 +120,6 @@ class nova::params {
           $vncproxy_package_name           = 'nova-consoleproxy'
           # Use default provider on Debian
           $special_service_provider        = undef
-          $libvirt_service_name            = 'libvirtd'
           $virtlock_service_name           = undef
           $virtlog_service_name            = undef
         }
@@ -130,11 +129,11 @@ class nova::params {
           $vncproxy_package_name           = 'nova-novncproxy'
           # Use default provider on Debian
           $special_service_provider        = undef
-          $libvirt_service_name            = 'libvirt-bin'
           $virtlock_service_name           = 'virtlockd'
           $virtlog_service_name            = 'virtlogd'
         }
       }
+      $libvirt_service_name            = 'libvirtd'
     }
     default: {
       fail("Unsupported osfamily: ${::osfamily} operatingsystem: ${::operatingsystem}, \

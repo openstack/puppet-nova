@@ -56,9 +56,10 @@ describe 'basic nova' do
         password => 'a_big_secret',
       }
       # TODO(aschultz): remove this once https://review.openstack.org/#/c/409970/ lands
-      class { '::nova::db::sync_cell_v2':
-        transport_url => 'rabbit://nova:an_even_bigger_secret@127.0.0.1:5672/',
-      }
+      # TODO(aschultz): don't do this until resolution for LP#1656276
+      #class { '::nova::db::sync_cell_v2':
+      #  transport_url => 'rabbit://nova:an_even_bigger_secret@127.0.0.1:5672/',
+      #}
       class { '::nova::api':
         service_name   => 'httpd',
       }

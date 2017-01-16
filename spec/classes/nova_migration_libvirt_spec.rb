@@ -154,7 +154,7 @@ describe 'nova::migration::libvirt' do
     end
 
     it_configures 'nova migration with libvirt'
-    it { is_expected.to contain_file_line('/etc/default/libvirt-bin libvirtd opts').with(:line => 'libvirtd_opts="-l"') }
+    it { is_expected.to contain_file_line('/etc/default/libvirtd libvirtd opts').with(:line => 'libvirtd_opts="-l"') }
   end
 
   context 'on Debian platforms release' do
@@ -167,7 +167,7 @@ describe 'nova::migration::libvirt' do
     end
 
     it_configures 'nova migration with libvirt'
-    it { is_expected.to contain_file_line('/etc/default/libvirt-bin libvirtd opts').with(:line => 'libvirtd_opts="-d -l"') }
+    it { is_expected.to contain_file_line('/etc/default/libvirtd libvirtd opts').with(:line => 'libvirtd_opts="-d -l"') }
   end
 
   context 'on RedHat platforms' do

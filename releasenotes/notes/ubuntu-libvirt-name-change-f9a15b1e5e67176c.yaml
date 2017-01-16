@@ -1,0 +1,8 @@
+---
+fixes:
+  - |
+    Ubuntu updated their libvirt package to 2.5.0 which uses the Debian name
+    for libvirtd configurations and services. The module has been updated to
+    use the new naming conventions for the configuration files.  If using the
+    Ocata module with the Newton packages, be aware that the configuration
+    of the default files may not work correctly.
