@@ -65,6 +65,11 @@
 #   (optional) Run nova-manage api_db sync on api nodes after installing the package.
 #   Defaults to true
 #
+# [*db_online_data_migrations*]
+#   (optional) Run nova-manage db online_data_migrations on api nodes after
+#   installing the package - required on upgrade.
+#   Defaults to false.
+#
 # [*neutron_metadata_proxy_shared_secret*]
 #   (optional) Shared secret to validate proxies Neutron metadata requests
 #   Defaults to undef
@@ -246,6 +251,7 @@ class nova::api(
   $metadata_workers                     = $::processorcount,
   $sync_db                              = true,
   $sync_db_api                          = true,
+  $db_online_data_migrations            = false,
   $neutron_metadata_proxy_shared_secret = undef,
   $default_floating_pool                = 'nova',
   $pci_alias                            = undef,
@@ -453,6 +459,9 @@ as a standalone service, or httpd for being run by a httpd server")
   }
   if $sync_db_api {
     include ::nova::db::sync_api
+  }
+  if $db_online_data_migrations {
+    include ::nova::db::online_data_migrations
   }
 
   # Remove auth configuration from api-paste.ini
