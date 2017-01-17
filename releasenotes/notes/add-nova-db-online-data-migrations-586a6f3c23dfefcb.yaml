@@ -1,0 +1,5 @@
+---
+features:
+  - Added a class to run the db online_data_migrations. This needs to happen
+    after a dbsync when you when you upgrade to Newton. More info at
+    https://bugs.launchpad.net/tripleo/+bug/1656791.
