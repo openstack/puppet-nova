@@ -10,9 +10,11 @@
 #   Defaults to undef
 #
 # [*cellv2_setup*]
-#   (optional) This flag toggles if we run the cell_v2 simple_cell_setup action
-#   with nova-manage. This flag will be set to true in Ocata when the cell v2
-#   setup is mandatory.
+#   (optional) This flag toggles if we preform a minimal cell_v2 setup of a
+#   a single cell.
+#   NOTE: 'nova-manage cell_v2 discover_hosts' must be
+#   run after any nova-compute hosts have been deployed.
+#   This flag will be set to true in Ocata when the cell v2 setup is mandatory.
 #   Defaults to false.
 #
 # [*db_sync_timeout*]
@@ -21,8 +23,8 @@
 #
 class nova::db::sync_api(
   $extra_params    = undef,
-  $db_sync_timeout = 300,
   $cellv2_setup    = false,
+  $db_sync_timeout = 300,
 ) {
 
   include ::nova::deps
@@ -38,12 +40,13 @@ class nova::db::sync_api(
     subscribe   => [
       Anchor['nova::install::end'],
       Anchor['nova::config::end'],
+      Anchor['nova::db::end'],
       Anchor['nova::dbsync_api::begin']
     ],
     notify      => Anchor['nova::dbsync_api::end'],
   }
 
   if $cellv2_setup {
-    include ::nova::db::sync_cell_v2
+    include ::nova::cell_v2::simple_setup
   }
 }

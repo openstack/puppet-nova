@@ -12,18 +12,19 @@ describe 'nova::db::sync_api' do
           :logoutput   => 'on_failure',
           :subscribe   => ['Anchor[nova::install::end]',
                            'Anchor[nova::config::end]',
+                           'Anchor[nova::db::end]',
                            'Anchor[nova::dbsync_api::begin]'],
           :notify      => 'Anchor[nova::dbsync_api::end]',
         )
       }
-      it { is_expected.to_not contain_class('nova::db::sync_cell_v2') }
+      it { is_expected.to_not contain_class('nova::cell_v2::simple_setup') }
     end
 
     context "overriding extra_params" do
       let :params do
         {
           :extra_params => '--config-file /etc/nova/nova.conf',
-          :cellv2_setup => true
+          :cellv2_setup => false
         }
       end
 
@@ -35,11 +36,12 @@ describe 'nova::db::sync_api' do
           :logoutput   => 'on_failure',
           :subscribe   => ['Anchor[nova::install::end]',
                            'Anchor[nova::config::end]',
+                           'Anchor[nova::db::end]',
                            'Anchor[nova::dbsync_api::begin]'],
           :notify      => 'Anchor[nova::dbsync_api::end]',
         )
       }
-      it { is_expected.to contain_class('nova::db::sync_cell_v2') }
+      it { is_expected.to_not contain_class('nova::cell_v2::simple_setup') }
     end
 
     context "overriding db_sync_timeout" do
@@ -57,6 +59,7 @@ describe 'nova::db::sync_api' do
           :logoutput   => 'on_failure',
           :subscribe   => ['Anchor[nova::install::end]',
                            'Anchor[nova::config::end]',
+                           'Anchor[nova::db::end]',
                            'Anchor[nova::dbsync_api::begin]'],
           :notify      => 'Anchor[nova::dbsync_api::end]',
         )

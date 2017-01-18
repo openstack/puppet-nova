@@ -1,5 +1,12 @@
 ---
 features:
-  - Adds cell_v2 simple_cell_setup as part of the nova-api database setup.
+  - |
+    Adds the ability to perform a simple cell v2 setup using map_cell0,
+    create_cell and discover_hosts via nova::cell_v2::simple_setup.
 upgrade:
-  - The cell_v2 setup will become mandatory in Ocata.
+  - |
+    Cell v2 must be setup prior to upgrading to Ocata or the db api sync will
+    fail. If upgrading from from an evironment with existing compute nodes and
+    planning to use puppet to manage your hosts, DO NOT use the
+    'nova-manage cell_v2 cell_simple_setup' and nova::cell_v2::simple_setup as
+    they will clash on the default cell management.

@@ -14,6 +14,7 @@ describe 'nova::db::sync' do
         :logoutput   => 'on_failure',
         :subscribe   => ['Anchor[nova::install::end]',
                          'Anchor[nova::config::end]',
+                         'Anchor[nova::db::end]',
                          'Anchor[nova::dbsync::begin]'],
         :notify      => 'Anchor[nova::dbsync::end]',
       )
@@ -36,6 +37,7 @@ describe 'nova::db::sync' do
           :logoutput   => 'on_failure',
           :subscribe   => ['Anchor[nova::install::end]',
                            'Anchor[nova::config::end]',
+                           'Anchor[nova::db::end]',
                            'Anchor[nova::dbsync::begin]'],
           :notify      => 'Anchor[nova::dbsync::end]',
         )
@@ -59,6 +61,7 @@ describe 'nova::db::sync' do
           :logoutput   => 'on_failure',
           :subscribe   => ['Anchor[nova::install::end]',
                            'Anchor[nova::config::end]',
+                           'Anchor[nova::db::end]',
                            'Anchor[nova::dbsync::begin]'],
           :notify      => 'Anchor[nova::dbsync::end]',
         )

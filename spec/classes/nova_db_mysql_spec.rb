@@ -22,6 +22,14 @@ describe 'nova::db::mysql' do
         :charset       => 'utf8',
         :collate       => 'utf8_general_ci',
       )}
+
+      it { is_expected.to contain_openstacklib__db__mysql('nova_cell0').with(
+        :user          => 'nova',
+        :password_hash => '*AA1420F182E88B9E5F874F6FBE7459291E8F4601',
+        :charset       => 'utf8',
+        :collate       => 'utf8_general_ci',
+        :create_user   => false,
+      )}
     end
 
     context 'overriding allowed_hosts param to array' do
@@ -68,6 +76,13 @@ describe 'nova::db::mysql' do
       )}
     end
 
+    context 'when disabling cell0 setup' do
+      let :params do
+        { :setup_cell0 => false}.merge(required_params)
+      end
+
+      it { is_expected.to_not contain_openstacklib__db__mysql('nova_cell0') }
+    end
   end
 
   on_supported_os({
