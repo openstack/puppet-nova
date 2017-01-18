@@ -1,5 +1,0 @@
----
-features:
-  - Adds cell_v2 simple_cell_setup as part of the nova-api database setup.
-upgrade:
-  - The cell_v2 setup will become mandatory in Ocata.
