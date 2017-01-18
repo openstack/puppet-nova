@@ -25,7 +25,7 @@ describe 'nova::metadata::novajoin::api' do
       :enable_ipa_client_install => true,
       :ensure_package            => 'present',
       :join_listen_port          => '<SERVICE DEFAULT>',
-      :keytab                    => '<SERVICE DEFAULT>',
+      :keytab                    => '/etc/nova/krb5.keytab',
       :log_dir                   => '/var/log/novajoin',
       :manage_service            => true,
       :nova_user                 => 'nova',
@@ -121,9 +121,15 @@ describe 'nova::metadata::novajoin::api' do
       it 'is_expected.to get service user keytab' do
         is_expected.to contain_exec('get-service-user-keytab').with(
           'command' => "/usr/bin/kinit -kt /etc/krb5.keytab && ipa-getkeytab -s `grep xmlrpc_uri /etc/ipa/default.conf  | cut -d/ -f3` \
-                -p nova/undercloud.example.com -k /etc/nova/krb5.keytab",
+                -p nova/undercloud.example.com -k #{param_hash[:keytab]}",
         )
       end
+
+      it { is_expected.to contain_file("#{param_hash[:keytab]}").with(
+        'owner'   => "#{param_hash[:nova_user]}",
+        'require' => 'Exec[get-service-user-keytab]',
+      )}
+
     end
   end
 

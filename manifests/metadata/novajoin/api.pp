@@ -103,7 +103,7 @@ class nova::metadata::novajoin::api (
   $ipa_domain                = undef,
   $join_listen_port          = $::os_service_default,
   $keystone_auth_url         = 'http://127.0.0.1:35357/',
-  $keytab                    = $::os_service_default,
+  $keytab                    = '/etc/nova/krb5.keytab',
   $log_dir                   = '/var/log/novajoin',
   $manage_service            = true,
   $nova_user                 = 'nova',
@@ -187,10 +187,12 @@ class nova::metadata::novajoin::api (
 
   exec { 'get-service-user-keytab':
     command => "/usr/bin/kinit -kt /etc/krb5.keytab && ipa-getkeytab -s `grep xmlrpc_uri /etc/ipa/default.conf  | cut -d/ -f3` \
-                -p nova/${::fqdn} -k /etc/nova/krb5.keytab",
-    creates => '/etc/nova/krb5.keytab',
+                -p nova/${::fqdn} -k ${keytab}",
+    creates => $keytab,
     require => Package['python-novajoin']
   }
+
+  ensure_resource('file', $keytab, { owner => $nova_user, require => Exec['get-service-user-keytab'] })
 
   Novajoin_config<||> ~> Service<| title == 'nova-api'|>
   Exec['get-service-user-keytab'] ~> Service['novajoin-server']
