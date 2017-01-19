@@ -22,8 +22,6 @@ describe 'nova::db::mysql_api' do
         :charset       => 'utf8',
         :collate       => 'utf8_general_ci',
       )}
-
-      it { is_expected.to_not contain_openstacklib__db__mysql('nova_api_cell0') }
     end
 
     context 'overriding allowed_hosts param to array' do
@@ -67,20 +65,6 @@ describe 'nova::db::mysql_api' do
 
       it { is_expected.to contain_openstacklib__db__mysql('nova_api').with(
         :charset => 'latin1',
-      )}
-    end
-
-    context 'when enabling cell0 setup' do
-      let :params do
-        { :setup_cell0 => true }.merge(required_params)
-      end
-
-      it { is_expected.to contain_openstacklib__db__mysql('nova_api_cell0').with(
-        :user          => 'nova_api',
-        :password_hash => '*AA1420F182E88B9E5F874F6FBE7459291E8F4601',
-        :charset       => 'utf8',
-        :collate       => 'utf8_general_ci',
-        :create_user   => false,
       )}
     end
 
