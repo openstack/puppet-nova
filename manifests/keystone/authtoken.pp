@@ -164,6 +164,10 @@
 #   caching. If left undefined, tokens will instead be cached in-process.
 #   Defaults to $::os_service_default.
 #
+# [*manage_memcache_package*]
+#  (Optional) Whether to install the python-memcache package.
+#  Defaults to false.
+#
 # [*region_name*]
 #   (Optional) The region in which the identity server can be found.
 #   Defaults to $::os_service_default.
@@ -217,6 +221,7 @@ class nova::keystone::authtoken(
   $memcache_security_strategy     = $::os_service_default,
   $memcache_use_advanced_pool     = $::os_service_default,
   $memcached_servers              = $::os_service_default,
+  $manage_memcache_package        = false,
   $region_name                    = $::os_service_default,
   $revocation_cache_time          = $::os_service_default,
   $signing_dir                    = $::os_service_default,
@@ -267,6 +272,7 @@ class nova::keystone::authtoken(
     memcache_use_advanced_pool     => $memcache_use_advanced_pool,
     memcache_pool_unused_timeout   => $memcache_pool_unused_timeout,
     memcached_servers              => $memcached_servers_real,
+    manage_memcache_package        => $manage_memcache_package,
     region_name                    => $region_name,
     revocation_cache_time          => $revocation_cache_time,
     signing_dir                    => $signing_dir,

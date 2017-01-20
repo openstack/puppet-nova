@@ -1,0 +1,3 @@
+---
+features:
+  - Passes parameter to keystone authtoken define to manage python-memcache package install.
