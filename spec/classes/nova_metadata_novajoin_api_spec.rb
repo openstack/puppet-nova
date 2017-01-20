@@ -15,6 +15,7 @@ describe 'nova::metadata::novajoin::api' do
 
   let :default_params do
     {
+      :bind_address              => '127.0.0.1',
       :api_paste_config          => '/etc/nova/join-api-paste.ini',
       :auth_strategy             => '<SERVICE DEFAULT>',
       :auth_type                 => 'password',
@@ -41,6 +42,7 @@ describe 'nova::metadata::novajoin::api' do
 
   [{},
    {
+      :bind_address              => '0.0.0.0',
       :api_paste_config          => '/etc/nova/join-api-paste.ini',
       :auth_strategy             => 'noauth2',
       :auth_type                 => 'password',
@@ -96,6 +98,7 @@ describe 'nova::metadata::novajoin::api' do
       ) }
 
       it 'is_expected.to configure default parameters' do
+        is_expected.to contain_novajoin_config('DEFAULT/join_listen').with_value(param_hash[:bind_address])
         is_expected.to contain_novajoin_config('DEFAULT/api_paste_config').with_value(param_hash[:api_paste_config])
         is_expected.to contain_novajoin_config('DEFAULT/auth_strategy').with_value(param_hash[:auth_strategy])
         is_expected.to contain_novajoin_config('DEFAULT/cacert').with_value(param_hash[:cacert])

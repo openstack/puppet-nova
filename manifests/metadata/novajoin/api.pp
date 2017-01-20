@@ -12,6 +12,10 @@
 #   (required) Transport URL for notifier service to talk to
 #   the messaging queue.
 #
+# [*bind_address*]
+#   (optional) IP address for novajoin server to listen
+#   Defaults to '127.0.0.1'
+#
 # [*api_paste_config*]
 #   (optional) Filename for the paste deploy file.
 #   Defaults to '/etc/nova/join-api-paste.ini'.
@@ -91,6 +95,7 @@
 class nova::metadata::novajoin::api (
   $nova_password,
   $transport_url,
+  $bind_address              = '127.0.0.1',
   $api_paste_config          = '/etc/nova/join-api-paste.ini',
   $auth_strategy             = $::os_service_default,
   $auth_type                 = 'password',
@@ -140,6 +145,7 @@ class nova::metadata::novajoin::api (
   }
 
   novajoin_config {
+    'DEFAULT/join_listen':                     value => $bind_address;
     'DEFAULT/api_paste_config':                value => $api_paste_config;
     'DEFAULT/auth_strategy':                   value => $auth_strategy;
     'DEFAULT/cacert':                          value => $cacert;
