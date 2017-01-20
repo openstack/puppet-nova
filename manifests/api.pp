@@ -159,21 +159,21 @@
 #   once connected.
 #   Defaults to $::os_service_default
 #
-# [*osapi_max_limit*]
+# [*max_limit*]
 #   (optional) This option is limit the maximum number of items in a single response.
 #   Defaults to $::os_service_default
 #
-# [*osapi_compute_link_prefix*]
+# [*compute_link_prefix*]
 #   (optional) This string is prepended to the normal URL that is returned in links
 #   to the OpenStack Compute API.
 #   Defaults to $::os_service_default
 #
-# [*osapi_glance_link_prefix*]
+# [*glance_link_prefix*]
 #   (optional) This string is prepended to the normal URL that is returned in links
 #   to Glance resources.
 #   Defaults to $::os_service_default
 #
-# [*osapi_hide_server_address_states*]
+# [*hide_server_address_states*]
 #   (optional) This option is a list of all instance states for which network address
 #   information should not be returned from the API.
 #   Defaults to $::os_service_default
@@ -212,6 +212,25 @@
 #   Class instead.
 #   Defaults to undef
 #
+# [*osapi_max_limit*]
+#   (optional) This option is limit the maximum number of items in a single response.
+#   Defaults to undef
+#
+# [*osapi_compute_link_prefix*]
+#   (optional) This string is prepended to the normal URL that is returned in links
+#   to the OpenStack Compute API.
+#   Defaults to undef
+#
+# [*osapi_glance_link_prefix*]
+#   (optional) This string is prepended to the normal URL that is returned in links
+#   to Glance resources.
+#   Defaults to undef
+#
+# [*osapi_hide_server_address_states*]
+#   (optional) This option is a list of all instance states for which network address
+#   information should not be returned from the API.
+#   Defaults to undef
+#
 class nova::api(
   $enabled                              = true,
   $manage_service                       = true,
@@ -245,10 +264,10 @@ class nova::api(
   $vendordata_dynamic_targets           = $::os_service_default,
   $vendordata_dynamic_connect_timeout   = $::os_service_default,
   $vendordata_dynamic_read_timeout      = $::os_service_default,
-  $osapi_max_limit                      = $::os_service_default,
-  $osapi_compute_link_prefix            = $::os_service_default,
-  $osapi_glance_link_prefix             = $::os_service_default,
-  $osapi_hide_server_address_states     = $::os_service_default,
+  $max_limit                            = $::os_service_default,
+  $compute_link_prefix                  = $::os_service_default,
+  $glance_link_prefix                   = $::os_service_default,
+  $hide_server_address_states           = $::os_service_default,
   $allow_instance_snapshots             = $::os_service_default,
   $enable_network_quota                 = $::os_service_default,
   $enable_instance_password             = $::os_service_default,
@@ -257,6 +276,10 @@ class nova::api(
   $allow_resize_to_same_host            = false,
   # DEPRECATED PARAMETER
   $conductor_workers                    = undef,
+  $osapi_max_limit                      = undef,
+  $osapi_compute_link_prefix            = undef,
+  $osapi_glance_link_prefix             = undef,
+  $osapi_hide_server_address_states     = undef,
 ) inherits nova::params {
 
   include ::nova::deps
@@ -281,6 +304,34 @@ class nova::api(
     nova_config{
       'DEFAULT/instance_name_template': ensure => absent;
     }
+  }
+
+  if $osapi_max_limit {
+    warning('The osapi_max_limit parameter is deprecated. Please use max_limit instead')
+    $max_limit_real = $osapi_max_limit
+  } else {
+    $max_limit_real = $max_limit
+  }
+
+  if $osapi_compute_link_prefix {
+    warning('The osapi_compute_link_prefix parameter is deprecated. Please use compute_link_prefix instead')
+    $compute_link_prefix_real = $osapi_compute_link_prefix
+  } else {
+    $compute_link_prefix_real = $compute_link_prefix
+  }
+
+  if $osapi_glance_link_prefix {
+    warning('The osapi_glance_link_prefix parameter is deprecated. Please use glance_link_prefix instead')
+    $glance_link_prefix_real = $osapi_glance_link_prefix
+  } else {
+    $glance_link_prefix_real = $glance_link_prefix
+  }
+
+  if $osapi_hide_server_address_states {
+    warning('The osapi_hide_server_address_states parameter is deprecated. Please use hide_server_address_states instead')
+    $hide_server_address_states_real = $osapi_hide_server_address_states
+  } else {
+    $hide_server_address_states_real = $hide_server_address_states
   }
 
   if !is_service_default($vendordata_providers) and !empty($vendordata_providers){
@@ -343,32 +394,32 @@ as a standalone service, or httpd for being run by a httpd server")
   }
 
   nova_config {
-    'wsgi/api_paste_config':                      value => $api_paste_config;
-    'DEFAULT/enabled_apis':                       value => join($enabled_apis_real, ',');
-    'DEFAULT/osapi_compute_listen':               value => $api_bind_address;
-    'DEFAULT/metadata_listen':                    value => $metadata_listen;
-    'DEFAULT/metadata_listen_port':               value => $metadata_listen_port;
-    'DEFAULT/osapi_compute_listen_port':          value => $osapi_compute_listen_port;
-    'DEFAULT/osapi_volume_listen':                value => $api_bind_address;
-    'DEFAULT/osapi_compute_workers':              value => $osapi_compute_workers;
-    'DEFAULT/metadata_workers':                   value => $metadata_workers;
-    'DEFAULT/use_forwarded_for':                  value => $use_forwarded_for;
-    'DEFAULT/default_floating_pool':              value => $default_floating_pool;
-    'DEFAULT/fping_path':                         value => $fping_path;
-    'DEFAULT/metadata_cache_expiration':          value => $metadata_cache_expiration;
-    'DEFAULT/vendordata_jsonfile_path':           value => $vendordata_jsonfile_path;
-    'DEFAULT/vendordata_providers':               value => $vendordata_providers_real;
-    'DEFAULT/vendordata_dynamic_targets':         value => $vendordata_dynamic_targets_real;
-    'DEFAULT/vendordata_dynamic_connect_timeout': value => $vendordata_dynamic_connect_timeout;
-    'DEFAULT/vendordata_dynamic_read_timeout':    value => $vendordata_dynamic_read_timeout;
-    'DEFAULT/osapi_max_limit':                    value => $osapi_max_limit;
-    'DEFAULT/osapi_compute_link_prefix':          value => $osapi_compute_link_prefix;
-    'DEFAULT/osapi_glance_link_prefix':           value => $osapi_glance_link_prefix;
-    'DEFAULT/osapi_hide_server_address_states':   value => $osapi_hide_server_address_states;
-    'DEFAULT/allow_instance_snapshots':           value => $allow_instance_snapshots;
-    'DEFAULT/enable_network_quota':               value => $enable_network_quota;
-    'DEFAULT/enable_instance_password':           value => $enable_instance_password;
-    'DEFAULT/password_length':                    value => $password_length;
+    'wsgi/api_paste_config':                  value => $api_paste_config;
+    'DEFAULT/enabled_apis':                   value => join($enabled_apis_real, ',');
+    'DEFAULT/osapi_compute_listen':           value => $api_bind_address;
+    'DEFAULT/metadata_listen':                value => $metadata_listen;
+    'DEFAULT/metadata_listen_port':           value => $metadata_listen_port;
+    'DEFAULT/osapi_compute_listen_port':      value => $osapi_compute_listen_port;
+    'DEFAULT/osapi_volume_listen':            value => $api_bind_address;
+    'DEFAULT/osapi_compute_workers':          value => $osapi_compute_workers;
+    'DEFAULT/metadata_workers':               value => $metadata_workers;
+    'DEFAULT/default_floating_pool':          value => $default_floating_pool;
+    'DEFAULT/enable_network_quota':           value => $enable_network_quota;
+    'DEFAULT/password_length':                value => $password_length;
+    'api/metadata_cache_expiration':          value => $metadata_cache_expiration;
+    'api/use_forwarded_for':                  value => $use_forwarded_for;
+    'api/fping_path':                         value => $fping_path;
+    'api/vendordata_jsonfile_path':           value => $vendordata_jsonfile_path;
+    'api/vendordata_providers':               value => $vendordata_providers_real;
+    'api/vendordata_dynamic_targets':         value => $vendordata_dynamic_targets_real;
+    'api/vendordata_dynamic_connect_timeout': value => $vendordata_dynamic_connect_timeout;
+    'api/vendordata_dynamic_read_timeout':    value => $vendordata_dynamic_read_timeout;
+    'api/max_limit':                          value => $max_limit_real;
+    'api/compute_link_prefix':                value => $compute_link_prefix_real;
+    'api/glance_link_prefix':                 value => $glance_link_prefix_real;
+    'api/hide_server_address_states':         value => $hide_server_address_states_real;
+    'api/allow_instance_snapshots':           value => $allow_instance_snapshots;
+    'api/enable_instance_password':           value => $enable_instance_password;
   }
 
   oslo::middleware {'nova_config':

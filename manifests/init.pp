@@ -649,9 +649,9 @@ but should be one of: ssh-rsa, ssh-dsa, ssh-ecdsa.")
   ensure_resource('nova_config', 'DEFAULT/disk_allocation_ratio', { value => $real_disk_allocation_ratio })
 
   nova_config {
-    'DEFAULT/image_service':                value => $image_service;
-    'DEFAULT/auth_strategy':                value => $auth_strategy;
-    'DEFAULT/host':                         value => $host;
+    'api/auth_strategy':     value => $auth_strategy;
+    'DEFAULT/image_service': value => $image_service;
+    'DEFAULT/host':          value => $host;
   }
 
   # we keep "nova.openstack.common.rpc.impl_kombu" for backward compatibility

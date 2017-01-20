@@ -37,7 +37,7 @@ describe 'nova' do
       end
 
       it 'configures auth_strategy' do
-        is_expected.to contain_nova_config('DEFAULT/auth_strategy').with_value('keystone')
+        is_expected.to contain_nova_config('api/auth_strategy').with_value('keystone')
         is_expected.to_not contain_nova_config('DEFAULT/use_deprecated_auth').with_value(false)
       end
 
@@ -134,7 +134,7 @@ describe 'nova' do
       end
 
       it 'configures auth_strategy' do
-        is_expected.to contain_nova_config('DEFAULT/auth_strategy').with_value('foo')
+        is_expected.to contain_nova_config('api/auth_strategy').with_value('foo')
         is_expected.to_not contain_nova_config('DEFAULT/use_deprecated_auth').with_value(true)
       end
 
