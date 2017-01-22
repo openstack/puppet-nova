@@ -56,6 +56,10 @@ class nova::deps {
   -> Anchor['nova::dbsync_api::end']
   -> Nova_network<||>
 
+  # all db settings should be applied and all packages should be installed
+  # before dbsync starts
+  Oslo::Db<||> -> Anchor['nova::dbsync::begin']
+
   # Installation or config changes will always restart services.
   Anchor['nova::install::end'] ~> Anchor['nova::service::begin']
   Anchor['nova::config::end']  ~> Anchor['nova::service::begin']
