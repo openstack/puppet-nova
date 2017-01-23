@@ -1,0 +1,7 @@
+---
+features:
+  - |
+    Add classes to expose refreshonly versions of the
+    "nova-manage cell_v2 map_cell_and_hosts" and
+    "nova-manage cell_v2 map_instances" commands that can be used to manage
+    cell v2.
