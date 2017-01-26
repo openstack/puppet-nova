@@ -1,6 +1,6 @@
 {
   "name": "openstack-nova",
-  "version": "10.2.0",
+  "version": "10.2.1",
   "author": "Puppet Labs and OpenStack Contributors",
   "summary": "Puppet module for OpenStack Nova",
   "license": "Apache-2.0",
@@ -56,7 +56,7 @@
       "version_requirement": ">=0.0.1 <1.0.0"
     },
     {
-      "name": "joshuabaird/puppet-ipaclient",
+      "name": "joshuabaird/ipaclient",
       "version_requirement": ">=2.5.1"
     },
     {
