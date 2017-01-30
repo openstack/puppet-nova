@@ -1,0 +1,6 @@
+---
+fixes:
+  - Fixes `bug 1660099
+    <https://bugs.launchpad.net/puppet-nova/+bug/1660099>`__ so we don't restrict
+    vncserver_listen to be binded on 0.0.0.0, which has been wrong for long time.
+    Nova allows to bind on any IP and live migration will be supported.
