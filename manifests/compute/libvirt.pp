@@ -154,11 +154,7 @@ class nova::compute::libvirt (
   }
 
   if $migration_support {
-    if $vncserver_listen != '0.0.0.0' and $vncserver_listen != '::0' {
-      fail('For migration support to work, you MUST set vncserver_listen to \'0.0.0.0\' or \'::0\'')
-    } else {
-      include ::nova::migration::libvirt
-    }
+    include ::nova::migration::libvirt
   }
 
   if $::osfamily == 'RedHat' {
