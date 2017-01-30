@@ -163,16 +163,6 @@ describe 'nova::compute::libvirt' do
         it { is_expected.to contain_file_line('/etc/libvirt/libvirtd.conf auth_tcp').with(:line => "auth_tcp = \"none\"") }
       end
 
-      context 'with vncserver_listen not set to 0.0.0.0' do
-        let :params do
-          { :vncserver_listen  => '127.0.0.1',
-            :migration_support => true }
-        end
-
-        it { expect { is_expected.to contain_class('nova::compute::libvirt') }.to \
-          raise_error(Puppet::Error, /For migration support to work, you MUST set vncserver_listen to '0.0.0.0' or '::0'/) }
-      end
-
       context 'with custom libvirt service name on Debian platforms' do
         let :params do
           { :libvirt_service_name  => 'libvirtd',
@@ -315,15 +305,6 @@ describe 'nova::compute::libvirt' do
         it { is_expected.to contain_file_line('/etc/libvirt/libvirtd.conf auth_tcp').with(:line => "auth_tcp = \"none\"") }
       end
 
-      context 'with vncserver_listen not set to 0.0.0.0' do
-        let :params do
-          { :vncserver_listen  => '127.0.0.1',
-            :migration_support => true }
-        end
-
-        it { expect { is_expected.to contain_class('nova::compute::libvirt') }.to \
-          raise_error(Puppet::Error, /For migration support to work, you MUST set vncserver_listen to '0.0.0.0'/) }
-      end
     end
 
     describe 'when manage_libvirt_services is set to false' do
