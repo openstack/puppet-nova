@@ -51,7 +51,7 @@
 #   (optional) Allow insecure conections.
 #   If true, the vCenter server certificate is not verified. If
 #   false, then the default CA truststore is used for verification. This
-#   option is ignored if “ca_file” is set.
+#   option is ignored if 'ca_file' is set.
 #   Defaults to $::os_service_default
 #
 # [*ca_file*]
