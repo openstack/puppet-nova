@@ -21,7 +21,6 @@ class nova::cell_v2::map_cell0 (
     path        => ['/bin', '/usr/bin'],
     command     => "nova-manage ${extra_params} cell_v2 map_cell0",
     refreshonly => true,
-    returns     => [0,1], # TODO(owalsh): Remove when this lands https://review.openstack.org/#/c/420132/ in packaging
     logoutput   => on_failure,
     subscribe   => Anchor['nova::cell_v2::begin'],
     notify      => Anchor['nova::cell_v2::end'],
