@@ -105,6 +105,8 @@ class nova::wsgi::apache (
     fail('::nova::api class must be declared in composition layer.')
   }
 
+  warning('deploying Nova API in WSGI with Apache is not recommended by Nova team. See LP#1661360.')
+
   ::openstacklib::wsgi::apache { 'nova_api_wsgi':
     bind_host           => $bind_host,
     bind_port           => $api_port,
