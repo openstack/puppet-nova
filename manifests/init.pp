@@ -67,6 +67,12 @@
 #   (Optional) Seconds to wait for a response from a call. (integer value)
 #   Defaults to $::os_service_default.
 #
+# [*control_exchange*]
+#   (Optional) The default exchange under which topics are scoped. May be
+#   overridden by an exchange name specified in the transport_url
+#   option.
+#   Defaults to $::os_service_default
+#
 # [*rpc_backend*]
 #   (optional) The rpc backend implementation to use, can be:
 #     rabbit (for rabbitmq)
@@ -447,6 +453,7 @@ class nova(
   $database_max_overflow                  = undef,
   $default_transport_url                  = $::os_service_default,
   $rpc_response_timeout                   = $::os_service_default,
+  $control_exchange                       = $::os_service_default,
   $rpc_backend                            = $::os_service_default,
   $image_service                          = 'nova.image.glance.GlanceImageService',
   # these glance params should be optional
@@ -732,6 +739,7 @@ but should be one of: ssh-rsa, ssh-dsa, ssh-ecdsa.")
   oslo::messaging::default { 'nova_config':
     transport_url        => $default_transport_url,
     rpc_response_timeout => $rpc_response_timeout,
+    control_exchange     => $control_exchange,
   }
 
   oslo::messaging::notifications { 'nova_config':
