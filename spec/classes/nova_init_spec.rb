@@ -61,6 +61,7 @@ describe 'nova' do
         is_expected.to contain_nova_config('os_vif_linux_bridge/use_ipv6').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('DEFAULT/transport_url').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('DEFAULT/rpc_response_timeout').with_value('<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('DEFAULT/control_exchange').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('cinder/os_region_name').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('cinder/catalog_info').with('value' => 'volumev2:cinderv2:publicURL')
         is_expected.to contain_nova_config('DEFAULT/cpu_allocation_ratio').with_value('<SERVICE DEFAULT>')
@@ -82,6 +83,7 @@ describe 'nova' do
           :image_service                           => 'nova.image.local.LocalImageService',
           :default_transport_url                   => 'rabbit://rabbit_user:password@localhost:5673',
           :rpc_response_timeout                    => '30',
+          :control_exchange                        => 'nova',
           :rpc_backend                             => 'rabbit',
           :rabbit_host                             => 'rabbit',
           :rabbit_userid                           => 'rabbit_user',
@@ -141,6 +143,8 @@ describe 'nova' do
       it 'configures rabbit' do
         is_expected.to contain_nova_config('DEFAULT/rpc_backend').with_value('rabbit')
         is_expected.to contain_nova_config('DEFAULT/transport_url').with_value('rabbit://rabbit_user:password@localhost:5673')
+        is_expected.to contain_nova_config('DEFAULT/rpc_response_timeout').with_value('30')
+        is_expected.to contain_nova_config('DEFAULT/control_exchange').with_value('nova')
         is_expected.to contain_nova_config('oslo_messaging_rabbit/rabbit_host').with_value('rabbit')
         is_expected.to contain_nova_config('oslo_messaging_rabbit/rabbit_password').with_value('password').with_secret(true)
         is_expected.to contain_nova_config('oslo_messaging_rabbit/rabbit_port').with_value('5673')
