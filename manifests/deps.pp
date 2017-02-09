@@ -65,4 +65,12 @@ class nova::deps {
     require => Anchor['nova::install::end'],
     before  => Anchor['nova::config::begin'],
   }
+
+  # Wedge online data migrations after db/api_sync and before service
+  anchor { 'nova::db_online_data_migrations::begin':
+    subscribe => Anchor['nova::dbsync_api::end']
+  } ->
+  anchor { 'nova::db_online_data_migrations::end':
+    notify => Anchor['nova::service::begin']
+  }
 }
