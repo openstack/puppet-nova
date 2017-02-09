@@ -72,10 +72,6 @@
 #     apache::vhost ssl parameters.
 #     Optional. Default to apache::vhost 'ssl_*' defaults.
 #
-# == Dependencies
-#
-#   requires Class['apache'] & Class['nova'] & Class['nova::api']
-#
 # == Examples
 #
 #   include apache
@@ -107,10 +103,6 @@ class nova::wsgi::apache_placement (
   include ::apache::mod::wsgi
   if $ssl {
     include ::apache::mod::ssl
-  }
-
-  if ! defined(Class[::nova::api]) {
-    fail('::nova::api class must be declared in composition layer.')
   }
 
   nova::generic_service { 'placement-api':
