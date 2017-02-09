@@ -15,9 +15,7 @@ describe 'nova::wsgi::apache_placement' do
     class { '::nova::keystone::authtoken':
       password => 'secrete',
     }
-    class { '::nova::api':
-      service_name   => 'httpd',
-    }"
+    "
  end
 
   shared_examples_for 'apache serving nova with mod_wsgi' do
@@ -33,9 +31,7 @@ describe 'nova::wsgi::apache_placement' do
          class { '::nova::keystone::authtoken':
            password => 'secrete',
          }
-         class { '::nova::api':
-           service_name   => 'httpd',
-         }"
+         "
       end
 
       it { is_expected.to contain_package('nova-placement-api').with(
@@ -103,9 +99,7 @@ describe 'nova::wsgi::apache_placement' do
          class { '::nova::keystone::authtoken':
            password => 'secrete',
          }
-         class { '::nova::api':
-           service_name   => 'httpd',
-         }"
+         "
       end
 
       let :params do
@@ -139,15 +133,6 @@ describe 'nova::wsgi::apache_placement' do
         'wsgi_script_aliases'         => { '/placement' => "#{platform_params[:wsgi_script_path]}/nova-placement-api" },
         'require'                     => 'File[placement_wsgi]'
       )}
-    end
-
-    describe 'when ::nova::api is missing in the composition layer' do
-
-      let :pre_condition do
-        "include nova"
-      end
-
-      it { is_expected.to raise_error Puppet::Error, /::nova::api class must be declared in composition layer./ }
     end
 
   end
