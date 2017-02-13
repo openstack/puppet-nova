@@ -55,12 +55,7 @@ describe 'basic nova' do
       class { '::nova::keystone::authtoken':
         password => 'a_big_secret',
       }
-      # TODO(aschultz): ubuntu's version of these commands are too old. Only
-      # run the cell_v2 on the redhat test until after Ocata-m3 is available
-      # from UCA
-      if $::osfamily == 'RedHat' {
-        include '::nova::cell_v2::simple_setup'
-      }
+      include '::nova::cell_v2::simple_setup'
       class { '::nova::api':
         service_name   => 'httpd',
       }
