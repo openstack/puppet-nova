@@ -32,6 +32,11 @@
 #   through the OpenStack Identity service.
 #   Defaults to 'RegionOne'
 #
+# [*os_interface*]
+#   (optional) interface name name used for getting the keystone endpoint for
+#   the placement API.
+#   Defaults to $::os_service_default
+#
 # [*username*]
 #   (optional) Username for connecting to Nova Placement API service in admin context
 #   through the OpenStack Identity service.
@@ -48,6 +53,7 @@ class nova::placement(
   $auth_type           = 'password',
   $auth_url            = 'http://127.0.0.1:35357/v3',
   $os_region_name      = 'RegionOne',
+  $os_interface        = $::os_service_default,
   $project_domain_name = 'Default',
   $project_name        = 'services',
   $user_domain_name    = 'Default',
@@ -64,6 +70,7 @@ class nova::placement(
     'placement/user_domain_name':    value => $user_domain_name;
     'placement/username':            value => $username;
     'placement/os_region_name':      value => $os_region_name;
+    'placement/os_interface':        value => $os_interface;
   }
 
 }

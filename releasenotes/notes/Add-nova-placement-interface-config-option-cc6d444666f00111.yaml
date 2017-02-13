@@ -1,0 +1,5 @@
+---
+features:
+  - The os_interface option for the nova placement API is not configurable.
+    This allows nodes communicating with the placement API (such as the compute
+    nodes) to be able to choose which keystone endpoint's interface to use.
