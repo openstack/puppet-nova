@@ -63,15 +63,11 @@ describe 'basic nova' do
       class { '::nova::wsgi::apache_api':
         ssl => false,
       }
-      # The Ubuntu package is now broken, it tries to run the app with systemd.
-      # Until it's fixed, let's test it on Red Hat only.
-      if $::osfamily == 'RedHat' {
-        class { '::nova::wsgi::apache_placement':
-          ssl => false,
-        }
-        class { '::nova::placement':
-          password => 'a_big_secret',
-        }
+      class { '::nova::wsgi::apache_placement':
+        ssl => false,
+      }
+      class { '::nova::placement':
+        password => 'a_big_secret',
       }
       class { '::nova::cert': }
       class { '::nova::client': }
