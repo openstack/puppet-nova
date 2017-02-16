@@ -71,12 +71,14 @@ describe 'nova::scheduler::filter' do
       let :params do
         { :isolated_images                      => [],
           :isolated_hosts                       => [],
+          :scheduler_available_filters          => [],
           :scheduler_default_filters            => [],
           :baremetal_scheduler_default_filters  => [], }
       end
 
       it { is_expected.to contain_nova_config('filter_scheduler/isolated_images').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('filter_scheduler/isolated_hosts').with_value('<SERVICE DEFAULT>') }
+      it { is_expected.to contain_nova_config('filter_scheduler/available_filters').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('filter_scheduler/enabled_filters').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('filter_scheduler/baremetal_enabled_filters').with_value('<SERVICE DEFAULT>') }
     end
