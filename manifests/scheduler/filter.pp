@@ -100,7 +100,11 @@ class nova::scheduler::filter (
   }
 
   if is_array($scheduler_available_filters) {
-    $scheduler_available_filters_real = $scheduler_available_filters
+    if empty($scheduler_available_filters) {
+      $scheduler_available_filters_real = $::os_service_default
+    } else {
+      $scheduler_available_filters_real = $scheduler_available_filters
+    }
   } else {
     warning('scheduler_available_filters must be an array and will fail in the future')
     $scheduler_available_filters_real = any2array($scheduler_available_filters)

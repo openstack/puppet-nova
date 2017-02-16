@@ -48,6 +48,7 @@ describe 'nova::scheduler::filter' do
       let :params do
         { :isolated_images                      => [],
           :isolated_hosts                       => [],
+          :scheduler_available_filters          => [],
           :scheduler_default_filters            => [],
           :baremetal_scheduler_default_filters  => [], }
       end
@@ -55,6 +56,7 @@ describe 'nova::scheduler::filter' do
       it { is_expected.to contain_nova_config('DEFAULT/isolated_images').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('DEFAULT/isolated_hosts').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('DEFAULT/scheduler_default_filters').with_value('<SERVICE DEFAULT>') }
+      it { is_expected.to contain_nova_config('DEFAULT/scheduler_available_filters').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('DEFAULT/baremetal_scheduler_default_filters').with_value('<SERVICE DEFAULT>') }
     end
   end
