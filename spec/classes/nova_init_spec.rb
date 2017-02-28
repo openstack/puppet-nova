@@ -354,7 +354,6 @@ describe 'nova' do
       end
 
       it 'configures amqp' do
-        is_expected.to contain_nova_config('DEFAULT/rpc_backend').with_value('amqp')
         is_expected.to contain_nova_config('oslo_messaging_amqp/server_request_prefix').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('oslo_messaging_amqp/broadcast_prefix').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('oslo_messaging_amqp/group_request_prefix').with_value('<SERVICE DEFAULT>')
@@ -388,7 +387,6 @@ describe 'nova' do
       end
 
       it 'configures amqp overide' do
-        is_expected.to contain_nova_config('DEFAULT/rpc_backend').with_value('amqp')
         is_expected.to contain_nova_config('oslo_messaging_amqp/idle_timeout').with_value('60')
         is_expected.to contain_nova_config('oslo_messaging_amqp/trace').with_value('true')
         is_expected.to contain_nova_config('oslo_messaging_amqp/ssl_ca_file').with_value('/etc/ca.cert')
