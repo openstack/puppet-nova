@@ -1,12 +1,9 @@
 # == Type: nova::cell_v2::cell
 #
 # Resource for managing cell_v2 cells.
+# DEPRECATED by the nova_cell_v2 type.
 #
 # === Parameters
-#
-# [*extra_params*]
-#  (String) Extra parameters to pass to the nova-manage commands.
-#  Defaults to ''.
 #
 # [*transport_url*]
 #  (String) AMQP transport url for the cell.
@@ -20,32 +17,26 @@
 #  configuration file.
 #  Defaults to undef.
 #
+# DEPRECATED
+#
+# [*extra_params*]
+#   This parameter is deprecated and will be ignored
+#
 define nova::cell_v2::cell (
-  $extra_params        = '',
-  $transport_url       = undef,
-  $database_connection = undef
+  $extra_params        = undef,
+  $transport_url       = 'default',
+  $database_connection = 'default'
 ) {
+
+  warning('nova::cell_v2::cell is deprecated by the nova_cell_v2 type in Pike and will be removed in the future.')
+  if $extra_params {
+    warning('The nova::cell_v2::cell::extra_params parameter is deprecated and will be ignored')
+  }
 
   include ::nova::deps
 
-  if $transport_url {
-    $transport_url_real = "--transport-url=${transport_url}"
-  } else {
-    $transport_url_real = ''
-  }
-
-  if $database_connection {
-    $database_connection_real = "--database_connection=${database_connection}"
-  } else {
-    $database_connection_real = ''
-  }
-
-  exec { "nova-cell_v2-cell-${title}":
-    path      => [ '/bin', '/usr/bin' ],
-    command   => "nova-manage ${extra_params} cell_v2 create_cell --name=${title} ${transport_url_real} ${database_connection_real}",
-    unless    => "nova-manage ${extra_params} cell_v2 list_cells | grep -q ${title}",
-    logoutput => on_failure,
-    subscribe => Anchor['nova::cell_v2::begin'],
-    notify    => Anchor['nova::cell_v2::end'],
+  nova_cell_v2 { "${title}":
+    transport_url       => $transport_url,
+    database_connection => $database_connection
   }
 }
