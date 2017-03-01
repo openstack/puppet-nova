@@ -7,30 +7,12 @@ describe 'nova::cell_v2::simple_setup' do
 
       it {
         is_expected.to contain_class('nova::cell_v2::map_cell0')
-        is_expected.to contain_nova__cell_v2__cell('default').with(
-          :extra_params        => '',
-          :transport_url       => nil,
-          :database_conneciton => nil
+        is_expected.to contain_nova_cell_v2('cell0').with(
+          :database_connection => 'default'
         )
-        is_expected.to contain_class('nova::cell_v2::discover_hosts')
-      }
-    end
-
-    context "overriding extra_params" do
-      let :params do
-        {
-          :extra_params        => '--config-file /etc/nova/nova.conf',
-          :transport_url       => 'rabbit://user:pass@host:1234/virt',
-          :database_connection => 'mysql://nova:pass@host:1234/nova'
-        }
-      end
-
-      it {
-        is_expected.to contain_class('nova::cell_v2::map_cell0')
-        is_expected.to contain_nova__cell_v2__cell('default').with(
-          :extra_params        => params[:extra_params],
-          :transport_url       => params[:transport_url],
-          :database_connection => params[:database_connection]
+        is_expected.to contain_nova_cell_v2('default').with(
+          :transport_url       => 'default',
+          :database_connection => 'default'
         )
         is_expected.to contain_class('nova::cell_v2::discover_hosts')
       }
