@@ -1,0 +1,5 @@
+---
+features:
+  - Adds the vendordata_dynamic_failure_fatal option to the API manifest.
+    Which, if set to true, makes nova take errors that happened in the
+    vendordata plugins as fatal.

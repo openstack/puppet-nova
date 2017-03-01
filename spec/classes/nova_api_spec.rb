@@ -62,6 +62,7 @@ describe 'nova::api' do
         is_expected.to contain_nova_config('api/vendordata_dynamic_targets').with('value' => '<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('api/vendordata_dynamic_connect_timeout').with('value' => '<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('api/vendordata_dynamic_read_timeout').with('value' => '<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('api/vendordata_dynamic_failure_fatal').with('value' => '<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('api/max_limit').with('value' => '<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('api/compute_link_prefix').with('value' => '<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('api/glance_link_prefix').with('value' => '<SERVICE DEFAULT>')
@@ -101,6 +102,7 @@ describe 'nova::api' do
           :vendordata_dynamic_targets           => ['join@http://127.0.0.1:9999/v1/'],
           :vendordata_dynamic_connect_timeout   => 30,
           :vendordata_dynamic_read_timeout      => 30,
+          :vendordata_dynamic_failure_fatal     => false,
           :osapi_max_limit                      => 1000,
           :osapi_compute_link_prefix            => 'https://10.0.0.1:7777/',
           :osapi_glance_link_prefix             => 'https://10.0.0.1:6666/',
@@ -145,6 +147,7 @@ describe 'nova::api' do
         is_expected.to contain_nova_config('api/vendordata_dynamic_targets').with('value' => 'join@http://127.0.0.1:9999/v1/')
         is_expected.to contain_nova_config('api/vendordata_dynamic_connect_timeout').with('value' => '30')
         is_expected.to contain_nova_config('api/vendordata_dynamic_read_timeout').with('value' => '30')
+        is_expected.to contain_nova_config('api/vendordata_dynamic_failure_fatal').with('value' => false)
         is_expected.to contain_nova_config('api/max_limit').with('value' => '1000')
         is_expected.to contain_nova_config('api/compute_link_prefix').with('value' => 'https://10.0.0.1:7777/')
         is_expected.to contain_nova_config('api/glance_link_prefix').with('value' => 'https://10.0.0.1:6666/')

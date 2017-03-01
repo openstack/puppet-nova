@@ -164,6 +164,11 @@
 #   once connected.
 #   Defaults to $::os_service_default
 #
+# [*vendordata_dynamic_failure_fatal*]
+#   (optional) Should failures to fetch dynamic vendordata be fatal to
+#   instance boot?
+#   Defaults to $::os_service_default
+#
 # [*max_limit*]
 #   (optional) This option is limit the maximum number of items in a single response.
 #   Defaults to $::os_service_default
@@ -270,6 +275,7 @@ class nova::api(
   $vendordata_dynamic_targets           = $::os_service_default,
   $vendordata_dynamic_connect_timeout   = $::os_service_default,
   $vendordata_dynamic_read_timeout      = $::os_service_default,
+  $vendordata_dynamic_failure_fatal     = $::os_service_default,
   $max_limit                            = $::os_service_default,
   $compute_link_prefix                  = $::os_service_default,
   $glance_link_prefix                   = $::os_service_default,
@@ -420,6 +426,7 @@ as a standalone service, or httpd for being run by a httpd server")
     'api/vendordata_dynamic_targets':         value => $vendordata_dynamic_targets_real;
     'api/vendordata_dynamic_connect_timeout': value => $vendordata_dynamic_connect_timeout;
     'api/vendordata_dynamic_read_timeout':    value => $vendordata_dynamic_read_timeout;
+    'api/vendordata_dynamic_failure_fatal':   value => $vendordata_dynamic_failure_fatal;
     'api/max_limit':                          value => $max_limit_real;
     'api/compute_link_prefix':                value => $compute_link_prefix_real;
     'api/glance_link_prefix':                 value => $glance_link_prefix_real;
