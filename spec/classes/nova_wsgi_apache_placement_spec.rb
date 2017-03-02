@@ -91,6 +91,8 @@ describe 'nova::wsgi::apache_placement' do
       it { is_expected.to contain_file('placement_wsgi').that_requires("File[#{platform_params[:wsgi_script_path]}]") }
 
       it { is_expected.to contain_concat("#{platform_params[:httpd_ports_file]}") }
+
+      it { is_expected.to contain_file(platform_params[:placement_httpd_config_file]) }
     end
 
     describe 'when overriding parameters using different ports' do
@@ -158,6 +160,7 @@ describe 'nova::wsgi::apache_placement' do
             :wsgi_script_path             => '/usr/lib/cgi-bin/nova',
             :placement_wsgi_script_source => '/usr/bin/nova-placement-api',
             :placement_package_name       => 'nova-placement-api',
+            :placement_httpd_config_file  => '/etc/apache2/sites-available/nova-placement-api.conf',
           }
         when 'RedHat'
           {
@@ -166,6 +169,7 @@ describe 'nova::wsgi::apache_placement' do
             :wsgi_script_path             => '/var/www/cgi-bin/nova',
             :placement_wsgi_script_source => '/usr/bin/nova-placement-api',
             :placement_package_name       => 'openstack-nova-placement-api',
+            :placement_httpd_config_file  => '/etc/httpd/conf.d/00-nova-placement-api.conf',
           }
         end
       end
