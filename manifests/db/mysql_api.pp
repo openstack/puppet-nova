@@ -31,15 +31,6 @@
 #   (optional) Additional hosts that are allowed to access this DB
 #   Defaults to undef
 #
-# === DEPRECATED
-#
-# TODO(aschultz): we can just remove this after tripleo gets fixed to use
-# the new param
-# [*setup_cell0*]
-#   (optional) Setup a cell0 for the cell_v2 functionality. This option will
-#   be set to true by default in Ocata when the cell v2 setup is mandatory.
-#   Defaults to undef
-#
 class nova::db::mysql_api(
   $password,
   $dbname        = 'nova_api',
@@ -48,13 +39,7 @@ class nova::db::mysql_api(
   $charset       = 'utf8',
   $collate       = 'utf8_general_ci',
   $allowed_hosts = undef,
-  # DEPREACTED
-  $setup_cell0   = undef
 ) {
-
-  if $setup_cell0 {
-    warning('nova::db::mysql_api::setup_cell0 is deprecated, use nova::db::mysql::setup_cell0 instead. This will be removed in Pike')
-  }
 
   include ::nova::deps
 
