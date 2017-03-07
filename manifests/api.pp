@@ -43,7 +43,7 @@
 #
 # [*osapi_compute_workers*]
 #   (optional) Number of workers for OpenStack API service
-#   Defaults to $::processorcount
+#   Defaults to $::os_workers
 #
 # [*osapi_compute_listen_port*]
 #   (optional) The port on which the OpenStack API will listen.
@@ -51,7 +51,7 @@
 #
 # [*metadata_workers*]
 #   (optional) Number of workers for metadata service
-#   Defaults to $::processorcount
+#   Defaults to $::os_workers
 #
 # [*instance_name_template*]
 #   (optional) Template string to be used to generate instance names
@@ -252,8 +252,8 @@ class nova::api(
   $metadata_listen_port                 = 8775,
   $enabled_apis                         = ['osapi_compute', 'metadata'],
   $use_forwarded_for                    = false,
-  $osapi_compute_workers                = $::processorcount,
-  $metadata_workers                     = $::processorcount,
+  $osapi_compute_workers                = $::os_workers,
+  $metadata_workers                     = $::os_workers,
   $sync_db                              = true,
   $sync_db_api                          = true,
   $db_online_data_migrations            = false,

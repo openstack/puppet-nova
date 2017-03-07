@@ -350,7 +350,7 @@ describe 'nova::api' do
   }).each do |os,facts|
     context "on #{os}" do
       let (:facts) do
-        facts.merge!(OSDefaults.get_facts({ :processorcount => 5 }))
+        facts.merge!(OSDefaults.get_facts({ :os_workers => 5 }))
       end
 
       let (:platform_params) do

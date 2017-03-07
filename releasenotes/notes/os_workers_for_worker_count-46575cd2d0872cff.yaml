@@ -1,0 +1,5 @@
+---
+other:
+  - Parameters that control the number of spawned child processes for
+    distributing processing have had their default value changed from
+    ::processorcount to ::os_workers.
