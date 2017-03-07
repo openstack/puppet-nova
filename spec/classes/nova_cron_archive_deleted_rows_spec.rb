@@ -22,6 +22,7 @@ describe 'nova::cron::archive_deleted_rows' do
     it 'configures a cron without until_complete' do
       is_expected.to contain_cron('nova-manage db archive_deleted_rows').with(
         :command     => "nova-manage db archive_deleted_rows --max_rows #{params[:max_rows]}  >>#{params[:destination]} 2>&1",
+        :user        => 'nova',
         :environment => 'PATH=/bin:/usr/bin:/usr/sbin SHELL=/bin/sh',
         :user        => params[:user],
         :minute      => params[:minute],
@@ -44,6 +45,7 @@ describe 'nova::cron::archive_deleted_rows' do
     it 'configures a cron with until_complete' do
       is_expected.to contain_cron('nova-manage db archive_deleted_rows').with(
         :command     => "nova-manage db archive_deleted_rows --max_rows #{params[:max_rows]} --until_complete >>#{params[:destination]} 2>&1",
+        :user        => 'nova',
         :environment => 'PATH=/bin:/usr/bin:/usr/sbin SHELL=/bin/sh',
         :user        => params[:user],
         :minute      => params[:minute],

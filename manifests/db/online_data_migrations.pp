@@ -23,6 +23,7 @@ class nova::db::online_data_migrations(
 
   exec { 'nova-db-online-data-migrations':
     command     => "/usr/bin/nova-manage ${extra_params} db online_data_migrations",
+    user        => $::nova::params::nova_user,
     refreshonly => true,
     try_sleep   => 5,
     tries       => 10,

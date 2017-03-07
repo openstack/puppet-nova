@@ -9,6 +9,7 @@ describe 'nova::cell_v2::map_cell0' do
         is_expected.to contain_exec('nova-cell_v2-map_cell0').with(
           :path        => ['/bin', '/usr/bin'],
           :command     => 'nova-manage  cell_v2 map_cell0',
+          :user        => 'nova',
           :refreshonly => 'true',
           :logoutput   => 'on_failure',
           :subscribe   => 'Anchor[nova::cell_v2::begin]',
@@ -28,6 +29,7 @@ describe 'nova::cell_v2::map_cell0' do
         is_expected.to contain_exec('nova-cell_v2-map_cell0').with(
           :path        => ['/bin', '/usr/bin'],
           :command     => 'nova-manage --config-file /etc/nova/nova.conf cell_v2 map_cell0',
+          :user        => 'nova',
           :refreshonly => 'true',
           :logoutput   => 'on_failure',
           :subscribe   => 'Anchor[nova::cell_v2::begin]',

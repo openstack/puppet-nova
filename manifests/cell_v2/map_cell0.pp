@@ -16,10 +16,12 @@ class nova::cell_v2::map_cell0 (
 ) {
 
   include ::nova::deps
+  include ::nova::params
 
   exec { 'nova-cell_v2-map_cell0':
     path        => ['/bin', '/usr/bin'],
     command     => "nova-manage ${extra_params} cell_v2 map_cell0",
+    user        => $::nova::params::nova_user,
     refreshonly => true,
     logoutput   => on_failure,
     subscribe   => Anchor['nova::cell_v2::begin'],
