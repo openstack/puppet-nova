@@ -26,7 +26,7 @@ describe 'nova::logging' do
      :use_syslog => true,
      :use_stderr => false,
      :log_facility => 'LOG_FOO',
-     :log_dir => '/var/log',
+     :log_dir => '/var/log/foo',
      :debug => true,
     }
   end
@@ -59,6 +59,13 @@ describe 'nova::logging' do
       is_expected.to contain_nova_config('DEFAULT/use_stderr').with(:value => '<SERVICE DEFAULT>')
       is_expected.to contain_nova_config('DEFAULT/log_dir').with(:value => '/var/log/nova')
       is_expected.to contain_nova_config('DEFAULT/debug').with(:value => '<SERVICE DEFAULT>')
+      is_expected.to contain_file('/var/log/nova').with(
+        :owner        => 'nova',
+      )
+      is_expected.to contain_file('/var/log/nova/nova-manage.log').with(
+        :owner        => 'nova',
+      )
+      is_expected.to contain_exec('chown nova logfiles')
     end
   end
 
@@ -67,8 +74,12 @@ describe 'nova::logging' do
       is_expected.to contain_nova_config('DEFAULT/use_syslog').with(:value => 'true')
       is_expected.to contain_nova_config('DEFAULT/use_stderr').with(:value => 'false')
       is_expected.to contain_nova_config('DEFAULT/syslog_log_facility').with(:value => 'LOG_FOO')
-      is_expected.to contain_nova_config('DEFAULT/log_dir').with(:value => '/var/log')
+      is_expected.to contain_nova_config('DEFAULT/log_dir').with(:value => '/var/log/foo')
       is_expected.to contain_nova_config('DEFAULT/debug').with(:value => 'true')
+      is_expected.to contain_file('/var/log/foo/nova-manage.log').with(
+        :owner        => 'nova',
+      )
+      is_expected.to contain_exec('chown nova logfiles')
     end
   end
 
@@ -105,6 +116,16 @@ describe 'nova::logging' do
 
       is_expected.to contain_nova_config('DEFAULT/log_date_format').with_value(
         '%Y-%m-%d %H:%M:%S')
+
+      is_expected.to contain_file('/var/log/foo').with(
+        :owner        => 'nova',
+      )
+
+      is_expected.to contain_file('/var/log/foo/nova-manage.log').with(
+        :owner        => 'nova',
+      )
+
+      is_expected.to contain_exec('chown nova logfiles')
     end
   end
 

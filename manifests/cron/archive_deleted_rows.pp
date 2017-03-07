@@ -43,7 +43,8 @@
 #
 #  [*user*]
 #    (optional) User with access to nova files.
-#    Defaults to 'nova'.
+#    nova::params::nova_user will be used if this is undef.
+#    Defaults to undef.
 #
 #  [*destination*]
 #    (optional) Path to file to which rows should be archived
@@ -60,12 +61,13 @@ class nova::cron::archive_deleted_rows (
   $month       = '*',
   $weekday     = '*',
   $max_rows    = '100',
-  $user        = 'nova',
+  $user        = undef,
   $destination = '/var/log/nova/nova-rowsflush.log',
   $until_complete = false,
 ) {
 
   include ::nova::deps
+  include ::nova::params
 
   if $until_complete {
     $until_complete_real = '--until-complete'
@@ -74,7 +76,7 @@ class nova::cron::archive_deleted_rows (
   cron { 'nova-manage db archive_deleted_rows':
     command     => "nova-manage db archive_deleted_rows --max_rows ${max_rows} ${until_complete_real} >>${destination} 2>&1",
     environment => 'PATH=/bin:/usr/bin:/usr/sbin SHELL=/bin/sh',
-    user        => $user,
+    user        => pick($user, $::nova::params::nova_user),
     minute      => $minute,
     hour        => $hour,
     monthday    => $monthday,

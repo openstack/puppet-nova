@@ -9,6 +9,7 @@ describe 'nova::cell_v2::map_cell_and_hosts' do
         is_expected.to contain_exec('nova-cell_v2-map_cell_and_hosts').with(
           :path        => ['/bin', '/usr/bin'],
           :command     => 'nova-manage  cell_v2 map_cell_and_hosts',
+          :user        => 'nova',
           :refreshonly => true,
         )
       }
@@ -25,6 +26,7 @@ describe 'nova::cell_v2::map_cell_and_hosts' do
         is_expected.to contain_exec('nova-cell_v2-map_cell_and_hosts').with(
           :path        => ['/bin', '/usr/bin'],
           :command     => 'nova-manage --config-file /etc/nova/nova.conf cell_v2 map_cell_and_hosts',
+          :user        => 'nova',
           :refreshonly => true,
         )
       }

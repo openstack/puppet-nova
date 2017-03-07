@@ -7,6 +7,7 @@ describe 'nova::db::sync_api' do
       it {
         is_expected.to contain_exec('nova-db-sync-api').with(
           :command     => '/usr/bin/nova-manage  api_db sync',
+          :user        => 'nova',
           :refreshonly => 'true',
           :timeout     => 300,
           :logoutput   => 'on_failure',
@@ -31,6 +32,7 @@ describe 'nova::db::sync_api' do
       it {
         is_expected.to contain_exec('nova-db-sync-api').with(
           :command     => '/usr/bin/nova-manage --config-file /etc/nova/nova.conf api_db sync',
+          :user        => 'nova',
           :refreshonly => 'true',
           :timeout     => 300,
           :logoutput   => 'on_failure',
@@ -54,6 +56,7 @@ describe 'nova::db::sync_api' do
       it {
         is_expected.to contain_exec('nova-db-sync-api').with(
           :command     => '/usr/bin/nova-manage  api_db sync',
+          :user        => 'nova',
           :refreshonly => 'true',
           :timeout     => 750,
           :logoutput   => 'on_failure',

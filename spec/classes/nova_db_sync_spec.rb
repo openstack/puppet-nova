@@ -7,6 +7,7 @@ describe 'nova::db::sync' do
     it 'runs nova-db-sync' do
       is_expected.to contain_exec('nova-db-sync').with(
         :command     => '/usr/bin/nova-manage  db sync',
+        :user        => 'nova',
         :refreshonly => 'true',
         :try_sleep   => 5,
         :tries       => 10,
@@ -30,6 +31,7 @@ describe 'nova::db::sync' do
       it {
         is_expected.to contain_exec('nova-db-sync').with(
           :command     => '/usr/bin/nova-manage --config-file /etc/nova/nova.conf db sync',
+          :user        => 'nova',
           :refreshonly => 'true',
           :try_sleep   => 5,
           :tries       => 10,
@@ -54,6 +56,7 @@ describe 'nova::db::sync' do
       it {
         is_expected.to contain_exec('nova-db-sync').with(
           :command     => '/usr/bin/nova-manage  db sync',
+          :user        => 'nova',
           :refreshonly => 'true',
           :try_sleep   => 5,
           :tries       => 10,

@@ -10,6 +10,7 @@ describe 'nova::cell_v2::map_instances' do
         is_expected.to contain_exec('nova-cell_v2-map_instances').with(
           :path        => ['/bin', '/usr/bin'],
           :command     => 'nova-manage  cell_v2 map_instances --cell_uuid=uuid',
+          :user        => 'nova',
           :refreshonly => true,
         )
       }
@@ -27,6 +28,7 @@ describe 'nova::cell_v2::map_instances' do
         is_expected.to contain_exec('nova-cell_v2-map_instances').with(
           :path        => ['/bin', '/usr/bin'],
           :command     => 'nova-manage --config-file /etc/nova/nova.conf cell_v2 map_instances --cell_uuid=uuid',
+          :user        => 'nova',
           :refreshonly => true,
         )
       }

@@ -49,7 +49,7 @@ class nova::params {
       # redhat specific config defaults
       $root_helper                   = 'sudo nova-rootwrap'
       $lock_path                     = '/var/lib/nova/tmp'
-      $nova_log_group                = 'nova'
+      $nova_log_group                = 'root'
       $nova_wsgi_script_path         = '/var/www/cgi-bin/nova'
       $nova_api_wsgi_script_source   = '/usr/lib/python2.7/site-packages/nova/wsgi/nova-api.py'
       $placement_wsgi_script_source  = '/usr/bin/nova-placement-api'
@@ -74,6 +74,8 @@ class nova::params {
           $messagebus_service_name  = undef
         }
       }
+      $nova_user                    = 'nova'
+      $nova_group                   = 'nova'
     }
     'Debian': {
       # package names
@@ -136,6 +138,8 @@ class nova::params {
         }
       }
       $libvirt_service_name            = 'libvirtd'
+      $nova_user                       = 'nova'
+      $nova_group                      = 'nova'
     }
     default: {
       fail("Unsupported osfamily: ${::osfamily} operatingsystem: ${::operatingsystem}, \
