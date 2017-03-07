@@ -105,6 +105,7 @@ class nova::logging(
 ) {
 
   include ::nova::deps
+  include ::nova::params
 
   # NOTE(spredzy): In order to keep backward compatibility we rely on the pick function
   # to use nova::<myparam> first then nova::logging::<myparam>.
@@ -113,6 +114,46 @@ class nova::logging(
   $log_facility_real = pick($::nova::log_facility,$log_facility)
   $log_dir_real = pick($::nova::log_dir,$log_dir)
   $debug_real = pick($::nova::debug,$debug)
+
+  if $log_dir_real != $::os_service_default {
+    # TODO: can probably remove this in Rocky once we've had it for 1 upgrade cycle
+    # Ensure ownership/permissions for any existing logfiles are correct before configuring nova
+    # This matches the rpm/deb logic:
+    #    Ubuntu: /var/log/nova is nova:adm
+    #    CentOS: /var/log/nova is nova:root
+    #    Both: /var/log/nova/*.log is nova:nova
+    $log_dir_owner = $::nova::params::nova_user
+    $log_dir_group = $::nova::params::nova_log_group
+    $log_file_owner = $::nova::params::nova_user
+    $log_file_group = $::nova::params::nova_group
+
+    file { $log_dir_real:
+      ensure  => directory,
+      owner   => $log_dir_owner,
+      group   => $log_dir_group,
+      require => Anchor['nova::install::end'],
+      before  => Anchor['nova::config::begin']
+    }
+
+    # Can't tell File[$log_dir_real] to use a different user/group when recursing so resort to chown
+    exec { 'chown nova logfiles':
+      command => "chown ${log_file_owner}:${log_file_group} ${log_dir_real}/*.log",
+      onlyif  => "test \"\$(stat -c '%U:%G' ${log_dir_real}/*.log | grep -v '${log_file_owner}:${log_file_group}')\" != ''",
+      path    => ['/usr/bin', '/bin'],
+      require => File[$log_dir_real],
+      before  => Anchor['nova::config::begin']
+    }
+
+    # END TODO, the following resource is likely to be necessary in Rocky and later
+
+    # This should force an update the selinux role if the logfile exists.
+    # It will be incorrect if the file was created by the dbsync exec resources.
+    file { "${log_dir_real}/nova-manage.log":
+      owner   => $log_file_owner,
+      group   => $log_file_group,
+      require => Anchor['nova::service::end']
+    }
+  }
 
   oslo::log { 'nova_config':
     debug                         => $debug_real,

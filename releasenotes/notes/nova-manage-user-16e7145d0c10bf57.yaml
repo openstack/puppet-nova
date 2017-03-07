@@ -1,0 +1,17 @@
+---
+fixes:
+  - |
+    Correct permissions on the nova logfiles.
+    If the ``nova-manage`` commands (such as dbsync) were initially run as
+    root then subsequent runs as the nova user would fail as the logfile is
+    owned by root (see `bug 1671681`_).
+    The ownership of all nova logfiles is now checked before configuring
+    nova, as a similar issue could prevent a service starting, and the
+    nova-manage command is now run as the correct user.
+
+    Adds nova::params::nova_user and nova::params::nova_group.
+    nova::cron::archive_deleted_rows::user now defaults to
+    nova::params::nova_user instead of hardcoding 'nova'
+
+    .. _bug 1671681: https://bugs.launchpad.net/puppet-nova/+bug/1671681
+

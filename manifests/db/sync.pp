@@ -23,6 +23,7 @@ class nova::db::sync(
 
   exec { 'nova-db-sync':
     command     => "/usr/bin/nova-manage ${extra_params} db sync",
+    user        => $::nova::params::nova_user,
     refreshonly => true,
     try_sleep   => 5,
     tries       => 10,
