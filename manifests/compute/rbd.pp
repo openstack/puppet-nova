@@ -107,7 +107,7 @@ class nova::compute::rbd (
     $cm = '/usr/bin/virsh secret-define --file /etc/nova/secret.xml | /usr/bin/awk \'{print $2}\' | sed \'/^$/d\' > /etc/nova/virsh.secret'
     exec { 'get-or-set virsh secret':
       command => "${cm}",
-      unless  => "/usr/bin/virsh secret-list | grep ${libvirt_rbd_secret_uuid}",
+      unless  => "/usr/bin/virsh secret-list | grep -i ${libvirt_rbd_secret_uuid}",
       require => [File['/etc/nova/secret.xml'], Service['libvirt']],
     }
 
