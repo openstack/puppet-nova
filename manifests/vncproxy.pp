@@ -46,8 +46,6 @@ class nova::vncproxy(
   include ::nova::deps
   include ::nova::params
 
-  # See http://nova.openstack.org/runnova/vncconsole.html for more details.
-
   nova_config {
     'vnc/novncproxy_host': value => $host;
     'vnc/novncproxy_port': value => $port;
