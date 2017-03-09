@@ -33,6 +33,11 @@
 #   cpu_mode="custom" and virt_type="kvm|qemu".
 #   Defaults to undef
 #
+# [*libvirt_snapshot_image_format*]
+#   (optional) Format to save snapshots to. Some filesystems
+#   have a preference and only operate on raw or qcow2
+#   Defaults to $::os_service_default
+#
 # [*libvirt_disk_cachemodes*]
 #   (optional) A list of cachemodes for different disk types, e.g.
 #   ["file=directsync", "block=none"]
@@ -128,6 +133,7 @@ class nova::compute::libvirt (
   $migration_support                          = false,
   $libvirt_cpu_mode                           = false,
   $libvirt_cpu_model                          = undef,
+  $libvirt_snapshot_image_format              = $::os_service_default,
   $libvirt_disk_cachemodes                    = [],
   $libvirt_hw_disk_discard                    = $::os_service_default,
   $libvirt_hw_machine_type                    = $::os_service_default,
@@ -197,17 +203,18 @@ class nova::compute::libvirt (
   }
 
   nova_config {
-    'DEFAULT/compute_driver':      value => $compute_driver;
-    'DEFAULT/preallocate_images':  value => $preallocate_images;
-    'vnc/vncserver_listen':        value => $vncserver_listen;
-    'libvirt/virt_type':           value => $libvirt_virt_type;
-    'libvirt/cpu_mode':            value => $libvirt_cpu_mode_real;
-    'libvirt/inject_password':     value => $libvirt_inject_password;
-    'libvirt/inject_key':          value => $libvirt_inject_key;
-    'libvirt/inject_partition':    value => $libvirt_inject_partition;
-    'libvirt/hw_disk_discard':     value => $libvirt_hw_disk_discard;
-    'libvirt/hw_machine_type':     value => $libvirt_hw_machine_type;
-    'libvirt/enabled_perf_events': value => $libvirt_enabled_perf_events;
+    'DEFAULT/compute_driver':        value => $compute_driver;
+    'DEFAULT/preallocate_images':    value => $preallocate_images;
+    'vnc/vncserver_listen':          value => $vncserver_listen;
+    'libvirt/virt_type':             value => $libvirt_virt_type;
+    'libvirt/cpu_mode':              value => $libvirt_cpu_mode_real;
+    'libvirt/snapshot_image_format': value => $libvirt_snapshot_image_format;
+    'libvirt/inject_password':       value => $libvirt_inject_password;
+    'libvirt/inject_key':            value => $libvirt_inject_key;
+    'libvirt/inject_partition':      value => $libvirt_inject_partition;
+    'libvirt/hw_disk_discard':       value => $libvirt_hw_disk_discard;
+    'libvirt/hw_machine_type':       value => $libvirt_hw_machine_type;
+    'libvirt/enabled_perf_events':   value => $libvirt_enabled_perf_events;
   }
 
   # cpu_model param is only valid if cpu_mode=custom
