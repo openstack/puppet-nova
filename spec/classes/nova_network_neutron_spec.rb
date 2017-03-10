@@ -29,7 +29,6 @@ describe 'nova::network::neutron' do
     it 'configures neutron endpoint in nova.conf' do
       is_expected.to contain_nova_config('neutron/password').with_value(params[:neutron_password]).with_secret(true)
       is_expected.to contain_nova_config('DEFAULT/dhcp_domain').with_value(default_params[:dhcp_domain])
-      is_expected.to contain_nova_config('DEFAULT/use_neutron').with_value(true)
       is_expected.to contain_nova_config('neutron/auth_type').with_value(default_params[:neutron_auth_type])
       is_expected.to contain_nova_config('neutron/url').with_value(default_params[:neutron_url])
       is_expected.to contain_nova_config('neutron/timeout').with_value(default_params[:neutron_url_timeout])

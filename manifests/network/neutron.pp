@@ -215,7 +215,6 @@ class nova::network::neutron (
     'DEFAULT/firewall_driver':         value => $firewall_driver;
     'DEFAULT/vif_plugging_is_fatal':   value => $vif_plugging_is_fatal;
     'DEFAULT/vif_plugging_timeout':    value => $vif_plugging_timeout;
-    'DEFAULT/use_neutron':             value => true;
     'neutron/url':                     value => $neutron_url;
     'neutron/timeout':                 value => $neutron_url_timeout;
     'neutron/project_name':            value => $neutron_project_name_real;
