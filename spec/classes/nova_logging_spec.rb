@@ -54,7 +54,7 @@ describe 'nova::logging' do
   end
 
   shared_examples 'basic default logging settings' do
-    it 'configures nova logging settins with default values' do
+    it 'configures nova logging settings with default values' do
       is_expected.to contain_oslo__log('nova_config').with(
         :use_syslog => '<SERVICE DEFAULT>',
         :use_stderr => '<SERVICE DEFAULT>',
@@ -65,7 +65,7 @@ describe 'nova::logging' do
   end
 
   shared_examples 'basic non-default logging settings' do
-    it 'configures nova logging settins with non-default values' do
+    it 'configures nova logging settings with non-default values' do
       is_expected.to contain_oslo__log('nova_config').with(
         :use_syslog          => true,
         :use_stderr          => false,
