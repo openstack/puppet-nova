@@ -1,0 +1,5 @@
+---
+features:
+  - Add new parameter "nova::compute::libvirt::libvirt_snapshot_image_format",
+    format to save snapshots to. Some filesystems have a preference and only
+    operate on raw or qcow2.
