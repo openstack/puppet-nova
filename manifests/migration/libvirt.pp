@@ -159,13 +159,21 @@ class nova::migration::libvirt(
         }
       }
 
-      file_line { "/etc/default/${::nova::compute::libvirt::libvirt_service_name} libvirtd opts":
-        path  => "/etc/default/${::nova::compute::libvirt::libvirt_service_name}",
-        line  => 'libvirtd_opts="-d -l"',
-        match => 'libvirtd_opts=',
-        tag   => 'libvirt-file_line',
+        if $::operatingsystem == 'Ubuntu' and versioncmp($::operatingsystemmajrelease, '16.04') >= 0 {
+          # If systemd is being used then libvirtd is already being launched correctly and
+          # adding -d causes a second consecutive start to fail which causes puppet to fail.
+          $libvirtd_opts = 'libvirtd_opts="-l"'
+        } else {
+          $libvirtd_opts = 'libvirtd_opts="-d -l"'
+        }
+
+        file_line { "/etc/default/${::nova::compute::libvirt::libvirt_service_name} libvirtd opts":
+          path  => "/etc/default/${::nova::compute::libvirt::libvirt_service_name}",
+          line  => $libvirtd_opts,
+          match => 'libvirtd_opts=',
+          tag   => 'libvirt-file_line',
+        }
       }
-    }
 
     default:  {
       warning("Unsupported osfamily: ${::osfamily}, make sure you are configuring this yourself")
