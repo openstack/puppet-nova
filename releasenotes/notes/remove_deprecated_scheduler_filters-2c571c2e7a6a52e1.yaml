@@ -1,0 +1,4 @@
+---
+other:
+  - ram, cpu and disk filters were moved top level in
+    newton so are removed from scheduler filter.

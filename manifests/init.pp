@@ -647,18 +647,13 @@ but should be one of: ssh-rsa, ssh-dsa, ssh-ecdsa.")
     }
   }
 
-  # maintain backwards compatibility
-  $real_cpu_allocation_ratio = pick($::nova::scheduler::filter::cpu_allocation_ratio, $cpu_allocation_ratio)
-  ensure_resource('nova_config', 'DEFAULT/cpu_allocation_ratio', { value => $real_cpu_allocation_ratio })
-  $real_ram_allocation_ratio = pick($::nova::scheduler::filter::ram_allocation_ratio, $ram_allocation_ratio)
-  ensure_resource('nova_config', 'DEFAULT/ram_allocation_ratio', { value => $real_ram_allocation_ratio })
-  $real_disk_allocation_ratio = pick($::nova::scheduler::filter::disk_allocation_ratio, $disk_allocation_ratio)
-  ensure_resource('nova_config', 'DEFAULT/disk_allocation_ratio', { value => $real_disk_allocation_ratio })
-
   nova_config {
-    'api/auth_strategy':     value => $auth_strategy;
-    'DEFAULT/image_service': value => $image_service;
-    'DEFAULT/host':          value => $host;
+    'api/auth_strategy':             value => $auth_strategy;
+    'DEFAULT/image_service':         value => $image_service;
+    'DEFAULT/host':                  value => $host;
+    'DEFAULT/cpu_allocation_ratio':  value => $cpu_allocation_ratio;
+    'DEFAULT/ram_allocation_ratio':  value => $ram_allocation_ratio;
+    'DEFAULT/disk_allocation_ratio': value => $disk_allocation_ratio;
   }
 
   # we keep "nova.openstack.common.rpc.impl_kombu" for backward compatibility

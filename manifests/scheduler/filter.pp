@@ -99,20 +99,6 @@
 #   (optional) Separator character(s) for image property namespace and name
 #   Defaults to $::os_service_default
 #
-# DEPRECATED PARAMETERS
-#
-# [*cpu_allocation_ratio*]
-#   (optional) Virtual CPU to Physical CPU allocation ratio
-#   Defaults to undef
-#
-# [*ram_allocation_ratio*]
-#   (optional) Virtual ram to physical ram allocation ratio
-#   Defaults to undef
-#
-# [*disk_allocation_ratio*]
-#   (optional) Virtual disk to physical disk allocation ratio
-#   Defaults to undef
-#
 class nova::scheduler::filter (
   $scheduler_host_manager                         = 'host_manager',
   $scheduler_max_attempts                         = '3',
@@ -136,10 +122,6 @@ class nova::scheduler::filter (
   $restrict_isolated_hosts_to_isolated_images     = $::os_service_default,
   $aggregate_image_properties_isolation_namespace = $::os_service_default,
   $aggregate_image_properties_isolation_separator = $::os_service_default,
-  # DEPRECATED PARAMETERS
-  $cpu_allocation_ratio                           = undef,
-  $ram_allocation_ratio                           = undef,
-  $disk_allocation_ratio                          = undef,
 ) {
 
   include ::nova::deps
@@ -183,18 +165,6 @@ class nova::scheduler::filter (
     $isolated_hosts_real = join($isolated_hosts, ',')
   } else {
     $isolated_hosts_real = $::os_service_default
-  }
-
-  if $cpu_allocation_ratio {
-    warning('cpu_allocation_ratio is deprecated in nova::scheduler::filter, please add to nova::init instead')
-  }
-
-  if $ram_allocation_ratio {
-    warning('ram_allocation_ratio is deprecated in nova::scheduler::filter, please add to nova::init instead')
-  }
-
-  if $disk_allocation_ratio {
-    warning('disk_allocation_ratio is deprecated in nova::scheduler::filter, please add to nova::init instead')
   }
 
   # TODO(aschultz): these should probably be in nova::scheduler ...
