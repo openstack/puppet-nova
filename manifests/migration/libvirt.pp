@@ -13,6 +13,10 @@
 #   Valid options are none and sasl.
 #   Defaults to 'none'
 #
+# [*listen_address*]
+#   (optional) Bind libvirtd tcp/tls socket to the given address.
+#   Defaults to undef (bind to all addresses)
+#
 # [*live_migration_tunnelled*]
 #   (optional) Whether to use tunnelled migration, where migration data is
 #   transported over the libvirtd connection.
@@ -62,6 +66,7 @@
 class nova::migration::libvirt(
   $use_tls                           = false,
   $auth                              = 'none',
+  $listen_address                    = undef,
   $live_migration_tunnelled          = $::os_service_default,
   $live_migration_completion_timeout = $::os_service_default,
   $live_migration_progress_timeout   = $::os_service_default,
@@ -168,6 +173,15 @@ class nova::migration::libvirt(
           }
         }
 
+        if $listen_address {
+          file_line { '/etc/libvirt/libvirtd.conf listen_address':
+            path  => '/etc/libvirt/libvirtd.conf',
+            line  => "listen_addr = \"${listen_address}\"",
+            match => 'listen_addr =',
+            tag   => 'libvirt-file_line',
+          }
+        }
+
         file_line { '/etc/sysconfig/libvirtd libvirtd args':
           path  => '/etc/sysconfig/libvirtd',
           line  => 'LIBVIRTD_ARGS="--listen"',
@@ -203,6 +217,15 @@ class nova::migration::libvirt(
             path  => '/etc/libvirt/libvirtd.conf',
             line  => "auth_tcp = \"${auth}\"",
             match => 'auth_tcp =',
+            tag   => 'libvirt-file_line',
+          }
+        }
+
+        if $listen_address {
+          file_line { '/etc/libvirt/libvirtd.conf listen_address':
+            path  => '/etc/libvirt/libvirtd.conf',
+            line  => "listen_addr = \"${listen_address}\"",
+            match => 'listen_addr =',
             tag   => 'libvirt-file_line',
           }
         }
