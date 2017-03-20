@@ -68,10 +68,6 @@ describe 'nova::compute' do
           :vncproxy_host                      => '127.0.0.1',
           :force_raw_images                   => false,
           :reserved_host_memory               => '0',
-          :compute_manager                    => 'ironic.nova.compute.manager.ClusteredComputeManager',
-          :default_availability_zone          => 'az1',
-          :default_schedule_zone              => 'az2',
-          :internal_service_availability_zone => 'az_int1',
           :heal_instance_info_cache_interval  => '120',
           :pci_passthrough                    => "[{\"vendor_id\":\"8086\",\"product_id\":\"0126\"},{\"vendor_id\":\"9096\",\"product_id\":\"1520\",\"physical_network\":\"physnet1\"}]",
           :config_drive_format                => 'vfat',
@@ -103,7 +99,6 @@ describe 'nova::compute' do
 
       it 'configures ironic in nova.conf' do
         is_expected.to contain_nova_config('DEFAULT/reserved_host_memory_mb').with_value('0')
-        is_expected.to contain_nova_config('DEFAULT/compute_manager').with_value('ironic.nova.compute.manager.ClusteredComputeManager')
       end
 
       it 'configures barbican service' do
@@ -121,12 +116,6 @@ describe 'nova::compute' do
         is_expected.to contain_nova_config('vnc/novncproxy_base_url').with_value(
           'http://127.0.0.1:6080/vnc_auto.html'
         )
-      end
-
-      it 'configures availability zones' do
-        is_expected.to contain_nova_config('DEFAULT/default_availability_zone').with_value('az1')
-        is_expected.to contain_nova_config('DEFAULT/default_schedule_zone').with_value('az2')
-        is_expected.to contain_nova_config('DEFAULT/internal_service_availability_zone').with_value('az_int1')
       end
 
       it { is_expected.to contain_nova_config('DEFAULT/heal_instance_info_cache_interval').with_value('120') }

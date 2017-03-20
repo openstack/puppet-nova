@@ -1,0 +1,6 @@
+---
+other:
+  - |
+    default_availability_zone, default_schedule_zone,
+    internal_service_availability_zone and compute_manager
+    were deprecated but are now removed from puppet-nova.
