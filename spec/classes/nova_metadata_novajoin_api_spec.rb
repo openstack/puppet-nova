@@ -78,8 +78,16 @@ describe 'nova::metadata::novajoin::api' do
       end
 
       let :pre_condition do
-        'class { "::ipaclient": password => "join_otp", }'
+        "class { '::ipaclient':
+           password => 'join_otp'
+         }
+         class { '::nova::metadata::novajoin::authtoken':
+           password => 'passw0rd',
+         }
+        "
       end
+
+      it { is_expected.to contain_class('nova::metadata::novajoin::authtoken') }
 
       it { is_expected.to contain_service('novajoin-server').with(
         'ensure'     => (param_hash[:manage_service] && param_hash[:enabled]) ? 'running': 'stopped',
@@ -156,7 +164,10 @@ describe 'nova::metadata::novajoin::api' do
     end
 
     let :pre_condition do
-      'class { "::ipaclient": password => "join_otp", }'
+      "class { '::ipaclient': password => 'join_otp', }
+       class { '::nova::metadata::novajoin::authtoken':
+         password => 'passw0rd',
+       }"
     end
 
     it { is_expected.to contain_service('novajoin-server').with(
@@ -187,7 +198,10 @@ describe 'nova::metadata::novajoin::api' do
     let(:params) { default_params }
 
     let :pre_condition do
-      'class { "::ipaclient": password => "join_otp", }'
+      "class { '::ipaclient': password => 'join_otp', }
+       class { '::nova::metadata::novajoin::authtoken':
+         password => 'passw0rd',
+       }"
     end
 
     it { is_expected.to contain_package('python-novajoin').with(

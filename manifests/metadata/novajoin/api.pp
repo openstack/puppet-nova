@@ -116,6 +116,7 @@ class nova::metadata::novajoin::api (
   $project_name              = 'service',
   $user_domain_id            = 'default',
 ) {
+  include ::nova::metadata::novajoin::authtoken
 
   case $::osfamily {
     'RedHat': {
