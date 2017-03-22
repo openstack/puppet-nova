@@ -22,22 +22,10 @@ class nova::availability_zone (
   $internal_service_availability_zone = $::os_service_default,
 ) {
 
-  # NOTE(dalees): In order to keep backward compatibility from nova::compute we
-  # rely on the pick function.
-  $default_availability_zone_real = pick(
-    $::nova::compute::default_availability_zone,
-    $default_availability_zone)
-  $default_schedule_zone_real = pick(
-    $::nova::compute::default_schedule_zone,
-    $default_schedule_zone)
-  $internal_service_availability_zone_real = pick(
-    $::nova::compute::internal_service_availability_zone,
-    $internal_service_availability_zone)
-
   nova_config {
-    'DEFAULT/default_availability_zone':          value => $default_availability_zone_real;
-    'DEFAULT/default_schedule_zone':              value => $default_schedule_zone_real;
-    'DEFAULT/internal_service_availability_zone': value => $internal_service_availability_zone_real;
+    'DEFAULT/default_availability_zone':          value => $default_availability_zone;
+    'DEFAULT/default_schedule_zone':              value => $default_schedule_zone;
+    'DEFAULT/internal_service_availability_zone': value => $internal_service_availability_zone;
   }
 
 }

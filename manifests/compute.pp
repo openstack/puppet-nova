@@ -144,25 +144,6 @@
 #   (optional) Maximum number of live migrations to run in parallel.
 #   Defaults to $::os_service_default
 #
-# DEPRECATED PARAMETERS
-#
-#  [*default_availability_zone*]
-#   (optional) Default compute node availability zone.
-#   Defaults to undef
-#
-#  [*default_schedule_zone*]
-#   (optional) Availability zone to use when user doesn't specify one.
-#   Defaults to undef
-#
-#  [*internal_service_availability_zone*]
-#   (optional) The availability zone to show internal services under.
-#   Defaults to undef
-#
-#  [*compute_manager*]
-#   Deprecated. Compute manager
-#   The driver that will manage the running instances.
-#   Defaults to $::os_service_default
-#
 class nova::compute (
   $enabled                            = true,
   $manage_service                     = true,
@@ -194,35 +175,10 @@ class nova::compute (
   $barbican_endpoint                  = $::os_service_default,
   $barbican_api_version               = $::os_service_default,
   $max_concurrent_live_migrations     = $::os_service_default,
-  # DEPRECATED PARAMETERS
-  $default_availability_zone          = undef,
-  $default_schedule_zone              = undef,
-  $internal_service_availability_zone = undef,
-  $compute_manager                    = $::os_service_default,
 ) {
 
   include ::nova::deps
   include ::nova::params
-
-  if $default_availability_zone {
-    warning("The default_availability_zone parameter is deprecated and will be removed in a \
-future release. Use default_availability_zone parameter of nova class instead.")
-  }
-
-  if $default_schedule_zone {
-    warning("The default_schedule_zone parameter is deprecated and will be removed in a \
-future release. Use default_schedule_zone parameter of nova class instead.")
-  }
-
-  if $internal_service_availability_zone {
-    warning("The internal_service_availability_zone parameter is deprecated and will be \
-removed in a future release. Use internal_service_availability_zone parameter of nova class instead.")
-  }
-
-  if $compute_manager {
-    warning("compute_manager is marked as deprecated in Nova but still needed when Ironic \
-is used. It will be removed once Nova removes it.")
-  }
 
   $vcpu_pin_set_real = pick(join(any2array($vcpu_pin_set), ','), $::os_service_default)
 
@@ -247,7 +203,6 @@ is used. It will be removed once Nova removes it.")
 
   nova_config {
     'DEFAULT/reserved_host_memory_mb':           value => $reserved_host_memory;
-    'DEFAULT/compute_manager':                   value => $compute_manager;
     'DEFAULT/heal_instance_info_cache_interval': value => $heal_instance_info_cache_interval;
     'DEFAULT/pci_passthrough_whitelist':         value => $pci_passthrough_real;
     'DEFAULT/resize_confirm_window':             value => $resize_confirm_window;
