@@ -1,0 +1,6 @@
+---
+features:
+  - Vendordata Dynamic plugins' authentication can be configured via the
+    vendordata_dynamic_plugin_auth_* parameters for the api manifest. These
+    parameters set the values in the vendordata_dynamic_auth section of the
+    nova configuration.

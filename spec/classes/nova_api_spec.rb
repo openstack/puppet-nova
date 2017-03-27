@@ -72,6 +72,14 @@ describe 'nova::api' do
         is_expected.to contain_nova_config('api/enable_instance_password').with('value' => '<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('DEFAULT/password_length').with('value' => '<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('DEFAULT/allow_resize_to_same_host').with('value' => false)
+        is_expected.to contain_nova_config('vendordata_dynamic_auth/auth_type').with('value' => '<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('vendordata_dynamic_auth/auth_url').with('value' => '<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('vendordata_dynamic_auth/os_region_name').with('value' => '<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('vendordata_dynamic_auth/password').with('value' => '<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('vendordata_dynamic_auth/project_domain_name').with('value' => '<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('vendordata_dynamic_auth/project_name').with('value' => '<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('vendordata_dynamic_auth/user_domain_name').with('value' => '<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('vendordata_dynamic_auth/username').with('value' => '<SERVICE DEFAULT>')
       end
 
       it 'unconfigures neutron_metadata proxy' do
@@ -83,36 +91,44 @@ describe 'nova::api' do
     context 'with overridden parameters' do
       before do
         params.merge!({
-          :enabled                              => false,
-          :ensure_package                       => '2012.1-2',
-          :api_bind_address                     => '192.168.56.210',
-          :metadata_listen                      => '127.0.0.1',
-          :metadata_listen_port                 => 8875,
-          :osapi_compute_listen_port            => 8874,
-          :use_forwarded_for                    => false,
-          :ratelimits                           => '(GET, "*", .*, 100, MINUTE);(POST, "*", .*, 200, MINUTE)',
-          :neutron_metadata_proxy_shared_secret => 'secrete',
-          :osapi_compute_workers                => 1,
-          :metadata_workers                     => 2,
-          :default_floating_pool                => 'public',
-          :enable_proxy_headers_parsing         => true,
-          :metadata_cache_expiration            => 15,
-          :vendordata_jsonfile_path             => '/tmp',
-          :vendordata_providers                 => ['StaticJSON', 'DynamicJSON'],
-          :vendordata_dynamic_targets           => ['join@http://127.0.0.1:9999/v1/'],
-          :vendordata_dynamic_connect_timeout   => 30,
-          :vendordata_dynamic_read_timeout      => 30,
-          :vendordata_dynamic_failure_fatal     => false,
-          :osapi_max_limit                      => 1000,
-          :osapi_compute_link_prefix            => 'https://10.0.0.1:7777/',
-          :osapi_glance_link_prefix             => 'https://10.0.0.1:6666/',
-          :osapi_hide_server_address_states     => 'building',
-          :allow_instance_snapshots             => true,
-          :enable_network_quota                 => false,
-          :enable_instance_password             => true,
-          :password_length                      => 12,
-          :pci_alias                            => "[{\"vendor_id\":\"8086\",\"product_id\":\"0126\",\"name\":\"graphic_card\"},{\"vendor_id\":\"9096\",\"product_id\":\"1520\",\"name\":\"network_card\"}]",
-          :allow_resize_to_same_host            => true,
+          :enabled                                     => false,
+          :ensure_package                              => '2012.1-2',
+          :api_bind_address                            => '192.168.56.210',
+          :metadata_listen                             => '127.0.0.1',
+          :metadata_listen_port                        => 8875,
+          :osapi_compute_listen_port                   => 8874,
+          :use_forwarded_for                           => false,
+          :ratelimits                                  => '(GET, "*", .*, 100, MINUTE);(POST, "*", .*, 200, MINUTE)',
+          :neutron_metadata_proxy_shared_secret        => 'secrete',
+          :osapi_compute_workers                       => 1,
+          :metadata_workers                            => 2,
+          :default_floating_pool                       => 'public',
+          :enable_proxy_headers_parsing                => true,
+          :metadata_cache_expiration                   => 15,
+          :vendordata_jsonfile_path                    => '/tmp',
+          :vendordata_providers                        => ['StaticJSON', 'DynamicJSON'],
+          :vendordata_dynamic_targets                  => ['join@http://127.0.0.1:9999/v1/'],
+          :vendordata_dynamic_connect_timeout          => 30,
+          :vendordata_dynamic_read_timeout             => 30,
+          :vendordata_dynamic_failure_fatal            => false,
+          :osapi_max_limit                             => 1000,
+          :osapi_compute_link_prefix                   => 'https://10.0.0.1:7777/',
+          :osapi_glance_link_prefix                    => 'https://10.0.0.1:6666/',
+          :osapi_hide_server_address_states            => 'building',
+          :allow_instance_snapshots                    => true,
+          :enable_network_quota                        => false,
+          :enable_instance_password                    => true,
+          :password_length                             => 12,
+          :pci_alias                                   => "[{\"vendor_id\":\"8086\",\"product_id\":\"0126\",\"name\":\"graphic_card\"},{\"vendor_id\":\"9096\",\"product_id\":\"1520\",\"name\":\"network_card\"}]",
+          :allow_resize_to_same_host                   => true,
+          :vendordata_dynamic_auth_auth_type           => 'password',
+          :vendordata_dynamic_auth_auth_url            => 'http://127.0.0.1:5000',
+          :vendordata_dynamic_auth_os_region_name      => 'RegionOne',
+          :vendordata_dynamic_auth_password            => 'secrete',
+          :vendordata_dynamic_auth_project_domain_name => 'Default',
+          :vendordata_dynamic_auth_project_name        => 'project',
+          :vendordata_dynamic_auth_user_domain_name    => 'Default',
+          :vendordata_dynamic_auth_username            => 'user',
         })
       end
 
@@ -160,6 +176,14 @@ describe 'nova::api' do
         is_expected.to contain_nova_config('api/enable_instance_password').with('value' => true)
         is_expected.to contain_nova_config('DEFAULT/password_length').with('value' => '12')
         is_expected.to contain_nova_config('DEFAULT/allow_resize_to_same_host').with('value' => true)
+        is_expected.to contain_nova_config('vendordata_dynamic_auth/auth_type').with('value' => 'password')
+        is_expected.to contain_nova_config('vendordata_dynamic_auth/auth_url').with('value' => 'http://127.0.0.1:5000')
+        is_expected.to contain_nova_config('vendordata_dynamic_auth/os_region_name').with('value' => 'RegionOne')
+        is_expected.to contain_nova_config('vendordata_dynamic_auth/password').with('value' => 'secrete').with_secret(true)
+        is_expected.to contain_nova_config('vendordata_dynamic_auth/project_domain_name').with('value' => 'Default')
+        is_expected.to contain_nova_config('vendordata_dynamic_auth/project_name').with('value' => 'project')
+        is_expected.to contain_nova_config('vendordata_dynamic_auth/user_domain_name').with('value' => 'Default')
+        is_expected.to contain_nova_config('vendordata_dynamic_auth/username').with('value' => 'user')
       end
 
       it 'configures nova pci_alias entries' do

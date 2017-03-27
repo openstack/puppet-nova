@@ -215,6 +215,39 @@
 #   and in others you need it set there.
 #   Defaults to false
 #
+#  [*vendordata_dynamic_auth_auth_type*]
+#   (optional) Authentication type to load for vendordata dynamic plugins.
+#   Defaults to $::os_service_default
+#
+#  [*vendordata_dynamic_auth_auth_url*]
+#   (optional) URL to use for authenticating.
+#   Defaults to $::os_service_default
+#
+#  [*vendordata_dynamic_auth_os_region_name*]
+#   (optional) Region name for the vendordata dynamic plugin credentials.
+#   Defaults to $::os_service_default
+#
+#  [*vendordata_dynamic_auth_password*]
+#   (optional) Password for the vendordata dynamic plugin credentials.
+#   Defaults to $::os_service_default
+#
+#  [*vendordata_dynamic_auth_project_domain_name*]
+#   (optional) Project domain name for the vendordata dynamic plugin
+#    credentials.
+#   Defaults to $::os_service_default
+#
+#  [*vendordata_dynamic_auth_project_name*]
+#   (optional) Project name for the vendordata dynamic plugin credentials.
+#   Defaults to $::os_service_default
+#
+#  [*vendordata_dynamic_auth_user_domain_name*]
+#   (optional) User domain name for the vendordata dynamic plugin credentials.
+#   Defaults to $::os_service_default
+#
+#  [*vendordata_dynamic_auth_username*]
+#   (optional) User name for the vendordata dynamic plugin credentials.
+#   Defaults to $::os_service_default
+#
 # DEPRECATED
 #
 # [*conductor_workers*]
@@ -242,56 +275,64 @@
 #   Defaults to undef
 #
 class nova::api(
-  $enabled                              = true,
-  $manage_service                       = true,
-  $api_paste_config                     = 'api-paste.ini',
-  $ensure_package                       = 'present',
-  $api_bind_address                     = '0.0.0.0',
-  $osapi_compute_listen_port            = 8774,
-  $metadata_listen                      = '0.0.0.0',
-  $metadata_listen_port                 = 8775,
-  $enabled_apis                         = ['osapi_compute', 'metadata'],
-  $use_forwarded_for                    = false,
-  $osapi_compute_workers                = $::os_workers,
-  $metadata_workers                     = $::os_workers,
-  $sync_db                              = true,
-  $sync_db_api                          = true,
-  $db_online_data_migrations            = false,
-  $neutron_metadata_proxy_shared_secret = undef,
-  $default_floating_pool                = 'nova',
-  $pci_alias                            = undef,
-  $ratelimits                           = undef,
-  $ratelimits_factory                   =
+  $enabled                                     = true,
+  $manage_service                              = true,
+  $api_paste_config                            = 'api-paste.ini',
+  $ensure_package                              = 'present',
+  $api_bind_address                            = '0.0.0.0',
+  $osapi_compute_listen_port                   = 8774,
+  $metadata_listen                             = '0.0.0.0',
+  $metadata_listen_port                        = 8775,
+  $enabled_apis                                = ['osapi_compute', 'metadata'],
+  $use_forwarded_for                           = false,
+  $osapi_compute_workers                       = $::os_workers,
+  $metadata_workers                            = $::os_workers,
+  $sync_db                                     = true,
+  $sync_db_api                                 = true,
+  $db_online_data_migrations                   = false,
+  $neutron_metadata_proxy_shared_secret        = undef,
+  $default_floating_pool                       = 'nova',
+  $pci_alias                                   = undef,
+  $ratelimits                                  = undef,
+  $ratelimits_factory                          =
     'nova.api.openstack.compute.limits:RateLimitingMiddleware.factory',
-  $validate                             = false,
-  $validation_options                   = {},
-  $instance_name_template               = undef,
-  $fping_path                           = '/usr/sbin/fping',
-  $service_name                         = $::nova::params::api_service_name,
-  $enable_proxy_headers_parsing         = $::os_service_default,
-  $metadata_cache_expiration            = $::os_service_default,
-  $vendordata_jsonfile_path             = $::os_service_default,
-  $vendordata_providers                 = $::os_service_default,
-  $vendordata_dynamic_targets           = $::os_service_default,
-  $vendordata_dynamic_connect_timeout   = $::os_service_default,
-  $vendordata_dynamic_read_timeout      = $::os_service_default,
-  $vendordata_dynamic_failure_fatal     = $::os_service_default,
-  $max_limit                            = $::os_service_default,
-  $compute_link_prefix                  = $::os_service_default,
-  $glance_link_prefix                   = $::os_service_default,
-  $hide_server_address_states           = $::os_service_default,
-  $allow_instance_snapshots             = $::os_service_default,
-  $enable_network_quota                 = $::os_service_default,
-  $enable_instance_password             = $::os_service_default,
-  $password_length                      = $::os_service_default,
-  $install_cinder_client                = true,
-  $allow_resize_to_same_host            = false,
+  $validate                                    = false,
+  $validation_options                          = {},
+  $instance_name_template                      = undef,
+  $fping_path                                  = '/usr/sbin/fping',
+  $service_name                                = $::nova::params::api_service_name,
+  $enable_proxy_headers_parsing                = $::os_service_default,
+  $metadata_cache_expiration                   = $::os_service_default,
+  $vendordata_jsonfile_path                    = $::os_service_default,
+  $vendordata_providers                        = $::os_service_default,
+  $vendordata_dynamic_targets                  = $::os_service_default,
+  $vendordata_dynamic_connect_timeout          = $::os_service_default,
+  $vendordata_dynamic_read_timeout             = $::os_service_default,
+  $vendordata_dynamic_failure_fatal            = $::os_service_default,
+  $max_limit                                   = $::os_service_default,
+  $compute_link_prefix                         = $::os_service_default,
+  $glance_link_prefix                          = $::os_service_default,
+  $hide_server_address_states                  = $::os_service_default,
+  $allow_instance_snapshots                    = $::os_service_default,
+  $enable_network_quota                        = $::os_service_default,
+  $enable_instance_password                    = $::os_service_default,
+  $password_length                             = $::os_service_default,
+  $install_cinder_client                       = true,
+  $allow_resize_to_same_host                   = false,
+  $vendordata_dynamic_auth_auth_type           = $::os_service_default,
+  $vendordata_dynamic_auth_auth_url            = $::os_service_default,
+  $vendordata_dynamic_auth_os_region_name      = $::os_service_default,
+  $vendordata_dynamic_auth_password            = $::os_service_default,
+  $vendordata_dynamic_auth_project_domain_name = $::os_service_default,
+  $vendordata_dynamic_auth_project_name        = $::os_service_default,
+  $vendordata_dynamic_auth_user_domain_name    = $::os_service_default,
+  $vendordata_dynamic_auth_username            = $::os_service_default,
   # DEPRECATED PARAMETER
-  $conductor_workers                    = undef,
-  $osapi_max_limit                      = undef,
-  $osapi_compute_link_prefix            = undef,
-  $osapi_glance_link_prefix             = undef,
-  $osapi_hide_server_address_states     = undef,
+  $conductor_workers                           = undef,
+  $osapi_max_limit                             = undef,
+  $osapi_compute_link_prefix                   = undef,
+  $osapi_glance_link_prefix                    = undef,
+  $osapi_hide_server_address_states            = undef,
 ) inherits nova::params {
 
   include ::nova::deps
@@ -406,33 +447,41 @@ as a standalone service, or httpd for being run by a httpd server")
   }
 
   nova_config {
-    'wsgi/api_paste_config':                  value => $api_paste_config;
-    'DEFAULT/enabled_apis':                   value => join($enabled_apis_real, ',');
-    'DEFAULT/osapi_compute_listen':           value => $api_bind_address;
-    'DEFAULT/metadata_listen':                value => $metadata_listen;
-    'DEFAULT/metadata_listen_port':           value => $metadata_listen_port;
-    'DEFAULT/osapi_compute_listen_port':      value => $osapi_compute_listen_port;
-    'DEFAULT/osapi_volume_listen':            value => $api_bind_address;
-    'DEFAULT/osapi_compute_workers':          value => $osapi_compute_workers;
-    'DEFAULT/metadata_workers':               value => $metadata_workers;
-    'DEFAULT/default_floating_pool':          value => $default_floating_pool;
-    'DEFAULT/enable_network_quota':           value => $enable_network_quota;
-    'DEFAULT/password_length':                value => $password_length;
-    'api/metadata_cache_expiration':          value => $metadata_cache_expiration;
-    'api/use_forwarded_for':                  value => $use_forwarded_for;
-    'api/fping_path':                         value => $fping_path;
-    'api/vendordata_jsonfile_path':           value => $vendordata_jsonfile_path;
-    'api/vendordata_providers':               value => $vendordata_providers_real;
-    'api/vendordata_dynamic_targets':         value => $vendordata_dynamic_targets_real;
-    'api/vendordata_dynamic_connect_timeout': value => $vendordata_dynamic_connect_timeout;
-    'api/vendordata_dynamic_read_timeout':    value => $vendordata_dynamic_read_timeout;
-    'api/vendordata_dynamic_failure_fatal':   value => $vendordata_dynamic_failure_fatal;
-    'api/max_limit':                          value => $max_limit_real;
-    'api/compute_link_prefix':                value => $compute_link_prefix_real;
-    'api/glance_link_prefix':                 value => $glance_link_prefix_real;
-    'api/hide_server_address_states':         value => $hide_server_address_states_real;
-    'api/allow_instance_snapshots':           value => $allow_instance_snapshots;
-    'api/enable_instance_password':           value => $enable_instance_password;
+    'wsgi/api_paste_config':                       value => $api_paste_config;
+    'DEFAULT/enabled_apis':                        value => join($enabled_apis_real, ',');
+    'DEFAULT/osapi_compute_listen':                value => $api_bind_address;
+    'DEFAULT/metadata_listen':                     value => $metadata_listen;
+    'DEFAULT/metadata_listen_port':                value => $metadata_listen_port;
+    'DEFAULT/osapi_compute_listen_port':           value => $osapi_compute_listen_port;
+    'DEFAULT/osapi_volume_listen':                 value => $api_bind_address;
+    'DEFAULT/osapi_compute_workers':               value => $osapi_compute_workers;
+    'DEFAULT/metadata_workers':                    value => $metadata_workers;
+    'DEFAULT/default_floating_pool':               value => $default_floating_pool;
+    'DEFAULT/enable_network_quota':                value => $enable_network_quota;
+    'DEFAULT/password_length':                     value => $password_length;
+    'api/metadata_cache_expiration':               value => $metadata_cache_expiration;
+    'api/use_forwarded_for':                       value => $use_forwarded_for;
+    'api/fping_path':                              value => $fping_path;
+    'api/vendordata_jsonfile_path':                value => $vendordata_jsonfile_path;
+    'api/vendordata_providers':                    value => $vendordata_providers_real;
+    'api/vendordata_dynamic_targets':              value => $vendordata_dynamic_targets_real;
+    'api/vendordata_dynamic_connect_timeout':      value => $vendordata_dynamic_connect_timeout;
+    'api/vendordata_dynamic_read_timeout':         value => $vendordata_dynamic_read_timeout;
+    'api/vendordata_dynamic_failure_fatal':        value => $vendordata_dynamic_failure_fatal;
+    'api/max_limit':                               value => $max_limit_real;
+    'api/compute_link_prefix':                     value => $compute_link_prefix_real;
+    'api/glance_link_prefix':                      value => $glance_link_prefix_real;
+    'api/hide_server_address_states':              value => $hide_server_address_states_real;
+    'api/allow_instance_snapshots':                value => $allow_instance_snapshots;
+    'api/enable_instance_password':                value => $enable_instance_password;
+    'vendordata_dynamic_auth/auth_type':           value => $vendordata_dynamic_auth_auth_type;
+    'vendordata_dynamic_auth/auth_url':            value => $vendordata_dynamic_auth_auth_url;
+    'vendordata_dynamic_auth/os_region_name':      value => $vendordata_dynamic_auth_os_region_name;
+    'vendordata_dynamic_auth/password':            value => $vendordata_dynamic_auth_password, secret => true;
+    'vendordata_dynamic_auth/project_domain_name': value => $vendordata_dynamic_auth_project_domain_name;
+    'vendordata_dynamic_auth/project_name':        value => $vendordata_dynamic_auth_project_name;
+    'vendordata_dynamic_auth/user_domain_name':    value => $vendordata_dynamic_auth_user_domain_name;
+    'vendordata_dynamic_auth/username':            value => $vendordata_dynamic_auth_username;
   }
 
   oslo::middleware {'nova_config':
