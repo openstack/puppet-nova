@@ -152,7 +152,7 @@ describe 'nova::api' do
         is_expected.to contain_nova_config('api/compute_link_prefix').with('value' => 'https://10.0.0.1:7777/')
         is_expected.to contain_nova_config('api/glance_link_prefix').with('value' => 'https://10.0.0.1:6666/')
         is_expected.to contain_nova_config('neutron/service_metadata_proxy').with('value' => true)
-        is_expected.to contain_nova_config('neutron/metadata_proxy_shared_secret').with('value' => 'secrete')
+        is_expected.to contain_nova_config('neutron/metadata_proxy_shared_secret').with('value' => 'secrete').with_secret(true)
         is_expected.to contain_nova_config('oslo_middleware/enable_proxy_headers_parsing').with('value' => true)
         is_expected.to contain_nova_config('api/hide_server_address_states').with('value' => 'building')
         is_expected.to contain_nova_config('api/allow_instance_snapshots').with('value' => true)
