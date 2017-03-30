@@ -1,0 +1,13 @@
+---
+features:
+  - |
+    Add support for libvirt live-migration over SSH including the ability to
+    override all libvirt options applicable to the SSH transport.
+    For more info see https://libvirt.org/remote.html#Remote_URI_reference.
+    Adds new parameter "nova::migration::libvirt::transport"
+    Adds new parameter "nova::migration::libvirt::client_user"
+    Adds new parameter "nova::migration::libvirt::client_port"
+    Adds new parameter "nova::migration::libvirt::client_extraparams"
+deprecations:
+  - |
+    The "nova::migration::libvirt::use_tls" parameter is deprecated by the "nova::migration::libvirt::transport" parameter.
