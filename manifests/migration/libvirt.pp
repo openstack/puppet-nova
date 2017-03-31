@@ -18,6 +18,14 @@
 #   (optional) Bind libvirtd tcp/tls socket to the given address.
 #   Defaults to undef (bind to all addresses)
 #
+# [*live_migration_inbound_addr*]
+#   (optional) The IP address or hostname to be used as the target for live
+#   migration traffic. If left unset, and if TLS is enabled, this module will
+#   default the 'live_migration_uri' to 'qemu+tls://%s/system' to be compatible
+#   with the previous behavior of this module. However, the usage of
+#   'live_migration_uri' is not recommended as it's scheduled for removal.
+#   Defaults to $::os_service_default
+#
 # [*live_migration_tunnelled*]
 #   (optional) Whether to use tunnelled migration, where migration data is
 #   transported over the libvirtd connection.
@@ -79,6 +87,7 @@ class nova::migration::libvirt(
   $transport                         = undef,
   $auth                              = 'none',
   $listen_address                    = undef,
+  $live_migration_inbound_addr       = $::os_service_default,
   $live_migration_tunnelled          = $::os_service_default,
   $live_migration_completion_timeout = $::os_service_default,
   $live_migration_progress_timeout   = $::os_service_default,
@@ -120,7 +129,6 @@ class nova::migration::libvirt(
   }
 
   if $configure_nova {
-
     if $transport_real == 'ssh' {
       if $client_user {
         $prefix =  "${client_user}@"
@@ -145,13 +153,21 @@ class nova::migration::libvirt(
       $extra_params =''
     }
 
-    $live_migration_uri = "qemu+${transport_real}://${prefix}%s${postfix}/system${extra_params}"
+    if is_service_default($live_migration_inbound_addr) {
+      $live_migration_uri = "qemu+${transport_real}://${prefix}%s${postfix}/system${extra_params}"
+      $live_migration_scheme = $::os_service_default
+    } else {
+      $live_migration_uri = $::os_service_default
+      $live_migration_scheme = $transport_real
+    }
 
     nova_config {
       'libvirt/live_migration_uri':                value => $live_migration_uri;
       'libvirt/live_migration_tunnelled':          value => $live_migration_tunnelled;
       'libvirt/live_migration_completion_timeout': value => $live_migration_completion_timeout;
       'libvirt/live_migration_progress_timeout':   value => $live_migration_progress_timeout;
+      'libvirt/live_migration_inbound_addr':       value => $live_migration_inbound_addr;
+      'libvirt/live_migration_scheme':             value => $live_migration_scheme;
     }
   }
 

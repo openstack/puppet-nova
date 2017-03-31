@@ -48,7 +48,8 @@ describe 'nova::migration::libvirt' do
       it { is_expected.to contain_nova_config('libvirt/live_migration_completion_timeout').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('libvirt/live_migration_progress_timeout').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('libvirt/live_migration_uri').with_value('qemu+tcp://%s/system') }
-
+      it { is_expected.to contain_nova_config('libvirt/live_migration_inbound_addr').with_value('<SERVICE DEFAULT>')}
+      it { is_expected.to contain_nova_config('libvirt/live_migration_scheme').with_value('<SERVICE DEFAULT>')}
     end
 
     context 'with override_uuid enabled' do
@@ -79,6 +80,8 @@ describe 'nova::migration::libvirt' do
       it { is_expected.to contain_file_line('/etc/libvirt/libvirtd.conf auth_tls').with(:line => "auth_tls = \"none\"") }
       it { is_expected.not_to contain_file_line('/etc/libvirt/libvirtd.conf auth_tcp')}
       it { is_expected.to contain_nova_config('libvirt/live_migration_uri').with_value('qemu+tls://%s/system')}
+      it { is_expected.to contain_nova_config('libvirt/live_migration_inbound_addr').with_value('<SERVICE DEFAULT>')}
+      it { is_expected.to contain_nova_config('libvirt/live_migration_scheme').with_value('<SERVICE DEFAULT>')}
     end
 
     context 'with tls enabled' do
@@ -92,6 +95,22 @@ describe 'nova::migration::libvirt' do
       it { is_expected.to contain_file_line('/etc/libvirt/libvirtd.conf auth_tls').with(:line => "auth_tls = \"none\"") }
       it { is_expected.not_to contain_file_line('/etc/libvirt/libvirtd.conf auth_tcp')}
       it { is_expected.to contain_nova_config('libvirt/live_migration_uri').with_value('qemu+tls://%s/system')}
+    end
+
+    context 'with tls enabled and inbound addr set' do
+      let :params do
+        {
+          :transport                   => 'tls',
+          :live_migration_inbound_addr => 'host1.example.com',
+        }
+      end
+      it { is_expected.to contain_file_line('/etc/libvirt/libvirtd.conf listen_tls').with(:line => "listen_tls = 1") }
+      it { is_expected.to contain_file_line('/etc/libvirt/libvirtd.conf listen_tcp').with(:line => "listen_tcp = 0") }
+      it { is_expected.to contain_file_line('/etc/libvirt/libvirtd.conf auth_tls').with(:line => "auth_tls = \"none\"") }
+      it { is_expected.not_to contain_file_line('/etc/libvirt/libvirtd.conf auth_tcp')}
+      it { is_expected.to contain_nova_config('libvirt/live_migration_uri').with_value('<SERVICE DEFAULT>')}
+      it { is_expected.to contain_nova_config('libvirt/live_migration_inbound_addr').with_value('host1.example.com')}
+      it { is_expected.to contain_nova_config('libvirt/live_migration_scheme').with_value('tls')}
     end
 
     context 'with migration flags set' do

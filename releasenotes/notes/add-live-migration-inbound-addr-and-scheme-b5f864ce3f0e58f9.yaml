@@ -1,0 +1,11 @@
+---
+features:
+  - The paremeter 'live_migration_inbound_addr' was introduced to the libvirt
+    live migration module. This sets the configuration option with the same
+    name in the nova configuration, in the 'libvirt' section.
+  - If TLS is enabled for libvirt's live migration, the module will set the
+    configuration option named 'live_migration_scheme' in the 'libvirt' section
+    to have the value 'tls'. This will be used by nova to form the scheme for
+    the live migration URI, e.g. 'qemu+tls://...'.
+  - Note that the usage of 'live_migratin_inbound_addr' doesn't permit adding
+    extra parameters to the live migration URI as of the writing of this.
