@@ -141,6 +141,15 @@ describe 'nova::migration::libvirt' do
       end
       it { is_expected.not_to contain_nova_config('libvirt/live_migration_uri').with_value('qemu+tls://%s/system') }
     end
+
+    context 'with listen_address set' do
+      let :params do
+        {
+          :listen_address => "127.0.0.1"
+        }
+      end
+      it { is_expected.to contain_file_line('/etc/libvirt/libvirtd.conf listen_address').with(:line => "listen_addr = \"127.0.0.1\"") }
+    end
   end
 
   # TODO (degorenko): switch to on_supported_os function when we got Xenial
