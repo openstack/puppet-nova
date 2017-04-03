@@ -201,7 +201,8 @@ class nova::metadata::novajoin::api (
 
   ensure_resource('file', $keytab, { owner => $nova_user, require => Exec['get-service-user-keytab'] })
 
-  Novajoin_config<||> ~> Service<| title == 'nova-api'|>
+  Novajoin_config<||> ~> Service<| title == 'novajoin-server'|>
+  Novajoin_config<||> ~> Service<| title == 'novajoin-notify'|>
   Exec['get-service-user-keytab'] ~> Service['novajoin-server']
   Exec['get-service-user-keytab'] ~> Service['novajoin-notify']
   Exec['get-service-user-keytab'] ~> Service<| title == 'nova-api'|>
