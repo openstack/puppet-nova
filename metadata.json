@@ -1,93 +1,93 @@
 {
-  "name": "openstack-nova",
-  "version": "11.0.0-dev",
-  "author": "Puppet Labs and OpenStack Contributors",
-  "summary": "Puppet module for OpenStack Nova",
-  "license": "Apache-2.0",
-  "source": "git://github.com/openstack/puppet-nova.git",
-  "project_page": "https://launchpad.net/puppet-nova",
-  "issues_url": "https://bugs.launchpad.net/puppet-nova",
-  "requirements": [
-    {
-      "name": "pe",
-      "version_requirement": "4.x"
-    },
-    {
-      "name": "puppet",
-      "version_requirement": "4.x"
-    }
-  ],
-  "operatingsystem_support": [
-    {
-      "operatingsystem": "Debian",
-      "operatingsystemrelease": [
-        "8"
-      ]
-    },
-    {
-      "operatingsystem": "Fedora",
-      "operatingsystemrelease": [
-        "24"
-      ]
-    },
-    {
-      "operatingsystem": "RedHat",
-      "operatingsystemrelease": [
-        "7"
-      ]
-    },
-    {
-      "operatingsystem": "Ubuntu",
-      "operatingsystemrelease": [
-        "16.04"
-      ]
-    }
-  ],
-  "description": "Installs and configures OpenStack Nova (Compute).",
-  "dependencies": [
-    {
-      "name": "puppetlabs/apache",
-      "version_requirement": ">=1.0.0 <2.0.0"
-    },
-    {
-      "name": "duritong/sysctl",
-      "version_requirement": ">=0.0.1 <1.0.0"
-    },
-    {
-      "name": "joshuabaird/ipaclient",
-      "version_requirement": ">=2.5.1"
-    },
-    {
-      "name": "openstack/cinder",
-      "version_requirement": ">=11.0.0 <12.0.0"
-    },
-    {
-      "name": "openstack/glance",
-      "version_requirement": ">=11.0.0 <12.0.0"
-    },
-    {
-      "name": "puppetlabs/inifile",
-      "version_requirement": ">=1.0.0 <2.0.0"
-    },
-    {
-      "name": "openstack/keystone",
-      "version_requirement": ">=11.0.0 <12.0.0"
-    },
-    {
-      "name": "puppetlabs/rabbitmq",
-      "version_requirement": ">=2.0.2 <6.0.0"
-    },
-    {
-      "name": "puppetlabs/stdlib",
-      "version_requirement": ">=4.0.0 <5.0.0"
-    },
-    {
-      "name": "openstack/openstacklib",
-      "version_requirement": ">=11.0.0 <12.0.0"
-    },
-    {
-      "name": "openstack/oslo",
-      "version_requirement": ">=11.0.0 <12.0.0"
-    }
-  ]
+    "author": "Puppet Labs and OpenStack Contributors",
+    "dependencies": [
+        {
+            "name": "puppetlabs/apache",
+            "version_requirement": ">=1.0.0 <2.0.0"
+        },
+        {
+            "name": "duritong/sysctl",
+            "version_requirement": ">=0.0.1 <1.0.0"
+        },
+        {
+            "name": "joshuabaird/ipaclient",
+            "version_requirement": ">=2.5.1"
+        },
+        {
+            "name": "openstack/cinder",
+            "version_requirement": ">=11.0.0 <12.0.0"
+        },
+        {
+            "name": "openstack/glance",
+            "version_requirement": ">=11.0.0 <12.0.0"
+        },
+        {
+            "name": "puppetlabs/inifile",
+            "version_requirement": ">=1.0.0 <2.0.0"
+        },
+        {
+            "name": "openstack/keystone",
+            "version_requirement": ">=11.0.0 <12.0.0"
+        },
+        {
+            "name": "puppetlabs/rabbitmq",
+            "version_requirement": ">=2.0.2 <6.0.0"
+        },
+        {
+            "name": "puppetlabs/stdlib",
+            "version_requirement": ">=4.0.0 <5.0.0"
+        },
+        {
+            "name": "openstack/openstacklib",
+            "version_requirement": ">=11.0.0 <12.0.0"
+        },
+        {
+            "name": "openstack/oslo",
+            "version_requirement": ">=11.0.0 <12.0.0"
+        }
+    ],
+    "description": "Installs and configures OpenStack Nova (Compute).",
+    "issues_url": "https://bugs.launchpad.net/puppet-nova",
+    "license": "Apache-2.0",
+    "name": "openstack-nova",
+    "operatingsystem_support": [
+        {
+            "operatingsystem": "Debian",
+            "operatingsystemrelease": [
+                "8"
+            ]
+        },
+        {
+            "operatingsystem": "Fedora",
+            "operatingsystemrelease": [
+                "24"
+            ]
+        },
+        {
+            "operatingsystem": "RedHat",
+            "operatingsystemrelease": [
+                "7"
+            ]
+        },
+        {
+            "operatingsystem": "Ubuntu",
+            "operatingsystemrelease": [
+                "16.04"
+            ]
+        }
+    ],
+    "project_page": "https://launchpad.net/puppet-nova",
+    "requirements": [
+        {
+            "name": "pe",
+            "version_requirement": "4.x"
+        },
+        {
+            "name": "puppet",
+            "version_requirement": "4.x"
+        }
+    ],
+    "source": "git://github.com/openstack/puppet-nova.git",
+    "summary": "Puppet module for OpenStack Nova",
+    "version": "11.0.0"
 }
