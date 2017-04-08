@@ -1,4 +1,0 @@
----
-deprecations:
-  - firewall_driver option is now deprecated for removal, the
-    parameter has no effect.

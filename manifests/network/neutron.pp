@@ -59,6 +59,13 @@
 #   and not the Identity service API IP and port.
 #   Defaults to 'http://127.0.0.1:35357/v3'
 #
+# [*firewall_driver*]
+#   (optional) Firewall driver.
+#   This prevents nova from maintaining a firewall so it does not interfere
+#   with Neutron's. Set to 'nova.virt.firewall.IptablesFirewallDriver'
+#   to re-enable the Nova firewall.
+#   Defaults to 'nova.virt.firewall.NoopFirewallDriver'
+#
 # [*vif_plugging_is_fatal*]
 #   (optional) Fail to boot instance if vif plugging fails.
 #   This prevents nova from booting an instance if vif plugging notification
@@ -111,13 +118,6 @@
 #   (optional) Location of ca certicates file to use for neutronclient requests.
 #   Defaults to undef
 #
-# [*firewall_driver*]
-#   (optional) Firewall driver.
-#   This prevents nova from maintaining a firewall so it does not interfere
-#   with Neutron's. Set to 'nova.virt.firewall.IptablesFirewallDriver'
-#   to re-enable the Nova firewall.
-#   Defaults to undef
-#
 class nova::network::neutron (
   $neutron_password                = false,
   $neutron_auth_type               = 'v3password',
@@ -131,6 +131,7 @@ class nova::network::neutron (
   $neutron_region_name             = 'RegionOne',
   $neutron_ovs_bridge              = 'br-int',
   $neutron_extension_sync_interval = '600',
+  $firewall_driver                 = 'nova.virt.firewall.NoopFirewallDriver',
   $vif_plugging_is_fatal           = true,
   $vif_plugging_timeout            = '300',
   $dhcp_domain                     = 'novalocal',
@@ -143,7 +144,6 @@ class nova::network::neutron (
   $neutron_default_tenant_id       = undef,
   $neutron_auth_plugin             = undef,
   $neutron_ca_certificates_file    = undef,
-  $firewall_driver                 = undef,
 ) {
 
   include ::nova::deps
@@ -210,12 +210,9 @@ class nova::network::neutron (
     }
   }
 
-  if $firewall_driver {
-    warning('firewall_driver parameter is deprecated, has no effect and will be removed in a future release.')
-  }
-
   nova_config {
     'DEFAULT/dhcp_domain':             value => $dhcp_domain;
+    'DEFAULT/firewall_driver':         value => $firewall_driver;
     'DEFAULT/vif_plugging_is_fatal':   value => $vif_plugging_is_fatal;
     'DEFAULT/vif_plugging_timeout':    value => $vif_plugging_timeout;
     'neutron/url':                     value => $neutron_url;
