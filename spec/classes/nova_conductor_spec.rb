@@ -78,9 +78,11 @@ describe 'nova::conductor' do
         "
       end
 
-      it { is_expected.to contain_nova_config('database/connection').with_value('mysql://user:pass@db/db').with_secret(true) }
-      it { is_expected.to contain_nova_config('database/slave_connection').with_value('mysql://user:pass@slave/db').with_secret(true) }
-      it { is_expected.to contain_nova_config('database/idle_timeout').with_value('30') }
+      it { is_expected.to contain_oslo__db('nova_config').with(
+        :connection       => 'mysql://user:pass@db/db',
+        :slave_connection => 'mysql://user:pass@slave/db',
+        :idle_timeout     => '30',
+      )}
     end
 
   end

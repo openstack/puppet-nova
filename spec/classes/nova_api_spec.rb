@@ -273,11 +273,13 @@ describe 'nova::api' do
         "
       end
 
-      it { is_expected.to contain_nova_config('database/connection').with_value('mysql://user:pass@db/db1').with_secret(true) }
-      it { is_expected.to contain_nova_config('database/slave_connection').with_value('mysql://user:pass@slave/db1').with_secret(true) }
       it { is_expected.to contain_nova_config('api_database/connection').with_value('mysql://user:pass@db/db2').with_secret(true) }
       it { is_expected.to contain_nova_config('api_database/slave_connection').with_value('mysql://user:pass@slave/db2').with_secret(true) }
-      it { is_expected.to contain_nova_config('database/idle_timeout').with_value('30') }
+      it { is_expected.to contain_oslo__db('nova_config').with(
+        :connection       => 'mysql://user:pass@db/db1',
+        :slave_connection => 'mysql://user:pass@slave/db1',
+        :idle_timeout     => '30',
+      )}
     end
 
     context 'with custom instance_name_template' do

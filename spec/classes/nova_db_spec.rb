@@ -34,23 +34,25 @@ describe 'nova::db' do
         )
       end
 
-      it { is_expected.to contain_nova_config('database/db_max_retries').with_value('<SERVICE DEFAULT>') }
-      it { is_expected.to contain_nova_config('database/connection').with_value('mysql+pymysql://user:pass@db/db1').with_secret(true) }
-      it { is_expected.to contain_nova_config('database/slave_connection').with_value('mysql+pymysql://user:pass@slave/db1').with_secret(true) }
+      it { is_expected.to contain_oslo__db('nova_config').with(
+        :connection       => 'mysql+pymysql://user:pass@db/db1',
+        :slave_connection => 'mysql+pymysql://user:pass@slave/db1',
+        :db_max_retries   => '<SERVICE DEFAULT>',
+        :idle_timeout     => '<SERVICE DEFAULT>',
+        :min_pool_size    => '<SERVICE DEFAULT>',
+        :max_retries      => '<SERVICE DEFAULT>',
+        :retry_interval   => '<SERVICE DEFAULT>',
+      )}
       it { is_expected.to contain_nova_config('api_database/connection').with_value('mysql+pymysql://user:pass@db/db2').with_secret(true) }
       it { is_expected.to contain_nova_config('api_database/slave_connection').with_value('mysql+pymysql://user:pass@slave/db2').with_secret(true) }
       it { is_expected.to contain_nova_config('placement_database/connection').with_value('mysql+pymysql://user:pass@db/db2').with_secret(true) }
       it { is_expected.to contain_nova_config('placement_database/slave_connection').with_value('mysql+pymysql://user:pass@slave/db2').with_secret(true) }
-      it { is_expected.to contain_nova_config('database/idle_timeout').with_value('<SERVICE DEFAULT>') }
-      it { is_expected.to contain_nova_config('database/min_pool_size').with_value('<SERVICE DEFAULT>') }
-      it { is_expected.to contain_nova_config('database/max_retries').with_value('<SERVICE DEFAULT>') }
-      it { is_expected.to contain_nova_config('database/retry_interval').with_value('<SERVICE DEFAULT>') }
     end
 
 
     context 'with postgresql backend' do
       let :params do
-        { :database_connection     => 'postgresql://nova:nova@localhost/nova', }
+        { :database_connection => 'postgresql://nova:nova@localhost/nova', }
       end
 
       it 'install the proper backend package' do
@@ -61,7 +63,7 @@ describe 'nova::db' do
 
     context 'with MySQL-python library as backend package' do
       let :params do
-        { :database_connection     => 'mysql://user:pass@db/db', }
+        { :database_connection => 'mysql://user:pass@db/db', }
       end
 
       it { is_expected.to contain_package('python-mysqldb').with(:ensure => 'present') }
@@ -69,7 +71,7 @@ describe 'nova::db' do
 
     context 'with incorrect database_connection string' do
       let :params do
-        { :database_connection     => 'redis://nova:nova@localhost/nova', }
+        { :database_connection => 'redis://nova:nova@localhost/nova', }
       end
 
       it_raises 'a Puppet::Error', /validate_re/
@@ -77,7 +79,7 @@ describe 'nova::db' do
 
     context 'with incorrect pymysql database_connection string' do
       let :params do
-        { :database_connection     => 'foo+pymysql://user:pass@db/db', }
+        { :database_connection => 'foo+pymysql://user:pass@db/db', }
       end
 
       it_raises 'a Puppet::Error', /validate_re/
@@ -87,7 +89,7 @@ describe 'nova::db' do
   shared_examples_for 'nova::db RedHat' do
     context 'using pymysql driver' do
       let :params do
-        { :database_connection   => 'mysql+pymysql://user:pass@db/db', }
+        { :database_connection => 'mysql+pymysql://user:pass@db/db', }
       end
 
       it { is_expected.not_to contain_package('db_backend_package') }
@@ -98,7 +100,7 @@ describe 'nova::db' do
 
     context 'using pymysql driver' do
       let :params do
-        { :database_connection   => 'mysql+pymysql://user:pass@db/db', }
+        { :database_connection => 'mysql+pymysql://user:pass@db/db', }
       end
 
       it 'install the proper backend package' do
