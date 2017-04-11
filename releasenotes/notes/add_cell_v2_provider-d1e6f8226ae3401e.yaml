@@ -1,0 +1,5 @@
+---
+features:
+  - Adds a "nova_cell_v2" provider and type for creating and updating cell_v2 cells.
+deprecations:
+  - The "nova::cell_v2::cell" define, which does not allow cell configs to be updated, is deprecated by the "nova_cell_v2" type.
