@@ -185,49 +185,6 @@ describe 'nova::migration::libvirt' do
       end
       it { is_expected.to contain_file_line('/etc/libvirt/libvirtd.conf listen_address').with(:line => "listen_addr = \"127.0.0.1\"") }
     end
-  end
-
-  # TODO (degorenko): switch to on_supported_os function when we got Xenial
-  context 'on Debian platforms with Ubuntu release 16' do
-    let :facts do
-      @default_facts.merge({
-        :osfamily => 'Debian',
-        :operatingsystem => 'Ubuntu',
-        :operatingsystemmajrelease => '16'
-      })
-    end
-
-    it_configures 'nova migration with libvirt'
-    it { is_expected.to contain_file_line('/etc/default/libvirtd libvirtd opts').with(:line => 'libvirtd_opts="-l"') }
-  end
-
-  context 'on Debian platforms release' do
-    let :facts do
-      @default_facts.merge({
-        :osfamily => 'Debian',
-        :operatingsystem => 'Debian',
-        :operatingsystemmajrelease => '8'
-      })
-    end
-
-    it_configures 'nova migration with libvirt'
-    it { is_expected.to contain_file_line('/etc/default/libvirtd libvirtd opts').with(:line => 'libvirtd_opts="-d -l"') }
-  end
-
-  context 'on RedHat platforms' do
-    let :facts do
-      @default_facts.merge({
-        :osfamily => 'RedHat',
-        :operatingsystem => 'CentOS',
-        :operatingsystemmajrelease => '7.0'
-      })
-    end
-
-    it_configures 'nova migration with libvirt'
-    it { is_expected.to contain_file_line('/etc/sysconfig/libvirtd libvirtd args').with(:line => 'LIBVIRTD_ARGS="--listen"') }
-  end
-
-  shared_examples_for 'ssh tunneling' do
 
     context 'with ssh transport' do
       let :params do
@@ -277,4 +234,45 @@ describe 'nova::migration::libvirt' do
     end
 
   end
+
+  # TODO (degorenko): switch to on_supported_os function when we got Xenial
+  context 'on Debian platforms with Ubuntu release 16' do
+    let :facts do
+      @default_facts.merge({
+        :osfamily => 'Debian',
+        :operatingsystem => 'Ubuntu',
+        :operatingsystemmajrelease => '16'
+      })
+    end
+
+    it_configures 'nova migration with libvirt'
+    it { is_expected.to contain_file_line('/etc/default/libvirtd libvirtd opts').with(:line => 'libvirtd_opts="-l"') }
+  end
+
+  context 'on Debian platforms release' do
+    let :facts do
+      @default_facts.merge({
+        :osfamily => 'Debian',
+        :operatingsystem => 'Debian',
+        :operatingsystemmajrelease => '8'
+      })
+    end
+
+    it_configures 'nova migration with libvirt'
+    it { is_expected.to contain_file_line('/etc/default/libvirtd libvirtd opts').with(:line => 'libvirtd_opts="-d -l"') }
+  end
+
+  context 'on RedHat platforms' do
+    let :facts do
+      @default_facts.merge({
+        :osfamily => 'RedHat',
+        :operatingsystem => 'CentOS',
+        :operatingsystemmajrelease => '7.0'
+      })
+    end
+
+    it_configures 'nova migration with libvirt'
+    it { is_expected.to contain_file_line('/etc/sysconfig/libvirtd libvirtd args').with(:line => 'LIBVIRTD_ARGS="--listen"') }
+  end
+
 end
