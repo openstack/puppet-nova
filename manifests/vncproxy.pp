@@ -51,8 +51,6 @@ class nova::vncproxy(
     'vnc/novncproxy_port': value => $port;
   }
 
-  include ::nova::vncproxy::common
-
   nova::generic_service { 'vncproxy':
     enabled        => $enabled,
     manage_service => $manage_service,

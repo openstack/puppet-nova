@@ -1,0 +1,9 @@
+---
+fixes:
+  - |
+    novncproxy_base_url parameter is only consumed by nova-compute. Thus it should
+    not be configured on controller node, where novnc proxy service runs. In packstack
+    deployment it causes problem when controller and compute are configured on the
+    same node and novncproxy_base_url is set to `http://0.0.0.0:6080/vnc_auto.html`.
+    In this case nova will return incorrect novnc url for instances, that run on such
+    compute node.
