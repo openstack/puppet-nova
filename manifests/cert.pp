@@ -25,6 +25,8 @@ class nova::cert(
   include ::nova::deps
   include ::nova::params
 
+  warning('nova::cert class is deprecated and will be removed in Queens.')
+
   nova::generic_service { 'cert':
     enabled        => $enabled,
     manage_service => $manage_service,
