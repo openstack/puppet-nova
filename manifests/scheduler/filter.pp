@@ -65,17 +65,17 @@
 #   Defaults to $::os_service_default
 #
 # [*ram_weight_multiplier*]
-#   (optional) Ram weight multipler ratio. This option determines how hosts
+#   (optional) Ram weight multiplier ratio. This option determines how hosts
 #   with more or less available RAM are weighed.
 #   Defaults to $::os_service_default
 #
 # [*disk_weight_multiplier*]
-#   (optional) Disk weight multipler ratio. Multiplier used for weighing free
+#   (optional) Disk weight multiplier ratio. Multiplier used for weighing free
 #   disk space. Negative numbers mean to stack vs spread.
 #   Defaults to $::os_service_default
 #
 # [*io_ops_weight_multiplier*]
-#   (optional) IO operations weight multipler ratio. This option determines
+#   (optional) IO operations weight multiplier ratio. This option determines
 #   how hosts with differing workloads are weighed
 #   Defaults to $::os_service_default
 #

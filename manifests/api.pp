@@ -545,7 +545,7 @@ as a standalone service, or httpd for being run by a httpd server")
     $aur = $::nova::keystone::authtoken::username
     #Admin password real
     $apr = $::nova::keystone::authtoken::password
-    #Admin tenan name real
+    #Admin tenant name real
     $atnr = $::nova::keystone::authtoken::project_name
     #Keystone Auth URI
     $kau = $::nova::keystone::authtoken::auth_uri

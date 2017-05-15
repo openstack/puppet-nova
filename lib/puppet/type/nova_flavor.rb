@@ -96,7 +96,7 @@ Puppet::Type.newtype(:nova_flavor) do
   end
 
   newparam(:rxtx_factor) do
-    desc 'The slice of bandiwdth that the instances with this flavor can use (through the Virtual Interface (vif) creation in the hypervisor)'
+    desc 'The slice of bandwidth that the instances with this flavor can use (through the Virtual Interface (vif) creation in the hypervisor)'
   end
 
   newparam(:is_public) do

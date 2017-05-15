@@ -147,7 +147,7 @@ class nova::migration::libvirt(
 
     if $client_extraparams != {} {
       $extra_params_before_python_escape = join(uriescape(join_keys_to_values($client_extraparams, '=')), '&')
-      # Must escape % as nova interprets it incorrecly.
+      # Must escape % as nova interprets it incorrectly.
       $extra_params = sprintf('?%s', regsubst($extra_params_before_python_escape, '%', '%%', 'G'))
     } else {
       $extra_params =''

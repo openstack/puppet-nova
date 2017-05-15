@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2014 OpenStack Fondation
+# Copyright (C) 2014 OpenStack Foundation
 #
 # Author: Emilien Macchi <emilien.macchi@enovance.com>
 #         Donald Talton  <dotalton@cisco.com>

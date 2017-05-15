@@ -22,7 +22,7 @@ class nova::deps {
   ~> Service<| tag == 'nova-service' |>
   ~> anchor { 'nova::service::end': }
 
-  # paste-api.ini config shold occur in the config block also.
+  # paste-api.ini config should occur in the config block also.
   Anchor['nova::config::begin']
   -> Nova_paste_api_ini<||>
   ~> Anchor['nova::config::end']
@@ -30,7 +30,7 @@ class nova::deps {
   # Support packages need to be installed in the install phase, but we don't
   # put them in the chain above because we don't want any false dependencies
   # between packages with the nova-package tag and the nova-support-package
-  # tag.  Note: the package resources here will have a 'before' relationshop on
+  # tag.  Note: the package resources here will have a 'before' relationship on
   # the nova::install::end anchor.  The line between nova-support-package and
   # nova-package should be whether or not Nova services would need to be
   # restarted if the package state was changed.
@@ -41,7 +41,7 @@ class nova::deps {
   # TODO(aschultz): check if we can remove these as I think they are no longer
   # valid since nova_cells is replaced by cell_v2 and the others are part of
   # nova network
-  # The following resourcs are managed by calling 'nova manage' and so the
+  # The following resources are managed by calling 'nova manage' and so the
   # database must be provisioned before they can be applied.
   Anchor['nova::dbsync_api::end']
   -> Nova_cells<||>

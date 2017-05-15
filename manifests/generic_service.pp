@@ -27,7 +27,7 @@
 #   Defaults to true.
 #
 # [*ensure_package*]
-#   (optional) Control the ensure parameter for the package ressource.
+#   (optional) Control the ensure parameter for the package resource.
 #   Defaults to 'present'.
 #
 define nova::generic_service(
