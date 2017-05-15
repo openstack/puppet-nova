@@ -1,0 +1,6 @@
+---
+fixes:
+  - |
+    The configuration for libvirt/enabled_perf_events requires a comma
+    seperated string for the value. The libvirt_enabled_perf_events parameter
+    will now properly convert arrays being passed in to a string. LP#1690946

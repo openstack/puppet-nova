@@ -214,7 +214,7 @@ class nova::compute::libvirt (
     'libvirt/inject_partition':      value => $libvirt_inject_partition;
     'libvirt/hw_disk_discard':       value => $libvirt_hw_disk_discard;
     'libvirt/hw_machine_type':       value => $libvirt_hw_machine_type;
-    'libvirt/enabled_perf_events':   value => $libvirt_enabled_perf_events;
+    'libvirt/enabled_perf_events':   value => join(any2array($libvirt_enabled_perf_events), ',');
   }
 
   # cpu_model param is only valid if cpu_mode=custom
