@@ -276,7 +276,8 @@ describe 'nova::compute::libvirt' do
           :vncserver_listen                           => '0.0.0.0',
           :remove_unused_base_images                  => true,
           :remove_unused_resized_minimum_age_seconds  => 3600,
-          :remove_unused_original_minimum_age_seconds => 3600
+          :remove_unused_original_minimum_age_seconds => 3600,
+          :libvirt_enabled_perf_events                => ['cmt', 'mbml', 'mbmt']
         }
       end
 
@@ -285,6 +286,7 @@ describe 'nova::compute::libvirt' do
       it { is_expected.to contain_nova_config('DEFAULT/remove_unused_base_images').with_value(true)}
       it { is_expected.to contain_nova_config('DEFAULT/remove_unused_original_minimum_age_seconds').with_value(3600)}
       it { is_expected.to contain_nova_config('libvirt/remove_unused_resized_minimum_age_seconds').with_value(3600)}
+      it { is_expected.to contain_nova_config('libvirt/enabled_perf_events').with_value('cmt,mbml,mbmt')}
       it { is_expected.to contain_package('libvirt').with(
         :name   => 'libvirt-daemon-kvm',
         :ensure => 'present'
