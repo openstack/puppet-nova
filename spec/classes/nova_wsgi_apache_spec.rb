@@ -164,7 +164,7 @@ describe 'nova::wsgi::apache' do
             :httpd_service_name     => 'httpd',
             :httpd_ports_file       => '/etc/httpd/conf/ports.conf',
             :wsgi_script_path       => '/var/www/cgi-bin/nova',
-            :api_wsgi_script_source => '/usr/lib/python2.7/site-packages/nova/wsgi/nova-api.py',
+            :api_wsgi_script_source => '/usr/bin/nova-api-wsgi',
           }
         end
       end
