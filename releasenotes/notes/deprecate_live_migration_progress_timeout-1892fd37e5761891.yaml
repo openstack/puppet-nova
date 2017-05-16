@@ -1,0 +1,4 @@
+---
+deprecations:
+    migration::libvirt::live_migration_progress_timeout has been deprecated as this
+    feature has been found not to work. See bug 1644248 for more details.
