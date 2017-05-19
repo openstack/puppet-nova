@@ -46,7 +46,6 @@ describe 'nova::migration::libvirt' do
       it { is_expected.to contain_file_line('/etc/libvirt/libvirtd.conf auth_tcp').with(:line => "auth_tcp = \"none\"") }
       it { is_expected.to contain_nova_config('libvirt/live_migration_tunnelled').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('libvirt/live_migration_completion_timeout').with_value('<SERVICE DEFAULT>') }
-      it { is_expected.to contain_nova_config('libvirt/live_migration_progress_timeout').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('libvirt/live_migration_uri').with_value('qemu+tcp://%s/system') }
       it { is_expected.to contain_nova_config('libvirt/live_migration_inbound_addr').with_value('<SERVICE DEFAULT>')}
       it { is_expected.to contain_nova_config('libvirt/live_migration_scheme').with_value('<SERVICE DEFAULT>')}
@@ -118,12 +117,10 @@ describe 'nova::migration::libvirt' do
         {
           :live_migration_tunnelled          => true,
           :live_migration_completion_timeout => '1500',
-          :live_migration_progress_timeout   => '1500',
         }
       end
       it { is_expected.to contain_nova_config('libvirt/live_migration_tunnelled').with(:value => true) }
       it { is_expected.to contain_nova_config('libvirt/live_migration_completion_timeout').with_value('1500') }
-      it { is_expected.to contain_nova_config('libvirt/live_migration_progress_timeout').with_value('1500') }
     end
 
     context 'with auth set to sasl' do

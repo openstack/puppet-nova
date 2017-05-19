@@ -44,12 +44,6 @@
 #   to 0 to disable timeouts.
 #   Defaults to $::os_service_default
 #
-# [*live_migration_progress_timeout*]
-#   (optional) Time to wait, in seconds, for migration to make forward progress
-#   in transferring data before aborting the operation. Set to 0 to disable
-#   timeouts.
-#   Defaults to $::os_service_default
-#
 # [*override_uuid*]
 #   (optional) Set uuid not equal to output from dmidecode (boolean)
 #   Defaults to false
@@ -83,6 +77,12 @@
 #   Defaults to false
 #   Deprecated by transport paramater.
 #
+# [*live_migration_progress_timeout*]
+#   (optional) Time to wait, in seconds, for migration to make forward progress
+#   in transferring data before aborting the operation. Set to 0 to disable
+#   timeouts.
+#   Defaults to undef
+#
 class nova::migration::libvirt(
   $transport                         = undef,
   $auth                              = 'none',
@@ -90,7 +90,6 @@ class nova::migration::libvirt(
   $live_migration_inbound_addr       = $::os_service_default,
   $live_migration_tunnelled          = $::os_service_default,
   $live_migration_completion_timeout = $::os_service_default,
-  $live_migration_progress_timeout   = $::os_service_default,
   $override_uuid                     = false,
   $configure_libvirt                 = true,
   $configure_nova                    = true,
@@ -99,6 +98,7 @@ class nova::migration::libvirt(
   $client_extraparams                = {},
   # DEPRECATED PARAMETERS
   $use_tls                           = false,
+  $live_migration_progress_timeout   = undef,
 ){
 
   include ::nova::deps
@@ -112,6 +112,10 @@ class nova::migration::libvirt(
     $transport_real = 'tls'
   } else {
     $transport_real = 'tcp'
+  }
+
+  if $live_migration_progress_timeout {
+    warning('live_migration_progress_timeout parameter is now deprecated and will be removed in the future release.')
   }
 
   validate_re($transport_real, ['^tcp$', '^tls$', '^ssh$'], 'Valid options for transport are tcp, tls, ssh.')
@@ -165,7 +169,6 @@ class nova::migration::libvirt(
       'libvirt/live_migration_uri':                value => $live_migration_uri;
       'libvirt/live_migration_tunnelled':          value => $live_migration_tunnelled;
       'libvirt/live_migration_completion_timeout': value => $live_migration_completion_timeout;
-      'libvirt/live_migration_progress_timeout':   value => $live_migration_progress_timeout;
       'libvirt/live_migration_inbound_addr':       value => $live_migration_inbound_addr;
       'libvirt/live_migration_scheme':             value => $live_migration_scheme;
     }
