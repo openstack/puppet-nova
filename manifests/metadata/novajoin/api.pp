@@ -5,8 +5,8 @@
 #
 # === Parameters
 #
-# [*nova_password*]
-#   (required) Password for the nova service user.
+# [*service_password*]
+#   (required) Password for the novajoin service user.
 #
 # [*transport_url*]
 #   (required) Transport URL for notifier service to talk to
@@ -18,7 +18,7 @@
 #
 # [*api_paste_config*]
 #   (optional) Filename for the paste deploy file.
-#   Defaults to '/etc/nova/join-api-paste.ini'.
+#   Defaults to '/etc/novajoin/join-api-paste.ini'.
 #
 # [*auth_strategy*]
 #   (optional) Strategy to use for authentication.
@@ -66,7 +66,7 @@
 #
 # [*keytab*]
 #   (optional) Kerberos client keytab file.
-#   Defaults to '/etc/nova/krb5.keytab'
+#   Defaults to '/etc/novajoin/krb5.keytab'
 #
 # [*log_dir*]
 #   (optional) log directory.
@@ -76,27 +76,35 @@
 #   (optional) If Puppet should manage service startup / shutdown.
 #   Defaults to true.
 #
+# [*service_user*]
+#   (optional) User that the novajoin services run as.
+#   Defaults to 'novajoin'
+#
+# [*project_domain_name*]
+#   (optional) Domain name containing project (for novajoin auth).
+#   Defaults to 'default'
+#
+# [*project_name*]
+#   (optional) Project name (for novajoin auth).
+#   Defaults to 'service'
+#
+# [*user_domain_id*]
+#   (optional) Domain for novajoin user.
+#   Defaults to 'default'
+#
+# DEPRECATED PARAMETERS
+#
 # [*nova_user*]
 #   (optional) User that nova services run as.
 #   Defaults to 'nova'
 #
-# [*project_domain_name*]
-#   (optional) Domain name containing project (for nova auth).
-#   Defaults to 'default'
-#
-# [*project_name*]
-#   (optional) Project name (for nova auth).
-#   Defaults to 'service'
-#
-# [*user_domain_id*]
-#   (optional) Domain for nova user.
-#   Defaults to 'default'
+# [*nova_password*]
+#   (required) Password for the nova service user.
 #
 class nova::metadata::novajoin::api (
-  $nova_password,
   $transport_url,
   $bind_address              = '127.0.0.1',
-  $api_paste_config          = '/etc/nova/join-api-paste.ini',
+  $api_paste_config          = '/etc/novajoin/join-api-paste.ini',
   $auth_strategy             = $::os_service_default,
   $auth_type                 = 'password',
   $cacert                    = '/etc/ipa/ca.crt',
@@ -108,15 +116,41 @@ class nova::metadata::novajoin::api (
   $ipa_domain                = undef,
   $join_listen_port          = $::os_service_default,
   $keystone_auth_url         = 'http://127.0.0.1:35357/',
-  $keytab                    = '/etc/nova/krb5.keytab',
+  $keytab                    = '/etc/novajoin/krb5.keytab',
   $log_dir                   = '/var/log/novajoin',
   $manage_service            = true,
-  $nova_user                 = 'nova',
+  $service_password          = undef,
+  $service_user              = 'novajoin',
   $project_domain_name       = 'default',
   $project_name              = 'service',
   $user_domain_id            = 'default',
+  # DEPRECATED PARAMETERS
+  $nova_user                 = 'nova',
+  $nova_password             = undef,
 ) {
   include ::nova::metadata::novajoin::authtoken
+
+  if $service_user {
+    $service_user_real = $service_user
+  } else {
+    warning('The nova_user parameter is deprecated. use service_user instead')
+    $service_user_real = $nova_user
+  }
+
+  if ! $service_user_real {
+    fail('service_user is missing')
+  }
+
+  if $service_password {
+    $service_password_real = $service_password
+  } else {
+    warning('The nova_password parameter is deprecated. use service_password instead')
+    $service_password_real = $nova_password
+  }
+
+  if ! $service_password_real {
+    fail('service_password is missing')
+  }
 
   case $::osfamily {
     'RedHat': {
@@ -158,8 +192,8 @@ class nova::metadata::novajoin::api (
     'DEFAULT/transport_url':                   value => $transport_url;
     'service_credentials/auth_type':           value => $auth_type;
     'service_credentials/auth_url':            value => $keystone_auth_url;
-    'service_credentials/password':            value => $nova_password;
-    'service_credentials/username':            value => $nova_user;
+    'service_credentials/password':            value => $service_password_real;
+    'service_credentials/username':            value => $service_user_real;
     'service_credentials/project_name':        value => $project_name;
     'service_credentials/user_domain_id':      value => $user_domain_id;
     'service_credentials/project_domain_name':
@@ -199,7 +233,7 @@ class nova::metadata::novajoin::api (
     require => Package['python-novajoin']
   }
 
-  ensure_resource('file', $keytab, { owner => $nova_user, require => Exec['get-service-user-keytab'] })
+  ensure_resource('file', $keytab, { owner => $service_user, require => Exec['get-service-user-keytab'] })
 
   Novajoin_config<||> ~> Service<| title == 'novajoin-server'|>
   Novajoin_config<||> ~> Service<| title == 'novajoin-notify'|>
