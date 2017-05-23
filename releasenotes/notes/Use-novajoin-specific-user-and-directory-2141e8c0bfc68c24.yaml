@@ -1,0 +1,5 @@
+---
+other:
+  - Novajoin now uses it's own user and configuration directory by default. As
+    to separate from the nova user and have it easier to use in containerized
+    environments.

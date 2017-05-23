@@ -128,7 +128,7 @@ describe 'nova::metadata::novajoin::auth' do
        }
       class { '::ipaclient': password => 'join_otp', }
        class { '::nova::metadata::novajoin::api':
-         nova_password => 'secrete',
+         service_password => 'secrete',
          transport_url => 'rabbit://127.0.0.1//',
        }"
     end

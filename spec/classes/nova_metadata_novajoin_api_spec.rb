@@ -16,7 +16,7 @@ describe 'nova::metadata::novajoin::api' do
   let :default_params do
     {
       :bind_address              => '127.0.0.1',
-      :api_paste_config          => '/etc/nova/join-api-paste.ini',
+      :api_paste_config          => '/etc/novajoin/join-api-paste.ini',
       :auth_strategy             => '<SERVICE DEFAULT>',
       :auth_type                 => 'password',
       :cacert                    => '/etc/ipa/ca.crt',
@@ -26,16 +26,16 @@ describe 'nova::metadata::novajoin::api' do
       :enable_ipa_client_install => true,
       :ensure_package            => 'present',
       :join_listen_port          => '<SERVICE DEFAULT>',
-      :keytab                    => '/etc/nova/krb5.keytab',
+      :keytab                    => '/etc/novajoin/krb5.keytab',
       :log_dir                   => '/var/log/novajoin',
       :manage_service            => true,
-      :nova_user                 => 'nova',
+      :service_user              => 'novajoin',
       :project_domain_name       => 'default',
       :project_name              => 'service',
       :user_domain_id            => 'default',
       :ipa_domain                => 'EXAMPLE.COM',
       :keystone_auth_url         => 'https://keystone.example.com:35357',
-      :nova_password             => 'my_secret_password',
+      :service_password          => 'my_secret_password',
       :transport_url             => 'rabbit:rabbit_pass@rabbit_host',
     }
   end
@@ -43,7 +43,7 @@ describe 'nova::metadata::novajoin::api' do
   [{},
    {
       :bind_address              => '0.0.0.0',
-      :api_paste_config          => '/etc/nova/join-api-paste.ini',
+      :api_paste_config          => '/etc/novajoin/join-api-paste.ini',
       :auth_strategy             => 'noauth2',
       :auth_type                 => 'password',
       :cacert                    => '/etc/ipa/ca.crt',
@@ -56,13 +56,13 @@ describe 'nova::metadata::novajoin::api' do
       :keytab                    => '/etc/krb5.conf',
       :log_dir                   => '/var/log/novajoin',
       :manage_service            => true,
-      :nova_user                 => 'nova1',
+      :service_user              => 'novajoin1',
       :project_domain_name       => 'default',
       :project_name              => 'service',
       :user_domain_id            => 'default',
       :ipa_domain                => 'EXAMPLE2.COM',
       :keystone_auth_url         => 'https://keystone2.example.com:35357',
-      :nova_password             => 'my_secret_password2',
+      :service_password          => 'my_secret_password2',
       :transport_url             => 'rabbit:rabbit_pass2@rabbit_host',
     }
   ].each do |param_set|
@@ -122,11 +122,11 @@ describe 'nova::metadata::novajoin::api' do
       it 'is_expected.to configure service credentials' do
         is_expected.to contain_novajoin_config('service_credentials/auth_type').with_value(param_hash[:auth_type])
         is_expected.to contain_novajoin_config('service_credentials/auth_url').with_value(param_hash[:keystone_auth_url])
-        is_expected.to contain_novajoin_config('service_credentials/password').with_value(param_hash[:nova_password])
+        is_expected.to contain_novajoin_config('service_credentials/password').with_value(param_hash[:service_password])
         is_expected.to contain_novajoin_config('service_credentials/project_name').with_value(param_hash[:project_name])
         is_expected.to contain_novajoin_config('service_credentials/user_domain_id').with_value(param_hash[:user_domain_id])
         is_expected.to contain_novajoin_config('service_credentials/project_domain_name').with_value(param_hash[:project_domain_name])
-        is_expected.to contain_novajoin_config('service_credentials/username').with_value(param_hash[:nova_user])
+        is_expected.to contain_novajoin_config('service_credentials/username').with_value(param_hash[:service_user])
       end
 
       it 'is_expected.to get service user keytab' do
@@ -137,7 +137,7 @@ describe 'nova::metadata::novajoin::api' do
       end
 
       it { is_expected.to contain_file("#{param_hash[:keytab]}").with(
-        'owner'   => "#{param_hash[:nova_user]}",
+        'owner'   => "#{param_hash[:service_user]}",
         'require' => 'Exec[get-service-user-keytab]',
       )}
 
@@ -155,11 +155,11 @@ describe 'nova::metadata::novajoin::api' do
 
     let :params do
       {
-        :manage_service => false,
-        :enabled        => false,
-        :ipa_domain     => 'EXAMPLE.COM',
-        :nova_password  => 'my_secret_password',
-        :transport_url  => 'rabbit:rabbit_pass@rabbit_host',
+        :manage_service    => false,
+        :enabled           => false,
+        :ipa_domain        => 'EXAMPLE.COM',
+        :service_password  => 'my_secret_password',
+        :transport_url     => 'rabbit:rabbit_pass@rabbit_host',
       }
     end
 
