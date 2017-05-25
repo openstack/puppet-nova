@@ -92,7 +92,6 @@ describe 'nova::db' do
         { :database_connection => 'mysql+pymysql://user:pass@db/db', }
       end
 
-      it { is_expected.not_to contain_package('db_backend_package') }
     end
   end
 
@@ -104,7 +103,7 @@ describe 'nova::db' do
       end
 
       it 'install the proper backend package' do
-        is_expected.to contain_package('db_backend_package').with(
+        is_expected.to contain_package('python-pymysql').with(
           :ensure => 'present',
           :name   => 'python-pymysql',
           :tag    => ['openstack'],
@@ -118,7 +117,7 @@ describe 'nova::db' do
       end
 
       it 'install the proper backend package' do
-        is_expected.to contain_package('db_backend_package').with(
+        is_expected.to contain_package('python-pysqlite2').with(
           :ensure => 'present',
           :name   => 'python-pysqlite2',
           :tag    => ['openstack'],
