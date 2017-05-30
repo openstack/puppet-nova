@@ -1,6 +1,6 @@
 {
   "name": "openstack-nova",
-  "version": "9.5.2",
+  "version": "9.5.3",
   "author": "Puppet Labs and OpenStack Contributors",
   "summary": "Puppet module for OpenStack Nova",
   "license": "Apache-2.0",
