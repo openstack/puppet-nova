@@ -2,4 +2,4 @@
  Current Series Release Notes
 ==============================
 
- .. release-notes::
+.. release-notes::
