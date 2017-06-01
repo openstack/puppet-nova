@@ -13,6 +13,7 @@ Puppet::Type.type(:nova_flavor).provide(
   def initialize(value={})
     super(value)
     @property_flush = {}
+    @project_flush = {}
   end
 
   def create
@@ -30,6 +31,11 @@ Puppet::Type.type(:nova_flavor).provide(
       prop_opts = [@resource[:name]]
       prop_opts << props_to_s(@resource[:properties])
       self.class.request('flavor', 'set', prop_opts)
+    end
+    if @resource[:project]
+      proj_opts = [@resource[:name]]
+      proj_opts << '--project' << @resource[:project]
+      self.class.request('flavor', 'set', proj_opts)
     end
     @property_hash[:ensure] = :present
   end
@@ -76,8 +82,19 @@ Puppet::Type.type(:nova_flavor).provide(
     @property_flush[:properties] = value
   end
 
+  def project=(value)
+    @project_flush[:project] = value
+  end
+
   def self.instances
     request('flavor', 'list', ['--long', '--all']).collect do |attrs|
+      project = request('flavor', 'show', [attrs[:id], '-c', 'access_project_ids'])
+      # Client can return None and this should be considered as ''
+      if project[:access_project_ids].downcase.chomp == 'none'
+        project_value = ''
+      else
+        project_value = project[:access_project_ids]
+      end
       properties = Hash[attrs[:properties].scan(/(\S+)='([^']*)'/)] rescue nil
       new(
           :ensure      => :present,
@@ -90,7 +107,8 @@ Puppet::Type.type(:nova_flavor).provide(
           :is_public   => attrs[:is_public].downcase.chomp == 'true'? true : false,
           :swap        => attrs[:swap],
           :rxtx_factor => attrs[:rxtx_factor],
-          :properties  => properties
+          :properties  => properties,
+          :project     => project_value
       )
     end
   end
@@ -111,6 +129,17 @@ Puppet::Type.type(:nova_flavor).provide(
 
       self.class.request('flavor', 'set', opts)
       @property_flush.clear
+    end
+    unless @project_flush.empty?
+      opts = [@resource[:name]]
+      unless @project_flush[:project]
+        opts << '--project' << @project_flush[:project]
+        self.class.request('flavor', 'set', opts)
+      else
+        opts << '--project' << @property_hash[:project]
+        self.class.request('flavor', 'unset', opts)
+      end
+      @project_flush.clear
     end
   end
   private
