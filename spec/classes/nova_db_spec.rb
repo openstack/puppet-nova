@@ -18,8 +18,10 @@ describe 'nova::db' do
       it { is_expected.to_not contain_nova_config('placement_database/slave_connection') }
       it { is_expected.to_not contain_nova_config('database/idle_timeout') }
       it { is_expected.to_not contain_nova_config('database/min_pool_size') }
+      it { is_expected.to_not contain_nova_config('database/max_pool_size') }
       it { is_expected.to_not contain_nova_config('database/max_retries') }
       it { is_expected.to_not contain_nova_config('database/retry_interval') }
+      it { is_expected.to_not contain_nova_config('database/max_overflow') }
     end
 
     context 'with overriden parameters' do
@@ -40,8 +42,10 @@ describe 'nova::db' do
         :db_max_retries   => '<SERVICE DEFAULT>',
         :idle_timeout     => '<SERVICE DEFAULT>',
         :min_pool_size    => '<SERVICE DEFAULT>',
+        :max_pool_size    => '<SERVICE DEFAULT>',
         :max_retries      => '<SERVICE DEFAULT>',
         :retry_interval   => '<SERVICE DEFAULT>',
+        :max_overflow     => '<SERVICE DEFAULT>',
       )}
       it { is_expected.to contain_nova_config('api_database/connection').with_value('mysql+pymysql://user:pass@db/db2').with_secret(true) }
       it { is_expected.to contain_nova_config('api_database/slave_connection').with_value('mysql+pymysql://user:pass@slave/db2').with_secret(true) }
