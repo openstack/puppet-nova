@@ -187,7 +187,7 @@ describe 'nova::api' do
       end
 
       it 'configures nova pci_alias entries' do
-        is_expected.to contain_nova_config('DEFAULT/pci_alias').with(
+        is_expected.to contain_nova_config('pci/pci_alias').with(
           'value' => "[{\"vendor_id\":\"8086\",\"product_id\":\"0126\",\"name\":\"graphic_card\"},{\"vendor_id\":\"9096\",\"product_id\":\"1520\",\"name\":\"network_card\"}]"
         )
       end

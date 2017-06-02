@@ -1,0 +1,9 @@
+---
+upgrade:
+  - |
+    PCI configuration options have been moved to the 'pci' group. They
+    should no longer be included in the 'DEFAULT' group. Options affected
+    by this change:
+
+    * ``pci_alias``
+    * ``pci_passthrough_whitelist``
