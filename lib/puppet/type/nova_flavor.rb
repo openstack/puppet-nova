@@ -42,6 +42,11 @@
 #    A key => value hash used to set the properties for the flavor. This is
 #    the only parameter that can be updated after the creation of the flavor.
 #    Optional
+#
+#  [*project*]
+#    Set flavor access to project (name or ID).
+#    If you set this option, take care to set is_public to false.
+#    Optional
 require 'puppet'
 
 Puppet::Type.newtype(:nova_flavor) do
@@ -100,7 +105,7 @@ Puppet::Type.newtype(:nova_flavor) do
   end
 
   newparam(:is_public) do
-    desc "Whether the image is public or not. Default true"
+    desc "Whether the flavor is public or not. Default true"
     newvalues(/(y|Y)es/, /(n|N)o/, /(t|T)rue/, /(f|F)alse/, true, false)
     defaultto(true)
     munge do |v|
@@ -112,6 +117,11 @@ Puppet::Type.newtype(:nova_flavor) do
         v.to_s.downcase.to_sym
       end
     end
+  end
+
+  newproperty(:project) do
+    desc 'Set flavor access to project (name or ID).'
+    defaultto('')
   end
 
   newproperty(:properties) do
