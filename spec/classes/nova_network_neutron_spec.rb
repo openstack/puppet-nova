@@ -17,7 +17,8 @@ describe 'nova::network::neutron' do
       :firewall_driver                 => 'nova.virt.firewall.NoopFirewallDriver',
       :vif_plugging_is_fatal           => true,
       :vif_plugging_timeout            => '300',
-      :dhcp_domain                     => 'novalocal'
+      :dhcp_domain                     => 'novalocal',
+      :default_floating_pool           => 'nova'
     }
   end
 
@@ -29,6 +30,7 @@ describe 'nova::network::neutron' do
     it 'configures neutron endpoint in nova.conf' do
       is_expected.to contain_nova_config('neutron/password').with_value(params[:neutron_password]).with_secret(true)
       is_expected.to contain_nova_config('DEFAULT/dhcp_domain').with_value(default_params[:dhcp_domain])
+      is_expected.to contain_nova_config('neutron/default_floating_pool').with_value(default_params[:default_floating_pool])
       is_expected.to contain_nova_config('neutron/auth_type').with_value(default_params[:neutron_auth_type])
       is_expected.to contain_nova_config('neutron/url').with_value(default_params[:neutron_url])
       is_expected.to contain_nova_config('neutron/timeout').with_value(default_params[:neutron_url_timeout])
@@ -67,7 +69,8 @@ describe 'nova::network::neutron' do
         :neutron_extension_sync_interval => '600',
         :vif_plugging_is_fatal           => false,
         :vif_plugging_timeout            => '0',
-        :dhcp_domain                     => 'foo'
+        :dhcp_domain                     => 'foo',
+        :default_floating_pool           => 'public'
       )
     end
 
@@ -75,6 +78,7 @@ describe 'nova::network::neutron' do
       is_expected.to contain_nova_config('neutron/auth_strategy').with_ensure('absent')
       is_expected.to contain_nova_config('neutron/password').with_value(params[:neutron_password]).with_secret(true)
       is_expected.to contain_nova_config('DEFAULT/dhcp_domain').with_value(params[:dhcp_domain])
+      is_expected.to contain_nova_config('neutron/default_floating_pool').with_value(params[:default_floating_pool])
       is_expected.to contain_nova_config('neutron/url').with_value(params[:neutron_url])
       is_expected.to contain_nova_config('neutron/timeout').with_value(params[:neutron_url_timeout])
       is_expected.to contain_nova_config('neutron/project_name').with_value(params[:neutron_project_name])

@@ -1,0 +1,5 @@
+---
+deprecations:
+  - |
+    nova::api::default_floating_pool has been deprecated. Please use
+    nova::network::neutron::default_floating_pool instead.

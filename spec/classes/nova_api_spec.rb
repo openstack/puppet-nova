@@ -53,7 +53,6 @@ describe 'nova::api' do
         is_expected.to contain_nova_config('DEFAULT/osapi_volume_listen').with('value' => '0.0.0.0')
         is_expected.to contain_nova_config('DEFAULT/osapi_compute_workers').with('value' => '5')
         is_expected.to contain_nova_config('DEFAULT/metadata_workers').with('value' => '5')
-        is_expected.to contain_nova_config('DEFAULT/default_floating_pool').with('value' => 'nova')
         is_expected.to contain_nova_config('api/fping_path').with('value' => '/usr/sbin/fping')
         is_expected.to contain_nova_config('oslo_middleware/enable_proxy_headers_parsing').with('value' => '<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('api/metadata_cache_expiration').with('value' => '<SERVICE DEFAULT>')
@@ -102,7 +101,6 @@ describe 'nova::api' do
           :neutron_metadata_proxy_shared_secret        => 'secrete',
           :osapi_compute_workers                       => 1,
           :metadata_workers                            => 2,
-          :default_floating_pool                       => 'public',
           :enable_proxy_headers_parsing                => true,
           :metadata_cache_expiration                   => 15,
           :vendordata_jsonfile_path                    => '/tmp',
@@ -156,7 +154,6 @@ describe 'nova::api' do
         is_expected.to contain_nova_config('api/use_forwarded_for').with('value' => false)
         is_expected.to contain_nova_config('DEFAULT/osapi_compute_workers').with('value' => '1')
         is_expected.to contain_nova_config('DEFAULT/metadata_workers').with('value' => '2')
-        is_expected.to contain_nova_config('DEFAULT/default_floating_pool').with('value' => 'public')
         is_expected.to contain_nova_config('api/metadata_cache_expiration').with('value' => '15')
         is_expected.to contain_nova_config('api/vendordata_jsonfile_path').with('value' => '/tmp')
         is_expected.to contain_nova_config('api/vendordata_providers').with('value' => 'StaticJSON,DynamicJSON')

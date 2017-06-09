@@ -95,10 +95,6 @@
 #   middleware should parse the proxy headers or not.(boolean value)
 #   Defaults to $::os_service_default
 #
-# [*default_floating_pool*]
-#   (optional) Default pool for floating IPs
-#   Defaults to 'nova'
-#
 # [*validate*]
 #   (optional) Whether to validate the service is working after any service refreshes
 #   Defaults to false
@@ -274,6 +270,10 @@
 #   information should not be returned from the API.
 #   Defaults to undef
 #
+# [*default_floating_pool*]
+#   (optional) Default pool for floating IPs
+#   Defaults to undef
+#
 class nova::api(
   $enabled                                     = true,
   $manage_service                              = true,
@@ -291,7 +291,6 @@ class nova::api(
   $sync_db_api                                 = true,
   $db_online_data_migrations                   = false,
   $neutron_metadata_proxy_shared_secret        = undef,
-  $default_floating_pool                       = 'nova',
   $pci_alias                                   = undef,
   $ratelimits                                  = undef,
   $ratelimits_factory                          =
@@ -333,6 +332,7 @@ class nova::api(
   $osapi_compute_link_prefix                   = undef,
   $osapi_glance_link_prefix                    = undef,
   $osapi_hide_server_address_states            = undef,
+  $default_floating_pool                       = undef,
 ) inherits nova::params {
 
   include ::nova::deps
@@ -357,6 +357,10 @@ class nova::api(
     nova_config{
       'DEFAULT/instance_name_template': ensure => absent;
     }
+  }
+
+  if $default_floating_pool {
+    warning('The default_floating_pool parameter is deprecated. Please use nova::network::neutron::default_floating_pool instead.')
   }
 
   if $osapi_max_limit {
@@ -456,7 +460,6 @@ as a standalone service, or httpd for being run by a httpd server")
     'DEFAULT/osapi_volume_listen':                 value => $api_bind_address;
     'DEFAULT/osapi_compute_workers':               value => $osapi_compute_workers;
     'DEFAULT/metadata_workers':                    value => $metadata_workers;
-    'DEFAULT/default_floating_pool':               value => $default_floating_pool;
     'DEFAULT/enable_network_quota':                value => $enable_network_quota;
     'DEFAULT/password_length':                     value => $password_length;
     'api/metadata_cache_expiration':               value => $metadata_cache_expiration;
