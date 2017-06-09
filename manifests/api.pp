@@ -534,7 +534,7 @@ as a standalone service, or httpd for being run by a httpd server")
 
   if $pci_alias {
     nova_config {
-      'pci/pci_alias': value => check_array_of_hash($pci_alias);
+      'pci/pci_alias': value => join(any2array(check_array_of_hash($pci_alias)), ',');
     }
   }
 
