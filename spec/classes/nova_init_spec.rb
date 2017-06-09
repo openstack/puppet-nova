@@ -178,7 +178,7 @@ describe 'nova' do
         is_expected.to contain_nova_config('oslo_messaging_notifications/transport_url').with_value('rabbit://rabbit_user:password@localhost:5673')
         is_expected.to contain_nova_config('oslo_messaging_notifications/driver').with_value('ceilometer.compute.nova_notifier')
         is_expected.to contain_nova_config('oslo_messaging_notifications/topics').with_value('openstack')
-        is_expected.to contain_nova_config('DEFAULT/notify_api_faults').with_value(true)
+        is_expected.to contain_nova_config('notifications/notify_api_faults').with_value(true)
         is_expected.to contain_nova_config('DEFAULT/report_interval').with_value('60')
         is_expected.to contain_nova_config('os_vif_linux_bridge/use_ipv6').with_value('true')
         is_expected.to contain_nova_config('cinder/os_region_name').with_value('MyRegion')
@@ -204,7 +204,7 @@ describe 'nova' do
       end
 
       it 'configures database' do
-        is_expected.to contain_nova_config('DEFAULT/notify_on_state_change').with_ensure('absent')
+        is_expected.to contain_nova_config('notifications/notify_on_state_change').with_ensure('absent')
       end
     end
 
@@ -214,7 +214,7 @@ describe 'nova' do
       end
 
       it 'configures database' do
-        is_expected.to contain_nova_config('DEFAULT/notify_on_state_change').with_value('vm_state')
+        is_expected.to contain_nova_config('notifications/notify_on_state_change').with_value('vm_state')
       end
     end
 
