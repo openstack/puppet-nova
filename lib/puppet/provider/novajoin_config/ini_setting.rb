@@ -4,7 +4,7 @@ Puppet::Type.type(:novajoin_config).provide(
 ) do
 
   def self.file_path
-    '/etc/nova/join.conf'
+    '/etc/novajoin/join.conf'
   end
 
 end
