@@ -22,6 +22,7 @@ describe 'nova::scheduler' do
 
     it { is_expected.to contain_nova_config('DEFAULT/scheduler_driver').with_ensure('absent') }
     it { is_expected.to contain_nova_config('scheduler/driver').with_value('filter_scheduler') }
+    it { is_expected.to contain_nova_config('scheduler/discover_hosts_in_cells_interval').with_value('<SERVICE DEFAULT>') }
 
     context 'with manage_service as false' do
       let :params do
@@ -48,6 +49,14 @@ describe 'nova::scheduler' do
       end
 
       it { is_expected.to contain_nova_config('scheduler/driver').with_value('custom driver') }
+    end
+
+    context 'with discover_hosts_in_cells_interval' do
+      let :params do
+        { :discover_hosts_in_cells_interval => 15 }
+      end
+
+      it { is_expected.to contain_nova_config('scheduler/discover_hosts_in_cells_interval').with_value(15) }
     end
 
     context 'with default database parameters' do
