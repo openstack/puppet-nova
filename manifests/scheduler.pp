@@ -20,11 +20,17 @@
 #   (optional) Default driver to use for the scheduler
 #   Defaults to 'filter_scheduler'
 #
+# [*discover_hosts_in_cells_interval*]
+#   (optional) This value controls how often (in seconds) the scheduler should
+#   attept to discover new hosts that have been added to cells.
+#   Defaults to $::os_service_default
+#
 class nova::scheduler(
-  $enabled          = true,
-  $manage_service   = true,
-  $ensure_package   = 'present',
-  $scheduler_driver = 'filter_scheduler',
+  $enabled                          = true,
+  $manage_service                   = true,
+  $ensure_package                   = 'present',
+  $scheduler_driver                 = 'filter_scheduler',
+  $discover_hosts_in_cells_interval = $::os_service_default,
 ) {
 
   include ::nova::deps
@@ -40,7 +46,8 @@ class nova::scheduler(
   }
 
   nova_config {
-    'scheduler/driver': value => $scheduler_driver;
+    'scheduler/driver':                           value => $scheduler_driver;
+    'scheduler/discover_hosts_in_cells_interval': value => $discover_hosts_in_cells_interval;
   }
 
   # TODO(aschultz): old options, remove in P
