@@ -8,6 +8,7 @@ describe 'nova::compute::ironic' do
       it 'configures ironic in nova.conf' do
         is_expected.to contain_nova_config('DEFAULT/compute_driver').with_value('ironic.IronicDriver')
         is_expected.to contain_nova_config('DEFAULT/max_concurrent_builds').with_value('<SERVICE DEFAULT>')
+        is_expected.to contain_class('ironic::client')
       end
     end
 
