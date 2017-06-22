@@ -1,0 +1,13 @@
+---
+fixes:
+  - |
+    [pci]/alias option is now required in the nova configuration file on compute nodes too.
+    This requires refactoring of the manifests as the parameter is common to nova::compute
+    and nova::api.
+    Common pci configuration is now done by the nova::pci class while compute specific
+    configuration is done now by the nova::compute::pci class.
+deprecations:
+  - |
+    nova::api::pci_alias is deprecated by nova::pci::aliases
+    nova::compute::pci_passthrough is deprecated by nova::compute::pci::passthrough
+
