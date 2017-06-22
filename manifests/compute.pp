@@ -83,13 +83,6 @@
 #   The amount of memory in MB reserved for the host.
 #   Defaults to '512'
 #
-#  [*pci_passthrough*]
-#   (optional) Pci passthrough list of hash.
-#   Defaults to $::os_service_default
-#   Example of format:
-#   [ { "vendor_id" => "1234","product_id" => "5678" },
-#     { "vendor_id" => "4321","product_id" => "8765", "physical_network" => "default" } ]
-#
 #  [*config_drive_format*]
 #   (optional) Config drive format. One of iso9660 (default) or vfat
 #   Defaults to undef
@@ -163,6 +156,16 @@
 #   The driver that will manage the running instances.
 #   Defaults to $::os_service_default
 #
+# DEPRECATED
+#
+# [*pci_passthrough*]
+#   DEPRECATED. Use nova::compute::pci::passthrough instead.
+#   (optional) Pci passthrough list of hash.
+#   Defaults to undef
+#   Example of format:
+#   [ { "vendor_id" => "1234","product_id" => "5678" },
+#     { "vendor_id" => "4321","product_id" => "8765", "physical_network" => "default" } ]
+#
 class nova::compute (
   $enabled                            = true,
   $manage_service                     = true,
@@ -183,7 +186,6 @@ class nova::compute (
   $force_raw_images                   = true,
   $reserved_host_memory               = '512',
   $heal_instance_info_cache_interval  = '60',
-  $pci_passthrough                    = $::os_service_default,
   $config_drive_format                = $::os_service_default,
   $allow_resize_to_same_host          = false,
   $resize_confirm_window              = $::os_service_default,
@@ -199,6 +201,7 @@ class nova::compute (
   $default_schedule_zone              = undef,
   $internal_service_availability_zone = undef,
   $compute_manager                    = $::os_service_default,
+  $pci_passthrough                    = undef,
 ) {
 
   include ::nova::deps
@@ -226,14 +229,12 @@ is used. It will be removed once Nova removes it.")
 
   $vcpu_pin_set_real = pick(join(any2array($vcpu_pin_set), ','), $::os_service_default)
 
-  # in the case of pci_passthrough, we can't use the same mechanism as vcpu_pin_set because
-  # the value is computed in a function and it makes things more complex. Let's just check if
-  # a value is set or if it's empty.
-  if !is_service_default($pci_passthrough) and !empty($pci_passthrough) {
-    $pci_passthrough_real = to_array_of_json_strings($pci_passthrough)
-  } else {
-    $pci_passthrough_real = $::os_service_default
+  include ::nova::pci
+
+  if $pci_passthrough {
+    warning('The pci_passthrough parameter is deprecated. Please use nova::compute::pci::passthrough instead.')
   }
+  include ::nova::compute::pci
 
   # cryptsetup is required when Barbican is encrypting volumes
   if $keymgr_api_class =~ /barbican/ {
@@ -249,7 +250,6 @@ is used. It will be removed once Nova removes it.")
     'DEFAULT/reserved_host_memory_mb':           value => $reserved_host_memory;
     'DEFAULT/compute_manager':                   value => $compute_manager;
     'DEFAULT/heal_instance_info_cache_interval': value => $heal_instance_info_cache_interval;
-    'pci/passthrough_whitelist':                 value => $pci_passthrough_real;
     'DEFAULT/resize_confirm_window':             value => $resize_confirm_window;
     'DEFAULT/vcpu_pin_set':                      value => $vcpu_pin_set_real;
     'DEFAULT/resume_guests_state_on_host_boot':  value => $resume_guests_state_on_host_boot;
