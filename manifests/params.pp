@@ -111,7 +111,7 @@ class nova::params {
       $nova_wsgi_script_path        = '/usr/lib/cgi-bin/nova'
       # TODO(aschultz): switch this later when UCA updates their packaging
       #$nova_api_wsgi_script_source  = '/usr/bin/nova-api-wsgi'
-      $nova_api_wsgi_script_source  = '/usr/lib/python2.7/dist-packages/nova/wsgi/nova-api.py'
+      $nova_api_wsgi_script_source  = '/usr/bin/nova-api-wsgi'
       $placement_wsgi_script_source = '/usr/bin/nova-placement-api'
       $placement_httpd_config_file  = '/etc/apache2/sites-available/nova-placement-api.conf'
       # debian specific nova config
