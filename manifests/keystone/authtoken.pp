@@ -185,11 +185,6 @@
 #   (in seconds). Set to -1 to disable caching completely. Integer value
 #   Defaults to $::os_service_default.
 #
-# DEPRECATED PARAMETERS
-#
-# [*signing_dir*]
-#   (Optional) Directory used to cache files related to PKI tokens.
-#   Defaults to undef
 #
 class nova::keystone::authtoken(
   $username                       = 'nova',
@@ -227,17 +222,12 @@ class nova::keystone::authtoken(
   $region_name                    = $::os_service_default,
   $revocation_cache_time          = $::os_service_default,
   $token_cache_time               = $::os_service_default,
-  # DEPRECATED PARAMETERS
-  $signing_dir                    = undef,
 ) {
 
   if is_service_default($password) {
     fail('Please set password for nova service user')
   }
 
-  if $signing_dir {
-    warning('signing_dir parameter is deprecated, has no effect and will be removed in the P release.')
-  }
 
   keystone::resource::authtoken { 'nova_config':
     username                       => $username,

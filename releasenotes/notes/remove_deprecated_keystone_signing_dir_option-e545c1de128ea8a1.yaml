@@ -1,0 +1,3 @@
+---
+upgrade:
+  - Deprecated keystone authtoken signing_dir option is removed in Pike.
