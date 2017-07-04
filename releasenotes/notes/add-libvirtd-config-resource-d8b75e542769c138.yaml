@@ -1,0 +1,5 @@
+---
+features:
+  - Add libvirtd_config resource and 
+    nova::compute::libvirt::config class for managing
+    /etc/libvirt/libvirtd.conf.

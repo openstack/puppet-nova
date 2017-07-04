@@ -40,10 +40,10 @@ describe 'nova::migration::libvirt' do
   shared_examples_for 'nova migration with libvirt' do
 
     context 'with default params' do
-      it { is_expected.to contain_file_line('/etc/libvirt/libvirtd.conf listen_tls').with(:line => "listen_tls = 0") }
-      it { is_expected.to contain_file_line('/etc/libvirt/libvirtd.conf listen_tcp').with(:line => "listen_tcp = 1") }
-      it { is_expected.not_to contain_file_line('/etc/libvirt/libvirtd.conf auth_tls')}
-      it { is_expected.to contain_file_line('/etc/libvirt/libvirtd.conf auth_tcp').with(:line => "auth_tcp = \"none\"") }
+      it { is_expected.to contain_libvirtd_config('listen_tls').with_value('0') }
+      it { is_expected.to contain_libvirtd_config('listen_tcp').with_value('1') }
+      it { is_expected.not_to contain_libvirtd_config('auth_tls') }
+      it { is_expected.to contain_libvirtd_config('auth_tcp').with_value("\"none\"") }
       it { is_expected.to contain_nova_config('libvirt/live_migration_tunnelled').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('libvirt/live_migration_completion_timeout').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('libvirt/live_migration_uri').with_value('qemu+tcp://%s/system') }
@@ -74,10 +74,10 @@ describe 'nova::migration::libvirt' do
           :use_tls => true,
         }
       end
-      it { is_expected.to contain_file_line('/etc/libvirt/libvirtd.conf listen_tls').with(:line => "listen_tls = 1") }
-      it { is_expected.to contain_file_line('/etc/libvirt/libvirtd.conf listen_tcp').with(:line => "listen_tcp = 0") }
-      it { is_expected.to contain_file_line('/etc/libvirt/libvirtd.conf auth_tls').with(:line => "auth_tls = \"none\"") }
-      it { is_expected.not_to contain_file_line('/etc/libvirt/libvirtd.conf auth_tcp')}
+      it { is_expected.to contain_libvirtd_config('listen_tls').with_value('1') }
+      it { is_expected.to contain_libvirtd_config('listen_tcp').with_value('0') }
+      it { is_expected.to contain_libvirtd_config('auth_tls').with_value("\"none\"") }
+      it { is_expected.not_to contain_libvirtd_config('auth_tcp') }
       it { is_expected.to contain_nova_config('libvirt/live_migration_uri').with_value('qemu+tls://%s/system')}
       it { is_expected.to contain_nova_config('libvirt/live_migration_inbound_addr').with_value('<SERVICE DEFAULT>')}
       it { is_expected.to contain_nova_config('libvirt/live_migration_scheme').with_value('<SERVICE DEFAULT>')}
@@ -89,10 +89,10 @@ describe 'nova::migration::libvirt' do
           :transport => 'tls',
         }
       end
-      it { is_expected.to contain_file_line('/etc/libvirt/libvirtd.conf listen_tls').with(:line => "listen_tls = 1") }
-      it { is_expected.to contain_file_line('/etc/libvirt/libvirtd.conf listen_tcp').with(:line => "listen_tcp = 0") }
-      it { is_expected.to contain_file_line('/etc/libvirt/libvirtd.conf auth_tls').with(:line => "auth_tls = \"none\"") }
-      it { is_expected.not_to contain_file_line('/etc/libvirt/libvirtd.conf auth_tcp')}
+      it { is_expected.to contain_libvirtd_config('listen_tls').with_value('1') }
+      it { is_expected.to contain_libvirtd_config('listen_tcp').with_value('0') }
+      it { is_expected.to contain_libvirtd_config('auth_tls').with_value("\"none\"") }
+      it { is_expected.not_to contain_libvirtd_config('auth_tcp') }
       it { is_expected.to contain_nova_config('libvirt/live_migration_uri').with_value('qemu+tls://%s/system')}
     end
 
@@ -103,10 +103,10 @@ describe 'nova::migration::libvirt' do
           :live_migration_inbound_addr => 'host1.example.com',
         }
       end
-      it { is_expected.to contain_file_line('/etc/libvirt/libvirtd.conf listen_tls').with(:line => "listen_tls = 1") }
-      it { is_expected.to contain_file_line('/etc/libvirt/libvirtd.conf listen_tcp').with(:line => "listen_tcp = 0") }
-      it { is_expected.to contain_file_line('/etc/libvirt/libvirtd.conf auth_tls').with(:line => "auth_tls = \"none\"") }
-      it { is_expected.not_to contain_file_line('/etc/libvirt/libvirtd.conf auth_tcp')}
+      it { is_expected.to contain_libvirtd_config('listen_tls').with_value('1') }
+      it { is_expected.to contain_libvirtd_config('listen_tcp').with_value('0') }
+      it { is_expected.to contain_libvirtd_config('auth_tls').with_value("\"none\"") }
+      it { is_expected.not_to contain_libvirtd_config('auth_tcp') }
       it { is_expected.to contain_nova_config('libvirt/live_migration_uri').with_value('<SERVICE DEFAULT>')}
       it { is_expected.to contain_nova_config('libvirt/live_migration_inbound_addr').with_value('host1.example.com')}
       it { is_expected.to contain_nova_config('libvirt/live_migration_scheme').with_value('tls')}
@@ -129,8 +129,8 @@ describe 'nova::migration::libvirt' do
           :auth => 'sasl',
         }
       end
-      it { is_expected.not_to contain_file_line('/etc/libvirt/libvirtd.conf auth_tls')}
-      it { is_expected.to contain_file_line('/etc/libvirt/libvirtd.conf auth_tcp').with(:line => "auth_tcp = \"sasl\"") }
+      it { is_expected.not_to contain_libvirtd_config('auth_tls') }
+      it { is_expected.to contain_libvirtd_config('auth_tcp').with_value("\"sasl\"") }
     end
 
     context 'with auth set to sasl and tls enabled' do
@@ -140,8 +140,8 @@ describe 'nova::migration::libvirt' do
           :transport => 'tls'
         }
       end
-      it { is_expected.to contain_file_line('/etc/libvirt/libvirtd.conf auth_tls').with(:line => "auth_tls = \"sasl\"") }
-      it { is_expected.not_to contain_file_line('/etc/libvirt/libvirtd.conf auth_tcp')}
+      it { is_expected.to contain_libvirtd_config('auth_tls').with_value("\"sasl\"") }
+      it { is_expected.not_to contain_libvirtd_config('auth_tcp') }
     end
 
     context 'with auth set to an invalid setting' do
@@ -160,8 +160,8 @@ describe 'nova::migration::libvirt' do
           :configure_libvirt => false
         }
       end
-      it { is_expected.not_to contain_file_line('/etc/libvirt/libvirtd.conf listen_tls') }
-      it { is_expected.not_to contain_file_line('/etc/libvirt/libvirtd.conf listen_tcp') }
+      it { is_expected.not_to contain_libvirtd_config('listen_tls') }
+      it { is_expected.not_to contain_libvirtd_config('listen_tcp') }
     end
 
     context 'when not configuring nova and tls enabled' do
@@ -180,7 +180,7 @@ describe 'nova::migration::libvirt' do
           :listen_address => "127.0.0.1"
         }
       end
-      it { is_expected.to contain_file_line('/etc/libvirt/libvirtd.conf listen_address').with(:line => "listen_addr = \"127.0.0.1\"") }
+      it { is_expected.to contain_libvirtd_config('listen_addr').with_value("\"127.0.0.1\"") }
     end
 
     context 'with ssh transport' do
@@ -190,8 +190,8 @@ describe 'nova::migration::libvirt' do
         }
       end
       it { is_expected.to contain_nova_config('libvirt/live_migration_uri').with_value('qemu+ssh://%s/system')}
-      it { is_expected.to contain_file_line('/etc/libvirt/libvirtd.conf listen_tls').with(:line => "listen_tls = 0") }
-      it { is_expected.to contain_file_line('/etc/libvirt/libvirtd.conf listen_tcp').with(:line => "listen_tcp = 0") }
+      it { is_expected.to contain_libvirtd_config('listen_tls').with_value('0') }
+      it { is_expected.to contain_libvirtd_config('listen_tcp').with_value('0') }
     end
 
     context 'with ssh transport with user' do
@@ -202,8 +202,8 @@ describe 'nova::migration::libvirt' do
         }
       end
       it { is_expected.to contain_nova_config('libvirt/live_migration_uri').with_value('qemu+ssh://foobar@%s/system')}
-      it { is_expected.to contain_file_line('/etc/libvirt/libvirtd.conf listen_tls').with(:line => "listen_tls = 0") }
-      it { is_expected.to contain_file_line('/etc/libvirt/libvirtd.conf listen_tcp').with(:line => "listen_tcp = 0") }
+      it { is_expected.to contain_libvirtd_config('listen_tls').with_value('0') }
+      it { is_expected.to contain_libvirtd_config('listen_tcp').with_value('0') }
     end
 
     context 'with ssh transport with port' do
@@ -214,8 +214,8 @@ describe 'nova::migration::libvirt' do
         }
       end
       it { is_expected.to contain_nova_config('libvirt/live_migration_uri').with_value('qemu+ssh://%s:1234/system')}
-      it { is_expected.to contain_file_line('/etc/libvirt/libvirtd.conf listen_tls').with(:line => "listen_tls = 0") }
-      it { is_expected.to contain_file_line('/etc/libvirt/libvirtd.conf listen_tcp').with(:line => "listen_tcp = 0") }
+      it { is_expected.to contain_libvirtd_config('listen_tls').with_value('0') }
+      it { is_expected.to contain_libvirtd_config('listen_tcp').with_value('0') }
     end
 
     context 'with ssh transport with extraparams' do
@@ -226,8 +226,8 @@ describe 'nova::migration::libvirt' do
         }
       end
       it { is_expected.to contain_nova_config('libvirt/live_migration_uri').with_value('qemu+ssh://%s/system?foo=%%25&bar=baz')}
-      it { is_expected.to contain_file_line('/etc/libvirt/libvirtd.conf listen_tls').with(:line => "listen_tls = 0") }
-      it { is_expected.to contain_file_line('/etc/libvirt/libvirtd.conf listen_tcp').with(:line => "listen_tcp = 0") }
+      it { is_expected.to contain_libvirtd_config('listen_tls').with_value('0') }
+      it { is_expected.to contain_libvirtd_config('listen_tcp').with_value('0') }
     end
 
   end

@@ -176,8 +176,12 @@ class nova::migration::libvirt(
 
   if $configure_libvirt {
     Anchor['nova::config::begin']
+    -> Libvirtd_config<||>
     -> File_line<| tag == 'libvirt-file_line'|>
     -> Anchor['nova::config::end']
+
+    Libvirtd_config<||>
+    ~> Service['libvirt']
 
     File_line<| tag == 'libvirt-file_line' |>
     ~> Service['libvirt']
@@ -203,47 +207,29 @@ class nova::migration::libvirt(
       }
     }
 
+    libvirtd_config {
+      'listen_tls': value => $listen_tls;
+      'listen_tcp': value => $listen_tcp;
+    }
+
+    if $transport_real == 'tls' {
+      libvirtd_config {
+        'auth_tls': value => "\"${auth}\"";
+      }
+    } elsif $transport_real == 'tcp' {
+      libvirtd_config {
+        'auth_tcp': value => "\"${auth}\"";
+      }
+    }
+
+    if $listen_address {
+      libvirtd_config {
+        'listen_addr': value => "\"${listen_address}\"";
+      }
+    }
+
     case $::osfamily {
       'RedHat': {
-        file_line { '/etc/libvirt/libvirtd.conf listen_tls':
-          path  => '/etc/libvirt/libvirtd.conf',
-          line  => "listen_tls = ${listen_tls}",
-          match => 'listen_tls =',
-          tag   => 'libvirt-file_line',
-        }
-
-        file_line { '/etc/libvirt/libvirtd.conf listen_tcp':
-          path  => '/etc/libvirt/libvirtd.conf',
-          line  => "listen_tcp = ${listen_tcp}",
-          match => 'listen_tcp =',
-          tag   => 'libvirt-file_line',
-        }
-
-        if $transport_real == 'tls' {
-          file_line { '/etc/libvirt/libvirtd.conf auth_tls':
-            path  => '/etc/libvirt/libvirtd.conf',
-            line  => "auth_tls = \"${auth}\"",
-            match => 'auth_tls =',
-            tag   => 'libvirt-file_line',
-          }
-        } elsif $transport_real == 'tcp' {
-          file_line { '/etc/libvirt/libvirtd.conf auth_tcp':
-            path  => '/etc/libvirt/libvirtd.conf',
-            line  => "auth_tcp = \"${auth}\"",
-            match => 'auth_tcp =',
-            tag   => 'libvirt-file_line',
-          }
-        }
-
-        if $listen_address {
-          file_line { '/etc/libvirt/libvirtd.conf listen_address':
-            path  => '/etc/libvirt/libvirtd.conf',
-            line  => "listen_addr = \"${listen_address}\"",
-            match => 'listen_addr =',
-            tag   => 'libvirt-file_line',
-          }
-        }
-
         if $transport_real != 'ssh' {
           file_line { '/etc/sysconfig/libvirtd libvirtd args':
             path  => '/etc/sysconfig/libvirtd',
@@ -255,45 +241,6 @@ class nova::migration::libvirt(
       }
 
       'Debian': {
-        file_line { '/etc/libvirt/libvirtd.conf listen_tls':
-          path  => '/etc/libvirt/libvirtd.conf',
-          line  => "listen_tls = ${listen_tls}",
-          match => 'listen_tls =',
-          tag   => 'libvirt-file_line',
-        }
-
-        file_line { '/etc/libvirt/libvirtd.conf listen_tcp':
-          path  => '/etc/libvirt/libvirtd.conf',
-          line  => "listen_tcp = ${listen_tcp}",
-          match => 'listen_tcp =',
-          tag   => 'libvirt-file_line',
-        }
-
-        if $transport_real == 'tls' {
-          file_line { '/etc/libvirt/libvirtd.conf auth_tls':
-            path  => '/etc/libvirt/libvirtd.conf',
-            line  => "auth_tls = \"${auth}\"",
-            match => 'auth_tls =',
-            tag   => 'libvirt-file_line',
-          }
-        } elsif $transport_real == 'tcp' {
-          file_line { '/etc/libvirt/libvirtd.conf auth_tcp':
-            path  => '/etc/libvirt/libvirtd.conf',
-            line  => "auth_tcp = \"${auth}\"",
-            match => 'auth_tcp =',
-            tag   => 'libvirt-file_line',
-          }
-        }
-
-        if $listen_address {
-          file_line { '/etc/libvirt/libvirtd.conf listen_address':
-            path  => '/etc/libvirt/libvirtd.conf',
-            line  => "listen_addr = \"${listen_address}\"",
-            match => 'listen_addr =',
-            tag   => 'libvirt-file_line',
-          }
-        }
-
         if $transport_real != 'ssh' {
           if $::operatingsystem == 'Ubuntu' and versioncmp($::operatingsystemmajrelease, '16') >= 0 {
             # If systemd is being used then libvirtd is already being launched correctly and
