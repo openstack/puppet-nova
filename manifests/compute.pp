@@ -249,7 +249,7 @@ is used. It will be removed once Nova removes it.")
     'DEFAULT/reserved_host_memory_mb':           value => $reserved_host_memory;
     'DEFAULT/compute_manager':                   value => $compute_manager;
     'DEFAULT/heal_instance_info_cache_interval': value => $heal_instance_info_cache_interval;
-    'DEFAULT/pci_passthrough_whitelist':         value => $pci_passthrough_real;
+    'pci/passthrough_whitelist':                 value => $pci_passthrough_real;
     'DEFAULT/resize_confirm_window':             value => $resize_confirm_window;
     'DEFAULT/vcpu_pin_set':                      value => $vcpu_pin_set_real;
     'DEFAULT/resume_guests_state_on_host_boot':  value => $resume_guests_state_on_host_boot;

@@ -1,0 +1,9 @@
+---
+fixes:
+  - |
+    PCI configuration options name should be same as mentioned in nova
+    configuration file, since these are moved to PCI section.
+    Options affected by this change:
+
+    * ``pci_alias`` to ``alias``
+    * ``pci_passthrough_whitelist`` to ``passthrough_whitelist``
