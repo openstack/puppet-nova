@@ -16,14 +16,6 @@
 #   (optional) Ram in MB
 #   Defaults to 51200
 #
-# [*quota_volumes*]
-#   (optional) Deprecated. This parameter does nothing and will be removed.
-#   Defaults to undef
-#
-# [*quota_gigabytes*]
-#   (optional) Deprecated. This parameter does nothing and will be removed.
-#   Defaults to undef
-#
 # [*quota_floating_ips*]
 #   (optional) Number of floating IPs
 #   Defaults to 10
@@ -36,18 +28,6 @@
 #   (optional) Number of metadata items per instance
 #   Defaults to 128
 #
-# [*quota_max_injected_files*]
-#   (optional) Deprecated. Use quota_injected_files instead
-#   Defaults to undef
-#
-# [*quota_max_injected_file_content_bytes*]
-#   (optional) Deprecated. Use quota_injected_file_content_bytes instead
-#   Defaults to undef
-#
-# [*quota_max_injected_file_path_bytes*]
-#   (optional) Deprecated. Use quota_injected_file_path_bytes instead
-#   Defaults to undef
-#
 # [*quota_injected_files*]
 #   (optional) Number of files that can be injected per instance
 #   Defaults to 5
@@ -56,9 +36,6 @@
 #   (optional) Maximum size in bytes of injected files
 #   Defaults to 10240
 #
-# [*quota_injected_file_path_bytes*]
-#   (optional) Deprecated. Use quota_injected_file_path_length instead
-#   Defaults to undef
 #
 # [*quota_injected_file_path_length*]
 #   (optional) Maximum size in bytes of injected file path
@@ -96,9 +73,6 @@
 #   (optional) Number of seconds between subsequent usage refreshes
 #   Defaults to 0
 #
-# [*quota_driver*]
-#   (optional) Deprecated. Driver to use for quota checks
-#   Defaults to undef
 #
 class nova::quota(
   $quota_instances = 10,
@@ -118,53 +92,9 @@ class nova::quota(
   $reservation_expire = 86400,
   $until_refresh = 0,
   $max_age = 0,
-  # DEPRECATED PARAMETERS
-  $quota_volumes = undef,
-  $quota_gigabytes = undef,
-  $quota_max_injected_files = undef,
-  $quota_injected_file_path_bytes = undef,
-  $quota_max_injected_file_content_bytes = undef,
-  $quota_max_injected_file_path_bytes = undef,
-  $quota_driver = undef,
 ) {
   include ::nova::deps
 
-  if $quota_volumes {
-    warning('The quota_volumes parameter is deprecated and has no effect.')
-  }
-
-  if $quota_gigabytes {
-    warning('The quota_gigabytes parameter is deprecated and has no effect.')
-  }
-
-  if $quota_driver {
-    warning('The quota_driver parameter is deprecated and has no effect.')
-  }
-
-  if $quota_max_injected_files {
-    warning('The quota_max_injected_files parameter is deprecated, use quota_injected_files instead.')
-    $quota_injected_files_real = $quota_max_injected_files
-  } else {
-    $quota_injected_files_real = $quota_injected_files
-  }
-
-  if $quota_max_injected_file_content_bytes {
-    warning('The quota_max_injected_file_content_bytes is deprecated, use quota_injected_file_content_bytes instead.')
-    $quota_injected_file_content_bytes_real = $quota_max_injected_file_content_bytes
-  } else {
-    $quota_injected_file_content_bytes_real = $quota_injected_file_content_bytes
-  }
-
-  if $quota_max_injected_file_path_bytes {
-    fail('The quota_max_injected_file_path_bytes parameter is deprecated, use quota_injected_file_path_length instead.')
-  }
-
-  if $quota_injected_file_path_bytes {
-    warning('The quota_injected_file_path_bytes parameter is deprecated, use quota_injected_file_path_length instead.')
-    $quota_injected_file_path_length_real = $quota_injected_file_path_bytes
-  } else {
-    $quota_injected_file_path_length_real = $quota_injected_file_path_length
-  }
 
   nova_config {
     'DEFAULT/quota_instances':                   value => $quota_instances;
@@ -173,9 +103,9 @@ class nova::quota(
     'DEFAULT/quota_floating_ips':                value => $quota_floating_ips;
     'DEFAULT/quota_fixed_ips':                   value => $quota_fixed_ips;
     'DEFAULT/quota_metadata_items':              value => $quota_metadata_items;
-    'DEFAULT/quota_injected_files':              value => $quota_injected_files_real;
-    'DEFAULT/quota_injected_file_content_bytes': value => $quota_injected_file_content_bytes_real;
-    'DEFAULT/quota_injected_file_path_length':   value => $quota_injected_file_path_length_real;
+    'DEFAULT/quota_injected_files':              value => $quota_injected_files;
+    'DEFAULT/quota_injected_file_content_bytes': value => $quota_injected_file_content_bytes;
+    'DEFAULT/quota_injected_file_path_length':   value => $quota_injected_file_path_length;
     'DEFAULT/quota_security_groups':             value => $quota_security_groups;
     'DEFAULT/quota_security_group_rules':        value => $quota_security_group_rules;
     'DEFAULT/quota_key_pairs':                   value => $quota_key_pairs;
