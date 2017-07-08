@@ -131,7 +131,7 @@ describe 'nova::compute' do
       it { is_expected.to contain_nova_config('DEFAULT/resume_guests_state_on_host_boot').with_value(true) }
 
       it 'configures nova pci_passthrough_whitelist entries' do
-        is_expected.to contain_nova_config('pci/pci_passthrough_whitelist').with(
+        is_expected.to contain_nova_config('pci/passthrough_whitelist').with(
           'value' => "[{\"vendor_id\":\"8086\",\"product_id\":\"0126\"},{\"vendor_id\":\"9096\",\"product_id\":\"1520\",\"physical_network\":\"physnet1\"}]"
         )
       end
@@ -155,7 +155,7 @@ describe 'nova::compute' do
         is_expected.to contain_nova_config('DEFAULT/vcpu_pin_set').with(:value => '<SERVICE DEFAULT>')
       end
       it 'clears pci_passthrough configuration' do
-        is_expected.to contain_nova_config('pci/pci_passthrough_whitelist').with(:value => '<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('pci/passthrough_whitelist').with(:value => '<SERVICE DEFAULT>')
       end
     end
 
