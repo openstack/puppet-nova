@@ -1,0 +1,4 @@
+---
+upgrade:
+  - Removed nova-objectstore service config options, this service has been remove since Mitaka.
+
