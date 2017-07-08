@@ -15,10 +15,6 @@ describe 'nova::ironic::common' do
         is_expected.to contain_nova_config('ironic/api_max_retries').with('value' => '<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('ironic/api_retry_interval').with('value' => '<SERVICE DEFAULT>')
 
-        is_expected.to contain_nova_config('ironic/admin_username').with_value('admin')
-        is_expected.to contain_nova_config('ironic/admin_password').with_value('ironic')
-        is_expected.to contain_nova_config('ironic/admin_url').with_value('http://127.0.0.1:35357/')
-        is_expected.to contain_nova_config('ironic/admin_tenant_name').with_value('services')
       end
     end
 
@@ -45,35 +41,19 @@ describe 'nova::ironic::common' do
         is_expected.to contain_nova_config('ironic/api_max_retries').with('value' => '60')
         is_expected.to contain_nova_config('ironic/api_retry_interval').with('value' => '2')
 
-        is_expected.to contain_nova_config('ironic/admin_username').with_value('ironic')
-        is_expected.to contain_nova_config('ironic/admin_password').with_value('s3cr3t')
-        is_expected.to contain_nova_config('ironic/admin_url').with_value('http://10.0.0.10:35357/')
-        is_expected.to contain_nova_config('ironic/admin_tenant_name').with_value('services2')
       end
     end
 
     context 'with deprecated parameters' do
       let :params do
         {
-          :admin_username    => 'ironic',
-          :admin_password    => 's3cr3t',
-          :admin_url         => 'http://10.0.0.10:35357/v2.0',
-          :admin_tenant_name => 'services2',
           :api_endpoint      => 'http://10.0.0.10:6385/v1',
         }
       end
 
       it 'configures ironic in nova.conf' do
-        is_expected.to contain_nova_config('ironic/username').with_value('ironic')
-        is_expected.to contain_nova_config('ironic/password').with_value('s3cr3t')
-        is_expected.to contain_nova_config('ironic/auth_url').with_value('http://10.0.0.10:35357/v2.0')
-        is_expected.to contain_nova_config('ironic/project_name').with_value('services2')
         is_expected.to contain_nova_config('ironic/api_endpoint').with_value('http://10.0.0.10:6385/v1')
 
-        is_expected.to contain_nova_config('ironic/admin_username').with_value('ironic')
-        is_expected.to contain_nova_config('ironic/admin_password').with_value('s3cr3t')
-        is_expected.to contain_nova_config('ironic/admin_url').with_value('http://10.0.0.10:35357/v2.0')
-        is_expected.to contain_nova_config('ironic/admin_tenant_name').with_value('services2')
       end
     end
   end

@@ -57,55 +57,20 @@ class nova::ironic::common (
   $username             = 'admin',
   $api_max_retries      = $::os_service_default,
   $api_retry_interval   = $::os_service_default,
-  # DEPRECATED
-  $admin_username       = undef,
-  $admin_password       = undef,
-  $admin_tenant_name    = undef,
-  $admin_url            = undef,
 ) {
 
   include ::nova::deps
 
-  if ($admin_username) {
-    warning('nova::ironic::common::admin_username is deprecated. Please use username')
-  }
-
-  if ($admin_password) {
-    warning('nova::ironic::common::admin_password is deprecated. Please use password')
-  }
-
-  if ($admin_tenant_name) {
-    warning('nova::ironic::common::admin_tenant_name is deprecated. Please use project_name')
-  }
-
-  if ($admin_url) {
-    warning('nova::ironic::common::admin_url is deprecated. Please use auth_url')
-  }
-
-
-
-  $username_real = pick($admin_username, $username)
-  $password_real = pick($admin_password, $password)
-  $auth_url_real = pick($admin_url, $auth_url)
-  $project_name_real = pick($admin_tenant_name, $project_name)
-
 
   nova_config {
     'ironic/auth_plugin':          value => $auth_plugin;
-    'ironic/username':             value => $username_real;
-    'ironic/password':             value => $password_real;
-    'ironic/auth_url':             value => $auth_url_real;
-    'ironic/project_name':         value => $project_name_real;
+    'ironic/username':             value => $username;
+    'ironic/password':             value => $password;
+    'ironic/auth_url':             value => $auth_url;
+    'ironic/project_name':         value => $project_name;
     'ironic/api_endpoint':         value => $api_endpoint;
     'ironic/api_max_retries':      value => $api_max_retries;
     'ironic/api_retry_interval':   value => $api_retry_interval;
   }
 
-  # TODO(aschultz): these are deprecated, remove in P
-  nova_config {
-    'ironic/admin_username':    value => $username_real;
-    'ironic/admin_password':    value => $password_real;
-    'ironic/admin_url':         value => $auth_url_real;
-    'ironic/admin_tenant_name': value => $project_name_real;
-  }
 }

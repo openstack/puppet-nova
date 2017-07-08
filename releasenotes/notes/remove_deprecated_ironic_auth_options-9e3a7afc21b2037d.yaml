@@ -1,0 +1,3 @@
+---
+upgrade:
+  - Removes Ironic deprecated admin_* authtoken options.
