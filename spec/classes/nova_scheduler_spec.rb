@@ -20,7 +20,6 @@ describe 'nova::scheduler' do
       :ensure    => 'running'
     )}
 
-    it { is_expected.to contain_nova_config('DEFAULT/scheduler_driver').with_ensure('absent') }
     it { is_expected.to contain_nova_config('scheduler/driver').with_value('filter_scheduler') }
     it { is_expected.to contain_nova_config('scheduler/discover_hosts_in_cells_interval').with_value('<SERVICE DEFAULT>') }
 

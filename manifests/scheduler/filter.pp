@@ -215,20 +215,4 @@ class nova::scheduler::filter (
       value => $aggregate_image_properties_isolation_separator;
   }
 
-  # TODO(aschultz): old options, remove in P
-  nova_config {
-    'DEFAULT/scheduler_host_manager':              ensure => 'absent';
-    'DEFAULT/scheduler_max_attempts':              ensure => 'absent';
-    'DEFAULT/scheduler_host_subset_size':          ensure => 'absent';
-    'DEFAULT/max_io_ops_per_host':                 ensure => 'absent';
-    'DEFAULT/max_instances_per_host':              ensure => 'absent';
-    'DEFAULT/scheduler_available_filters':         ensure => 'absent';
-    'DEFAULT/scheduler_weight_classes':            ensure => 'absent';
-    'DEFAULT/scheduler_use_baremetal_filters':     ensure => 'absent';
-    'DEFAULT/scheduler_default_filters':           ensure => 'absent';
-    'DEFAULT/baremetal_scheduler_default_filters': ensure => 'absent';
-    'DEFAULT/isolated_images':                     ensure => 'absent';
-    'DEFAULT/isolated_hosts':                      ensure => 'absent';
-  }
-
 }

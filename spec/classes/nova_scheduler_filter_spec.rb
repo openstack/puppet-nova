@@ -32,18 +32,6 @@ describe 'nova::scheduler::filter' do
       it { is_expected.to contain_nova_config('filter_scheduler/aggregate_image_properties_isolation_namespace').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('filter_scheduler/aggregate_image_properties_isolation_separator').with_value('<SERVICE DEFAULT>') }
 
-      it { is_expected.to contain_nova_config('DEFAULT/scheduler_host_manager').with_ensure('absent') }
-      it { is_expected.to contain_nova_config('DEFAULT/scheduler_max_attempts').with_ensure('absent') }
-      it { is_expected.to contain_nova_config('DEFAULT/scheduler_host_subset_size').with_ensure('absent') }
-      it { is_expected.to contain_nova_config('DEFAULT/max_io_ops_per_host').with_ensure('absent') }
-      it { is_expected.to contain_nova_config('DEFAULT/max_instances_per_host').with_ensure('absent') }
-      it { is_expected.to contain_nova_config('DEFAULT/scheduler_available_filters').with_ensure('absent') }
-      it { is_expected.to contain_nova_config('DEFAULT/scheduler_weight_classes').with_ensure('absent') }
-      it { is_expected.to contain_nova_config('DEFAULT/scheduler_use_baremetal_filters').with_ensure('absent') }
-      it { is_expected.to contain_nova_config('DEFAULT/isolated_images').with_ensure('absent') }
-      it { is_expected.to contain_nova_config('DEFAULT/isolated_hosts').with_ensure('absent') }
-      it { is_expected.to contain_nova_config('DEFAULT/scheduler_default_filters').with_ensure('absent') }
-      it { is_expected.to contain_nova_config('DEFAULT/baremetal_scheduler_default_filters').with_ensure('absent') }
     end
 
     context 'when overriding params with non-empty arrays' do

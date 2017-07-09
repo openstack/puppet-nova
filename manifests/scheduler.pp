@@ -50,8 +50,4 @@ class nova::scheduler(
     'scheduler/discover_hosts_in_cells_interval': value => $discover_hosts_in_cells_interval;
   }
 
-  # TODO(aschultz): old options, remove in P
-  nova_config {
-    'DEFAULT/scheduler_driver': ensure => 'absent';
-  }
 }
