@@ -140,12 +140,6 @@ class nova::network::neutron (
   $vif_plugging_timeout            = '300',
   $dhcp_domain                     = 'novalocal',
   $default_floating_pool           = 'nova',
-  # DEPRECATED PARAMETERS
-  $neutron_admin_password          = false,
-  $neutron_auth_strategy           = undef,
-  $neutron_admin_tenant_name       = undef,
-  $neutron_admin_username          = undef,
-  $neutron_admin_auth_url          = undef,
   $neutron_default_tenant_id       = undef,
   $neutron_auth_plugin             = undef,
   $neutron_ca_certificates_file    = undef,
@@ -153,67 +147,6 @@ class nova::network::neutron (
 
   include ::nova::deps
 
-  # neutron_admin params removed in Mitaka
-  if $neutron_password {
-    $neutron_password_real = $neutron_password
-  } else {
-    if $neutron_admin_password {
-      warning('neutron_admin_password is deprecated. Use neutron_password')
-      $neutron_password_real = $neutron_admin_password
-    } else {
-      fail('neutron_password is required')
-    }
-  }
-
-  # neutron_auth_plugin deprecated in Newton
-  if $neutron_auth_plugin {
-    warning('neutron_auth_plugin parameter is deprecated and will be removed in a future release, use neutron_auth_type instead.')
-    $neutron_auth_type_real = $neutron_auth_plugin
-  } else {
-    $neutron_auth_type_real = $neutron_auth_type
-  }
-
-  if $neutron_admin_tenant_name {
-    warning('neutron_admin_tenant_name is deprecated. Use neutron_project_name')
-    $neutron_project_name_real = $neutron_admin_tenant_name
-  } else {
-    $neutron_project_name_real = $neutron_project_name
-  }
-
-  if $neutron_admin_username {
-    warning('neutron_admin_username is deprecated. Use neutron_username')
-    $neutron_username_real = $neutron_admin_username
-  } else {
-    $neutron_username_real = $neutron_username
-  }
-
-  if $neutron_admin_auth_url {
-    warning('neutron_admin_auth_url is deprecated. Use neutron_auth_url')
-    $neutron_auth_url_real = $neutron_admin_auth_url
-  } else {
-    $neutron_auth_url_real = $neutron_auth_url
-  }
-
-  # neutron_auth_strategy removed in Mitaka
-  if $neutron_auth_strategy {
-    warning('neutron_auth_strategy is deprecated')
-  }
-  nova_config {
-    'neutron/auth_strategy': ensure => absent;
-  }
-
-  # neutron_default_tenant_id removed in Mitaka
-  # the parameter is deprecated but still can be used if needed
-  if $neutron_default_tenant_id {
-    warning('neutron_default_tenant_id is deprecated')
-    nova_config {
-      'neutron/default_tenant_id': value => $neutron_default_tenant_id;
-    }
-  } else {
-    nova_config {
-      'neutron/default_tenant_id': ensure => absent;
-    }
-  }
 
   $default_floating_pool_real = pick($::nova::api::default_floating_pool, $default_floating_pool)
 
@@ -225,20 +158,16 @@ class nova::network::neutron (
     'neutron/default_floating_pool':   value => $default_floating_pool_real;
     'neutron/url':                     value => $neutron_url;
     'neutron/timeout':                 value => $neutron_url_timeout;
-    'neutron/project_name':            value => $neutron_project_name_real;
+    'neutron/project_name':            value => $neutron_project_name;
     'neutron/project_domain_name':     value => $neutron_project_domain_name;
     'neutron/region_name':             value => $neutron_region_name;
-    'neutron/username':                value => $neutron_username_real;
+    'neutron/username':                value => $neutron_username;
     'neutron/user_domain_name':        value => $neutron_user_domain_name;
-    'neutron/password':                value => $neutron_password_real, secret => true;
-    'neutron/auth_url':                value => $neutron_auth_url_real;
+    'neutron/password':                value => $neutron_password, secret => true;
+    'neutron/auth_url':                value => $neutron_auth_url;
     'neutron/ovs_bridge':              value => $neutron_ovs_bridge;
     'neutron/extension_sync_interval': value => $neutron_extension_sync_interval;
-    'neutron/auth_type':               value => $neutron_auth_type_real;
-  }
-
-  if $neutron_ca_certificates_file {
-    warning('neutron_ca_certificates_file parameter is deprecated, has no effect and will be dropped in a future release.')
+    'neutron/auth_type':               value => $neutron_auth_type;
   }
 
 }

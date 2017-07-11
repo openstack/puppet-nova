@@ -1,0 +1,3 @@
+---
+upgrade:
+  - Removes deprecated Neutron "neutron_admin_*" auth options.
