@@ -1,0 +1,11 @@
+---
+upgrade:
+  - Previous deprecated quota options
+    ''quota_volumes''
+    ''quota_gigabytes''
+    ''quota_max_injected_files''
+    ''quota_injected_file_path_bytes''
+    ''quota_max_injected_file_content_bytes''
+    ''quota_max_injected_file_path_bytes''
+    ''quota_driver''
+    are removed for now, these options deprecated since 2014.

@@ -68,21 +68,6 @@ describe 'nova::quota' do
     it_configures 'nova quota'
   end
 
-  context 'with deprecated parameters' do
-    let :params do {
-        :quota_max_injected_files => 10,
-        :quota_max_injected_file_content_bytes => 20480,
-        :quota_injected_file_path_bytes => 254
-      }
-    end
-
-    it {
-      is_expected.to contain_nova_config('DEFAULT/quota_injected_files').with_value('10')
-      is_expected.to contain_nova_config('DEFAULT/quota_injected_file_content_bytes').with_value('20480')
-      is_expected.to contain_nova_config('DEFAULT/quota_injected_file_path_length').with_value('254')
-    }
-  end
-
   it { is_expected.to contain_nova_config('DEFAULT/quota_ram').with_value('51200') }
 
   describe 'when overriding params' do
