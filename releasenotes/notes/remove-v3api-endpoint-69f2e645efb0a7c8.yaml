@@ -1,0 +1,3 @@
+---
+upgrade:
+  - Remove Nova API v3 endpoint options which deprecated before Newton.
