@@ -1,32 +1,8 @@
 require 'spec_helper'
 
 describe 'nova::wsgi::apache_api' do
-
-  let :global_facts do
-    @default_facts.merge({
-      :processorcount => 42,
-      :concat_basedir => '/var/lib/puppet/concat',
-      :fqdn           => 'some.host.tld'
-    })
-  end
-
- let :pre_condition do
-   "include nova
-    class { '::nova::keystone::authtoken':
-      password => 'secrete',
-    }
-    class { '::nova::api':
-      service_name   => 'httpd',
-    }"
- end
-
   shared_examples_for 'apache serving nova with mod_wsgi' do
-    it { is_expected.to contain_service('httpd').with_name(platform_params[:httpd_service_name]) }
-    it { is_expected.to contain_class('nova::params') }
-    it { is_expected.to contain_class('apache') }
-    it { is_expected.to contain_class('apache::mod::wsgi') }
-
-    describe 'with default parameters' do
+    context 'with default parameters' do
 
       let :pre_condition do
         "include nova
@@ -37,61 +13,28 @@ describe 'nova::wsgi::apache_api' do
            service_name   => 'httpd',
          }"
       end
-
-      it { is_expected.to contain_file("#{platform_params[:wsgi_script_path]}").with(
-        'ensure'  => 'directory',
-        'owner'   => 'nova',
-        'group'   => 'nova',
-        'require' => 'Package[httpd]'
+      it { is_expected.to contain_class('nova::params') }
+      it { is_expected.to contain_class('apache') }
+      it { is_expected.to contain_class('apache::mod::wsgi') }
+      it { is_expected.to contain_class('apache::mod::ssl') }
+      it { is_expected.to contain_openstacklib__wsgi__apache('nova_api_wsgi').with(
+        :bind_port           => 8774,
+        :group               => 'nova',
+        :path                => '/',
+        :servername          => facts[:fqdn],
+        :ssl                 => true,
+        :threads             => facts[:os_workers],
+        :user                => 'nova',
+        :workers             => 1,
+        :wsgi_daemon_process => 'nova-api',
+        :wsgi_process_group  => 'nova-api',
+        :wsgi_script_dir     => platform_params[:wsgi_script_path],
+        :wsgi_script_file    => 'nova-api',
+        :wsgi_script_source  => platform_params[:api_wsgi_script_source],
       )}
-
-
-      it { is_expected.to contain_file('nova_api_wsgi').with(
-        'ensure'  => 'file',
-        'path'    => "#{platform_params[:wsgi_script_path]}/nova-api",
-        'source'  => platform_params[:api_wsgi_script_source],
-        'owner'   => 'nova',
-        'group'   => 'nova',
-        'mode'    => '0644'
-      )}
-      it { is_expected.to contain_file('nova_api_wsgi').that_requires("File[#{platform_params[:wsgi_script_path]}]") }
-
-      it { is_expected.to contain_apache__vhost('nova_api_wsgi').with(
-        'servername'                  => 'some.host.tld',
-        'ip'                          => nil,
-        'port'                        => '8774',
-        'docroot'                     => "#{platform_params[:wsgi_script_path]}",
-        'docroot_owner'               => 'nova',
-        'docroot_group'               => 'nova',
-        'ssl'                         => 'true',
-        'wsgi_daemon_process'         => 'nova-api',
-        'wsgi_daemon_process_options' => {
-          'user'         => 'nova',
-          'group'        => 'nova',
-          'processes'    => 1,
-          'threads'      => '42',
-          'display-name' => 'nova_api_wsgi',
-        },
-        'wsgi_process_group'          => 'nova-api',
-        'wsgi_script_aliases'         => { '/' => "#{platform_params[:wsgi_script_path]}/nova-api" },
-        'require'                     => 'File[nova_api_wsgi]'
-      )}
-      it { is_expected.to contain_concat("#{platform_params[:httpd_ports_file]}") }
-
-      it { is_expected.to contain_file('nova_api_wsgi').with(
-        'ensure'  => 'file',
-        'path'    => "#{platform_params[:wsgi_script_path]}/nova-api",
-        'source'  => platform_params[:api_wsgi_script_source],
-        'owner'   => 'nova',
-        'group'   => 'nova',
-        'mode'    => '0644'
-      )}
-      it { is_expected.to contain_file('nova_api_wsgi').that_requires("File[#{platform_params[:wsgi_script_path]}]") }
-
-      it { is_expected.to contain_concat("#{platform_params[:httpd_ports_file]}") }
     end
 
-    describe 'when overriding parameters using different ports' do
+    context 'when overriding parameters using different ports' do
       let :pre_condition do
         "include nova
          class { '::nova::keystone::authtoken':
@@ -113,29 +56,30 @@ describe 'nova::wsgi::apache_api' do
         }
       end
 
-      it { is_expected.to contain_apache__vhost('nova_api_wsgi').with(
-        'servername'                  => 'dummy.host',
-        'ip'                          => '10.42.51.1',
-        'port'                        => '12345',
-        'docroot'                     => "#{platform_params[:wsgi_script_path]}",
-        'docroot_owner'               => 'nova',
-        'docroot_group'               => 'nova',
-        'ssl'                         => 'false',
-        'wsgi_daemon_process'         => 'nova-api',
-        'wsgi_daemon_process_options' => {
-          'user'         => 'nova',
-          'group'        => 'nova',
-          'processes'    => 37,
-          'threads'      => '42',
-          'display-name' => 'nova-api',
-        },
-        'wsgi_process_group'          => 'nova-api',
-        'wsgi_script_aliases'         => { '/' => "#{platform_params[:wsgi_script_path]}/nova-api" },
-        'require'                     => 'File[nova_api_wsgi]'
+      it { is_expected.to contain_class('nova::params') }
+      it { is_expected.to contain_class('apache') }
+      it { is_expected.to contain_class('apache::mod::wsgi') }
+      it { is_expected.to_not contain_class('apache::mod::ssl') }
+      it { is_expected.to contain_openstacklib__wsgi__apache('nova_api_wsgi').with(
+        :bind_host                 => '10.42.51.1',
+        :bind_port                 => 12345,
+        :group                     => 'nova',
+        :path                      => '/',
+        :servername                => 'dummy.host',
+        :ssl                       => false,
+        :threads                   => facts[:os_workers],
+        :user                      => 'nova',
+        :workers                   => 37,
+        :wsgi_daemon_process       => 'nova-api',
+        :wsgi_process_display_name => 'nova-api',
+        :wsgi_process_group        => 'nova-api',
+        :wsgi_script_dir           => platform_params[:wsgi_script_path],
+        :wsgi_script_file          => 'nova-api',
+        :wsgi_script_source        => platform_params[:api_wsgi_script_source],
       )}
     end
 
-    describe 'when ::nova::api is missing in the composition layer' do
+    context 'when ::nova::api is missing in the composition layer' do
 
       let :pre_condition do
         "include nova"

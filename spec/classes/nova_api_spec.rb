@@ -196,17 +196,11 @@ describe 'nova::api' do
           :validate => true,
         })
       end
-      it { is_expected.to contain_exec('execute nova-api validation').with(
-        :path      => '/usr/bin:/bin:/usr/sbin:/sbin',
-        :provider  => 'shell',
-        :tries     => '10',
-        :try_sleep => '2',
+      it { is_expected.to contain_openstacklib__service_validation('nova-api').with(
         :command   => 'nova --os-auth-url http://127.0.0.1:5000/ --os-project-name services --os-username nova --os-password passw0rd flavor-list',
+        :subscribe => 'Service[nova-api]',
       )}
 
-      it { is_expected.to contain_anchor('create nova-api anchor').with(
-        :require => 'Exec[execute nova-api validation]',
-      )}
     end
 
     context 'while validating the service with custom command' do
@@ -216,16 +210,9 @@ describe 'nova::api' do
           :validation_options  => { 'nova-api' => { 'command' => 'my-script' } }
         })
       end
-      it { is_expected.to contain_exec('execute nova-api validation').with(
-        :path      => '/usr/bin:/bin:/usr/sbin:/sbin',
-        :provider  => 'shell',
-        :tries     => '10',
-        :try_sleep => '2',
+      it { is_expected.to contain_openstacklib__service_validation('nova-api').with(
         :command   => 'my-script',
-      )}
-
-      it { is_expected.to contain_anchor('create nova-api anchor').with(
-        :require => 'Exec[execute nova-api validation]',
+        :subscribe => 'Service[nova-api]',
       )}
     end
 
