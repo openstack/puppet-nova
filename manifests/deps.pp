@@ -82,8 +82,8 @@ class nova::deps {
   # Wedge this in after the db creation and before the services
   anchor { 'nova::dbsync_api::begin':
     subscribe => Anchor['nova::db::end']
-  } ->
-  anchor { 'nova::dbsync_api::end':
+  }
+  -> anchor { 'nova::dbsync_api::end':
     notify => Anchor['nova::service::begin'],
   }
 
@@ -93,8 +93,8 @@ class nova::deps {
       Anchor['nova::db::end'],
       Anchor['nova::dbsync_api::end']
     ]
-  } ->
-  anchor { 'nova::dbsync::end':
+  }
+  -> anchor { 'nova::dbsync::end':
     notify => Anchor['nova::service::begin']
   }
 
@@ -102,17 +102,17 @@ class nova::deps {
   # be overridden using the spaceship operator to move it around when needed
   anchor { 'nova::cell_v2::begin':
     subscribe => Anchor['nova::dbsync_api::end']
-  } ->
-  Nova::Cell_v2::Cell<||> ~>
-  anchor { 'nova::cell_v2::end':
+  }
+  -> Nova::Cell_v2::Cell<||>
+  ~> anchor { 'nova::cell_v2::end':
     notify => Anchor['nova::dbsync::begin']
   }
 
   # Wedge online data migrations after db/api_sync and before service
   anchor { 'nova::db_online_data_migrations::begin':
     subscribe => Anchor['nova::dbsync_api::end']
-  } ->
-  anchor { 'nova::db_online_data_migrations::end':
+  }
+  -> anchor { 'nova::db_online_data_migrations::end':
     notify => Anchor['nova::service::begin']
   }
 }
