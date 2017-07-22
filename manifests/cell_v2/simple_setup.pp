@@ -49,8 +49,8 @@ class nova::cell_v2::simple_setup (
 
   include ::nova::cell_v2::discover_hosts
 
-  Class['nova::cell_v2::map_cell0'] ->
-    Nova_cell_v2 <| |> ~>
-      Class['nova::cell_v2::discover_hosts']
+  Class['nova::cell_v2::map_cell0']
+    -> Nova_cell_v2 <| |>
+      ~> Class['nova::cell_v2::discover_hosts']
 
 }

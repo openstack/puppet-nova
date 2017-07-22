@@ -122,9 +122,9 @@ class nova::wsgi::apache_placement (
   }
   # Ubuntu requires nova-placement-api to be installed before apache to find wsgi script
   Package<| title == 'nova-placement-api'|> -> Package<| title == 'httpd'|>
-  Package<| title == 'nova-placement-api' |> ->
-    File[$::nova::params::placement_httpd_config_file] ~>
-      Service['httpd']
+  Package<| title == 'nova-placement-api' |>
+    -> File[$::nova::params::placement_httpd_config_file]
+      ~> Service['httpd']
 
   ::openstacklib::wsgi::apache { 'placement_wsgi':
     bind_host                 => $bind_host,
