@@ -69,7 +69,7 @@ Puppet::Type.newtype(:nova_security_rule) do
       raise Puppet::Error, 'You should give the source port!'
     end
     validate do |value|
-      if value !~ /\d+/ or value.to_i <= 0 or value.to_i >= 65536
+      if value !~ /\d+/ or value.to_i <= -1 or value.to_i >= 65536
         raise Puppet::Error, 'Incorrect from port!'
       end
     end
@@ -80,7 +80,7 @@ Puppet::Type.newtype(:nova_security_rule) do
       raise Puppet::Error, 'You should give the destination port!'
     end
     validate do |value|
-      if value !~ /\d+/ or value.to_i <= 0 or value.to_i >= 65536
+      if value !~ /\d+/ or value.to_i <= -1 or value.to_i >= 65536
         raise Puppet::Error, 'Incorrect to port!'
       end
     end
@@ -131,6 +131,9 @@ Puppet::Type.newtype(:nova_security_rule) do
     end
     unless self[:from_port].to_i <= self[:to_port].to_i
       raise Puppet::Error, 'From_port should be lesser or equal to to_port!'
+    end
+    if self[:ip_protocol] != 'icmp' and (self[:from_port].to_i <= 0 || self[:to_port].to_i <= 0)
+      raise Puppet::Error, 'From_port and To_port should not be less than 0 unless IP protocol is ICMP'
     end
   end
 
