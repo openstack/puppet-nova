@@ -14,6 +14,15 @@ describe Puppet::Type.type(:nova_security_rule) do
     end
   end
 
+  it "should be able to create an instance with icmp" do
+    expect(described_class.new(:name => 'scr0',
+                               :ip_protocol => 'icmp',
+                               :from_port => -1,
+                               :to_port => -1,
+                               :ip_range => "0.0.0.0/0",
+                               :security_group => "scg0")).not_to be_nil
+  end
+
   it "should be able to create an instance with ip range" do
     expect(described_class.new(:name => 'scr0',
                                :ip_protocol => 'tcp',
