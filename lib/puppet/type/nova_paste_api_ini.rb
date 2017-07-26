@@ -3,7 +3,7 @@ Puppet::Type.newtype(:nova_paste_api_ini) do
   ensurable
 
   newparam(:name, :namevar => true) do
-    desc 'Section/setting name to manage from nova/paste-api.ini'
+    desc 'Section/setting name to manage from /etc/nova/api-paste.ini'
     newvalues(/\S+\/\S+/)
   end
 
