@@ -73,12 +73,6 @@
 #   option.
 #   Defaults to $::os_service_default
 #
-# [*rpc_backend*]
-#   (optional) The rpc backend implementation to use, can be:
-#     rabbit (for rabbitmq)
-#     zmq (for zeromq)
-#   Defaults to $::os_service_default
-#
 # [*image_service*]
 #   (optional) Service used to search for and retrieve images.
 #   Defaults to 'nova.image.glance.GlanceImageService'
@@ -435,6 +429,12 @@
 #   (optional) The RabbitMQ virtual host. (string value)
 #   Defaults to $::os_service_default
 #
+# [*rpc_backend*]
+#   (optional) The rpc backend implementation to use, can be:
+#     rabbit (for rabbitmq)
+#     zmq (for zeromq)
+#   Defaults to $::os_service_default
+#
 class nova(
   $ensure_package                         = 'present',
   $database_connection                    = undef,
@@ -454,7 +454,6 @@ class nova(
   $default_transport_url                  = $::os_service_default,
   $rpc_response_timeout                   = $::os_service_default,
   $control_exchange                       = $::os_service_default,
-  $rpc_backend                            = $::os_service_default,
   $image_service                          = 'nova.image.glance.GlanceImageService',
   # these glance params should be optional
   # this should probably just be configured as a glance client
@@ -534,6 +533,7 @@ class nova(
   $rabbit_port                            = $::os_service_default,
   $rabbit_userid                          = $::os_service_default,
   $rabbit_virtual_host                    = $::os_service_default,
+  $rpc_backend                            = $::os_service_default,
 ) inherits nova::params {
 
   include ::nova::deps
@@ -552,10 +552,12 @@ class nova(
     !is_service_default($rabbit_password) or
     !is_service_default($rabbit_port) or
     !is_service_default($rabbit_userid) or
-    !is_service_default($rabbit_virtual_host) {
+    !is_service_default($rabbit_virtual_host) or
+    !is_service_default($rpc_backend) {
     warning("nova::rabbit_host, nova::rabbit_hosts, nova::rabbit_password, \
-nova::rabbit_port, nova::rabbit_userid and nova::rabbit_virtual_host are \
-deprecated. Please use nova::default_transport_url instead.")
+nova::rabbit_port, nova::rabbit_userid, nova::rabbit_virtual_host and \
+nova::rpc_backend are deprecated. Please use  nova::default_transport_url \
+instead.")
   }
 
   if $use_ssl {
@@ -656,49 +658,43 @@ but should be one of: ssh-rsa, ssh-dsa, ssh-ecdsa.")
     'DEFAULT/disk_allocation_ratio': value => $disk_allocation_ratio;
   }
 
-  # we keep "nova.openstack.common.rpc.impl_kombu" for backward compatibility
-  # but since Icehouse, "rabbit" is enough.
-  if $rpc_backend in [$::os_service_default, 'nova.openstack.common.rpc.impl_kombu', 'rabbit'] {
-    oslo::messaging::rabbit {'nova_config':
-      rabbit_password             => $rabbit_password,
-      rabbit_userid               => $rabbit_userid,
-      rabbit_virtual_host         => $rabbit_virtual_host,
-      rabbit_use_ssl              => $rabbit_use_ssl,
-      heartbeat_timeout_threshold => $rabbit_heartbeat_timeout_threshold,
-      heartbeat_rate              => $rabbit_heartbeat_rate,
-      kombu_reconnect_delay       => $kombu_reconnect_delay,
-      amqp_durable_queues         => $amqp_durable_queues,
-      kombu_compression           => $kombu_compression,
-      kombu_ssl_ca_certs          => $kombu_ssl_ca_certs,
-      kombu_ssl_certfile          => $kombu_ssl_certfile,
-      kombu_ssl_keyfile           => $kombu_ssl_keyfile,
-      kombu_ssl_version           => $kombu_ssl_version,
-      rabbit_hosts                => $rabbit_hosts,
-      rabbit_host                 => $rabbit_host,
-      rabbit_port                 => $rabbit_port,
-      rabbit_ha_queues            => $rabbit_ha_queues,
-    }
-  } elsif $rpc_backend == 'amqp' {
-    oslo::messaging::amqp { 'nova_config':
-      server_request_prefix  => $amqp_server_request_prefix,
-      broadcast_prefix       => $amqp_broadcast_prefix,
-      group_request_prefix   => $amqp_group_request_prefix,
-      container_name         => $amqp_container_name,
-      idle_timeout           => $amqp_idle_timeout,
-      trace                  => $amqp_trace,
-      ssl_ca_file            => $amqp_ssl_ca_file,
-      ssl_cert_file          => $amqp_ssl_cert_file,
-      ssl_key_file           => $amqp_ssl_key_file,
-      ssl_key_password       => $amqp_ssl_key_password,
-      allow_insecure_clients => $amqp_allow_insecure_clients,
-      sasl_mechanisms        => $amqp_sasl_mechanisms,
-      sasl_config_dir        => $amqp_sasl_config_dir,
-      sasl_config_name       => $amqp_sasl_config_name,
-      username               => $amqp_username,
-      password               => $amqp_password,
-    }
-  } else {
-    nova_config { 'DEFAULT/rpc_backend': value => $rpc_backend }
+  oslo::messaging::rabbit {'nova_config':
+    rabbit_password             => $rabbit_password,
+    rabbit_userid               => $rabbit_userid,
+    rabbit_virtual_host         => $rabbit_virtual_host,
+    rabbit_use_ssl              => $rabbit_use_ssl,
+    heartbeat_timeout_threshold => $rabbit_heartbeat_timeout_threshold,
+    heartbeat_rate              => $rabbit_heartbeat_rate,
+    kombu_reconnect_delay       => $kombu_reconnect_delay,
+    amqp_durable_queues         => $amqp_durable_queues,
+    kombu_compression           => $kombu_compression,
+    kombu_ssl_ca_certs          => $kombu_ssl_ca_certs,
+    kombu_ssl_certfile          => $kombu_ssl_certfile,
+    kombu_ssl_keyfile           => $kombu_ssl_keyfile,
+    kombu_ssl_version           => $kombu_ssl_version,
+    rabbit_hosts                => $rabbit_hosts,
+    rabbit_host                 => $rabbit_host,
+    rabbit_port                 => $rabbit_port,
+    rabbit_ha_queues            => $rabbit_ha_queues,
+  }
+
+  oslo::messaging::amqp { 'nova_config':
+    server_request_prefix  => $amqp_server_request_prefix,
+    broadcast_prefix       => $amqp_broadcast_prefix,
+    group_request_prefix   => $amqp_group_request_prefix,
+    container_name         => $amqp_container_name,
+    idle_timeout           => $amqp_idle_timeout,
+    trace                  => $amqp_trace,
+    ssl_ca_file            => $amqp_ssl_ca_file,
+    ssl_cert_file          => $amqp_ssl_cert_file,
+    ssl_key_file           => $amqp_ssl_key_file,
+    ssl_key_password       => $amqp_ssl_key_password,
+    allow_insecure_clients => $amqp_allow_insecure_clients,
+    sasl_mechanisms        => $amqp_sasl_mechanisms,
+    sasl_config_dir        => $amqp_sasl_config_dir,
+    sasl_config_name       => $amqp_sasl_config_name,
+    username               => $amqp_username,
+    password               => $amqp_password,
   }
 
   # SSL Options
