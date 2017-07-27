@@ -27,7 +27,7 @@ describe Puppet::Type.type(:nova_security_rule) do
     expect(described_class.new(:name => 'scr0',
                                :ip_protocol => 'tcp',
                                :from_port => 22,
-                               :to_port => 23, 
+                               :to_port => 23,
                                :ip_range => "0.0.0.0/0",
                                :security_group => "scg0")).not_to be_nil
   end
@@ -36,7 +36,7 @@ describe Puppet::Type.type(:nova_security_rule) do
     expect(described_class.new(:name => 'scr0',
                                :ip_protocol => 'tcp',
                                :from_port => 22,
-                               :to_port => 23, 
+                               :to_port => 23,
                                :source_group => "tenant",
                                :security_group => "scg0")).not_to be_nil
   end
