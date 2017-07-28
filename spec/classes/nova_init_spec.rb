@@ -342,11 +342,7 @@ describe 'nova' do
       it { is_expected.to contain_nova_config('DEFAULT/rpc_backend').with_value('rabbit') }
     end
 
-    context 'with amqp rpc_backend default parameters' do
-      let :params do
-        { :rpc_backend => 'amqp' }
-      end
-
+    context 'with amqp default parameters' do
       it 'configures amqp' do
         is_expected.to contain_nova_config('oslo_messaging_amqp/server_request_prefix').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('oslo_messaging_amqp/broadcast_prefix').with_value('<SERVICE DEFAULT>')
@@ -367,10 +363,9 @@ describe 'nova' do
       end
     end
 
-    context 'with amqp rpc_backend overriden parameters' do
+    context 'with amqp overriden parameters' do
       let :params do
-        { :rpc_backend        => 'amqp',
-          :amqp_idle_timeout  => '60',
+        { :amqp_idle_timeout  => '60',
           :amqp_trace         => true,
           :amqp_ssl_ca_file   => '/etc/ca.cert',
           :amqp_ssl_cert_file => '/etc/certfile',
