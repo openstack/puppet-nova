@@ -29,14 +29,14 @@ describe 'basic nova' do
 
       # Nova resources
       class { '::nova':
-        database_connection     => 'mysql+pymysql://nova:a_big_secret@127.0.0.1/nova?charset=utf8',
-        api_database_connection => 'mysql+pymysql://nova_api:a_big_secret@127.0.0.1/nova_api?charset=utf8',
-        rabbit_userid           => 'nova',
-        rabbit_password         => 'an_even_bigger_secret',
-        image_service           => 'nova.image.glance.GlanceImageService',
-        glance_api_servers      => 'localhost:9292',
-        debug                   => true,
-        rabbit_host             => '127.0.0.1',
+        database_connection           => 'mysql+pymysql://nova:a_big_secret@127.0.0.1/nova?charset=utf8',
+        api_database_connection       => 'mysql+pymysql://nova_api:a_big_secret@127.0.0.1/nova_api?charset=utf8',
+        placement_database_connection => 'mysql+pymysql://nova_placement:a_big_secret@127.0.0.1/nova_placement?charset=utf8',
+        default_transport_url         => 'rabbit://nova:an_even_bigger_secret@127.0.0.1:5672/',
+        image_service                 => 'nova.image.glance.GlanceImageService',
+        glance_api_servers            => 'localhost:9292',
+        debug                         => true,
+        rabbit_host                   => '127.0.0.1',
       }
       class { '::nova::db::mysql':
         password => 'a_big_secret',
@@ -44,7 +44,13 @@ describe 'basic nova' do
       class { '::nova::db::mysql_api':
         password => 'a_big_secret',
       }
+      class { '::nova::db::mysql_placement':
+        password => 'a_big_secret',
+      }
       class { '::nova::keystone::auth':
+        password => 'a_big_secret',
+      }
+      class { '::nova::keystone::auth_placement':
         password => 'a_big_secret',
       }
       class { '::nova::keystone::authtoken':
@@ -56,6 +62,16 @@ describe 'basic nova' do
       include ::apache
       class { '::nova::wsgi::apache':
         ssl => false,
+      }
+      # The Ubuntu package is now broken, it tries to run the app with systemd.
+      # Until it's fixed, let's test it on Red Hat only.
+      if $::osfamily == 'RedHat' {
+        class { '::nova::wsgi::apache_placement':
+          ssl => false,
+        }
+        class { '::nova::placement':
+          password => 'a_big_secret',
+        }
       }
       class { '::nova::cert': }
       class { '::nova::client': }
@@ -106,6 +122,12 @@ describe 'basic nova' do
 
     describe port(8775) do
       it { is_expected.to be_listening }
+    end
+
+    if os[:family].casecmp('RedHat') == 0
+      describe port(80) do
+        it { is_expected.to be_listening }
+      end
     end
 
     describe port(6080) do

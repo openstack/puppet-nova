@@ -25,6 +25,14 @@
 #   (optional) Connection url to connect to nova API slave database (read-only).
 #   Defaults to undef.
 #
+# [*placement_database_connection*]
+#   (optional) Connection url for the nova placement database.
+#   Defaults to undef.
+#
+# [*placement_slave_connection*]
+#   (optional) Connection url to connect to nova placement slave database (read-only).
+#   Defaults to undef.
+#
 # [*database_max_retries*]
 #   (optional) Maximum database connection retries during startup.
 #   Defaults to undef.
@@ -437,6 +445,8 @@ class nova(
   $slave_connection                       = undef,
   $api_database_connection                = undef,
   $api_slave_connection                   = undef,
+  $placement_database_connection          = undef,
+  $placement_slave_connection             = undef,
   $block_device_allocate_retries          = $::os_service_default,
   $block_device_allocate_retries_interval = $::os_service_default,
   $database_idle_timeout                  = undef,
