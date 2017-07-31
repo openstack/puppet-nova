@@ -58,29 +58,22 @@ Puppet::Type.newtype(:nova_security_rule) do
   end
 
   newparam(:ip_protocol) do
-    defaultto do
-      raise Puppet::Error, 'You should give protocol!'
-    end
     newvalues 'tcp', 'udp', 'icmp'
   end
 
   newparam(:from_port) do
-    defaultto do
-      raise Puppet::Error, 'You should give the source port!'
-    end
+    newvalues(/\d+/)
     validate do |value|
-      if value !~ /\d+/ or value.to_i <= -1 or value.to_i >= 65536
+      if value.to_i < -1 or value.to_i >= 65536
         raise Puppet::Error, 'Incorrect from port!'
       end
     end
   end
 
   newparam(:to_port) do
-    defaultto do
-      raise Puppet::Error, 'You should give the destination port!'
-    end
+    newvalues(/\d+/)
     validate do |value|
-      if value !~ /\d+/ or value.to_i <= -1 or value.to_i >= 65536
+      if value.to_i < -1 or value.to_i >= 65536
         raise Puppet::Error, 'Incorrect to port!'
       end
     end
@@ -116,23 +109,26 @@ Puppet::Type.newtype(:nova_security_rule) do
     end
   end
 
-  newparam(:source_group) do
-  end
-
-  newparam(:security_group) do
-    defaultto do
-      raise Puppet::Error, 'You should provide the security group to add this rule to!'
-    end
-  end
+  newparam(:source_group)
+  newparam(:security_group)
 
   validate do
-    unless !!self[:ip_range] ^ !!self[:source_group]
+    unless self[:from_port]
+      raise Puppet::Error, 'You should give the source port!'
+    end
+    unless self[:to_port]
+      raise Puppet::Error, 'You should give the destination port!'
+    end
+    unless self[:security_group]
+      raise Puppet::Error, 'You should provide the security group to add this rule to!'
+    end
+    unless self[:ip_range].to_s.empty? ^ self[:source_group].to_s.empty?
       raise Puppet::Error, 'You should give either ip_range or source_group. Not none or both!'
     end
     unless self[:from_port].to_i <= self[:to_port].to_i
       raise Puppet::Error, 'From_port should be lesser or equal to to_port!'
     end
-    if self[:ip_protocol] != 'icmp' and (self[:from_port].to_i <= 0 || self[:to_port].to_i <= 0)
+    if self[:ip_protocol].to_s != 'icmp' and (self[:from_port].to_i <= 0 || self[:to_port].to_i <= 0)
       raise Puppet::Error, 'From_port and To_port should not be less than 0 unless IP protocol is ICMP'
     end
   end
