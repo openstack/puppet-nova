@@ -108,8 +108,9 @@ class nova::compute::rbd (
     exec { 'get-or-set virsh secret':
       command => $cm,
       unless  => "/usr/bin/virsh secret-list | grep -i ${libvirt_rbd_secret_uuid}",
-      require => [File['/etc/nova/secret.xml'], Service['libvirt']],
+      require => File['/etc/nova/secret.xml'],
     }
+    Service<| title == 'libvirt' |> -> Exec['get-or-set virsh secret']
 
     if $libvirt_rbd_secret_key {
       $libvirt_key = $libvirt_rbd_secret_key

@@ -31,18 +31,6 @@ class nova::compute::libvirt::services (
   include ::nova::params
 
   if $libvirt_service_name {
-    # messagebus
-    if($::osfamily == 'RedHat' and $::operatingsystem != 'Fedora') {
-      service { 'messagebus':
-        ensure   => running,
-        enable   => true,
-        name     => $::nova::params::messagebus_service_name,
-        provider => $::nova::params::special_service_provider,
-
-      }
-      Package['libvirt'] -> Service['messagebus'] -> Service['libvirt']
-    }
-
     # libvirt-nwfilter
     if $::osfamily == 'RedHat' {
       package { 'libvirt-nwfilter':
@@ -80,6 +68,17 @@ class nova::compute::libvirt::services (
       require  => Package['libvirt'],
     }
 
+    # messagebus
+    if($::osfamily == 'RedHat' and $::operatingsystem != 'Fedora') {
+      service { 'messagebus':
+        ensure   => running,
+        enable   => true,
+        name     => $::nova::params::messagebus_service_name,
+        provider => $::nova::params::special_service_provider,
+      }
+      Package['libvirt'] -> Service['messagebus'] -> Service['libvirt']
+    }
+
     # when nova-compute & libvirt run together
     Service['libvirt'] -> Service<| title == 'nova-compute'|>
   }
@@ -91,8 +90,8 @@ class nova::compute::libvirt::services (
       enable   => true,
       name     => $virtlock_service_name,
       provider => $::nova::params::special_service_provider,
-      require  => Package['libvirt']
     }
+    Package<| name == 'libvirt' |> -> Service['virtlockd']
   }
 
   if $virtlog_service_name {
@@ -101,8 +100,8 @@ class nova::compute::libvirt::services (
       enable   => true,
       name     => $virtlog_service_name,
       provider => $::nova::params::special_service_provider,
-      require  => Package['libvirt']
     }
+    Package<| name == 'libvirt' |> -> Service['virtlogd']
   }
 
 }

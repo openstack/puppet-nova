@@ -28,6 +28,8 @@ class nova::policy (
   $policy_path = '/etc/nova/policy.json',
 ) {
 
+  include ::nova::deps
+
   validate_hash($policies)
 
   $policy_defaults = {
