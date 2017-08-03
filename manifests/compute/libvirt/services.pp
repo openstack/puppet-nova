@@ -65,7 +65,7 @@ class nova::compute::libvirt::services (
       enable   => true,
       name     => $libvirt_service_name,
       provider => $::nova::params::special_service_provider,
-      require  => Package['libvirt'],
+      require  => Anchor['nova::install::end'],
     }
 
     # messagebus

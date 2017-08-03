@@ -230,11 +230,11 @@ class nova::metadata::novajoin::api (
     command => "/usr/bin/kinit -kt /etc/krb5.keytab && ipa-getkeytab -s `grep xmlrpc_uri /etc/ipa/default.conf  | cut -d/ -f3` \
                 -p nova/${::fqdn} -k ${keytab}",
     creates => $keytab,
-    require => Package['python-novajoin']
   }
 
   ensure_resource('file', $keytab, { owner => $service_user, require => Exec['get-service-user-keytab'] })
 
+  Package<| tag == 'novajoin-package' |> -> Exec['get-service-user-keytab']
   Novajoin_config<||> ~> Service<| title == 'novajoin-server'|>
   Novajoin_config<||> ~> Service<| title == 'novajoin-notify'|>
   Exec['get-service-user-keytab'] ~> Service['novajoin-server']
