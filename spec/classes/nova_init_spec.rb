@@ -42,7 +42,6 @@ describe 'nova' do
       end
 
       it 'configures rabbit' do
-        is_expected.to contain_nova_config('DEFAULT/rpc_backend').with_value('rabbit')
         is_expected.to contain_nova_config('oslo_messaging_rabbit/rabbit_host').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('oslo_messaging_rabbit/rabbit_password').with_value('<SERVICE DEFAULT>').with_secret(true)
         is_expected.to contain_nova_config('oslo_messaging_rabbit/rabbit_port').with_value('<SERVICE DEFAULT>')
@@ -84,7 +83,6 @@ describe 'nova' do
           :default_transport_url                   => 'rabbit://rabbit_user:password@localhost:5673',
           :rpc_response_timeout                    => '30',
           :control_exchange                        => 'nova',
-          :rpc_backend                             => 'rabbit',
           :rabbit_host                             => 'rabbit',
           :rabbit_userid                           => 'rabbit_user',
           :rabbit_port                             => '5673',
@@ -141,7 +139,6 @@ describe 'nova' do
       end
 
       it 'configures rabbit' do
-        is_expected.to contain_nova_config('DEFAULT/rpc_backend').with_value('rabbit')
         is_expected.to contain_nova_config('DEFAULT/transport_url').with_value('rabbit://rabbit_user:password@localhost:5673')
         is_expected.to contain_nova_config('DEFAULT/rpc_response_timeout').with_value('30')
         is_expected.to contain_nova_config('DEFAULT/control_exchange').with_value('nova')
@@ -332,14 +329,6 @@ describe 'nova' do
       it { is_expected.to contain_oslo__messaging__rabbit('nova_config').with(
         :rabbit_use_ssl     => true,
       )}
-    end
-
-    context 'with rabbitmq rpc_backend with old parameter' do
-      let :params do
-        { :rpc_backend => 'nova.openstack.common.rpc.impl_kombu' }
-      end
-
-      it { is_expected.to contain_nova_config('DEFAULT/rpc_backend').with_value('rabbit') }
     end
 
     context 'with amqp default parameters' do
