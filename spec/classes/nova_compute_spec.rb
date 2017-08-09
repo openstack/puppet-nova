@@ -34,6 +34,7 @@ describe 'nova::compute' do
       it { is_expected.to contain_nova_config('barbican/barbican_api_version').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('barbican/auth_endpoint').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('DEFAULT/max_concurrent_live_migrations').with_value('<SERVICE DEFAULT>') }
+      it { is_expected.to contain_nova_config('pci/passthrough_whitelist').with(:value => '<SERVICE DEFAULT>') }
 
       it { is_expected.to_not contain_package('cryptsetup').with( :ensure => 'present' )}
 
@@ -73,7 +74,6 @@ describe 'nova::compute' do
           :default_schedule_zone              => 'az2',
           :internal_service_availability_zone => 'az_int1',
           :heal_instance_info_cache_interval  => '120',
-          :pci_passthrough                    => "[{\"vendor_id\":\"8086\",\"product_id\":\"0126\"},{\"vendor_id\":\"9096\",\"product_id\":\"1520\",\"physical_network\":\"physnet1\"}]",
           :config_drive_format                => 'vfat',
           :resize_confirm_window              => '3',
           :vcpu_pin_set                       => ['4-12','^8','15'],
@@ -141,12 +141,6 @@ describe 'nova::compute' do
 
       it { is_expected.to contain_nova_config('DEFAULT/resume_guests_state_on_host_boot').with_value(true) }
 
-      it 'configures nova pci_passthrough_whitelist entries' do
-        is_expected.to contain_nova_config('pci/passthrough_whitelist').with(
-          'value' => "[{\"vendor_id\":\"8086\",\"product_id\":\"0126\"},{\"vendor_id\":\"9096\",\"product_id\":\"1520\",\"physical_network\":\"physnet1\"}]"
-        )
-      end
-
       it 'configures nova config_drive_format to vfat' do
         is_expected.to contain_nova_config('DEFAULT/config_drive_format').with_value('vfat')
         is_expected.to_not contain_package('genisoimage').with(
@@ -155,6 +149,43 @@ describe 'nova::compute' do
       end
     end
 
+    context 'with pci_passthrough array' do
+      let :params do
+        {
+          :pci_passthrough => [
+            {
+              "vendor_id"  => "8086",
+              "product_id" => "0126"
+            },
+            {
+              "vendor_id"        => "9096",
+              "product_id"       => "1520",
+              "physical_network" => "physnet1"
+            }
+          ]
+        }
+      end
+
+      it 'configures nova pci_passthrough_whitelist entries' do
+        is_expected.to contain_nova_config('pci/passthrough_whitelist').with(
+          'value' => ['{"vendor_id":"8086","product_id":"0126"}','{"vendor_id":"9096","product_id":"1520","physical_network":"physnet1"}']
+        )
+      end
+    end
+
+    context 'with pci_passthrough JSON encoded string (deprecated)' do
+      let :params do
+        {
+          :pci_passthrough => "[{\"vendor_id\":\"8086\",\"product_id\":\"0126\"},{\"vendor_id\":\"9096\",\"product_id\":\"1520\",\"physical_network\":\"physnet1\"}]"
+        }
+      end
+
+      it 'configures nova pci_passthrough_whitelist entries' do
+        is_expected.to contain_nova_config('pci/passthrough_whitelist').with(
+          'value' => ['{"vendor_id":"8086","product_id":"0126"}','{"vendor_id":"9096","product_id":"1520","physical_network":"physnet1"}']
+        )
+      end
+    end
 
     context 'when vcpu_pin_set and pci_passthrough are empty' do
       let :params do
