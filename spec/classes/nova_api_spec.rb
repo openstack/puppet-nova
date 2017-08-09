@@ -79,6 +79,7 @@ describe 'nova::api' do
         is_expected.to contain_nova_config('vendordata_dynamic_auth/project_name').with('value' => '<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('vendordata_dynamic_auth/user_domain_name').with('value' => '<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('vendordata_dynamic_auth/username').with('value' => '<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('pci/alias').with(:value => '<SERVICE DEFAULT>')
       end
 
       it 'unconfigures neutron_metadata proxy' do
@@ -117,7 +118,6 @@ describe 'nova::api' do
           :enable_network_quota                        => false,
           :enable_instance_password                    => true,
           :password_length                             => 12,
-          :pci_alias                                   => "[{\"vendor_id\":\"8086\",\"product_id\":\"0126\",\"name\":\"graphic_card\"},{\"vendor_id\":\"9096\",\"product_id\":\"1520\",\"name\":\"network_card\"}]",
           :allow_resize_to_same_host                   => true,
           :vendordata_dynamic_auth_auth_type           => 'password',
           :vendordata_dynamic_auth_auth_url            => 'http://127.0.0.1:5000',
@@ -182,11 +182,51 @@ describe 'nova::api' do
         is_expected.to contain_nova_config('vendordata_dynamic_auth/user_domain_name').with('value' => 'Default')
         is_expected.to contain_nova_config('vendordata_dynamic_auth/username').with('value' => 'user')
       end
+    end
 
+    context 'with pci_alias array' do
+      before do
+        params.merge!({
+          :pci_alias => [{
+              "vendor_id"  => "8086",
+              "product_id" => "0126",
+              "name"       => "graphic_card"
+            },
+            {
+              "vendor_id"  => "9096",
+              "product_id" => "1520",
+              "name"       => "network_card"
+            }
+          ]
+        })
+      end
       it 'configures nova pci_alias entries' do
         is_expected.to contain_nova_config('pci/alias').with(
-          'value' => "[{\"vendor_id\":\"8086\",\"product_id\":\"0126\",\"name\":\"graphic_card\"},{\"vendor_id\":\"9096\",\"product_id\":\"1520\",\"name\":\"network_card\"}]"
+          'value' => ['{"vendor_id":"8086","product_id":"0126","name":"graphic_card"}','{"vendor_id":"9096","product_id":"1520","name":"network_card"}']
         )
+      end
+    end
+
+    context 'with pci_alias JSON encoded string (deprecated)' do
+      before do
+        params.merge!({
+          :pci_alias => "[{\"vendor_id\":\"8086\",\"product_id\":\"0126\",\"name\":\"graphic_card\"},{\"vendor_id\":\"9096\",\"product_id\":\"1520\",\"name\":\"network_card\"}]",
+        })
+      end
+      it 'configures nova pci_alias entries' do
+        is_expected.to contain_nova_config('pci/alias').with(
+          'value' => ['{"vendor_id":"8086","product_id":"0126","name":"graphic_card"}','{"vendor_id":"9096","product_id":"1520","name":"network_card"}']
+        )
+      end
+    end
+
+    context 'when pci_alias is empty' do
+      let :params do
+        { :pci_alias => "" }
+      end
+
+      it 'clears pci_alias configuration' do
+        is_expected.to contain_nova_config('pci/alias').with(:value => '<SERVICE DEFAULT>')
       end
     end
 

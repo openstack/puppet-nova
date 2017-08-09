@@ -87,8 +87,8 @@
 #   (optional) Pci passthrough list of hash.
 #   Defaults to $::os_service_default
 #   Example of format:
-#  "[ { 'vendor_id':'1234','product_id':'5678' },
-#     { 'vendor_id':'4321','product_id':'8765','physical_network':'default' } ] "
+#   [ { "vendor_id" => "1234","product_id" => "5678" },
+#     { "vendor_id" => "4321","product_id" => "8765", "physical_network" => "default" } ]
 #
 #  [*config_drive_format*]
 #   (optional) Config drive format. One of iso9660 (default) or vfat
@@ -186,7 +186,7 @@ class nova::compute (
   # the value is computed in a function and it makes things more complex. Let's just check if
   # a value is set or if it's empty.
   if !is_service_default($pci_passthrough) and !empty($pci_passthrough) {
-    $pci_passthrough_real = check_array_of_hash($pci_passthrough)
+    $pci_passthrough_real = to_array_of_json_strings($pci_passthrough)
   } else {
     $pci_passthrough_real = $::os_service_default
   }
