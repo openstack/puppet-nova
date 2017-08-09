@@ -75,10 +75,11 @@
 #   Defaults to undef
 #
 # [*pci_alias*]
-#   (optional) Pci passthrough for controller:
-#   Defaults to undef
-#   Example
-#   "[ {'vendor_id':'1234', 'product_id':'5678', 'name':'default'}, {...} ]"
+#   (optional) A list of pci alias hashes
+#   Defaults to $::os_service_default
+#   Example:
+#   [{"vendor_id" => "1234", "product_id" => "5678", "name" => "default"},
+#    {"vendor_id" => "1234", "product_id" => "6789", "name" => "other"}]
 #
 # [*ratelimits*]
 #   (optional) A string that is a semicolon-separated list of 5-tuples.
@@ -285,7 +286,7 @@ class nova::api(
   $db_online_data_migrations            = false,
   $neutron_metadata_proxy_shared_secret = undef,
   $default_floating_pool                = 'nova',
-  $pci_alias                            = undef,
+  $pci_alias                            = $::os_service_default,
   $ratelimits                           = undef,
   $ratelimits_factory                   =
     'nova.api.openstack.compute.limits:RateLimitingMiddleware.factory',
@@ -523,10 +524,13 @@ as a standalone service, or httpd for being run by a httpd server")
     'filter:authtoken/auth_admin_prefix': ensure => absent;
   }
 
-  if $pci_alias {
-    nova_config {
-      'DEFAULT/pci_alias': value => join(any2array(check_array_of_hash($pci_alias)), ',');
-    }
+  if !is_service_default($pci_alias) and !empty($pci_alias) {
+    $pci_alias_real = to_array_of_json_strings($pci_alias)
+  } else {
+    $pci_alias_real = $::os_service_default
+  }
+  nova_config {
+    'DEFAULT/pci_alias': value => $pci_alias_real;
   }
 
   if $validate {
