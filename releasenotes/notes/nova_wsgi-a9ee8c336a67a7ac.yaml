@@ -1,5 +1,0 @@
----
-issues:
-  - Using nova::wsgi::apache_api to deploy Nova in WSGI with Apache is not
-    recommended by Nova team. See `bug 1661360
-    <https://bugs.launchpad.net/nova/+bug/1661360>`__.
