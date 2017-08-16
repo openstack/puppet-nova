@@ -1,0 +1,11 @@
+---
+features:
+  - |
+    The nova::api::pci_alias and nova::compute::pci_passthrough params now
+    accept an array of hashes. A valid JSON encoded array of objects is also
+    acceptable.
+deprecations:
+  - |
+    Invalid JSON was previously accepted for the nova::api::pci_alias and
+    nova::compute::pci_passthrough parameters. This format is now deprecated
+    and may not be accepted in future.
