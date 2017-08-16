@@ -1,0 +1,6 @@
+---
+features:
+  - Added nova patching configuration parameters. These parameters are available
+    in nova.conf, but are not configurable using puppet-nova. The monkey patching
+    parameters allow patching a decorator for all functions in specified modules.
+    This change create patch/config.pp file to make these parameters configurable.
