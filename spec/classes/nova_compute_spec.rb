@@ -34,6 +34,7 @@ describe 'nova::compute' do
       it { is_expected.to contain_nova_config('barbican/barbican_api_version').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('barbican/auth_endpoint').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('DEFAULT/max_concurrent_live_migrations').with_value('<SERVICE DEFAULT>') }
+      it { is_expected.to contain_nova_config('compute/consecutive_build_service_disable_threshold').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('pci/passthrough_whitelist').with(:value => '<SERVICE DEFAULT>') }
 
       it { is_expected.to_not contain_package('cryptsetup').with( :ensure => 'present' )}
@@ -79,6 +80,7 @@ describe 'nova::compute' do
           :barbican_api_version               => 'v1',
           :barbican_auth_endpoint             => 'http://127.0.0.1:5000/v3',
           :max_concurrent_live_migrations     => '4',
+          :consecutive_build_service_disable_threshold => '9',
         }
       end
 
@@ -127,6 +129,8 @@ describe 'nova::compute' do
       it { is_expected.to contain_nova_config('DEFAULT/vcpu_pin_set').with(:value => '4-12,^8,15') }
 
       it { is_expected.to contain_nova_config('DEFAULT/max_concurrent_live_migrations').with_value('4') }
+
+      it { is_expected.to contain_nova_config('compute/consecutive_build_service_disable_threshold').with_value('9') }
 
       it { is_expected.to contain_nova_config('DEFAULT/resume_guests_state_on_host_boot').with_value(true) }
 
