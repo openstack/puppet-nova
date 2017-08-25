@@ -144,37 +144,43 @@
 #   (optional) Maximum number of live migrations to run in parallel.
 #   Defaults to $::os_service_default
 #
+# [*consecutive_build_service_disable_threshold*]
+#   (optional) Max number of consecutive build failures before the nova-compute
+#   will disable itself.
+#   Defaults to $::os_service_default
+#
 class nova::compute (
-  $enabled                            = true,
-  $manage_service                     = true,
-  $ensure_package                     = 'present',
-  $vnc_enabled                        = true,
-  $vncserver_proxyclient_address      = '127.0.0.1',
-  $vncproxy_host                      = false,
-  $vncproxy_protocol                  = 'http',
-  $vncproxy_port                      = '6080',
-  $vncproxy_path                      = '/vnc_auto.html',
-  $vnc_keymap                         = 'en-us',
-  $force_config_drive                 = false,
-  $virtio_nic                         = false,
-  $neutron_enabled                    = true,
-  $install_bridge_utils               = true,
-  $instance_usage_audit               = false,
-  $instance_usage_audit_period        = 'month',
-  $force_raw_images                   = true,
-  $reserved_host_memory               = '512',
-  $heal_instance_info_cache_interval  = '60',
-  $pci_passthrough                    = $::os_service_default,
-  $config_drive_format                = $::os_service_default,
-  $allow_resize_to_same_host          = false,
-  $resize_confirm_window              = $::os_service_default,
-  $vcpu_pin_set                       = $::os_service_default,
-  $resume_guests_state_on_host_boot   = $::os_service_default,
-  $keymgr_api_class                   = $::os_service_default,
-  $barbican_auth_endpoint             = $::os_service_default,
-  $barbican_endpoint                  = $::os_service_default,
-  $barbican_api_version               = $::os_service_default,
-  $max_concurrent_live_migrations     = $::os_service_default,
+  $enabled                                     = true,
+  $manage_service                              = true,
+  $ensure_package                              = 'present',
+  $vnc_enabled                                 = true,
+  $vncserver_proxyclient_address               = '127.0.0.1',
+  $vncproxy_host                               = false,
+  $vncproxy_protocol                           = 'http',
+  $vncproxy_port                               = '6080',
+  $vncproxy_path                               = '/vnc_auto.html',
+  $vnc_keymap                                  = 'en-us',
+  $force_config_drive                          = false,
+  $virtio_nic                                  = false,
+  $neutron_enabled                             = true,
+  $install_bridge_utils                        = true,
+  $instance_usage_audit                        = false,
+  $instance_usage_audit_period                 = 'month',
+  $force_raw_images                            = true,
+  $reserved_host_memory                        = '512',
+  $heal_instance_info_cache_interval           = '60',
+  $pci_passthrough                             = $::os_service_default,
+  $config_drive_format                         = $::os_service_default,
+  $allow_resize_to_same_host                   = false,
+  $resize_confirm_window                       = $::os_service_default,
+  $vcpu_pin_set                                = $::os_service_default,
+  $resume_guests_state_on_host_boot            = $::os_service_default,
+  $keymgr_api_class                            = $::os_service_default,
+  $barbican_auth_endpoint                      = $::os_service_default,
+  $barbican_endpoint                           = $::os_service_default,
+  $barbican_api_version                        = $::os_service_default,
+  $max_concurrent_live_migrations              = $::os_service_default,
+  $consecutive_build_service_disable_threshold = $::os_service_default,
 ) {
 
   include ::nova::deps
@@ -213,6 +219,8 @@ class nova::compute (
     'barbican/barbican_endpoint':                value => $barbican_endpoint;
     'barbican/barbican_api_version':             value => $barbican_api_version;
     'DEFAULT/max_concurrent_live_migrations':    value => $max_concurrent_live_migrations;
+    'compute/consecutive_build_service_disable_threshold':
+      value => $consecutive_build_service_disable_threshold;
   }
 
   ensure_resource('nova_config', 'DEFAULT/allow_resize_to_same_host', { value => $allow_resize_to_same_host })
