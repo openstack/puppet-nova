@@ -1,0 +1,4 @@
+---
+deprecations:
+  - |
+    Nova-cert service configuration class has been removed.
