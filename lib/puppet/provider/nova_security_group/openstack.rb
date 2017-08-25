@@ -50,9 +50,7 @@ Puppet::Type.type(:nova_security_group).provide(
     #               retrieve all security groups.  The following helps filter it.
     project_id = self.nova_request('token', 'issue', nil, ['-c', 'project_id', '-f', 'value']).strip
 
-    self.nova_request('security group', 'list', nil).select do |attrs|
-      attrs[:project] == project_id
-    end.collect do |attrs|
+    self.nova_request('security group', 'list', nil, ['--project', project_id]).collect do |attrs|
       new(
         :ensure      => :present,
         :id          => attrs[:id],
