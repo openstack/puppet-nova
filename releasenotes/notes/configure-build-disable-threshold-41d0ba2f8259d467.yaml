@@ -1,0 +1,4 @@
+---
+features: |
+  - Add ability to configure compute/consecutive_build_service_disable_threshold
+    on the compute notes.
