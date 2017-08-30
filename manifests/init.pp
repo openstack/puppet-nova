@@ -403,6 +403,12 @@
 #   per compute node.
 #   Defaults to $::os_service_default
 #
+# [*my_ip*]
+#   (optional) IP address of this host on the management network.
+#   If unset, will determine the IP programmatically based on the default route.
+#   If unable to do so, will use "127.0.0.1".
+#   Defaults to $::os_service_default.
+#
 # DEPRECATED PARAMETERS
 #
 # [*rabbit_host*]
@@ -520,6 +526,7 @@ class nova(
   $ram_allocation_ratio                   = $::os_service_default,
   $disk_allocation_ratio                  = $::os_service_default,
   $purge_config                           = false,
+  $my_ip                                  = $::os_service_default,
   # DEPRECATED PARAMETERS
   $rabbit_host                            = $::os_service_default,
   $rabbit_hosts                           = $::os_service_default,
@@ -649,6 +656,7 @@ but should be one of: ssh-rsa, ssh-dsa, ssh-ecdsa.")
   ensure_resource('nova_config', 'DEFAULT/disk_allocation_ratio', { value => $real_disk_allocation_ratio })
 
   nova_config {
+    'DEFAULT/my_ip':         value => $my_ip;
     'api/auth_strategy':     value => $auth_strategy;
     'DEFAULT/image_service': value => $image_service;
     'DEFAULT/host':          value => $host;
