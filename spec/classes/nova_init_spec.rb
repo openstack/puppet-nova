@@ -115,6 +115,7 @@ describe 'nova' do
           :purge_config                            => false,
           :block_device_allocate_retries           => '60',
           :block_device_allocate_retries_interval  => '3',
+          :my_ip                                   => '192.0.2.1',
         }
       end
 
@@ -153,6 +154,10 @@ describe 'nova' do
 
       it 'configures host' do
         is_expected.to contain_nova_config('DEFAULT/host').with_value('test-001.example.org')
+      end
+
+      it 'configures my_ip' do
+        is_expected.to contain_nova_config('DEFAULT/my_ip').with_value('192.0.2.1')
       end
 
       it 'configures upgrade_levels' do
