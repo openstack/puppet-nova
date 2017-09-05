@@ -136,6 +136,13 @@ describe 'nova::metadata::novajoin::api' do
         )
       end
 
+      it { is_expected.to contain_file("/var/log/novajoin").with(
+        'ensure'  => 'directory',
+        'owner'   => "#{param_hash[:service_user]}",
+        'group'   => "#{param_hash[:service_user]}",
+        'recurse' => true
+      )}
+
       it { is_expected.to contain_file("#{param_hash[:keytab]}").with(
         'owner'   => "#{param_hash[:service_user]}",
         'require' => 'Exec[get-service-user-keytab]',
