@@ -74,13 +74,6 @@
 #   (optional) Shared secret to validate proxies Neutron metadata requests
 #   Defaults to undef
 #
-# [*pci_alias*]
-#   (optional) A list of pci alias hashes
-#   Defaults to $::os_service_default
-#   Example:
-#   [{"vendor_id" => "1234", "product_id" => "5678", "name" => "default"},
-#    {"vendor_id" => "1234", "product_id" => "6789", "name" => "other"}]
-#
 # [*ratelimits*]
 #   (optional) A string that is a semicolon-separated list of 5-tuples.
 #   See http://docs.openstack.org/trunk/config-reference/content/configuring-compute-API.html
@@ -275,6 +268,14 @@
 #   (optional) Default pool for floating IPs
 #   Defaults to undef
 #
+# [*pci_alias*]
+#   DEPRECATED. Use nova::pci::aliases instead.
+#   (optional) A list of pci alias hashes
+#   Defaults to undef
+#   Example:
+#   [{"vendor_id" => "1234", "product_id" => "5678", "name" => "default"},
+#    {"vendor_id" => "1234", "product_id" => "6789", "name" => "other"}]
+#
 class nova::api(
   $enabled                                     = true,
   $manage_service                              = true,
@@ -292,7 +293,6 @@ class nova::api(
   $sync_db_api                                 = true,
   $db_online_data_migrations                   = false,
   $neutron_metadata_proxy_shared_secret        = undef,
-  $pci_alias                                   = $::os_service_default,
   $ratelimits                                  = undef,
   $ratelimits_factory                          =
     'nova.api.openstack.compute.limits:RateLimitingMiddleware.factory',
@@ -334,6 +334,7 @@ class nova::api(
   $osapi_glance_link_prefix                    = undef,
   $osapi_hide_server_address_states            = undef,
   $default_floating_pool                       = undef,
+  $pci_alias                                   = undef,
 ) inherits nova::params {
 
   include ::nova::deps
@@ -536,14 +537,10 @@ as a standalone service, or httpd for being run by a httpd server")
     'filter:authtoken/auth_admin_prefix': ensure => absent;
   }
 
-  if !is_service_default($pci_alias) and !empty($pci_alias) {
-    $pci_alias_real = to_array_of_json_strings($pci_alias)
-  } else {
-    $pci_alias_real = $::os_service_default
+  if $pci_alias {
+    warning('The pci_alias parameter is deprecated. Please use nova::pci::aliases instead.')
   }
-  nova_config {
-    'pci/alias': value => $pci_alias_real;
-  }
+  include ::nova::pci
 
   if $validate {
     #Shrinking the variables names in favor of not

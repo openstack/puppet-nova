@@ -79,12 +79,16 @@ describe 'nova::api' do
         is_expected.to contain_nova_config('vendordata_dynamic_auth/project_name').with('value' => '<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('vendordata_dynamic_auth/user_domain_name').with('value' => '<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('vendordata_dynamic_auth/username').with('value' => '<SERVICE DEFAULT>')
-        is_expected.to contain_nova_config('pci/alias').with(:value => '<SERVICE DEFAULT>')
       end
 
       it 'unconfigures neutron_metadata proxy' do
         is_expected.to contain_nova_config('neutron/service_metadata_proxy').with(:value => false)
         is_expected.to contain_nova_config('neutron/metadata_proxy_shared_secret').with(:ensure => 'absent')
+      end
+
+      it 'includes nova::pci' do
+        is_expected.to contain_class('nova::pci')
+        is_expected.to contain_nova_config('pci/alias').with(:value => '<SERVICE DEFAULT>')
       end
     end
 
@@ -201,6 +205,7 @@ describe 'nova::api' do
         })
       end
       it 'configures nova pci_alias entries' do
+        is_expected.to contain_class('nova::pci')
         is_expected.to contain_nova_config('pci/alias').with(
           'value' => ['{"vendor_id":"8086","product_id":"0126","name":"graphic_card"}','{"vendor_id":"9096","product_id":"1520","name":"network_card"}']
         )
@@ -214,6 +219,7 @@ describe 'nova::api' do
         })
       end
       it 'configures nova pci_alias entries' do
+        is_expected.to contain_class('nova::pci')
         is_expected.to contain_nova_config('pci/alias').with(
           'value' => ['{"vendor_id":"8086","product_id":"0126","name":"graphic_card"}','{"vendor_id":"9096","product_id":"1520","name":"network_card"}']
         )
@@ -221,11 +227,14 @@ describe 'nova::api' do
     end
 
     context 'when pci_alias is empty' do
-      let :params do
-        { :pci_alias => "" }
+      before do
+        params.merge!({
+          :pci_alias => ""
+        })
       end
 
       it 'clears pci_alias configuration' do
+        is_expected.to contain_class('nova::pci')
         is_expected.to contain_nova_config('pci/alias').with(:value => '<SERVICE DEFAULT>')
       end
     end
