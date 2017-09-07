@@ -20,15 +20,18 @@
 # nova_cells provider
 #
 
-Puppet::Type.type(:nova_cells).provide(:nova_manage) do
+require File.join(File.dirname(__FILE__), '..','..','..', 'puppet/provider/nova')
+
+Puppet::Type.type(:nova_cells).provide(
+  :nova_manage,
+  :parent => Puppet::Provider::Nova
+) do
 
   desc "Manage nova cells"
 
-  optional_commands :nova_manage => 'nova-manage'
-
   def self.instances
     begin
-      cells_list = nova_manage("cell", "list")
+      cells_list = nova_manage_request("cell", "list")
     rescue Exception => e
       if e.message =~ /No cells defined/
         return []
@@ -63,14 +66,14 @@ Puppet::Type.type(:nova_cells).provide(:nova_manage) do
       end
     end
 
-    nova_manage('cell', 'create',
+    nova_manage_request('cell', 'create',
       optional_opts
     )
   end
 
   def exists?
     begin
-      cells_list = nova_manage("cell", "list")
+      cells_list = nova_manage_request("cell", "list")
       return cells_list.split("\n")[1..-1].detect do |n|
         n =~ /^(\S+)\s+(#{resource[:cells].split('/').first})/
       end
@@ -81,7 +84,7 @@ Puppet::Type.type(:nova_cells).provide(:nova_manage) do
 
 
   def destroy
-    nova_manage("cell", "delete", resource[:name])
+    nova_manage_request("cell", "delete", resource[:name])
   end
 
 end

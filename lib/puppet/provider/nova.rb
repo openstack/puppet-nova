@@ -38,6 +38,20 @@ class Puppet::Provider::Nova < Puppet::Provider::Openstack
     Puppet::Provider::Openstack.request(service, action, properties, @credentials)
   end
 
+  def self.nova_manage_request(*args)
+    # Not using the nova-manage command directly,
+    # so we can disable combining of stderr/stdout output.
+    Puppet::Util::Execution.execute("#{Puppet::Util.which('nova-manage')} #{args.join(' ')}", {
+      :failonfail         => true,
+      :combine            => false,
+      :custom_environment => {}
+    })
+  end
+
+  def nova_manage_request(*args)
+    self.class.nova_manage_request(args)
+  end
+
   def self.conf_filename
     '/etc/nova/nova.conf'
   end
