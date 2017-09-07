@@ -173,6 +173,13 @@ class nova::metadata::novajoin::api (
     tag    => ['openstack', 'novajoin-package'],
   }
 
+  file { '/var/log/novajoin':
+    ensure  => directory,
+    owner   => $service_user,
+    group   => $service_user,
+    recurse => true,
+  }
+
   if $ipa_domain != undef {
     novajoin_config {
       'DEFAULT/domain': value => $ipa_domain;
