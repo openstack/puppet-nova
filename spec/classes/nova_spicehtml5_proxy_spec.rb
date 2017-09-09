@@ -64,9 +64,10 @@ describe 'nova::spicehtml5proxy' do
   context 'on Debian system' do
     let :facts do
       @default_facts.merge({
-        :osfamily        => 'Debian',
-        :operatingsystem => 'Debian',
-        :os_package_type => 'debian'
+        :osfamily                  => 'Debian',
+        :operatingsystem           => 'Debian',
+        :operatingsystemmajrelease => '9',
+        :os_package_type           => 'debian'
       })
     end
 
