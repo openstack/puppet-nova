@@ -101,8 +101,6 @@ class nova::params {
       $tgt_service_name             = 'tgt'
       $nova_log_group               = 'adm'
       $nova_wsgi_script_path        = '/usr/lib/cgi-bin/nova'
-      # TODO(aschultz): switch this later when UCA updates their packaging
-      #$nova_api_wsgi_script_source  = '/usr/bin/nova-api-wsgi'
       $nova_api_wsgi_script_source  = '/usr/bin/nova-api-wsgi'
       $placement_wsgi_script_source = '/usr/bin/nova-placement-api'
       $placement_httpd_config_file  = '/etc/apache2/sites-available/nova-placement-api.conf'
