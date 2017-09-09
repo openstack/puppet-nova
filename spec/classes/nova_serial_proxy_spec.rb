@@ -67,8 +67,9 @@ describe 'nova::serialproxy' do
   context 'on Debian system' do
     let :facts do
      @default_facts.merge({
-       :osfamily        => 'Debian',
-        :operatingsystem => 'Debian'
+       :osfamily                  => 'Debian',
+       :operatingsystem           => 'Debian',
+       :operatingsystemmajrelease => '9'
       })
     end
 
