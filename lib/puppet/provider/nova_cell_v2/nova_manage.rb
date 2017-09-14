@@ -8,8 +8,6 @@ Puppet::Type.type(:nova_cell_v2).provide(
 
   desc "Manage nova cellv2 cells"
 
-  optional_commands :nova_manage => 'nova-manage'
-
   mk_resource_methods
 
   def initialize(value={})
@@ -18,7 +16,7 @@ Puppet::Type.type(:nova_cell_v2).provide(
   end
 
   def self.instances
-    cells_list = nova_manage("cell_v2", "list_cells", "--verbose")
+    cells_list = nova_manage_request("cell_v2", "list_cells", "--verbose") 
 
     cells_list.split("\n")[3..-2].collect do |cell|
       $name, $uuid, $transport_url, $database_connection = cell.split('|')[1..-1].map{ |x| x.strip}
@@ -93,7 +91,7 @@ Puppet::Type.type(:nova_cell_v2).provide(
         optional_opts.push(opt).push(resource[param])
       end
     end
-    cell_uuid = nova_manage('cell_v2', 'create_cell',
+    cell_uuid = nova_manage_request('cell_v2', 'create_cell',
       optional_opts, "--verbose"
     )
     @property_hash = {
@@ -119,7 +117,7 @@ Puppet::Type.type(:nova_cell_v2).provide(
   def flush
     @property_hash.update(@property_flush)
     if @property_flush[:ensure] == :absent
-      nova_manage("cell_v2", "delete_cell", "--cell_uuid", @property_hash[:uuid])
+      nova_manage_request("cell_v2", "delete_cell", "--cell_uuid", @property_hash[:uuid])
     elsif @property_flush[:transport_url] or @property_flush[:database_connection]
       opts = []
       if not @property_flush[:transport_url]
@@ -140,7 +138,7 @@ Puppet::Type.type(:nova_cell_v2).provide(
       end
       opts.push('--database_connection').push(@property_flush[:database_connection])
 
-      nova_manage("cell_v2", "update_cell", "--cell_uuid", @property_hash[:uuid], opts)
+      nova_manage_request("cell_v2", "update_cell", "--cell_uuid", @property_hash[:uuid], opts)
     end
     @property_flush = {}
   end
