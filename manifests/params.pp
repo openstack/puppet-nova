@@ -81,7 +81,11 @@ class nova::params {
       $conductor_package_name       = 'nova-conductor'
       $consoleauth_package_name     = 'nova-consoleauth'
       $doc_package_name             = 'nova-doc'
-      $libvirt_package_name         = 'libvirt-bin'
+      if ($::operatingsystem == 'Debian') and (versioncmp($::operatingsystemmajrelease, '9') >= 0 ) {
+        $libvirt_package_name         = 'libvirt-daemon-system'
+      } else {
+        $libvirt_package_name         = 'libvirt-bin'
+      }
       $network_package_name         = 'nova-network'
       $scheduler_package_name       = 'nova-scheduler'
       $tgt_package_name             = 'tgt'

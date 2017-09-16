@@ -49,9 +49,10 @@ describe 'nova::vncproxy' do
   describe 'on debian OS' do
       let :facts do
         @default_facts.merge({
-          :osfamily        => 'Debian',
-          :operatingsystem => 'Debian',
-          :os_package_type => 'debian'
+          :osfamily                  => 'Debian',
+          :operatingsystem           => 'Debian',
+          :operatingsystemmajrelease => '9',
+          :os_package_type           => 'debian'
         })
       end
       it { is_expected.to contain_package('nova-vncproxy').with(
