@@ -32,7 +32,7 @@
 #    Optional
 #
 #  [*hosts*]
-#    A comma seperated list with hosts or a single host. ie "host1,host2"
+#    A comma separated list with hosts or a single host. ie "host1,host2"
 #    Optional
 #
 
@@ -102,7 +102,7 @@ Puppet::Type.newtype(:nova_aggregate) do
   end
 
   newproperty(:hosts) do
-    desc 'Single host or comma seperated list of hosts'
+    desc 'Single host or comma separated list of hosts'
     #convert DSL/string form to internal form
     munge do |value|
       if value.is_a?(Array)

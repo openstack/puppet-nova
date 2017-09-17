@@ -100,7 +100,7 @@ class nova::compute::rbd (
       require => Anchor['nova::config::begin'],
     }
 
-    #Variable name shrinked in favor of removing
+    #Variable name shrunk in favor of removing
     #the more than 140 chars puppet-lint warning.
     #variable used in the get-or-set virsh secret
     #resource.
