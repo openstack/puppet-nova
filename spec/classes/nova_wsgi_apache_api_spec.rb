@@ -18,19 +18,20 @@ describe 'nova::wsgi::apache_api' do
       it { is_expected.to contain_class('apache::mod::wsgi') }
       it { is_expected.to contain_class('apache::mod::ssl') }
       it { is_expected.to contain_openstacklib__wsgi__apache('nova_api_wsgi').with(
-        :bind_port           => 8774,
-        :group               => 'nova',
-        :path                => '/',
-        :servername          => facts[:fqdn],
-        :ssl                 => true,
-        :threads             => facts[:os_workers],
-        :user                => 'nova',
-        :workers             => 1,
-        :wsgi_daemon_process => 'nova-api',
-        :wsgi_process_group  => 'nova-api',
-        :wsgi_script_dir     => platform_params[:wsgi_script_path],
-        :wsgi_script_file    => 'nova-api',
-        :wsgi_script_source  => platform_params[:api_wsgi_script_source],
+        :bind_port                   => 8774,
+        :group                       => 'nova',
+        :path                        => '/',
+        :servername                  => facts[:fqdn],
+        :ssl                         => true,
+        :threads                     => facts[:os_workers],
+        :user                        => 'nova',
+        :workers                     => 1,
+        :wsgi_daemon_process         => 'nova-api',
+        :wsgi_process_group          => 'nova-api',
+        :wsgi_script_dir             => platform_params[:wsgi_script_path],
+        :wsgi_script_file            => 'nova-api',
+        :wsgi_script_source          => platform_params[:api_wsgi_script_source],
+        :custom_wsgi_process_options => {},
       )}
     end
 
@@ -47,12 +48,15 @@ describe 'nova::wsgi::apache_api' do
 
       let :params do
         {
-          :servername                => 'dummy.host',
-          :bind_host                 => '10.42.51.1',
-          :api_port                  => 12345,
-          :ssl                       => false,
-          :wsgi_process_display_name => 'nova-api',
-          :workers                   => 37,
+          :servername                  => 'dummy.host',
+          :bind_host                   => '10.42.51.1',
+          :api_port                    => 12345,
+          :ssl                         => false,
+          :wsgi_process_display_name   => 'nova-api',
+          :workers                     => 37,
+          :custom_wsgi_process_options => {
+            'python_path' => '/my/python/path',
+          },
         }
       end
 
@@ -61,21 +65,24 @@ describe 'nova::wsgi::apache_api' do
       it { is_expected.to contain_class('apache::mod::wsgi') }
       it { is_expected.to_not contain_class('apache::mod::ssl') }
       it { is_expected.to contain_openstacklib__wsgi__apache('nova_api_wsgi').with(
-        :bind_host                 => '10.42.51.1',
-        :bind_port                 => 12345,
-        :group                     => 'nova',
-        :path                      => '/',
-        :servername                => 'dummy.host',
-        :ssl                       => false,
-        :threads                   => facts[:os_workers],
-        :user                      => 'nova',
-        :workers                   => 37,
-        :wsgi_daemon_process       => 'nova-api',
-        :wsgi_process_display_name => 'nova-api',
-        :wsgi_process_group        => 'nova-api',
-        :wsgi_script_dir           => platform_params[:wsgi_script_path],
-        :wsgi_script_file          => 'nova-api',
-        :wsgi_script_source        => platform_params[:api_wsgi_script_source],
+        :bind_host                   => '10.42.51.1',
+        :bind_port                   => 12345,
+        :group                       => 'nova',
+        :path                        => '/',
+        :servername                  => 'dummy.host',
+        :ssl                         => false,
+        :threads                     => facts[:os_workers],
+        :user                        => 'nova',
+        :workers                     => 37,
+        :wsgi_daemon_process         => 'nova-api',
+        :wsgi_process_display_name   => 'nova-api',
+        :wsgi_process_group          => 'nova-api',
+        :wsgi_script_dir             => platform_params[:wsgi_script_path],
+        :wsgi_script_file            => 'nova-api',
+        :wsgi_script_source          => platform_params[:api_wsgi_script_source],
+        :custom_wsgi_process_options => {
+          'python_path' => '/my/python/path',
+        },
       )}
     end
 
