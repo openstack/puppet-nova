@@ -172,39 +172,4 @@ class Puppet::Provider::Nova < Puppet::Provider::Openstack
       return s.gsub(/'/, "")
     end
   end
-
-  # deprecated: string to list for nova cli
-  def self.str2list(s)
-    #parse string
-    if s.include? ","
-      if s.include? "="
-        new = {}
-      else
-        new = []
-      end
-      if s =~ /^'.+'$/
-        s.split("', '").each do |el|
-          ret = str2hash(el.strip())
-          if s.include? "="
-            new.update(ret)
-          else
-            new.push(ret)
-          end
-        end
-      else
-        s.split(",").each do |el|
-          ret = str2hash(el.strip())
-          if s.include? "="
-            new.update(ret)
-          else
-            new.push(ret)
-          end
-        end
-      end
-      return new
-    else
-      return str2hash(s.strip())
-    end
-  end
-
 end

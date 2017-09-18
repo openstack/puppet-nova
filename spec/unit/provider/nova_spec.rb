@@ -118,31 +118,5 @@ describe Puppet::Provider::Nova do
       res = klass.str2hash("a b = c d")
       expect(res).to eq({"a b "=>" c d"})
     end
-
-    it 'should return the same string' do
-      res = klass.str2list("zone1")
-      expect(res).to eq("zone1")
-    end
-
-    it 'should return a list of strings' do
-      res = klass.str2list("zone1, zone2")
-      expect(res).to eq(["zone1", "zone2"])
-    end
-
-
-    it 'should return a list of strings' do
-      res = klass.str2list("zo n e1,    zone2    ")
-      expect(res).to eq(["zo n e1", "zone2"])
-    end
-
-    it 'should return a hash with multiple keys' do
-      res = klass.str2list("a=b, c=d")
-      expect(res).to eq({"a"=>"b", "c"=>"d"})
-    end
-
-    it 'should return a single hash' do
-      res = klass.str2list("a=b")
-      expect(res).to eq({"a"=>"b"})
-    end
   end
 end
