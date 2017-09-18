@@ -207,35 +207,4 @@ class Puppet::Provider::Nova < Puppet::Provider::Openstack
     end
   end
 
-  # deprecated: nova cli to list
-  def self.cliout2list(output)
-    #don't proceed with empty output
-    if output.empty?
-      return []
-    end
-    lines = []
-    output.each_line do |line|
-      #ignore lines starting with '+'
-      if not line.match("^\\+")
-        #split line at '|' and remove useless information
-        line = line.gsub(/^\| /, "").gsub(/ \|$/, "").gsub(/[\n]+/, "")
-        line = line.split("|").map do |el|
-          el.strip().gsub(/^-$/, "")
-        end
-        #check every element for list
-        line = line.map do |el|
-          el = str2list(el)
-        end
-        lines.push(line)
-      end
-    end
-    #create a list of hashes and return the list
-    hash_list = []
-    header = lines[0]
-    lines[1..-1].each do |line|
-      hash_list.push(Hash[header.zip(line)])
-    end
-    return hash_list
-  end
-
 end
