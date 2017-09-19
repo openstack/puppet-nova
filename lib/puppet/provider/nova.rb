@@ -41,7 +41,11 @@ class Puppet::Provider::Nova < Puppet::Provider::Openstack
   def self.nova_manage_request(*args)
     # Not using the nova-manage command directly,
     # so we can disable combining of stderr/stdout output.
-    Puppet::Util::Execution.execute("#{Puppet::Util.which('nova-manage')} #{args.join(' ')}", {
+    args.unshift(Puppet::Util.which('nova-manage'))
+
+    # NOTE(mnaser): We pass the arguments as an array to avoid problems with
+    #               symbols in the arguments breaking things.
+    Puppet::Util::Execution.execute(args, {
       :failonfail         => true,
       :combine            => false,
       :custom_environment => {}
