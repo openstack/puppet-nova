@@ -1,0 +1,5 @@
+---
+other:
+  - removed useless option nova::network::neutron::neutron_default_tenant_id
+  - removed useless option nova::network::neutron::neutron_auth_plugin
+  - removed useless option nova::network::neutron::neutron_ca_certificates_file

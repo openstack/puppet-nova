@@ -111,17 +111,6 @@
 #   and not the Identity service API IP and port.
 #   Use neutron_auth_url instead.
 #
-# [*neutron_default_tenant_id*]
-#   (optional) DEPRECATED. Default tenant id when creating neutron networks
-#
-# [*neutron_auth_plugin*]
-#   Name of the plugin to load (string value)
-#   Defaults to undef
-#
-# [*neutron_ca_certificates_file*]
-#   (optional) Location of ca certicates file to use for neutronclient requests.
-#   Defaults to undef
-#
 class nova::network::neutron (
   $neutron_password                = false,
   $neutron_auth_type               = 'v3password',
@@ -140,9 +129,6 @@ class nova::network::neutron (
   $vif_plugging_timeout            = '300',
   $dhcp_domain                     = 'novalocal',
   $default_floating_pool           = 'nova',
-  $neutron_default_tenant_id       = undef,
-  $neutron_auth_plugin             = undef,
-  $neutron_ca_certificates_file    = undef,
 ) {
 
   include ::nova::deps
