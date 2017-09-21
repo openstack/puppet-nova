@@ -23,19 +23,20 @@ describe 'nova::wsgi::apache_placement' do
       )}
       it { is_expected.to contain_file(platform_params[:placement_httpd_config_file]) }
       it { is_expected.to contain_openstacklib__wsgi__apache('placement_wsgi').with(
-        :bind_port           => 80,
-        :group               => 'nova',
-        :path                => '/placement',
-        :servername          => facts[:fqdn],
-        :ssl                 => true,
-        :threads             => facts[:os_workers],
-        :user                => 'nova',
-        :workers             => 1,
-        :wsgi_daemon_process => 'placement-api',
-        :wsgi_process_group  => 'placement-api',
-        :wsgi_script_dir     => platform_params[:wsgi_script_path],
-        :wsgi_script_file    => 'nova-placement-api',
-        :wsgi_script_source  => platform_params[:placement_wsgi_script_source],
+        :bind_port                   => 80,
+        :group                       => 'nova',
+        :path                        => '/placement',
+        :servername                  => facts[:fqdn],
+        :ssl                         => true,
+        :threads                     => facts[:os_workers],
+        :user                        => 'nova',
+        :workers                     => 1,
+        :wsgi_daemon_process         => 'placement-api',
+        :wsgi_process_group          => 'placement-api',
+        :wsgi_script_dir             => platform_params[:wsgi_script_path],
+        :wsgi_script_file            => 'nova-placement-api',
+        :wsgi_script_source          => platform_params[:placement_wsgi_script_source],
+        :custom_wsgi_process_options => {},
       )}
 
     end
@@ -57,6 +58,9 @@ describe 'nova::wsgi::apache_placement' do
           :ssl                       => false,
           :wsgi_process_display_name => 'placement-api',
           :workers                   => 37,
+          :custom_wsgi_process_options => {
+            'python_path' => '/my/python/path',
+          },
         }
       end
 
@@ -71,21 +75,24 @@ describe 'nova::wsgi::apache_placement' do
       )}
       it { is_expected.to contain_file(platform_params[:placement_httpd_config_file]) }
       it { is_expected.to contain_openstacklib__wsgi__apache('placement_wsgi').with(
-        :bind_host                 => '10.42.51.1',
-        :bind_port                 => 12345,
-        :group                     => 'nova',
-        :path                      => '/placement',
-        :servername                => 'dummy.host',
-        :ssl                       => false,
-        :workers                   => 37,
-        :threads                   => facts[:os_workers],
-        :user                      => 'nova',
-        :wsgi_daemon_process       => 'placement-api',
-        :wsgi_process_display_name => 'placement-api',
-        :wsgi_process_group        => 'placement-api',
-        :wsgi_script_dir           => platform_params[:wsgi_script_path],
-        :wsgi_script_file          => 'nova-placement-api',
-        :wsgi_script_source        => platform_params[:placement_wsgi_script_source],
+        :bind_host                   => '10.42.51.1',
+        :bind_port                   => 12345,
+        :group                       => 'nova',
+        :path                        => '/placement',
+        :servername                  => 'dummy.host',
+        :ssl                         => false,
+        :workers                     => 37,
+        :threads                     => facts[:os_workers],
+        :user                        => 'nova',
+        :wsgi_daemon_process         => 'placement-api',
+        :wsgi_process_display_name   => 'placement-api',
+        :wsgi_process_group          => 'placement-api',
+        :wsgi_script_dir             => platform_params[:wsgi_script_path],
+        :wsgi_script_file            => 'nova-placement-api',
+        :wsgi_script_source          => platform_params[:placement_wsgi_script_source],
+        :custom_wsgi_process_options => {
+          'python_path' => '/my/python/path',
+        },
       )}
     end
   end
