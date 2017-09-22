@@ -64,7 +64,7 @@ class nova::deps {
   Anchor['nova::install::end'] ~> Anchor['nova::service::begin']
   Anchor['nova::config::end']  ~> Anchor['nova::service::begin']
 
-  # This is here for backwards compatability for any external users of the
+  # This is here for backwards compatibility for any external users of the
   # nova-start anchor.  This should be considered deprecated and removed in the
   # N cycle
   anchor { 'nova-start':
