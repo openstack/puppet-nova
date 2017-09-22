@@ -18,7 +18,7 @@
 #
 # [*workers*]
 #   (optional) Number of workers for OpenStack Conductor service
-#   Defaults to undef (i.e. parameter will not be present)
+#   Defaults to $::os_workers
 #
 # [*enable_new_services*]
 #   (optional) When a new service (for example "nova-compute") start up, it gets
@@ -37,7 +37,7 @@ class nova::conductor(
   $enabled             = true,
   $manage_service      = true,
   $ensure_package      = 'present',
-  $workers             = undef,
+  $workers             = $::os_workers,
   $enable_new_services = $::os_service_default,
   # DEPREACTED PARAMETERS
   $use_local           = undef,
