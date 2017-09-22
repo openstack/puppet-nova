@@ -329,7 +329,7 @@
 #   (optional) Info to match when looking for cinder in the service
 #   catalog. Format is: separated values of the form:
 #   <service_type>:<service_name>:<endpoint_type>
-#   Defaults to 'volumev2:cinderv2:publicURL'
+#   Defaults to $::os_service_default
 #
 # [*upgrade_level_cells*]
 #  (optional) Sets a version cap for messages sent to local cells services
@@ -511,7 +511,7 @@ class nova(
   $notify_api_faults                      = false,
   $notify_on_state_change                 = undef,
   $os_region_name                         = $::os_service_default,
-  $cinder_catalog_info                    = 'volumev2:cinderv2:publicURL',
+  $cinder_catalog_info                    = $::os_service_default,
   $upgrade_level_cells                    = $::os_service_default,
   $upgrade_level_cert                     = $::os_service_default,
   $upgrade_level_compute                  = $::os_service_default,
