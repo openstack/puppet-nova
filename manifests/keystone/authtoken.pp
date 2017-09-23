@@ -226,6 +226,8 @@ class nova::keystone::authtoken(
   $revocation_cache_time          = undef,
 ) {
 
+  include ::nova::deps
+
   if is_service_default($password) {
     fail('Please set password for nova service user')
   }
