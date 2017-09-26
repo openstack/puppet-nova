@@ -1,0 +1,3 @@
+---
+upgrade:
+  - Remove live_migration_progress_timeout parameter
