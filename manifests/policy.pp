@@ -32,6 +32,18 @@ class nova::policy (
 
   validate_hash($policies)
 
+  # NOTE(danpawlik) Policy.json file has been removed in
+  # Ubuntu Cloud archive packages since Ocata staging.
+  # Ensure that the file exist.
+  file { '/etc/nova/policy.json':
+    ensure  => file,
+    owner   => 'nova',
+    group   => 'nova',
+    mode    => '0644',
+    require => Anchor['nova::install::end'],
+    before  => Anchor['nova::config::begin'],
+  }
+
   $policy_defaults = {
     'file_path' => $policy_path,
     'require'   => Anchor['nova::config::begin'],
