@@ -57,13 +57,6 @@
 #   (optional) Regex to match the name of a datastore.
 #   Defaults to $::os_service_default
 #
-# DEPRECATED PARAMETERS
-# [*wsdl_location*]
-#   (optional) VIM Service WSDL Location e.g
-#   http://<server>/vimService.wsdl. Optional over-ride to
-#   default location for bug work-arounds.
-#   Defaults to undef
-#
 class nova::compute::vmware(
   $host_ip,
   $host_username,
@@ -77,15 +70,9 @@ class nova::compute::vmware(
   $insecure           = $::os_service_default,
   $ca_file            = $::os_service_default,
   $datastore_regex    = $::os_service_default,
-  # DEPRECATED PARAMETERS
-  $wsdl_location      = undef,
 ) {
 
   include ::nova::deps
-
-  if $wsdl_location {
-    warning('wsdl_location is deprecated, has no effect and will be removed in the future release.')
-  }
 
   nova_config {
     'DEFAULT/compute_driver':    value => $compute_driver;
