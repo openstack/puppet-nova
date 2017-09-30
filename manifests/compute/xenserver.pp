@@ -223,23 +223,6 @@
 #   first introduced (integer value)
 #   Defaults to $::os_service_default
 #
-# DEPRECATED PARAMETERS
-#
-# [*xenapi_inject_image*]
-#   (optional) DEPRECATED: This parameter does nothing.
-#
-# [*xenapi_connection_url*]
-#   (optional) DEPRECATED: URL for connection to XenServer/Xen Cloud Platform.
-#   Please use connection_url parameter.
-#
-# [*xenapi_connection_username*]
-#   (optional) DEPRECATED: Username for connection to XenServer/Xen Cloud Platform
-#   Please use connection_username parameter.
-#
-# [*xenapi_connection_password*]
-#   (optional) DEPRECATED: Password for connection to XenServer/Xen Cloud Platform.
-#   Please use connection_password parameter.
-#
 class nova::compute::xenserver(
   $connection_url,
   $connection_username,
@@ -288,31 +271,9 @@ class nova::compute::xenserver(
   $vif_driver                            = 'nova.virt.xenapi.vif.XenAPIOpenVswitchDriver',
   $image_upload_handler                  = $::os_service_default,
   $introduce_vdi_retry_wait              = $::os_service_default,
-  # DEPRECATED PARAMETERS
-  $xenapi_inject_image                   = undef,
-  $xenapi_connection_url                 = undef,
-  $xenapi_connection_username            = undef,
-  $xenapi_connection_password            = undef,
 ) {
 
   include ::nova::deps
-
-  if $xenapi_inject_image != undef {
-    warning('The xenapi_inject_image parameter is deprecated and has no effect.')
-  }
-
-  if $xenapi_connection_url {
-    warning('The xenapi_connection_url parameter is deprecated and has no effect, please use connection_url.')
-  }
-
-  if $xenapi_connection_username {
-    warning('The xenapi_connection_username parameter is deprecated and has no effect, please use connection_username.')
-  }
-
-  if $xenapi_connection_password {
-    warning('The xenapi_connection_password parameter is deprecated and has no effect, please use connection_password.')
-  }
-
 
   nova_config {
     'DEFAULT/compute_driver':                          value => $compute_driver;

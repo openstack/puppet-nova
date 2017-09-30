@@ -1,0 +1,5 @@
+---
+upgrade:
+  - Remove some useless parameters
+    Some parameters are useless in xenserver.pp,
+    have no effect and will be removed in the future.
