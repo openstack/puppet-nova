@@ -27,25 +27,13 @@
 #   by the conductor service which is responsible for creating the service entries.
 #   Defaults to $::os_service_default
 #
-# DEPRECATED PARAMETERS
-#
-# [*use_local*]
-#   (optional) Perform nova-conductor operations locally
-#   Defaults to undef
-#
 class nova::conductor(
   $enabled             = true,
   $manage_service      = true,
   $ensure_package      = 'present',
   $workers             = $::os_workers,
   $enable_new_services = $::os_service_default,
-  # DEPREACTED PARAMETERS
-  $use_local           = undef,
 ) {
-
-  if $use_local {
-    warning('use_local parameter is deprecated, has no effect and will be dropped in a future release.')
-  }
 
   include ::nova::deps
   include ::nova::db

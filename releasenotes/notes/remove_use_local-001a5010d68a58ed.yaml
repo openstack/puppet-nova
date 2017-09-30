@@ -1,0 +1,5 @@
+---
+upgrade:
+  - Remove use_local parameter
+    use_local parameter is deprecated, has no effect
+    and will be removed in the future.
