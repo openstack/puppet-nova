@@ -1,0 +1,4 @@
+---
+upgrade:
+  - Remove Class nova::network
+    nova-network is deprecated in Newton and will be removed in the future.
