@@ -17,21 +17,12 @@
 #  configuration file.
 #  Defaults to undef.
 #
-# DEPRECATED
-#
-# [*extra_params*]
-#   This parameter is deprecated and will be ignored
-#
 define nova::cell_v2::cell (
-  $extra_params        = undef,
   $transport_url       = 'default',
   $database_connection = 'default'
 ) {
 
   warning('nova::cell_v2::cell is deprecated by the nova_cell_v2 type in Pike and will be removed in the future.')
-  if $extra_params {
-    warning('The nova::cell_v2::cell::extra_params parameter is deprecated and will be ignored')
-  }
 
   include ::nova::deps
 
