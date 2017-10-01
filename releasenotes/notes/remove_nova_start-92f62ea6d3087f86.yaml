@@ -1,0 +1,6 @@
+---
+upgrade:
+  - Remove nova-start
+    This is here for backwards compatibility for any external users of the
+    nova-start anchor. This should be considered deprecated and removed in the
+    future cycle.
