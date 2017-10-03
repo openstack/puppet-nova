@@ -111,7 +111,11 @@ class nova::logging(
   $use_syslog_real = pick($::nova::use_syslog,$use_syslog)
   $use_stderr_real = pick($::nova::use_stderr,$use_stderr)
   $log_facility_real = pick($::nova::log_facility,$log_facility)
-  $log_dir_real = pick($::nova::log_dir,$log_dir)
+  if $log_dir != '' {
+    $log_dir_real = pick($::nova::log_dir,$log_dir)
+  } else {
+    $log_dir_real = $log_dir
+  }
   $debug_real = pick($::nova::debug,$debug)
 
   oslo::log { 'nova_config':
