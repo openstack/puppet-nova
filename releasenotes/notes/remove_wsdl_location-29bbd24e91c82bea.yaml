@@ -1,0 +1,5 @@
+---
+upgrade:
+  - Remove wsdl_location parameter
+    wsdl_location parameter is now deprecated and will be removed
+    in the future release.
