@@ -1,0 +1,5 @@
+---
+upgrade:
+  - Remove extra_params parameter
+    The nova::cell_v2::cell::extra_params parameter is
+    deprecated and will be ignored.
