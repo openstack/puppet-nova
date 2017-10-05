@@ -11,7 +11,6 @@ class nova::params {
       $api_package_name              = 'openstack-nova-api'
       $placement_package_name        = 'openstack-nova-placement-api'
       $cells_package_name            = 'openstack-nova-cells'
-      $cert_package_name             = 'openstack-nova-cert'
       $common_package_name           = 'openstack-nova-common'
       $compute_package_name          = 'openstack-nova-compute'
       $conductor_package_name        = 'openstack-nova-conductor'
@@ -31,7 +30,6 @@ class nova::params {
       # service names
       $api_service_name              = 'openstack-nova-api'
       $cells_service_name            = 'openstack-nova-cells'
-      $cert_service_name             = 'openstack-nova-cert'
       $compute_service_name          = 'openstack-nova-compute'
       $conductor_service_name        = 'openstack-nova-conductor'
       $consoleauth_service_name      = 'openstack-nova-consoleauth'
@@ -78,7 +76,6 @@ class nova::params {
       $api_package_name             = 'nova-api'
       $placement_package_name       = 'nova-placement-api'
       $cells_package_name           = 'nova-cells'
-      $cert_package_name            = 'nova-cert'
       $common_package_name          = 'nova-common'
       $compute_package_name         = 'nova-compute'
       $conductor_package_name       = 'nova-conductor'
@@ -98,7 +95,6 @@ class nova::params {
       # service names
       $api_service_name             = 'nova-api'
       $cells_service_name           = 'nova-cells'
-      $cert_service_name            = 'nova-cert'
       $compute_service_name         = 'nova-compute'
       $conductor_service_name       = 'nova-conductor'
       $consoleauth_service_name     = 'nova-consoleauth'
