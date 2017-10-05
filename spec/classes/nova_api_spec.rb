@@ -75,9 +75,9 @@ describe 'nova::api' do
         is_expected.to contain_nova_config('vendordata_dynamic_auth/auth_url').with('value' => '<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('vendordata_dynamic_auth/os_region_name').with('value' => '<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('vendordata_dynamic_auth/password').with('value' => '<SERVICE DEFAULT>')
-        is_expected.to contain_nova_config('vendordata_dynamic_auth/project_domain_name').with('value' => '<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('vendordata_dynamic_auth/project_domain_name').with('value' => 'Default')
         is_expected.to contain_nova_config('vendordata_dynamic_auth/project_name').with('value' => '<SERVICE DEFAULT>')
-        is_expected.to contain_nova_config('vendordata_dynamic_auth/user_domain_name').with('value' => '<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('vendordata_dynamic_auth/user_domain_name').with('value' => 'Default')
         is_expected.to contain_nova_config('vendordata_dynamic_auth/username').with('value' => '<SERVICE DEFAULT>')
       end
 
