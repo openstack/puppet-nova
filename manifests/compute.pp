@@ -142,16 +142,6 @@
 #   will disable itself.
 #   Defaults to $::os_service_default
 #
-# DEPRECATED
-#
-# [*pci_passthrough*]
-#   DEPRECATED. Use nova::compute::pci::passthrough instead.
-#   (optional) Pci passthrough list of hash.
-#   Defaults to undef
-#   Example of format:
-#   [ { "vendor_id" => "1234","product_id" => "5678" },
-#     { "vendor_id" => "4321","product_id" => "8765", "physical_network" => "default" } ]
-#
 class nova::compute (
   $enabled                                     = true,
   $manage_service                              = true,
@@ -183,8 +173,6 @@ class nova::compute (
   $barbican_api_version                        = $::os_service_default,
   $max_concurrent_live_migrations              = $::os_service_default,
   $consecutive_build_service_disable_threshold = $::os_service_default,
-  # DEPRECATED PARAMETERS
-  $pci_passthrough                             = undef,
 ) {
 
   include ::nova::deps
@@ -193,11 +181,6 @@ class nova::compute (
   $vcpu_pin_set_real = pick(join(any2array($vcpu_pin_set), ','), $::os_service_default)
 
   include ::nova::pci
-
-  if $pci_passthrough {
-    warning('The pci_passthrough parameter is deprecated. Please use nova::compute::pci::passthrough instead.')
-  }
-  include ::nova::compute::pci
 
   # cryptsetup is required when Barbican is encrypting volumes
   if $keymgr_api_class =~ /barbican/ {

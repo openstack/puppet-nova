@@ -1,0 +1,5 @@
+---
+upgrade:
+  - Remove parameter nova::compute::pci_passthrough
+    The pci_passthrough parameter is deprecated. Please use 
+    nova::compute::pci::passthrough instead.
