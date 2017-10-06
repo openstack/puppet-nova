@@ -1,0 +1,5 @@
+---
+upgrade:
+  - Remove Class nova::wsgi::apache
+    nova::wsgi::apache is deprecated and will be removed in a future release,
+    please use nova::wsgi::apache_api.
