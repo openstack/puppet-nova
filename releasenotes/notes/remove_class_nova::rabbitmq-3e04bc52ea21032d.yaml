@@ -1,0 +1,6 @@
+---
+upgrade:
+  - Remove Class nova::rabbitmq
+    nova::rabbitmq class is deprecated and will be removed in next release.
+    Make other plans to configure rabbitmq resources.
+ 
