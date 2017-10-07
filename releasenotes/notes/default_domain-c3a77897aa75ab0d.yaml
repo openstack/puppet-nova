@@ -1,0 +1,6 @@
+---
+issues:
+  - |
+    Keystone v2.0 API was removed so we need to set a default value
+    for user_domain_name and project_domain name, which will be
+    Default as it is already in some other classes in modules.
