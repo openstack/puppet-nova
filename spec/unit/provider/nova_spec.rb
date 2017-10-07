@@ -65,34 +65,6 @@ describe Puppet::Provider::Nova do
 
   end
 
-  describe 'when invoking the nova cli' do
-
-    it 'should set auth credentials in the environment' do
-      authenv = {
-        :OS_AUTH_URL     => auth_endpoint,
-        :OS_USERNAME     => credential_hash['username'],
-        :OS_PROJECT_NAME => credential_hash['project_name'],
-        :OS_PASSWORD     => credential_hash['password'],
-        :OS_REGION_NAME => credential_hash['region_name'],
-      }
-      klass.expects(:get_nova_credentials).with().returns(credential_hash)
-      klass.expects(:withenv).with(authenv)
-      klass.auth_nova('test_retries')
-    end
-
-    ['[Errno 111] Connection refused',
-     '(HTTP 400)'].reverse.each do |valid_message|
-      it "should retry when nova cli returns with error #{valid_message}" do
-        klass.expects(:get_nova_credentials).with().returns({})
-        klass.expects(:sleep).with(10).returns(nil)
-        klass.expects(:nova).twice.with(['test_retries']).raises(
-          Exception, valid_message).then.returns('')
-        klass.auth_nova('test_retries')
-      end
-    end
-
-  end
-
   describe 'when parse a string line' do
     it 'should return the same string' do
       res = klass.str2hash("zone1")

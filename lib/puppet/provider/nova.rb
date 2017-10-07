@@ -60,21 +60,6 @@ class Puppet::Provider::Nova < Puppet::Provider::Openstack
     '/etc/nova/nova.conf'
   end
 
-  # deprecated: method for old nova cli auth
-  def self.withenv(hash, &block)
-    saved = ENV.to_hash
-    hash.each do |name, val|
-      ENV[name.to_s] = val
-    end
-
-    yield
-  ensure
-    ENV.clear
-    saved.each do |name, val|
-      ENV[name] = val
-    end
-  end
-
   def self.nova_conf
     return @nova_conf if @nova_conf
     @nova_conf = Puppet::Util::IniConfig::File.new
@@ -126,40 +111,6 @@ class Puppet::Provider::Nova < Puppet::Provider::Openstack
 
   def self.auth_endpoint
     @auth_endpoint ||= get_auth_endpoint
-  end
-
-  # deprecated: method for old nova cli auth
-  def self.auth_nova(*args)
-    q = nova_credentials
-    authenv = {
-      :OS_AUTH_URL     => self.auth_endpoint,
-      :OS_USERNAME     => q['username'],
-      :OS_PROJECT_NAME => q['project_name'],
-      :OS_PASSWORD     => q['password']
-    }
-    if q.key?('region_name')
-      authenv[:OS_REGION_NAME] = q['region_name']
-    end
-    begin
-      withenv authenv do
-        nova(args)
-      end
-    rescue Exception => e
-      if (e.message =~ /\[Errno 111\] Connection refused/) or
-          (e.message =~ /\(HTTP 400\)/)
-        sleep 10
-        withenv authenv do
-          nova(args)
-        end
-      else
-       raise(e)
-      end
-    end
-  end
-
-  # deprecated: method for old nova cli auth
-  def auth_nova(*args)
-    self.class.auth_nova(args)
   end
 
   def self.reset
