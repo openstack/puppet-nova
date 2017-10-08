@@ -94,6 +94,13 @@ class nova::db (
   include ::nova::deps
   include ::nova::params
 
+  if $placement_database_connection {
+    warning('placement_database_connection has no effect as of pike, and may be removed in a future release')
+  }
+  if $placement_slave_connection {
+    warning('placement_slave_connection has no effect as of pike, and may be removed in a future release')
+  }
+
   # NOTE(spredzy): In order to keep backward compatibility we rely on the pick function
   # to use nova::<myparam> first the nova::db::<myparam>
   $database_connection_real = pick($::nova::database_connection, $database_connection)
