@@ -70,6 +70,18 @@
 #     apache::vhost ssl parameters.
 #     Optional. Default to apache::vhost 'ssl_*' defaults.
 #
+#   [*access_log_file*]
+#     The log file name for the virtualhost.
+#     Optional. Defaults to false.
+#
+#   [*access_log_format*]
+#     The log format for the virtualhost.
+#     Optional. Defaults to false.
+#
+#   [*error_log_file*]
+#     The error log file name for the virtualhost.
+#     Optional. Defaults to undef.
+#
 #   [*custom_wsgi_process_options*]
 #     (optional) gives you the oportunity to add custom process options or to
 #     overwrite the default options for the WSGI main process.
@@ -105,6 +117,9 @@ class nova::wsgi::apache_api (
   $wsgi_process_display_name   = undef,
   $threads                     = $::os_workers,
   $priority                    = '10',
+  $access_log_file             = false,
+  $access_log_format           = false,
+  $error_log_file              = undef,
   $custom_wsgi_process_options = {},
 ) {
 
@@ -144,6 +159,9 @@ class nova::wsgi::apache_api (
     wsgi_script_file            => 'nova-api',
     wsgi_script_source          => $::nova::params::nova_api_wsgi_script_source,
     custom_wsgi_process_options => $custom_wsgi_process_options,
+    access_log_file             => $access_log_file,
+    access_log_format           => $access_log_format,
+    error_log_file              => $error_log_file,
   }
 
 }
