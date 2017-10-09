@@ -86,31 +86,6 @@
 #   (optional) Default pool for floating IPs
 #   Defaults to 'nova'
 #
-# DEPRECATED PARAMETERS
-# [*neutron_auth_strategy*]
-#   (optional) DEPRECATED.
-#
-# [*neutron_admin_password*]
-#   DEPRECATED. Password for connecting to Neutron network services
-#   in admin context through the OpenStack Identity service.
-#   Use neutron_password instead.
-#
-# [*neutron_admin_tenant_name*]
-#   (optional) DEPRECATED. Tenant name for connecting to Neutron network
-#   services in admin context through the OpenStack Identity service.
-#   Use neutron_project_name instead.
-#
-# [*neutron_admin_username*]
-#   (optional) DEPRECATED. Username for connecting to Neutron network services
-#   in admin context through the OpenStack Identity service.
-#   Use neutron_username instead.
-#
-# [*neutron_admin_auth_url*]
-#   (optional) DEPRECATED. Points to the OpenStack Identity server IP and port.
-#   This is the Identity (keystone) admin API server IP and port value,
-#   and not the Identity service API IP and port.
-#   Use neutron_auth_url instead.
-#
 class nova::network::neutron (
   $neutron_password                = false,
   $neutron_auth_type               = 'v3password',
