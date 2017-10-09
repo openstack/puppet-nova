@@ -1,0 +1,8 @@
+---
+features:
+  - |
+    The parameter log_outputs in the libvirt manifest has been expose in order
+    to be able to configure where the libvirtd logs end up (which could be in
+    multiple places depending on the value for that parameter). It configures
+    the configuration value with the same name, as explained in the
+    documentation - https://libvirt.org/logging.html

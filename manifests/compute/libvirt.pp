@@ -126,6 +126,11 @@
 #   you actually want to deploy.
 #   Defaults to true for backward compatibility.
 #
+# [*log_outputs*]
+#   (optional) Defines log outputs, as specified in
+#   https://libvirt.org/logging.html
+#   Defaults to undef
+#
 class nova::compute::libvirt (
   $ensure_package                             = 'present',
   $libvirt_virt_type                          = 'kvm',
@@ -150,6 +155,7 @@ class nova::compute::libvirt (
   $compute_driver                             = 'libvirt.LibvirtDriver',
   $preallocate_images                         = $::os_service_default,
   $manage_libvirt_services                    = true,
+  $log_outputs                                = undef,
 ) inherits nova::params {
 
   include ::nova::deps
@@ -178,6 +184,12 @@ class nova::compute::libvirt (
 
   if $migration_support {
     include ::nova::migration::libvirt
+  }
+
+  if $log_outputs {
+    libvirtd_config {
+      'log_outputs': value => "\"${log_outputs}\"";
+    }
   }
 
   # manage_libvirt_services is here for backward compatibility to support
