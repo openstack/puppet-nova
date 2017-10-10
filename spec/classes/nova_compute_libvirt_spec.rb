@@ -81,6 +81,7 @@ describe 'nova::compute::libvirt' do
           :virtlog_service_name                       => 'virtlog',
           :compute_driver                             => 'libvirt.FoobarDriver',
           :preallocate_images                         => 'space',
+          :log_outputs                                => '1:file:/var/log/libvirt/libvirtd.log'
         }
       end
 
@@ -102,6 +103,7 @@ describe 'nova::compute::libvirt' do
       it { is_expected.to contain_nova_config('DEFAULT/remove_unused_base_images').with_value(true)}
       it { is_expected.to contain_nova_config('DEFAULT/remove_unused_original_minimum_age_seconds').with_value(3600)}
       it { is_expected.to contain_nova_config('libvirt/remove_unused_resized_minimum_age_seconds').with_value(3600)}
+      it { is_expected.to contain_libvirtd_config('log_outputs').with_value("\"#{params[:log_outputs]}\"")}
       it {
         is_expected.to contain_service('libvirt').with(
           :name     => 'custom_service',
