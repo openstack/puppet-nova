@@ -48,6 +48,14 @@
 #   The Ironic Keystone tenant name.
 #   Defaults to 'services'
 #
+# [*user_domain_name*]
+#   (Optional) Name of domain for $user_domain_name
+#   Defaults to 'Default'
+#
+# [*project_domain_name*]
+#   (Optional) Name of domain for $project_domain_name
+#   Defaults to 'Default'
+#
 class nova::ironic::common (
   $api_endpoint         = 'http://127.0.0.1:6385/v1',
   $auth_plugin          = 'password',
@@ -57,6 +65,8 @@ class nova::ironic::common (
   $username             = 'admin',
   $api_max_retries      = $::os_service_default,
   $api_retry_interval   = $::os_service_default,
+  $user_domain_name     = 'Default',
+  $project_domain_name  = 'Default',
 ) {
 
   include ::nova::deps
@@ -71,6 +81,8 @@ class nova::ironic::common (
     'ironic/api_endpoint':         value => $api_endpoint;
     'ironic/api_max_retries':      value => $api_max_retries;
     'ironic/api_retry_interval':   value => $api_retry_interval;
+    'ironic/user_domain_name':     value => $user_domain_name;
+    'ironic/project_domain_name':  value => $project_domain_name;
   }
 
 }
