@@ -21,10 +21,6 @@ class nova::compute::neutron (
 ) {
   include ::nova::deps
 
-  if $libvirt_vif_driver == 'nova.virt.libvirt.vif.LibvirtOpenVswitchDriver' {
-    fail('nova.virt.libvirt.vif.LibvirtOpenVswitchDriver as vif_driver is removed from Icehouse')
-  }
-
   nova_config {
     'libvirt/vif_driver': value => $libvirt_vif_driver;
   }

@@ -14,14 +14,6 @@ describe 'nova::compute::neutron' do
     it { is_expected.to contain_nova_config('DEFAULT/force_snat_range').with_ensure(:absent) }
   end
 
-  context 'when overriding with a removed libvirt_vif_driver param' do
-    let :params do
-      {:libvirt_vif_driver => 'nova.virt.libvirt.vif.LibvirtOpenVswitchDriver' }
-    end
-
-    it_raises 'a Puppet::Error', /nova.virt.libvirt.vif.LibvirtOpenVswitchDriver as vif_driver is removed from Icehouse/
-  end
-
   context 'with force_snat_range parameter set to false' do
     let :params do
       { :force_snat_range => false, }
