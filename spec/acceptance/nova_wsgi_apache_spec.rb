@@ -11,79 +11,8 @@ describe 'basic nova' do
       include ::openstack_integration::rabbitmq
       include ::openstack_integration::mysql
       include ::openstack_integration::keystone
-
-      rabbitmq_user { 'nova':
-        admin    => true,
-        password => 'an_even_bigger_secret',
-        provider => 'rabbitmqctl',
-        require  => Class['rabbitmq'],
-      }
-
-      rabbitmq_user_permissions { 'nova@/':
-        configure_permission => '.*',
-        write_permission     => '.*',
-        read_permission      => '.*',
-        provider             => 'rabbitmqctl',
-        require              => Class['rabbitmq'],
-      }
-
-      # Nova resources
-      class { '::nova':
-        database_connection           => 'mysql+pymysql://nova:a_big_secret@127.0.0.1/nova?charset=utf8',
-        api_database_connection       => 'mysql+pymysql://nova_api:a_big_secret@127.0.0.1/nova_api?charset=utf8',
-        placement_database_connection => 'mysql+pymysql://nova_placement:a_big_secret@127.0.0.1/nova_placement?charset=utf8',
-        default_transport_url         => 'rabbit://nova:an_even_bigger_secret@127.0.0.1:5672/',
-        image_service                 => 'nova.image.glance.GlanceImageService',
-        glance_api_servers            => 'localhost:9292',
-        debug                         => true,
-      }
-      class { '::nova::db::mysql':
-        password => 'a_big_secret',
-      }
-      class { '::nova::db::mysql_api':
-        password => 'a_big_secret',
-      }
-      class { '::nova::db::mysql_placement':
-        password => 'a_big_secret',
-      }
-      class { '::nova::keystone::auth':
-        password => 'a_big_secret',
-      }
-      class { '::nova::keystone::auth_placement':
-        password => 'a_big_secret',
-      }
-      class { '::nova::keystone::authtoken':
-        password => 'a_big_secret',
-      }
-      include '::nova::cell_v2::simple_setup'
-      class { '::nova::api':
-        service_name   => 'httpd',
-      }
-      include ::apache
-      class { '::nova::wsgi::apache_api':
-        ssl => false,
-      }
-      class { '::nova::wsgi::apache_placement':
-        ssl => false,
-      }
-      class { '::nova::placement':
-        password => 'a_big_secret',
-      }
-      class { '::nova::client': }
-      class { '::nova::conductor': }
-      class { '::nova::consoleauth': }
-      class { '::nova::cron::archive_deleted_rows': }
-      class { '::nova::compute': vnc_enabled => true }
-      class { '::nova::compute::libvirt':
-        migration_support     => true,
-        vncserver_listen      => '0.0.0.0',
-        # TODO: enable it again when puppet 4.5 will be idempotent
-        # https://tickets.puppetlabs.com/browse/PUP-6370
-        virtlock_service_name => false,
-        virtlog_service_name  => false,
-      }
-      class { '::nova::scheduler': }
-      class { '::nova::vncproxy': }
+      include ::openstack_integration::neutron
+      include ::openstack_integration::nova
 
       nova_aggregate { 'test_aggregate':
         ensure            => present,
@@ -101,8 +30,6 @@ describe 'basic nova' do
         vcpus   => '1',
         require => [ Class['nova::api'], Class['nova::keystone::auth'] ],
       }
-
-      # TODO: networking with neutron
       EOS
 
 
