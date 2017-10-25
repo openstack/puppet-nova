@@ -29,7 +29,7 @@ describe 'nova::compute' do
       it { is_expected.to contain_nova_config('DEFAULT/vcpu_pin_set').with(:value => '<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('DEFAULT/resume_guests_state_on_host_boot').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to_not contain_nova_config('vnc/novncproxy_base_url') }
-      it { is_expected.to contain_nova_config('key_manager/api_class').with_value('<SERVICE DEFAULT>') }
+      it { is_expected.to contain_nova_config('key_manager/backend').with_value('nova.keymgr.conf_key_mgr.ConfKeyManager') }
       it { is_expected.to contain_nova_config('barbican/barbican_endpoint').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('barbican/barbican_api_version').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('barbican/auth_endpoint').with_value('<SERVICE DEFAULT>') }
@@ -74,7 +74,7 @@ describe 'nova::compute' do
           :resize_confirm_window              => '3',
           :vcpu_pin_set                       => ['4-12','^8','15'],
           :resume_guests_state_on_host_boot   => true,
-          :keymgr_api_class                   => 'castellan.key_manager.barbican_key_manager.BarbicanKeyManager',
+          :keymgr_backend                     => 'castellan.key_manager.barbican_key_manager.BarbicanKeyManager',
           :barbican_endpoint                  => 'http://localhost',
           :barbican_api_version               => 'v1',
           :barbican_auth_endpoint             => 'http://127.0.0.1:5000/v3',
@@ -103,7 +103,7 @@ describe 'nova::compute' do
       end
 
       it 'configures barbican service' do
-        is_expected.to contain_nova_config('key_manager/api_class').with_value('castellan.key_manager.barbican_key_manager.BarbicanKeyManager')
+        is_expected.to contain_nova_config('key_manager/backend').with_value('castellan.key_manager.barbican_key_manager.BarbicanKeyManager')
         is_expected.to contain_nova_config('barbican/barbican_endpoint').with_value('http://localhost')
         is_expected.to contain_nova_config('barbican/barbican_api_version').with_value('v1')
         is_expected.to contain_nova_config('barbican/auth_endpoint').with_value('http://127.0.0.1:5000/v3')
@@ -138,6 +138,18 @@ describe 'nova::compute' do
         is_expected.to_not contain_package('genisoimage').with(
           :ensure => 'present',
         )
+      end
+    end
+
+    context 'with barbican deprecated parameters' do
+      let :params do
+        {
+          :keymgr_api_class => 'castellan.key_manager.barbican_key_manager.BarbicanKeyManager',
+        }
+      end
+      it 'should set keymgr parameter' do
+        is_expected.to contain_nova_config('key_manager/backend').with_value('castellan.key_manager.barbican_key_manager.BarbicanKeyManager')
+        is_expected.to contain_package('cryptsetup').with( :ensure => 'present' )
       end
     end
 
