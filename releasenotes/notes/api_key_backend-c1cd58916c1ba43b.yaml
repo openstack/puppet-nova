@@ -1,0 +1,8 @@
+---
+deprecations:
+  - |
+    keymgr_api_class is now deprecated in favor of keymgr_backend, with
+    full backward compatibility for users.
+    keymgr_backend is set to nova.keymgr.conf_key_mgr.ConfKeyManager
+    by default and configures key_manager/backend instead of
+    key_manager/api_class.

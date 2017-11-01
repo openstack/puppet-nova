@@ -115,11 +115,6 @@
 #   resume their state each time the compute node boots or restarts.
 #   Defaults to $::os_service_default
 #
-# [*keymgr_api_class*]
-#   (optional) Key Manager service.
-#   Example of valid value: castellan.key_manager.barbican_key_manager.BarbicanKeyManager
-#   Defaults to $::os_service_default
-#
 # [*barbican_auth_endpoint*]
 #   (optional) Keystone v3 API URL.
 #   Example: http://localhost:5000/v3
@@ -140,6 +135,18 @@
 # [*consecutive_build_service_disable_threshold*]
 #   (optional) Max number of consecutive build failures before the nova-compute
 #   will disable itself.
+#   Defaults to $::os_service_default
+#
+# [*keymgr_backend*]
+#   (optional) Key Manager service class.
+#   Example of valid value: castellan.key_manager.barbican_key_manager.BarbicanKeyManager
+#   Defaults to 'nova.keymgr.conf_key_mgr.ConfKeyManager'.
+#
+# DEPRECATED PARAMETERS
+#
+# [*keymgr_api_class*]
+#   (optional) Key Manager service.
+#   Example of valid value: castellan.key_manager.barbican_key_manager.BarbicanKeyManager
 #   Defaults to $::os_service_default
 #
 class nova::compute (
@@ -167,12 +174,14 @@ class nova::compute (
   $resize_confirm_window                       = $::os_service_default,
   $vcpu_pin_set                                = $::os_service_default,
   $resume_guests_state_on_host_boot            = $::os_service_default,
-  $keymgr_api_class                            = $::os_service_default,
   $barbican_auth_endpoint                      = $::os_service_default,
   $barbican_endpoint                           = $::os_service_default,
   $barbican_api_version                        = $::os_service_default,
   $max_concurrent_live_migrations              = $::os_service_default,
   $consecutive_build_service_disable_threshold = $::os_service_default,
+  $keymgr_backend                              = 'nova.keymgr.conf_key_mgr.ConfKeyManager',
+  # DEPRECATED PARAMETERS
+  $keymgr_api_class                            = undef,
 ) {
 
   include ::nova::deps
@@ -182,8 +191,15 @@ class nova::compute (
 
   include ::nova::pci
 
+  if $keymgr_api_class {
+    warning('The keymgr_api_class parameter is deprecated, use keymgr_backend')
+    $keymgr_backend_real = $keymgr_api_class
+  } else {
+    $keymgr_backend_real = $keymgr_backend
+  }
+
   # cryptsetup is required when Barbican is encrypting volumes
-  if $keymgr_api_class =~ /barbican/ {
+  if $keymgr_backend_real =~ /barbican/ {
     ensure_packages('cryptsetup', {
       ensure => present,
       tag    => 'openstack',
@@ -198,7 +214,7 @@ class nova::compute (
     'DEFAULT/resize_confirm_window':             value => $resize_confirm_window;
     'DEFAULT/vcpu_pin_set':                      value => $vcpu_pin_set_real;
     'DEFAULT/resume_guests_state_on_host_boot':  value => $resume_guests_state_on_host_boot;
-    'key_manager/api_class':                     value => $keymgr_api_class;
+    'key_manager/backend':                       value => $keymgr_backend_real;
     'barbican/auth_endpoint':                    value => $barbican_auth_endpoint;
     'barbican/barbican_endpoint':                value => $barbican_endpoint;
     'barbican/barbican_api_version':             value => $barbican_api_version;
