@@ -98,6 +98,7 @@ describe 'nova' do
           :notification_transport_url              => 'rabbit://rabbit_user:password@localhost:5673',
           :notification_driver                     => 'ceilometer.compute.nova_notifier',
           :notification_topics                     => 'openstack',
+          :notification_format                     => 'unversioned',
           :notify_api_faults                       => true,
           :report_interval                         => '60',
           :os_region_name                          => 'MyRegion',
@@ -180,6 +181,7 @@ describe 'nova' do
         is_expected.to contain_nova_config('oslo_messaging_notifications/transport_url').with_value('rabbit://rabbit_user:password@localhost:5673')
         is_expected.to contain_nova_config('oslo_messaging_notifications/driver').with_value('ceilometer.compute.nova_notifier')
         is_expected.to contain_nova_config('oslo_messaging_notifications/topics').with_value('openstack')
+        is_expected.to contain_nova_config('notifications/notification_format').with_value('unversioned')
         is_expected.to contain_nova_config('notifications/notify_api_faults').with_value(true)
         is_expected.to contain_nova_config('DEFAULT/report_interval').with_value('60')
         is_expected.to contain_nova_config('os_vif_linux_bridge/use_ipv6').with_value('true')
