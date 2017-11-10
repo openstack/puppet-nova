@@ -1,0 +1,5 @@
+---
+features:
+  - |
+    Add parameter to set notification format. Specifies which notification
+    format shall be used by nova.
