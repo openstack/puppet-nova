@@ -305,6 +305,10 @@
 #   (optional) AMQP topic used for OpenStack notifications
 #   Defaults to ::os_service_default
 #
+# [*notification_format*]
+#   (optional) Format used for OpenStack notifications
+#   Defaults to ::os_service_default
+#
 # [*notify_api_faults*]
 #   (optional) If set, send api.fault notifications on caught
 #   exceptions in the API service
@@ -508,6 +512,7 @@ class nova(
   $notification_transport_url             = $::os_service_default,
   $notification_driver                    = $::os_service_default,
   $notification_topics                    = $::os_service_default,
+  $notification_format                    = $::os_service_default,
   $notify_api_faults                      = false,
   $notify_on_state_change                 = undef,
   $os_region_name                         = $::os_service_default,
@@ -752,6 +757,7 @@ but should be one of: ssh-rsa, ssh-dsa, ssh-ecdsa.")
     'cinder/catalog_info':                            value => $cinder_catalog_info;
     'os_vif_linux_bridge/use_ipv6':                   value => $use_ipv6;
     'DEFAULT/notify_api_faults':                      value => $notify_api_faults;
+    'DEFAULT/notification_format':                    value => $notification_format;
     # Following may need to be broken out to different nova services
     'DEFAULT/state_path':                             value => $state_path;
     'DEFAULT/service_down_time':                      value => $service_down_time;
