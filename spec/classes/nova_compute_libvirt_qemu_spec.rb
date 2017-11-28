@@ -18,7 +18,7 @@ describe 'nova::compute::libvirt::qemu' do
       end
       it { is_expected.to contain_augeas('qemu-conf-limits').with({
         :context => '/files/etc/libvirt/qemu.conf',
-        :changes => [ "rm max_files", "rm max_processes" ],
+        :changes => [ "rm max_files", "rm max_processes", "rm group" ],
       }).that_notifies('Service[libvirt]') }
     end
 
@@ -46,6 +46,26 @@ describe 'nova::compute::libvirt::qemu' do
       it { is_expected.to contain_augeas('qemu-conf-limits').with({
         :context => '/files/etc/libvirt/qemu.conf',
         :changes => [ "set max_files 32768", "set max_processes 131072" ],
+        :tag     => 'qemu-conf-augeas',
+      }).that_notifies('Service[libvirt]') }
+    end
+
+    context 'when configuring qemu with group parameter' do
+      let :params do
+        {
+          :configure_qemu => true,
+          :group => 'openvswitch',
+          :max_files => 32768,
+          :max_processes => 131072,
+        }
+      end
+      it { is_expected.to contain_augeas('qemu-conf-limits').with({
+        :context => '/files/etc/libvirt/qemu.conf',
+        :changes => [
+            "set max_files 32768",
+            "set max_processes 131072",
+            "set group openvswitch"
+        ],
         :tag     => 'qemu-conf-augeas',
       }).that_notifies('Service[libvirt]') }
     end
