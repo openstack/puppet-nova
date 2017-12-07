@@ -33,6 +33,7 @@ describe 'nova::compute' do
       it { is_expected.to contain_nova_config('barbican/barbican_endpoint').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('barbican/barbican_api_version').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('barbican/auth_endpoint').with_value('<SERVICE DEFAULT>') }
+      it { is_expected.to contain_nova_config('glance/verify_glance_signatures').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('DEFAULT/max_concurrent_live_migrations').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('compute/consecutive_build_service_disable_threshold').with_value('<SERVICE DEFAULT>') }
 
@@ -79,6 +80,7 @@ describe 'nova::compute' do
           :barbican_api_version               => 'v1',
           :barbican_auth_endpoint             => 'http://127.0.0.1:5000/v3',
           :max_concurrent_live_migrations     => '4',
+          :verify_glance_signatures           => true,
           :consecutive_build_service_disable_threshold => '9',
         }
       end
@@ -132,6 +134,7 @@ describe 'nova::compute' do
       it { is_expected.to contain_nova_config('compute/consecutive_build_service_disable_threshold').with_value('9') }
 
       it { is_expected.to contain_nova_config('DEFAULT/resume_guests_state_on_host_boot').with_value(true) }
+      it { is_expected.to contain_nova_config('glance/verify_glance_signatures').with_value(true) }
 
       it 'configures nova config_drive_format to vfat' do
         is_expected.to contain_nova_config('DEFAULT/config_drive_format').with_value('vfat')

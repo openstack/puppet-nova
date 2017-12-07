@@ -1,0 +1,4 @@
+---
+features:
+  - Added parameter verify_glance_signatures to enable verification of signatures
+    on glance images.

@@ -142,6 +142,10 @@
 #   Example of valid value: castellan.key_manager.barbican_key_manager.BarbicanKeyManager
 #   Defaults to 'nova.keymgr.conf_key_mgr.ConfKeyManager'.
 #
+# [*verify_glance_signatures*]
+#   (optional) Whether to verify image signatures. (boolean value)
+#   Defaults to $::os_service_default
+#
 # DEPRECATED PARAMETERS
 #
 # [*keymgr_api_class*]
@@ -180,6 +184,7 @@ class nova::compute (
   $max_concurrent_live_migrations              = $::os_service_default,
   $consecutive_build_service_disable_threshold = $::os_service_default,
   $keymgr_backend                              = 'nova.keymgr.conf_key_mgr.ConfKeyManager',
+  $verify_glance_signatures                    = $::os_service_default,
   # DEPRECATED PARAMETERS
   $keymgr_api_class                            = undef,
 ) {
@@ -294,7 +299,8 @@ class nova::compute (
   }
 
   nova_config {
-    'DEFAULT/config_drive_format': value => $config_drive_format;
+    'DEFAULT/config_drive_format':     value => $config_drive_format;
+    'glance/verify_glance_signatures': value => $verify_glance_signatures;
   }
 
 }
