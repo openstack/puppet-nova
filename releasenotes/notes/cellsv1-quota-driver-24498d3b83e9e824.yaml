@@ -1,0 +1,5 @@
+---
+fixes:
+  - |
+    Restore NoopQuotaDriver quota_driver in child cell with CellsV1
+    as it is still required to disable quota checking in child cells.
