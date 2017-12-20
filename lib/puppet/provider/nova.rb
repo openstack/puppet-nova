@@ -46,6 +46,7 @@ class Puppet::Provider::Nova < Puppet::Provider::Openstack
     # NOTE(mnaser): We pass the arguments as an array to avoid problems with
     #               symbols in the arguments breaking things.
     Puppet::Util::Execution.execute(args, {
+      :uid                => nova_user,
       :failonfail         => true,
       :combine            => false,
       :custom_environment => {}
@@ -54,6 +55,10 @@ class Puppet::Provider::Nova < Puppet::Provider::Openstack
 
   def nova_manage_request(*args)
     self.class.nova_manage_request(args)
+  end
+
+  def self.nova_user
+    'nova'
   end
 
   def self.conf_filename

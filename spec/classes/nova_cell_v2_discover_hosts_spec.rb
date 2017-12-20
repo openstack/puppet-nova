@@ -9,6 +9,7 @@ describe 'nova::cell_v2::discover_hosts' do
         is_expected.to contain_exec('nova-cell_v2-discover_hosts').with(
           :path        => ['/bin', '/usr/bin'],
           :command     => 'nova-manage  cell_v2 discover_hosts',
+          :user        => 'nova',
           :refreshonly => true,
           :subscribe   => 'Anchor[nova::service::end]'
         )
@@ -26,6 +27,7 @@ describe 'nova::cell_v2::discover_hosts' do
         is_expected.to contain_exec('nova-cell_v2-discover_hosts').with(
           :path        => ['/bin', '/usr/bin'],
           :command     => 'nova-manage --config-file /etc/nova/nova.conf cell_v2 discover_hosts',
+          :user        => 'nova',
           :refreshonly => true,
           :subscribe   => 'Anchor[nova::service::end]'
         )
