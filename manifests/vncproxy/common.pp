@@ -2,19 +2,19 @@
 #
 # [*vncproxy_host*]
 #   (optional) The host of the VNC proxy server
-#   Defaults to false
+#   Defaults to undef
 #
 # [*vncproxy_protocol*]
 #   (optional) The protocol to communicate with the VNC proxy server
-#   Defaults to 'http'
+#   Defaults to undef
 #
 # [*vncproxy_port*]
 #   (optional) The port to communicate with the VNC proxy server
-#   Defaults to '6080'
+#   Defaults to undef
 #
 # [*vncproxy_path*]
 #   (optional) The path at the end of the uri for communication with the VNC proxy server
-#   Defaults to '/vnc_auto.html'
+#   Defaults to undef
 #
 class nova::vncproxy::common (
   $vncproxy_host     = undef,
