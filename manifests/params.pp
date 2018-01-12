@@ -4,7 +4,7 @@
 # should be considered to be constant
 class nova::params {
   include ::openstacklib::defaults
-
+  $group = 'nova'
   case $::osfamily {
     'RedHat': {
       # package names
