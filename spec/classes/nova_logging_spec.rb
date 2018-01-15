@@ -25,6 +25,7 @@ describe 'nova::logging' do
      :log_date_format => '%Y-%m-%d %H:%M:%S',
      :use_syslog => true,
      :use_json => true,
+     :use_journal => true,
      :use_stderr => false,
      :log_facility => 'LOG_FOO',
      :log_dir => '/var/log/foo',
@@ -57,11 +58,12 @@ describe 'nova::logging' do
   shared_examples 'basic default logging settings' do
     it 'configures nova logging settings with default values' do
       is_expected.to contain_oslo__log('nova_config').with(
-        :use_syslog => '<SERVICE DEFAULT>',
-        :use_json   => '<SERVICE DEFAULT>',
-        :use_stderr => '<SERVICE DEFAULT>',
-        :log_dir    => '/var/log/nova',
-        :debug      => '<SERVICE DEFAULT>',
+        :use_syslog  => '<SERVICE DEFAULT>',
+        :use_json    => '<SERVICE DEFAULT>',
+        :use_journal => '<SERVICE DEFAULT>',
+        :use_stderr  => '<SERVICE DEFAULT>',
+        :log_dir     => '/var/log/nova',
+        :debug       => '<SERVICE DEFAULT>',
       )
       is_expected.to contain_file('/var/log/nova').with(
         :owner        => 'nova',
@@ -78,6 +80,7 @@ describe 'nova::logging' do
       is_expected.to contain_oslo__log('nova_config').with(
         :use_syslog          => true,
         :use_json            => true,
+        :use_journal         => true,
         :use_stderr          => false,
         :syslog_log_facility => 'LOG_FOO',
         :log_dir             => '/var/log/foo',

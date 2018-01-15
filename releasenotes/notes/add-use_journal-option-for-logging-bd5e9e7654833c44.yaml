@@ -1,0 +1,5 @@
+---
+features:
+  - |
+    Adds the use_journal option for configuring oslo.log. This will enable
+    passing the logs to journald.
