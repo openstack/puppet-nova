@@ -33,6 +33,34 @@
 #   proxy server
 #   Defaults to '/vnc_auto.html'
 #
+# [*allow_noauth*]
+#   (optional) Whether connections to unauthenticated/unencrypted VNC servers
+#   are permitted.
+#   Defaults to true
+#
+# [*allow_vencrypt*]
+#   (optional) Whether connections to VNC servers supporting vencrypt are
+#   permitted.
+#   Defaults to false
+#
+# [*vencrypt_key*]
+#   (optional) path to the private key to use when connecting to VNC servers
+#   supporting vencrypt
+#   Required when allow_vencrypt is true.
+#   Defaults to undef
+#
+# [*vencrypt_cert*]
+#   (optional) path to the certifiate to use when connecting to VNC servers
+#   supporting vencrypt
+#   Required when allow_vencrypt is true.
+#   Defaults to undef
+#
+# [*vencrypt_ca*]
+#   (optional) path to the certificate authority cert to use when connecting
+#   to VNC servers that supporting vencrypt
+#   Required when allow_vencrypt is true.
+#   Defaults to undef
+#
 class nova::vncproxy(
   $enabled           = true,
   $manage_service    = true,
@@ -40,15 +68,45 @@ class nova::vncproxy(
   $host              = '0.0.0.0',
   $port              = '6080',
   $vncproxy_path     = '/vnc_auto.html',
-  $ensure_package    = 'present'
+  $ensure_package    = 'present',
+  $allow_noauth      = true,
+  $allow_vencrypt    = false,
+  $vencrypt_key      = undef,
+  $vencrypt_cert     = undef,
+  $vencrypt_ca       = undef,
 ) {
 
   include ::nova::deps
   include ::nova::params
 
+  if (!$allow_noauth and !$allow_vencrypt) {
+    fail('Either allow_noauth or allow_vencrypt must be true')
+  }
+
+  if $allow_vencrypt {
+
+    if (!$vencrypt_ca or !$vencrypt_cert or !$vencrypt_key) {
+      fail('vencrypt_ca/cert/key params are required when allow_vencrypt is true')
+    }
+    nova_config {
+      'vnc/vencrypt_ca_certs':    value => $vencrypt_ca;
+      'vnc/vencrypt_client_cert': value => $vencrypt_cert;
+      'vnc/vencrypt_client_key':  value => $vencrypt_key;
+    }
+
+    if $allow_noauth {
+      $auth_schemes = 'vencrypt,none'
+    } else {
+      $auth_schemes = 'vencrypt'
+    }
+  } else {
+    $auth_schemes = 'none'
+  }
+
   nova_config {
     'vnc/novncproxy_host': value => $host;
     'vnc/novncproxy_port': value => $port;
+    'vnc/auth_schemes':    value => $auth_schemes;
   }
 
   nova::generic_service { 'vncproxy':
