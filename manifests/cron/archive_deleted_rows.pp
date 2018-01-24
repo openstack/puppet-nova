@@ -50,7 +50,7 @@
 #    Defaults to '/var/log/nova/nova-rowsflush.log'.
 #
 #  [*until_complete*]
-#    (optional) Adds --until_complete to the archive command
+#    (optional) Adds --until-complete to the archive command
 #    Defaults to false.
 #
 class nova::cron::archive_deleted_rows (
@@ -68,7 +68,7 @@ class nova::cron::archive_deleted_rows (
   include ::nova::deps
 
   if $until_complete {
-    $until_complete_real = '--until_complete'
+    $until_complete_real = '--until-complete'
   }
 
   cron { 'nova-manage db archive_deleted_rows':
