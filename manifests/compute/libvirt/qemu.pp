@@ -20,11 +20,21 @@
 #   (optional) Maximum number of processes that can be run by qemu user.
 #   Defaults to 4096.
 #
+# [*vnc_tls*]
+#   (optional) Enables TLS for vnc connections.
+#   Defaults to false.
+#
+# [*vnc_tls_verify*]
+#   (optional) Enables TLS client cert verification when vnc_tls is enabled.
+#   Defaults to true.
+#
 class nova::compute::libvirt::qemu(
   $configure_qemu = false,
   $group          = undef,
   $max_files      = 1024,
   $max_processes  = 4096,
+  $vnc_tls        = false,
+  $vnc_tls_verify = true
 ){
 
   include ::nova::deps
@@ -39,9 +49,19 @@ class nova::compute::libvirt::qemu(
 
   if $configure_qemu {
 
+    if $vnc_tls {
+      $vnc_tls_value = 1
+      $vnc_tls_verify_value = $vnc_tls_verify ? { true => 1, false => 0 }
+    } else {
+      $vnc_tls_value = 0
+      $vnc_tls_verify_value = 0
+    }
+
     $augues_changes_default = [
       "set max_files ${max_files}",
       "set max_processes ${max_processes}",
+      "set vnc_tls ${vnc_tls_value}",
+      "set vnc_tls_x509_verify ${vnc_tls_verify_value}"
     ]
     if $group and !empty($group) {
       $augues_group_changes = ["set group ${group}"]
@@ -62,6 +82,8 @@ class nova::compute::libvirt::qemu(
         'rm max_files',
         'rm max_processes',
         'rm group',
+        'rm vnc_tls',
+        'rm vnc_tls_x509_verify'
       ],
       tag     => 'qemu-conf-augeas',
     }

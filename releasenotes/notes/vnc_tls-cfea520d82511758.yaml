@@ -1,0 +1,14 @@
+---
+features:
+  - |
+    Add parameters to configure TLS for nova novncproxy to/from libvirt/qemu:
+
+    * ``nova::vncproxy::allow_noauth``
+    * ``nova::vncproxy::allow_vencrypt``
+    * ``nova::vncproxy::vencrypt_key``
+    * ``nova::vncproxy::vencrypt_cert``
+    * ``nova::vncproxy::vencrypt_ca``
+    * ``nova::compute::libvirt::qemu::vnc_tls``
+    * ``nova::compute::libvirt::qemu::vnc_tls_verify``
+
+    More info is available in the `nova vnc-proxy documentation <https://docs.openstack.org/nova/queens/admin/remote-console-access.html#vnc-proxy-security>`_.

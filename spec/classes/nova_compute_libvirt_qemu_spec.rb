@@ -18,7 +18,7 @@ describe 'nova::compute::libvirt::qemu' do
       end
       it { is_expected.to contain_augeas('qemu-conf-limits').with({
         :context => '/files/etc/libvirt/qemu.conf',
-        :changes => [ "rm max_files", "rm max_processes", "rm group" ],
+        :changes => [ "rm max_files", "rm max_processes", "rm group", "rm vnc_tls", "rm vnc_tls_x509_verify" ],
       }).that_notifies('Service[libvirt]') }
     end
 
@@ -30,7 +30,7 @@ describe 'nova::compute::libvirt::qemu' do
       end
       it { is_expected.to contain_augeas('qemu-conf-limits').with({
         :context => '/files/etc/libvirt/qemu.conf',
-        :changes => [ "set max_files 1024", "set max_processes 4096" ],
+        :changes => [ "set max_files 1024", "set max_processes 4096", "set vnc_tls 0", "set vnc_tls_x509_verify 0" ],
         :tag     => 'qemu-conf-augeas',
       }).that_notifies('Service[libvirt]') }
     end
@@ -45,7 +45,7 @@ describe 'nova::compute::libvirt::qemu' do
       end
       it { is_expected.to contain_augeas('qemu-conf-limits').with({
         :context => '/files/etc/libvirt/qemu.conf',
-        :changes => [ "set max_files 32768", "set max_processes 131072" ],
+        :changes => [ "set max_files 32768", "set max_processes 131072", "set vnc_tls 0", "set vnc_tls_x509_verify 0" ],
         :tag     => 'qemu-conf-augeas',
       }).that_notifies('Service[libvirt]') }
     end
@@ -64,11 +64,53 @@ describe 'nova::compute::libvirt::qemu' do
         :changes => [
             "set max_files 32768",
             "set max_processes 131072",
+            "set vnc_tls 0",
+            "set vnc_tls_x509_verify 0",
             "set group openvswitch"
         ],
         :tag     => 'qemu-conf-augeas',
       }).that_notifies('Service[libvirt]') }
     end
+
+    context 'when configuring qemu with vnc_tls' do
+      let :params do
+        {
+          :configure_qemu => true,
+          :vnc_tls => true
+        }
+      end
+      it { is_expected.to contain_augeas('qemu-conf-limits').with({
+        :context => '/files/etc/libvirt/qemu.conf',
+        :changes => [
+            "set max_files 1024",
+            "set max_processes 4096",
+            "set vnc_tls 1",
+            "set vnc_tls_x509_verify 1"
+        ],
+        :tag     => 'qemu-conf-augeas',
+      }).that_notifies('Service[libvirt]') }
+    end
+
+    context 'when configuring qemu without vnc_tls_verify' do
+      let :params do
+        {
+          :configure_qemu => true,
+          :vnc_tls => true,
+          :vnc_tls_verify => false
+        }
+      end
+      it { is_expected.to contain_augeas('qemu-conf-limits').with({
+        :context => '/files/etc/libvirt/qemu.conf',
+        :changes => [
+            "set max_files 1024",
+            "set max_processes 4096",
+            "set vnc_tls 1",
+            "set vnc_tls_x509_verify 0"
+        ],
+        :tag     => 'qemu-conf-augeas',
+      }).that_notifies('Service[libvirt]') }
+    end
+
   end
 
   on_supported_os({
