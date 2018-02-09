@@ -233,6 +233,7 @@ describe 'nova' do
         is_expected.to contain_nova_config('oslo_messaging_rabbit/rabbit_hosts').with_value('rabbit:5673,rabbit2:5674')
         is_expected.to contain_nova_config('oslo_messaging_rabbit/rabbit_ha_queues').with_value(true)
         is_expected.to contain_nova_config('oslo_messaging_rabbit/kombu_reconnect_delay').with_value('<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('oslo_messaging_rabbit/kombu_failover_strategy').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('oslo_messaging_rabbit/kombu_compression').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('oslo_messaging_rabbit/amqp_durable_queues').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_oslo__messaging__rabbit('nova_config').with(
@@ -252,6 +253,7 @@ describe 'nova' do
         is_expected.to contain_nova_config('oslo_messaging_rabbit/rabbit_hosts').with_value('rabbit:5673')
         is_expected.to contain_nova_config('oslo_messaging_rabbit/rabbit_ha_queues').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('oslo_messaging_rabbit/kombu_reconnect_delay').with_value('<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('oslo_messaging_rabbit/kombu_failover_strategy').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('oslo_messaging_rabbit/amqp_durable_queues').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_oslo__messaging__rabbit('nova_config').with(
           :rabbit_use_ssl     => '<SERVICE DEFAULT>',

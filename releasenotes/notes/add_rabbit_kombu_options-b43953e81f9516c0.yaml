@@ -1,0 +1,6 @@
+---
+features:
+  - |
+    Adds the kombu_failover_strategy option for configuring oslo.messaging.rabbit.
+    This will determines how the next RabbitMQ node is chosen in case the one we
+    are currently connected to becomes unavailable.
