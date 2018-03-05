@@ -23,6 +23,11 @@
 #    Name for the new aggregate
 #    Required
 #
+#  [*filter_hosts*]
+#    A boolean-y value to toggle whether only hosts known to be active by
+#    openstack should be aggregated. i.e. "true" or "false"
+#    Optional, defaults to "false"
+#
 #  [*availability_zone*]
 #    The availability zone. ie "zone1"
 #    Optional
@@ -58,6 +63,12 @@ Puppet::Type.newtype(:nova_aggregate) do
         raise ArgumentError, "#{value} is not a valid name"
       end
     end
+  end
+
+  newparam(:filter_hosts) do
+    desc 'Toggle to filter given hosts so that only known nova-compute service hosts are added to the aggregate'
+    defaultto :false
+    newvalues(:true, :false)
   end
 
   newproperty(:id) do
