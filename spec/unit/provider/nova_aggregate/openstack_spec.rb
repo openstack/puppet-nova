@@ -97,4 +97,105 @@ hosts="[u\'example\']"
 
     end
   end
+
+
+  describe 'managing aggregates with filter_hosts toggled' do
+
+    # instantiation attributes for the provider with filter_hosts set.
+    let(:aggregate_attrs) do
+      {
+         :name              => 'just',
+         :availability_zone => 'simple',
+         :hosts             => ['known'],
+         :ensure            => 'present',
+         :metadata          => 'nice=cookie',
+         :filter_hosts      => 'true'
+      }
+    end
+
+    let(:resource) do
+      Puppet::Type::Nova_aggregate.new(aggregate_attrs)
+    end
+
+    let(:provider) do
+      provider_class.new(resource)
+    end
+
+    it_behaves_like 'authenticated with environment variables' do
+
+      # create an aggregate and actually aggregate hosts to it
+      describe 'create aggregate and add/remove hosts with filter_hosts toggled' do
+
+        it 'creates aggregate with filter_hosts toggled' do
+
+          provider.class.stubs(:get_known_hosts)
+            .returns(['known', 'known_too'])
+
+          # these expectations are the actual tests that check the provider's behaviour
+          # and make sure only known hosts ('known' is the only known host) will be
+          # aggregated.
+
+          provider_class.expects(:openstack)
+            .with('aggregate', 'create', '--format', 'shell', ['just', '--zone', 'simple', "--property", "nice=cookie"])
+            .once
+            .returns('name="just"
+id="just"
+availability_zone="simple"
+properties="{u\'nice\': u\'cookie\'}"
+hosts="[]"
+')
+
+          provider_class.expects(:openstack)
+            .with('aggregate', 'add host', ['just', 'known'])
+            .once
+            .returns('name="just"
+id="just"
+availability_zone="simple"
+properties="{u\'nice\': u\'cookie\'}"
+hosts="[u\'known\']"
+')
+
+          provider_class.expects(:openstack)
+            .with('aggregate', 'add host', ['just', 'known_too'])
+            .once
+            .returns('name="just"
+id="just"
+availability_zone="simple"
+properties="{u\'nice\': u\'cookie\'}"
+hosts="[u\'known\', u\'known_too\']"
+')
+
+          provider_class.expects(:openstack)
+            .with('aggregate', 'remove host', ['just', 'known'])
+            .once
+            .returns('name="just"
+id="just"
+availability_zone="simple"
+properties="{u\'nice\': u\'cookie\'}"
+hosts="[u\'known_too\']"
+')
+
+          # this creates a provider with the attributes defined above as 'aggregate_attrs'
+          # and tries to add some hosts and then to remove some hosts.
+          # the hosts will be filtered against known active hosts and the expectations
+          # described above are the actual tests that check the provider's behaviour
+
+          provider.create
+          property_hash = provider.instance_variable_get(:@property_hash)
+          property_hash[:hosts] = ['known']
+          provider.instance_variable_set(:@property_hash, property_hash)
+
+          provider.hosts = ['known', 'known_too', 'unknown']
+          property_hash = provider.instance_variable_get(:@property_hash)
+          property_hash[:hosts] = ['known', 'known_too']
+          provider.instance_variable_set(:@property_hash, property_hash)
+
+          provider.hosts = ['known_too']
+
+        end
+      end
+
+    end
+  end
+
 end
