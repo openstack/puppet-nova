@@ -54,16 +54,25 @@
 #    (optional) Adds --until-complete to the archive command
 #    Defaults to false.
 #
+#  [*purge*]
+#    (optional) Adds --purge to the archive command
+#    This option will fully purge shadow table data after
+#    archiving, it adds a --purge flag to archive_deleted_rows
+#    which will automatically do a full db purge when complete.
+#    Defaults to false.
+#
+
 class nova::cron::archive_deleted_rows (
-  $minute      = 1,
-  $hour        = 0,
-  $monthday    = '*',
-  $month       = '*',
-  $weekday     = '*',
-  $max_rows    = '100',
-  $user        = undef,
-  $destination = '/var/log/nova/nova-rowsflush.log',
+  $minute         = 1,
+  $hour           = 0,
+  $monthday       = '*',
+  $month          = '*',
+  $weekday        = '*',
+  $max_rows       = '100',
+  $user           = undef,
+  $destination    = '/var/log/nova/nova-rowsflush.log',
   $until_complete = false,
+  $purge          = false,
 ) {
 
   include ::nova::deps
@@ -72,9 +81,21 @@ class nova::cron::archive_deleted_rows (
   if $until_complete {
     $until_complete_real = '--until-complete'
   }
+  else {
+    $until_complete_real = ''
+  }
+
+  if $purge {
+    $purge_real = '--purge'
+  }
+  else {
+    $purge_real = ''
+  }
+
+  $cron_cmd = 'nova-manage db archive_deleted_rows'
 
   cron { 'nova-manage db archive_deleted_rows':
-    command     => "nova-manage db archive_deleted_rows --max_rows ${max_rows} ${until_complete_real} >>${destination} 2>&1",
+    command     => "${cron_cmd} ${purge_real} --max_rows ${max_rows} ${until_complete_real} >>${destination} 2>&1",
     environment => 'PATH=/bin:/usr/bin:/usr/sbin SHELL=/bin/sh',
     user        => pick($user, $::nova::params::nova_user),
     minute      => $minute,

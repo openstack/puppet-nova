@@ -1,0 +1,10 @@
+---
+features:
+  - |
+    OpenStack Nova in Rocky has the ability
+    of also purging the shadow data.
+    This patch enables the cron configuration
+    of this parameter for the archive rows
+    Cron and adds an additional Cron to run the
+    purge of the shadow tables without running
+    the archive task.

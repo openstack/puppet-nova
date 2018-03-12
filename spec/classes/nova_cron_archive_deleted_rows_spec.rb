@@ -21,7 +21,7 @@ describe 'nova::cron::archive_deleted_rows' do
   context 'until_complete is false' do
     it 'configures a cron without until_complete' do
       is_expected.to contain_cron('nova-manage db archive_deleted_rows').with(
-        :command     => "nova-manage db archive_deleted_rows --max_rows #{params[:max_rows]}  >>#{params[:destination]} 2>&1",
+        :command     => "nova-manage db archive_deleted_rows  --max_rows #{params[:max_rows]}  >>#{params[:destination]} 2>&1",
         :user        => 'nova',
         :environment => 'PATH=/bin:/usr/bin:/usr/sbin SHELL=/bin/sh',
         :user        => params[:user],
@@ -44,7 +44,54 @@ describe 'nova::cron::archive_deleted_rows' do
 
     it 'configures a cron with until_complete' do
       is_expected.to contain_cron('nova-manage db archive_deleted_rows').with(
-        :command     => "nova-manage db archive_deleted_rows --max_rows #{params[:max_rows]} --until-complete >>#{params[:destination]} 2>&1",
+        :command     => "nova-manage db archive_deleted_rows  --max_rows #{params[:max_rows]} --until-complete >>#{params[:destination]} 2>&1",
+        :user        => 'nova',
+        :environment => 'PATH=/bin:/usr/bin:/usr/sbin SHELL=/bin/sh',
+        :user        => params[:user],
+        :minute      => params[:minute],
+        :hour        => params[:hour],
+        :monthday    => params[:monthday],
+        :month       => params[:month],
+        :weekday     => params[:weekday],
+        :require     => 'Anchor[nova::dbsync::end]',
+      )
+    end
+  end
+
+  context 'purge is true' do
+    before :each do
+      params.merge!(
+        :purge => true,
+      )
+    end
+
+    it 'configures a cron with purge' do
+      is_expected.to contain_cron('nova-manage db archive_deleted_rows').with(
+        :command     => "nova-manage db archive_deleted_rows --purge --max_rows #{params[:max_rows]}  >>#{params[:destination]} 2>&1",
+        :user        => 'nova',
+        :environment => 'PATH=/bin:/usr/bin:/usr/sbin SHELL=/bin/sh',
+        :user        => params[:user],
+        :minute      => params[:minute],
+        :hour        => params[:hour],
+        :monthday    => params[:monthday],
+        :month       => params[:month],
+        :weekday     => params[:weekday],
+        :require     => 'Anchor[nova::dbsync::end]',
+      )
+    end
+  end
+
+  context 'full purge' do
+    before :each do
+      params.merge!(
+        :purge => true,
+        :until_complete => true,
+      )
+    end
+
+    it 'configures a cron with all purge params' do
+      is_expected.to contain_cron('nova-manage db archive_deleted_rows').with(
+        :command     => "nova-manage db archive_deleted_rows --purge --max_rows #{params[:max_rows]} --until-complete >>#{params[:destination]} 2>&1",
         :user        => 'nova',
         :environment => 'PATH=/bin:/usr/bin:/usr/sbin SHELL=/bin/sh',
         :user        => params[:user],
