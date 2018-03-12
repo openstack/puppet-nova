@@ -1,0 +1,19 @@
+[libdefaults]
+  default_realm = <%= @ipa_realm_real %>
+  dns_lookup_realm = false
+  dns_lookup_kdc = false
+  rdns = false
+  ticket_lifetime = 24h
+  forwardable = yes
+  udp_preference_limit = 0
+
+[realms]
+  <%= @ipa_realm_real %> = {
+    kdc = <%= @ipa_hostname %>:88
+    master_kdc = <%= @ipa_hostname %>:88
+    admin_server = <%= @ipa_hostname %>:749
+    default_domain = <%= @ipa_domain_real %>
+  }
+[domain_realm]
+  .<%= @ipa_domain_real %> = <%= @ipa_realm_real %>
+  <%= @ipa_domain_real %> = <%= @ipa_realm_real %>

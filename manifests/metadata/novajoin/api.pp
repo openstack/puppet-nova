@@ -92,6 +92,15 @@
 #   (optional) Domain for novajoin user.
 #   Defaults to 'default'
 #
+# [*configure_kerberos*]
+#   (optional) Whether or not to create a kerberos configuration file.
+#   Defaults to false
+#
+# [*ipa_realm*]
+#   (optional) Kerberos realm. If left empty, the kerberos configuration will
+#   take the domain and upcase it.
+#   Defaults to undef
+#
 # DEPRECATED PARAMETERS
 #
 # [*nova_user*]
@@ -124,6 +133,8 @@ class nova::metadata::novajoin::api (
   $project_domain_name       = 'default',
   $project_name              = 'service',
   $user_domain_id            = 'default',
+  $configure_kerberos        = false,
+  $ipa_realm                 = undef,
   # DEPRECATED PARAMETERS
   $nova_user                 = 'nova',
   $nova_password             = undef,
@@ -184,6 +195,23 @@ class nova::metadata::novajoin::api (
     novajoin_config {
       'DEFAULT/domain': value => $ipa_domain;
     }
+    $ipa_domain_real = $ipa_domain
+  } else {
+    $ipa_domain_real = $::domain
+  }
+
+  if $configure_kerberos {
+    if $ipa_realm != undef {
+      $ipa_realm_real
+    } else {
+      $ipa_realm_real = upcase($ipa_domain_real)
+    }
+
+    file { '/etc/novajoin/krb5.conf':
+      content => template('nova/krb5.conf.erb'),
+      owner   => $service_user,
+      group   => $service_user,
+    }
   }
 
   novajoin_config {
@@ -234,7 +262,7 @@ class nova::metadata::novajoin::api (
   }
 
   exec { 'get-service-user-keytab':
-    command => "/usr/bin/kinit -kt /etc/krb5.keytab && ipa-getkeytab -s `grep xmlrpc_uri /etc/ipa/default.conf  | cut -d/ -f3` \
+    command => "/usr/bin/kinit -kt /etc/krb5.keytab && ipa-getkeytab -s ${::ipa_hostname} \
                 -p nova/${::fqdn} -k ${keytab}",
     creates => $keytab,
   }

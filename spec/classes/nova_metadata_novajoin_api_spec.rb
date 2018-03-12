@@ -9,6 +9,7 @@ describe 'nova::metadata::novajoin::api' do
         :processorcount         => '7',
         :fqdn                   => "undercloud.example.com",
         :operatingsystemrelease => '7.0',
+        :ipa_hostname           => 'ipa.ipadomain'
       }
     )
   end
@@ -131,7 +132,7 @@ describe 'nova::metadata::novajoin::api' do
 
       it 'is_expected.to get service user keytab' do
         is_expected.to contain_exec('get-service-user-keytab').with(
-          'command' => "/usr/bin/kinit -kt /etc/krb5.keytab && ipa-getkeytab -s `grep xmlrpc_uri /etc/ipa/default.conf  | cut -d/ -f3` \
+          'command' => "/usr/bin/kinit -kt /etc/krb5.keytab && ipa-getkeytab -s ipa.ipadomain \
                 -p nova/undercloud.example.com -k #{param_hash[:keytab]}",
         )
       end
