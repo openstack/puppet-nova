@@ -45,6 +45,7 @@ class nova::db::sync_api(
       Anchor['nova::dbsync_api::begin']
     ],
     notify      => Anchor['nova::dbsync_api::end'],
+    tag         => 'openstack-db',
   }
 
   if $cellv2_setup {
