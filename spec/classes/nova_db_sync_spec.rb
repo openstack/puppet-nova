@@ -18,6 +18,7 @@ describe 'nova::db::sync' do
                          'Anchor[nova::db::end]',
                          'Anchor[nova::dbsync::begin]'],
         :notify      => 'Anchor[nova::dbsync::end]',
+        :tag         => 'openstack-db',
       )
     end
 
@@ -42,6 +43,7 @@ describe 'nova::db::sync' do
                            'Anchor[nova::db::end]',
                            'Anchor[nova::dbsync::begin]'],
           :notify      => 'Anchor[nova::dbsync::end]',
+          :tag         => 'openstack-db',
         )
         }
       end
@@ -67,6 +69,7 @@ describe 'nova::db::sync' do
                            'Anchor[nova::db::end]',
                            'Anchor[nova::dbsync::begin]'],
           :notify      => 'Anchor[nova::dbsync::end]',
+          :tag         => 'openstack-db',
         )
         }
       end

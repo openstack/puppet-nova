@@ -1,0 +1,3 @@
+---
+features:
+  - Add openstack-db tag to Exec that run db-sync.
