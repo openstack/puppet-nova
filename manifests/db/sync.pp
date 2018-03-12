@@ -36,5 +36,6 @@ class nova::db::sync(
       Anchor['nova::dbsync::begin']
     ],
     notify      => Anchor['nova::dbsync::end'],
+    tag         => 'openstack-db',
   }
 }
