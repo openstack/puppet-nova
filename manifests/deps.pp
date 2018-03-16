@@ -56,6 +56,10 @@ class nova::deps {
   Anchor['nova::dbsync::end']
   -> Nova_network<||>
 
+  # all cache settings should be applied and all packages should be installed
+  # before service startup
+  Oslo::Cache<||> -> Anchor['nova::service::begin']
+
   # all db settings should be applied and all packages should be installed
   # before dbsync starts
   Oslo::Db<||> -> Anchor['nova::dbsync::begin']
