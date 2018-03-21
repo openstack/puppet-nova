@@ -1,0 +1,14 @@
+---
+features:
+  - |
+    This patch will add a new parameter (age) to define a
+    retention policy when purging the Nova shadow tables.
+    Also will add the parameter all_cells (defaulted to false)
+    to run the purge command over the cells tables. 
+fixes:
+  - |
+    Fix the default values to saner ones, this is because
+    operators might run both the archive and the purge cron
+    jobs. The defaults will make the purge job to run each
+    day at 5 hours but the retention policy parameter will
+    retain the data for 14 days.
