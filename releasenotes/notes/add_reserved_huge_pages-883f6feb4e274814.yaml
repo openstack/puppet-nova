@@ -1,0 +1,5 @@
+---
+features:
+  - |
+    Add the ability to set reserved_huge_pages on nova-computes via a string or
+    a list of strings.
