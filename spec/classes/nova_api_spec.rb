@@ -54,7 +54,9 @@ describe 'nova::api' do
         is_expected.to contain_nova_config('DEFAULT/osapi_compute_workers').with('value' => '5')
         is_expected.to contain_nova_config('DEFAULT/metadata_workers').with('value' => '5')
         is_expected.to contain_nova_config('api/fping_path').with('value' => '/usr/sbin/fping')
-        is_expected.to contain_nova_config('oslo_middleware/enable_proxy_headers_parsing').with('value' => '<SERVICE DEFAULT>')
+        is_expected.to contain_oslo__middleware('nova_config').with(
+          :enable_proxy_headers_parsing => '<SERVICE DEFAULT>',
+        )
         is_expected.to contain_nova_config('api/metadata_cache_expiration').with('value' => '<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('api/vendordata_jsonfile_path').with('value' => '<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('api/vendordata_providers').with('value' => '<SERVICE DEFAULT>')
@@ -170,7 +172,9 @@ describe 'nova::api' do
         is_expected.to contain_nova_config('api/glance_link_prefix').with('value' => 'https://10.0.0.1:6666/')
         is_expected.to contain_nova_config('neutron/service_metadata_proxy').with('value' => true)
         is_expected.to contain_nova_config('neutron/metadata_proxy_shared_secret').with('value' => 'secrete').with_secret(true)
-        is_expected.to contain_nova_config('oslo_middleware/enable_proxy_headers_parsing').with('value' => true)
+        is_expected.to contain_oslo__middleware('nova_config').with(
+          :enable_proxy_headers_parsing => true,
+        )
         is_expected.to contain_nova_config('api/hide_server_address_states').with('value' => 'building')
         is_expected.to contain_nova_config('api/allow_instance_snapshots').with('value' => true)
         is_expected.to contain_nova_config('DEFAULT/enable_network_quota').with('value' => false)
