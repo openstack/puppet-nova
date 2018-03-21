@@ -34,6 +34,7 @@ describe 'nova::compute' do
       it { is_expected.to contain_nova_config('barbican/barbican_api_version').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('barbican/auth_endpoint').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('DEFAULT/pci_passthrough_whitelist').with(:value => '<SERVICE DEFAULT>') }
+      it { is_expected.to contain_nova_config('DEFAULT/reserved_huge_pages').with_value('<SERVICE DEFAULT>') }
 
       it { is_expected.to_not contain_package('cryptsetup').with( :ensure => 'present' )}
 
@@ -141,6 +142,32 @@ describe 'nova::compute' do
         is_expected.to contain_nova_config('DEFAULT/config_drive_format').with_value('vfat')
         is_expected.to_not contain_package('genisoimage').with(
           :ensure => 'present',
+        )
+      end
+    end
+
+    context 'with reserved_huge_pages string' do
+      let :params do
+        {
+            :reserved_huge_pages => "foo"
+        }
+      end
+      it 'configures nova reserved_huge_pages entries' do
+        is_expected.to contain_nova_config('DEFAULT/reserved_huge_pages').with(
+          'value' => 'foo'
+        )
+      end
+    end
+
+    context 'with reserved_huge_pages array' do
+      let :params do
+        {
+            :reserved_huge_pages => ["foo", "bar"]
+        }
+      end
+      it 'configures nova reserved_huge_pages entries' do
+        is_expected.to contain_nova_config('DEFAULT/reserved_huge_pages').with(
+          'value' => ['foo','bar']
         )
       end
     end

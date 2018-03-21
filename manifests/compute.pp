@@ -163,6 +163,12 @@
 #   The driver that will manage the running instances.
 #   Defaults to $::os_service_default
 #
+# [*reserved_huge_pages*]
+#    (optional) Number of huge memory pages to reserved per NUMA host cell.
+#    Defaults to $::os_service_default
+#    Accepts a string e.g "node:0,size:1GB,count:4" or a list of strings e.g:
+#    ["node:0,size:1GB,count:4", "node:1,size:1GB,count:4"]
+#
 class nova::compute (
   $enabled                            = true,
   $manage_service                     = true,
@@ -193,6 +199,7 @@ class nova::compute (
   $barbican_auth_endpoint             = $::os_service_default,
   $barbican_endpoint                  = $::os_service_default,
   $barbican_api_version               = $::os_service_default,
+  $reserved_huge_pages                = $::os_service_default,
   # DEPRECATED PARAMETERS
   $default_availability_zone          = undef,
   $default_schedule_zone              = undef,
@@ -247,11 +254,22 @@ is used. It will be removed once Nova removes it.")
     })
   }
 
+  if !is_service_default($reserved_huge_pages) and !empty($reserved_huge_pages) {
+    if is_array($reserved_huge_pages) or is_string($reserved_huge_pages) {
+      $reserved_huge_pages_real = $reserved_huge_pages
+    } else {
+      fail("Invalid reserved_huge_pages parameter value: ${reserved_huge_pages}")
+    }
+  } else {
+    $reserved_huge_pages_real = $::os_service_default
+  }
+
   include ::nova::availability_zone
 
   nova_config {
     'DEFAULT/reserved_host_memory_mb':           value => $reserved_host_memory;
     'DEFAULT/compute_manager':                   value => $compute_manager;
+    'DEFAULT/reserved_huge_pages':               value => $reserved_huge_pages_real;
     'DEFAULT/heal_instance_info_cache_interval': value => $heal_instance_info_cache_interval;
     'DEFAULT/pci_passthrough_whitelist':         value => $pci_passthrough_real;
     'DEFAULT/resize_confirm_window':             value => $resize_confirm_window;
