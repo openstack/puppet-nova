@@ -146,6 +146,12 @@
 #   (optional) Whether to verify image signatures. (boolean value)
 #   Defaults to $::os_service_default
 #
+#  [*reserved_huge_pages*]
+#    (optional) Number of huge memory pages to reserved per NUMA host cell.
+#    Defaults to $::os_service_default
+#    Accepts a string e.g "node:0,size:1GB,count:4" or a list of strings e.g:
+#    ["node:0,size:1GB,count:4", "node:1,size:1GB,count:4"]
+#
 # DEPRECATED PARAMETERS
 #
 # [*keymgr_api_class*]
@@ -185,6 +191,7 @@ class nova::compute (
   $consecutive_build_service_disable_threshold = $::os_service_default,
   $keymgr_backend                              = 'nova.keymgr.conf_key_mgr.ConfKeyManager',
   $verify_glance_signatures                    = $::os_service_default,
+  $reserved_huge_pages                         = $::os_service_default,
   # DEPRECATED PARAMETERS
   $keymgr_api_class                            = undef,
 ) {
@@ -211,10 +218,21 @@ class nova::compute (
     })
   }
 
+  if !is_service_default($reserved_huge_pages) and !empty($reserved_huge_pages) {
+    if is_array($reserved_huge_pages) or is_string($reserved_huge_pages) {
+      $reserved_huge_pages_real = $reserved_huge_pages
+    } else {
+      fail("Invalid reserved_huge_pages parameter value: ${reserved_huge_pages}")
+    }
+  } else {
+    $reserved_huge_pages_real = $::os_service_default
+  }
+
   include ::nova::availability_zone
 
   nova_config {
     'DEFAULT/reserved_host_memory_mb':           value => $reserved_host_memory;
+    'DEFAULT/reserved_huge_pages':               value => $reserved_huge_pages_real;
     'DEFAULT/heal_instance_info_cache_interval': value => $heal_instance_info_cache_interval;
     'DEFAULT/resize_confirm_window':             value => $resize_confirm_window;
     'DEFAULT/vcpu_pin_set':                      value => $vcpu_pin_set_real;
