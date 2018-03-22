@@ -24,7 +24,7 @@ describe 'nova::db' do
       it { is_expected.to_not contain_nova_config('database/max_overflow') }
     end
 
-    context 'with overriden parameters' do
+    context 'with overridden parameters' do
       before :each do
         params.merge!(
           :database_connection           => 'mysql+pymysql://user:pass@db/db1',

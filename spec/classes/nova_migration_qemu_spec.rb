@@ -35,7 +35,7 @@ describe 'nova::migration::qemu' do
       }).that_notifies('Service[libvirt]') }
     end
 
-    context 'when configuring qemu with overriden parameters' do
+    context 'when configuring qemu with overridden parameters' do
       let :params do
         {
           :configure_qemu => true,

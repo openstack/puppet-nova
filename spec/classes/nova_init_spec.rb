@@ -361,7 +361,7 @@ describe 'nova' do
       end
     end
 
-    context 'with amqp overriden parameters' do
+    context 'with amqp overridden parameters' do
       let :params do
         { :amqp_idle_timeout  => '60',
           :amqp_trace         => true,

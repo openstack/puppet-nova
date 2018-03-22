@@ -39,7 +39,7 @@ describe 'nova::conductor' do
       )}
     end
 
-    context 'with overriden workers parameter' do
+    context 'with overridden workers parameter' do
       let :params do
         {:workers => '5' }
       end
