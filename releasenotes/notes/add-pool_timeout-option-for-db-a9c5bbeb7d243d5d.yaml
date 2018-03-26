@@ -1,0 +1,5 @@
+---
+features:
+  - |
+    Adds the pool_timeout option for configuring oslo.db. This will
+    configure this value for pool_timeout with SQLAlchemy.
