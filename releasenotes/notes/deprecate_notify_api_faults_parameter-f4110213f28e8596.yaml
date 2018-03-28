@@ -1,0 +1,4 @@
+---
+deprecations:
+  - nova::notify_api_faults is deprecated and will be removed in a future
+    release. Please use nova::notify_on_api_faults instead.
