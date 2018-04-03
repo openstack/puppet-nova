@@ -11,11 +11,11 @@ describe Puppet::Provider::Nova do
 
   let :credential_hash do
     {
-      'auth_uri'     => 'https://192.168.56.210:35357/v2.0/',
-      'project_name' => 'admin_tenant',
-      'username'     => 'admin',
-      'password'     => 'password',
-      'region_name'  => 'Region1',
+      'www_authenticate_uri' => 'https://192.168.56.210:35357/v2.0/',
+      'project_name'         => 'admin_tenant',
+      'username'             => 'admin',
+      'password'             => 'password',
+      'region_name'          => 'Region1',
     }
   end
 

@@ -50,7 +50,7 @@ Puppet::Type.newtype(:nova_aggregate) do
   ensurable
 
   autorequire(:nova_config) do
-    ['auth_uri', 'project_name', 'username', 'password']
+    ['www_authenticate_uri', 'project_name', 'username', 'password']
   end
 
   newparam(:name, :namevar => true) do
