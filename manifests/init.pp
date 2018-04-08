@@ -653,6 +653,7 @@ but should be one of: ssh-rsa, ssh-dsa, ssh-ecdsa.")
 
   package { 'python-nova':
     ensure => $ensure_package,
+    name   => $::nova::params::python_package_name,
     tag    => ['openstack', 'nova-package'],
   }
 
