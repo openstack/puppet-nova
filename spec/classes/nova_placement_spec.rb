@@ -6,7 +6,7 @@ describe 'nova::placement' do
     { :auth_type           => 'password',
       :project_name        => 'services',
       :project_domain_name => 'Default',
-      :os_region_name      => 'RegionOne',
+      :region_name         => 'RegionOne',
       :username            => 'placement',
       :user_domain_name    => 'Default',
       :auth_url            => 'http://127.0.0.1:35357/v3',
@@ -25,7 +25,7 @@ describe 'nova::placement' do
         is_expected.to contain_nova_config('placement/auth_type').with_value(default_params[:auth_type])
         is_expected.to contain_nova_config('placement/project_name').with_value(default_params[:project_name])
         is_expected.to contain_nova_config('placement/project_domain_name').with_value(default_params[:project_domain_name])
-        is_expected.to contain_nova_config('placement/os_region_name').with_value(default_params[:os_region_name])
+        is_expected.to contain_nova_config('placement/region_name').with_value(default_params[:region_name])
         is_expected.to contain_nova_config('placement/os_interface').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('placement/username').with_value(default_params[:username])
         is_expected.to contain_nova_config('placement/user_domain_name').with_value(default_params[:user_domain_name])
@@ -39,7 +39,7 @@ describe 'nova::placement' do
           :auth_type           => 'password',
           :project_name        => 'service',
           :project_domain_name => 'default',
-          :os_region_name      => 'RegionTwo',
+          :region_name         => 'RegionTwo',
           :os_interface        => 'internal',
           :username            => 'placement2',
           :user_domain_name    => 'default',
@@ -52,7 +52,7 @@ describe 'nova::placement' do
         is_expected.to contain_nova_config('placement/auth_type').with_value(params[:auth_type])
         is_expected.to contain_nova_config('placement/project_name').with_value(params[:project_name])
         is_expected.to contain_nova_config('placement/project_domain_name').with_value(params[:project_domain_name])
-        is_expected.to contain_nova_config('placement/os_region_name').with_value(params[:os_region_name])
+        is_expected.to contain_nova_config('placement/region_name').with_value(params[:region_name])
         is_expected.to contain_nova_config('placement/os_interface').with_value(params[:os_interface])
         is_expected.to contain_nova_config('placement/username').with_value(params[:username])
         is_expected.to contain_nova_config('placement/user_domain_name').with_value(params[:user_domain_name])
