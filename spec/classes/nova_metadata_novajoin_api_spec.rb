@@ -131,10 +131,17 @@ describe 'nova::metadata::novajoin::api' do
       end
 
       it 'is_expected.to get service user keytab' do
-        is_expected.to contain_exec('get-service-user-keytab').with(
-          'command' => "/usr/bin/kinit -kt /etc/krb5.keytab && ipa-getkeytab -s ipa.ipadomain \
+        if param_hash[:enable_ipa_client_install]
+          is_expected.to contain_exec('get-service-user-keytab').with(
+            'command' => "/usr/bin/kinit -kt /etc/krb5.keytab && ipa-getkeytab -s `grep xmlrpc_uri /etc/ipa/default.conf | cut -d/ -f3` \
                 -p nova/undercloud.example.com -k #{param_hash[:keytab]}",
-        )
+          )
+        else
+          is_expected.to contain_exec('get-service-user-keytab').with(
+            'command' => "/usr/bin/kinit -kt /etc/krb5.keytab && ipa-getkeytab -s ipa.ipadomain \
+                -p nova/undercloud.example.com -k #{param_hash[:keytab]}",
+          )
+        end
       end
 
       it { is_expected.to contain_file("/var/log/novajoin").with(

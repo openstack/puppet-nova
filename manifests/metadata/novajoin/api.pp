@@ -176,6 +176,13 @@ class nova::metadata::novajoin::api (
 
   if $enable_ipa_client_install {
     require ::ipaclient
+    # If we're installing IPA here, the hostname fact won't be populated yet,
+    # so we'll use a command to get it.
+    $ipa_hostname_real = '`grep xmlrpc_uri /etc/ipa/default.conf | cut -d/ -f3`'
+  } else {
+    # This assumes that the current node is already IPA enrolled, so the
+    # fact will work here.
+    $ipa_hostname_real = $::ipa_hostname
   }
 
   package { 'python-novajoin':
@@ -262,7 +269,7 @@ class nova::metadata::novajoin::api (
   }
 
   exec { 'get-service-user-keytab':
-    command => "/usr/bin/kinit -kt /etc/krb5.keytab && ipa-getkeytab -s ${::ipa_hostname} \
+    command => "/usr/bin/kinit -kt /etc/krb5.keytab && ipa-getkeytab -s ${ipa_hostname_real} \
                 -p nova/${::fqdn} -k ${keytab}",
     creates => $keytab,
   }
