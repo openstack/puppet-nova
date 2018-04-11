@@ -50,8 +50,6 @@ class nova::db::mysql(
 
   include ::nova::deps
 
-  $setup_cell0_real = pick($::nova::db::mysql_api::setup_cell0, $setup_cell0)
-
   ::openstacklib::db::mysql { 'nova':
     user          => $user,
     password_hash => mysql_password($password),
@@ -62,7 +60,7 @@ class nova::db::mysql(
     allowed_hosts => $allowed_hosts,
   }
 
-  if $setup_cell0_real {
+  if $setup_cell0 {
     # need for cell_v2
     ::openstacklib::db::mysql { 'nova_cell0':
       user          => $user,
