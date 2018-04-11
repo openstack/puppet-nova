@@ -1,0 +1,12 @@
+---
+features:
+  - |
+    This allows for specifying granular CPU feature flags, when
+    specifying CPU models. It should be set only if ``cpu_mode``
+    and ``cpu_model`` conf parameter are set and ``cpu_mode``
+    parameter value is set to "custom".
+    The recent "Meltdown" CVE fixes have resulted in critical
+    performance penalty which impacts every Nova guest within
+    certain CPU models.
+
+    More info is available in `nova release notes <https://docs.openstack.org/releasenotes/nova/queens.html#bug-fixes>`_.

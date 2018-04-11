@@ -33,6 +33,12 @@
 #   cpu_mode="custom" and virt_type="kvm|qemu".
 #   Defaults to undef
 #
+# [*libvirt_cpu_model_extra_flags*]
+#   (optional) This allows specifying granular CPU feature flags when
+#   specifying CPU models. Only valid, if cpu_mode and cpu_model
+#   attributes are specified and only if cpu_mode="custom".
+#   Defaults to undef
+#
 # [*libvirt_snapshot_image_format*]
 #   (optional) Format to save snapshots to. Some filesystems
 #   have a preference and only operate on raw or qcow2
@@ -133,6 +139,7 @@ class nova::compute::libvirt (
   $migration_support                          = false,
   $libvirt_cpu_mode                           = false,
   $libvirt_cpu_model                          = undef,
+  $libvirt_cpu_model_extra_flags              = undef,
   $libvirt_snapshot_image_format              = $::os_service_default,
   $libvirt_disk_cachemodes                    = [],
   $libvirt_hw_disk_discard                    = $::os_service_default,
@@ -223,13 +230,19 @@ class nova::compute::libvirt (
     validate_string($libvirt_cpu_model)
     nova_config {
       'libvirt/cpu_model': value => $libvirt_cpu_model;
+      'libvirt/cpu_model_extra_flags': value => $libvirt_cpu_model_extra_flags;
     }
   } else {
     nova_config {
       'libvirt/cpu_model': ensure => absent;
+      'libvirt/cpu_model_extra_flags': ensure => absent;
     }
     if $libvirt_cpu_model {
       warning('$libvirt_cpu_model requires that $libvirt_cpu_mode => "custom" and will be ignored')
+    }
+
+    if $libvirt_cpu_model_extra_flags {
+      warning('$libvirt_cpu_model_extra_flags requires that $libvirt_cpu_mode => "custom" and will be ignored')
     }
   }
 
