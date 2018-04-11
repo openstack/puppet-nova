@@ -5,6 +5,11 @@
 class nova::params {
   include ::openstacklib::defaults
   $group = 'nova'
+  if ($::os_package_type == 'debian') {
+    $pyvers = '3'
+  } else {
+    $pyvers = ''
+  }
   case $::osfamily {
     'RedHat': {
       # package names
@@ -12,6 +17,7 @@ class nova::params {
       $placement_package_name        = 'openstack-nova-placement-api'
       $cells_package_name            = 'openstack-nova-cells'
       $common_package_name           = 'openstack-nova-common'
+      $python_package_name           = 'python-nova'
       $compute_package_name          = 'openstack-nova-compute'
       $conductor_package_name        = 'openstack-nova-conductor'
       $consoleauth_package_name      = 'openstack-nova-console'
@@ -79,6 +85,7 @@ class nova::params {
       $placement_package_name       = 'nova-placement-api'
       $cells_package_name           = 'nova-cells'
       $common_package_name          = 'nova-common'
+      $python_package_name          = "python${pyvers}-nova"
       $compute_package_name         = 'nova-compute'
       $conductor_package_name       = 'nova-conductor'
       $consoleauth_package_name     = 'nova-consoleauth'
