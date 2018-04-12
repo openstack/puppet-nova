@@ -33,7 +33,7 @@ This is a backwards-incompatible major release for OpenStack Liberty.
 - make libvirt migration security configurable
 - add region support to nova providers
 - floating IP range support in Nova network
-- rename neuton/url_timeout to neutron/timeout
+- rename neutron/url_timeout to neutron/timeout
 - add upgrade_levels configuration options
 - switch nova to leverage os_package_type fact
 - use os_package_type for libvirt service name
