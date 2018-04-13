@@ -27,7 +27,7 @@
 #   admin context through the OpenStack Identity service.
 #   Defaults to 'Default'
 #
-# [*os_region_name*]
+# [*region_name*]
 #   (optional) Region name for connecting to Nova Placement API service in admin context
 #   through the OpenStack Identity service.
 #   Defaults to 'RegionOne'
@@ -48,18 +48,34 @@
 #   and not the Identity service API IP and port.
 #   Defaults to 'http://127.0.0.1:35357/v3'
 #
+# DEPRECATED PARAMETERS
+#
+# [*os_region_name*]
+#   (optional) Region name for connecting to Nova Placement API service in admin context
+#   through the OpenStack Identity service.
+#   Defaults to undef
+#
 class nova::placement(
   $password            = false,
   $auth_type           = 'password',
   $auth_url            = 'http://127.0.0.1:35357/v3',
-  $os_region_name      = 'RegionOne',
+  $region_name         = 'RegionOne',
   $os_interface        = $::os_service_default,
   $project_domain_name = 'Default',
   $project_name        = 'services',
   $user_domain_name    = 'Default',
   $username            = 'placement',
+  # DEPRECATED PARAMETERS
+  $os_region_name      = undef,
 ) {
+
   include ::nova::deps
+
+  if $os_region_name {
+    warning('The os_region_name parameter is deprecated and will be removed \
+in a future release. Please use region_name instead.')
+  }
+  $region_name_real = pick($os_region_name, $region_name)
 
   nova_config {
     'placement/auth_type':           value => $auth_type;
@@ -69,7 +85,7 @@ class nova::placement(
     'placement/project_name':        value => $project_name;
     'placement/user_domain_name':    value => $user_domain_name;
     'placement/username':            value => $username;
-    'placement/os_region_name':      value => $os_region_name;
+    'placement/region_name':         value => $region_name_real;
     'placement/os_interface':        value => $os_interface;
   }
 

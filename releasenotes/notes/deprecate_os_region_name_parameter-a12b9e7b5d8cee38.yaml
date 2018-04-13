@@ -1,0 +1,4 @@
+---
+deprecations:
+  - os_region_name is deprecated and will be removed in a future release.
+    Please region_name instead.
