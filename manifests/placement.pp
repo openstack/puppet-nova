@@ -4,6 +4,24 @@
 #
 # === Parameters:
 #
+# [*enabled*]
+#   (optional) Whether the nova placement api service will be run
+#   Defaults to true
+#
+# [*manage_service*]
+#   (optional) Whether to start/stop the service
+#   Only useful if ::nova::params::service_name is set to
+#   nova-placement-api.
+#   Defaults to true
+#
+# [*service_name*]
+#   (optional) The service name for the placement service.
+#   Defaults to $::nova::params::placement_service_name
+#
+# [*ensure_package*]
+#   (optional) The state of the nova conductor package
+#   Defaults to 'present'
+#
 # [*password*]
 #   (required) Password for connecting to Nova Placement API service in
 #   admin context through the OpenStack Identity service.
@@ -56,6 +74,10 @@
 #   Defaults to undef
 #
 class nova::placement(
+  $enabled             = true,
+  $manage_service      = true,
+  $service_name        = $::nova::params::placement_service_name,
+  $ensure_package      = 'present',
   $password            = false,
   $auth_type           = 'password',
   $auth_url            = 'http://127.0.0.1:35357/v3',
@@ -71,11 +93,29 @@ class nova::placement(
 
   include ::nova::deps
 
+  validate_bool($enabled)
+
   if $os_region_name {
     warning('The os_region_name parameter is deprecated and will be removed \
 in a future release. Please use region_name instead.')
   }
   $region_name_real = pick($os_region_name, $region_name)
+
+  if $service_name == 'nova-placement-api' {
+    nova::generic_service { 'nova-placement-api':
+      enabled        => $enabled,
+      manage_service => $manage_service,
+      package_name   => $::nova::params::placement_package_name,
+      service_name   => $service_name,
+      ensure_package => $ensure_package,
+    }
+  } elsif $service_name == 'httpd' {
+    # we need to make sure nova-placement-api/uwsgi is stopped before trying to start apache
+    if ($::os_package_type == 'debian') {
+      Service['nova-placement-api'] -> Service[$service_name]
+    }
+  }
+
 
   nova_config {
     'placement/auth_type':           value => $auth_type;

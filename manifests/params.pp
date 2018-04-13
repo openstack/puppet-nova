@@ -39,6 +39,7 @@ class nova::params {
       $compute_service_name          = 'openstack-nova-compute'
       $conductor_service_name        = 'openstack-nova-conductor'
       $consoleauth_service_name      = 'openstack-nova-consoleauth'
+      $placement_service_name        = 'httpd'
       $libvirt_service_name          = 'libvirtd'
       $virtlock_service_name         = 'virtlockd'
       $virtlog_service_name          = undef
@@ -111,6 +112,11 @@ class nova::params {
       $scheduler_service_name       = 'nova-scheduler'
       $vncproxy_service_name        = 'nova-novncproxy'
       $serialproxy_service_name     = 'nova-serialproxy'
+      if ($::os_package_type == 'debian') {
+          $placement_service_name   = 'nova-placement-api'
+      } else {
+          $placement_service_name   = 'httpd'
+      }
       $tgt_service_name             = 'tgt'
       $nova_log_group               = 'adm'
       $nova_wsgi_script_path        = '/usr/lib/cgi-bin/nova'
