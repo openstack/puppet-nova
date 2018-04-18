@@ -24,14 +24,14 @@ describe provider_class do
 
   shared_examples 'nova_network' do
     describe '#exists?' do
-      it 'should check non-existsing network' do
+      it 'should check non-existing network' do
         provider.expects(:auth_nova).with("network-list")
                       .returns('"+--------------------------------------+-------------+-------------+\n| ID                                   | Label       | Cidr        |\n+--------------------------------------+-------------+-------------+\n| 703edc62-36ab-4c41-9d73-884b30e9acbd | novanetwork | 10.0.0.0/16 |\n+--------------------------------------+-------------+-------------+\n"
 ')
         expect(provider.exists?).to be_falsey
       end
 
-      it 'should check existsing network' do
+      it 'should check existing network' do
         provider.expects(:auth_nova).with("network-list")
                       .returns('"+--------------------------------------+-------------+-------------+\n| ID                                   | Label       | Cidr        |\n+--------------------------------------+-------------+-------------+\n| 703edc62-36ab-4c41-9d73-884b30e9acbd | novanetwork | 10.20.0.0/16 |\n+--------------------------------------+-------------+-------------+\n"
 ')

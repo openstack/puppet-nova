@@ -103,7 +103,7 @@
 #   Defaults to $::os_service_default
 #
 # [*torrent_seed_chance*]
-#   (optional) Probability that peer will become a seeder. (1.0 = 100%) (floating poin value)
+#   (optional) Probability that peer will become a seeder. (1.0 = 100%) (floating point value)
 #   Defaults to $::os_service_default
 #
 # [*torrent_seed_duration*]

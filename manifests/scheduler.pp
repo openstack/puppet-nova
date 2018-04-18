@@ -22,7 +22,7 @@
 #
 # [*discover_hosts_in_cells_interval*]
 #   (optional) This value controls how often (in seconds) the scheduler should
-#   attept to discover new hosts that have been added to cells.
+#   attempt to discover new hosts that have been added to cells.
 #   Defaults to $::os_service_default
 #
 class nova::scheduler(
