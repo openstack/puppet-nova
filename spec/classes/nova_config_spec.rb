@@ -16,6 +16,8 @@ describe 'nova::config' do
     }
   end
 
+  it { is_expected.to contain_class('nova::deps') }
+
   it 'configures arbitrary nova configurations' do
     is_expected.to contain_nova_config('DEFAULT/foo').with_value('fooValue')
     is_expected.to contain_nova_config('DEFAULT/bar').with_value('barValue')
