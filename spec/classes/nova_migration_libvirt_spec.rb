@@ -48,7 +48,6 @@ describe 'nova::migration::libvirt' do
       it { is_expected.to contain_nova_config('libvirt/live_migration_completion_timeout').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('libvirt/live_migration_uri').with_value('qemu+tcp://%s/system') }
       it { is_expected.to contain_nova_config('libvirt/live_migration_inbound_addr').with_value('<SERVICE DEFAULT>')}
-      it { is_expected.to contain_nova_config('libvirt/live_migration_scheme').with_value('<SERVICE DEFAULT>')}
     end
 
     context 'with override_uuid enabled' do
@@ -80,7 +79,6 @@ describe 'nova::migration::libvirt' do
       it { is_expected.not_to contain_libvirtd_config('auth_tcp') }
       it { is_expected.to contain_nova_config('libvirt/live_migration_uri').with_value('qemu+tls://%s/system')}
       it { is_expected.to contain_nova_config('libvirt/live_migration_inbound_addr').with_value('<SERVICE DEFAULT>')}
-      it { is_expected.to contain_nova_config('libvirt/live_migration_scheme').with_value('<SERVICE DEFAULT>')}
     end
 
     context 'with tls enabled' do
@@ -107,9 +105,8 @@ describe 'nova::migration::libvirt' do
       it { is_expected.to contain_libvirtd_config('listen_tcp').with_value('0') }
       it { is_expected.to contain_libvirtd_config('auth_tls').with_value("\"none\"") }
       it { is_expected.not_to contain_libvirtd_config('auth_tcp') }
-      it { is_expected.to contain_nova_config('libvirt/live_migration_uri').with_value('<SERVICE DEFAULT>')}
+      it { is_expected.to contain_nova_config('libvirt/live_migration_uri').with_value('qemu+tls://%s/system')}
       it { is_expected.to contain_nova_config('libvirt/live_migration_inbound_addr').with_value('host1.example.com')}
-      it { is_expected.to contain_nova_config('libvirt/live_migration_scheme').with_value('tls')}
     end
 
     context 'with migration flags set' do
