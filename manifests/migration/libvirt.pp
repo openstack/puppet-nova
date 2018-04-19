@@ -20,10 +20,7 @@
 #
 # [*live_migration_inbound_addr*]
 #   (optional) The IP address or hostname to be used as the target for live
-#   migration traffic. If left unset, and if TLS is enabled, this module will
-#   default the 'live_migration_uri' to 'qemu+tls://%s/system' to be compatible
-#   with the previous behavior of this module. However, the usage of
-#   'live_migration_uri' is not recommended as it's scheduled for removal.
+#   migration traffic.
 #   Defaults to $::os_service_default
 #
 # [*live_migration_tunnelled*]
@@ -157,20 +154,13 @@ class nova::migration::libvirt(
       $extra_params =''
     }
 
-    if is_service_default($live_migration_inbound_addr) {
-      $live_migration_uri = "qemu+${transport_real}://${prefix}%s${postfix}/system${extra_params}"
-      $live_migration_scheme = $::os_service_default
-    } else {
-      $live_migration_uri = $::os_service_default
-      $live_migration_scheme = $transport_real
-    }
+    $live_migration_uri = "qemu+${transport_real}://${prefix}%s${postfix}/system${extra_params}"
 
     nova_config {
       'libvirt/live_migration_uri':                value => $live_migration_uri;
       'libvirt/live_migration_tunnelled':          value => $live_migration_tunnelled;
       'libvirt/live_migration_completion_timeout': value => $live_migration_completion_timeout;
       'libvirt/live_migration_inbound_addr':       value => $live_migration_inbound_addr;
-      'libvirt/live_migration_scheme':             value => $live_migration_scheme;
     }
   }
 
