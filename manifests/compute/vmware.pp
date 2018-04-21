@@ -42,7 +42,7 @@
 #   Defaults to 'vmwareapi.VMwareVCDriver'
 #
 # [*insecure*]
-#   (optional) Allow insecure conections.
+#   (optional) Allow insecure connections.
 #   If true, the vCenter server certificate is not verified. If
 #   false, then the default CA truststore is used for verification. This
 #   option is ignored if 'ca_file' is set.

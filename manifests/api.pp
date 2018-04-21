@@ -201,7 +201,7 @@
 #
 #  [*allow_resize_to_same_host*]
 #   (optional) Allow destination machine to match source for resize. Note that this
-#   is also settable in the compute class. In some sitautions you need it set here
+#   is also settable in the compute class. In some situations you need it set here
 #   and in others you need it set there.
 #   Defaults to false
 #

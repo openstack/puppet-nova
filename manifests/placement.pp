@@ -33,7 +33,7 @@
 #   Defaults to 'RegionOne'
 #
 # [*os_interface*]
-#   (optional) interface name name used for getting the keystone endpoint for
+#   (optional) interface name used for getting the keystone endpoint for
 #   the placement API.
 #   Defaults to $::os_service_default
 #

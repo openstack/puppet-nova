@@ -66,7 +66,7 @@
 #   Defaults to undef (default port for the transport)
 #
 # [*client_extraparams*]
-#   (optional) Hash of additional params to append to the live-migraition uri
+#   (optional) Hash of additional params to append to the live-migration uri
 #   See https://libvirt.org/guide/html/Application_Development_Guide-Architecture-Remote_URIs.html
 #   Defaults to {}
 #

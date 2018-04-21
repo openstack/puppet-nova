@@ -136,7 +136,7 @@
 #
 # [*kombu_compression*]
 #   (optional) Possible values are: gzip, bz2. If not set compression will not
-#   be used. This option may notbe available in future versions. EXPERIMENTAL.
+#   be used. This option may not be available in future versions. EXPERIMENTAL.
 #   (string value)
 #   Defaults to $::os_service_default
 #
@@ -273,7 +273,7 @@
 #   Possible values : 'osapi_compute', 'metadata'
 #
 # [*cert_file*]
-#   (optinal) Certificate file to use when starting API server securely
+#   (optional) Certificate file to use when starting API server securely
 #   Defaults to false, not set
 #
 # [*key_file*]

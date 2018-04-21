@@ -5,7 +5,7 @@ Puppet::Type.newtype(:nova_network) do
 
   ensurable
 
-  # there are concerns about determining uniqiueness of network
+  # there are concerns about determining uniqueness of network
   # segments b/c it is actually the combination of network/prefix
   # that determine uniqueness
   newparam(:network, :namevar => true) do
