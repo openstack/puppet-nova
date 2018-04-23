@@ -1,0 +1,12 @@
+---
+fixes:
+  - |
+    Fix live_migration_inbound_addr when used with non-default port/user/extra_params
+
+    live_migration_scheme was being used when live_migration_inbound_addr was set.
+    This prohibits a non-default port/user/extra_params being used which is often
+    required to fully describe the uri, particularly for the ssh transport
+    (see https://bugs.launchpad.net/nova/+bug/1671288).
+
+    However live_migration_inbound_addr also works with live_migration_uri, so for
+    now revert back to using live_migration_uri in all cases.
