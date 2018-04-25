@@ -24,6 +24,11 @@
 #   (optional) Whether to use a VNC proxy
 #   Defaults to true
 #
+# [*spice_enabled*]
+#   (optional) Whether to use a SPICE html5 proxy
+#   Mutually exclusive with vnc_enabled.
+#   Defaults to false.
+#
 # [*vncserver_proxyclient_address*]
 #   (optional) The IP address of the server running the VNC proxy client
 #   Defaults to '127.0.0.1'
@@ -164,6 +169,7 @@ class nova::compute (
   $manage_service                              = true,
   $ensure_package                              = 'present',
   $vnc_enabled                                 = true,
+  $spice_enabled                               = false,
   $vncserver_proxyclient_address               = '127.0.0.1',
   $vncproxy_host                               = false,
   $vncproxy_protocol                           = 'http',
@@ -208,6 +214,10 @@ class nova::compute (
     $keymgr_backend_real = $keymgr_api_class
   } else {
     $keymgr_backend_real = $keymgr_backend
+  }
+
+  if ($vnc_enabled and $spice_enabled) {
+    fail('vnc_enabled and spice_enabled is mutually exclusive')
   }
 
   # cryptsetup is required when Barbican is encrypting volumes
@@ -262,8 +272,10 @@ class nova::compute (
       'vnc/keymap':                        ensure => absent;
     }
   }
+
   nova_config {
-    'vnc/enabled': value => $vnc_enabled;
+    'vnc/enabled':   value => $vnc_enabled;
+    'spice/enabled': value => $spice_enabled;
   }
 
   if $neutron_enabled != true and $install_bridge_utils {

@@ -1,0 +1,13 @@
+---
+features:
+  - |
+    Puppet-openstack now manages both [vnc]/enabled and [spice]/enabled. This
+    was needed because Debian has [spice]/enabled set to True by default, and
+    one cannot have both enabled in a compute node. Therefore, it was mandatory
+    to have [spice]/enabled set to Flase if we're using VNC.
+upgrade:
+  - |
+    Users of puppet-openstack will have to set ::nova::compute::spice_enabled to
+    True to make a meaningful decisioin to use Spice and not use VNC, and not
+    rely on ::nova::spicehtml5proxy or ::nova::compute::spice to set it as
+    enabled by default.

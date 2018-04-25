@@ -8,6 +8,10 @@ describe 'nova::vncproxy' do
       'include nova'
     end
 
+    let :params do
+      { :enabled => true }
+    end
+
     context 'with default parameters' do
 
       it { is_expected.to contain_nova_config('vnc/novncproxy_host').with(:value => '0.0.0.0') }
@@ -22,7 +26,7 @@ describe 'nova::vncproxy' do
         :name      => platform_params[:nova_vncproxy_service],
         :hasstatus => true,
         :ensure    => 'running'
-      )}
+      ) }
 
       describe 'with manage_service as false' do
         let :params do
@@ -30,16 +34,20 @@ describe 'nova::vncproxy' do
             :manage_service => false
           }
         end
+
         it { is_expected.to contain_service('nova-vncproxy').without_ensure }
       end
 
       describe 'with package version' do
         let :params do
-          {:ensure_package => '2012.1-2'}
+          { :ensure_package => '2012.1-2' }
         end
+
         it { is_expected.to contain_package('nova-vncproxy').with(
-          'ensure' => '2012.1-2'
-        )}
+            :ensure => '2012.1-2',
+            :name   => platform_params[:nova_vncproxy_package],
+          )
+        }
       end
     end
 
@@ -122,6 +130,25 @@ describe 'nova::vncproxy' do
 
   end
 
+  shared_examples 'nova_vnc_proxy debian package' do
+    let :pre_condition do
+      'include nova'
+    end
+
+    before do
+      facts.merge!( :os_package_type => 'debian' )
+    end
+
+    it { is_expected.to contain_file_line('/etc/default/nova-consoleproxy:NOVA_CONSOLE_PROXY_TYPE').with(
+      :path    => '/etc/default/nova-consoleproxy',
+      :match   => '^NOVA_CONSOLE_PROXY_TYPE=(.*)$',
+      :line    => 'NOVA_CONSOLE_PROXY_TYPE=novnc',
+      :tag     => 'nova-consoleproxy',
+      :require => 'Anchor[nova::config::begin]',
+      :notify  => 'Anchor[nova::config::end]',
+    )}
+  end
+
   on_supported_os({
     :supported_os => OSDefaults.get_supported_os
   }).each do |os,facts|
@@ -133,8 +160,13 @@ describe 'nova::vncproxy' do
       let (:platform_params) do
         case facts[:osfamily]
         when 'Debian'
-          { :nova_vncproxy_package => 'nova-novncproxy',
-            :nova_vncproxy_service => 'nova-novncproxy' }
+          if facts[:os_package_type] == 'debian'
+            { :nova_vncproxy_package => 'nova-consoleproxy',
+              :nova_vncproxy_service => 'nova-novncproxy' }
+          else
+            { :nova_vncproxy_package => 'nova-novncproxy',
+              :nova_vncproxy_service => 'nova-novncproxy' }
+          end
         when 'RedHat'
           { :nova_vncproxy_package => 'openstack-nova-novncproxy',
             :nova_vncproxy_service => 'openstack-nova-novncproxy' }
@@ -142,6 +174,10 @@ describe 'nova::vncproxy' do
       end
 
       it_behaves_like 'nova_vnc_proxy'
+
+      if facts[:os_package_type] == 'debian'
+        it_behaves_like 'nova_vnc_proxy debian package'
+      end
 
     end
   end

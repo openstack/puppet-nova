@@ -1,7 +1,6 @@
 require 'spec_helper'
 describe 'nova::compute::spice' do
 
-  it { is_expected.to contain_nova_config('spice/enabled').with_value('true')}
   it { is_expected.to contain_nova_config('spice/agent_enabled').with_value('true')}
   it { is_expected.to contain_nova_config('spice/server_proxyclient_address').with_value('127.0.0.1')}
   it { is_expected.to_not contain_nova_config('spice/html5proxy_base_url')}

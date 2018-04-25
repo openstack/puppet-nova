@@ -103,12 +103,35 @@ class nova::vncproxy(
     $auth_schemes = 'none'
   }
 
+  # Nodes running novncproxy do *not* need (and in fact, don't care)
+  # about [vnc]/enable to be set. This setting is for compute nodes,
+  # where we must select VNC or SPICE so that it can be passed on to
+  # libvirt which passes it as parameter when starting VMs with KVM.
+  # Therefore, this setting is set within compute.pp only.
   nova_config {
     'vnc/novncproxy_host': value => $host;
     'vnc/novncproxy_port': value => $port;
     'vnc/auth_schemes':    value => $auth_schemes;
   }
 
+  # The Debian package needs some scheduling:
+  # 1/ Install the packagin
+  # 2/ Fix /etc/default/nova-consoleproxy
+  # 3/ Start the service
+  # Other OS don't need this scheduling and can use
+  # the standard nova::generic_service
+  if $::os_package_type == 'debian' {
+    if $enabled {
+      file_line { '/etc/default/nova-consoleproxy:NOVA_CONSOLE_PROXY_TYPE':
+        path    => '/etc/default/nova-consoleproxy',
+        match   => '^NOVA_CONSOLE_PROXY_TYPE=(.*)$',
+        line    => 'NOVA_CONSOLE_PROXY_TYPE=novnc',
+        tag     => 'nova-consoleproxy',
+        require => Anchor['nova::config::begin'],
+        notify  => Anchor['nova::config::end'],
+      }
+    }
+  }
   nova::generic_service { 'vncproxy':
     enabled        => $enabled,
     manage_service => $manage_service,

@@ -58,7 +58,6 @@ class nova::compute::spice(
   }
 
   nova_config {
-    'spice/enabled':                    value => true;
     'spice/agent_enabled':              value => $agent_enabled;
     'spice/server_listen':              value => $server_listen;
     'spice/server_proxyclient_address': value => $server_proxyclient_address;

@@ -6,22 +6,36 @@ describe 'nova::spicehtml5proxy' do
     'include nova'
   end
 
-  shared_examples 'nova-spicehtml5proxy' do
+  shared_examples 'nova-spicehtml5proxy debian package' do
+    let :params do
+      { :enabled => true }
+    end
 
+    it { is_expected.to contain_file_line('/etc/default/nova-consoleproxy:NOVA_CONSOLE_PROXY_TYPE').with(
+        :path    => '/etc/default/nova-consoleproxy',
+        :match   => '^NOVA_CONSOLE_PROXY_TYPE=(.*)$',
+        :line    => 'NOVA_CONSOLE_PROXY_TYPE=spicehtml5',
+        :tag     => 'nova-consoleproxy',
+        :require => 'Anchor[nova::config::begin]',
+        :notify  => 'Anchor[nova::config::end]',
+    )}
+  end
+
+  shared_examples 'nova-spicehtml5proxy' do
     it 'configures nova.conf' do
       is_expected.to contain_nova_config('spice/html5proxy_host').with(:value => '0.0.0.0')
       is_expected.to contain_nova_config('spice/html5proxy_port').with(:value => '6082')
     end
 
     it { is_expected.to contain_package('nova-spicehtml5proxy').with(
-      :name   => platform_params[:spicehtml5proxy_package_name],
-      :ensure => 'present'
+      :ensure => 'present',
+      :name   => platform_params[:spicehtml5proxy_package_name]
     ) }
 
     it { is_expected.to contain_service('nova-spicehtml5proxy').with(
+      :ensure    => 'running',
       :name      => platform_params[:spicehtml5proxy_service_name],
-      :hasstatus => 'true',
-      :ensure    => 'running'
+      :hasstatus => true
     )}
 
     context 'with manage_service as false' do
@@ -30,6 +44,7 @@ describe 'nova::spicehtml5proxy' do
           :manage_service => false
         }
       end
+
       it { is_expected.to contain_service('nova-spicehtml5proxy').without_ensure }
     end
 
@@ -39,7 +54,8 @@ describe 'nova::spicehtml5proxy' do
       end
 
       it { is_expected.to contain_package('nova-spicehtml5proxy').with(
-        :ensure => params[:ensure_package]
+        :ensure => params[:ensure_package],
+        :name   => platform_params[:spicehtml5proxy_package_name],
       )}
     end
   end
@@ -49,8 +65,8 @@ describe 'nova::spicehtml5proxy' do
       @default_facts.merge({
         :osfamily        => 'Debian',
         :operatingsystem => 'Ubuntu',
-        :os_package_type => 'ubuntu'
-       })
+        :os_package_type => 'ubuntu',
+      })
     end
 
     let :platform_params do
@@ -76,6 +92,7 @@ describe 'nova::spicehtml5proxy' do
         :spicehtml5proxy_service_name => 'nova-spicehtml5proxy' }
     end
 
+    it_configures 'nova-spicehtml5proxy debian package'
     it_configures 'nova-spicehtml5proxy'
   end
 
@@ -93,6 +110,7 @@ describe 'nova::spicehtml5proxy' do
         :spicehtml5proxy_service_name => 'nova-spicehtml5proxy' }
     end
 
+    it_configures 'nova-spicehtml5proxy debian package'
     it_configures 'nova-spicehtml5proxy'
   end
 

@@ -122,6 +122,10 @@ describe 'nova::compute' do
         )
       end
 
+      it 'should have spice disabled' do
+        is_expected.to contain_nova_config('spice/enabled').with_value(false)
+      end
+
       it { is_expected.to contain_nova_config('DEFAULT/heal_instance_info_cache_interval').with_value('120') }
 
       it { is_expected.to contain_nova_config('DEFAULT/force_raw_images').with(:value => false) }
@@ -221,9 +225,10 @@ describe 'nova::compute' do
 
     end
 
-    context 'with vnc_enabled set to false' do
+    context 'with vnc_enabled set to false and spice_enabled set to true' do
       let :params do
-        { :vnc_enabled => false }
+        { :vnc_enabled => false,
+          :spice_enabled => true, }
       end
 
       it 'disables vnc in nova.conf' do
@@ -232,6 +237,19 @@ describe 'nova::compute' do
         is_expected.to contain_nova_config('vnc/keymap').with_ensure('absent')
         is_expected.to_not contain_nova_config('vnc/novncproxy_base_url')
       end
+
+      it 'enables spice' do
+        is_expected.to contain_nova_config('spice/enabled').with_value(true)
+      end
+    end
+
+    context 'with vnc_enabled and spice_enabled set to true' do
+      let :params do
+        { :vnc_enabled   => true,
+          :spice_enabled => true, }
+      end
+
+      it { is_expected.to raise_error Puppet::Error, /vnc_enabled and spice_enabled is mutually exclusive/ }
     end
 
     context 'with force_config_drive parameter set to true' do
