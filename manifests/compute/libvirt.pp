@@ -137,6 +137,16 @@
 #   https://libvirt.org/logging.html
 #   Defaults to undef
 #
+# [*rx_queue_size*]
+#   (optional) virtio-net rx queue size
+#   Valid values are 256, 512, 1024
+#   Defaults to $::os_service_default
+#
+# [*tx_queue_size*]
+#   (optional) virtio-net tx queue size
+#   Valid values are 256, 512, 1024
+#   Defaults to $::os_service_default
+#
 class nova::compute::libvirt (
   $ensure_package                             = 'present',
   $libvirt_virt_type                          = 'kvm',
@@ -163,6 +173,8 @@ class nova::compute::libvirt (
   $preallocate_images                         = $::os_service_default,
   $manage_libvirt_services                    = true,
   $log_outputs                                = undef,
+  $rx_queue_size                              = $::os_service_default,
+  $tx_queue_size                              = $::os_service_default,
 ) inherits nova::params {
 
   include ::nova::deps
@@ -197,6 +209,14 @@ class nova::compute::libvirt (
     libvirtd_config {
       'log_outputs': value => "\"${log_outputs}\"";
     }
+  }
+
+  unless $rx_queue_size == $::os_service_default or $rx_queue_size in [256, 512, 1024] {
+    fail("Invalid rx_queue_size parameter: ${rx_queue_size}")
+  }
+
+  unless $tx_queue_size == $::os_service_default or $tx_queue_size in [256, 512, 1024] {
+    fail("Invalid_tx_queue_size parameter: ${tx_queue_size}")
   }
 
   # manage_libvirt_services is here for backward compatibility to support
@@ -234,6 +254,8 @@ class nova::compute::libvirt (
     'libvirt/hw_disk_discard':       value => $libvirt_hw_disk_discard;
     'libvirt/hw_machine_type':       value => $libvirt_hw_machine_type;
     'libvirt/enabled_perf_events':   value => join(any2array($libvirt_enabled_perf_events), ',');
+    'libvirt/rx_queue_size':         value => $rx_queue_size;
+    'libvirt/tx_queue_size':         value => $tx_queue_size;
   }
 
   # cpu_model param is only valid if cpu_mode=custom
