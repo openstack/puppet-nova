@@ -55,6 +55,9 @@ class nova::params {
       $nova_log_group                = 'root'
       $nova_wsgi_script_path         = '/var/www/cgi-bin/nova'
       $nova_api_wsgi_script_source   = '/usr/bin/nova-api-wsgi'
+      $placement_public_url          = 'http://127.0.0.1/placement'
+      $placement_internal_url        = 'http://127.0.0.1/placement'
+      $placement_admin_url           = 'http://127.0.0.1/placement'
       $placement_wsgi_script_source  = '/usr/bin/nova-placement-api'
       $placement_httpd_config_file   = '/etc/httpd/conf.d/00-nova-placement-api.conf'
       case $::operatingsystem {
@@ -131,6 +134,9 @@ class nova::params {
           $virtlock_service_name           = undef
           $virtlog_service_name            = undef
           $placement_service_name          = 'nova-placement-api'
+          $placement_public_url            = 'http://127.0.0.1'
+          $placement_internal_url          = 'http://127.0.0.1'
+          $placement_admin_url             = 'http://127.0.0.1'
         }
         default: {
           $spicehtml5proxy_package_name    = 'nova-spiceproxy'
@@ -141,6 +147,9 @@ class nova::params {
           $virtlock_service_name           = 'virtlockd'
           $virtlog_service_name            = 'virtlogd'
           $placement_service_name          = 'httpd'
+          $placement_public_url            = 'http://127.0.0.1/placement'
+          $placement_internal_url          = 'http://127.0.0.1/placement'
+          $placement_admin_url             = 'http://127.0.0.1/placement'
         }
       }
       $libvirt_service_name            = 'libvirtd'

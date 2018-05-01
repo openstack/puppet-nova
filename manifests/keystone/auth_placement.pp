@@ -63,13 +63,13 @@ class nova::keystone::auth_placement(
   $region                  = 'RegionOne',
   $tenant                  = 'services',
   $email                   = 'placement@localhost',
-  $public_url              = 'http://127.0.0.1/placement',
-  $internal_url            = 'http://127.0.0.1/placement',
-  $admin_url               = 'http://127.0.0.1/placement',
+  $public_url              = $::nova::params::placement_public_url,
+  $internal_url            = $::nova::params::placement_internal_url,
+  $admin_url               = $::nova::params::placement_admin_url,
   $configure_endpoint      = true,
   $configure_user          = true,
   $configure_user_role     = true,
-) {
+) inherits nova::params {
 
   include ::nova::deps
 
