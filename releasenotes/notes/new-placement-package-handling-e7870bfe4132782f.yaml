@@ -1,0 +1,6 @@
+---
+features:
+  - |
+    Now puppet ensures that the nova-placement-api package is properly
+    installed and that the service is running when running using Debian
+    package.
