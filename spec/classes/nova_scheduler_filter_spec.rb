@@ -17,11 +17,9 @@ describe 'nova::scheduler::filter' do
       it { is_expected.to contain_nova_config('filter_scheduler/max_instances_per_host').with_value('50') }
       it { is_expected.to contain_nova_config('filter_scheduler/available_filters').with_value(['nova.scheduler.filters.all_filters']) }
       it { is_expected.to contain_nova_config('filter_scheduler/weight_classes').with_value('nova.scheduler.weights.all_weighers') }
-      it { is_expected.to contain_nova_config('filter_scheduler/use_baremetal_filters').with_value(false) }
       it { is_expected.to contain_nova_config('filter_scheduler/isolated_images').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('filter_scheduler/isolated_hosts').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('filter_scheduler/enabled_filters').with_value('<SERVICE DEFAULT>') }
-      it { is_expected.to contain_nova_config('filter_scheduler/baremetal_enabled_filters').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('filter_scheduler/track_instance_changes').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('filter_scheduler/ram_weight_multiplier').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('filter_scheduler/disk_weight_multiplier').with_value('<SERVICE DEFAULT>') }
@@ -32,6 +30,8 @@ describe 'nova::scheduler::filter' do
       it { is_expected.to contain_nova_config('filter_scheduler/aggregate_image_properties_isolation_namespace').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('filter_scheduler/aggregate_image_properties_isolation_separator').with_value('<SERVICE DEFAULT>') }
 
+      it { is_expected.to_not contain_nova_config('filter_scheduler/use_baremetal_filters') }
+      it { is_expected.to_not contain_nova_config('filter_scheduler/baremetal_enabled_filters') }
     end
 
     context 'when overriding params with non-empty arrays' do
@@ -40,8 +40,6 @@ describe 'nova::scheduler::filter' do
           :isolated_images                      => ['ubuntu1','centos2'],
           :isolated_hosts                       => ['192.168.1.2','192.168.1.3'],
           :scheduler_default_filters            => ['RetryFilter','AvailabilityZoneFilter','RamFilter'],
-          :scheduler_use_baremetal_filters      => true,
-          :baremetal_scheduler_default_filters  => ['ExactRamFilter','ExactDiskFilter','ExactCoreFilter'],
           :scheduler_available_filters          => ['nova_filter1','nova_filter2']
         }
       end
@@ -50,9 +48,19 @@ describe 'nova::scheduler::filter' do
       it { is_expected.to contain_nova_config('filter_scheduler/isolated_images').with_value('ubuntu1,centos2') }
       it { is_expected.to contain_nova_config('filter_scheduler/isolated_hosts').with_value('192.168.1.2,192.168.1.3') }
       it { is_expected.to contain_nova_config('filter_scheduler/enabled_filters').with_value('RetryFilter,AvailabilityZoneFilter,RamFilter') }
-      it { is_expected.to contain_nova_config('filter_scheduler/use_baremetal_filters').with_value(true) }
-      it { is_expected.to contain_nova_config('filter_scheduler/baremetal_enabled_filters').with_value('ExactRamFilter,ExactDiskFilter,ExactCoreFilter') }
       it { is_expected.to contain_nova_config('filter_scheduler/available_filters').with_value(['nova_filter1','nova_filter2']) }
+    end
+
+    context 'when overriding deprecated params' do
+      let :params do
+        {
+          :scheduler_use_baremetal_filters      => true,
+          :baremetal_scheduler_default_filters  => ['ExactRamFilter','ExactDiskFilter','ExactCoreFilter'],
+        }
+      end
+
+      it { is_expected.to_not contain_nova_config('filter_scheduler/use_baremetal_filters') }
+      it { is_expected.to_not contain_nova_config('filter_scheduler/baremetal_enabled_filters') }
     end
 
     context 'when overriding params with empty arrays' do
@@ -61,14 +69,13 @@ describe 'nova::scheduler::filter' do
           :isolated_hosts                       => [],
           :scheduler_available_filters          => [],
           :scheduler_default_filters            => [],
-          :baremetal_scheduler_default_filters  => [], }
+        }
       end
 
       it { is_expected.to contain_nova_config('filter_scheduler/isolated_images').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('filter_scheduler/isolated_hosts').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('filter_scheduler/available_filters').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('filter_scheduler/enabled_filters').with_value('<SERVICE DEFAULT>') }
-      it { is_expected.to contain_nova_config('filter_scheduler/baremetal_enabled_filters').with_value('<SERVICE DEFAULT>') }
     end
   end
 

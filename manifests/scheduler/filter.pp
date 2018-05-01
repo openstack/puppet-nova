@@ -46,14 +46,6 @@
 #   (optional) Which weight class names to use for weighing hosts
 #   Defaults to 'nova.scheduler.weights.all_weighers'
 #
-# [*baremetal_scheduler_default_filters*]
-#   (optional) An array of filters to be used by default for baremetal hosts
-#   Defaults to $::os_service_default
-#
-# [*scheduler_use_baremetal_filters*]
-#   (optional) Use baremetal_scheduler_default_filters or not.
-#   Defaults to false
-#
 # [*periodic_task_interval*]
 #   (optional) This value controls how often (in seconds) to run periodic tasks
 #   in the scheduler. The specific tasks that are run for each period are
@@ -99,6 +91,16 @@
 #   (optional) Separator character(s) for image property namespace and name
 #   Defaults to $::os_service_default
 #
+# DEPRECATED
+#
+# [*baremetal_scheduler_default_filters*]
+#   An array of filters to be used by default for baremetal hosts
+#   No longer used. Defaults to undef
+#
+# [*scheduler_use_baremetal_filters*]
+#   Use baremetal_scheduler_default_filters or not.
+#   No longer used. Defaults to undef
+#
 class nova::scheduler::filter (
   $scheduler_host_manager                         = 'host_manager',
   $scheduler_max_attempts                         = '3',
@@ -110,8 +112,6 @@ class nova::scheduler::filter (
   $scheduler_available_filters                    = ['nova.scheduler.filters.all_filters'],
   $scheduler_default_filters                      = $::os_service_default,
   $scheduler_weight_classes                       = 'nova.scheduler.weights.all_weighers',
-  $baremetal_scheduler_default_filters            = $::os_service_default,
-  $scheduler_use_baremetal_filters                = false,
   $periodic_task_interval                         = $::os_service_default,
   $track_instance_changes                         = $::os_service_default,
   $ram_weight_multiplier                          = $::os_service_default,
@@ -122,6 +122,9 @@ class nova::scheduler::filter (
   $restrict_isolated_hosts_to_isolated_images     = $::os_service_default,
   $aggregate_image_properties_isolation_namespace = $::os_service_default,
   $aggregate_image_properties_isolation_separator = $::os_service_default,
+  # DEPRECATED
+  $baremetal_scheduler_default_filters            = undef,
+  $scheduler_use_baremetal_filters                = undef,
 ) {
 
   include ::nova::deps
@@ -148,12 +151,12 @@ class nova::scheduler::filter (
     $scheduler_available_filters_real = any2array($scheduler_available_filters)
   }
 
-  if !is_service_default($baremetal_scheduler_default_filters) and !empty($baremetal_scheduler_default_filters){
-    validate_array($baremetal_scheduler_default_filters)
-    $baremetal_scheduler_default_filters_real = join($baremetal_scheduler_default_filters, ',')
-  } else {
-    $baremetal_scheduler_default_filters_real = $::os_service_default
+  if $baremetal_scheduler_default_filters or $scheduler_use_baremetal_filters {
+    warning('The baremetal_scheduler_default_filters and \
+scheduler_use_baremetal_filters parameters are deprecated and will have \
+no effect. Baremetal scheduling now uses custom resource classes.')
   }
+
   if !is_service_default($isolated_images) and !empty($isolated_images){
     validate_array($isolated_images)
     $isolated_images_real = join($isolated_images, ',')
@@ -187,12 +190,8 @@ class nova::scheduler::filter (
       value => $scheduler_available_filters_real;
     'filter_scheduler/weight_classes':
       value => $scheduler_weight_classes;
-    'filter_scheduler/use_baremetal_filters':
-      value => $scheduler_use_baremetal_filters;
     'filter_scheduler/enabled_filters':
       value => $scheduler_default_filters_real;
-    'filter_scheduler/baremetal_enabled_filters':
-      value => $baremetal_scheduler_default_filters_real;
     'filter_scheduler/isolated_images':
       value => $isolated_images_real;
     'filter_scheduler/isolated_hosts':
