@@ -60,6 +60,46 @@ describe 'nova::placement' do
       end
     end
 
+    context 'when settings service_name to httpd' do
+      before do
+        params.merge!(
+          :service_name => 'httpd',
+        )
+      end
+
+      it 'should not contain placement generic service' do
+        is_expected.to_not contain_nova__generic_service('nova-placement-api')
+      end
+    end
+
+  end
+
+  shared_examples 'nova::placement on Ubuntu' do
+    context 'with required parameters' do
+      it 'should not contain placement generic service' do
+        is_expected.to_not contain_nova__generic_service('nova-placement-api')
+      end
+    end
+  end
+
+  shared_examples 'nova::placement on Debian' do
+    before do
+      facts.merge!(
+        :os_package_type => 'debian',
+      )
+    end
+
+    context 'with required parameters' do
+      it 'should contain placement generic service' do
+        is_expected.to contain_nova__generic_service('nova-placement-api').with(
+          :enabled        => true,
+          :manage_service => true,
+          :package_name   => 'nova-placement-api',
+          :service_name   => 'nova-placement-api',
+          :ensure_package => 'present'
+        )
+      end
+    end
   end
 
   on_supported_os({
@@ -71,6 +111,10 @@ describe 'nova::placement' do
       end
 
       it_behaves_like 'nova::placement'
+
+      if facts[:osfamily] == 'Debian'
+        it_behaves_like "nova::placement on #{facts[:operatingsystem]}"
+      end
     end
   end
 end

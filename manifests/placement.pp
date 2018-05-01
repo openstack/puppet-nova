@@ -10,16 +10,20 @@
 #
 # [*manage_service*]
 #   (optional) Whether to start/stop the service
-#   Only useful if ::nova::params::service_name is set to
+#   Only useful if $::nova::params::service_name is set to
 #   nova-placement-api.
 #   Defaults to true
+#
+# [*package_name*]
+#   (optional) The package name for nova placement.
+#   Defaults to $::nova::params::placement_package_name
 #
 # [*service_name*]
 #   (optional) The service name for the placement service.
 #   Defaults to $::nova::params::placement_service_name
 #
 # [*ensure_package*]
-#   (optional) The state of the nova conductor package
+#   (optional) The state of the nova placement package
 #   Defaults to 'present'
 #
 # [*password*]
@@ -76,6 +80,7 @@
 class nova::placement(
   $enabled             = true,
   $manage_service      = true,
+  $package_name        = $::nova::params::placement_package_name,
   $service_name        = $::nova::params::placement_service_name,
   $ensure_package      = 'present',
   $password            = false,
@@ -89,7 +94,7 @@ class nova::placement(
   $username            = 'placement',
   # DEPRECATED PARAMETERS
   $os_region_name      = undef,
-) {
+) inherits nova::params {
 
   include ::nova::deps
 
@@ -105,7 +110,7 @@ in a future release. Please use region_name instead.')
     nova::generic_service { 'nova-placement-api':
       enabled        => $enabled,
       manage_service => $manage_service,
-      package_name   => $::nova::params::placement_package_name,
+      package_name   => $package_name,
       service_name   => $service_name,
       ensure_package => $ensure_package,
     }
@@ -115,7 +120,6 @@ in a future release. Please use region_name instead.')
       Service['nova-placement-api'] -> Service[$service_name]
     }
   }
-
 
   nova_config {
     'placement/auth_type':           value => $auth_type;
