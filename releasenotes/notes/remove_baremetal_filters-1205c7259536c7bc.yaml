@@ -1,12 +1,14 @@
 ---
 deprecations:
   - |
-    The nova scheduler baremetal Exact* filters have now been removed.
+    The nova scheduler baremetal Exact* filters and ironic host_manager
+    have now been removed.
     As a result the following parameters are now deprecated and have
     no effect:
 
     ``nova::scheduler::filter::baremetal_scheduler_default_filter``
     ``nova::scheduler::filter::scheduler_use_baremetal_filters``
+    ``nova::scheduler::filter::scheduler_host_manager``
 
     Baremetal scheduling will use the custom resource class defined for
     each baremetal node to make its selection. Refer to the ironic
