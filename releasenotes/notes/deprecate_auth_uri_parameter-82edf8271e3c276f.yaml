@@ -1,0 +1,6 @@
+---
+deprecations:
+  - nova::keystone::authtoken::auth_uri is deprecated and will be removed in a future release.
+    Please use www_authenticate_uri instead.
+  - nova::metadata::novajoin::authtoken::auth_uri is deprecated and will be removed in a future release.
+    Please use www_authenticate_uri instead.
