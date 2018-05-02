@@ -112,11 +112,6 @@ class nova::params {
       $scheduler_service_name       = 'nova-scheduler'
       $vncproxy_service_name        = 'nova-novncproxy'
       $serialproxy_service_name     = 'nova-serialproxy'
-      if ($::os_package_type == 'debian') {
-          $placement_service_name   = 'nova-placement-api'
-      } else {
-          $placement_service_name   = 'httpd'
-      }
       $tgt_service_name             = 'tgt'
       $nova_log_group               = 'adm'
       $nova_wsgi_script_path        = '/usr/lib/cgi-bin/nova'
@@ -135,6 +130,7 @@ class nova::params {
           $special_service_provider        = undef
           $virtlock_service_name           = undef
           $virtlog_service_name            = undef
+          $placement_service_name          = 'nova-placement-api'
         }
         default: {
           $spicehtml5proxy_package_name    = 'nova-spiceproxy'
@@ -144,6 +140,7 @@ class nova::params {
           $special_service_provider        = undef
           $virtlock_service_name           = 'virtlockd'
           $virtlog_service_name            = 'virtlogd'
+          $placement_service_name          = 'httpd'
         }
       }
       $libvirt_service_name            = 'libvirtd'
