@@ -35,8 +35,8 @@
 #
 # [*libvirt_cpu_model_extra_flags*]
 #   (optional) This allows specifying granular CPU feature flags when
-#   specifying CPU models. Only valid, if cpu_mode and cpu_model
-#   attributes are specified and only if cpu_mode="custom".
+#   specifying CPU models. Only has effect if cpu_mode is not set
+#   to 'none'.
 #   Defaults to undef
 #
 # [*libvirt_snapshot_image_format*]
@@ -264,19 +264,27 @@ class nova::compute::libvirt (
     validate_string($libvirt_cpu_model)
     nova_config {
       'libvirt/cpu_model': value => $libvirt_cpu_model;
-      'libvirt/cpu_model_extra_flags': value => $libvirt_cpu_model_extra_flags;
     }
   } else {
     nova_config {
       'libvirt/cpu_model': ensure => absent;
-      'libvirt/cpu_model_extra_flags': ensure => absent;
     }
     if $libvirt_cpu_model {
       warning('$libvirt_cpu_model requires that $libvirt_cpu_mode => "custom" and will be ignored')
     }
+  }
 
+  if $libvirt_cpu_mode_real != 'none' {
+    validate_string($libvirt_cpu_model_extra_flags)
+    nova_config {
+      'libvirt/cpu_model_extra_flags': value => $libvirt_cpu_model_extra_flags;
+    }
+  } else {
+    nova_config {
+      'libvirt/cpu_model_extra_flags': ensure => absent;
+    }
     if $libvirt_cpu_model_extra_flags {
-      warning('$libvirt_cpu_model_extra_flags requires that $libvirt_cpu_mode => "custom" and will be ignored')
+      warning('$libvirt_cpu_model_extra_flags requires that $libvirt_cpu_mode is not set to "none" and will be ignored')
     }
   }
 

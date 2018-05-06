@@ -13,6 +13,12 @@ describe 'nova::compute::libvirt' do
 
     describe 'with default parameters' do
 
+      let :params do
+        {
+          :libvirt_cpu_model_extra_flags  => 'pcid,pdpe1gb',
+        }
+      end
+
       it { is_expected.to contain_class('nova::params')}
 
       it {
@@ -46,7 +52,7 @@ describe 'nova::compute::libvirt' do
       it { is_expected.to contain_nova_config('libvirt/virt_type').with_value('kvm')}
       it { is_expected.to contain_nova_config('libvirt/cpu_mode').with_value('host-model')}
       it { is_expected.to contain_nova_config('libvirt/cpu_model').with_ensure('absent')}
-      it { is_expected.to contain_nova_config('libvirt/cpu_model_extra_flags').with_ensure('absent')}
+      it { is_expected.to contain_nova_config('libvirt/cpu_model_extra_flags').with_ensure('pcid,pdpe1gb')}
       it { is_expected.to contain_nova_config('libvirt/snapshot_image_format').with_ensure('absent')}
       it { is_expected.to contain_nova_config('libvirt/disk_cachemodes').with_ensure('absent')}
       it { is_expected.to contain_nova_config('libvirt/inject_password').with_value(false)}
@@ -96,7 +102,7 @@ describe 'nova::compute::libvirt' do
       it { is_expected.to contain_nova_config('libvirt/virt_type').with_value('qemu')}
       it { is_expected.to contain_nova_config('libvirt/cpu_mode').with_value('host-passthrough')}
       it { is_expected.to contain_nova_config('libvirt/cpu_model').with_ensure('absent')}
-      it { is_expected.to contain_nova_config('libvirt/cpu_model_extra_flags').with_ensure('absent')}
+      it { is_expected.to contain_nova_config('libvirt/cpu_model_extra_flags').with_ensure('pcid')}
       it { is_expected.to contain_nova_config('libvirt/snapshot_image_format').with_ensure('absent')}
       it { is_expected.to contain_nova_config('libvirt/disk_cachemodes').with_value('file=directsync,block=none')}
       it { is_expected.to contain_nova_config('libvirt/hw_disk_discard').with_value('unmap')}
