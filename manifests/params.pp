@@ -13,6 +13,7 @@ class nova::params {
   case $::osfamily {
     'RedHat': {
       # package names
+      $client_package                = 'python-novaclient'
       $api_package_name              = 'openstack-nova-api'
       $placement_package_name        = 'openstack-nova-placement-api'
       $cells_package_name            = 'openstack-nova-cells'
@@ -85,6 +86,7 @@ class nova::params {
     }
     'Debian': {
       # package names
+      $client_package               = "python${pyvers}-novaclient"
       $api_package_name             = 'nova-api'
       $placement_package_name       = 'nova-placement-api'
       $cells_package_name           = 'nova-cells'
