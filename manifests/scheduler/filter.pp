@@ -4,11 +4,6 @@
 #
 # === Parameters:
 #
-# [*scheduler_host_manager*]
-#   (optional) The scheduler host manager class to use. Should be either
-#   'host_manager' or 'ironic_host_manager'
-#   Defaults to 'host_manager'
-#
 # [*scheduler_max_attempts*]
 #   (optional) Maximum number of attempts to schedule an instance
 #   Defaults to '3'
@@ -101,8 +96,12 @@
 #   Use baremetal_scheduler_default_filters or not.
 #   No longer used. Defaults to undef
 #
+# [*scheduler_host_manager*]
+#   The scheduler host manager class to use.
+#   No longer used. Defaults to undef
+#
+
 class nova::scheduler::filter (
-  $scheduler_host_manager                         = 'host_manager',
   $scheduler_max_attempts                         = '3',
   $scheduler_host_subset_size                     = '1',
   $max_io_ops_per_host                            = '8',
@@ -125,6 +124,7 @@ class nova::scheduler::filter (
   # DEPRECATED
   $baremetal_scheduler_default_filters            = undef,
   $scheduler_use_baremetal_filters                = undef,
+  $scheduler_host_manager                         = undef,
 ) {
 
   include ::nova::deps
@@ -151,8 +151,8 @@ class nova::scheduler::filter (
     $scheduler_available_filters_real = any2array($scheduler_available_filters)
   }
 
-  if $baremetal_scheduler_default_filters or $scheduler_use_baremetal_filters {
-    warning('The baremetal_scheduler_default_filters and \
+  if $baremetal_scheduler_default_filters or $scheduler_use_baremetal_filters or $scheduler_host_manager {
+    warning('The scheduler_host_manager, baremetal_scheduler_default_filters and \
 scheduler_use_baremetal_filters parameters are deprecated and will have \
 no effect. Baremetal scheduling now uses custom resource classes.')
   }
@@ -172,7 +172,6 @@ no effect. Baremetal scheduling now uses custom resource classes.')
 
   # TODO(aschultz): these should probably be in nova::scheduler ...
   nova_config {
-    'scheduler/host_manager':           value => $scheduler_host_manager;
     'scheduler/max_attempts':           value => $scheduler_max_attempts;
     'scheduler/periodic_task_interval': value => $periodic_task_interval;
   }

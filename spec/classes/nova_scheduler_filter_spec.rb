@@ -9,7 +9,6 @@ describe 'nova::scheduler::filter' do
   shared_examples 'nova::scheduler::filter' do
 
     context 'with default parameters' do
-      it { is_expected.to contain_nova_config('scheduler/host_manager').with_value('host_manager') }
       it { is_expected.to contain_nova_config('scheduler/max_attempts').with_value('3') }
       it { is_expected.to contain_nova_config('scheduler/periodic_task_interval').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('filter_scheduler/host_subset_size').with_value('1') }
@@ -32,6 +31,7 @@ describe 'nova::scheduler::filter' do
 
       it { is_expected.to_not contain_nova_config('filter_scheduler/use_baremetal_filters') }
       it { is_expected.to_not contain_nova_config('filter_scheduler/baremetal_enabled_filters') }
+      it { is_expected.to_not contain_nova_config('scheduler/host_manager') }
     end
 
     context 'when overriding params with non-empty arrays' do
