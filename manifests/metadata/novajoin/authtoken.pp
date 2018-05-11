@@ -32,7 +32,7 @@
 #   (Optional) If true, explicitly allow TLS without checking server cert
 #   against any certificate authorities.  WARNING: not recommended.  Use with
 #   caution.
-#   Defaults to $:os_service_default
+#   Defaults to $::os_service_default
 #
 # [*auth_section*]
 #   (Optional) Config Section from which to load plugin specific options
