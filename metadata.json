@@ -6,10 +6,6 @@
             "version_requirement": ">=1.0.0 <2.0.0"
         },
         {
-            "name": "duritong/sysctl",
-            "version_requirement": ">=0.0.1 <1.0.0"
-        },
-        {
             "name": "joshuabaird/ipaclient",
             "version_requirement": ">=2.5.1"
         },
