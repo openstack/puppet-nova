@@ -8,11 +8,7 @@ describe 'nova::compute::libvirt' do
 
   shared_examples 'debian-nova-compute-libvirt' do
     let(:libvirt_options) do
-      if facts[:operatingsystem] == 'Ubuntu' and Puppet::Util::Package.versioncmp(facts[:operatingsystemmajrelease], '16') >= 0
-        'libvirtd_opts="-l"'
-      else
-        'libvirtd_opts="-d -l"'
-      end
+      'libvirtd_opts="-l"'
     end
 
     describe 'with default parameters' do
