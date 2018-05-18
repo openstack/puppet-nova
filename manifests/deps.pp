@@ -94,12 +94,11 @@ class nova::deps {
     notify => Anchor['nova::service::begin']
   }
 
-  # Wedge cell_v2 put this between api sync and db sync by default but can
-  # be overridden using the spaceship operator to move it around when needed
+  # Between api sync and db sync by default but can be overridden
+  # using the spaceship operator to move it around when needed
   anchor { 'nova::cell_v2::begin':
     subscribe => Anchor['nova::dbsync_api::end']
   }
-  -> Nova::Cell_v2::Cell<||>
   ~> anchor { 'nova::cell_v2::end':
     notify => Anchor['nova::dbsync::begin']
   }

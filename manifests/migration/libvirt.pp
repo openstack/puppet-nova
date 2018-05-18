@@ -67,13 +67,6 @@
 #   See https://libvirt.org/guide/html/Application_Development_Guide-Architecture-Remote_URIs.html
 #   Defaults to {}
 #
-# DEPRECATED PARAMETERS
-#
-# [*use_tls*]
-#   (optional) Use tls for remote connections to libvirt
-#   Defaults to false
-#   Deprecated by transport paramater.
-#
 class nova::migration::libvirt(
   $transport                         = undef,
   $auth                              = 'none',
@@ -87,19 +80,12 @@ class nova::migration::libvirt(
   $client_user                       = undef,
   $client_port                       = undef,
   $client_extraparams                = {},
-  # DEPRECATED PARAMETERS
-  $use_tls                           = false,
 ){
 
   include ::nova::deps
 
   if $transport {
     $transport_real = $transport
-  } elsif $use_tls {
-    warning(
-      'The use_tls parameter is now deprecated and will be removed in the Queens cycle. Please set transport=tls instead.'
-    )
-    $transport_real = 'tls'
   } else {
     $transport_real = 'tcp'
   }

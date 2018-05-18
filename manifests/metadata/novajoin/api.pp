@@ -101,15 +101,6 @@
 #   take the domain and upcase it.
 #   Defaults to undef
 #
-# DEPRECATED PARAMETERS
-#
-# [*nova_user*]
-#   (optional) User that nova services run as.
-#   Defaults to 'nova'
-#
-# [*nova_password*]
-#   (required) Password for the nova service user.
-#
 class nova::metadata::novajoin::api (
   $transport_url,
   $bind_address              = '127.0.0.1',
@@ -135,31 +126,14 @@ class nova::metadata::novajoin::api (
   $user_domain_id            = 'default',
   $configure_kerberos        = false,
   $ipa_realm                 = undef,
-  # DEPRECATED PARAMETERS
-  $nova_user                 = 'nova',
-  $nova_password             = undef,
 ) {
   include ::nova::metadata::novajoin::authtoken
 
-  if $service_user {
-    $service_user_real = $service_user
-  } else {
-    warning('The nova_user parameter is deprecated. use service_user instead')
-    $service_user_real = $nova_user
-  }
-
-  if ! $service_user_real {
+  if ! $service_user {
     fail('service_user is missing')
   }
 
-  if $service_password {
-    $service_password_real = $service_password
-  } else {
-    warning('The nova_password parameter is deprecated. use service_password instead')
-    $service_password_real = $nova_password
-  }
-
-  if ! $service_password_real {
+  if ! $service_password {
     fail('service_password is missing')
   }
 
@@ -234,8 +208,8 @@ class nova::metadata::novajoin::api (
     'DEFAULT/transport_url':                   value => $transport_url;
     'service_credentials/auth_type':           value => $auth_type;
     'service_credentials/auth_url':            value => $keystone_auth_url;
-    'service_credentials/password':            value => $service_password_real;
-    'service_credentials/username':            value => $service_user_real;
+    'service_credentials/password':            value => $service_password;
+    'service_credentials/username':            value => $service_user;
     'service_credentials/project_name':        value => $project_name;
     'service_credentials/user_domain_id':      value => $user_domain_id;
     'service_credentials/project_domain_name':

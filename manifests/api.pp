@@ -238,44 +238,6 @@
 #   (optional) User name for the vendordata dynamic plugin credentials.
 #   Defaults to $::os_service_default
 #
-# DEPRECATED
-#
-# [*conductor_workers*]
-#   (optional) DEPRECATED. Use workers parameter of nova::conductor
-#   Class instead.
-#   Defaults to undef
-#
-# [*osapi_max_limit*]
-#   (optional) This option is limit the maximum number of items in a single response.
-#   Defaults to undef
-#
-# [*osapi_compute_link_prefix*]
-#   (optional) This string is prepended to the normal URL that is returned in links
-#   to the OpenStack Compute API.
-#   Defaults to undef
-#
-# [*osapi_glance_link_prefix*]
-#   (optional) This string is prepended to the normal URL that is returned in links
-#   to Glance resources.
-#   Defaults to undef
-#
-# [*osapi_hide_server_address_states*]
-#   (optional) This option is a list of all instance states for which network address
-#   information should not be returned from the API.
-#   Defaults to undef
-#
-# [*default_floating_pool*]
-#   (optional) Default pool for floating IPs
-#   Defaults to undef
-#
-# [*pci_alias*]
-#   DEPRECATED. Use nova::pci::aliases instead.
-#   (optional) A list of pci alias hashes
-#   Defaults to undef
-#   Example:
-#   [{"vendor_id" => "1234", "product_id" => "5678", "name" => "default"},
-#    {"vendor_id" => "1234", "product_id" => "6789", "name" => "other"}]
-#
 class nova::api(
   $enabled                                     = true,
   $manage_service                              = true,
@@ -327,14 +289,6 @@ class nova::api(
   $vendordata_dynamic_auth_project_name        = $::os_service_default,
   $vendordata_dynamic_auth_user_domain_name    = 'Default',
   $vendordata_dynamic_auth_username            = $::os_service_default,
-  # DEPRECATED PARAMETER
-  $conductor_workers                           = undef,
-  $osapi_max_limit                             = undef,
-  $osapi_compute_link_prefix                   = undef,
-  $osapi_glance_link_prefix                    = undef,
-  $osapi_hide_server_address_states            = undef,
-  $default_floating_pool                       = undef,
-  $pci_alias                                   = undef,
 ) inherits nova::params {
 
   include ::nova::deps
@@ -347,10 +301,6 @@ class nova::api(
     Class['cinder::client'] ~> Nova::Generic_service['api']
   }
 
-  if $conductor_workers {
-    warning('The conductor_workers parameter is deprecated and has no effect. Use workers parameter of nova::conductor class instead.')
-  }
-
   if $instance_name_template {
     nova_config {
       'DEFAULT/instance_name_template': value => $instance_name_template;
@@ -359,38 +309,6 @@ class nova::api(
     nova_config{
       'DEFAULT/instance_name_template': ensure => absent;
     }
-  }
-
-  if $default_floating_pool {
-    warning('The default_floating_pool parameter is deprecated. Please use nova::network::neutron::default_floating_pool instead.')
-  }
-
-  if $osapi_max_limit {
-    warning('The osapi_max_limit parameter is deprecated. Please use max_limit instead')
-    $max_limit_real = $osapi_max_limit
-  } else {
-    $max_limit_real = $max_limit
-  }
-
-  if $osapi_compute_link_prefix {
-    warning('The osapi_compute_link_prefix parameter is deprecated. Please use compute_link_prefix instead')
-    $compute_link_prefix_real = $osapi_compute_link_prefix
-  } else {
-    $compute_link_prefix_real = $compute_link_prefix
-  }
-
-  if $osapi_glance_link_prefix {
-    warning('The osapi_glance_link_prefix parameter is deprecated. Please use glance_link_prefix instead')
-    $glance_link_prefix_real = $osapi_glance_link_prefix
-  } else {
-    $glance_link_prefix_real = $glance_link_prefix
-  }
-
-  if $osapi_hide_server_address_states {
-    warning('The osapi_hide_server_address_states parameter is deprecated. Please use hide_server_address_states instead')
-    $hide_server_address_states_real = $osapi_hide_server_address_states
-  } else {
-    $hide_server_address_states_real = $hide_server_address_states
   }
 
   if !is_service_default($vendordata_providers) and !empty($vendordata_providers){
@@ -473,10 +391,10 @@ as a standalone service, or httpd for being run by a httpd server")
     'api/vendordata_dynamic_connect_timeout':      value => $vendordata_dynamic_connect_timeout;
     'api/vendordata_dynamic_read_timeout':         value => $vendordata_dynamic_read_timeout;
     'api/vendordata_dynamic_failure_fatal':        value => $vendordata_dynamic_failure_fatal;
-    'api/max_limit':                               value => $max_limit_real;
-    'api/compute_link_prefix':                     value => $compute_link_prefix_real;
-    'api/glance_link_prefix':                      value => $glance_link_prefix_real;
-    'api/hide_server_address_states':              value => $hide_server_address_states_real;
+    'api/max_limit':                               value => $max_limit;
+    'api/compute_link_prefix':                     value => $compute_link_prefix;
+    'api/glance_link_prefix':                      value => $glance_link_prefix;
+    'api/hide_server_address_states':              value => $hide_server_address_states;
     'api/allow_instance_snapshots':                value => $allow_instance_snapshots;
     'api/enable_instance_password':                value => $enable_instance_password;
     'vendordata_dynamic_auth/auth_type':           value => $vendordata_dynamic_auth_auth_type;
@@ -536,11 +454,6 @@ as a standalone service, or httpd for being run by a httpd server")
     'filter:authtoken/admin_password':    ensure => absent;
     'filter:authtoken/auth_admin_prefix': ensure => absent;
   }
-
-  if $pci_alias {
-    warning('The pci_alias parameter is deprecated. Please use nova::pci::aliases instead.')
-  }
-  include ::nova::pci
 
   if $validate {
     #Shrinking the variables names in favor of not

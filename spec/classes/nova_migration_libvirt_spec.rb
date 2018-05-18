@@ -67,20 +67,6 @@ describe 'nova::migration::libvirt' do
       }).that_requires('Package[libvirt]').that_notifies('Service[libvirt]') }
     end
 
-    context 'with tls enabled (legacy)' do
-      let :params do
-        {
-          :use_tls => true,
-        }
-      end
-      it { is_expected.to contain_libvirtd_config('listen_tls').with_value('1') }
-      it { is_expected.to contain_libvirtd_config('listen_tcp').with_value('0') }
-      it { is_expected.to contain_libvirtd_config('auth_tls').with_value("\"none\"") }
-      it { is_expected.not_to contain_libvirtd_config('auth_tcp') }
-      it { is_expected.to contain_nova_config('libvirt/live_migration_uri').with_value('qemu+tls://%s/system')}
-      it { is_expected.to contain_nova_config('libvirt/live_migration_inbound_addr').with_value('<SERVICE DEFAULT>')}
-    end
-
     context 'with tls enabled' do
       let :params do
         {
