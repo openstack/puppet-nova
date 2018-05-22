@@ -56,6 +56,12 @@
 #   with more or less available RAM are weighed.
 #   Defaults to $::os_service_default
 #
+# [*cpu_weight_multiplier*]
+#   (optional) CPU weight multilier ratio. This options determines how hosts
+#   with more or less available CPU cores are weighed. Negative numbers mean
+#   to stack vs spread.
+#   Defaults to $::os_service_default
+#
 # [*disk_weight_multiplier*]
 #   (optional) Disk weight multiplier ratio. Multiplier used for weighing free
 #   disk space. Negative numbers mean to stack vs spread.
@@ -114,6 +120,7 @@ class nova::scheduler::filter (
   $periodic_task_interval                         = $::os_service_default,
   $track_instance_changes                         = $::os_service_default,
   $ram_weight_multiplier                          = $::os_service_default,
+  $cpu_weight_multiplier                          = $::os_service_default,
   $disk_weight_multiplier                         = $::os_service_default,
   $io_ops_weight_multiplier                       = $::os_service_default,
   $soft_affinity_weight_multiplier                = $::os_service_default,
@@ -197,6 +204,8 @@ no effect. Baremetal scheduling now uses custom resource classes.')
       value => $isolated_hosts_real;
     'filter_scheduler/ram_weight_multiplier':
       value => $ram_weight_multiplier;
+    'filter_scheduler/cpu_weight_multiplier':
+      value => $cpu_weight_multiplier;
     'filter_scheduler/disk_weight_multiplier':
       value => $disk_weight_multiplier;
     'filter_scheduler/io_ops_weight_multiplier':

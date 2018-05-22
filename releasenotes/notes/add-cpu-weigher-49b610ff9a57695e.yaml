@@ -1,0 +1,6 @@
+---
+features:
+  - |
+    Add support for configuring ``cpu_weight_multiplier`` config
+    option, which can be used to spread or stack workfloads on
+    hosts based on their vCPU usage.

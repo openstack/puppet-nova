@@ -21,6 +21,7 @@ describe 'nova::scheduler::filter' do
       it { is_expected.to contain_nova_config('filter_scheduler/enabled_filters').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('filter_scheduler/track_instance_changes').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('filter_scheduler/ram_weight_multiplier').with_value('<SERVICE DEFAULT>') }
+      it { is_expected.to contain_nova_config('filter_scheduler/cpu_weight_multiplier').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('filter_scheduler/disk_weight_multiplier').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('filter_scheduler/io_ops_weight_multiplier').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('filter_scheduler/soft_affinity_weight_multiplier').with_value('<SERVICE DEFAULT>') }
