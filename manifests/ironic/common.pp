@@ -30,24 +30,6 @@
 # [*api_retry_interval*]
 #   Interval in second for ironic driver to poll ironic api
 #
-# === DEPRECATED
-#
-# [*admin_username*]
-#   The admin username for Ironic to connect to Nova.
-#   Defaults to 'admin'
-#
-# [*admin_password*]
-#   The admin password for Ironic to connect to Nova.
-#   Defaults to 'ironic'
-#
-# [*admin_url*]
-#   The address of the Keystone api endpoint.
-#   Defaults to 'http://127.0.0.1:35357/v2.0'
-#
-# [*admin_tenant_name*]
-#   The Ironic Keystone tenant name.
-#   Defaults to 'services'
-#
 # [*user_domain_name*]
 #   (Optional) Name of domain for $user_domain_name
 #   Defaults to 'Default'
@@ -70,7 +52,6 @@ class nova::ironic::common (
 ) {
 
   include ::nova::deps
-
 
   nova_config {
     'ironic/auth_plugin':          value => $auth_plugin;

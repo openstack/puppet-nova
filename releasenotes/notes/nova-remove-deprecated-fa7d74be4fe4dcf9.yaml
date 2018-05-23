@@ -1,0 +1,40 @@
+---
+upgrade:
+  - |
+    The deprecated parameter nova::api::conductor_workers is removed.
+    Please use nova::conductor::workers instead.
+  - |
+    The deprecated parameter nova::api::osapi_max_limit is removed.
+    Please use nova::api::max_limit instead.
+  - |
+    The deprecated parameter nova::api::osapi_compute_link_prefix is removed.
+    Please use nova::api::compute_link_prefix instead.
+  - |
+    The deprecated parameter nova::api::osapi_glance_link_prefix is removed.
+    Please use nova::api::glance_link_prefix instead.
+  - |
+    The deprecated parameter nova::api::osapi_hide_server_address_states is removed.
+    Please use nova::api::hide_server_address_states instead.
+  - |
+    The deprecated parameter nova::api::default_floating_pool is removed.
+    Please use nova::network::neutron::default_floating_pool instead.
+  - |
+    The deprecated parameter nova::api::pci_alias is removed.
+    Please use the nova::pci class instead and set the nova::pci::aliases parameter.
+  - |
+    The deprecated parameter nova::migration::libvirt::use_tls is removed.
+    Please set nova::migration::libvirt::transport to 'tls' instead if you had this option.
+  - |
+    The deprecated class nova::cell_v2::cell is now removed.
+    Please use the nova_cell_v2 resource type instead of using this class.
+  - |
+    The deprecated nova::rabbit_host, nova::rabbit_hosts, nova::rabbit_password,
+    nova::rabbit_port, nova::rabbit_userid and nova::rabbit_virtual_host is removed.
+    Please use the nova::default_transport_url instead.
+  - |
+    The deprecated nova::rpc_backend is removed.
+  - |
+    The deprecated nova::metadata::novajoin::api::nova_user and
+    nova::metadata::novajoin::api::nova_password is removed.
+    Please use the nova::metadata::novajoin::api::service_user and
+    nova::metadata::novajoin::api::service_password instead.

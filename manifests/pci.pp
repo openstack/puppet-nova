@@ -16,12 +16,10 @@ class nova::pci(
 ) {
   include ::nova::deps
 
-  $picked_aliases = pick_default($::nova::api::pci_alias, $aliases)
-
-  if $picked_aliases and
-      !is_service_default($picked_aliases) and
-      !empty($picked_aliases) {
-    $aliases_real = to_array_of_json_strings($picked_aliases)
+  if $aliases and
+      !is_service_default($aliases) and
+      !empty($aliases) {
+    $aliases_real = to_array_of_json_strings($aliases)
   } else {
     $aliases_real = $::os_service_default
   }

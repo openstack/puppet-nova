@@ -421,36 +421,6 @@
 #
 # DEPRECATED PARAMETERS
 #
-# [*rabbit_host*]
-#   (optional) Location of rabbitmq installation. (string value)
-#   Defaults to $::os_service_default
-#
-# [*rabbit_hosts*]
-#   (optional) List of clustered rabbit servers. (string value)
-#   Defaults to $::os_service_default
-#
-# [*rabbit_port*]
-#   (optional) Port for rabbitmq instance. (port value)
-#   Defaults to $::os_service_default
-#
-# [*rabbit_password*]
-#   (optional) Password used to connect to rabbitmq. (string value)
-#   Defaults to $::os_service_default
-#
-# [*rabbit_userid*]
-#   (optional) User used to connect to rabbitmq. (string value)
-#   Defaults to $::os_service_default
-#
-# [*rabbit_virtual_host*]
-#   (optional) The RabbitMQ virtual host. (string value)
-#   Defaults to $::os_service_default
-#
-# [*rpc_backend*]
-#   (optional) The rpc backend implementation to use, can be:
-#     rabbit (for rabbitmq)
-#     zmq (for zeromq)
-#   Defaults to $::os_service_default
-#
 # [*notify_api_faults*]
 #   (optional) If set, send api.fault notifications on caught
 #   exceptions in the API service
@@ -551,13 +521,6 @@ class nova(
   $purge_config                           = false,
   $my_ip                                  = $::os_service_default,
   # DEPRECATED PARAMETERS
-  $rabbit_host                            = $::os_service_default,
-  $rabbit_hosts                           = $::os_service_default,
-  $rabbit_password                        = $::os_service_default,
-  $rabbit_port                            = $::os_service_default,
-  $rabbit_userid                          = $::os_service_default,
-  $rabbit_virtual_host                    = $::os_service_default,
-  $rpc_backend                            = $::os_service_default,
   $notify_api_faults                      = undef,
 ) inherits nova::params {
 
@@ -570,19 +533,6 @@ class nova(
   validate_array($enabled_ssl_apis)
   if empty($enabled_ssl_apis) and $use_ssl {
       warning('enabled_ssl_apis is empty but use_ssl is set to true')
-  }
-
-  if !is_service_default($rabbit_host) or
-    !is_service_default($rabbit_hosts) or
-    !is_service_default($rabbit_password) or
-    !is_service_default($rabbit_port) or
-    !is_service_default($rabbit_userid) or
-    !is_service_default($rabbit_virtual_host) or
-    !is_service_default($rpc_backend) {
-    warning("nova::rabbit_host, nova::rabbit_hosts, nova::rabbit_password, \
-nova::rabbit_port, nova::rabbit_userid, nova::rabbit_virtual_host and \
-nova::rpc_backend are deprecated. Please use  nova::default_transport_url \
-instead.")
   }
 
   if $notify_api_faults {
@@ -692,9 +642,6 @@ but should be one of: ssh-rsa, ssh-dsa, ssh-ecdsa.")
   }
 
   oslo::messaging::rabbit {'nova_config':
-    rabbit_password             => $rabbit_password,
-    rabbit_userid               => $rabbit_userid,
-    rabbit_virtual_host         => $rabbit_virtual_host,
     rabbit_use_ssl              => $rabbit_use_ssl,
     heartbeat_timeout_threshold => $rabbit_heartbeat_timeout_threshold,
     heartbeat_rate              => $rabbit_heartbeat_rate,
@@ -706,9 +653,6 @@ but should be one of: ssh-rsa, ssh-dsa, ssh-ecdsa.")
     kombu_ssl_certfile          => $kombu_ssl_certfile,
     kombu_ssl_keyfile           => $kombu_ssl_keyfile,
     kombu_ssl_version           => $kombu_ssl_version,
-    rabbit_hosts                => $rabbit_hosts,
-    rabbit_host                 => $rabbit_host,
-    rabbit_port                 => $rabbit_port,
     rabbit_ha_queues            => $rabbit_ha_queues,
   }
 
