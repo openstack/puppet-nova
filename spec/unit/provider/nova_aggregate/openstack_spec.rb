@@ -10,7 +10,7 @@ describe provider_class do
     ENV['OS_USERNAME']     = 'test'
     ENV['OS_PASSWORD']     = 'abc123'
     ENV['OS_PROJECT_NAME'] = 'test'
-    ENV['OS_AUTH_URL']     = 'http://127.0.0.1:35357/v3'
+    ENV['OS_AUTH_URL']     = 'http://127.0.0.1:5000/v3'
   end
 
   describe 'managing aggregates' do

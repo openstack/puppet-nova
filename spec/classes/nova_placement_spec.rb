@@ -9,7 +9,7 @@ describe 'nova::placement' do
       :region_name         => 'RegionOne',
       :username            => 'placement',
       :user_domain_name    => 'Default',
-      :auth_url            => 'http://127.0.0.1:35357/v3',
+      :auth_url            => 'http://127.0.0.1:5000/v3',
     }
   end
 
@@ -43,7 +43,7 @@ describe 'nova::placement' do
           :os_interface        => 'internal',
           :username            => 'placement2',
           :user_domain_name    => 'default',
-          :auth_url            => 'https://127.0.0.1:35357/v3',
+          :auth_url            => 'https://127.0.0.1:5000/v3',
         )
       end
 

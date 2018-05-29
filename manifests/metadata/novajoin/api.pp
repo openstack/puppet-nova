@@ -62,7 +62,7 @@
 #
 # [*keystone_auth_url*]
 #   (optional) auth_url for the keystone instance.
-#   Defaults to 'http:://127.0.0.1:35357'
+#   Defaults to 'http:://127.0.0.1:5000'
 #
 # [*keytab*]
 #   (optional) Kerberos client keytab file.
@@ -115,7 +115,7 @@ class nova::metadata::novajoin::api (
   $ensure_package            = 'present',
   $ipa_domain                = undef,
   $join_listen_port          = $::os_service_default,
-  $keystone_auth_url         = 'http://127.0.0.1:35357/',
+  $keystone_auth_url         = 'http://127.0.0.1:5000/',
   $keytab                    = '/etc/novajoin/krb5.keytab',
   $log_dir                   = '/var/log/novajoin',
   $manage_service            = true,
