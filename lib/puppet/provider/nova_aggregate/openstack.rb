@@ -86,14 +86,13 @@ Puppet::Type.type(:nova_aggregate).provide(
 
   def metadata=(value)
     # clear obsolete keys
-    # wip until #1559866
-#   if @property_hash[:metadata].keys.length > 0
-#     properties = [@resource[:name] ]
-#     (@property_hash[:metadata].keys - @resource[:metadata].keys).each do |key|
-#       properties << "--property" << "#{key}"
-#     end
-#     self.class.request('aggregate', 'unset', properties)
-#   end
+    if @property_hash[:metadata].keys.length > 0
+      properties = [@resource[:name] ]
+      (@property_hash[:metadata].keys - @resource[:metadata].keys).each do |key|
+        properties << "--property" << "#{key}"
+      end
+      self.class.request('aggregate', 'unset', properties)
+    end
     properties = [@resource[:name] ]
     @resource[:metadata].each do |key, value|
       properties << "--property" << "#{key}=#{value}"
