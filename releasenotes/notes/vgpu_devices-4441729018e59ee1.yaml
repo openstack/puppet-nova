@@ -1,0 +1,5 @@
+---
+features:
+  - |
+    Exposes the devices/enabled_vgpu_types config option for vgpu support.
+    More information in the `nova vgpu documentation <https://docs.openstack.org/nova/latest/admin/virtual-gpu.html>`_.

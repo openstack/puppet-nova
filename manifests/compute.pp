@@ -208,6 +208,7 @@ class nova::compute (
   $vcpu_pin_set_real = pick(join(any2array($vcpu_pin_set), ','), $::os_service_default)
 
   include ::nova::pci
+  include ::nova::compute::vgpu
 
   if $keymgr_api_class {
     warning('The keymgr_api_class parameter is deprecated, use keymgr_backend')
