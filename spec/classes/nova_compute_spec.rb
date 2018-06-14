@@ -28,6 +28,7 @@ describe 'nova::compute' do
       it { is_expected.to contain_nova_config('DEFAULT/resize_confirm_window').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('DEFAULT/vcpu_pin_set').with(:value => '<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('DEFAULT/resume_guests_state_on_host_boot').with_value('<SERVICE DEFAULT>') }
+      it { is_expected.to contain_nova_config('compute/cpu_shared_set').with(:value => '<SERVICE DEFAULT>') }
       it { is_expected.to_not contain_nova_config('vnc/novncproxy_base_url') }
       it { is_expected.to contain_nova_config('key_manager/backend').with_value('nova.keymgr.conf_key_mgr.ConfKeyManager') }
       it { is_expected.to contain_nova_config('barbican/barbican_endpoint').with_value('<SERVICE DEFAULT>') }
@@ -75,6 +76,7 @@ describe 'nova::compute' do
           :config_drive_format                => 'vfat',
           :resize_confirm_window              => '3',
           :vcpu_pin_set                       => ['4-12','^8','15'],
+          :cpu_shared_set                     => ['4-12','^8','15'],
           :resume_guests_state_on_host_boot   => true,
           :keymgr_backend                     => 'castellan.key_manager.barbican_key_manager.BarbicanKeyManager',
           :barbican_endpoint                  => 'http://localhost',
@@ -133,6 +135,8 @@ describe 'nova::compute' do
       it { is_expected.to contain_nova_config('DEFAULT/resize_confirm_window').with_value('3') }
 
       it { is_expected.to contain_nova_config('DEFAULT/vcpu_pin_set').with(:value => '4-12,^8,15') }
+
+      it { is_expected.to contain_nova_config('compute/cpu_shared_set').with(:value => '4-12,^8,15') }
 
       it { is_expected.to contain_nova_config('DEFAULT/max_concurrent_live_migrations').with_value('4') }
 
@@ -194,6 +198,16 @@ describe 'nova::compute' do
 
       it 'clears vcpu_pin_set configuration' do
         is_expected.to contain_nova_config('DEFAULT/vcpu_pin_set').with(:value => '<SERVICE DEFAULT>')
+      end
+    end
+
+    context 'when cpu_shared_set is empty' do
+      let :params do
+        { :cpu_shared_set    => ""}
+      end
+
+      it 'clears cpu_shared_set configuration' do
+        is_expected.to contain_nova_config('compute/cpu_shared_set').with(:value => '<SERVICE DEFAULT>')
       end
     end
 

@@ -114,6 +114,12 @@
 #   for virtual machine processes
 #   Defaults to $::os_service_default
 #
+#  [*cpu_shared_set*]
+#   (optional) A list or range of physical CPU cores to reserve
+#   for for best-effort guest vCPU resources (e.g. emulator threads in
+#   libvirt/QEMU)
+#   Defaults to $::os_service_default
+#
 #  [*resume_guests_state_on_host_boot*]
 #   (optional) This option specifies whether to start guests that were running before the
 #   host rebooted. It ensures that all of the instances on a Nova compute node
@@ -189,6 +195,7 @@ class nova::compute (
   $allow_resize_to_same_host                   = false,
   $resize_confirm_window                       = $::os_service_default,
   $vcpu_pin_set                                = $::os_service_default,
+  $cpu_shared_set                              = $::os_service_default,
   $resume_guests_state_on_host_boot            = $::os_service_default,
   $barbican_auth_endpoint                      = $::os_service_default,
   $barbican_endpoint                           = $::os_service_default,
@@ -206,6 +213,7 @@ class nova::compute (
   include ::nova::params
 
   $vcpu_pin_set_real = pick(join(any2array($vcpu_pin_set), ','), $::os_service_default)
+  $cpu_shared_set_real = pick(join(any2array($cpu_shared_set), ','), $::os_service_default)
 
   include ::nova::pci
 
@@ -247,6 +255,7 @@ class nova::compute (
     'DEFAULT/resize_confirm_window':             value => $resize_confirm_window;
     'DEFAULT/vcpu_pin_set':                      value => $vcpu_pin_set_real;
     'DEFAULT/resume_guests_state_on_host_boot':  value => $resume_guests_state_on_host_boot;
+    'compute/cpu_shared_set':                    value => $cpu_shared_set_real;
     'key_manager/backend':                       value => $keymgr_backend_real;
     'barbican/auth_endpoint':                    value => $barbican_auth_endpoint;
     'barbican/barbican_endpoint':                value => $barbican_endpoint;
