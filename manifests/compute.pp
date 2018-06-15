@@ -216,6 +216,7 @@ class nova::compute (
   $cpu_shared_set_real = pick(join(any2array($cpu_shared_set), ','), $::os_service_default)
 
   include ::nova::pci
+  include ::nova::compute::vgpu
 
   if $keymgr_api_class {
     warning('The keymgr_api_class parameter is deprecated, use keymgr_backend')
