@@ -1,0 +1,5 @@
+---
+features:
+  - |
+    The nova_aggregate resource type can now unset aggregate metadata.
+    [Bug `1776772 <https://bugs.launchpad.net/puppet-nova/+bug/1776772>`_]
