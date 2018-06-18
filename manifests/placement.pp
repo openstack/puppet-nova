@@ -68,7 +68,7 @@
 #   (optional) Points to the OpenStack Identity server IP and port.
 #   This is the Identity (keystone) admin API server IP and port value,
 #   and not the Identity service API IP and port.
-#   Defaults to 'http://127.0.0.1:35357/v3'
+#   Defaults to 'http://127.0.0.1:5000/v3'
 #
 # DEPRECATED PARAMETERS
 #
@@ -85,7 +85,7 @@ class nova::placement(
   $ensure_package      = 'present',
   $password            = false,
   $auth_type           = 'password',
-  $auth_url            = 'http://127.0.0.1:35357/v3',
+  $auth_url            = 'http://127.0.0.1:5000/v3',
   $region_name         = 'RegionOne',
   $os_interface        = $::os_service_default,
   $project_domain_name = 'Default',

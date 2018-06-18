@@ -14,7 +14,7 @@
 #
 # [*auth_url*]
 #   (Optional) The URL to use for authentication.
-#   Defaults to 'http:://127.0.0.1:35357'
+#   Defaults to 'http:://127.0.0.1:5000'
 #
 # [*project_name*]
 #   (Optional) Service project name
@@ -187,7 +187,7 @@
 class nova::keystone::authtoken(
   $username                       = 'nova',
   $password                       = $::os_service_default,
-  $auth_url                       = 'http://127.0.0.1:35357/',
+  $auth_url                       = 'http://127.0.0.1:5000/',
   $project_name                   = 'services',
   $user_domain_name               = 'Default',
   $project_domain_name            = 'Default',

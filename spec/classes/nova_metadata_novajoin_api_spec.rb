@@ -35,7 +35,7 @@ describe 'nova::metadata::novajoin::api' do
       :project_name              => 'service',
       :user_domain_id            => 'default',
       :ipa_domain                => 'EXAMPLE.COM',
-      :keystone_auth_url         => 'https://keystone.example.com:35357',
+      :keystone_auth_url         => 'https://keystone.example.com:5000',
       :service_password          => 'my_secret_password',
       :transport_url             => 'rabbit:rabbit_pass@rabbit_host',
     }
@@ -62,7 +62,7 @@ describe 'nova::metadata::novajoin::api' do
       :project_name              => 'service',
       :user_domain_id            => 'default',
       :ipa_domain                => 'EXAMPLE2.COM',
-      :keystone_auth_url         => 'https://keystone2.example.com:35357',
+      :keystone_auth_url         => 'https://keystone2.example.com:5000',
       :service_password          => 'my_secret_password2',
       :transport_url             => 'rabbit:rabbit_pass2@rabbit_host',
     }

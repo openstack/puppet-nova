@@ -10,7 +10,7 @@
 #
 # [*auth_url*]
 #   The address of the Keystone api endpoint.
-#   Defaults to 'http://127.0.0.1:35357/'
+#   Defaults to 'http://127.0.0.1:5000/'
 #
 # [*project_name*]
 #   The Ironic Keystone project name.
@@ -41,7 +41,7 @@
 class nova::ironic::common (
   $api_endpoint         = 'http://127.0.0.1:6385/v1',
   $auth_plugin          = 'password',
-  $auth_url             = 'http://127.0.0.1:35357/',
+  $auth_url             = 'http://127.0.0.1:5000/',
   $password             = 'ironic',
   $project_name         = 'services',
   $username             = 'admin',
