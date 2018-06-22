@@ -226,6 +226,28 @@ describe 'nova::compute' do
 
     end
 
+    context 'when neutron_physnets_numa_nodes_mapping and neutron_tunnel_numa_nodes are empty' do
+      let :params do
+        { :neutron_physnets_numa_nodes_mapping => {},
+          :neutron_tunnel_numa_nodes           => [], }
+      end
+
+      it { is_expected.to contain_nova_config('neutron/physnets').with(:ensure => 'absent') }
+      it { is_expected.to contain_nova_config('neutron_tunnel/numa_nodes').with(:ensure => 'absent') }
+    end
+
+    context 'when neutron_physnets_numa_nodes_mapping and neutron_tunnel_numa_nodes are set to valid values' do
+      let :params do
+        { :neutron_physnets_numa_nodes_mapping => { 'foo' => [0, 1], 'bar' => [0] },
+          :neutron_tunnel_numa_nodes           => 1, }
+      end
+
+      it { is_expected.to contain_nova_config('neutron/physnets').with(:value => 'foo,bar') }
+      it { is_expected.to contain_nova_config('neutron_physnet_foo/numa_nodes').with(:value => '0,1') }
+      it { is_expected.to contain_nova_config('neutron_physnet_bar/numa_nodes').with(:value => '0') }
+      it { is_expected.to contain_nova_config('neutron_tunnel/numa_nodes').with(:value => '1') }
+    end
+
     context 'with install_bridge_utils set to false' do
       let :params do
         { :install_bridge_utils => false }

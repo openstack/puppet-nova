@@ -1,0 +1,6 @@
+---
+features:
+  - |
+    Add parameters `neutron_physnets_numa_nodes_mapping` and
+    `neutron_tunnel_numa_nodes` to provide numa affinity for
+    physnets attached to vswitches.
