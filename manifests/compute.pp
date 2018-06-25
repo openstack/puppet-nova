@@ -116,7 +116,7 @@
 #
 #  [*cpu_shared_set*]
 #   (optional) A list or range of physical CPU cores to reserve
-#   for for best-effort guest vCPU resources (e.g. emulator threads in
+#   for best-effort guest vCPU resources (e.g. emulator threads in
 #   libvirt/QEMU)
 #   Defaults to $::os_service_default
 #
