@@ -115,6 +115,10 @@ Developer documentation for the entire puppet-openstack project.
 
 * https://docs.openstack.org/puppet-openstack-guide/latest/
 
+Release notes for the project can be found at:
+  https://docs.openstack.org/releasenotes/puppet-nova/
+
+
 Beaker-Rspec
 ------------
 
