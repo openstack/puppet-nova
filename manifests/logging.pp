@@ -119,6 +119,7 @@ class nova::logging(
 
   # NOTE(spredzy): In order to keep backward compatibility we rely on the pick function
   # to use nova::<myparam> first then nova::logging::<myparam>.
+  # TODO(tobasco): Remove these when they have been deprecated for atleast one cycle.
   $use_syslog_real = pick($::nova::use_syslog,$use_syslog)
   $use_stderr_real = pick($::nova::use_stderr,$use_stderr)
   $log_facility_real = pick($::nova::log_facility,$log_facility)

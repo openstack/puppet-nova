@@ -221,11 +221,6 @@
 #   (optional) Maximum time since last check-in for up service.
 #   Defaults to 60
 #
-# [*log_dir*]
-#   (optional) Directory where logs should be stored.
-#   If set to $::os_service_default, it will not log to any directory.
-#   Defaults to undef
-#
 # [*state_path*]
 #   (optional) Directory for storing state.
 #   Defaults to '/var/lib/nova'
@@ -234,10 +229,6 @@
 #   (optional) Directory for lock files.
 #   On RHEL will be '/var/lib/nova/tmp' and on Debian '/var/lock/nova'
 #   Defaults to $::nova::params::lock_path
-#
-# [*debug*]
-#   (optional) Set log output to debug output.
-#   Defaults to undef
 #
 # [*periodic_interval*]
 #   (optional) Seconds between running periodic tasks.
@@ -250,18 +241,6 @@
 # [*rootwrap_config*]
 #   (optional) Path to the rootwrap configuration file to use for running commands as root
 #   Defaults to '/etc/nova/rootwrap.conf'
-#
-# [*use_syslog*]
-#   (optional) Use syslog for logging
-#   Defaults to undef
-#
-# [*use_stderr*]
-#   (optional) Use stderr for logging
-#   Defaults to undef
-#
-# [*log_facility*]
-#   (optional) Syslog facility to receive log lines.
-#   Defaults to undef
 #
 # [*use_ssl*]
 #   (optional) Enable SSL on the API server
@@ -426,6 +405,27 @@
 #   exceptions in the API service
 #   Defaults to undef
 #
+# [*use_syslog*]
+#   (optional) Use syslog for logging
+#   Defaults to undef
+#
+# [*use_stderr*]
+#   (optional) Use stderr for logging
+#   Defaults to undef
+#
+# [*log_facility*]
+#   (optional) Syslog facility to receive log lines.
+#   Defaults to undef
+#
+# [*log_dir*]
+#   (optional) Directory where logs should be stored.
+#   If set to $::os_service_default, it will not log to any directory.
+#   Defaults to undef
+#
+# [*debug*]
+#   (optional) Set log output to debug output.
+#   Defaults to undef
+#
 class nova(
   $ensure_package                         = 'present',
   $database_connection                    = undef,
@@ -480,10 +480,8 @@ class nova(
   $host                                   = $::os_service_default,
   $auth_strategy                          = 'keystone',
   $service_down_time                      = 60,
-  $log_dir                                = undef,
   $state_path                             = '/var/lib/nova',
   $lock_path                              = $::nova::params::lock_path,
-  $debug                                  = undef,
   $periodic_interval                      = '60',
   $report_interval                        = '10',
   $rootwrap_config                        = '/etc/nova/rootwrap.conf',
@@ -494,9 +492,6 @@ class nova(
   $key_file                               = false,
   $nova_public_key                        = undef,
   $nova_private_key                       = undef,
-  $use_syslog                             = undef,
-  $use_stderr                             = undef,
-  $log_facility                           = undef,
   $notification_transport_url             = $::os_service_default,
   $notification_driver                    = $::os_service_default,
   $notification_topics                    = $::os_service_default,
@@ -522,13 +517,25 @@ class nova(
   $my_ip                                  = $::os_service_default,
   # DEPRECATED PARAMETERS
   $notify_api_faults                      = undef,
+  $use_syslog                             = undef,
+  $use_stderr                             = undef,
+  $log_facility                           = undef,
+  $log_dir                                = undef,
+  $debug                                  = undef,
 ) inherits nova::params {
 
   include ::nova::deps
 
   # maintain backward compatibility
   include ::nova::db
+
+  # TODO(tobasco): Remove when use_syslog, use_stderr, log_facility, log_dir
+  # and debug parameters is removed from here.
   include ::nova::logging
+  if ($use_syslog or $use_stderr or $log_facility or $log_dir or $debug) {
+    warning('nova::use_syslog, nova::use_stderr, nova::log_facility, nova::log_dir \
+and nova::debug is deprecated and has been moved to nova::logging class, please set them there.')
+  }
 
   validate_array($enabled_ssl_apis)
   if empty($enabled_ssl_apis) and $use_ssl {

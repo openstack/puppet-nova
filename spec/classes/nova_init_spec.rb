@@ -73,8 +73,7 @@ describe 'nova' do
     context 'with overridden parameters' do
 
       let :params do
-        { :debug                                   => true,
-          :log_dir                                 => '/var/log/nova2',
+        {
           :image_service                           => 'nova.image.local.LocalImageService',
           :default_transport_url                   => 'rabbit://rabbit_user:password@localhost:5673',
           :rpc_response_timeout                    => '30',

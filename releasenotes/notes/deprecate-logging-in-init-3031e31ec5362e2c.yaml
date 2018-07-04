@@ -1,0 +1,6 @@
+---
+deprecations:
+  - |
+    The parameters nova::use_syslog, nova::use_stderr, nova::log_facility, nova::log_dir
+    and nova::debug has been deprecated and moved to the nova::logging class, please use
+    them there.
