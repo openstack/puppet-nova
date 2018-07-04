@@ -261,7 +261,7 @@
 #
 # [*ca_file*]
 #   (optional) CA certificate file to use to verify connecting clients
-#   Defaults to false, not set_
+#   Defaults to false, not set
 #
 # [*nova_public_key*]
 #   (optional) Install public key in .ssh/authorized_keys for the 'nova' user.
@@ -274,6 +274,18 @@
 #   for key type).  Expects a hash of the form { type => 'key-type', key =>
 #   'key-data' }, where 'key-type' is one of (ssh-rsa, ssh-dsa, ssh-ecdsa) and
 #   'key-data' is the contents of the private key file.
+#
+# [*ssl_only*]
+#   (optional) Disallow non-encrypted connections.
+#   Defaults to false
+#
+# [*cert*]
+#   (optional) Path to SSL certificate file.
+#   Defaults to $::os_service_default
+#
+# [*key*]
+#   (optional) SSL key file (if separate from cert).
+#   Defaults to $::os_service_default
 #
 # [*notification_transport_url*]
 #   (optional) A URL representing the messaging driver to use for notifications
@@ -492,6 +504,9 @@ class nova(
   $key_file                               = false,
   $nova_public_key                        = undef,
   $nova_private_key                       = undef,
+  $ssl_only                               = false,
+  $cert                                   = $::os_service_default,
+  $key                                    = $::os_service_default,
   $notification_transport_url             = $::os_service_default,
   $notification_driver                    = $::os_service_default,
   $notification_topics                    = $::os_service_default,
@@ -639,6 +654,9 @@ but should be one of: ssh-rsa, ssh-dsa, ssh-ecdsa.")
   }
 
   nova_config {
+    'DEFAULT/ssl_only':              value => $ssl_only;
+    'DEFAULT/cert':                  value => $cert;
+    'DEFAULT/key':                   value => $key;
     'DEFAULT/my_ip':                 value => $my_ip;
     'api/auth_strategy':             value => $auth_strategy;
     'DEFAULT/image_service':         value => $image_service;

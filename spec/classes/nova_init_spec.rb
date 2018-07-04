@@ -62,6 +62,9 @@ describe 'nova' do
         is_expected.to contain_nova_config('DEFAULT/cpu_allocation_ratio').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('DEFAULT/ram_allocation_ratio').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('DEFAULT/disk_allocation_ratio').with_value('<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('DEFAULT/ssl_only').with_value(false)
+        is_expected.to contain_nova_config('DEFAULT/cert').with_value('<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('DEFAULT/key').with_value('<SERVICE DEFAULT>')
       end
 
       it 'configures block_device_allocate params' do
@@ -107,6 +110,9 @@ describe 'nova' do
           :block_device_allocate_retries           => '60',
           :block_device_allocate_retries_interval  => '3',
           :my_ip                                   => '192.0.2.1',
+          :ssl_only                                => true,
+          :cert                                    => '/etc/ssl/private/snakeoil.pem',
+          :key                                     => '/etc/ssl/certs/snakeoil.pem',
         }
       end
 
@@ -172,6 +178,9 @@ describe 'nova' do
         is_expected.to contain_nova_config('DEFAULT/report_interval').with_value('60')
         is_expected.to contain_nova_config('os_vif_linux_bridge/use_ipv6').with_value('true')
         is_expected.to contain_nova_config('cinder/os_region_name').with_value('MyRegion')
+        is_expected.to contain_nova_config('DEFAULT/ssl_only').with_value(true)
+        is_expected.to contain_nova_config('DEFAULT/cert').with_value('/etc/ssl/private/snakeoil.pem')
+        is_expected.to contain_nova_config('DEFAULT/key').with_value('/etc/ssl/certs/snakeoil.pem')
       end
 
       context 'with multiple notification_driver' do
