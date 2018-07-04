@@ -1,0 +1,5 @@
+---
+features:
+  - |
+    Added parameters nova::ssl_only, nova::cert, nova::key to manage
+    SSL options for VNC.
