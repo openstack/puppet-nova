@@ -1,0 +1,18 @@
+---
+features:
+  - |
+    Class to serve Nova Metadata API with apache mod_wsgi in place of
+    nova-metadata-api service. The new classes to configure are
+    nova::metadata and nova::wsgi::apache_metadata.
+deprecations:
+  - |
+    The following parameters gets deprecated in nova::api:
+    nova_metadata_wsgi_enabled, neutron_metadata_proxy_shared_secret,
+    metadata_cache_expiration, vendordata_jsonfile_path,
+    vendordata_providers, vendordata_dynamic_targets,
+    vendordata_dynamic_connect_timeout, vendordata_dynamic_read_timeout,
+    vendordata_dynamic_failure_fatal, vendordata_dynamic_auth_auth_type,
+    vendordata_dynamic_auth_auth_url, vendordata_dynamic_auth_os_region_name,
+    vendordata_dynamic_auth_password, vendordata_dynamic_auth_project_domain_name,
+    vendordata_dynamic_auth_project_name, vendordata_dynamic_auth_user_domain_name,
+    vendordata_dynamic_auth_username
