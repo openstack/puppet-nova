@@ -1,0 +1,7 @@
+---
+features:
+  - |
+    Adds nova::compute::libvirt_guests to manage /etc/sysconfig/libvirt-guests
+    to configure libvirt-guests for compute reboot and handle running instance
+    properly.
+
