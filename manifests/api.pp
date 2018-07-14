@@ -357,6 +357,8 @@ class nova::api(
     }
     # make sure we start apache before nova-api to avoid binding issues
     Service[$service_name] -> Service['nova-api']
+    # make sure apache is refreshed on config changes etc
+    Anchor['nova::service::begin'] ~> Service[$service_name]
   } else {
     fail("Invalid service_name. Either nova-api/openstack-nova-api for running \
 as a standalone service, or httpd for being run by a httpd server")
