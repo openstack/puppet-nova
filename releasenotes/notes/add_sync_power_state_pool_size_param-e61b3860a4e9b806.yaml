@@ -1,0 +1,4 @@
+---
+features:
+  - Add sync_power_state_pool_size as a parameter to nova::compute.
+

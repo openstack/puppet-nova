@@ -143,6 +143,10 @@
 #   (optional) Maximum number of live migrations to run in parallel.
 #   Defaults to $::os_service_default
 #
+# [*sync_power_state_pool_size*]
+#   (optional) Maximum number of greenthreads to use when syncing power states.
+#   Defaults to $::os_service_default
+#
 # [*consecutive_build_service_disable_threshold*]
 #   (optional) Max number of consecutive build failures before the nova-compute
 #   will disable itself.
@@ -201,6 +205,7 @@ class nova::compute (
   $barbican_endpoint                           = $::os_service_default,
   $barbican_api_version                        = $::os_service_default,
   $max_concurrent_live_migrations              = $::os_service_default,
+  $sync_power_state_pool_size                  = $::os_service_default,
   $consecutive_build_service_disable_threshold = $::os_service_default,
   $keymgr_backend                              = 'nova.keymgr.conf_key_mgr.ConfKeyManager',
   $verify_glance_signatures                    = $::os_service_default,
@@ -262,6 +267,7 @@ class nova::compute (
     'barbican/barbican_endpoint':                value => $barbican_endpoint;
     'barbican/barbican_api_version':             value => $barbican_api_version;
     'DEFAULT/max_concurrent_live_migrations':    value => $max_concurrent_live_migrations;
+    'DEFAULT/sync_power_state_pool_size':        value => $sync_power_state_pool_size;
     'compute/consecutive_build_service_disable_threshold':
       value => $consecutive_build_service_disable_threshold;
   }
