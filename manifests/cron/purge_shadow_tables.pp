@@ -55,6 +55,11 @@
 #    (optional) Adds --verbose to the purge command
 #    If specified, will print information about the purged rows.
 #
+#  [*maxdelay*]
+#    (optional) In Seconds. Should be a positive integer.
+#    Induces a random delay before running the cronjob to avoid running
+#    all cron jobs at the same time on all hosts this job is configured.
+#    Defaults to 0.
 
 class nova::cron::purge_shadow_tables (
   $minute       = 0,
@@ -67,6 +72,7 @@ class nova::cron::purge_shadow_tables (
   $age          = 14,
   $all_cells    = false,
   $verbose      = false,
+  $maxdelay     = 0,
 ) {
 
   include ::nova::deps
@@ -86,10 +92,17 @@ class nova::cron::purge_shadow_tables (
     $all_cells_real = ''
   }
 
+  if $maxdelay == 0 {
+    $sleep = ''
+  } else {
+    $sleep = "sleep `expr \${RANDOM} \\% ${maxdelay}`; "
+  }
+
   $cron_cmd = 'nova-manage db purge'
 
   cron { 'nova-manage db purge':
-    command     => "${cron_cmd} --before `date --date='today - ${age} days' +%D` ${verbose_real} ${all_cells_real} >>${destination} 2>&1",
+    command     => "${sleep}${cron_cmd} --before `date --date='today - ${age} days' +%D` ${verbose_real} \
+                    ${all_cells_real} >>${destination} 2>&1",
     environment => 'PATH=/bin:/usr/bin:/usr/sbin SHELL=/bin/sh',
     user        => pick($user, $::nova::params::nova_user),
     minute      => $minute,
