@@ -163,6 +163,15 @@
 #    Accepts a string e.g "node:0,size:1GB,count:4" or a list of strings e.g:
 #    ["node:0,size:1GB,count:4", "node:1,size:1GB,count:4"]
 #
+#  [*neutron_physnets_numa_nodes_mapping*]
+#    (optional) Map of physnet name as key and list of NUMA nodes as value.
+#    Defaults to {}
+#
+#  [*neutron_tunnel_numa_nodes*]
+#    (optional) List of NUMA nodes to configure NUMA affinity for all
+#    tunneled networks.
+#    Defaults to []
+#
 # DEPRECATED PARAMETERS
 #
 # [*keymgr_api_class*]
@@ -205,6 +214,8 @@ class nova::compute (
   $keymgr_backend                              = 'nova.keymgr.conf_key_mgr.ConfKeyManager',
   $verify_glance_signatures                    = $::os_service_default,
   $reserved_huge_pages                         = $::os_service_default,
+  $neutron_physnets_numa_nodes_mapping         = {},
+  $neutron_tunnel_numa_nodes                   = [],
   # DEPRECATED PARAMETERS
   $keymgr_api_class                            = undef,
 ) {
@@ -235,6 +246,34 @@ class nova::compute (
       ensure => present,
       tag    => 'openstack',
     })
+  }
+
+  if !empty($neutron_physnets_numa_nodes_mapping) {
+    validate_hash($neutron_physnets_numa_nodes_mapping)
+    $neutron_physnets_real = keys($neutron_physnets_numa_nodes_mapping)
+    nova_config {
+      'neutron/physnets': value => join(any2array($neutron_physnets_real), ',');
+    }
+
+    $neutron_physnets_numa_nodes_mapping.each |$physnet, $numa_nodes| {
+      nova_config {
+        "neutron_physnet_${physnet}/numa_nodes": value => join(any2array($numa_nodes), ',');
+      }
+    }
+  } else {
+    nova_config {
+      'neutron/physnets': ensure => absent;
+    }
+  }
+
+  if !empty($neutron_tunnel_numa_nodes) {
+    nova_config {
+      'neutron_tunnel/numa_nodes': value => join(any2array($neutron_tunnel_numa_nodes), ',');
+    }
+  } else {
+    nova_config {
+      'neutron_tunnel/numa_nodes': ensure => absent;
+    }
   }
 
   if !is_service_default($reserved_huge_pages) and !empty($reserved_huge_pages) {
