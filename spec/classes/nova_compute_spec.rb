@@ -36,6 +36,7 @@ describe 'nova::compute' do
       it { is_expected.to contain_nova_config('barbican/auth_endpoint').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('glance/verify_glance_signatures').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('DEFAULT/max_concurrent_live_migrations').with_value('<SERVICE DEFAULT>') }
+      it { is_expected.to contain_nova_config('DEFAULT/sync_power_state_pool_size').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('compute/consecutive_build_service_disable_threshold').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('DEFAULT/reserved_huge_pages').with_value('<SERVICE DEFAULT>') }
 
@@ -83,6 +84,7 @@ describe 'nova::compute' do
           :barbican_api_version               => 'v1',
           :barbican_auth_endpoint             => 'http://127.0.0.1:5000/v3',
           :max_concurrent_live_migrations     => '4',
+          :sync_power_state_pool_size         => '10',
           :verify_glance_signatures           => true,
           :consecutive_build_service_disable_threshold => '9',
         }
@@ -139,6 +141,8 @@ describe 'nova::compute' do
       it { is_expected.to contain_nova_config('compute/cpu_shared_set').with(:value => '4-12,^8,15') }
 
       it { is_expected.to contain_nova_config('DEFAULT/max_concurrent_live_migrations').with_value('4') }
+
+      it { is_expected.to contain_nova_config('DEFAULT/sync_power_state_pool_size').with_value('10') }
 
       it { is_expected.to contain_nova_config('compute/consecutive_build_service_disable_threshold').with_value('9') }
 
