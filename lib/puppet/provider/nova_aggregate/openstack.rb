@@ -15,12 +15,13 @@ Puppet::Type.type(:nova_aggregate).provide(
   def self.instances
     request('aggregate', 'list').collect do |el|
       attrs = request('aggregate', 'show', el[:name])
+      properties = Hash[attrs[:properties].scan(/(\S+)='([^']*)'/)] rescue nil
       new(
           :ensure => :present,
           :name => attrs[:name],
           :id => attrs[:id],
           :availability_zone => attrs[:availability_zone],
-          :metadata => str2hash(attrs[:properties]),
+          :metadata => properties,
           :hosts => string2list(attrs[:hosts]).sort,
           :filter_hosts => attrs[:filter_hosts]
       )

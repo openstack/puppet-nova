@@ -46,12 +46,13 @@ just,"simple","just"
             .returns('"id="just"
 name="simple"
 availability_zone=just"
-properties="key=\'2value\'"
+properties="key1=\'tomato\', key2=\'mushroom\'"
 hosts="[]"
 ')
           instances = provider_class.instances
           expect(instances.count).to eq(1)
           expect(instances[0].name).to eq('simple')
+          expect(instances[0].metadata).to eq({"key1"=>"tomato", "key2"=>"mushroom"})
         end
       end
 
