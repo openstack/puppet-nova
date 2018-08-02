@@ -70,10 +70,6 @@
 #   installing the package - required on upgrade.
 #   Defaults to false.
 #
-# [*neutron_metadata_proxy_shared_secret*]
-#   (optional) Shared secret to validate proxies Neutron metadata requests
-#   Defaults to undef
-#
 # [*ratelimits*]
 #   (optional) A string that is a semicolon-separated list of 5-tuples.
 #   See http://docs.openstack.org/trunk/config-reference/content/configuring-compute-API.html
@@ -122,43 +118,6 @@
 #   to make nova be a web app using apache mod_wsgi.
 #   Defaults to '$::nova::params::api_service_name'
 #
-# [*metadata_cache_expiration*]
-#   (optional) This option is the time (in seconds) to cache metadata.
-#   Defaults to $::os_service_default
-#
-# [*vendordata_jsonfile_path*]
-#   (optional) Represent the path to the data file.
-#   Cloud providers may store custom data in vendor data file that will then be
-#   available to the instances via the metadata service, and to the rendering of
-#   config-drive. The default class for this, JsonFileVendorData, loads this
-#   information from a JSON file, whose path is configured by this option
-#   Defaults to $::os_service_default
-#
-# [*vendordata_providers*]
-#   (optional) vendordata providers are how deployers can provide metadata via
-#   configdrive and metadata that is specific to their deployment. There are
-#   currently two supported providers: StaticJSON and DynamicJSON.
-#   Defaults to $::os_service_default
-#
-# [*vendordata_dynamic_targets*]
-#   (optional) A list of targets for the dynamic vendordata provider. These
-#   targets are of the form <name>@<url>.
-#   Defaults to $::os_service_default
-#
-# [*vendordata_dynamic_connect_timeout*]
-#   (optional) Maximum wait time for an external REST service to connect.
-#   Defaults to $::os_service_default
-#
-# [*vendordata_dynamic_read_timeout*]
-#   (optional) Maximum wait time for an external REST service to return data
-#   once connected.
-#   Defaults to $::os_service_default
-#
-# [*vendordata_dynamic_failure_fatal*]
-#   (optional) Should failures to fetch dynamic vendordata be fatal to
-#   instance boot?
-#   Defaults to $::os_service_default
-#
 # [*max_limit*]
 #   (optional) This option is limit the maximum number of items in a single response.
 #   Defaults to $::os_service_default
@@ -199,42 +158,91 @@
 #   (optional) Whether the cinder::client class should be used to install the cinder client.
 #   Defaults to true
 #
-#  [*allow_resize_to_same_host*]
+# [*allow_resize_to_same_host*]
 #   (optional) Allow destination machine to match source for resize. Note that this
 #   is also settable in the compute class. In some situations you need it set here
 #   and in others you need it set there.
 #   Defaults to false
 #
-#  [*vendordata_dynamic_auth_auth_type*]
+# DEPRECATED
+#
+# [*nova_metadata_wsgi_enabled*]
+#   Wether nova metadata api is run via wsgi. Since running metadata via eventlet is
+#   going to be removed in the Sein release we can deprecate this and plan to remove
+#   metadata handling from api class.
+#   Defaults to false
+#
+# [*neutron_metadata_proxy_shared_secret*]
+#   (optional) Shared secret to validate proxies Neutron metadata requests
+#   Defaults to undef
+#
+# [*metadata_cache_expiration*]
+#   (optional) This option is the time (in seconds) to cache metadata.
+#   Defaults to $::os_service_default
+#
+# [*vendordata_jsonfile_path*]
+#   (optional) Represent the path to the data file.
+#   Cloud providers may store custom data in vendor data file that will then be
+#   available to the instances via the metadata service, and to the rendering of
+#   config-drive. The default class for this, JsonFileVendorData, loads this
+#   information from a JSON file, whose path is configured by this option
+#   Defaults to $::os_service_default
+#
+# [*vendordata_providers*]
+#   (optional) vendordata providers are how deployers can provide metadata via
+#   configdrive and metadata that is specific to their deployment. There are
+#   currently two supported providers: StaticJSON and DynamicJSON.
+#   Defaults to $::os_service_default
+#
+# [*vendordata_dynamic_targets*]
+#   (optional) A list of targets for the dynamic vendordata provider. These
+#   targets are of the form <name>@<url>.
+#   Defaults to $::os_service_default
+#
+# [*vendordata_dynamic_connect_timeout*]
+#   (optional) Maximum wait time for an external REST service to connect.
+#   Defaults to $::os_service_default
+#
+# [*vendordata_dynamic_read_timeout*]
+#   (optional) Maximum wait time for an external REST service to return data
+#   once connected.
+#   Defaults to $::os_service_default
+#
+# [*vendordata_dynamic_failure_fatal*]
+#   (optional) Should failures to fetch dynamic vendordata be fatal to
+#   instance boot?
+#   Defaults to $::os_service_default
+#
+# [*vendordata_dynamic_auth_auth_type*]
 #   (optional) Authentication type to load for vendordata dynamic plugins.
 #   Defaults to $::os_service_default
 #
-#  [*vendordata_dynamic_auth_auth_url*]
+# [*vendordata_dynamic_auth_auth_url*]
 #   (optional) URL to use for authenticating.
 #   Defaults to $::os_service_default
 #
-#  [*vendordata_dynamic_auth_os_region_name*]
+# [*vendordata_dynamic_auth_os_region_name*]
 #   (optional) Region name for the vendordata dynamic plugin credentials.
 #   Defaults to $::os_service_default
 #
-#  [*vendordata_dynamic_auth_password*]
+# [*vendordata_dynamic_auth_password*]
 #   (optional) Password for the vendordata dynamic plugin credentials.
 #   Defaults to $::os_service_default
 #
-#  [*vendordata_dynamic_auth_project_domain_name*]
+# [*vendordata_dynamic_auth_project_domain_name*]
 #   (optional) Project domain name for the vendordata dynamic plugin
 #    credentials.
 #   Defaults to 'Default'
 #
-#  [*vendordata_dynamic_auth_project_name*]
+# [*vendordata_dynamic_auth_project_name*]
 #   (optional) Project name for the vendordata dynamic plugin credentials.
 #   Defaults to $::os_service_default
 #
-#  [*vendordata_dynamic_auth_user_domain_name*]
+# [*vendordata_dynamic_auth_user_domain_name*]
 #   (optional) User domain name for the vendordata dynamic plugin credentials.
 #   Defaults to 'Default'
 #
-#  [*vendordata_dynamic_auth_username*]
+# [*vendordata_dynamic_auth_username*]
 #   (optional) User name for the vendordata dynamic plugin credentials.
 #   Defaults to $::os_service_default
 #
@@ -289,12 +297,18 @@ class nova::api(
   $vendordata_dynamic_auth_project_name        = $::os_service_default,
   $vendordata_dynamic_auth_user_domain_name    = 'Default',
   $vendordata_dynamic_auth_username            = $::os_service_default,
+  # DEPRECATED PARAMETER
+  $nova_metadata_wsgi_enabled                  = false,
 ) inherits nova::params {
 
   include ::nova::deps
   include ::nova::db
   include ::nova::policy
   include ::nova::keystone::authtoken
+
+  if !$nova_metadata_wsgi_enabled {
+    warning('Running nova metadata api via evenlet is deprecated and will be removed in Stein release.')
+  }
 
   if $install_cinder_client {
     include ::cinder::client
@@ -325,8 +339,8 @@ class nova::api(
     $vendordata_dynamic_targets_real = $::os_service_default
   }
 
-  # metadata can't be run in wsgi so we have to enable it in eventlet anyway.
-  if ('metadata' in $enabled_apis and $service_name == 'httpd') {
+  # enable metadata in eventlet if we do not run metadata via wsgi (nova::metadata)
+  if ('metadata' in $enabled_apis and $service_name == 'httpd' and !$nova_metadata_wsgi_enabled) {
     $enable_metadata = true
   } else {
     $enable_metadata = false
@@ -340,6 +354,7 @@ class nova::api(
     $service_enabled   = $enabled
   } elsif $service_name == 'httpd' {
     # when running wsgi, we want to enable metadata in eventlet if part of enabled_apis
+    # but only if we do not run metadata via wsgi (nova::metadata)
     if $enable_metadata {
       $enabled_apis_real = ['metadata']
       $service_enabled   = $enabled

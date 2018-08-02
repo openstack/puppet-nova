@@ -325,6 +325,36 @@ describe 'nova::api' do
       end
     end
 
+    context 'when running nova API in wsgi for compute, and metadata in wsgi' do
+      before do
+        params.merge!({
+          :service_name => 'httpd',
+          :nova_metadata_wsgi_enabled => true })
+      end
+
+      let :pre_condition do
+        "include ::apache
+         include ::nova
+         class { '::nova::keystone::authtoken':
+           password => 'a_big_secret',
+         }"
+      end
+
+      it 'disable metadata in evenlet configuration' do
+        is_expected.to contain_nova_config('DEFAULT/enabled_apis').with('value' => '')
+      end
+
+      it 'disable nova API service' do
+          is_expected.to contain_service('nova-api').with(
+          :ensure => 'stopped',
+          :name   => platform_params[:nova_api_service],
+          :enable => false,
+          :tag    => 'nova-service',
+        )
+      end
+
+    end
+
     context 'when disabling cinder client installation' do
       before do
         params.merge!({ :install_cinder_client => false })
