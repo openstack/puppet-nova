@@ -82,7 +82,7 @@ class Puppet::Provider::Nova < Puppet::Provider::Openstack
 
   def self.get_nova_credentials
     #needed keys for authentication
-    auth_keys = ['auth_uri', 'project_name', 'username', 'password']
+    auth_keys = ['auth_url', 'project_name', 'username', 'password']
     conf = nova_conf
     if conf and conf['keystone_authtoken'] and
         auth_keys.all?{|k| !conf['keystone_authtoken'][k].nil?}
@@ -111,7 +111,7 @@ class Puppet::Provider::Nova < Puppet::Provider::Openstack
 
   def self.get_auth_endpoint
     q = nova_credentials
-    "#{q['auth_uri']}"
+    "#{q['auth_url']}"
   end
 
   def self.auth_endpoint
