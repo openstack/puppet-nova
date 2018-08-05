@@ -326,6 +326,11 @@
 #   exceptions in the nova API service.
 #   Defaults to $::os_service_default
 #
+# [*ovsdb_connection*]
+#   (optional) Sets the ovsdb connection string. This is used by os-vif
+#   to interact with openvswitch on the host.
+#   Defaults to $::os_service_default
+#
 # [*cinder_catalog_info*]
 #   (optional) Info to match when looking for cinder in the service
 #   catalog. Format is: separated values of the form:
@@ -514,6 +519,7 @@ class nova(
   $notify_on_api_faults                   = false,
   $notify_on_state_change                 = undef,
   $os_region_name                         = $::os_service_default,
+  $ovsdb_connection                       = $::os_service_default,
   $cinder_catalog_info                    = $::os_service_default,
   $upgrade_level_cells                    = $::os_service_default,
   $upgrade_level_cert                     = $::os_service_default,
@@ -745,6 +751,7 @@ but should be one of: ssh-rsa, ssh-dsa, ssh-ecdsa.")
   nova_config {
     'cinder/catalog_info':                            value => $cinder_catalog_info;
     'os_vif_linux_bridge/use_ipv6':                   value => $use_ipv6;
+    'DEFAULT/ovsdb_connection':                       value => $ovsdb_connection;
     'notifications/notify_on_api_faults':             value => $notify_on_api_faults_real;
     'notifications/notification_format':              value => $notification_format;
     # Following may need to be broken out to different nova services

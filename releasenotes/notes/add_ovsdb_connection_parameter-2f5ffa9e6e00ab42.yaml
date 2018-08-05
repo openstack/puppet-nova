@@ -1,0 +1,5 @@
+---
+features:
+  - Add support for configuring ``ovsdb_connection`` config
+    option, which can be used by ovs-vif repo in ovs-vsctl
+    commands to reach remote ovsdb over tcp/ssl.
