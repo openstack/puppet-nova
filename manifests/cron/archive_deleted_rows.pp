@@ -54,6 +54,13 @@
 #    (optional) Adds --until-complete to the archive command
 #    Defaults to false.
 #
+#  [*maxdelay*]
+#    (optional) In Seconds. Should be a positive integer.
+#    Induces a random delay before running the cronjob to avoid running
+#    all cron jobs at the same time on all hosts this job is configured.
+#    Defaults to 0.
+#
+
 class nova::cron::archive_deleted_rows (
   $minute      = 1,
   $hour        = 0,
@@ -64,6 +71,7 @@ class nova::cron::archive_deleted_rows (
   $user        = undef,
   $destination = '/var/log/nova/nova-rowsflush.log',
   $until_complete = false,
+  $maxdelay       = 0,
 ) {
 
   include ::nova::deps
@@ -73,8 +81,14 @@ class nova::cron::archive_deleted_rows (
     $until_complete_real = '--until-complete'
   }
 
+  if $maxdelay == 0 {
+    $sleep = ''
+  } else {
+    $sleep = "sleep `expr \${RANDOM} \\% ${maxdelay}`; "
+  }
+
   cron { 'nova-manage db archive_deleted_rows':
-    command     => "nova-manage db archive_deleted_rows --max_rows ${max_rows} ${until_complete_real} >>${destination} 2>&1",
+    command     => "${sleep}nova-manage db archive_deleted_rows --max_rows ${max_rows} ${until_complete_real} >>${destination} 2>&1",
     environment => 'PATH=/bin:/usr/bin:/usr/sbin SHELL=/bin/sh',
     user        => pick($user, $::nova::params::nova_user),
     minute      => $minute,
