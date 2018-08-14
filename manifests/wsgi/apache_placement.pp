@@ -150,8 +150,7 @@ class nova::wsgi::apache_placement (
     -> File[$::nova::params::placement_httpd_config_file]
       ~> Service['httpd']
 
-  # notify apache on service refreshes
-  Anchor['nova::service::begin'] ~> Service['httpd']
+  Service <| title == 'httpd' |> { tag +> 'nova-service' }
 
   ::openstacklib::wsgi::apache { 'placement_wsgi':
     bind_host                   => $bind_host,

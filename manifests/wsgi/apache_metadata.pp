@@ -127,8 +127,7 @@ class nova::wsgi::apache_metadata (
     fail('::nova::metadata class must be declared in composition layer.')
   }
 
-  # notify apache on service refreshes
-  Anchor['nova::service::begin'] ~> Service['httpd']
+  Service <| title == 'httpd' |> { tag +> 'nova-service' }
 
   ::openstacklib::wsgi::apache { 'nova_metadata_wsgi':
     bind_host                   => $bind_host,
