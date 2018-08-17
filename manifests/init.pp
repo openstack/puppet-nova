@@ -73,10 +73,6 @@
 #   option.
 #   Defaults to $::os_service_default
 #
-# [*image_service*]
-#   (optional) Service used to search for and retrieve images.
-#   Defaults to 'nova.image.glance.GlanceImageService'
-#
 # [*glance_api_servers*]
 #   (optional) List of addresses for api servers.
 #   Defaults to 'http://localhost:9292'
@@ -443,6 +439,10 @@
 #   (optional) Set log output to debug output.
 #   Defaults to undef
 #
+# [*image_service*]
+#   (optional) Service used to search for and retrieve images.
+#   Defaults to undef
+#
 class nova(
   $ensure_package                         = 'present',
   $database_connection                    = undef,
@@ -462,7 +462,6 @@ class nova(
   $default_transport_url                  = $::os_service_default,
   $rpc_response_timeout                   = $::os_service_default,
   $control_exchange                       = $::os_service_default,
-  $image_service                          = 'nova.image.glance.GlanceImageService',
   # these glance params should be optional
   # this should probably just be configured as a glance client
   $glance_api_servers                     = 'http://localhost:9292',
@@ -543,6 +542,7 @@ class nova(
   $log_facility                           = undef,
   $log_dir                                = undef,
   $debug                                  = undef,
+  $image_service                          = undef,
 ) inherits nova::params {
 
   include ::nova::deps
@@ -568,6 +568,11 @@ and nova::debug is deprecated and has been moved to nova::logging class, please 
 nova::notify_on_api_faults instead.')
   }
   $notify_on_api_faults_real = pick($notify_api_faults, $notify_on_api_faults)
+
+  if $image_service {
+    warning('The unused image_service parameter is deprecated, as we are \
+already using python-glanceclient instead of old glance client.')
+  }
 
   if $use_ssl {
     if !$cert_file {
@@ -653,10 +658,8 @@ but should be one of: ssh-rsa, ssh-dsa, ssh-ecdsa.")
     purge => $purge_config,
   }
 
-  if $image_service == 'nova.image.glance.GlanceImageService' {
-    if $glance_api_servers {
-      nova_config { 'glance/api_servers': value => $glance_api_servers }
-    }
+  if $glance_api_servers {
+    nova_config { 'glance/api_servers': value => $glance_api_servers }
   }
 
   nova_config {
@@ -665,7 +668,6 @@ but should be one of: ssh-rsa, ssh-dsa, ssh-ecdsa.")
     'DEFAULT/key':                   value => $key;
     'DEFAULT/my_ip':                 value => $my_ip;
     'api/auth_strategy':             value => $auth_strategy;
-    'DEFAULT/image_service':         value => $image_service;
     'DEFAULT/host':                  value => $host;
     'DEFAULT/cpu_allocation_ratio':  value => $cpu_allocation_ratio;
     'DEFAULT/ram_allocation_ratio':  value => $ram_allocation_ratio;
