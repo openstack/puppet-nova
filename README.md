@@ -50,7 +50,6 @@ class { 'nova':
   database_connection => 'mysql://nova:a_big_secret@127.0.0.1/nova?charset=utf8',
   rabbit_userid       => 'nova',
   rabbit_password     => 'an_even_bigger_secret',
-  image_service       => 'nova.image.glance.GlanceImageService',
   glance_api_servers  => 'localhost:9292',
   rabbit_host         => '127.0.0.1',
 }
@@ -79,12 +78,12 @@ nova is a combination of Puppet manifest and ruby code to delivery configuration
 The `nova_config` provider is a children of the ini_setting provider. It allows one to write an entry in the `/etc/nova/nova.conf` file.
 
 ```puppet
-nova_config { 'DEFAULT/image_service' :
-  value => nova.image.glance.GlanceImageService,
+nova_config { 'DEFAULT/glance_api_servers' :
+  value => 'http://localhost:9292',
 }
 ```
 
-This will write `image_service=nova.image.glance.GlanceImageService` in the `[DEFAULT]` section.
+This will write 'http://localhost:9292' in the `[DEFAULT]` section.
 
 ##### name
 
