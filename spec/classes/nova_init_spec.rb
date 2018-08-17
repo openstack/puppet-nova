@@ -31,8 +31,7 @@ describe 'nova' do
         :refreshonly => true
       )}
 
-      it 'configures image service' do
-        is_expected.to contain_nova_config('DEFAULT/image_service').with_value('nova.image.glance.GlanceImageService')
+      it 'configures glance api servers' do
         is_expected.to contain_nova_config('glance/api_servers').with_value('http://localhost:9292')
       end
 
@@ -78,7 +77,7 @@ describe 'nova' do
 
       let :params do
         {
-          :image_service                           => 'nova.image.local.LocalImageService',
+          :glance_api_servers                      => 'http://localhost:9292',
           :default_transport_url                   => 'rabbit://rabbit_user:password@localhost:5673',
           :rpc_response_timeout                    => '30',
           :control_exchange                        => 'nova',
@@ -129,9 +128,8 @@ describe 'nova' do
         })
       end
 
-      it 'configures image service' do
-        is_expected.to contain_nova_config('DEFAULT/image_service').with_value('nova.image.local.LocalImageService')
-        is_expected.to_not contain_nova_config('glance/api_servers')
+      it 'configures glance api servers' do
+        is_expected.to contain_nova_config('glance/api_servers')
       end
 
       it 'configures auth_strategy' do
