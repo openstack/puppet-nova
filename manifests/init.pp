@@ -323,11 +323,6 @@
 #   (optional) Format used for OpenStack notifications
 #   Defaults to ::os_service_default
 #
-# [*notify_on_api_faults*]
-#   (optional) If set, send api.fault notifications on caught
-#   exceptions in the API service
-#   Defaults to false
-#
 # [*notify_on_state_change*]
 #   (optional) If set, send compute.instance.update notifications
 #   on instance state changes. Valid values are None for no notifications,
@@ -467,6 +462,11 @@
 #   exceptions in the API service
 #   Defaults to undef
 #
+# [*notify_on_api_faults*]
+#   (optional) If set, send api.fault notifications on caught
+#   exceptions in the API service
+#   Defaults to undef
+#
 class nova(
   $ensure_package                         = 'present',
   $database_connection                    = undef,
@@ -544,7 +544,6 @@ class nova(
   $notification_driver                    = $::os_service_default,
   $notification_topics                    = $::os_service_default,
   $notification_format                    = $::os_service_default,
-  $notify_on_api_faults                   = false,
   $notify_on_state_change                 = undef,
   $os_region_name                         = $::os_service_default,
   $cinder_catalog_info                    = $::os_service_default,
@@ -573,6 +572,7 @@ class nova(
   $rpc_backend                            = $::os_service_default,
   $image_service                          = undef,
   $notify_api_faults                      = undef,
+  $notify_on_api_faults                   = undef,
 ) inherits nova::params {
 
   include ::nova::deps
@@ -599,16 +599,18 @@ nova::rpc_backend are deprecated. Please use  nova::default_transport_url \
 instead.")
   }
 
+  if $notify_api_faults {
+    warning('The notify_api_faults parameter is deprecated.')
+  }
+
+  if $notify_on_api_faults {
+    warning('The notify_on_api_faults parameter is deprecated.')
+  }
+
   if $image_service {
     warning('The unused image_service parameter is deprecated, as we are \
 already using python-glanceclient instead of old glance client.')
   }
-
-  if $notify_api_faults {
-    warning('The notify_api_faults parameter is deprecated. Please use \
-nova::notify_on_api_faults instead.')
-  }
-  $notify_on_api_faults_real = pick($notify_api_faults, $notify_on_api_faults)
 
   if $use_ssl {
     if !$cert_file {
@@ -794,7 +796,6 @@ but should be one of: ssh-rsa, ssh-dsa, ssh-ecdsa.")
   nova_config {
     'cinder/catalog_info':                            value => $cinder_catalog_info;
     'os_vif_linux_bridge/use_ipv6':                   value => $use_ipv6;
-    'notifications/notify_on_api_faults':             value => $notify_on_api_faults_real;
     'notifications/notification_format':              value => $notification_format;
     # Following may need to be broken out to different nova services
     'DEFAULT/state_path':                             value => $state_path;

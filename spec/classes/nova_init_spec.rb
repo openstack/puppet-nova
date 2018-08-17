@@ -100,7 +100,6 @@ describe 'nova' do
           :notification_driver                     => 'ceilometer.compute.nova_notifier',
           :notification_topics                     => 'openstack',
           :notification_format                     => 'unversioned',
-          :notify_on_api_faults                    => true,
           :report_interval                         => '60',
           :os_region_name                          => 'MyRegion',
           :use_ipv6                                => true,
@@ -185,7 +184,6 @@ describe 'nova' do
         is_expected.to contain_nova_config('oslo_messaging_notifications/driver').with_value('ceilometer.compute.nova_notifier')
         is_expected.to contain_nova_config('oslo_messaging_notifications/topics').with_value('openstack')
         is_expected.to contain_nova_config('notifications/notification_format').with_value('unversioned')
-        is_expected.to contain_nova_config('notifications/notify_on_api_faults').with_value(true)
         is_expected.to contain_nova_config('DEFAULT/report_interval').with_value('60')
         is_expected.to contain_nova_config('os_vif_linux_bridge/use_ipv6').with_value('true')
         is_expected.to contain_nova_config('cinder/os_region_name').with_value('MyRegion')
@@ -225,17 +223,6 @@ describe 'nova' do
 
       it 'configures database' do
         is_expected.to contain_nova_config('notifications/notify_on_state_change').with_value('vm_state')
-      end
-    end
-
-    context 'with deprecated notify_api_faults parameter' do
-      let :params do
-        { :notify_on_api_faults => :undef,
-          :notify_api_faults    => 'true' }
-      end
-
-      it 'configures notify_on_api_faults using the deprecated parameter' do
-        is_expected.to contain_nova_config('notifications/notify_on_api_faults').with_value('true')
       end
     end
 
