@@ -393,7 +393,6 @@ as a standalone service, or httpd for being run by a httpd server")
     'DEFAULT/metadata_listen':                     value => $metadata_listen;
     'DEFAULT/metadata_listen_port':                value => $metadata_listen_port;
     'DEFAULT/osapi_compute_listen_port':           value => $osapi_compute_listen_port;
-    'DEFAULT/osapi_volume_listen':                 value => $api_bind_address;
     'DEFAULT/osapi_compute_workers':               value => $osapi_compute_workers;
     'DEFAULT/metadata_workers':                    value => $metadata_workers;
     'DEFAULT/enable_network_quota':                value => $enable_network_quota;
