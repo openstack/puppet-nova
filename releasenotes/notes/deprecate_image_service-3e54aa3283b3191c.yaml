@@ -1,0 +1,5 @@
+---
+deprecations:
+  - |
+    The image_service parameter is deprecated, as we are already using
+    python-glanceclient instead of old glance client.
