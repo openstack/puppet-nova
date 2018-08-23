@@ -338,10 +338,6 @@ describe 'nova::api' do
          }"
       end
 
-      it 'disable metadata in evenlet configuration' do
-        is_expected.to contain_nova_config('DEFAULT/enabled_apis').with('value' => '')
-      end
-
       it 'disable nova API service' do
           is_expected.to contain_service('nova-api').with(
           :ensure => 'stopped',
