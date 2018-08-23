@@ -386,57 +386,62 @@ as a standalone service, or httpd for being run by a httpd server")
     service_name   => $::nova::params::api_service_name,
   }
 
+  if !$nova_metadata_wsgi_enabled {
+    nova_config {
+      'DEFAULT/enabled_apis':                        value => join($enabled_apis_real, ',');
+      'DEFAULT/metadata_workers':                    value => $metadata_workers;
+      'DEFAULT/metadata_listen':                     value => $metadata_listen;
+      'DEFAULT/metadata_listen_port':                value => $metadata_listen_port;
+      'api/vendordata_jsonfile_path':                value => $vendordata_jsonfile_path;
+      'api/vendordata_providers':                    value => $vendordata_providers_real;
+      'api/vendordata_dynamic_targets':              value => $vendordata_dynamic_targets_real;
+      'api/vendordata_dynamic_connect_timeout':      value => $vendordata_dynamic_connect_timeout;
+      'api/vendordata_dynamic_read_timeout':         value => $vendordata_dynamic_read_timeout;
+      'api/vendordata_dynamic_failure_fatal':        value => $vendordata_dynamic_failure_fatal;
+      'api/metadata_cache_expiration':               value => $metadata_cache_expiration;
+      'vendordata_dynamic_auth/auth_type':           value => $vendordata_dynamic_auth_auth_type;
+      'vendordata_dynamic_auth/auth_url':            value => $vendordata_dynamic_auth_auth_url;
+      'vendordata_dynamic_auth/os_region_name':      value => $vendordata_dynamic_auth_os_region_name;
+      'vendordata_dynamic_auth/password':            value => $vendordata_dynamic_auth_password, secret => true;
+      'vendordata_dynamic_auth/project_domain_name': value => $vendordata_dynamic_auth_project_domain_name;
+      'vendordata_dynamic_auth/project_name':        value => $vendordata_dynamic_auth_project_name;
+      'vendordata_dynamic_auth/user_domain_name':    value => $vendordata_dynamic_auth_user_domain_name;
+      'vendordata_dynamic_auth/username':            value => $vendordata_dynamic_auth_username;
+    }
+
+    if ($neutron_metadata_proxy_shared_secret){
+      nova_config {
+        'neutron/service_metadata_proxy': value => true;
+        'neutron/metadata_proxy_shared_secret':
+          value => $neutron_metadata_proxy_shared_secret, secret => true;
+      }
+    } else {
+      nova_config {
+        'neutron/service_metadata_proxy':       value  => false;
+        'neutron/metadata_proxy_shared_secret': ensure => absent;
+      }
+    }
+
+    oslo::middleware {'nova_config':
+      enable_proxy_headers_parsing => $enable_proxy_headers_parsing,
+    }
+  }
+
   nova_config {
     'wsgi/api_paste_config':                       value => $api_paste_config;
-    'DEFAULT/enabled_apis':                        value => join($enabled_apis_real, ',');
     'DEFAULT/osapi_compute_listen':                value => $api_bind_address;
-    'DEFAULT/metadata_listen':                     value => $metadata_listen;
-    'DEFAULT/metadata_listen_port':                value => $metadata_listen_port;
     'DEFAULT/osapi_compute_listen_port':           value => $osapi_compute_listen_port;
     'DEFAULT/osapi_compute_workers':               value => $osapi_compute_workers;
-    'DEFAULT/metadata_workers':                    value => $metadata_workers;
     'DEFAULT/enable_network_quota':                value => $enable_network_quota;
     'DEFAULT/password_length':                     value => $password_length;
-    'api/metadata_cache_expiration':               value => $metadata_cache_expiration;
     'api/use_forwarded_for':                       value => $use_forwarded_for;
     'api/fping_path':                              value => $fping_path;
-    'api/vendordata_jsonfile_path':                value => $vendordata_jsonfile_path;
-    'api/vendordata_providers':                    value => $vendordata_providers_real;
-    'api/vendordata_dynamic_targets':              value => $vendordata_dynamic_targets_real;
-    'api/vendordata_dynamic_connect_timeout':      value => $vendordata_dynamic_connect_timeout;
-    'api/vendordata_dynamic_read_timeout':         value => $vendordata_dynamic_read_timeout;
-    'api/vendordata_dynamic_failure_fatal':        value => $vendordata_dynamic_failure_fatal;
     'api/max_limit':                               value => $max_limit;
     'api/compute_link_prefix':                     value => $compute_link_prefix;
     'api/glance_link_prefix':                      value => $glance_link_prefix;
     'api/hide_server_address_states':              value => $hide_server_address_states;
     'api/allow_instance_snapshots':                value => $allow_instance_snapshots;
     'api/enable_instance_password':                value => $enable_instance_password;
-    'vendordata_dynamic_auth/auth_type':           value => $vendordata_dynamic_auth_auth_type;
-    'vendordata_dynamic_auth/auth_url':            value => $vendordata_dynamic_auth_auth_url;
-    'vendordata_dynamic_auth/os_region_name':      value => $vendordata_dynamic_auth_os_region_name;
-    'vendordata_dynamic_auth/password':            value => $vendordata_dynamic_auth_password, secret => true;
-    'vendordata_dynamic_auth/project_domain_name': value => $vendordata_dynamic_auth_project_domain_name;
-    'vendordata_dynamic_auth/project_name':        value => $vendordata_dynamic_auth_project_name;
-    'vendordata_dynamic_auth/user_domain_name':    value => $vendordata_dynamic_auth_user_domain_name;
-    'vendordata_dynamic_auth/username':            value => $vendordata_dynamic_auth_username;
-  }
-
-  oslo::middleware {'nova_config':
-    enable_proxy_headers_parsing => $enable_proxy_headers_parsing,
-  }
-
-  if ($neutron_metadata_proxy_shared_secret){
-    nova_config {
-      'neutron/service_metadata_proxy': value => true;
-      'neutron/metadata_proxy_shared_secret':
-        value => $neutron_metadata_proxy_shared_secret, secret => true;
-    }
-  } else {
-    nova_config {
-      'neutron/service_metadata_proxy':       value  => false;
-      'neutron/metadata_proxy_shared_secret': ensure => absent;
-    }
   }
 
   if ($ratelimits != undef) {

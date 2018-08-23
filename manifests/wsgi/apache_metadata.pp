@@ -117,7 +117,7 @@ class nova::wsgi::apache_metadata (
     include ::apache::mod::ssl
   }
 
-  nova::generic_service { 'api':
+  nova::generic_service { 'metadata-api':
     service_name   => false,
     package_name   => $::nova::params::api_package_name,
     ensure_package => $ensure_package,
