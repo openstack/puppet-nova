@@ -302,11 +302,6 @@
 #   (optional) Format used for OpenStack notifications
 #   Defaults to ::os_service_default
 #
-# [*notify_on_api_faults*]
-#   (optional) If set, send api.fault notifications on caught
-#   exceptions in the API service
-#   Defaults to false
-#
 # [*notify_on_state_change*]
 #   (optional) If set, send compute.instance.update notifications
 #   on instance state changes. Valid values are None for no notifications,
@@ -441,6 +436,10 @@
 #
 # [*image_service*]
 #   (optional) Service used to search for and retrieve images.
+#
+# [*notify_on_api_faults*]
+#   (optional) If set, send api.fault notifications on caught
+#   exceptions in the API service
 #   Defaults to undef
 #
 class nova(
@@ -515,7 +514,6 @@ class nova(
   $notification_driver                    = $::os_service_default,
   $notification_topics                    = $::os_service_default,
   $notification_format                    = $::os_service_default,
-  $notify_on_api_faults                   = false,
   $notify_on_state_change                 = undef,
   $os_region_name                         = $::os_service_default,
   $ovsdb_connection                       = $::os_service_default,
@@ -543,6 +541,7 @@ class nova(
   $log_dir                                = undef,
   $debug                                  = undef,
   $image_service                          = undef,
+  $notify_on_api_faults                   = undef,
 ) inherits nova::params {
 
   include ::nova::deps
@@ -564,10 +563,12 @@ and nova::debug is deprecated and has been moved to nova::logging class, please 
   }
 
   if $notify_api_faults {
-    warning('The notify_api_faults parameter is deprecated. Please use \
-nova::notify_on_api_faults instead.')
+    warning('The notify_api_faults parameter is deprecated.')
   }
-  $notify_on_api_faults_real = pick($notify_api_faults, $notify_on_api_faults)
+
+  if $notify_on_api_faults {
+    warning('The notify_on_api_faults parameter is deprecated.')
+  }
 
   if $image_service {
     warning('The unused image_service parameter is deprecated, as we are \
@@ -754,7 +755,6 @@ but should be one of: ssh-rsa, ssh-dsa, ssh-ecdsa.")
     'cinder/catalog_info':                            value => $cinder_catalog_info;
     'os_vif_linux_bridge/use_ipv6':                   value => $use_ipv6;
     'DEFAULT/ovsdb_connection':                       value => $ovsdb_connection;
-    'notifications/notify_on_api_faults':             value => $notify_on_api_faults_real;
     'notifications/notification_format':              value => $notification_format;
     # Following may need to be broken out to different nova services
     'DEFAULT/state_path':                             value => $state_path;
