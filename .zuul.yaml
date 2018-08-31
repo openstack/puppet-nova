@@ -4,3 +4,4 @@
       - puppet-openstack-module-unit-jobs
       - puppet-openstack-integration-jobs-all
       - puppet-openstack-beaker-jobs
+      - release-notes-jobs
