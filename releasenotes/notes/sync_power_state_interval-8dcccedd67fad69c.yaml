@@ -1,0 +1,7 @@
+---
+features:
+  - |
+    Adding nova::compute::sync_power_state_interval parameter that
+    configure the interval to sync power states between the database and the
+    hypervisor. Set to -1 to disable, or to 0 to run the default rate.
+    Defaults to $::os_service_default.
