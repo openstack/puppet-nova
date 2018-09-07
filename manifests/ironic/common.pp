@@ -56,7 +56,7 @@ class nova::ironic::common (
   nova_config {
     'ironic/auth_plugin':          value => $auth_plugin;
     'ironic/username':             value => $username;
-    'ironic/password':             value => $password;
+    'ironic/password':             value => $password, secret => true;
     'ironic/auth_url':             value => $auth_url;
     'ironic/project_name':         value => $project_name;
     'ironic/api_endpoint':         value => $api_endpoint;
