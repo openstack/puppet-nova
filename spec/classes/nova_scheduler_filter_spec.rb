@@ -40,7 +40,7 @@ describe 'nova::scheduler::filter' do
         { :scheduler_max_attempts               => '4',
           :isolated_images                      => ['ubuntu1','centos2'],
           :isolated_hosts                       => ['192.168.1.2','192.168.1.3'],
-          :scheduler_default_filters            => ['RetryFilter','AvailabilityZoneFilter','RamFilter'],
+          :scheduler_default_filters            => ['RetryFilter','AvailabilityZoneFilter'],
           :scheduler_available_filters          => ['nova_filter1','nova_filter2']
         }
       end
@@ -48,7 +48,7 @@ describe 'nova::scheduler::filter' do
       it { is_expected.to contain_nova_config('scheduler/max_attempts').with_value('4') }
       it { is_expected.to contain_nova_config('filter_scheduler/isolated_images').with_value('ubuntu1,centos2') }
       it { is_expected.to contain_nova_config('filter_scheduler/isolated_hosts').with_value('192.168.1.2,192.168.1.3') }
-      it { is_expected.to contain_nova_config('filter_scheduler/enabled_filters').with_value('RetryFilter,AvailabilityZoneFilter,RamFilter') }
+      it { is_expected.to contain_nova_config('filter_scheduler/enabled_filters').with_value('RetryFilter,AvailabilityZoneFilter') }
       it { is_expected.to contain_nova_config('filter_scheduler/available_filters').with_value(['nova_filter1','nova_filter2']) }
     end
 
