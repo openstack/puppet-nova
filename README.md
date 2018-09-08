@@ -16,7 +16,10 @@ nova
 4. [Implementation - An under-the-hood peek at what the module is doing](#implementation)
 5. [Limitations - OS compatibility, etc.](#limitations)
 6. [Development - Guide for contributing to the module](#development)
-7. [Contributors - Those with commits](#contributors)
+7. [Release Notes - Release notes for the project](#release-notes)
+8. [Beaker-Rspec - Beaker-rspec tests for the project](#beaker-rspec)
+9. [Contributors - Those with commits](#contributors)
+10. [Repository - The project source code repository](#repository)
 
 Overview
 --------
