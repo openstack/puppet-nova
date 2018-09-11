@@ -33,6 +33,15 @@
 #   NOTE: big files will be stored here
 #   Defaults to undef.
 #
+# [*nbd_tls*]
+#   (optional) Enables TLS for nbd connections.
+#   Defaults to false.
+#
+# [*libvirt_version*]
+#   (optional) installed libvirt version. Default is automatic detected depending
+#   of the used OS installed via ::nova::compute::libvirt::version::default .
+#   Defaults to ::nova::compute::libvirt::version::default
+#
 class nova::compute::libvirt::qemu(
   $configure_qemu     = false,
   $group              = undef,
@@ -40,8 +49,10 @@ class nova::compute::libvirt::qemu(
   $max_processes      = 4096,
   $vnc_tls            = false,
   $vnc_tls_verify     = true,
-  $memory_backing_dir = undef
-){
+  $memory_backing_dir = undef,
+  $nbd_tls            = false,
+  $libvirt_version    = $::nova::compute::libvirt::version::default,
+) inherits nova::compute::libvirt::version {
 
   include ::nova::deps
   require ::nova::compute::libvirt
@@ -63,11 +74,17 @@ class nova::compute::libvirt::qemu(
       $vnc_tls_verify_value = 0
     }
 
+    if $nbd_tls {
+      $nbd_tls_value = 1
+    } else {
+      $nbd_tls_value = 0
+    }
+
     $augues_changes_default = [
       "set max_files ${max_files}",
       "set max_processes ${max_processes}",
       "set vnc_tls ${vnc_tls_value}",
-      "set vnc_tls_x509_verify ${vnc_tls_verify_value}"
+      "set vnc_tls_x509_verify ${vnc_tls_verify_value}",
     ]
     if $group and !empty($group) {
       $augues_group_changes = ["set group ${group}"]
@@ -79,7 +96,13 @@ class nova::compute::libvirt::qemu(
     } else {
       $augues_memory_backing_dir_changes = []
     }
-    $augues_changes = concat($augues_changes_default, $augues_group_changes, $augues_memory_backing_dir_changes)
+    if versioncmp($libvirt_version, '4.5') >= 0 {
+      $augues_nbd_tls_changes = ["set nbd_tls ${nbd_tls_value}"]
+    } else {
+      $augues_nbd_tls_changes = []
+    }
+
+    $augues_changes = concat($augues_changes_default, $augues_group_changes, $augues_memory_backing_dir_changes, $augues_nbd_tls_changes)
 
     augeas { 'qemu-conf-limits':
       context => '/files/etc/libvirt/qemu.conf',
@@ -87,16 +110,26 @@ class nova::compute::libvirt::qemu(
       tag     => 'qemu-conf-augeas',
     }
   } else {
+
+    $augues_changes_default = [
+      'rm max_files',
+      'rm max_processes',
+      'rm group',
+      'rm vnc_tls',
+      'rm vnc_tls_x509_verify',
+      'rm memory_backing_dir',
+    ]
+    if versioncmp($libvirt_version, '4.5') >= 0 {
+      $augues_nbd_tls_changes = ['rm nbd_tls']
+    } else {
+      $augues_nbd_tls_changes = []
+    }
+
+    $augues_changes = concat($augues_changes_default, $augues_nbd_tls_changes)
+
     augeas { 'qemu-conf-limits':
       context => '/files/etc/libvirt/qemu.conf',
-      changes => [
-        'rm max_files',
-        'rm max_processes',
-        'rm group',
-        'rm vnc_tls',
-        'rm vnc_tls_x509_verify',
-        'rm memory_backing_dir'
-      ],
+      changes => $augues_changes,
       tag     => 'qemu-conf-augeas',
     }
   }
