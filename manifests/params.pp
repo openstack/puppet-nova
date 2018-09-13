@@ -4,16 +4,17 @@
 # should be considered to be constant
 class nova::params {
   include ::openstacklib::defaults
-  $group = 'nova'
   if ($::os_package_type == 'debian') or ($::operatingsystem == 'Fedora') {
     $pyvers = '3'
   } else {
     $pyvers = ''
   }
+  $client_package = "python${pyvers}-novaclient"
+  $group          = 'nova'
+
   case $::osfamily {
     'RedHat': {
       # package names
-      $client_package                    = "python${pyvers}-novaclient"
       $api_package_name                  = 'openstack-nova-api'
       $placement_package_name            = 'openstack-nova-placement-api'
       $cells_package_name                = 'openstack-nova-cells'
@@ -89,7 +90,6 @@ class nova::params {
     }
     'Debian': {
       # package names
-      $client_package                    = "python${pyvers}-novaclient"
       $api_package_name                  = 'nova-api'
       $placement_package_name            = 'nova-placement-api'
       $cells_package_name                = 'nova-cells'
