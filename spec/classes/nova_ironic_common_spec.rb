@@ -8,7 +8,7 @@ describe 'nova::ironic::common' do
       it 'configures ironic in nova.conf' do
         is_expected.to contain_nova_config('ironic/auth_plugin').with_value('password')
         is_expected.to contain_nova_config('ironic/username').with_value('admin')
-        is_expected.to contain_nova_config('ironic/password').with_value('ironic')
+        is_expected.to contain_nova_config('ironic/password').with_value('ironic').with_secret(true)
         is_expected.to contain_nova_config('ironic/auth_url').with_value('http://127.0.0.1:5000/')
         is_expected.to contain_nova_config('ironic/project_name').with_value('services')
         is_expected.to contain_nova_config('ironic/api_endpoint').with_value('http://127.0.0.1:6385/v1')
@@ -38,7 +38,7 @@ describe 'nova::ironic::common' do
       it 'configures ironic in nova.conf' do
         is_expected.to contain_nova_config('ironic/auth_plugin').with_value('password')
         is_expected.to contain_nova_config('ironic/username').with_value('ironic')
-        is_expected.to contain_nova_config('ironic/password').with_value('s3cr3t')
+        is_expected.to contain_nova_config('ironic/password').with_value('s3cr3t').with_secret(true)
         is_expected.to contain_nova_config('ironic/auth_url').with_value('http://10.0.0.10:5000/')
         is_expected.to contain_nova_config('ironic/project_name').with_value('services2')
         is_expected.to contain_nova_config('ironic/api_endpoint').with_value('http://10.0.0.10:6385/v1')
