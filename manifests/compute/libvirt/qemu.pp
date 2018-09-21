@@ -28,13 +28,19 @@
 #   (optional) Enables TLS client cert verification when vnc_tls is enabled.
 #   Defaults to true.
 #
+# [*memory_backing_dir*]
+#   (optional) This directory is used for memoryBacking source if configured as file.
+#   NOTE: big files will be stored here
+#   Defaults to undef.
+#
 class nova::compute::libvirt::qemu(
-  $configure_qemu = false,
-  $group          = undef,
-  $max_files      = 1024,
-  $max_processes  = 4096,
-  $vnc_tls        = false,
-  $vnc_tls_verify = true
+  $configure_qemu     = false,
+  $group              = undef,
+  $max_files          = 1024,
+  $max_processes      = 4096,
+  $vnc_tls            = false,
+  $vnc_tls_verify     = true,
+  $memory_backing_dir = undef
 ){
 
   include ::nova::deps
@@ -68,7 +74,12 @@ class nova::compute::libvirt::qemu(
     } else {
       $augues_group_changes = []
     }
-    $augues_changes = concat($augues_changes_default, $augues_group_changes)
+    if $memory_backing_dir and !empty($memory_backing_dir) {
+      $augues_memory_backing_dir_changes = ["set memory_backing_dir ${memory_backing_dir}"]
+    } else {
+      $augues_memory_backing_dir_changes = []
+    }
+    $augues_changes = concat($augues_changes_default, $augues_group_changes, $augues_memory_backing_dir_changes)
 
     augeas { 'qemu-conf-limits':
       context => '/files/etc/libvirt/qemu.conf',
@@ -83,7 +94,8 @@ class nova::compute::libvirt::qemu(
         'rm max_processes',
         'rm group',
         'rm vnc_tls',
-        'rm vnc_tls_x509_verify'
+        'rm vnc_tls_x509_verify',
+        'rm memory_backing_dir'
       ],
       tag     => 'qemu-conf-augeas',
     }

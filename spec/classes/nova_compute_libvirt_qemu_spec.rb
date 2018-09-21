@@ -18,7 +18,7 @@ describe 'nova::compute::libvirt::qemu' do
       end
       it { is_expected.to contain_augeas('qemu-conf-limits').with({
         :context => '/files/etc/libvirt/qemu.conf',
-        :changes => [ "rm max_files", "rm max_processes", "rm group", "rm vnc_tls", "rm vnc_tls_x509_verify" ],
+        :changes => [ "rm max_files", "rm max_processes", "rm group", "rm vnc_tls", "rm vnc_tls_x509_verify", "rm memory_backing_dir" ],
       }).that_notifies('Service[libvirt]') }
     end
 
@@ -57,6 +57,7 @@ describe 'nova::compute::libvirt::qemu' do
           :group => 'openvswitch',
           :max_files => 32768,
           :max_processes => 131072,
+          :memory_backing_dir => '/tmp'
         }
       end
       it { is_expected.to contain_augeas('qemu-conf-limits').with({
@@ -66,7 +67,8 @@ describe 'nova::compute::libvirt::qemu' do
             "set max_processes 131072",
             "set vnc_tls 0",
             "set vnc_tls_x509_verify 0",
-            "set group openvswitch"
+            "set group openvswitch",
+            "set memory_backing_dir /tmp"
         ],
         :tag     => 'qemu-conf-augeas',
       }).that_notifies('Service[libvirt]') }
