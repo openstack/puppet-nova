@@ -54,9 +54,9 @@
 #   through the OpenStack Identity service.
 #   Defaults to 'RegionOne'
 #
-# [*os_interface*]
-#   (optional) interface name used for getting the keystone endpoint for
-#   the placement API.
+# [*valid_interfaces*]
+#   (optional) Interface names used for getting the keystone endpoint for
+#   the placement API. Comma separated if multiple.
 #   Defaults to $::os_service_default
 #
 # [*username*]
@@ -72,9 +72,9 @@
 #
 # DEPRECATED PARAMETERS
 #
-# [*os_region_name*]
-#   (optional) Region name for connecting to Nova Placement API service in admin context
-#   through the OpenStack Identity service.
+# [*os_interface*]
+#   (optional) interface name used for getting the keystone endpoint for
+#   the placement API.
 #   Defaults to undef
 #
 class nova::placement(
@@ -87,24 +87,23 @@ class nova::placement(
   $auth_type           = 'password',
   $auth_url            = 'http://127.0.0.1:5000/v3',
   $region_name         = 'RegionOne',
-  $os_interface        = $::os_service_default,
+  $valid_interfaces    = $::os_service_default,
   $project_domain_name = 'Default',
   $project_name        = 'services',
   $user_domain_name    = 'Default',
   $username            = 'placement',
   # DEPRECATED PARAMETERS
-  $os_region_name      = undef,
+  $os_interface        = undef,
 ) inherits nova::params {
 
   include ::nova::deps
 
   validate_bool($enabled)
 
-  if $os_region_name {
-    warning('The os_region_name parameter is deprecated and will be removed \
-in a future release. Please use region_name instead.')
+  if $os_interface {
+    warning('nova::placement::os_interface is deprecated for removal, please use valid_interfaces instead.')
   }
-  $region_name_real = pick($os_region_name, $region_name)
+  $valid_interfaces_real = pick($os_interface, $valid_interfaces)
 
   if $service_name == 'nova-placement-api' {
     nova::generic_service { 'nova-placement-api':
@@ -129,8 +128,8 @@ in a future release. Please use region_name instead.')
     'placement/project_name':        value => $project_name;
     'placement/user_domain_name':    value => $user_domain_name;
     'placement/username':            value => $username;
-    'placement/region_name':         value => $region_name_real;
-    'placement/os_interface':        value => $os_interface;
+    'placement/region_name':         value => $region_name;
+    'placement/valid_interfaces':    value => $valid_interfaces_real;
   }
 
 }
