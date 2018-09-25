@@ -16,6 +16,10 @@
 #   (optional) The state of the scheduler package
 #   Defaults to 'present'
 #
+# [*workers*]
+#   (optional) The amount of scheduler workers.
+#   Defaults to $::os_workers
+#
 # [*scheduler_driver*]
 #   (optional) Default driver to use for the scheduler
 #   Defaults to 'filter_scheduler'
@@ -29,6 +33,7 @@ class nova::scheduler(
   $enabled                          = true,
   $manage_service                   = true,
   $ensure_package                   = 'present',
+  $workers                          = $::os_workers,
   $scheduler_driver                 = 'filter_scheduler',
   $discover_hosts_in_cells_interval = $::os_service_default,
 ) {
@@ -46,6 +51,7 @@ class nova::scheduler(
   }
 
   nova_config {
+    'scheduler/workers':                          value => $workers;
     'scheduler/driver':                           value => $scheduler_driver;
     'scheduler/discover_hosts_in_cells_interval': value => $discover_hosts_in_cells_interval;
   }

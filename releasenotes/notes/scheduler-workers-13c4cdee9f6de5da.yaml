@@ -1,0 +1,5 @@
+---
+features:
+  - |
+    Added new parameter nova::scheduler::workers which can be used to set the
+    amount of scheduler workers.
