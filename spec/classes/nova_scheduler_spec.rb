@@ -8,7 +8,6 @@ describe 'nova::scheduler' do
 
   shared_examples 'nova-scheduler' do
 
-
     it { is_expected.to contain_package('nova-scheduler').with(
       :name   => platform_params[:scheduler_package_name],
       :ensure => 'present'
@@ -20,6 +19,7 @@ describe 'nova::scheduler' do
       :ensure    => 'running'
     )}
 
+    it { is_expected.to contain_nova_config('scheduler/workers').with_value(4) }
     it { is_expected.to contain_nova_config('scheduler/driver').with_value('filter_scheduler') }
     it { is_expected.to contain_nova_config('scheduler/discover_hosts_in_cells_interval').with_value('<SERVICE DEFAULT>') }
 
@@ -40,6 +40,14 @@ describe 'nova::scheduler' do
       it { is_expected.to contain_package('nova-scheduler').with(
         :ensure => params[:ensure_package]
       )}
+    end
+
+    context 'with workers' do
+      let :params do
+        { :workers => 8 }
+      end
+
+      it { is_expected.to contain_nova_config('scheduler/workers').with_value(8) }
     end
 
     context 'with scheduler driver' do
@@ -89,7 +97,7 @@ describe 'nova::scheduler' do
 
   context 'on Debian platforms' do
     let :facts do
-      @default_facts.merge({ :osfamily => 'Debian' })
+      @default_facts.merge({ :osfamily => 'Debian', :os_workers => 4 })
     end
 
     let :platform_params do
@@ -102,7 +110,7 @@ describe 'nova::scheduler' do
 
   context 'on Redhat platforms' do
     let :facts do
-      @default_facts.merge({ :osfamily => 'RedHat' })
+      @default_facts.merge({ :osfamily => 'RedHat', :os_workers => 4 })
     end
 
     let :platform_params do
