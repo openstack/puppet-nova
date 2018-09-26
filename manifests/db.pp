@@ -43,11 +43,11 @@
 #   Defaults to $::os_service_default
 #
 # [*placement_database_connection*]
-#   (optional) Connection url to connect to nova placement database.
+#   (optional) Connection url to connect to placement database.
 #   Defaults to $::os_service_default
 #
 # [*placement_slave_connection*]
-#   (optional) Connection url to connect to nova placement slave database (read-only).
+#   (optional) Connection url to connect to placement slave database (read-only).
 #   Defaults to $::os_service_default
 #
 # [*database_idle_timeout*]
@@ -98,13 +98,6 @@ class nova::db (
 
   include ::nova::deps
   include ::nova::params
-
-  if $placement_database_connection {
-    warning('placement_database_connection has no effect as of pike, and may be removed in a future release')
-  }
-  if $placement_slave_connection {
-    warning('placement_slave_connection has no effect as of pike, and may be removed in a future release')
-  }
 
   # NOTE(spredzy): In order to keep backward compatibility we rely on the pick function
   # to use nova::<myparam> first the nova::db::<myparam>
