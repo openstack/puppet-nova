@@ -26,11 +26,11 @@
 #   Defaults to undef.
 #
 # [*placement_database_connection*]
-#   (optional) Connection url for the nova placement database.
+#   (optional) Connection url for the placement database.
 #   Defaults to undef.
 #
 # [*placement_slave_connection*]
-#   (optional) Connection url to connect to nova placement slave database (read-only).
+#   (optional) Connection url to connect to placement slave database (read-only).
 #   Defaults to undef.
 #
 # [*database_max_retries*]
