@@ -151,6 +151,12 @@
 #   (optional) Available capacity in MiB for file-backed memory.
 #   Defaults to $::os_service_default
 #
+# [*volume_use_multipath*]
+#   (optional) Use multipath connection of the
+#   iSCSI or FC volume. Volumes can be connected in the
+#   LibVirt as multipath devices.
+#   Defaults to $::os_service_default
+#
 class nova::compute::libvirt (
   $ensure_package                             = 'present',
   $libvirt_virt_type                          = 'kvm',
@@ -180,6 +186,7 @@ class nova::compute::libvirt (
   $rx_queue_size                              = $::os_service_default,
   $tx_queue_size                              = $::os_service_default,
   $file_backed_memory                         = undef,
+  $volume_use_multipath                       = $::os_service_default,
 ) inherits nova::params {
 
   include ::nova::deps
@@ -262,6 +269,7 @@ class nova::compute::libvirt (
     'libvirt/rx_queue_size':         value => $rx_queue_size;
     'libvirt/tx_queue_size':         value => $tx_queue_size;
     'libvirt/file_backed_memory':    value => $file_backed_memory;
+    'libvirt/volume_use_multipath':  value => $volume_use_multipath;
   }
 
   # cpu_model param is only valid if cpu_mode=custom

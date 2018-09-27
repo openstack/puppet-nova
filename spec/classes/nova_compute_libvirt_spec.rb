@@ -64,6 +64,7 @@ describe 'nova::compute::libvirt' do
       it { is_expected.to contain_nova_config('libvirt/remove_unused_resized_minimum_age_seconds').with_ensure('absent')}
       it { is_expected.to contain_nova_config('libvirt/rx_queue_size').with_value('<SERVICE DEFAULT>')}
       it { is_expected.to contain_nova_config('libvirt/tx_queue_size').with_value('<SERVICE DEFAULT>')}
+      it { is_expected.to contain_nova_config('libvirt/volume_use_multipath').with_value('<SERVICE DEFAULT>')}
     end
 
     describe 'with params' do
@@ -90,6 +91,7 @@ describe 'nova::compute::libvirt' do
           :log_outputs                                => '1:file:/var/log/libvirt/libvirtd.log',
           :rx_queue_size                              => 512,
           :tx_queue_size                              => 1024,
+          :volume_use_multipath                       => false,
         }
       end
 
@@ -115,6 +117,7 @@ describe 'nova::compute::libvirt' do
       it { is_expected.to contain_libvirtd_config('log_outputs').with_value("\"#{params[:log_outputs]}\"")}
       it { is_expected.to contain_nova_config('libvirt/rx_queue_size').with_value(512)}
       it { is_expected.to contain_nova_config('libvirt/tx_queue_size').with_value(1024)}
+      it { is_expected.to contain_nova_config('libvirt/volume_use_multipath').with_value(false)}
       it {
         is_expected.to contain_service('libvirt').with(
           :name     => 'custom_service',
