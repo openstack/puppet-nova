@@ -1,0 +1,9 @@
+---
+upgrade:
+  - |
+    The deprecated nova::placement::os_region_name parameter is now removed.
+    Please use the nova::placement::region_name parameter instead.
+deprecations:
+  - |
+    The nova::placement::os_interface parameter is now deprecated and will be
+    removed the next release. Please use nova::placement::valid_interfaces instead.
