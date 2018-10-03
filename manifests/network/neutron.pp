@@ -108,15 +108,12 @@ class nova::network::neutron (
 
   include ::nova::deps
 
-
-  $default_floating_pool_real = pick($::nova::api::default_floating_pool, $default_floating_pool)
-
   nova_config {
     'DEFAULT/dhcp_domain':             value => $dhcp_domain;
     'DEFAULT/firewall_driver':         value => $firewall_driver;
     'DEFAULT/vif_plugging_is_fatal':   value => $vif_plugging_is_fatal;
     'DEFAULT/vif_plugging_timeout':    value => $vif_plugging_timeout;
-    'neutron/default_floating_pool':   value => $default_floating_pool_real;
+    'neutron/default_floating_pool':   value => $default_floating_pool;
     'neutron/url':                     value => $neutron_url;
     'neutron/timeout':                 value => $neutron_url_timeout;
     'neutron/project_name':            value => $neutron_project_name;
