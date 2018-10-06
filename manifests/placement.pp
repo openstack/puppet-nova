@@ -130,7 +130,7 @@ in a future release. Please use region_name instead.')
     'placement/user_domain_name':    value => $user_domain_name;
     'placement/username':            value => $username;
     'placement/region_name':         value => $region_name_real;
-    'placement/os_interface':        value => $os_interface;
+    'placement/valid_interfaces':    value => $os_interface;
   }
 
 }
