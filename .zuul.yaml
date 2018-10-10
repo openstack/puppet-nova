@@ -4,5 +4,5 @@
       - puppet-openstack-module-unit-jobs
       - puppet-openstack-integration-jobs-all
       - puppet-openstack-beaker-jobs
-      - tripleo-puppet-undercloud
+      - tripleo-puppet-standalone
       - release-notes-jobs-python3
