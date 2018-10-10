@@ -132,7 +132,10 @@ describe 'nova::keystone::auth' do
     end
 
     let :facts do
-      @default_facts.merge({ :osfamily => "Debian"})
+      @default_facts.merge({
+        :osfamily => "Debian",
+        :os       => { :name  => 'Debian', :family => 'Debian', :release => { :major => '8', :minor => '0' } },
+      })
     end
 
     let :params do
