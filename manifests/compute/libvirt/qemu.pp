@@ -33,10 +33,6 @@
 #   NOTE: big files will be stored here
 #   Defaults to undef.
 #
-# [*nbd_tls*]
-#   (optional) Enables TLS for nbd connections.
-#   Defaults to false.
-#
 class nova::compute::libvirt::qemu(
   $configure_qemu     = false,
   $group              = undef,
@@ -44,8 +40,7 @@ class nova::compute::libvirt::qemu(
   $max_processes      = 4096,
   $vnc_tls            = false,
   $vnc_tls_verify     = true,
-  $memory_backing_dir = undef,
-  $nbd_tls            = false
+  $memory_backing_dir = undef
 ){
 
   include ::nova::deps
@@ -68,18 +63,11 @@ class nova::compute::libvirt::qemu(
       $vnc_tls_verify_value = 0
     }
 
-    if $nbd_tls {
-      $nbd_tls_value = 1
-    } else {
-      $nbd_tls_value = 0
-    }
-
     $augues_changes_default = [
       "set max_files ${max_files}",
       "set max_processes ${max_processes}",
       "set vnc_tls ${vnc_tls_value}",
-      "set vnc_tls_x509_verify ${vnc_tls_verify_value}",
-      "set nbd_tls ${nbd_tls_value}"
+      "set vnc_tls_x509_verify ${vnc_tls_verify_value}"
     ]
     if $group and !empty($group) {
       $augues_group_changes = ["set group ${group}"]
@@ -107,8 +95,7 @@ class nova::compute::libvirt::qemu(
         'rm group',
         'rm vnc_tls',
         'rm vnc_tls_x509_verify',
-        'rm memory_backing_dir',
-        'rm nbd_tls'
+        'rm memory_backing_dir'
       ],
       tag     => 'qemu-conf-augeas',
     }
