@@ -52,7 +52,6 @@ describe 'nova::api' do
         is_expected.to contain_nova_config('DEFAULT/metadata_listen_port').with('value' => '8775')
         is_expected.to contain_nova_config('DEFAULT/osapi_compute_workers').with('value' => '5')
         is_expected.to contain_nova_config('DEFAULT/metadata_workers').with('value' => '5')
-        is_expected.to contain_nova_config('api/fping_path').with('value' => '/usr/sbin/fping')
         is_expected.to contain_oslo__middleware('nova_config').with(
           :enable_proxy_headers_parsing => '<SERVICE DEFAULT>',
         )
