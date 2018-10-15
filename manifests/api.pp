@@ -89,10 +89,6 @@
 #   (optional) Whether to validate the service is working after any service refreshes
 #   Defaults to false
 #
-# [*fping_path*]
-#   (optional) Full path to fping.
-#   Defaults to '/usr/sbin/fping'
-#
 # [*validation_options*]
 #   (optional) Service validation options
 #   Should be a hash of options defined in openstacklib::service_validation
@@ -246,6 +242,10 @@
 #   (optional) User name for the vendordata dynamic plugin credentials.
 #   Defaults to $::os_service_default
 #
+# [*fping_path*]
+#   (optional) Full path to fping.
+#   Defaults to undef
+#
 class nova::api(
   $enabled                                     = true,
   $manage_service                              = true,
@@ -269,7 +269,6 @@ class nova::api(
   $validate                                    = false,
   $validation_options                          = {},
   $instance_name_template                      = undef,
-  $fping_path                                  = '/usr/sbin/fping',
   $service_name                                = $::nova::params::api_service_name,
   $enable_proxy_headers_parsing                = $::os_service_default,
   $metadata_cache_expiration                   = $::os_service_default,
@@ -299,6 +298,7 @@ class nova::api(
   $vendordata_dynamic_auth_username            = $::os_service_default,
   # DEPRECATED PARAMETER
   $nova_metadata_wsgi_enabled                  = false,
+  $fping_path                                  = undef,
 ) inherits nova::params {
 
   include ::nova::deps
@@ -308,6 +308,10 @@ class nova::api(
 
   if !$nova_metadata_wsgi_enabled {
     warning('Running nova metadata api via evenlet is deprecated and will be removed in Stein release.')
+  }
+
+  if $fping_path {
+    warning('fping_path is deprecated, has no effect and will be removed in the future.')
   }
 
   if $install_cinder_client {
@@ -435,7 +439,6 @@ as a standalone service, or httpd for being run by a httpd server")
     'DEFAULT/enable_network_quota':                value => $enable_network_quota;
     'DEFAULT/password_length':                     value => $password_length;
     'api/use_forwarded_for':                       value => $use_forwarded_for;
-    'api/fping_path':                              value => $fping_path;
     'api/max_limit':                               value => $max_limit;
     'api/compute_link_prefix':                     value => $compute_link_prefix;
     'api/glance_link_prefix':                      value => $glance_link_prefix;
