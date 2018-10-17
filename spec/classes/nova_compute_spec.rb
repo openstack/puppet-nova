@@ -187,18 +187,6 @@ describe 'nova::compute' do
       end
     end
 
-    context 'with barbican deprecated parameters' do
-      let :params do
-        {
-          :keymgr_api_class => 'castellan.key_manager.barbican_key_manager.BarbicanKeyManager',
-        }
-      end
-      it 'should set keymgr parameter' do
-        is_expected.to contain_nova_config('key_manager/backend').with_value('castellan.key_manager.barbican_key_manager.BarbicanKeyManager')
-        is_expected.to contain_package('cryptsetup').with( :ensure => 'present' )
-      end
-    end
-
     context 'when vcpu_pin_set and pci params are empty' do
       let :params do
         { :vcpu_pin_set    => ""}

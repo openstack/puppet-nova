@@ -1,0 +1,3 @@
+---
+upgrade:
+  - Deprecated nova::compute::keymgr_api_class option has been removed.
