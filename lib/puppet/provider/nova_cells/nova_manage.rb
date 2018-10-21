@@ -19,6 +19,8 @@
 #
 # nova_cells provider
 #
+# CELL v1 IS DEPRECATED AND WILL BE REMOVED
+#
 
 require File.join(File.dirname(__FILE__), '..','..','..', 'puppet/provider/nova')
 

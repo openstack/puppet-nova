@@ -1,0 +1,15 @@
+---
+issues:
+  - |
+    The nova::cells::create_cells functionality is not working and will not
+    be fixed and has therefore been removed.
+upgrade:
+  - |
+    The nova::cells::create_cells functionality is deprecated and has no effect
+    since it was broken before and will not be fixed. Cells v1 has been
+    deprecated in Nova since Ocata and will be removed soon.
+deprecations:
+  - |
+    The Cell v1 functionality is now deprecated and should not be used.
+    It has been deprecated since Ocata and will be removed soon. This affects
+    nova::cells, nova::manage::cells and the nova_cells resource.

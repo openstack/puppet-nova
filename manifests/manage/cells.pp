@@ -18,6 +18,9 @@
 #
 #
 # Configuring the database in each cell
+#
+# CELL v1 IS DEPRECATED AND WILL BE REMOVED
+#
 # == Namevar
 #  The namevar will be the name of the cell
 #
@@ -72,6 +75,8 @@ define nova::manage::cells (
 ) {
 
   include ::nova::deps
+
+  warning('nova::cells v1 is deprecated and will be removed in a future release')
 
   nova_cells { $name:
     ensure              => present,

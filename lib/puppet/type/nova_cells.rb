@@ -19,6 +19,8 @@
 #
 # nova_cells type
 #
+# CELL v1 IS DEPRECATED AND WILL BE REMOVED
+#
 # == Parameters
 #  [*name*]
 #    Name for the new cell

@@ -20,6 +20,8 @@
 #
 # Installs the Nova Cells
 #
+# CELL v1 IS DEPRECATED AND THIS WILL BE REMOVED.
+#
 # === Parameters:
 #
 #  [*enabled*]
@@ -29,10 +31,6 @@
 # [*manage_service*]
 #   (optional) Whether to start/stop the service
 #   Defaults to true
-#
-#  [*create_cells*]
-#    Create cells with nova-manage
-#    Defaults to 'True'
 #
 #  [*ensure_package*]
 #    Desired ensure state of packages.
@@ -132,6 +130,12 @@
 #    It might be used by some cell scheduling code in the future
 #    Defaults to '1.0'
 #
+#### DEPRECATED PARAMETERS
+#
+#  [*create_cells*]
+#    Create cells with nova-manage
+#    Defaults to 'True'
+#
 class nova::cells (
   $bandwidth_update_interval     = '600',
   $call_timeout                  = '60',
@@ -139,7 +143,6 @@ class nova::cells (
   $cell_name                     = 'nova',
   $cell_type                     = undef,
   $cell_parent_name              = undef,
-  $create_cells                  = true,
   $db_check_interval             = '60',
   $enabled                       = true,
   $ensure_package                = 'present',
@@ -160,10 +163,14 @@ class nova::cells (
   $scheduler_weight_classes      = 'nova.cells.weights.all_weighers',
   $weight_offset                 = '1.0',
   $weight_scale                  = '1.0',
+  ## DEPRECATED PARAMETERS
+  $create_cells                  = undef,
 ) {
 
   include ::nova::deps
   include ::nova::params
+
+  warning('nova::cells v1 is deprecated and will be removed in a future release')
 
   case $cell_type {
     'parent': {
@@ -209,32 +216,7 @@ class nova::cells (
   }
 
   if $create_cells {
-    @@nova::manage::cells { $cell_name:
-      cell_type           => $cell_type,
-      cell_parent_name    => $cell_parent_name,
-      rabbit_username     => $::nova::rabbit_userid,
-      rabbit_password     => $::nova::rabbit_password,
-      rabbit_hosts        => $::nova::rabbit_hosts,
-      rabbit_port         => $::nova::rabbit_port,
-      rabbit_virtual_host => $::nova::rabbit_virtual_host,
-      weight_offset       => $weight_offset,
-      weight_scale        => $weight_scale,
-      before              => Service['cells']
-    }
-
-    case $cell_type {
-      'parent': {
-        # A parent cell must declare its child cell(s)
-        Nova::Manage::Cells <<| cell_parent_name == $cell_parent_name and cell_type == 'child' |>>
-      }
-      'child': {
-        # A child cell must declare its parent cell
-        Nova::Manage::Cells <<| name == $cell_parent_name and cell_type == 'parent' |>>
-      }
-      default: {
-        fail("Invalid cell_type parameter value: ${cell_type}")
-      }
-    }
+    warning('cells v1 is deprecated and nova::cells::create_cells has no effect')
   }
 
 }
