@@ -181,13 +181,6 @@
 #    tunneled networks.
 #    Defaults to []
 #
-# DEPRECATED PARAMETERS
-#
-# [*keymgr_api_class*]
-#   (optional) Key Manager service.
-#   Example of valid value: castellan.key_manager.barbican_key_manager.BarbicanKeyManager
-#   Defaults to $::os_service_default
-#
 class nova::compute (
   $enabled                                     = true,
   $manage_service                              = true,
@@ -227,8 +220,6 @@ class nova::compute (
   $reserved_huge_pages                         = $::os_service_default,
   $neutron_physnets_numa_nodes_mapping         = {},
   $neutron_tunnel_numa_nodes                   = [],
-  # DEPRECATED PARAMETERS
-  $keymgr_api_class                            = undef,
 ) {
 
   include ::nova::deps
@@ -240,19 +231,12 @@ class nova::compute (
   include ::nova::pci
   include ::nova::compute::vgpu
 
-  if $keymgr_api_class {
-    warning('The keymgr_api_class parameter is deprecated, use keymgr_backend')
-    $keymgr_backend_real = $keymgr_api_class
-  } else {
-    $keymgr_backend_real = $keymgr_backend
-  }
-
   if ($vnc_enabled and $spice_enabled) {
     fail('vnc_enabled and spice_enabled is mutually exclusive')
   }
 
   # cryptsetup is required when Barbican is encrypting volumes
-  if $keymgr_backend_real =~ /barbican/ {
+  if $keymgr_backend =~ /barbican/ {
     ensure_packages('cryptsetup', {
       ensure => present,
       tag    => 'openstack',
@@ -307,7 +291,7 @@ class nova::compute (
     'DEFAULT/vcpu_pin_set':                      value => $vcpu_pin_set_real;
     'DEFAULT/resume_guests_state_on_host_boot':  value => $resume_guests_state_on_host_boot;
     'compute/cpu_shared_set':                    value => $cpu_shared_set_real;
-    'key_manager/backend':                       value => $keymgr_backend_real;
+    'key_manager/backend':                       value => $keymgr_backend;
     'barbican/auth_endpoint':                    value => $barbican_auth_endpoint;
     'barbican/barbican_endpoint':                value => $barbican_endpoint;
     'barbican/barbican_api_version':             value => $barbican_api_version;
