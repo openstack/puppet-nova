@@ -239,6 +239,7 @@ class nova::compute (
 
   include ::nova::pci
   include ::nova::compute::vgpu
+  include ::nova::vendordata
 
   if $keymgr_api_class {
     warning('The keymgr_api_class parameter is deprecated, use keymgr_backend')
