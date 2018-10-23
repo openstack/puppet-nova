@@ -50,11 +50,10 @@ To utilize the nova module's functionality you will need to declare multiple res
 
 ```puppet
 class { 'nova':
-  database_connection => 'mysql://nova:a_big_secret@127.0.0.1/nova?charset=utf8',
-  rabbit_userid       => 'nova',
-  rabbit_password     => 'an_even_bigger_secret',
-  glance_api_servers  => 'localhost:9292',
-  rabbit_host         => '127.0.0.1',
+  database_connection     => 'mysql://nova:a_big_secret@127.0.0.1/nova?charset=utf8',
+  api_database_connection => 'mysql://nova:a_big_secret@127.0.0.1/nova_api?charset=utf8',
+  default_transport_url   => 'rabbit://nova:an_even_bigger_secret@127.0.0.1:5672/nova',
+  glance_api_servers      => 'localhost:9292',
 }
 
 class { 'nova::compute':
