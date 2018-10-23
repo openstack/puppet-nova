@@ -56,12 +56,6 @@ describe 'nova::api' do
           :enable_proxy_headers_parsing => '<SERVICE DEFAULT>',
         )
         is_expected.to contain_nova_config('api/metadata_cache_expiration').with('value' => '<SERVICE DEFAULT>')
-        is_expected.to contain_nova_config('api/vendordata_jsonfile_path').with('value' => '<SERVICE DEFAULT>')
-        is_expected.to contain_nova_config('api/vendordata_providers').with('value' => '<SERVICE DEFAULT>')
-        is_expected.to contain_nova_config('api/vendordata_dynamic_targets').with('value' => '<SERVICE DEFAULT>')
-        is_expected.to contain_nova_config('api/vendordata_dynamic_connect_timeout').with('value' => '<SERVICE DEFAULT>')
-        is_expected.to contain_nova_config('api/vendordata_dynamic_read_timeout').with('value' => '<SERVICE DEFAULT>')
-        is_expected.to contain_nova_config('api/vendordata_dynamic_failure_fatal').with('value' => '<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('api/max_limit').with('value' => '<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('api/compute_link_prefix').with('value' => '<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('api/glance_link_prefix').with('value' => '<SERVICE DEFAULT>')
@@ -71,14 +65,6 @@ describe 'nova::api' do
         is_expected.to contain_nova_config('api/enable_instance_password').with('value' => '<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('DEFAULT/password_length').with('value' => '<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('DEFAULT/allow_resize_to_same_host').with('value' => false)
-        is_expected.to contain_nova_config('vendordata_dynamic_auth/auth_type').with('value' => '<SERVICE DEFAULT>')
-        is_expected.to contain_nova_config('vendordata_dynamic_auth/auth_url').with('value' => '<SERVICE DEFAULT>')
-        is_expected.to contain_nova_config('vendordata_dynamic_auth/os_region_name').with('value' => '<SERVICE DEFAULT>')
-        is_expected.to contain_nova_config('vendordata_dynamic_auth/password').with('value' => '<SERVICE DEFAULT>')
-        is_expected.to contain_nova_config('vendordata_dynamic_auth/project_domain_name').with('value' => 'Default')
-        is_expected.to contain_nova_config('vendordata_dynamic_auth/project_name').with('value' => '<SERVICE DEFAULT>')
-        is_expected.to contain_nova_config('vendordata_dynamic_auth/user_domain_name').with('value' => 'Default')
-        is_expected.to contain_nova_config('vendordata_dynamic_auth/username').with('value' => '<SERVICE DEFAULT>')
       end
 
       it 'unconfigures neutron_metadata proxy' do
@@ -103,12 +89,6 @@ describe 'nova::api' do
           :metadata_workers                            => 2,
           :enable_proxy_headers_parsing                => true,
           :metadata_cache_expiration                   => 15,
-          :vendordata_jsonfile_path                    => '/tmp',
-          :vendordata_providers                        => ['StaticJSON', 'DynamicJSON'],
-          :vendordata_dynamic_targets                  => ['join@http://127.0.0.1:9999/v1/'],
-          :vendordata_dynamic_connect_timeout          => 30,
-          :vendordata_dynamic_read_timeout             => 30,
-          :vendordata_dynamic_failure_fatal            => false,
           :max_limit                                   => 1000,
           :compute_link_prefix                         => 'https://10.0.0.1:7777/',
           :glance_link_prefix                          => 'https://10.0.0.1:6666/',
@@ -118,6 +98,12 @@ describe 'nova::api' do
           :enable_instance_password                    => true,
           :password_length                             => 12,
           :allow_resize_to_same_host                   => true,
+          :vendordata_jsonfile_path                    => '/tmp',
+          :vendordata_providers                        => ['StaticJSON', 'DynamicJSON'],
+          :vendordata_dynamic_targets                  => ['join@http://127.0.0.1:9999/v1/'],
+          :vendordata_dynamic_connect_timeout          => 30, 
+          :vendordata_dynamic_read_timeout             => 30, 
+          :vendordata_dynamic_failure_fatal            => false,
           :vendordata_dynamic_auth_auth_type           => 'password',
           :vendordata_dynamic_auth_auth_url            => 'http://127.0.0.1:5000',
           :vendordata_dynamic_auth_os_region_name      => 'RegionOne',
@@ -125,7 +111,7 @@ describe 'nova::api' do
           :vendordata_dynamic_auth_project_domain_name => 'Default',
           :vendordata_dynamic_auth_project_name        => 'project',
           :vendordata_dynamic_auth_user_domain_name    => 'Default',
-          :vendordata_dynamic_auth_username            => 'user',
+          :vendordata_dynamic_auth_username            => 'user',          
         })
       end
 
@@ -153,12 +139,6 @@ describe 'nova::api' do
         is_expected.to contain_nova_config('DEFAULT/osapi_compute_workers').with('value' => '1')
         is_expected.to contain_nova_config('DEFAULT/metadata_workers').with('value' => '2')
         is_expected.to contain_nova_config('api/metadata_cache_expiration').with('value' => '15')
-        is_expected.to contain_nova_config('api/vendordata_jsonfile_path').with('value' => '/tmp')
-        is_expected.to contain_nova_config('api/vendordata_providers').with('value' => 'StaticJSON,DynamicJSON')
-        is_expected.to contain_nova_config('api/vendordata_dynamic_targets').with('value' => 'join@http://127.0.0.1:9999/v1/')
-        is_expected.to contain_nova_config('api/vendordata_dynamic_connect_timeout').with('value' => '30')
-        is_expected.to contain_nova_config('api/vendordata_dynamic_read_timeout').with('value' => '30')
-        is_expected.to contain_nova_config('api/vendordata_dynamic_failure_fatal').with('value' => false)
         is_expected.to contain_nova_config('api/max_limit').with('value' => '1000')
         is_expected.to contain_nova_config('api/compute_link_prefix').with('value' => 'https://10.0.0.1:7777/')
         is_expected.to contain_nova_config('api/glance_link_prefix').with('value' => 'https://10.0.0.1:6666/')
@@ -173,6 +153,12 @@ describe 'nova::api' do
         is_expected.to contain_nova_config('api/enable_instance_password').with('value' => true)
         is_expected.to contain_nova_config('DEFAULT/password_length').with('value' => '12')
         is_expected.to contain_nova_config('DEFAULT/allow_resize_to_same_host').with('value' => true)
+        is_expected.to contain_nova_config('api/vendordata_jsonfile_path').with('value' => '/tmp')
+        is_expected.to contain_nova_config('api/vendordata_providers').with('value' => 'StaticJSON,DynamicJSON')
+        is_expected.to contain_nova_config('api/vendordata_dynamic_targets').with('value' => 'join@http://127.0.0.1:9999/v1/')
+        is_expected.to contain_nova_config('api/vendordata_dynamic_connect_timeout').with('value' => '30')
+        is_expected.to contain_nova_config('api/vendordata_dynamic_read_timeout').with('value' => '30')
+        is_expected.to contain_nova_config('api/vendordata_dynamic_failure_fatal').with('value' => false)
         is_expected.to contain_nova_config('vendordata_dynamic_auth/auth_type').with('value' => 'password')
         is_expected.to contain_nova_config('vendordata_dynamic_auth/auth_url').with('value' => 'http://127.0.0.1:5000')
         is_expected.to contain_nova_config('vendordata_dynamic_auth/os_region_name').with('value' => 'RegionOne')
@@ -180,7 +166,7 @@ describe 'nova::api' do
         is_expected.to contain_nova_config('vendordata_dynamic_auth/project_domain_name').with('value' => 'Default')
         is_expected.to contain_nova_config('vendordata_dynamic_auth/project_name').with('value' => 'project')
         is_expected.to contain_nova_config('vendordata_dynamic_auth/user_domain_name').with('value' => 'Default')
-        is_expected.to contain_nova_config('vendordata_dynamic_auth/username').with('value' => 'user')
+        is_expected.to contain_nova_config('vendordata_dynamic_auth/username').with('value' => 'user')        
       end
     end
 
