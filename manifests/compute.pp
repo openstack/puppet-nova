@@ -49,10 +49,6 @@
 #   (optional) The path at the end of the uri for communication with the VNC proxy server
 #   Defaults to '/vnc_auto.html'
 #
-# [*vnc_keymap*]
-#   (optional) The keymap to use with VNC (ls -alh /usr/share/qemu/keymaps to list available keymaps)
-#   Defaults to 'en-us'
-#
 # [*force_config_drive*]
 #   (optional) Whether to force the config drive to be attached to all VMs
 #   Defaults to false
@@ -181,6 +177,12 @@
 #    tunneled networks.
 #    Defaults to []
 #
+# DEPRECATED PARAMETERS
+#
+# [*vnc_keymap*]
+#   (optional) The keymap to use with VNC (ls -alh /usr/share/qemu/keymaps to list available keymaps)
+#   Defaults to undef
+#
 class nova::compute (
   $enabled                                     = true,
   $manage_service                              = true,
@@ -192,7 +194,6 @@ class nova::compute (
   $vncproxy_protocol                           = 'http',
   $vncproxy_port                               = '6080',
   $vncproxy_path                               = '/vnc_auto.html',
-  $vnc_keymap                                  = 'en-us',
   $force_config_drive                          = false,
   $virtio_nic                                  = false,
   $neutron_enabled                             = true,
@@ -220,6 +221,8 @@ class nova::compute (
   $reserved_huge_pages                         = $::os_service_default,
   $neutron_physnets_numa_nodes_mapping         = {},
   $neutron_tunnel_numa_nodes                   = [],
+  # DEPRECATED PARAMETERS
+  $vnc_keymap                                  = undef,
 ) {
 
   include ::nova::deps
@@ -230,6 +233,10 @@ class nova::compute (
 
   include ::nova::pci
   include ::nova::compute::vgpu
+
+  if $vnc_keymap {
+    warning('vnc_keymap parameter is deprecated, has no effect and will be removed in the future.')
+  }
 
   if ($vnc_enabled and $spice_enabled) {
     fail('vnc_enabled and spice_enabled is mutually exclusive')
@@ -308,14 +315,11 @@ class nova::compute (
     include ::nova::vncproxy::common
 
     nova_config {
-      'vnc/vncserver_proxyclient_address': value =>
-        $vncserver_proxyclient_address;
-      'vnc/keymap':                        value => $vnc_keymap;
+      'vnc/vncserver_proxyclient_address': value => $vncserver_proxyclient_address;
     }
   } else {
     nova_config {
       'vnc/vncserver_proxyclient_address': ensure => absent;
-      'vnc/keymap':                        ensure => absent;
     }
   }
 

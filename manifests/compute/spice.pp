@@ -17,10 +17,6 @@
 #   listen on the compute host.
 #   Defaults to '127.0.0.1'
 #
-# [*keymap*]
-#   (optional) keymap for spice
-#   Defaults to 'en-us'
-#
 # [*proxy_host*]
 #   (optional) Host for the html5 console proxy
 #   Defaults to false
@@ -37,18 +33,29 @@
 #   (optional) Path of the spice html file for the html5 console proxy
 #   Defaults to '/spice_auto.html'
 #
+# DEPRECATED PARAMETERS
+#
+# [*keymap*]
+#   (optional) keymap for spice
+#   Defaults to undef
+#
 class nova::compute::spice(
   $agent_enabled                    = true,
   $server_listen                    = undef,
   $server_proxyclient_address       = '127.0.0.1',
-  $keymap                           = 'en-us',
   $proxy_host                       = false,
   $proxy_protocol                   = 'http',
   $proxy_port                       = '6082',
-  $proxy_path                       = '/spice_auto.html'
+  $proxy_path                       = '/spice_auto.html',
+  # DEPRECATED PARAMETERS
+  $keymap                           = undef,
 ) {
 
   include ::nova::deps
+
+  if $keymap {
+    warning('keymap parameter is deprecated, has no effect and will be removed in the future.')
+  }
 
   if $proxy_host {
     $html5proxy_base_url = "${proxy_protocol}://${proxy_host}:${proxy_port}${proxy_path}"
@@ -61,6 +68,5 @@ class nova::compute::spice(
     'spice/agent_enabled':              value => $agent_enabled;
     'spice/server_listen':              value => $server_listen;
     'spice/server_proxyclient_address': value => $server_proxyclient_address;
-    'spice/keymap':                     value => $keymap;
   }
 }
