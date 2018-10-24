@@ -1,13 +1,5 @@
 require 'json'
 
-def array_of_hash?(list)
-  return false unless list.class == Array
-  list.each do |e|
-    return false unless e.class == Hash
-  end
-  true
-end
-
 module Puppet::Parser::Functions
   newfunction(:to_array_of_json_strings, :arity =>1, :type => :rvalue, :doc => "Convert
     input array of hashes (optionally JSON encoded) to a puppet Array of JSON encoded Strings") do |arg|
@@ -26,7 +18,7 @@ module Puppet::Parser::Functions
         raise Puppet::ParseError, "Syntax error: #{arg[0]} is not valid"
       end
     end
-    unless array_of_hash?(list)
+    unless list.class == Array or (list.each { |e| return false unless e.class == Hash })
       raise Puppet::ParseError, "Syntax error: #{arg[0]} is not an Array or JSON encoded String"
     end
     rv = []
