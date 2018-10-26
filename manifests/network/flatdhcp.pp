@@ -2,6 +2,8 @@
 #
 # Configures nova-network with flat dhcp option
 #
+# DEPRECATED!
+#
 # === Parameters:
 #
 # [*fixed_range*]
@@ -52,6 +54,8 @@ class nova::network::flatdhcp (
 ) {
 
   include ::nova::deps
+
+  warning('nova::network::flatdhcp is deprecated and nova-network will be removed in a future release')
 
   if $::osfamily == 'RedHat' and $::operatingsystem != 'Fedora' {
     package { 'dnsmasq-utils':

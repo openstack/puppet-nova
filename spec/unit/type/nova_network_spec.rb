@@ -1,3 +1,4 @@
+# TODO(tobias-urdin): This is deprecated and should be removed in T release.
 require 'puppet'
 require 'puppet/type/nova_network'
 describe 'Puppet::Type.type(:nova_network)' do

@@ -1,0 +1,23 @@
+---
+deprecations:
+  - |
+    nova::network::bridge class is deprecated and will be removed in a future release
+    because it doesn't align with this modules purpose to configure nova nad not networking
+    interfaces.
+  - |
+    nova::network::flat, nova::network::flatdhcp and nova::network::vlan classes is now
+    deprecated and will be removed in a future release. Nova-network is deprecated in nova
+    and will be removed in a future release.
+  - |
+    firewall_driver and dhcp_domain parameters in nova::network::neutron is deprecated and will
+    be removed in a future release. These are replaced by use_neutron and DNS domain functionality
+    in neutron, these were focused on supporting nova-network and will be removed when nova-network
+    support is removed from nova.
+  - |
+    nova_network resource is deprecated and will be removed in a future release.
+  - |
+    nova::compute::neutron class is deprecated and will be removed in a future release.
+  - |
+    nova::manage::network is deprecated and will be removed in a future release.
+  - |
+    nova::use_ipv6 is deprecated and will be removed in a future release.

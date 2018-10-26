@@ -16,6 +16,11 @@ Puppet::Type.newtype(:nova_network) do
   newparam(:label) do
     desc "The Nova network label"
     defaultto "novanetwork"
+
+    munge do |value|
+      Puppet.deprecation_warning('nova_network is deprecated and will be removed in a future release')
+      value
+    end
   end
 
   newparam(:num_networks) do

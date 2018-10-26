@@ -364,10 +364,6 @@
 #  (optional) Sets a version cap for messages sent to scheduler services
 #  Defaults to $::os_service_default
 #
-# [*use_ipv6*]
-#   (optional) Use IPv6 or not.
-#   Defaults to $::os_service_default
-#
 # [*purge_config*]
 #   (optional) Whether to set only the specified config options
 #   in the nova config.
@@ -440,6 +436,10 @@
 # [*notify_on_api_faults*]
 #   (optional) If set, send api.fault notifications on caught
 #   exceptions in the API service
+#   Defaults to undef
+#
+# [*use_ipv6*]
+#   (optional) Use IPv6 or not.
 #   Defaults to undef
 #
 class nova(
@@ -527,7 +527,6 @@ class nova(
   $upgrade_level_intercell                = $::os_service_default,
   $upgrade_level_network                  = $::os_service_default,
   $upgrade_level_scheduler                = $::os_service_default,
-  $use_ipv6                               = $::os_service_default,
   $cpu_allocation_ratio                   = $::os_service_default,
   $ram_allocation_ratio                   = $::os_service_default,
   $disk_allocation_ratio                  = $::os_service_default,
@@ -542,6 +541,7 @@ class nova(
   $debug                                  = undef,
   $image_service                          = undef,
   $notify_on_api_faults                   = undef,
+  $use_ipv6                               = undef,
 ) inherits nova::params {
 
   include ::nova::deps
@@ -555,6 +555,10 @@ class nova(
   if ($use_syslog or $use_stderr or $log_facility or $log_dir or $debug) {
     warning('nova::use_syslog, nova::use_stderr, nova::log_facility, nova::log_dir \
 and nova::debug is deprecated and has been moved to nova::logging class, please set them there.')
+  }
+
+  if $use_ipv6 {
+    warning('nova::use_ipv6 is deprecated and will be removed in a future release')
   }
 
   validate_array($enabled_ssl_apis)
@@ -751,9 +755,13 @@ but should be one of: ssh-rsa, ssh-dsa, ssh-ecdsa.")
     topics        => $notification_topics,
   }
 
+  # TODO(tobias-urdin): Remove when use_ipv6 params is removed.
+  nova_config {
+    'os_vif_linux_bridge/use_ipv6': value => $use_ipv6;
+  }
+
   nova_config {
     'cinder/catalog_info':                            value => $cinder_catalog_info;
-    'os_vif_linux_bridge/use_ipv6':                   value => $use_ipv6;
     'DEFAULT/ovsdb_connection':                       value => $ovsdb_connection;
     'notifications/notification_format':              value => $notification_format;
     # Following may need to be broken out to different nova services
