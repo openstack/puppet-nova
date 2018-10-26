@@ -4,5 +4,21 @@
       - puppet-openstack-module-unit-jobs
       - puppet-openstack-integration-jobs-all
       - puppet-openstack-beaker-jobs
-      - tripleo-puppet-standalone
       - release-notes-jobs-python3
+    check:
+      jobs:
+        - puppet-nova-tripleo-standalone
+    gate:
+      jobs:
+        - puppet-nova-tripleo-standalone
+
+- job:
+    name: puppet-nova-tripleo-standalone
+    parent: tripleo-puppet-ci-centos-7-standalone
+    description: |
+      TripleO standalone Job running Nova specific Tempest tests.
+    vars:
+      featureset_override:
+        run_tempest: true
+        tempest_whitelist:
+          - 'compute'
