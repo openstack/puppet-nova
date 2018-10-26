@@ -1,0 +1,21 @@
+---
+deprecations:
+  - |
+    nova::network::neutron::neutron_url is deprecated and will be removed in a future
+    release. Nova will default to looking up the neutron endpoint in the keystone
+    catalog, you can override the endpoint type with neutron_endpoint_type or by
+    overriding the endpoint with the neutron_endpoint_override parameter.
+  - |
+    nova::network::neutron::neutron_url_timeout is deprecated, please use neutron_timeout
+    instead.
+features:
+  - |
+    Added new parameter nova::network::neutron::neutron_timeout that replaces the current
+    neutron_url_timeout parameter.
+  - |
+    Added new parameter nova::network::neutron::neutron_valid_interfaces which can be used
+    to override the keystone catalog interface nova should lookup for the neutron endpoint.
+  - |
+    Added new parameter nova::network::neutron::neutron_endpoint_override that can be used
+    to force the endpoint nova should use to talk to neutron, otherwise it will be looked
+    up in the keystone endpoint catalog.
