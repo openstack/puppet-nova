@@ -122,7 +122,6 @@ describe 'nova::compute' do
       it 'configures vnc in nova.conf' do
         is_expected.to contain_nova_config('vnc/enabled').with_value(true)
         is_expected.to contain_nova_config('vnc/vncserver_proxyclient_address').with_value('127.0.0.1')
-        is_expected.to contain_nova_config('vnc/keymap').with_value('en-us')
         is_expected.to contain_nova_config('vnc/novncproxy_base_url').with_value(
           'http://127.0.0.1:6080/vnc_auto.html'
         )
@@ -266,7 +265,6 @@ describe 'nova::compute' do
       it 'disables vnc in nova.conf' do
         is_expected.to contain_nova_config('vnc/enabled').with_value(false)
         is_expected.to contain_nova_config('vnc/vncserver_proxyclient_address').with_ensure('absent')
-        is_expected.to contain_nova_config('vnc/keymap').with_ensure('absent')
         is_expected.to_not contain_nova_config('vnc/novncproxy_base_url')
       end
 
@@ -331,13 +329,6 @@ describe 'nova::compute' do
       it { is_expected.to contain_nova_config('DEFAULT/instance_usage_audit_period').with_value('year') }
     end
 
-    context 'with vnc_keymap set to fr' do
-      let :params do
-        { :vnc_keymap => 'fr', }
-      end
-
-      it { is_expected.to contain_nova_config('vnc/keymap').with_value('fr') }
-    end
   end
 
   on_supported_os({

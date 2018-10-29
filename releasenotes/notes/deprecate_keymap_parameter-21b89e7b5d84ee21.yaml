@@ -1,0 +1,6 @@
+---
+deprecations:
+  - nova::compute::vnc_keymap option isnow deprecated for removal, the
+    parameter has no effect.
+  - nova::compute::spice::keymap option is now deprecated for removal,
+    the parameter has no effect.
