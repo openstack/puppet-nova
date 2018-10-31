@@ -81,6 +81,10 @@
 #   client connection. (integer value)
 #   Defaults to $::os_service_default
 #
+# [*manage_backend_package*]
+#   (Optional) (Optional) Whether to install the backend package for the cache.
+#   Defaults to true
+#
 class nova::cache (
   $config_prefix                        = $::os_service_default,
   $expiration_time                      = $::os_service_default,
@@ -95,6 +99,7 @@ class nova::cache (
   $memcache_pool_maxsize                = $::os_service_default,
   $memcache_pool_unused_timeout         = $::os_service_default,
   $memcache_pool_connection_get_timeout = $::os_service_default,
+  $manage_backend_package               = true,
 ) {
 
   include ::nova::deps
@@ -113,5 +118,6 @@ class nova::cache (
     memcache_pool_maxsize                => $memcache_pool_maxsize,
     memcache_pool_unused_timeout         => $memcache_pool_unused_timeout,
     memcache_pool_connection_get_timeout => $memcache_pool_connection_get_timeout,
+    manage_backend_package               => $manage_backend_package,
   }
 }
