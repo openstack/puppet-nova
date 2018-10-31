@@ -244,7 +244,7 @@ class nova::metadata::novajoin::api (
 
   exec { 'get-service-user-keytab':
     command => "/usr/bin/kinit -kt /etc/krb5.keytab && ipa-getkeytab -s ${ipa_hostname_real} \
-                -p nova/${::fqdn} -k ${keytab}",
+-p nova/${::fqdn} -k ${keytab}",
     creates => $keytab,
   }
 

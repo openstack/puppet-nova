@@ -103,6 +103,7 @@ class nova::vendordata(
   # ::nova::metadata, we remove the checkes here.
   if $vendordata_caller {
     if ($vendordata_caller == 'metadata') {
+      # lint:ignore:140chars
       $vendordata_jsonfile_path_real                    = pick($::nova::metadata::vendordata_jsonfile_path, $vendordata_jsonfile_path)
       $vendordata_providers_pick                        = pick($::nova::metadata::vendordata_providers, $vendordata_providers)
       $vendordata_dynamic_targets_pick                  = pick($::nova::metadata::vendordata_dynamic_targets, $vendordata_dynamic_targets)
@@ -132,6 +133,7 @@ class nova::vendordata(
       $vendordata_dynamic_auth_project_name_real        = pick($::nova::api::vendordata_dynamic_auth_project_name, $vendordata_dynamic_auth_project_name)
       $vendordata_dynamic_auth_user_domain_name_real    = pick($::nova::api::vendordata_dynamic_auth_user_domain_name, $vendordata_dynamic_auth_user_domain_name)
       $vendordata_dynamic_auth_username_real            = pick($::nova::api::vendordata_dynamic_auth_username, $vendordata_dynamic_auth_username)
+      # lint:endignore
     }
   } else {
     $vendordata_jsonfile_path_real                    = $vendordata_jsonfile_path
