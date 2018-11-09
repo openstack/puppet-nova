@@ -23,6 +23,7 @@ describe 'nova::cache' do
         is_expected.to contain_nova_config('cache/memcache_pool_maxsize').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('cache/memcache_pool_unused_timeout').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('cache/memcache_pool_connection_get_timeout').with_value('<SERVICE DEFAULT>')
+        is_expected.to contain_oslo__cache('nova_config').with_manage_backend_package(true)
       end
     end
 
@@ -41,6 +42,7 @@ describe 'nova::cache' do
           :memcache_pool_maxsize                => '10',
           :memcache_pool_unused_timeout         => '120',
           :memcache_pool_connection_get_timeout => '360',
+          :manage_backend_package               => false,
         }
       end
 
@@ -58,6 +60,7 @@ describe 'nova::cache' do
         is_expected.to contain_nova_config('cache/memcache_pool_maxsize').with_value('10')
         is_expected.to contain_nova_config('cache/memcache_pool_unused_timeout').with_value('120')
         is_expected.to contain_nova_config('cache/memcache_pool_connection_get_timeout').with_value('360')
+        is_expected.to contain_oslo__cache('nova_config').with_manage_backend_package(false)
       end
     end
   end

@@ -1,0 +1,7 @@
+---
+features:
+  - |
+    Added new parameter nova::cache::manage_backend_package that is sent to the
+    oslo::cache class which determines if the backend cache python library
+    should be installed or not. Defaults to true same as oslo::cache default
+    value.
