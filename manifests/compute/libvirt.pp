@@ -147,6 +147,12 @@
 #   Valid values are 256, 512, 1024
 #   Defaults to $::os_service_default
 #
+# [*volume_use_multipath*]
+#   (optional) Use multipath connection of the
+#   iSCSI or FC volume. Volumes can be connected in the
+#   LibVirt as multipath devices.
+#   Defaults to $::os_service_default
+#
 class nova::compute::libvirt (
   $ensure_package                             = 'present',
   $libvirt_virt_type                          = 'kvm',
@@ -175,6 +181,7 @@ class nova::compute::libvirt (
   $log_outputs                                = undef,
   $rx_queue_size                              = $::os_service_default,
   $tx_queue_size                              = $::os_service_default,
+  $volume_use_multipath                       = $::os_service_default,
 ) inherits nova::params {
 
   include ::nova::deps
@@ -256,6 +263,7 @@ class nova::compute::libvirt (
     'libvirt/enabled_perf_events':   value => join(any2array($libvirt_enabled_perf_events), ',');
     'libvirt/rx_queue_size':         value => $rx_queue_size;
     'libvirt/tx_queue_size':         value => $tx_queue_size;
+    'libvirt/volume_use_multipath':  value => $volume_use_multipath;
   }
 
   # cpu_model param is only valid if cpu_mode=custom
