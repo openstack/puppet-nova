@@ -61,6 +61,7 @@ describe 'nova::compute::libvirt' do
       it { is_expected.to contain_nova_config('DEFAULT/remove_unused_original_minimum_age_seconds').with_ensure('absent')}
       it { is_expected.to contain_nova_config('libvirt/remove_unused_resized_minimum_age_seconds').with_ensure('absent')}
       it { is_expected.to contain_nova_config('libvirt/volume_use_multipath').with_value('<SERVICE DEFAULT>')}
+      it { is_expected.to contain_nova_config('libvirt/nfs_mount_options').with_ensure('<SERVICE DEFAULT>')}
     end
 
     describe 'with params' do
@@ -86,6 +87,7 @@ describe 'nova::compute::libvirt' do
           :preallocate_images                         => 'space',
           :log_outputs                                => '1:file:/var/log/libvirt/libvirtd.log',
           :volume_use_multipath                       => false,
+          :nfs_mount_options                          => 'rw,intr,nolock'
         }
       end
 
@@ -110,6 +112,7 @@ describe 'nova::compute::libvirt' do
       it { is_expected.to contain_nova_config('libvirt/remove_unused_resized_minimum_age_seconds').with_value(3600)}
       it { is_expected.to contain_libvirtd_config('log_outputs').with_value("\"#{params[:log_outputs]}\"")}
       it { is_expected.to contain_nova_config('libvirt/volume_use_multipath').with_value(false)}
+      it { is_expected.to contain_nova_config('libvirt/nfs_mount_options').with_value('rw,intr,nolock')}
       it {
         is_expected.to contain_service('libvirt').with(
           :name     => 'custom_service',
@@ -278,6 +281,7 @@ describe 'nova::compute::libvirt' do
       it { is_expected.to contain_nova_config('DEFAULT/remove_unused_base_images').with_ensure('absent')}
       it { is_expected.to contain_nova_config('DEFAULT/remove_unused_original_minimum_age_seconds').with_ensure('absent')}
       it { is_expected.to contain_nova_config('libvirt/remove_unused_resized_minimum_age_seconds').with_ensure('absent')}
+      it { is_expected.to contain_nova_config('libvirt/nfs_mount_options').with_ensure('<SERVICE DEFAULT>')}
     end
 
     describe 'with params' do
@@ -287,7 +291,8 @@ describe 'nova::compute::libvirt' do
           :remove_unused_base_images                  => true,
           :remove_unused_resized_minimum_age_seconds  => 3600,
           :remove_unused_original_minimum_age_seconds => 3600,
-          :libvirt_enabled_perf_events                => ['cmt', 'mbml', 'mbmt']
+          :libvirt_enabled_perf_events                => ['cmt', 'mbml', 'mbmt'],
+          :nfs_mount_options                          => 'rw,intr,nolock'
         }
       end
 
@@ -297,6 +302,7 @@ describe 'nova::compute::libvirt' do
       it { is_expected.to contain_nova_config('DEFAULT/remove_unused_original_minimum_age_seconds').with_value(3600)}
       it { is_expected.to contain_nova_config('libvirt/remove_unused_resized_minimum_age_seconds').with_value(3600)}
       it { is_expected.to contain_nova_config('libvirt/enabled_perf_events').with_value('cmt,mbml,mbmt')}
+      it { is_expected.to contain_nova_config('libvirt/nfs_mount_options').with_value('rw,intr,nolock')}
       it { is_expected.to contain_package('libvirt').with(
         :name   => 'libvirt-daemon-kvm',
         :ensure => 'present'
