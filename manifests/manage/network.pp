@@ -1,5 +1,7 @@
 # === Parameters:
 #
+# DEPRECATED!
+#
 # [*network*]
 #   (required) IPv4 CIDR of network to create.
 #
@@ -53,6 +55,8 @@ define nova::manage::network (
 ) {
 
   include ::nova::deps
+
+  warning('nova::manage::network is deprecated and will be removed in a future release')
 
   nova_network { $name:
     ensure        => present,

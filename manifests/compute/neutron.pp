@@ -4,6 +4,8 @@
 # This will use virtio for VM guests and the
 # specified driver for the VIF
 #
+# DEPRECATED!
+#
 # === Parameters
 #
 # [*libvirt_vif_driver*]
@@ -20,6 +22,10 @@ class nova::compute::neutron (
   $force_snat_range   = '0.0.0.0/0',
 ) {
   include ::nova::deps
+
+  # NOTE(tobias-urdin): libvirt/vif_driver option does not exist and force_snat_range is
+  # a nova-network specific config which is deprecated.
+  warning('nova::compute::network class is deprecated and will be removed in a future release')
 
   nova_config {
     'libvirt/vif_driver': value => $libvirt_vif_driver;

@@ -2,6 +2,8 @@
 #
 # Configures nova network to use vlans
 #
+# DEPRECATED!
+#
 # === Parameters:
 #
 # [*fixed_range*]
@@ -46,6 +48,8 @@ class nova::network::vlan (
 ) {
 
   include ::nova::deps
+
+  warning('nova::network::vlan is deprecated and nova-network will be removed in a future release')
 
   if $::osfamily == 'RedHat' and $::operatingsystem != 'Fedora' {
     package { 'dnsmasq-utils':

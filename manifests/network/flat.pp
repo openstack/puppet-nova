@@ -2,6 +2,8 @@
 #
 # Configuration settings for nova flat network
 #
+# DEPRECATED!
+#
 # === Parameters:
 #
 # [*fixed_range*]
@@ -27,6 +29,8 @@ class nova::network::flat (
 ) {
 
   include ::nova::deps
+
+  warning('nova::network::flat is deprecated and nova-network will be removed in a future release')
 
   if $public_interface {
     nova_config { 'DEFAULT/public_interface': value => $public_interface }

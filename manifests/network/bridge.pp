@@ -1,5 +1,7 @@
 # bridge.pp
 #
+# DEPRECATED!
+#
 # === Parameters:
 #
 # [*ip*]
@@ -14,6 +16,8 @@ define nova::network::bridge (
   $netmask = '255.255.255.0'
 ) {
   include ::nova::deps
+
+  warning('nova::network::bridge is deprecated and will be removed in a future release')
 
   case $::osfamily {
 

@@ -1,4 +1,6 @@
+# TODO(tobias-urdin): This is deprecated and should be removed in T release.
 require 'spec_helper'
+
 describe 'nova::compute::neutron' do
 
   context 'with default parameters' do

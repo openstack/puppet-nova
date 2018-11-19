@@ -1,3 +1,4 @@
+# TODO(tobias-urdin): This is deprecated and should be removed in T release.
 require 'puppet'
 require 'puppet/provider/nova_network/nova'
 require 'tempfile'
