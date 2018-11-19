@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe 'nova::db::postgresql' do
 
-  shared_examples_for 'nova::db::postgresql' do
+  shared_examples 'nova::db::postgresql' do
     let :req_params do
       { :password => 'pw' }
     end
@@ -16,12 +16,30 @@ describe 'nova::db::postgresql' do
         req_params
       end
 
-      it { is_expected.to contain_postgresql__server__db('nova').with(
-        :user     => 'nova',
-        :password => 'md557ae0608fad632bf0155cb9502a6b454'
+      it { should contain_openstacklib__db__postgresql('nova').with(
+        :password_hash => 'md557ae0608fad632bf0155cb9502a6b454',
+        :dbname        => 'nova',
+        :user          => 'nova',
+        :encoding      => nil,
+        :privileges    => 'ALL',
+      )}
+
+      it { should contain_openstacklib__db__postgresql('nova_cell0').with(
+        :password_hash => 'md557ae0608fad632bf0155cb9502a6b454',
+        :dbname        => 'nova_cell0',
+        :user          => 'nova',
+        :encoding      => nil,
+        :privileges    => 'ALL',
       )}
     end
 
+    context 'when disabling cell0 setup' do
+      let :params do
+        { :setup_cell0 => false}.merge(req_params)
+      end
+
+      it { is_expected.to_not contain_openstacklib__db__postgresql('nova_cell0') }
+    end
   end
 
   on_supported_os({

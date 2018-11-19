@@ -1,0 +1,8 @@
+---
+features:
+  - |
+    nova::db::postgresql now creates the nova_cell0 database
+upgrade:
+  - |
+    nova::db::postgresql now creates the nova_cell0 database, you can disable
+    this behaviour by setting setup_cell0 to false.
