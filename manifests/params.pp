@@ -4,7 +4,8 @@
 # should be considered to be constant
 class nova::params {
   include ::openstacklib::defaults
-  if ($::os_package_type == 'debian') or ($::operatingsystem == 'Fedora') {
+  if ($::os_package_type == 'debian') or ($::operatingsystem == 'Fedora') or
+     ($::os['family'] == 'RedHat' and Integer.new($::os['release']['major']) > 7) {
     $pyvers = '3'
   } else {
     $pyvers = ''

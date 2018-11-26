@@ -48,50 +48,26 @@ describe 'nova::serialproxy' do
     end
   end
 
-  context 'on Ubuntu system' do
-    let :facts do
-      @default_facts.merge({
-        :osfamily        => 'Debian',
-        :operatingsystem => 'Ubuntu'
-      })
+  on_supported_os({
+    :supported_os => OSDefaults.get_supported_os
+  }).each do |os,facts|
+    context "on #{os}" do
+      let (:facts) do
+        facts.merge!(OSDefaults.get_facts({}))
+      end
+
+      let (:platform_params) do
+        case facts[:osfamily]
+        when 'Debian'
+          { :serialproxy_package_name => 'nova-serialproxy',
+            :serialproxy_service_name => 'nova-serialproxy' }
+        when 'RedHat'
+          { :serialproxy_package_name => 'openstack-nova-serialproxy',
+            :serialproxy_service_name => 'openstack-nova-serialproxy' }
+        end
+      end
+      it_configures 'nova-serialproxy'
     end
-
-    let :platform_params do
-      { :serialproxy_package_name => 'nova-serialproxy',
-        :serialproxy_service_name => 'nova-serialproxy' }
-    end
-
-    it_configures 'nova-serialproxy'
-  end
-
-  context 'on Debian system' do
-    let :facts do
-     @default_facts.merge({
-       :osfamily                  => 'Debian',
-       :operatingsystem           => 'Debian',
-       :operatingsystemmajrelease => '9'
-      })
-    end
-
-    let :platform_params do
-      { :serialproxy_package_name => 'nova-serialproxy',
-        :serialproxy_service_name => 'nova-serialproxy' }
-    end
-
-    it_configures 'nova-serialproxy'
-  end
-
-  context 'on Redhat platforms' do
-    let :facts do
-      @default_facts.merge({ :osfamily => 'RedHat' })
-    end
-
-    let :platform_params do
-      { :serialproxy_package_name => 'openstack-nova-serialproxy',
-        :serialproxy_service_name => 'openstack-nova-serialproxy' }
-    end
-
-    it_configures 'nova-serialproxy'
   end
 
 end

@@ -95,30 +95,27 @@ describe 'nova::scheduler' do
 
   end
 
-  context 'on Debian platforms' do
-    let :facts do
-      @default_facts.merge({ :osfamily => 'Debian', :os_workers => 4 })
+  on_supported_os({
+    :supported_os => OSDefaults.get_supported_os
+  }).each do |os,facts|
+    context "on #{os}" do
+      let (:facts) do
+        facts.merge!(OSDefaults.get_facts({ :os_workers => 4 }))
+      end
+
+      let (:platform_params) do
+        case facts[:osfamily]
+        when 'Debian'
+          { :scheduler_package_name => 'nova-scheduler',
+            :scheduler_service_name => 'nova-scheduler' }
+        when 'RedHat'
+          { :scheduler_package_name => 'openstack-nova-scheduler',
+            :scheduler_service_name => 'openstack-nova-scheduler' }
+        end
+      end
+
+      it_configures 'nova-scheduler'
     end
-
-    let :platform_params do
-      { :scheduler_package_name => 'nova-scheduler',
-        :scheduler_service_name => 'nova-scheduler' }
-    end
-
-    it_configures 'nova-scheduler'
-  end
-
-  context 'on Redhat platforms' do
-    let :facts do
-      @default_facts.merge({ :osfamily => 'RedHat', :os_workers => 4 })
-    end
-
-    let :platform_params do
-      { :scheduler_package_name => 'openstack-nova-scheduler',
-        :scheduler_service_name => 'openstack-nova-scheduler' }
-    end
-
-    it_configures 'nova-scheduler'
   end
 
 end

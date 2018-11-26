@@ -217,44 +217,24 @@ describe 'nova::migration::libvirt' do
 
   end
 
-  # TODO (degorenko): switch to on_supported_os function when we got Xenial
-  context 'on Debian platforms with Ubuntu release 16' do
-    let :facts do
-      @default_facts.merge({
-        :osfamily => 'Debian',
-        :operatingsystem => 'Ubuntu',
-        :operatingsystemmajrelease => '16'
-      })
+  on_supported_os({
+    :supported_os => OSDefaults.get_supported_os
+  }).each do |os,facts|
+    context "on #{os}" do
+      let (:facts) do
+        facts.merge!(OSDefaults.get_facts({ :os_workers => 5 }))
+      end
+
+      let (:platform_params) do
+        case facts[:osfamily]
+        when 'Debian'
+            it { is_expected.to contain_file_line('/etc/default/libvirtd libvirtd opts').with(:line => 'libvirtd_opts="-l"') }
+        when 'RedHat'
+            it { is_expected.to contain_file_line('/etc/sysconfig/libvirtd libvirtd args').with(:line => 'LIBVIRTD_ARGS="--listen"') }
+        end
+      end
+
+      it_configures 'nova migration with libvirt'
     end
-
-    it_configures 'nova migration with libvirt'
-    it { is_expected.to contain_file_line('/etc/default/libvirtd libvirtd opts').with(:line => 'libvirtd_opts="-l"') }
   end
-
-  context 'on Debian platforms release' do
-    let :facts do
-      @default_facts.merge({
-        :osfamily => 'Debian',
-        :operatingsystem => 'Debian',
-        :operatingsystemmajrelease => '8'
-      })
-    end
-
-    it_configures 'nova migration with libvirt'
-    it { is_expected.to contain_file_line('/etc/default/libvirtd libvirtd opts').with(:line => 'libvirtd_opts="-l"') }
-  end
-
-  context 'on RedHat platforms' do
-    let :facts do
-      @default_facts.merge({
-        :osfamily => 'RedHat',
-        :operatingsystem => 'CentOS',
-        :operatingsystemmajrelease => '7.0'
-      })
-    end
-
-    it_configures 'nova migration with libvirt'
-    it { is_expected.to contain_file_line('/etc/sysconfig/libvirtd libvirtd args').with(:line => 'LIBVIRTD_ARGS="--listen"') }
-  end
-
 end
