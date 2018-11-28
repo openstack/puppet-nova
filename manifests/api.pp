@@ -480,8 +480,7 @@ as a standalone service, or httpd for being run by a httpd server")
     #Admin tenant name real
     $atnr = $::nova::keystone::authtoken::project_name
     #Keystone Auth URI
-    # TODO(tobasco): Remove pick when auth_uri is removed.
-    $kau = pick($::nova::keystone::authtoken::auth_uri, $::nova::keystone::authtoken::www_authenticate_uri)
+    $kau = $::nova::keystone::authtoken::www_authenticate_uri
     $defaults = {
       'nova-api' => {
         'command'  => "nova --os-auth-url ${kau} --os-project-name ${atnr} --os-username ${aur} --os-password ${apr} flavor-list",
