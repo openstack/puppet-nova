@@ -57,7 +57,6 @@ class nova::params {
       # redhat specific config defaults
       $root_helper                       = 'sudo nova-rootwrap'
       $lock_path                         = '/var/lib/nova/tmp'
-      $nova_log_group                    = 'root'
       $nova_wsgi_script_path             = '/var/www/cgi-bin/nova'
       $nova_api_wsgi_script_source       = '/usr/bin/nova-api-wsgi'
       $nova_metadata_wsgi_script_source  = '/usr/bin/nova-metadata-wsgi'
@@ -122,7 +121,6 @@ class nova::params {
       $vncproxy_service_name             = 'nova-novncproxy'
       $serialproxy_service_name          = 'nova-serialproxy'
       $tgt_service_name                  = 'tgt'
-      $nova_log_group                    = 'adm'
       $nova_wsgi_script_path             = '/usr/lib/cgi-bin/nova'
       $nova_api_wsgi_script_source       = '/usr/bin/nova-api-wsgi'
       $nova_metadata_wsgi_script_source  = '/usr/bin/nova-metadata-wsgi'

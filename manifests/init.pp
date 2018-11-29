@@ -409,27 +409,6 @@
 #   exceptions in the API service
 #   Defaults to undef
 #
-# [*use_syslog*]
-#   (optional) Use syslog for logging
-#   Defaults to undef
-#
-# [*use_stderr*]
-#   (optional) Use stderr for logging
-#   Defaults to undef
-#
-# [*log_facility*]
-#   (optional) Syslog facility to receive log lines.
-#   Defaults to undef
-#
-# [*log_dir*]
-#   (optional) Directory where logs should be stored.
-#   If set to $::os_service_default, it will not log to any directory.
-#   Defaults to undef
-#
-# [*debug*]
-#   (optional) Set log output to debug output.
-#   Defaults to undef
-#
 # [*image_service*]
 #   (optional) Service used to search for and retrieve images.
 #
@@ -534,11 +513,6 @@ class nova(
   $my_ip                                  = $::os_service_default,
   # DEPRECATED PARAMETERS
   $notify_api_faults                      = undef,
-  $use_syslog                             = undef,
-  $use_stderr                             = undef,
-  $log_facility                           = undef,
-  $log_dir                                = undef,
-  $debug                                  = undef,
   $image_service                          = undef,
   $notify_on_api_faults                   = undef,
   $use_ipv6                               = undef,
@@ -548,14 +522,6 @@ class nova(
 
   # maintain backward compatibility
   include ::nova::db
-
-  # TODO(tobasco): Remove when use_syslog, use_stderr, log_facility, log_dir
-  # and debug parameters is removed from here.
-  include ::nova::logging
-  if ($use_syslog or $use_stderr or $log_facility or $log_dir or $debug) {
-    warning('nova::use_syslog, nova::use_stderr, nova::log_facility, nova::log_dir \
-and nova::debug is deprecated and has been moved to nova::logging class, please set them there.')
-  }
 
   if $use_ipv6 {
     warning('nova::use_ipv6 is deprecated and will be removed in a future release')

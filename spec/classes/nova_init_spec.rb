@@ -6,10 +6,6 @@ describe 'nova' do
 
     context 'with default parameters' do
 
-     it 'contains the logging class' do
-       is_expected.to contain_class('nova::logging')
-     end
-
       it 'installs packages' do
         is_expected.to contain_package('python-nova').with(
           :ensure => 'present',
