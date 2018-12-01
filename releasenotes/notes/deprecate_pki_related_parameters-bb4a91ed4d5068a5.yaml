@@ -1,0 +1,6 @@
+---
+deprecations:
+  - check_revocations_for_cached option is now deprecated for removal, the
+    parameter has no effect.
+  - hash_algorithms option is now deprecated for removal, the parameter
+    has no effect.
