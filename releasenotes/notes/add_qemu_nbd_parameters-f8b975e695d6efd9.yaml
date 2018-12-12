@@ -1,0 +1,11 @@
+---
+features:
+  - |
+    Add support for native TLS encryption on NBD for disk migration
+
+    The NBD protocol previously runs in clear text, offering no security
+    protection for the data transferred, unless it is tunnelled over some
+    external transport like SSH. Such tunnelling is inefficient and
+    inconvenient to manage. Support for TLS to the NBD clients & servers
+    provided by QEMU was added. This adds support to configure ndb related
+    qemu.conf parameters.
