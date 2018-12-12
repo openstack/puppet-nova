@@ -1,0 +1,4 @@
+---
+upgrade:
+  - |
+    The deprecated parameter auth_uri is now removed, please use www_authenticate_uri.
