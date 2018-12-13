@@ -34,7 +34,7 @@
 # [*setup_cell0*]
 #   (Optional) Setup a cell0 for the cell_v2 functionality. This option will
 #   be set to true by default in Ocata when the cell v2 setup is mandatory.
-#   Defaults to false
+#   Defaults to true
 #
 
 class nova::db::mysql(
