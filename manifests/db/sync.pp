@@ -4,13 +4,13 @@
 # ==Parameters
 #
 # [*extra_params*]
-#   (optional) String of extra command line parameters to append
+#   (Optional) String of extra command line parameters to append
 #   to the nova-manage db sync command. These will be inserted in
 #   the command line between 'nova-manage' and 'db sync'.
 #   Defaults to undef
 #
 # [*db_sync_timeout*]
-#   (optional) Timeout for the execution of the db_sync
+#   (Optional) Timeout for the execution of the db_sync
 #   Defaults to 300
 #
 class nova::db::sync(

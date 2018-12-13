@@ -36,7 +36,6 @@
 #   be set to true by default in Ocata when the cell v2 setup is mandatory.
 #   Defaults to true
 #
-
 class nova::db::mysql(
   $password,
   $dbname        = 'nova',

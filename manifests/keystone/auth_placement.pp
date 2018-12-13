@@ -5,54 +5,54 @@
 # === Parameters:
 #
 # [*password*]
-#   Password to create for the service user
+#   (Required) Password to create for the service user
 #
 # [*auth_name*]
-#   (optional) The name of the placement service user
+#   (Optional) The name of the placement service user
 #   Defaults to 'placement'
 #
 # [*service_name*]
-#   (optional) Name of the service.
+#   (Optional) Name of the service.
 #   Defaults to 'placement'.
 #
 # [*service_description*]
-#   (optional) Description for keystone service.
+#   (Optional) Description for keystone service.
 #   Defaults to 'Openstack Placement Service'.
 #
 # [*public_url*]
-#   (optional) The endpoint's public url.
+#   (Optional) The endpoint's public url.
 #   Defaults to 'http://127.0.0.1/placement'
 #
 # [*internal_url*]
-#   (optional) The endpoint's internal url.
+#   (Optional) The endpoint's internal url.
 #   Defaults to 'http://127.0.0.1/placement'
 #
 # [*admin_url*]
-#   (optional) The endpoint's admin url.
+#   (Optional) The endpoint's admin url.
 #   Defaults to 'http://127.0.0.1/placement'
 #
 # [*region*]
-#   (optional) The region in which to place the endpoints
+#   (Optional) The region in which to place the endpoints
 #   Defaults to 'RegionOne'
 #
 # [*tenant*]
-#   (optional) The tenant to use for the nova service user
+#   (Optional) The tenant to use for the nova service user
 #   Defaults to 'services'
 #
 # [*email*]
-#   (optional) The email address for the nova service user
+#   (Optional) The email address for the nova service user
 #   Defaults to 'placement@localhost'
 #
 # [*configure_endpoint*]
-#   (optional) Whether to create the endpoint.
+#   (Optional) Whether to create the endpoint.
 #   Defaults to true
 #
 # [*configure_user*]
-#   (optional) Whether to create the service user.
+#   (Optional) Whether to create the service user.
 #   Defaults to true
 #
 # [*configure_user_role*]
-#   (optional) Whether to configure the admin role for the service user.
+#   (Optional) Whether to configure the admin role for the service user.
 #   Defaults to true
 #
 class nova::keystone::auth_placement(
