@@ -63,12 +63,6 @@
 #   (Optional) Required if identity server requires client certificate
 #   Defaults to $::os_service_default.
 #
-# [*check_revocations_for_cached*]
-#   (Optional) If true, the revocation list will be checked for cached tokens.
-#   This requires that PKI tokens are configured on the identity server.
-#   boolean value.
-#   Defaults to $::os_service_default.
-#
 # [*delay_auth_decision*]
 #   (Optional) Do not handle authorization requests within the middleware, but
 #   delegate the authorization decision to downstream WSGI components. Boolean
@@ -83,17 +77,6 @@
 #   type is unknown the token will be rejected. "required" any form of token
 #   binding is needed to be allowed. Finally the name of a binding method that
 #   must be present in tokens. String value.
-#   Defaults to $::os_service_default.
-#
-# [*hash_algorithms*]
-#   (Optional) Hash algorithms to use for hashing PKI tokens. This may be a
-#   single algorithm or multiple. The algorithms are those supported by Python
-#   standard hashlib.new(). The hashes will be tried in the order given, so put
-#   the preferred one first for performance. The result of the first hash will
-#   be stored in the cache. This will typically be set to multiple values only
-#   while migrating from a less secure algorithm to a more secure one. Once all
-#   the old tokens are expired this option should be set to a single value for
-#   better performance. List value.
 #   Defaults to $::os_service_default.
 #
 # [*http_connect_timeout*]
@@ -178,6 +161,25 @@
 #   (in seconds). Set to -1 to disable caching completely. Integer value
 #   Defaults to $::os_service_default.
 #
+# === Deprecated parameters
+#
+# [*check_revocations_for_cached*]
+#   (Optional) If true, the revocation list will be checked for cached tokens.
+#   This requires that PKI tokens are configured on the identity server.
+#   boolean value.
+#   Defaults to $::os_service_default.
+#
+# [*hash_algorithms*]
+#   (Optional) Hash algorithms to use for hashing PKI tokens. This may be a
+#   single algorithm or multiple. The algorithms are those supported by Python
+#   standard hashlib.new(). The hashes will be tried in the order given, so put
+#   the preferred one first for performance. The result of the first hash will
+#   be stored in the cache. This will typically be set to multiple values only
+#   while migrating from a less secure algorithm to a more secure one. Once all
+#   the old tokens are expired this option should be set to a single value for
+#   better performance. List value.
+#   Defaults to $::os_service_default.
+#
 class nova::metadata::novajoin::authtoken(
   $username                       = 'novajoin',
   $password                       = $::os_service_default,
@@ -193,10 +195,8 @@ class nova::metadata::novajoin::authtoken(
   $cache                          = $::os_service_default,
   $cafile                         = $::os_service_default,
   $certfile                       = $::os_service_default,
-  $check_revocations_for_cached   = $::os_service_default,
   $delay_auth_decision            = $::os_service_default,
   $enforce_token_bind             = $::os_service_default,
-  $hash_algorithms                = $::os_service_default,
   $http_connect_timeout           = $::os_service_default,
   $http_request_max_retries       = $::os_service_default,
   $include_service_catalog        = $::os_service_default,
@@ -213,10 +213,21 @@ class nova::metadata::novajoin::authtoken(
   $manage_memcache_package        = false,
   $region_name                    = $::os_service_default,
   $token_cache_time               = $::os_service_default,
+  ## DEPRECATED PARAMETERS
+  $check_revocations_for_cached   = undef,
+  $hash_algorithms                = undef,
 ) {
 
   if is_service_default($password) {
     fail('Please set password for novajoin service user')
+  }
+
+  if $check_revocations_for_cached {
+    warning('check_revocations_for_cached is deprecated, will be removed and has no effect')
+  }
+
+  if $hash_algorithms {
+    warning('hash_algorithms is deprecated, will be removed and has no effect')
   }
 
   keystone::resource::authtoken { 'novajoin_config':
@@ -234,10 +245,8 @@ class nova::metadata::novajoin::authtoken(
     cache                          => $cache,
     cafile                         => $cafile,
     certfile                       => $certfile,
-    check_revocations_for_cached   => $check_revocations_for_cached,
     delay_auth_decision            => $delay_auth_decision,
     enforce_token_bind             => $enforce_token_bind,
-    hash_algorithms                => $hash_algorithms,
     http_connect_timeout           => $http_connect_timeout,
     http_request_max_retries       => $http_request_max_retries,
     include_service_catalog        => $include_service_catalog,
