@@ -47,6 +47,7 @@ describe 'nova::migration::libvirt' do
       it { is_expected.not_to contain_libvirtd_config('auth_tls') }
       it { is_expected.to contain_libvirtd_config('auth_tcp').with_value("\"none\"") }
       it { is_expected.to contain_nova_config('libvirt/live_migration_tunnelled').with_value('<SERVICE DEFAULT>') }
+      it { is_expected.to contain_nova_config('libvirt/live_migration_with_native_tls').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('libvirt/live_migration_completion_timeout').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('libvirt/live_migration_uri').with_value('qemu+tcp://%s/system') }
       it { is_expected.to contain_nova_config('libvirt/live_migration_inbound_addr').with_value('<SERVICE DEFAULT>')}
@@ -95,6 +96,15 @@ describe 'nova::migration::libvirt' do
       it { is_expected.not_to contain_libvirtd_config('auth_tcp') }
       it { is_expected.to contain_nova_config('libvirt/live_migration_uri').with_value('qemu+tls://%s/system')}
       it { is_expected.to contain_nova_config('libvirt/live_migration_inbound_addr').with_value('host1.example.com')}
+    end
+
+    context 'with live_migration_with_native_tls flags set' do
+      let :params do
+        {
+          :live_migration_with_native_tls          => true,
+        }
+      end
+      it { is_expected.to contain_nova_config('libvirt/live_migration_with_native_tls').with(:value => true) }
     end
 
     context 'with migration flags set' do

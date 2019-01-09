@@ -34,6 +34,16 @@
 #   the availability of native encryption support in the hypervisor.
 #   Defaults to $::os_service_default
 #
+# [*live_migration_with_native_tls*]
+#   (optional) This option will allow both migration stream (guest RAM plus
+#   device state) *and* disk stream to be transported over native TLS, i.e.
+#   TLS support built into QEMU.
+#   Prerequisite: TLS environment is configured correctly on all relevant
+#   Compute nodes.  This means, Certificate Authority (CA), server, client
+#   certificates, their corresponding keys, and their file permisssions are
+#   in place, and are validated.
+#   Defaults to $::os_service_default
+#
 # [*live_migration_completion_timeout*]
 #   (optional) Time to wait, in seconds, for migration to successfully complete
 #   transferring data before aborting the operation. Value is per GiB of guest
@@ -73,6 +83,7 @@ class nova::migration::libvirt(
   $listen_address                    = undef,
   $live_migration_inbound_addr       = $::os_service_default,
   $live_migration_tunnelled          = $::os_service_default,
+  $live_migration_with_native_tls    = $::os_service_default,
   $live_migration_completion_timeout = $::os_service_default,
   $override_uuid                     = false,
   $configure_libvirt                 = true,
@@ -134,6 +145,7 @@ class nova::migration::libvirt(
     nova_config {
       'libvirt/live_migration_uri':                value => $live_migration_uri;
       'libvirt/live_migration_tunnelled':          value => $live_migration_tunnelled;
+      'libvirt/live_migration_with_native_tls':    value => $live_migration_with_native_tls;
       'libvirt/live_migration_completion_timeout': value => $live_migration_completion_timeout;
       'libvirt/live_migration_inbound_addr':       value => $live_migration_inbound_addr;
     }
