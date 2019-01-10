@@ -38,6 +38,7 @@ class nova::conductor(
   include ::nova::deps
   include ::nova::db
   include ::nova::params
+  include ::nova::workarounds
 
   nova::generic_service { 'conductor':
     enabled        => $enabled,
