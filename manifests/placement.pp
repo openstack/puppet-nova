@@ -1,6 +1,6 @@
 # == Class: nova::placement
 #
-# Class for configuring [placement] section in nova.conf.
+# Class for deploying Placement and configuring the [placement] section in nova.conf.
 #
 # === Parameters:
 #
@@ -98,26 +98,17 @@ class nova::placement(
 
   include ::nova::deps
 
-  validate_bool($enabled)
-
   if $os_interface {
     warning('nova::placement::os_interface is deprecated for removal, please use valid_interfaces instead.')
   }
   $valid_interfaces_real = pick($os_interface, $valid_interfaces)
 
-  if $service_name == 'nova-placement-api' {
-    nova::generic_service { 'nova-placement-api':
-      enabled        => $enabled,
-      manage_service => $manage_service,
-      package_name   => $package_name,
-      service_name   => $service_name,
-      ensure_package => $ensure_package,
-    }
-  } elsif $service_name == 'httpd' {
-    # we need to make sure nova-placement-api/uwsgi is stopped before trying to start apache
-    if ($::os_package_type == 'debian') {
-      Service['nova-placement-api'] -> Service[$service_name]
-    }
+  class { '::nova::placement::service':
+    enabled        => $enabled,
+    manage_service => $manage_service,
+    package_name   => $package_name,
+    service_name   => $service_name,
+    ensure_package => $ensure_package,
   }
 
   nova_config {
