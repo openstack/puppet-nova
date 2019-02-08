@@ -45,7 +45,7 @@ class nova::db::mysql_placement(
 
   ::openstacklib::db::mysql { 'nova_placement':
     user          => $user,
-    password_hash => mysql_password($password),
+    password_hash => mysql::password($password),
     dbname        => $dbname,
     host          => $host,
     charset       => $charset,
