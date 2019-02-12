@@ -2,7 +2,12 @@
 #
 # Class for deploying the Placement service.
 #
+# This class is deprecated and will be removed in a future release in favour of
+# the puppet-placement module.
+#
 # === Parameters:
+#
+# DEPRECATED PARAMETERS
 #
 # [*enabled*]
 #   (optional) Whether the nova placement api service will be run
@@ -27,12 +32,15 @@
 #   Defaults to 'present'
 #
 class nova::placement::service(
+  # DEPRECATED PARAMETERS
   $enabled             = true,
   $manage_service      = true,
   $package_name        = $::nova::params::placement_package_name,
   $service_name        = $::nova::params::placement_service_name,
   $ensure_package      = 'present',
 ) inherits nova::params {
+
+  warning('nova::placement::service is deprecated and will be removed in a future release')
 
   include ::nova::deps
 

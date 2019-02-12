@@ -2,7 +2,12 @@
 #
 # Creates nova placement api endpoints and service account in keystone
 #
+# This class is deprecated and will be removed in a future release in favour of
+# the puppet-placement module.
+
 # === Parameters:
+#
+# DEPRECATED PARAMETERS
 #
 # [*password*]
 #   (Required) Password to create for the service user
@@ -56,6 +61,7 @@
 #   Defaults to true
 #
 class nova::keystone::auth_placement(
+  # DEPRECATED PARAMETERS
   $password,
   $auth_name               = 'placement',
   $service_name            = 'placement',
@@ -70,6 +76,8 @@ class nova::keystone::auth_placement(
   $configure_user          = true,
   $configure_user_role     = true,
 ) inherits nova::params {
+
+  warning('nova::keystone::auth_placement is deprecated and will be removed in a future release')
 
   include ::nova::deps
 

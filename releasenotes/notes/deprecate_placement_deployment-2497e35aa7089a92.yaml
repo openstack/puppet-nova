@@ -1,0 +1,70 @@
+---
+deprecations:
+  - |
+    The deployment of the Placement service using the following puppet-nova
+    classes is now deprecated in favour of the puppet-placement module:
+
+    - nova::placement
+    - nova::db::mysql_placement
+    - nova::keystone::auth_placement
+    - nova::wsgi::apache_placement
+
+    The following parameters are deprecated for removal:
+
+    - nova::placement_database_connection
+    - nova::placement_slave_connection
+    - nova::placement::enabled
+    - nova::placement::manage_service
+    - nova::placement::package_name
+    - nova::placement::service_name
+    - nova::placement::ensure_package
+    - nova::db::placement_database_connection
+    - nova::db::placement_slave_connection
+    - nova::db::mysql_placement::password
+    - nova::db::mysql_placement::dbname
+    - nova::db::mysql_placement::user
+    - nova::db::mysql_placement::host
+    - nova::db::mysql_placement::charset
+    - nova::db::mysql_placement::collate
+    - nova::db::mysql_placement::allowed_hosts
+    - nova::keystone::auth_placement::password,
+    - nova::keystone::auth_placement::auth_name
+    - nova::keystone::auth_placement::service_name
+    - nova::keystone::auth_placement::service_description
+    - nova::keystone::auth_placement::region
+    - nova::keystone::auth_placement::tenant
+    - nova::keystone::auth_placement::email
+    - nova::keystone::auth_placement::public_url
+    - nova::keystone::auth_placement::internal_url
+    - nova::keystone::auth_placement::admin_url
+    - nova::keystone::auth_placement::configure_endpoint
+    - nova::keystone::auth_placement::configure_user
+    - nova::keystone::auth_placement::configure_user_role
+    - nova::wsgi::apache_placement::servername
+    - nova::wsgi::apache_placement::api_port
+    - nova::wsgi::apache_placement::bind_host
+    - nova::wsgi::apache_placement::path
+    - nova::wsgi::apache_placement::ssl
+    - nova::wsgi::apache_placement::workers
+    - nova::wsgi::apache_placement::ssl_cert
+    - nova::wsgi::apache_placement::ssl_key
+    - nova::wsgi::apache_placement::ssl_chain
+    - nova::wsgi::apache_placement::ssl_ca
+    - nova::wsgi::apache_placement::ssl_crl_path
+    - nova::wsgi::apache_placement::ssl_crl
+    - nova::wsgi::apache_placement::ssl_certs_dir
+    - nova::wsgi::apache_placement::wsgi_process_display_name
+    - nova::wsgi::apache_placement::threads
+    - nova::wsgi::apache_placement::priority
+    - nova::wsgi::apache_placement::ensure_package
+    - nova::wsgi::apache_placement::access_log_file
+    - nova::wsgi::apache_placement::access_log_format
+    - nova::wsgi::apache_placement::error_log_file
+    - nova::wsgi::apache_placement::custom_wsgi_process_options
+
+    The nova::placement class will continue to be used to configure the
+    ``[placement]`` section of ``nova.conf``.
+
+    These deprecations come ahead of the planned extraction of the Placement
+    service from the Nova project early in the upcoming OpenStack Train release
+    development cycle.

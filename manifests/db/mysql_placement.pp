@@ -2,7 +2,12 @@
 #
 # Class that configures mysql for the nova_placement database.
 #
+# This class is deprecated and will be removed in a future release in favour of
+# the puppet-placement module.
+#
 # === Parameters:
+#
+# DEPRECATED PARAMETERS
 #
 # [*password*]
 #   (Required) Password to use for the nova user
@@ -32,6 +37,7 @@
 #   Defaults to undef
 #
 class nova::db::mysql_placement(
+  # DEPRECATED PARAMETERS
   $password,
   $dbname        = 'nova_placement',
   $user          = 'nova_placement',
@@ -40,6 +46,8 @@ class nova::db::mysql_placement(
   $collate       = 'utf8_general_ci',
   $allowed_hosts = undef,
 ) {
+
+  warning('nova::db::mysql_placement is deprecated and will be removed in a future release')
 
   include ::nova::deps
 

@@ -42,14 +42,6 @@
 #   (optional) Connection url to connect to nova api slave database (read-only).
 #   Defaults to $::os_service_default
 #
-# [*placement_database_connection*]
-#   (optional) Connection url to connect to placement database.
-#   Defaults to $::os_service_default
-#
-# [*placement_slave_connection*]
-#   (optional) Connection url to connect to placement slave database (read-only).
-#   Defaults to $::os_service_default
-#
 # [*database_idle_timeout*]
 #   Timeout when db connections should be reaped.
 #   (Optional) Defaults to $::os_service_default
@@ -79,14 +71,22 @@
 #   (Optional) If set, use this value for pool_timeout with SQLAlchemy.
 #   Defaults to $::os_service_default
 #
+# DEPRECATED PARAMETERS
+#
+# [*placement_database_connection*]
+#   (optional) Connection url to connect to placement database.
+#   Defaults to $::os_service_default
+#
+# [*placement_slave_connection*]
+#   (optional) Connection url to connect to placement slave database (read-only).
+#   Defaults to $::os_service_default
+
 class nova::db (
   $database_db_max_retries       = $::os_service_default,
   $database_connection           = $::os_service_default,
   $slave_connection              = $::os_service_default,
   $api_database_connection       = $::os_service_default,
   $api_slave_connection          = $::os_service_default,
-  $placement_database_connection = $::os_service_default,
-  $placement_slave_connection    = $::os_service_default,
   $database_idle_timeout         = $::os_service_default,
   $database_min_pool_size        = $::os_service_default,
   $database_max_pool_size        = $::os_service_default,
@@ -94,10 +94,21 @@ class nova::db (
   $database_retry_interval       = $::os_service_default,
   $database_max_overflow         = $::os_service_default,
   $database_pool_timeout         = $::os_service_default,
+  # DEPRECATED PARAMETERS
+  $placement_database_connection = $::os_service_default,
+  $placement_slave_connection    = $::os_service_default,
 ) {
 
   include ::nova::deps
   include ::nova::params
+
+  if $placement_database_connection {
+    warning('nova::db::placement_database_connection is deprecated and will be removed in a future release')
+  }
+
+  if $placement_slave_connection {
+    warning('nova::db::placement_slave_connection is deprecated and will be removed in a future release')
+  }
 
   # NOTE(spredzy): In order to keep backward compatibility we rely on the pick function
   # to use nova::<myparam> first the nova::db::<myparam>

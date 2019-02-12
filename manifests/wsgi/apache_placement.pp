@@ -22,6 +22,8 @@
 #
 # == Parameters
 #
+# DEPRECATED PARAMETERS
+#
 #   [*servername*]
 #     The servername for the virtualhost.
 #     Optional. Defaults to $::fqdn
@@ -121,6 +123,8 @@ class nova::wsgi::apache_placement (
   $error_log_file              = undef,
   $custom_wsgi_process_options = {},
 ) {
+
+  warning('nova::wsgi::apache_placement is deprecated and will be removed in a future release')
 
   include ::nova::params
   include ::apache

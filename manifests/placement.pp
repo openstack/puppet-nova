@@ -4,28 +4,6 @@
 #
 # === Parameters:
 #
-# [*enabled*]
-#   (optional) Whether the nova placement api service will be run
-#   Defaults to true
-#
-# [*manage_service*]
-#   (optional) Whether to start/stop the service
-#   Only useful if $::nova::params::service_name is set to
-#   nova-placement-api.
-#   Defaults to true
-#
-# [*package_name*]
-#   (optional) The package name for nova placement.
-#   Defaults to $::nova::params::placement_package_name
-#
-# [*service_name*]
-#   (optional) The service name for the placement service.
-#   Defaults to $::nova::params::placement_service_name
-#
-# [*ensure_package*]
-#   (optional) The state of the nova placement package
-#   Defaults to 'present'
-#
 # [*password*]
 #   (required) Password for connecting to Nova Placement API service in
 #   admin context through the OpenStack Identity service.
@@ -77,12 +55,29 @@
 #   the placement API.
 #   Defaults to undef
 #
+# [*enabled*]
+#   (optional) Whether the nova placement api service will be run
+#   Defaults to true
+#
+# [*manage_service*]
+#   (optional) Whether to start/stop the service
+#   Only useful if $::nova::params::service_name is set to
+#   nova-placement-api.
+#   Defaults to true
+#
+# [*package_name*]
+#   (optional) The package name for nova placement.
+#   Defaults to $::nova::params::placement_package_name
+#
+# [*service_name*]
+#   (optional) The service name for the placement service.
+#   Defaults to $::nova::params::placement_service_name
+#
+# [*ensure_package*]
+#   (optional) The state of the nova placement package
+#   Defaults to 'present'
+
 class nova::placement(
-  $enabled             = true,
-  $manage_service      = true,
-  $package_name        = $::nova::params::placement_package_name,
-  $service_name        = $::nova::params::placement_service_name,
-  $ensure_package      = 'present',
   $password            = false,
   $auth_type           = 'password',
   $auth_url            = 'http://127.0.0.1:5000/v3',
@@ -94,6 +89,11 @@ class nova::placement(
   $username            = 'placement',
   # DEPRECATED PARAMETERS
   $os_interface        = undef,
+  $enabled             = true,
+  $manage_service      = true,
+  $package_name        = $::nova::params::placement_package_name,
+  $service_name        = $::nova::params::placement_service_name,
+  $ensure_package      = 'present',
 ) inherits nova::params {
 
   include ::nova::deps

@@ -25,14 +25,6 @@
 #   (optional) Connection url to connect to nova API slave database (read-only).
 #   Defaults to undef.
 #
-# [*placement_database_connection*]
-#   (optional) Connection url for the placement database.
-#   Defaults to undef.
-#
-# [*placement_slave_connection*]
-#   (optional) Connection url to connect to placement slave database (read-only).
-#   Defaults to undef.
-#
 # [*database_max_retries*]
 #   (optional) Maximum database connection retries during startup.
 #   Defaults to undef.
@@ -404,6 +396,14 @@
 #
 # DEPRECATED PARAMETERS
 #
+# [*placement_database_connection*]
+#   (optional) Connection url for the placement database.
+#   Defaults to undef.
+#
+# [*placement_slave_connection*]
+#   (optional) Connection url to connect to placement slave database (read-only).
+#   Defaults to undef.
+#
 # [*notify_api_faults*]
 #   (optional) If set, send api.fault notifications on caught
 #   exceptions in the API service
@@ -427,8 +427,6 @@ class nova(
   $slave_connection                       = undef,
   $api_database_connection                = undef,
   $api_slave_connection                   = undef,
-  $placement_database_connection          = undef,
-  $placement_slave_connection             = undef,
   $block_device_allocate_retries          = $::os_service_default,
   $block_device_allocate_retries_interval = $::os_service_default,
   $database_idle_timeout                  = undef,
@@ -512,6 +510,8 @@ class nova(
   $purge_config                           = false,
   $my_ip                                  = $::os_service_default,
   # DEPRECATED PARAMETERS
+  $placement_database_connection          = undef,
+  $placement_slave_connection             = undef,
   $notify_api_faults                      = undef,
   $image_service                          = undef,
   $notify_on_api_faults                   = undef,
@@ -522,6 +522,14 @@ class nova(
 
   # maintain backward compatibility
   include ::nova::db
+
+  if $placement_database_connection {
+    warning('nova::placement_database_connection is deprecated and will be removed in a future release')
+  }
+
+  if $placement_slave_connection {
+    warning('nova::placement_slave_connection is deprecated and will be removed in a future release')
+  }
 
   if $use_ipv6 {
     warning('nova::use_ipv6 is deprecated and will be removed in a future release')
