@@ -1,0 +1,4 @@
+---
+upgrade:
+  - |
+    This module now requires a puppetlabs-mysql version >= 6.0.0
