@@ -38,7 +38,7 @@ Setup
 
 **What the nova module affects:**
 
-* [Nova](https://wiki.openstack.org/wiki/Nova), the compute service for OpenStack.
+* [Nova](https://docs.openstack.org/nova/latest/), the compute service for OpenStack.
 
 ### Installing nova
 
