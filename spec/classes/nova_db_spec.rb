@@ -12,8 +12,6 @@ describe 'nova::db' do
       it { should_not contain_nova_config('database/slave_connection') }
       it { should_not contain_nova_config('api_database/connection') }
       it { should_not contain_nova_config('api_database/slave_connection') }
-      it { should_not contain_nova_config('placement_database/connection') }
-      it { should_not contain_nova_config('placement_database/slave_connection') }
       it { should_not contain_nova_config('database/idle_timeout') }
       it { should_not contain_nova_config('database/min_pool_size') }
       it { should_not contain_nova_config('database/max_pool_size') }
@@ -30,8 +28,6 @@ describe 'nova::db' do
           :slave_connection              => 'mysql+pymysql://user:pass@slave/db1',
           :api_database_connection       => 'mysql+pymysql://user:pass@db/db2',
           :api_slave_connection          => 'mysql+pymysql://user:pass@slave/db2',
-          :placement_database_connection => 'mysql+pymysql://user:pass@db/db2',
-          :placement_slave_connection    => 'mysql+pymysql://user:pass@slave/db2',
         )
       end
 
@@ -50,8 +46,6 @@ describe 'nova::db' do
 
       it { should contain_nova_config('api_database/connection').with_value('mysql+pymysql://user:pass@db/db2').with_secret(true) }
       it { should contain_nova_config('api_database/slave_connection').with_value('mysql+pymysql://user:pass@slave/db2').with_secret(true) }
-      it { should contain_nova_config('placement_database/connection').with_value('mysql+pymysql://user:pass@db/db2').with_secret(true) }
-      it { should contain_nova_config('placement_database/slave_connection').with_value('mysql+pymysql://user:pass@slave/db2').with_secret(true) }
     end
   end
 

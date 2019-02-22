@@ -12,7 +12,6 @@ class nova::params {
     'RedHat': {
       # package names
       $api_package_name                  = 'openstack-nova-api'
-      $placement_package_name            = 'openstack-nova-placement-api'
       $cells_package_name                = 'openstack-nova-cells'
       $common_package_name               = 'openstack-nova-common'
       $python_package_name               = "python${pyvers}-nova"
@@ -38,7 +37,6 @@ class nova::params {
       $compute_service_name              = 'openstack-nova-compute'
       $conductor_service_name            = 'openstack-nova-conductor'
       $consoleauth_service_name          = 'openstack-nova-consoleauth'
-      $placement_service_name            = 'httpd'
       $libvirt_service_name              = 'libvirtd'
       $libvirt_guests_service_name       = 'libvirt-guests'
       $virtlock_service_name             = 'virtlockd'
@@ -55,11 +53,6 @@ class nova::params {
       $nova_wsgi_script_path             = '/var/www/cgi-bin/nova'
       $nova_api_wsgi_script_source       = '/usr/bin/nova-api-wsgi'
       $nova_metadata_wsgi_script_source  = '/usr/bin/nova-metadata-wsgi'
-      $placement_public_url              = 'http://127.0.0.1/placement'
-      $placement_internal_url            = 'http://127.0.0.1/placement'
-      $placement_admin_url               = 'http://127.0.0.1/placement'
-      $placement_wsgi_script_source      = '/usr/bin/nova-placement-api'
-      $placement_httpd_config_file       = '/etc/httpd/conf.d/00-nova-placement-api.conf'
       case $::operatingsystem {
         'RedHat', 'CentOS', 'Scientific', 'OracleLinux': {
           if (versioncmp($::operatingsystemmajrelease, '7') < 0) {
@@ -86,7 +79,6 @@ class nova::params {
     'Debian': {
       # package names
       $api_package_name                  = 'nova-api'
-      $placement_package_name            = 'nova-placement-api'
       $cells_package_name                = 'nova-cells'
       $common_package_name               = 'nova-common'
       $python_package_name               = "python${pyvers}-nova"
@@ -118,8 +110,6 @@ class nova::params {
       $nova_wsgi_script_path             = '/usr/lib/cgi-bin/nova'
       $nova_api_wsgi_script_source       = '/usr/bin/nova-api-wsgi'
       $nova_metadata_wsgi_script_source  = '/usr/bin/nova-metadata-wsgi'
-      $placement_wsgi_script_source      = '/usr/bin/nova-placement-api'
-      $placement_httpd_config_file       = '/etc/apache2/sites-available/nova-placement-api.conf'
       # debian specific nova config
       $root_helper                       = 'sudo nova-rootwrap'
       $lock_path                         = '/var/lock/nova'
@@ -133,10 +123,6 @@ class nova::params {
           $special_service_provider        = undef
           $virtlock_service_name           = 'virtlockd'
           $virtlog_service_name            = 'virtlogd'
-          $placement_service_name          = 'nova-placement-api'
-          $placement_public_url            = 'http://127.0.0.1'
-          $placement_internal_url          = 'http://127.0.0.1'
-          $placement_admin_url             = 'http://127.0.0.1'
         }
         default: {
           $spicehtml5proxy_package_name    = 'nova-spiceproxy'
@@ -147,10 +133,6 @@ class nova::params {
           $special_service_provider        = undef
           $virtlock_service_name           = 'virtlockd'
           $virtlog_service_name            = 'virtlogd'
-          $placement_service_name          = 'httpd'
-          $placement_public_url            = 'http://127.0.0.1/placement'
-          $placement_internal_url          = 'http://127.0.0.1/placement'
-          $placement_admin_url             = 'http://127.0.0.1/placement'
         }
       }
       $libvirt_service_name            = 'libvirtd'
