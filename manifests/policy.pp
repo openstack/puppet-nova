@@ -31,7 +31,7 @@ class nova::policy (
   include ::nova::deps
   include ::nova::params
 
-  validate_hash($policies)
+  validate_legacy(Hash, 'validate_hash', $policies)
 
   $policy_defaults = {
     file_path  => $policy_path,

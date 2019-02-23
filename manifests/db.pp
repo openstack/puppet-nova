@@ -116,8 +116,8 @@ class nova::db (
 
   if !is_service_default($database_connection_real) {
 
-    validate_re($database_connection_real,
-      '^(sqlite|mysql(\+pymysql)?|postgresql):\/\/(\S+:\S+@\S+\/\S+)?')
+    validate_legacy(Oslo::Dbconn, 'validate_re', $database_connection_real,
+      ['^(sqlite|mysql(\+pymysql)?|postgresql):\/\/(\S+:\S+@\S+\/\S+)?'])
 
     oslo::db { 'nova_config':
       db_max_retries   => $database_db_max_retries,
@@ -135,8 +135,8 @@ class nova::db (
 
   if !is_service_default($api_database_connection_real) {
 
-    validate_re($api_database_connection_real,
-      '^(sqlite|mysql(\+pymysql)?|postgresql):\/\/(\S+:\S+@\S+\/\S+)?')
+    validate_legacy(Oslo::Dbconn, 'validate_re', $api_database_connection_real,
+      ['^(sqlite|mysql(\+pymysql)?|postgresql):\/\/(\S+:\S+@\S+\/\S+)?'])
 
     nova_config {
       'api_database/connection':       value => $api_database_connection_real, secret => true;
@@ -147,8 +147,8 @@ class nova::db (
 
   if !is_service_default($placement_database_connection_real) {
 
-    validate_re($placement_database_connection_real,
-      '^(sqlite|mysql(\+pymysql)?|postgresql):\/\/(\S+:\S+@\S+\/\S+)?')
+    validate_legacy(Oslo::Dbconn, 'validate_re', $placement_database_connection_real,
+      ['^(sqlite|mysql(\+pymysql)?|postgresql):\/\/(\S+:\S+@\S+\/\S+)?'])
 
     nova_config {
       'placement_database/connection':       value => $placement_database_connection_real, secret => true;

@@ -141,7 +141,7 @@ class nova::scheduler::filter (
   # - if set, we'll validate it's an array that is not empty and configure the parameter.
   # - Otherwise, fallback to default.
   if !is_service_default($scheduler_default_filters) and !empty($scheduler_default_filters){
-    validate_array($scheduler_default_filters)
+    validate_legacy(Array, 'validate_array', $scheduler_default_filters)
     $scheduler_default_filters_real = join($scheduler_default_filters, ',')
   } else {
     $scheduler_default_filters_real = $::os_service_default
@@ -165,13 +165,13 @@ no effect. Baremetal scheduling now uses custom resource classes.')
   }
 
   if !is_service_default($isolated_images) and !empty($isolated_images){
-    validate_array($isolated_images)
+    validate_legacy(Array, 'validate_array', $isolated_images)
     $isolated_images_real = join($isolated_images, ',')
   } else {
     $isolated_images_real = $::os_service_default
   }
   if !is_service_default($isolated_hosts) and !empty($isolated_hosts){
-    validate_array($isolated_hosts)
+    validate_legacy(Array, 'validate_array', $isolated_hosts)
     $isolated_hosts_real = join($isolated_hosts, ',')
   } else {
     $isolated_hosts_real = $::os_service_default

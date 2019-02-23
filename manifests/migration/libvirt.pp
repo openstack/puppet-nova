@@ -101,8 +101,10 @@ class nova::migration::libvirt(
     $transport_real = 'tcp'
   }
 
-  validate_re($transport_real, ['^tcp$', '^tls$', '^ssh$'], 'Valid options for transport are tcp, tls, ssh.')
-  validate_re($auth, [ '^sasl$', '^none$' ], 'Valid options for auth are none and sasl.')
+  validate_legacy(Enum['tcp', 'tls', 'ssh'], 'validate_re', $transport_real,
+    [['^tcp$', '^tls$', '^ssh$'], 'Valid options for transport are tcp, tls, ssh.'])
+  validate_legacy(Enum['sasl', 'none'], 'validate_re', $auth,
+    [['^sasl$', '^none$'], 'Valid options for auth are none and sasl.'])
 
   if $transport_real == 'tls' {
     $listen_tls = '1'

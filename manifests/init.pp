@@ -527,7 +527,7 @@ class nova(
     warning('nova::use_ipv6 is deprecated and will be removed in a future release')
   }
 
-  validate_array($enabled_ssl_apis)
+  validate_legacy(Array, 'validate_array', $enabled_ssl_apis)
   if empty($enabled_ssl_apis) and $use_ssl {
       warning('enabled_ssl_apis is empty but use_ssl is set to true')
   }

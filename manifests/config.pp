@@ -34,8 +34,8 @@ class nova::config (
 
   include ::nova::deps
 
-  validate_hash($nova_config)
-  validate_hash($nova_paste_api_ini)
+  validate_legacy(Hash, 'validate_hash', $nova_config)
+  validate_legacy(Hash, 'validate_hash', $nova_paste_api_ini)
 
   create_resources('nova_config', $nova_config)
   create_resources('nova_paste_api_ini', $nova_paste_api_ini)

@@ -146,7 +146,7 @@ describe 'nova::migration::libvirt' do
         }
       end
       it { expect { is_expected.to contain_class('nova::compute::libvirt') }.to \
-        raise_error(Puppet::Error, /Valid options for auth are none and sasl./) }
+        raise_error(Puppet::Error) }
     end
 
     context 'when not configuring libvirt' do

@@ -98,6 +98,8 @@ class nova::placement(
 
   include ::nova::deps
 
+  validate_legacy(Boolean, 'validate_bool', $enabled)
+
   if $os_interface {
     warning('nova::placement::os_interface is deprecated for removal, please use valid_interfaces instead.')
   }

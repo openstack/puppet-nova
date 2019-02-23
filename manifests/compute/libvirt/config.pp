@@ -24,7 +24,7 @@ class nova::compute::libvirt::config (
   $libvirtd_config        = {},
 ) {
 
-  validate_hash($libvirtd_config)
+  validate_legacy(Hash, 'validate_hash', $libvirtd_config)
 
   create_resources('libvirtd_config', $libvirtd_config)
 }

@@ -153,14 +153,14 @@ class nova::vendordata(
   }
 
   if !is_service_default($vendordata_providers_pick) and !empty($vendordata_providers_pick){
-    validate_array($vendordata_providers_pick)
+    validate_legacy(Array, 'validate_array', $vendordata_providers_pick)
     $vendordata_providers_real = join($vendordata_providers_pick, ',')
   } else {
     $vendordata_providers_real = $::os_service_default
   }
 
   if !is_service_default($vendordata_dynamic_targets_pick) and !empty($vendordata_dynamic_targets_pick){
-    validate_array($vendordata_dynamic_targets_pick)
+    validate_legacy(Array, 'validate_array', $vendordata_dynamic_targets_pick)
     $vendordata_dynamic_targets_real = join($vendordata_dynamic_targets_pick, ',')
   } else {
     $vendordata_dynamic_targets_real = $::os_service_default
