@@ -1,0 +1,10 @@
+---
+prelude: >
+    In this release Ubuntu has moved all projects that supported it to python3
+    which means that there will be a lot of changes. The Puppet OpenStack project
+    does not test the upgrade path from python2 to python3 packages so there might
+    be manual steps required when moving to the python3 packages.
+upgrade:
+  - |
+    Ubuntu packages are now using python3, the upgrade path is not tested by
+    Puppet OpenStack. Manual steps may be required when upgrading.
