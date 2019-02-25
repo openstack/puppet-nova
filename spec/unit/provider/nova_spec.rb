@@ -11,7 +11,7 @@ describe Puppet::Provider::Nova do
 
   let :credential_hash do
     {
-      'auth_url'     => 'https://192.168.56.210:5000/v2.0/',
+      'auth_url'     => 'https://192.168.56.210:5000/v3/',
       'project_name' => 'admin_tenant',
       'username'     => 'admin',
       'password'     => 'password',
@@ -20,7 +20,7 @@ describe Puppet::Provider::Nova do
   end
 
   let :auth_endpoint do
-    'https://192.168.56.210:5000/v2.0/'
+    'https://192.168.56.210:5000/v3/'
   end
 
   let :credential_error do
