@@ -21,4 +21,5 @@
       featureset_override:
         run_tempest: true
         tempest_whitelist:
-          - 'compute'
+          - 'tempest.api.compute'
+          - 'tempest.scenario.test_server_basic_ops'
