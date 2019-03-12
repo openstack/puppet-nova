@@ -29,6 +29,7 @@ describe 'nova::logging' do
      :use_stderr                     => false,
      :log_facility                   => 'LOG_FOO',
      :log_dir                        => '/var/log/foo',
+     :log_file                       => '/var/log/foo/nova.log',
      :debug                          => true,
     }
   end
@@ -63,6 +64,7 @@ describe 'nova::logging' do
         :use_journal => '<SERVICE DEFAULT>',
         :use_stderr  => '<SERVICE DEFAULT>',
         :log_dir     => '/var/log/nova',
+        :log_file    => '<SERVICE DEFAULT>',
         :debug       => '<SERVICE DEFAULT>',
       )
       is_expected.to contain_file('/var/log/nova/nova-manage.log').with(
@@ -80,6 +82,7 @@ describe 'nova::logging' do
         :use_stderr          => false,
         :syslog_log_facility => 'LOG_FOO',
         :log_dir             => '/var/log/foo',
+        :log_file            => '/var/log/foo/nova.log',
         :debug               => true,
       )
       is_expected.to contain_file('/var/log/foo/nova-manage.log').with(

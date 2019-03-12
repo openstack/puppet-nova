@@ -1,0 +1,4 @@
+---
+features:
+  - |
+    Add the log_file option for logging.
