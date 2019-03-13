@@ -252,7 +252,7 @@ class nova::compute (
   }
 
   if !empty($neutron_physnets_numa_nodes_mapping) {
-    validate_hash($neutron_physnets_numa_nodes_mapping)
+    validate_legacy(Hash, 'validate_hash', $neutron_physnets_numa_nodes_mapping)
     $neutron_physnets_real = keys($neutron_physnets_numa_nodes_mapping)
     nova_config {
       'neutron/physnets': value => join(any2array($neutron_physnets_real), ',');

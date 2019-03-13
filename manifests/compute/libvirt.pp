@@ -275,7 +275,7 @@ class nova::compute::libvirt (
   # cpu_model param is only valid if cpu_mode=custom
   # otherwise it should be commented out
   if $libvirt_cpu_mode_real == 'custom' {
-    validate_string($libvirt_cpu_model)
+    validate_legacy(String, 'validate_string', $libvirt_cpu_model)
     nova_config {
       'libvirt/cpu_model': value => $libvirt_cpu_model;
     }
@@ -289,7 +289,7 @@ class nova::compute::libvirt (
   }
 
   if $libvirt_cpu_mode_real != 'none' {
-    validate_string($libvirt_cpu_model_extra_flags)
+    validate_legacy(String, 'validate_string', $libvirt_cpu_model_extra_flags)
     nova_config {
       'libvirt/cpu_model_extra_flags': value => $libvirt_cpu_model_extra_flags;
     }
