@@ -131,8 +131,8 @@ class nova::params {
           $vncproxy_package_name           = 'nova-consoleproxy'
           # Use default provider on Debian
           $special_service_provider        = undef
-          $virtlock_service_name           = undef
-          $virtlog_service_name            = undef
+          $virtlock_service_name           = 'virtlockd'
+          $virtlog_service_name            = 'virtlogd'
           $placement_service_name          = 'nova-placement-api'
           $placement_public_url            = 'http://127.0.0.1'
           $placement_internal_url          = 'http://127.0.0.1'
