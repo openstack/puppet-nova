@@ -421,6 +421,10 @@
 #   (optional) Use IPv6 or not.
 #   Defaults to undef
 #
+#  [*cross_az_attach*]
+#   (optional) Allow attach between instance and volume in different availability zones.
+#   Defaults to $::os_service_default
+#
 class nova(
   $ensure_package                         = 'present',
   $database_connection                    = undef,
@@ -516,6 +520,7 @@ class nova(
   $image_service                          = undef,
   $notify_on_api_faults                   = undef,
   $use_ipv6                               = undef,
+  $cross_az_attach                        = $::os_service_default,
 ) inherits nova::params {
 
   include ::nova::deps
@@ -759,6 +764,7 @@ but should be one of: ssh-rsa, ssh-dsa, ssh-ecdsa.")
 
   nova_config {
     'cinder/os_region_name':      value => $os_region_name;
+    'cinder/cross_az_attach':     value => $cross_az_attach;
     'upgrade_levels/cells':       value => $upgrade_level_cells;
     'upgrade_levels/cert':        value => $upgrade_level_cert;
     'upgrade_levels/compute':     value => $upgrade_level_compute;

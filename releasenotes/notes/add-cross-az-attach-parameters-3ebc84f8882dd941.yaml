@@ -1,0 +1,4 @@
+---
+features:
+  - Adds the cross_az_attach parameter to allow configuring attach between
+    instance and volume in different availability zones.
