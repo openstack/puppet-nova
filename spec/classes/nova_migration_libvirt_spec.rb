@@ -139,6 +139,18 @@ describe 'nova::migration::libvirt' do
       it { is_expected.not_to contain_libvirtd_config('auth_tcp') }
     end
 
+    context 'with certificates set and tls enabled' do
+      let :params do
+        {
+          :transport => 'tls',
+          :ca_file   => '/ca',
+          :crl_file  => '/crl',
+        }
+      end
+      it { is_expected.to contain_libvirtd_config('ca_file').with_value("\"/ca\"") }
+      it { is_expected.to contain_libvirtd_config('crl_file').with_value("\"/crl\"") }
+    end
+
     context 'with auth set to an invalid setting' do
       let :params do
         {
