@@ -102,7 +102,6 @@ class nova::params {
       $network_package_name              = 'nova-network'
       $scheduler_package_name            = 'nova-scheduler'
       $tgt_package_name                  = 'tgt'
-      $serialproxy_package_name          = 'nova-serialproxy'
       $ceph_client_package_name          = 'ceph'
       $genisoimage_package_name          = 'genisoimage'
       # service names
@@ -129,6 +128,7 @@ class nova::params {
           $spicehtml5proxy_package_name    = 'nova-consoleproxy'
           $spicehtml5proxy_service_name    = 'nova-spicehtml5proxy'
           $vncproxy_package_name           = 'nova-consoleproxy'
+          $serialproxy_package_name        = 'nova-consoleproxy'
           # Use default provider on Debian
           $special_service_provider        = undef
           $virtlock_service_name           = 'virtlockd'
@@ -142,6 +142,7 @@ class nova::params {
           $spicehtml5proxy_package_name    = 'nova-spiceproxy'
           $spicehtml5proxy_service_name    = 'nova-spiceproxy'
           $vncproxy_package_name           = 'nova-novncproxy'
+          $serialproxy_package_name        = 'nova-serialproxy'
           # Use default provider on Debian
           $special_service_provider        = undef
           $virtlock_service_name           = 'virtlockd'

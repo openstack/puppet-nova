@@ -59,8 +59,13 @@ describe 'nova::serialproxy' do
       let (:platform_params) do
         case facts[:osfamily]
         when 'Debian'
-          { :serialproxy_package_name => 'nova-serialproxy',
-            :serialproxy_service_name => 'nova-serialproxy' }
+          if facts[:os_package_type] == 'debian'
+            { :serialproxy_package_name => 'nova-consoleproxy',
+              :serialproxy_service_name => 'nova-serialproxy' }
+          else
+            { :serialproxy_package_name => 'nova-serialproxy',
+              :serialproxy_service_name => 'nova-serialproxy' }
+          end
         when 'RedHat'
           { :serialproxy_package_name => 'openstack-nova-serialproxy',
             :serialproxy_service_name => 'openstack-nova-serialproxy' }
