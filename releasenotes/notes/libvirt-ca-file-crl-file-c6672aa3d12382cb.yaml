@@ -1,0 +1,8 @@
+---
+features:
+  - |
+    The ca_file is now configurable for the TLS transport in nova's live
+    migration options for libvirt.
+  - |
+    The crl_file is now configurable for the TLS transport in nova's live
+    migration options for libvirt.

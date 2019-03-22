@@ -77,6 +77,18 @@
 #   See https://libvirt.org/guide/html/Application_Development_Guide-Architecture-Remote_URIs.html
 #   Defaults to {}
 #
+# [*ca_file*]
+#   (optional) Specifies the CA certificate that the TLS transport will use.
+#   Note that this is only used if the TLS transport is enabled via the
+#   "transport" option.
+#   Defaults to undef
+#
+# [*crl_file*]
+#   (optional) Specifies the CRL file that the TLS transport will use.
+#   Note that this is only used if the TLS transport is enabled via the
+#   "transport" option.
+#   Defaults to undef
+#
 class nova::migration::libvirt(
   $transport                         = undef,
   $auth                              = 'none',
@@ -91,6 +103,8 @@ class nova::migration::libvirt(
   $client_user                       = undef,
   $client_port                       = undef,
   $client_extraparams                = {},
+  $ca_file                           = undef,
+  $crl_file                          = undef,
 ){
 
   include ::nova::deps
@@ -194,6 +208,16 @@ class nova::migration::libvirt(
     if $transport_real == 'tls' {
       libvirtd_config {
         'auth_tls': value => "\"${auth}\"";
+      }
+      if $ca_file {
+        libvirtd_config {
+          'ca_file': value => "\"${ca_file}\"";
+        }
+      }
+      if $crl_file {
+        libvirtd_config {
+          'crl_file': value => "\"${crl_file}\"";
+        }
       }
     } elsif $transport_real == 'tcp' {
       libvirtd_config {
