@@ -26,6 +26,7 @@ describe 'nova::metadata' do
           :enable_proxy_headers_parsing => '<SERVICE DEFAULT>',
         )
         is_expected.to contain_nova_config('api/metadata_cache_expiration').with('value' => '<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('api/local_metadata_per_cell').with('value' => '<SERVICE DEFAULT>')
       end
 
       it 'unconfigures neutron_metadata proxy' do
@@ -39,6 +40,7 @@ describe 'nova::metadata' do
         params.merge!({
           :neutron_metadata_proxy_shared_secret        => 'secrete',
           :enable_proxy_headers_parsing                => true,
+          :local_metadata_per_cell                     => true,
           :metadata_cache_expiration                   => 15,
           :vendordata_jsonfile_path                    => '/tmp',
           :vendordata_providers                        => ['StaticJSON', 'DynamicJSON'],
@@ -58,6 +60,7 @@ describe 'nova::metadata' do
       end
 
       it 'configures various stuff' do
+        is_expected.to contain_nova_config('api/local_metadata_per_cell').with('value' => true)
         is_expected.to contain_nova_config('api/metadata_cache_expiration').with('value' => '15')
         is_expected.to contain_nova_config('api/vendordata_jsonfile_path').with('value' => '/tmp')
         is_expected.to contain_nova_config('api/vendordata_providers').with('value' => 'StaticJSON,DynamicJSON')
