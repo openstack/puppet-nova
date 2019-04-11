@@ -41,6 +41,7 @@ class nova::scheduler(
   include ::nova::deps
   include ::nova::db
   include ::nova::params
+  include ::nova::availability_zone
 
   nova::generic_service { 'scheduler':
     enabled        => $enabled,
