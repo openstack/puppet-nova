@@ -394,6 +394,10 @@
 #   If unable to do so, will use "127.0.0.1".
 #   Defaults to $::os_service_default.
 #
+#  [*cross_az_attach*]
+#   (optional) Allow attach between instance and volume in different availability zones.
+#   Defaults to $::os_service_default
+#
 # DEPRECATED PARAMETERS
 #
 # [*placement_database_connection*]
@@ -420,10 +424,6 @@
 # [*use_ipv6*]
 #   (optional) Use IPv6 or not.
 #   Defaults to undef
-#
-#  [*cross_az_attach*]
-#   (optional) Allow attach between instance and volume in different availability zones.
-#   Defaults to $::os_service_default
 #
 class nova(
   $ensure_package                         = 'present',
@@ -513,6 +513,7 @@ class nova(
   $disk_allocation_ratio                  = $::os_service_default,
   $purge_config                           = false,
   $my_ip                                  = $::os_service_default,
+  $cross_az_attach                        = $::os_service_default,
   # DEPRECATED PARAMETERS
   $placement_database_connection          = undef,
   $placement_slave_connection             = undef,
@@ -520,7 +521,6 @@ class nova(
   $image_service                          = undef,
   $notify_on_api_faults                   = undef,
   $use_ipv6                               = undef,
-  $cross_az_attach                        = $::os_service_default,
 ) inherits nova::params {
 
   include ::nova::deps
