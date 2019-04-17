@@ -15,11 +15,11 @@
         },
         {
             "name": "openstack/cinder",
-            "version_requirement": ">=11.5.0 <12.0.0"
+            "version_requirement": ">=11.6.0 <12.0.0"
         },
         {
             "name": "openstack/glance",
-            "version_requirement": ">=11.5.0 <12.0.0"
+            "version_requirement": ">=11.6.0 <12.0.0"
         },
         {
             "name": "puppetlabs/inifile",
@@ -27,11 +27,11 @@
         },
         {
             "name": "openstack/ironic",
-            "version_requirement": ">=11.5.0 <12.0.0"
+            "version_requirement": ">=11.6.0 <12.0.0"
         },
         {
             "name": "openstack/keystone",
-            "version_requirement": ">=11.4.0 <12.0.0"
+            "version_requirement": ">=11.6.0 <12.0.0"
         },
         {
             "name": "puppetlabs/rabbitmq",
@@ -43,11 +43,11 @@
         },
         {
             "name": "openstack/openstacklib",
-            "version_requirement": ">=11.5.0 <12.0.0"
+            "version_requirement": ">=11.6.0 <12.0.0"
         },
         {
             "name": "openstack/oslo",
-            "version_requirement": ">=11.4.0 <12.0.0"
+            "version_requirement": ">=11.6.0 <12.0.0"
         }
     ],
     "description": "Installs and configures OpenStack Nova (Compute).",
@@ -93,5 +93,5 @@
     ],
     "source": "git://github.com/openstack/puppet-nova.git",
     "summary": "Puppet module for OpenStack Nova",
-    "version": "11.5.0"
+    "version": "11.6.0"
 }
