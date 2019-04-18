@@ -1,0 +1,6 @@
+---
+features:
+  - |
+    The libvirt driver allows passing different mount options to the
+    nfs client.
+    ``[libvirt]/nfs_mount_options``, defaulting to <None>.

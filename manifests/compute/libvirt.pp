@@ -157,6 +157,11 @@
 #   LibVirt as multipath devices.
 #   Defaults to $::os_service_default
 #
+# [*nfs_mount_options*]
+#   (optional) Mount options passed to the NFS client. See section of the
+#   nfs man page for details.
+#   Defaults to $::os_service_default
+#
 class nova::compute::libvirt (
   $ensure_package                             = 'present',
   $libvirt_virt_type                          = 'kvm',
@@ -187,6 +192,7 @@ class nova::compute::libvirt (
   $tx_queue_size                              = $::os_service_default,
   $file_backed_memory                         = undef,
   $volume_use_multipath                       = $::os_service_default,
+  $nfs_mount_options                          = $::os_service_default,
 ) inherits nova::params {
 
   include ::nova::deps
@@ -270,6 +276,7 @@ class nova::compute::libvirt (
     'libvirt/tx_queue_size':         value => $tx_queue_size;
     'libvirt/file_backed_memory':    value => $file_backed_memory;
     'libvirt/volume_use_multipath':  value => $volume_use_multipath;
+    'libvirt/nfs_mount_options':     value => $nfs_mount_options;
   }
 
   # cpu_model param is only valid if cpu_mode=custom
