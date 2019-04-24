@@ -4,4 +4,4 @@ upgrade:
     ::os_service_default(use default set by nova which is currently
     'volumev3:cinderv3:publicURL') from 'volumev2:cinderv2:publicURL'
     because nova has removed the support of cinderv2 in
-    https://review.openstack.org/#/c/501874/.
+    https://review.opendev.org/#/c/501874/.

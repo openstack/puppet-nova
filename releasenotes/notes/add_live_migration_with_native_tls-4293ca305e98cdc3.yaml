@@ -1,5 +1,5 @@
 ---
 features:
   - |
-    https://review.openstack.org/625216 introduces a new setting which needs
+    https://review.opendev.org/625216 introduces a new setting which needs
     set to true if native TLS for migration and disks over NBD is being used.

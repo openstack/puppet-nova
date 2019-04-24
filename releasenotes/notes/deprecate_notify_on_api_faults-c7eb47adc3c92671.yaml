@@ -3,4 +3,4 @@ deprecations:
   - |
     The ``notify_on_api_faults`` parameter is deprecated as
     it is also removed from nova config options in change
-    ``https://review.openstack.org/#/c/505164``.
+    ``https://review.opendev.org/#/c/505164``.
