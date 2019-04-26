@@ -70,16 +70,6 @@
 # [*database_pool_timeout*]
 #   (Optional) If set, use this value for pool_timeout with SQLAlchemy.
 #   Defaults to $::os_service_default
-#
-# DEPRECATED PARAMETERS
-#
-# [*placement_database_connection*]
-#   (optional) Connection url to connect to placement database.
-#   Defaults to $::os_service_default
-#
-# [*placement_slave_connection*]
-#   (optional) Connection url to connect to placement slave database (read-only).
-#   Defaults to $::os_service_default
 
 class nova::db (
   $database_db_max_retries       = $::os_service_default,
@@ -94,21 +84,10 @@ class nova::db (
   $database_retry_interval       = $::os_service_default,
   $database_max_overflow         = $::os_service_default,
   $database_pool_timeout         = $::os_service_default,
-  # DEPRECATED PARAMETERS
-  $placement_database_connection = $::os_service_default,
-  $placement_slave_connection    = $::os_service_default,
 ) {
 
   include ::nova::deps
   include ::nova::params
-
-  if $placement_database_connection {
-    warning('nova::db::placement_database_connection is deprecated and will be removed in a future release')
-  }
-
-  if $placement_slave_connection {
-    warning('nova::db::placement_slave_connection is deprecated and will be removed in a future release')
-  }
 
   # NOTE(spredzy): In order to keep backward compatibility we rely on the pick function
   # to use nova::<myparam> first the nova::db::<myparam>
@@ -116,8 +95,6 @@ class nova::db (
   $slave_connection_real = pick($::nova::slave_connection, $slave_connection)
   $api_database_connection_real = pick($::nova::api_database_connection, $api_database_connection)
   $api_slave_connection_real = pick($::nova::api_slave_connection, $api_slave_connection)
-  $placement_database_connection_real = pick($::nova::placement_database_connection, $placement_database_connection)
-  $placement_slave_connection_real = pick($::nova::placement_slave_connection, $placement_slave_connection)
   $database_idle_timeout_real = pick($::nova::database_idle_timeout, $database_idle_timeout)
   $database_min_pool_size_real = pick($::nova::database_min_pool_size, $database_min_pool_size)
   $database_max_pool_size_real = pick($::nova::database_max_pool_size, $database_max_pool_size)
@@ -152,18 +129,6 @@ class nova::db (
     nova_config {
       'api_database/connection':       value => $api_database_connection_real, secret => true;
       'api_database/slave_connection': value => $api_slave_connection_real, secret => true;
-    }
-
-  }
-
-  if !is_service_default($placement_database_connection_real) {
-
-    validate_legacy(Oslo::Dbconn, 'validate_re', $placement_database_connection_real,
-      ['^(sqlite|mysql(\+pymysql)?|postgresql):\/\/(\S+:\S+@\S+\/\S+)?'])
-
-    nova_config {
-      'placement_database/connection':       value => $placement_database_connection_real, secret => true;
-      'placement_database/slave_connection': value => $placement_slave_connection_real, secret => true;
     }
 
   }
