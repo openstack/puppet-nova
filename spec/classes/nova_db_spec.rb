@@ -12,7 +12,7 @@ describe 'nova::db' do
       it { should_not contain_nova_config('database/slave_connection') }
       it { should_not contain_nova_config('api_database/connection') }
       it { should_not contain_nova_config('api_database/slave_connection') }
-      it { should_not contain_nova_config('database/idle_timeout') }
+      it { should_not contain_nova_config('database/connection_recycle_time') }
       it { should_not contain_nova_config('database/min_pool_size') }
       it { should_not contain_nova_config('database/max_pool_size') }
       it { should_not contain_nova_config('database/max_retries') }
@@ -32,16 +32,16 @@ describe 'nova::db' do
       end
 
       it { should contain_oslo__db('nova_config').with(
-        :connection       => 'mysql+pymysql://user:pass@db/db1',
-        :slave_connection => 'mysql+pymysql://user:pass@slave/db1',
-        :db_max_retries   => '<SERVICE DEFAULT>',
-        :idle_timeout     => '<SERVICE DEFAULT>',
-        :min_pool_size    => '<SERVICE DEFAULT>',
-        :max_pool_size    => '<SERVICE DEFAULT>',
-        :max_retries      => '<SERVICE DEFAULT>',
-        :retry_interval   => '<SERVICE DEFAULT>',
-        :max_overflow     => '<SERVICE DEFAULT>',
-        :pool_timeout     => '<SERVICE DEFAULT>',
+        :connection              => 'mysql+pymysql://user:pass@db/db1',
+        :slave_connection        => 'mysql+pymysql://user:pass@slave/db1',
+        :db_max_retries          => '<SERVICE DEFAULT>',
+        :connection_recycle_time => '<SERVICE DEFAULT>',
+        :min_pool_size           => '<SERVICE DEFAULT>',
+        :max_pool_size           => '<SERVICE DEFAULT>',
+        :max_retries             => '<SERVICE DEFAULT>',
+        :retry_interval          => '<SERVICE DEFAULT>',
+        :max_overflow            => '<SERVICE DEFAULT>',
+        :pool_timeout            => '<SERVICE DEFAULT>',
       )}
 
       it { should contain_nova_config('api_database/connection').with_value('mysql+pymysql://user:pass@db/db2').with_secret(true) }

@@ -65,7 +65,7 @@ describe 'nova::conductor' do
 
       it { is_expected.to_not contain_nova_config('database/connection') }
       it { is_expected.to_not contain_nova_config('database/slave_connection') }
-      it { is_expected.to_not contain_nova_config('database/idle_timeout').with_value('<SERVICE DEFAULT>') }
+      it { is_expected.to_not contain_nova_config('database/connection_recycle_time').with_value('<SERVICE DEFAULT>') }
     end
 
     context 'with overridden database parameters' do
@@ -79,9 +79,9 @@ describe 'nova::conductor' do
       end
 
       it { is_expected.to contain_oslo__db('nova_config').with(
-        :connection       => 'mysql://user:pass@db/db',
-        :slave_connection => 'mysql://user:pass@slave/db',
-        :idle_timeout     => '30',
+        :connection              => 'mysql://user:pass@db/db',
+        :slave_connection        => 'mysql://user:pass@slave/db',
+        :connection_recycle_time => '30',
       )}
     end
 

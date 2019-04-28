@@ -1,0 +1,4 @@
+---
+deprecations:
+  - database_idle_timeout is deprecated and will be removed in a future
+    release. Please use database_connection_recycle_time instead.
