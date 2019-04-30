@@ -1,0 +1,5 @@
+---
+upgrade:
+  - |
+    The deprecated cells v1 classes nova::cells, nova::manage::cells and the
+    nova_cells resource is removed.

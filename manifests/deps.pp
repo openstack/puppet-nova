@@ -38,15 +38,8 @@ class nova::deps {
   -> Package<| tag == 'nova-support-package'|>
   -> Anchor['nova::install::end']
 
-  # TODO(aschultz): check if we can remove these as I think they are no longer
-  # valid since nova_cells is replaced by cell_v2 and the others are part of
-  # nova network
   # The following resources are managed by calling 'nova manage' and so the
   # database must be provisioned before they can be applied.
-  Anchor['nova::dbsync_api::end']
-  -> Nova_cells<||>
-  Anchor['nova::dbsync::end']
-  -> Nova_cells<||>
   Anchor['nova::dbsync_api::end']
   -> Nova_floating<||>
   Anchor['nova::dbsync::end']
