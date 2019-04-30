@@ -1,0 +1,12 @@
+---
+fixes:
+  - |
+    Add cinder credentials in cinder section of nova conf to fix issue
+    when reclaim_instance_interval > 0 and delete instance which booted
+    from volume 'delete_on_termination' set as true. The volume status
+    showing attached and in-use, even after instance deletion, since
+    the admin context didn't have any token info hence call to cinder
+    api failed.
+    In case when context is is_admin and without token,added cinder creds
+    used to do authentication with user/project info to call cinder api.
+    [Bug `1734025 <https://bugs.launchpad.net/nova/+bug/1734025>`_]
