@@ -19,7 +19,8 @@
       TripleO standalone Job running Nova specific Tempest tests.
     vars:
       featureset_override:
-        run_tempest: true
-        tempest_whitelist:
+        run_tempest: false
+        tempest_test_whitelist:
           - 'tempest.api.compute'
           - 'tempest.scenario.test_server_basic_ops'
+        use_os_tempest: true
