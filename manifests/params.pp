@@ -12,7 +12,6 @@ class nova::params {
     'RedHat': {
       # package names
       $api_package_name                  = 'openstack-nova-api'
-      $cells_package_name                = 'openstack-nova-cells'
       $common_package_name               = 'openstack-nova-common'
       $python_package_name               = "python${pyvers}-nova"
       $compute_package_name              = 'openstack-nova-compute'
@@ -33,7 +32,6 @@ class nova::params {
       $genisoimage_package_name          = 'genisoimage'
       # service names
       $api_service_name                  = 'openstack-nova-api'
-      $cells_service_name                = 'openstack-nova-cells'
       $compute_service_name              = 'openstack-nova-compute'
       $conductor_service_name            = 'openstack-nova-conductor'
       $consoleauth_service_name          = 'openstack-nova-consoleauth'
@@ -79,7 +77,6 @@ class nova::params {
     'Debian': {
       # package names
       $api_package_name                  = 'nova-api'
-      $cells_package_name                = 'nova-cells'
       $common_package_name               = 'nova-common'
       $python_package_name               = "python${pyvers}-nova"
       $compute_package_name              = 'nova-compute'
@@ -98,7 +95,6 @@ class nova::params {
       $genisoimage_package_name          = 'genisoimage'
       # service names
       $api_service_name                  = 'nova-api'
-      $cells_service_name                = 'nova-cells'
       $compute_service_name              = 'nova-compute'
       $conductor_service_name            = 'nova-conductor'
       $consoleauth_service_name          = 'nova-consoleauth'
