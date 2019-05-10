@@ -93,7 +93,6 @@ describe 'nova' do
           :os_region_name                          => 'MyRegion',
           :cross_az_attach                         => 'MyAZ',
           :ovsdb_connection                        => 'tcp:127.0.0.1:6640',
-          :use_ipv6                                => true,
           :upgrade_level_cells                     => '1.0.0',
           :upgrade_level_cert                      => '1.0.0',
           :upgrade_level_compute                   => '1.0.0',
@@ -172,7 +171,6 @@ describe 'nova' do
         is_expected.to contain_nova_config('notifications/notification_format').with_value('unversioned')
         is_expected.to contain_nova_config('DEFAULT/report_interval').with_value('60')
         is_expected.to contain_nova_config('DEFAULT/ovsdb_connection').with_value('tcp:127.0.0.1:6640')
-        is_expected.to contain_nova_config('os_vif_linux_bridge/use_ipv6').with_value('true')
         is_expected.to contain_nova_config('cinder/os_region_name').with_value('MyRegion')
         is_expected.to contain_nova_config('cinder/cross_az_attach').with_value('MyAZ')
         is_expected.to contain_nova_config('DEFAULT/ssl_only').with_value(true)

@@ -413,10 +413,6 @@
 #   exceptions in the API service
 #   Defaults to undef
 #
-# [*use_ipv6*]
-#   (optional) Use IPv6 or not.
-#   Defaults to undef
-#
 class nova(
   $ensure_package                         = 'present',
   $database_connection                    = undef,
@@ -510,17 +506,12 @@ class nova(
   $notify_api_faults                      = undef,
   $image_service                          = undef,
   $notify_on_api_faults                   = undef,
-  $use_ipv6                               = undef,
 ) inherits nova::params {
 
   include ::nova::deps
 
   # maintain backward compatibility
   include ::nova::db
-
-  if $use_ipv6 {
-    warning('nova::use_ipv6 is deprecated and will be removed in a future release')
-  }
 
   validate_legacy(Array, 'validate_array', $enabled_ssl_apis)
   if empty($enabled_ssl_apis) and $use_ssl {
@@ -714,11 +705,6 @@ but should be one of: ssh-rsa, ssh-dsa, ssh-ecdsa.")
     transport_url => $notification_transport_url,
     driver        => $notification_driver,
     topics        => $notification_topics,
-  }
-
-  # TODO(tobias-urdin): Remove when use_ipv6 params is removed.
-  nova_config {
-    'os_vif_linux_bridge/use_ipv6': value => $use_ipv6;
   }
 
   nova_config {
