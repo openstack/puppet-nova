@@ -37,7 +37,7 @@ describe provider_class do
       describe "#create" do
         it 'should create security group rule' do
           provider.class.stubs(:openstack)
-                        .with('security group rule', 'create', ['scg0', '--protocol', 'tcp', '--dst-port', '22:23', '--src-ip', '0.0.0.0/0'])
+                        .with('security group rule', 'create', ['scg0', '--protocol', 'tcp', '--dst-port', '22:23', '--remote-ip', '0.0.0.0/0'])
                         .returns('id="021114fb-67e0-4882-b2ed-e7c5328d8aa8"
   protocol="tcp"
   port_range_max="22"

@@ -24,9 +24,9 @@ Puppet::Type.type(:nova_security_rule).provide(
     end
 
     unless @resource[:ip_range].nil?
-      opts << "--src-ip" << @resource[:ip_range]
+      opts << "--remote-ip" << @resource[:ip_range]
     else
-      opts << "--src-group" << @resource[:source_group]
+      opts << "--remote-group" << @resource[:source_group]
     end
 
     @property_hash = self.class.nova_request('security group rule', 'create', nil, opts)
