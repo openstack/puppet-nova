@@ -1,0 +1,6 @@
+---
+features:
+  - |
+    Add parameter `mem_stats_period_seconds` to specify number
+    of seconds to memory usage statistics period, zero or negative
+    value mean to disable memory usage statistics.
