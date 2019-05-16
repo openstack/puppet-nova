@@ -67,6 +67,7 @@ describe 'nova::compute::libvirt' do
       it { is_expected.to contain_nova_config('libvirt/volume_use_multipath').with_value('<SERVICE DEFAULT>')}
       it { is_expected.to contain_nova_config('libvirt/nfs_mount_options').with_ensure('<SERVICE DEFAULT>')}
       it { is_expected.to contain_nova_config('libvirt/num_pcie_ports').with_ensure('<SERVICE DEFAULT>')}
+      it { is_expected.to contain_nova_config('libvirt/mem_stats_period_seconds').with_value('<SERVICE DEFAULT>')}
     end
 
     describe 'with params' do
@@ -95,7 +96,8 @@ describe 'nova::compute::libvirt' do
           :tx_queue_size                              => 1024,
           :volume_use_multipath                       => false,
           :nfs_mount_options                          => 'rw,intr,nolock',
-          :num_pcie_ports                             => 16
+          :num_pcie_ports                             => 16,
+          :mem_stats_period_seconds                   => 20,
         }
       end
 
@@ -124,6 +126,7 @@ describe 'nova::compute::libvirt' do
       it { is_expected.to contain_nova_config('libvirt/volume_use_multipath').with_value(false)}
       it { is_expected.to contain_nova_config('libvirt/nfs_mount_options').with_value('rw,intr,nolock')}
       it { is_expected.to contain_nova_config('libvirt/num_pcie_ports').with_value(16)}
+      it { is_expected.to contain_nova_config('libvirt/mem_stats_period_seconds').with_value(20)}
       it {
         is_expected.to contain_service('libvirt').with(
           :name     => 'custom_service',
@@ -303,7 +306,8 @@ describe 'nova::compute::libvirt' do
           :remove_unused_resized_minimum_age_seconds  => 3600,
           :remove_unused_original_minimum_age_seconds => 3600,
           :libvirt_enabled_perf_events                => ['cmt', 'mbml', 'mbmt'],
-          :nfs_mount_options                          => 'rw,intr,nolock'
+          :nfs_mount_options                          => 'rw,intr,nolock',
+          :mem_stats_period_seconds                   => 20,
         }
       end
 
@@ -314,6 +318,7 @@ describe 'nova::compute::libvirt' do
       it { is_expected.to contain_nova_config('libvirt/remove_unused_resized_minimum_age_seconds').with_value(3600)}
       it { is_expected.to contain_nova_config('libvirt/enabled_perf_events').with_value('cmt,mbml,mbmt')}
       it { is_expected.to contain_nova_config('libvirt/nfs_mount_options').with_value('rw,intr,nolock')}
+      it { is_expected.to contain_nova_config('libvirt/mem_stats_period_seconds').with_value(20)}
       it { is_expected.to contain_package('libvirt').with(
         :name   => 'libvirt-daemon-kvm',
         :ensure => 'present'

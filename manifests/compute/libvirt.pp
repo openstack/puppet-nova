@@ -169,6 +169,11 @@
 #  for hotplug use.
 #  Defaults to $::os_service_default
 #
+# [*mem_stats_period_seconds*]
+#   (optional) A number of seconds to memory usage statistics period,
+#   zero or negative value mean to disable memory usage statistics.
+#   Defaults to $::os_service_default
+#
 class nova::compute::libvirt (
   $ensure_package                             = 'present',
   $libvirt_virt_type                          = 'kvm',
@@ -201,6 +206,7 @@ class nova::compute::libvirt (
   $volume_use_multipath                       = $::os_service_default,
   $nfs_mount_options                          = $::os_service_default,
   $num_pcie_ports                             = $::os_service_default,
+  $mem_stats_period_seconds                   = $::os_service_default,
 ) inherits nova::params {
 
   include ::nova::deps
@@ -268,24 +274,25 @@ class nova::compute::libvirt (
   }
 
   nova_config {
-    'DEFAULT/compute_driver':        value => $compute_driver;
-    'DEFAULT/preallocate_images':    value => $preallocate_images;
-    'vnc/vncserver_listen':          value => $vncserver_listen;
-    'libvirt/virt_type':             value => $libvirt_virt_type;
-    'libvirt/cpu_mode':              value => $libvirt_cpu_mode_real;
-    'libvirt/snapshot_image_format': value => $libvirt_snapshot_image_format;
-    'libvirt/inject_password':       value => $libvirt_inject_password;
-    'libvirt/inject_key':            value => $libvirt_inject_key;
-    'libvirt/inject_partition':      value => $libvirt_inject_partition;
-    'libvirt/hw_disk_discard':       value => $libvirt_hw_disk_discard;
-    'libvirt/hw_machine_type':       value => $libvirt_hw_machine_type;
-    'libvirt/enabled_perf_events':   value => join(any2array($libvirt_enabled_perf_events), ',');
-    'libvirt/rx_queue_size':         value => $rx_queue_size;
-    'libvirt/tx_queue_size':         value => $tx_queue_size;
-    'libvirt/file_backed_memory':    value => $file_backed_memory;
-    'libvirt/volume_use_multipath':  value => $volume_use_multipath;
-    'libvirt/nfs_mount_options':     value => $nfs_mount_options;
-    'libvirt/num_pcie_ports':        value => $num_pcie_ports;
+    'DEFAULT/compute_driver':           value => $compute_driver;
+    'DEFAULT/preallocate_images':       value => $preallocate_images;
+    'vnc/vncserver_listen':             value => $vncserver_listen;
+    'libvirt/virt_type':                value => $libvirt_virt_type;
+    'libvirt/cpu_mode':                 value => $libvirt_cpu_mode_real;
+    'libvirt/snapshot_image_format':    value => $libvirt_snapshot_image_format;
+    'libvirt/inject_password':          value => $libvirt_inject_password;
+    'libvirt/inject_key':               value => $libvirt_inject_key;
+    'libvirt/inject_partition':         value => $libvirt_inject_partition;
+    'libvirt/hw_disk_discard':          value => $libvirt_hw_disk_discard;
+    'libvirt/hw_machine_type':          value => $libvirt_hw_machine_type;
+    'libvirt/enabled_perf_events':      value => join(any2array($libvirt_enabled_perf_events), ',');
+    'libvirt/rx_queue_size':            value => $rx_queue_size;
+    'libvirt/tx_queue_size':            value => $tx_queue_size;
+    'libvirt/file_backed_memory':       value => $file_backed_memory;
+    'libvirt/volume_use_multipath':     value => $volume_use_multipath;
+    'libvirt/nfs_mount_options':        value => $nfs_mount_options;
+    'libvirt/num_pcie_ports':           value => $num_pcie_ports;
+    'libvirt/mem_stats_period_seconds': value => $mem_stats_period_seconds;
   }
 
   # cpu_model param is only valid if cpu_mode=custom
