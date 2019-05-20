@@ -1,0 +1,11 @@
+---
+upgrade:
+  - |
+    The deprecated parameter nova::network::neutron::neutron_url is removed and will default to looking up the
+    neutron endpoint in the keystone catalog, use nova::network::neutron::neutron_endpoint_override to override.
+  - |
+    The deprecated parameter nova::network::neutron::neutron_url_timeout is removed, please use neutron_timeout instead.
+  - |
+    The deprecated parameter nova::network::neutron::firewall_driver is removed.
+  - |
+    The deprecated parameter nova::network::neutron::dhcp_domain is removed.
