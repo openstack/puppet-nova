@@ -5,6 +5,7 @@ describe 'nova::client' do
   shared_examples_for 'nova client' do
 
     it { is_expected.to contain_class('nova::deps') }
+    it { is_expected.to contain_class('nova::params') }
 
     it 'installs nova client package' do
       is_expected.to contain_package('python-novaclient').with(
