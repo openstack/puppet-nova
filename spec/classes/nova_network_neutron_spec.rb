@@ -93,6 +93,27 @@ describe 'nova::network::neutron' do
         should contain_nova_config('DEFAULT/vif_plugging_timeout').with_value(params[:vif_plugging_timeout])
       end
     end
+
+    context 'with deprecated class parameters' do
+      before do
+        params.merge!(
+          :neutron_url         => 'http://10.0.0.1:9696',
+          :neutron_url_timeout => '30',
+          :firewall_driver     => 'nova.virt.firewall.IptablesFirewallDriver',
+          :dhcp_domain         => 'foo',
+        )
+      end
+
+      it 'configures neutron endpoint in nova.conf' do
+        should contain_nova_config('DEFAULT/dhcp_domain').with_value(params[:dhcp_domain])
+        should contain_nova_config('neutron/url').with_value(params[:neutron_url])
+        should contain_nova_config('neutron/timeout').with_value(params[:neutron_url_timeout])
+      end
+
+      it 'configures Nova to use Neutron Security Groups and Firewall' do
+        should contain_nova_config('DEFAULT/firewall_driver').with_value(params[:firewall_driver])
+      end
+    end
   end
 
   on_supported_os({
