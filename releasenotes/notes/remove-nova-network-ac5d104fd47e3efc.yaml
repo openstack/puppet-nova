@@ -1,0 +1,13 @@
+---
+upgrade:
+  - |
+    The deprecated nova-network classes nova::network::bridge, nova::network::flat, nova::network::flatdhcp
+    and nova::network::vlan classes is now removed.
+  - |
+    The deprecated nova_network resource is now removed.
+  - |
+    The deprecated class nova::compute::neutron is now removed.
+  - |
+    The deprecated class nova::manage::network is now removed.
+  - |
+    The deprecated parameter nova::use_ipv6 is now removed.

@@ -44,10 +44,6 @@ class nova::deps {
   -> Nova_floating<||>
   Anchor['nova::dbsync::end']
   -> Nova_floating<||>
-  Anchor['nova::dbsync_api::end']
-  -> Nova_network<||>
-  Anchor['nova::dbsync::end']
-  -> Nova_network<||>
 
   # all cache settings should be applied and all packages should be installed
   # before service startup
