@@ -29,13 +29,20 @@
 #   attempt to discover new hosts that have been added to cells.
 #   Defaults to $::os_service_default
 #
+# [*limit_tenants_to_placement_aggregate*]
+#   (optional) This setting allows to have tenant isolation with placement.
+#   It ensures hosts in tenant-isolated host aggregate and availability
+#   zones will only be available to specific set of tenants.
+#   Defaults to $::os_service_default
+#
 class nova::scheduler(
-  $enabled                          = true,
-  $manage_service                   = true,
-  $ensure_package                   = 'present',
-  $workers                          = $::os_workers,
-  $scheduler_driver                 = 'filter_scheduler',
-  $discover_hosts_in_cells_interval = $::os_service_default,
+  $enabled                              = true,
+  $manage_service                       = true,
+  $ensure_package                       = 'present',
+  $workers                              = $::os_workers,
+  $scheduler_driver                     = 'filter_scheduler',
+  $discover_hosts_in_cells_interval     = $::os_service_default,
+  $limit_tenants_to_placement_aggregate = $::os_service_default,
 ) {
 
   include ::nova::deps
@@ -52,9 +59,10 @@ class nova::scheduler(
   }
 
   nova_config {
-    'scheduler/workers':                          value => $workers;
-    'scheduler/driver':                           value => $scheduler_driver;
-    'scheduler/discover_hosts_in_cells_interval': value => $discover_hosts_in_cells_interval;
+    'scheduler/workers':                              value => $workers;
+    'scheduler/driver':                               value => $scheduler_driver;
+    'scheduler/discover_hosts_in_cells_interval':     value => $discover_hosts_in_cells_interval;
+    'scheduler/limit_tenants_to_placement_aggregate': value => $limit_tenants_to_placement_aggregate;
   }
 
 }
