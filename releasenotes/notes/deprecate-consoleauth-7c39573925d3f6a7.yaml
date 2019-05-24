@@ -1,0 +1,14 @@
+---
+upgrade:
+  - |
+    The nova-consoleauth service is now deprecated and not deployed.
+    This means the nova::consoleauth has no effect now and does not manage
+    the package or service for consoleauth. Deployments should stop this service
+    and remove the package if it's deployed.
+deprecations:
+  - |
+    The nova-consoleauth service is deprecated. The nova::consoleauth class
+    has no effect now and will be removed in the next release.
+  - |
+    The nova::upgrade_level_consoleauth parameter is deprecated, has no effect
+    and will be removed in the next release.

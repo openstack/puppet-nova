@@ -16,7 +16,6 @@ class nova::params {
       $python_package_name               = "python${pyvers}-nova"
       $compute_package_name              = 'openstack-nova-compute'
       $conductor_package_name            = 'openstack-nova-conductor'
-      $consoleauth_package_name          = 'openstack-nova-console'
       $doc_package_name                  = 'openstack-nova-doc'
       $libvirt_package_name              = 'libvirt'
       $libvirt_guests_package_name       = 'libvirt-client'
@@ -34,7 +33,6 @@ class nova::params {
       $api_service_name                  = 'openstack-nova-api'
       $compute_service_name              = 'openstack-nova-compute'
       $conductor_service_name            = 'openstack-nova-conductor'
-      $consoleauth_service_name          = 'openstack-nova-consoleauth'
       $libvirt_service_name              = 'libvirtd'
       $libvirt_guests_service_name       = 'libvirt-guests'
       $virtlock_service_name             = 'virtlockd'
@@ -81,7 +79,6 @@ class nova::params {
       $python_package_name               = "python${pyvers}-nova"
       $compute_package_name              = 'nova-compute'
       $conductor_package_name            = 'nova-conductor'
-      $consoleauth_package_name          = 'nova-consoleauth'
       $doc_package_name                  = 'nova-doc'
       if ($::operatingsystem == 'Debian') and (versioncmp($::operatingsystemmajrelease, '9') >= 0 ) {
         $libvirt_package_name            = 'libvirt-daemon-system'
@@ -97,7 +94,6 @@ class nova::params {
       $api_service_name                  = 'nova-api'
       $compute_service_name              = 'nova-compute'
       $conductor_service_name            = 'nova-conductor'
-      $consoleauth_service_name          = 'nova-consoleauth'
       $network_service_name              = 'nova-network'
       $scheduler_service_name            = 'nova-scheduler'
       $vncproxy_service_name             = 'nova-novncproxy'

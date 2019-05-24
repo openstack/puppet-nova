@@ -5,6 +5,8 @@
 # The consoleauth service is required for vncproxy auth
 # for Horizon
 #
+# DEPRECATED!
+#
 # === Parameters
 #
 # [*enabled*]
@@ -25,15 +27,5 @@ class nova::consoleauth(
   $ensure_package = 'present'
 ) {
 
-  include ::nova::deps
-  include ::nova::params
-
-  nova::generic_service { 'consoleauth':
-    enabled        => $enabled,
-    manage_service => $manage_service,
-    package_name   => $::nova::params::consoleauth_package_name,
-    service_name   => $::nova::params::consoleauth_service_name,
-    ensure_package => $ensure_package,
-  }
-
+  warning('nova::consoleauth is deprecated and has no effect')
 }

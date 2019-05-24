@@ -340,10 +340,6 @@
 #  (optional) Sets a version cap for messages sent to console services
 #  Defaults to $::os_service_default
 #
-# [*upgrade_level_consoleauth*]
-#  (optional) Sets a version cap for messages sent to consoleauth services
-#  Defaults to $::os_service_default
-#
 # [*upgrade_level_intercell*]
 #  (optional) Sets a version cap for messages sent between cells services
 #  Defaults to $::os_service_default
@@ -411,6 +407,10 @@
 # [*notify_on_api_faults*]
 #   (optional) If set, send api.fault notifications on caught
 #   exceptions in the API service
+#   Defaults to undef
+#
+# [*upgrade_level_consoleauth*]
+#   (optional) Sets a version cap for messages sent to consoleauth services
 #   Defaults to undef
 #
 class nova(
@@ -492,7 +492,6 @@ class nova(
   $upgrade_level_compute                  = $::os_service_default,
   $upgrade_level_conductor                = $::os_service_default,
   $upgrade_level_console                  = $::os_service_default,
-  $upgrade_level_consoleauth              = $::os_service_default,
   $upgrade_level_intercell                = $::os_service_default,
   $upgrade_level_network                  = $::os_service_default,
   $upgrade_level_scheduler                = $::os_service_default,
@@ -506,6 +505,7 @@ class nova(
   $notify_api_faults                      = undef,
   $image_service                          = undef,
   $notify_on_api_faults                   = undef,
+  $upgrade_level_consoleauth              = undef,
 ) inherits nova::params {
 
   include ::nova::deps
@@ -524,6 +524,10 @@ class nova(
 
   if $notify_on_api_faults {
     warning('The notify_on_api_faults parameter is deprecated.')
+  }
+
+  if $upgrade_level_consoleauth {
+    warning('The nova::upgrade_level_consoleauth parameter is deprecated and has no effect')
   }
 
   if $image_service {
@@ -738,7 +742,6 @@ but should be one of: ssh-rsa, ssh-dsa, ssh-ecdsa.")
     'upgrade_levels/compute':     value => $upgrade_level_compute;
     'upgrade_levels/conductor':   value => $upgrade_level_conductor;
     'upgrade_levels/console':     value => $upgrade_level_console;
-    'upgrade_levels/consoleauth': value => $upgrade_level_consoleauth;
     'upgrade_levels/intercell':   value => $upgrade_level_intercell;
     'upgrade_levels/network':     value => $upgrade_level_network;
     'upgrade_levels/scheduler':   value => $upgrade_level_scheduler;

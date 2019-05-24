@@ -18,7 +18,6 @@
 #
 # sudo pcs resource create nova_api_service lsb:openstack-nova-api
 # sudo pcs resource create nova_conductor_service lsb:openstack-nova-conductor
-# sudo pcs resource create nova_consoleauth_service lsb:openstack-nova-consoleauth
 # sudo pcs resource create nova_novncproxy_service lsb:openstack-nova-novncproxy
 # sudo pcs resource create nova_scheduler_service lsb:openstack-nova-scheduler
 #
@@ -34,11 +33,6 @@ class { '::nova::api':
 }
 
 class { '::nova::conductor':
-  enabled        => false,
-  manage_service => false,
-}
-
-class { '::nova::consoleauth':
   enabled        => false,
   manage_service => false,
 }
