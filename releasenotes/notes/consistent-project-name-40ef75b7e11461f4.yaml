@@ -1,0 +1,5 @@
+---
+upgrade:
+  - |
+    The default value for nova::metadata::novajoin::api::project_name has
+    been changed from 'service' to 'services'.
