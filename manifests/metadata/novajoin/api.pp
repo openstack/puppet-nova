@@ -86,7 +86,7 @@
 #
 # [*project_name*]
 #   (optional) Project name (for novajoin auth).
-#   Defaults to 'service'
+#   Defaults to 'services'
 #
 # [*user_domain_id*]
 #   (optional) Domain for novajoin user.
@@ -122,7 +122,7 @@ class nova::metadata::novajoin::api (
   $service_password          = undef,
   $service_user              = 'novajoin',
   $project_domain_name       = 'default',
-  $project_name              = 'service',
+  $project_name              = 'services',
   $user_domain_id            = 'default',
   $configure_kerberos        = false,
   $ipa_realm                 = undef,
