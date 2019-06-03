@@ -75,26 +75,26 @@
 #   Time period must be hour, day, month or year
 #   Defaults to 'month'
 #
-#  [*force_raw_images*]
+# [*force_raw_images*]
 #   (optional) Force backing images to raw format.
 #   Defaults to true
 #
-#  [*reserved_host_memory*]
+# [*reserved_host_memory*]
 #   Reserved host memory
 #   The amount of memory in MB reserved for the host.
 #   Defaults to '512'
 #
-#  [*config_drive_format*]
+# [*config_drive_format*]
 #   (optional) Config drive format. One of iso9660 (default) or vfat
 #   Defaults to undef
 #
-#  [*allow_resize_to_same_host*]
+# [*allow_resize_to_same_host*]
 #   (optional) Allow destination machine to match source for resize.
 #   Useful when testing in single-host environments. Note that this
 #   can also be set in the api.pp class.
 #   Defaults to false
 #
-#  [*resize_confirm_window*]
+# [*resize_confirm_window*]
 #   (optional) Automatically confirm resizes after N seconds.
 #   Resize functionality will save the existing server before resizing.
 #   After the resize completes, user is requested to confirm the resize.
@@ -105,18 +105,18 @@
 #   server is in resized state longer than that time.
 #   Defaults to $::os_service_default
 #
-#  [*vcpu_pin_set*]
+# [*vcpu_pin_set*]
 #   (optional) A list or range of physical CPU cores to reserve
 #   for virtual machine processes
 #   Defaults to $::os_service_default
 #
-#  [*cpu_shared_set*]
+# [*cpu_shared_set*]
 #   (optional) A list or range of physical CPU cores to reserve
 #   for best-effort guest vCPU resources (e.g. emulator threads in
 #   libvirt/QEMU)
 #   Defaults to $::os_service_default
 #
-#  [*resume_guests_state_on_host_boot*]
+# [*resume_guests_state_on_host_boot*]
 #   (optional) This option specifies whether to start guests that were running before the
 #   host rebooted. It ensures that all of the instances on a Nova compute node
 #   resume their state each time the compute node boots or restarts.
@@ -162,20 +162,24 @@
 #   (optional) Whether to verify image signatures. (boolean value)
 #   Defaults to $::os_service_default
 #
-#  [*reserved_huge_pages*]
-#    (optional) Number of huge memory pages to reserved per NUMA host cell.
-#    Defaults to $::os_service_default
-#    Accepts a string e.g "node:0,size:1GB,count:4" or a list of strings e.g:
-#    ["node:0,size:1GB,count:4", "node:1,size:1GB,count:4"]
+# [*reserved_huge_pages*]
+#   (optional) Number of huge memory pages to reserved per NUMA host cell.
+#   Defaults to $::os_service_default
+#   Accepts a string e.g "node:0,size:1GB,count:4" or a list of strings e.g:
+#   ["node:0,size:1GB,count:4", "node:1,size:1GB,count:4"]
 #
-#  [*neutron_physnets_numa_nodes_mapping*]
-#    (optional) Map of physnet name as key and list of NUMA nodes as value.
-#    Defaults to {}
+# [*neutron_physnets_numa_nodes_mapping*]
+#   (optional) Map of physnet name as key and list of NUMA nodes as value.
+#   Defaults to {}
 #
-#  [*neutron_tunnel_numa_nodes*]
-#    (optional) List of NUMA nodes to configure NUMA affinity for all
-#    tunneled networks.
-#    Defaults to []
+# [*neutron_tunnel_numa_nodes*]
+#   (optional) List of NUMA nodes to configure NUMA affinity for all
+#   tunneled networks.
+#   Defaults to []
+#
+# [*live_migration_wait_for_vif_plug*]
+#   (optional) whether to wait for ``network-vif-plugged`` events before starting guest transfer
+#   Defaults to $::os_service_default
 #
 # DEPRECATED PARAMETERS
 #
@@ -221,6 +225,7 @@ class nova::compute (
   $reserved_huge_pages                         = $::os_service_default,
   $neutron_physnets_numa_nodes_mapping         = {},
   $neutron_tunnel_numa_nodes                   = [],
+  $live_migration_wait_for_vif_plug            = $::os_service_default,
   # DEPRECATED PARAMETERS
   $vnc_keymap                                  = undef,
 ) {
@@ -308,6 +313,7 @@ class nova::compute (
     'DEFAULT/sync_power_state_interval':         value => $sync_power_state_interval;
     'compute/consecutive_build_service_disable_threshold':
       value => $consecutive_build_service_disable_threshold;
+    'compute/live_migration_wait_for_vif_plug':  value => $live_migration_wait_for_vif_plug;
   }
 
   ensure_resource('nova_config', 'DEFAULT/allow_resize_to_same_host', { value => $allow_resize_to_same_host })
