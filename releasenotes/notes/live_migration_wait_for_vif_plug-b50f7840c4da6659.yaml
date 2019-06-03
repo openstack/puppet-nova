@@ -1,0 +1,6 @@
+---
+features:
+  - |
+    Add parameter `live_migration_wait_for_vif_plug` to
+    whether to wait for ``network-vif-plugged`` events before
+    starting guest transfer.
