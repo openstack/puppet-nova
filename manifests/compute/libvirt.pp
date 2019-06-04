@@ -162,6 +162,13 @@
 #   nfs man page for details.
 #   Defaults to $::os_service_default
 #
+# [*num_pcie_ports*]
+#  (optional) The number of PCIe ports an instance will get.
+#  Libvirt allows a custom number of PCIe ports (pcie-root-port controllers) a
+#  target instance will get. Some will be used by default, rest will be available
+#  for hotplug use.
+#  Defaults to $::os_service_default
+#
 class nova::compute::libvirt (
   $ensure_package                             = 'present',
   $libvirt_virt_type                          = 'kvm',
@@ -193,6 +200,7 @@ class nova::compute::libvirt (
   $file_backed_memory                         = undef,
   $volume_use_multipath                       = $::os_service_default,
   $nfs_mount_options                          = $::os_service_default,
+  $num_pcie_ports                             = $::os_service_default,
 ) inherits nova::params {
 
   include ::nova::deps
@@ -277,6 +285,7 @@ class nova::compute::libvirt (
     'libvirt/file_backed_memory':    value => $file_backed_memory;
     'libvirt/volume_use_multipath':  value => $volume_use_multipath;
     'libvirt/nfs_mount_options':     value => $nfs_mount_options;
+    'libvirt/num_pcie_ports':        value => $num_pcie_ports;
   }
 
   # cpu_model param is only valid if cpu_mode=custom
