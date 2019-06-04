@@ -66,6 +66,7 @@ describe 'nova::compute::libvirt' do
       it { is_expected.to contain_nova_config('libvirt/tx_queue_size').with_value('<SERVICE DEFAULT>')}
       it { is_expected.to contain_nova_config('libvirt/volume_use_multipath').with_value('<SERVICE DEFAULT>')}
       it { is_expected.to contain_nova_config('libvirt/nfs_mount_options').with_ensure('<SERVICE DEFAULT>')}
+      it { is_expected.to contain_nova_config('libvirt/num_pcie_ports').with_ensure('<SERVICE DEFAULT>')}
     end
 
     describe 'with params' do
@@ -93,7 +94,8 @@ describe 'nova::compute::libvirt' do
           :rx_queue_size                              => 512,
           :tx_queue_size                              => 1024,
           :volume_use_multipath                       => false,
-          :nfs_mount_options                          => 'rw,intr,nolock'
+          :nfs_mount_options                          => 'rw,intr,nolock',
+          :num_pcie_ports                             => 16
         }
       end
 
@@ -121,6 +123,7 @@ describe 'nova::compute::libvirt' do
       it { is_expected.to contain_nova_config('libvirt/tx_queue_size').with_value(1024)}
       it { is_expected.to contain_nova_config('libvirt/volume_use_multipath').with_value(false)}
       it { is_expected.to contain_nova_config('libvirt/nfs_mount_options').with_value('rw,intr,nolock')}
+      it { is_expected.to contain_nova_config('libvirt/num_pcie_ports').with_value(16)}
       it {
         is_expected.to contain_service('libvirt').with(
           :name     => 'custom_service',
