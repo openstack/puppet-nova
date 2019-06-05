@@ -1,0 +1,6 @@
+---
+features:
+  - |
+    Add parmeter `query_placement_for_image_type_support` that causes the
+    scheduler to ask placement only for compute hosts that support the
+    `disk_format` of the image used in the request.
