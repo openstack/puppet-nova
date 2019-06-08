@@ -57,15 +57,6 @@
 #   (optional) Whether to use virtio for the nic driver of VMs
 #   Defaults to false
 #
-# [*neutron_enabled*]
-#   (optional) Whether to use Neutron for networking of VMs
-#   Defaults to true
-#
-# [*install_bridge_utils*]
-#   (optional) Whether to install the bridge-utils package or not.
-#   Applicable only for cases when Neutron was disabled
-#   Defaults to true
-#
 # [*instance_usage_audit*]
 #   (optional) Generate periodic compute.instance.exists notifications.
 #   Defaults to false
@@ -187,6 +178,15 @@
 #   (optional) The keymap to use with VNC (ls -alh /usr/share/qemu/keymaps to list available keymaps)
 #   Defaults to undef
 #
+# [*neutron_enabled*]
+#   (optional) Whether to use Neutron for networking of VMs
+#   Defaults to undef
+#
+# [*install_bridge_utils*]
+#   (optional) Whether to install the bridge-utils package or not.
+#   Applicable only for cases when Neutron was disabled
+#   Defaults to undef
+#
 class nova::compute (
   $enabled                                     = true,
   $manage_service                              = true,
@@ -200,8 +200,6 @@ class nova::compute (
   $vncproxy_path                               = '/vnc_auto.html',
   $force_config_drive                          = false,
   $virtio_nic                                  = false,
-  $neutron_enabled                             = true,
-  $install_bridge_utils                        = true,
   $instance_usage_audit                        = false,
   $instance_usage_audit_period                 = 'month',
   $force_raw_images                            = true,
@@ -228,6 +226,8 @@ class nova::compute (
   $live_migration_wait_for_vif_plug            = $::os_service_default,
   # DEPRECATED PARAMETERS
   $vnc_keymap                                  = undef,
+  $neutron_enabled                             = undef,
+  $install_bridge_utils                        = undef,
 ) {
 
   include ::nova::deps
@@ -242,6 +242,14 @@ class nova::compute (
 
   if $vnc_keymap {
     warning('vnc_keymap parameter is deprecated, has no effect and will be removed in the future.')
+  }
+
+  if $neutron_enabled {
+    warning('neutron_enabled is deprecated and has no effect, was only used for install_bridge_utils')
+  }
+
+  if $install_bridge_utils {
+    warning('install_bridge_utils is deprecated and has no effect')
   }
 
   if ($vnc_enabled and $spice_enabled) {
@@ -333,14 +341,6 @@ class nova::compute (
   nova_config {
     'vnc/enabled':   value => $vnc_enabled;
     'spice/enabled': value => $spice_enabled;
-  }
-
-  if $neutron_enabled != true and $install_bridge_utils {
-    # Install bridge-utils if we use nova-network
-    package { 'bridge-utils':
-      ensure => present,
-      tag    => ['openstack', 'nova-support-package'],
-    }
   }
 
   nova::generic_service { 'compute':
