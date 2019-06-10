@@ -27,6 +27,7 @@ describe 'nova::metadata' do
         )
         is_expected.to contain_nova_config('api/metadata_cache_expiration').with('value' => '<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('api/local_metadata_per_cell').with('value' => '<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('api/dhcp_domain').with('value' => '<SERVICE DEFAULT>')
       end
 
       it 'unconfigures neutron_metadata proxy' do
@@ -42,6 +43,7 @@ describe 'nova::metadata' do
           :enable_proxy_headers_parsing                => true,
           :local_metadata_per_cell                     => true,
           :metadata_cache_expiration                   => 15,
+          :dhcp_domain                                 => 'foo',
           :vendordata_jsonfile_path                    => '/tmp',
           :vendordata_providers                        => ['StaticJSON', 'DynamicJSON'],
           :vendordata_dynamic_targets                  => ['join@http://127.0.0.1:9999/v1/'],
@@ -68,6 +70,7 @@ describe 'nova::metadata' do
         is_expected.to contain_nova_config('api/vendordata_dynamic_connect_timeout').with('value' => '30')
         is_expected.to contain_nova_config('api/vendordata_dynamic_read_timeout').with('value' => '30')
         is_expected.to contain_nova_config('api/vendordata_dynamic_failure_fatal').with('value' => false)
+        is_expected.to contain_nova_config('api/dhcp_domain').with('value' => 'foo')
         is_expected.to contain_nova_config('neutron/service_metadata_proxy').with('value' => true)
         is_expected.to contain_nova_config('neutron/metadata_proxy_shared_secret').with('value' => 'secrete').with_secret(true)
         is_expected.to contain_oslo__middleware('nova_config').with(

@@ -1,0 +1,6 @@
+---
+features:
+  - |
+    `nova::metadata::dhcp_domain` has been added back to configure
+    api/dhcp_domain.  `nova::network::neutron::dhcp_domain` has been removed
+    and the metadata version of the variable should be used instead.

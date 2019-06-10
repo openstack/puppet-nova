@@ -105,7 +105,7 @@ describe 'nova::network::neutron' do
       end
 
       it 'configures neutron endpoint in nova.conf' do
-        should contain_nova_config('DEFAULT/dhcp_domain').with_value(params[:dhcp_domain])
+        should contain_nova_config('api/dhcp_domain').with_value(params[:dhcp_domain])
         should contain_nova_config('neutron/url').with_value(params[:neutron_url])
         should contain_nova_config('neutron/timeout').with_value(params[:neutron_url_timeout])
       end

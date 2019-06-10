@@ -33,6 +33,10 @@
 #   service.
 #   Defaults to $::os_service_default
 #
+# [*dhcp_domain*]
+#   (optional) domain to use for building the hostnames
+#   Defaults to $::os_service_default
+#
 # DEPRECATED
 #
 # [*vendordata_jsonfile_path*]
@@ -107,6 +111,7 @@ class nova::metadata(
   $enable_proxy_headers_parsing                = $::os_service_default,
   $metadata_cache_expiration                   = $::os_service_default,
   $local_metadata_per_cell                     = $::os_service_default,
+  $dhcp_domain                                 = $::os_service_default,
   # DEPRECATED PARAMETERS
   $vendordata_jsonfile_path                    = undef,
   $vendordata_providers                        = undef,
@@ -147,6 +152,17 @@ class nova::metadata(
   class { '::nova::vendordata':
     vendordata_caller => 'metadata',
   }
+
+  # TODO(mwhahaha): backwards compatibility until we drop it from
+  # nova::network::network
+  if defined('$::nova::neutron::dhcp_domain') and $::nova::neutron::dhcp_domain != undef {
+    $dhcp_domain_real = $::nova::neutron::dhcp_domain
+  } else {
+    $dhcp_domain_real = $dhcp_domain
+  }
+  ensure_resource('nova_config', 'api/dhcp_domain', {
+    value => $dhcp_domain_real
+  })
 
   nova_config {
     'DEFAULT/enabled_apis':                        value => $enabled_apis;

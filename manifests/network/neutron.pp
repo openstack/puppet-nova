@@ -139,13 +139,17 @@ class nova::network::neutron (
     warning('nova::network::neutron::firewall_driver is deprecated and will be removed in a future release')
   }
 
-  if $dhcp_domain {
-    warning('nova::network::neutron::dhcp_domain is deprecated and will be removed in a future release')
+
+  # TODO(mwhahaha): remove me when tripleo switches to use the metadata version
+  # of dhcp_domain
+  if $dhcp_domain != undef {
+    ensure_resource('nova_config', 'api/dhcp_domain', {
+      value => $dhcp_domain
+    })
   }
 
   # TODO(tobias-urdin): Remove these in the T release.
   nova_config {
-    'DEFAULT/dhcp_domain':     value => $dhcp_domain;
     'DEFAULT/firewall_driver': value => $firewall_driver;
   }
 

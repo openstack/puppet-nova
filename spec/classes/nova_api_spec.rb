@@ -101,8 +101,8 @@ describe 'nova::api' do
           :vendordata_jsonfile_path                    => '/tmp',
           :vendordata_providers                        => ['StaticJSON', 'DynamicJSON'],
           :vendordata_dynamic_targets                  => ['join@http://127.0.0.1:9999/v1/'],
-          :vendordata_dynamic_connect_timeout          => 30, 
-          :vendordata_dynamic_read_timeout             => 30, 
+          :vendordata_dynamic_connect_timeout          => 30,
+          :vendordata_dynamic_read_timeout             => 30,
           :vendordata_dynamic_failure_fatal            => false,
           :vendordata_dynamic_auth_auth_type           => 'password',
           :vendordata_dynamic_auth_auth_url            => 'http://127.0.0.1:5000',
@@ -111,7 +111,7 @@ describe 'nova::api' do
           :vendordata_dynamic_auth_project_domain_name => 'Default',
           :vendordata_dynamic_auth_project_name        => 'project',
           :vendordata_dynamic_auth_user_domain_name    => 'Default',
-          :vendordata_dynamic_auth_username            => 'user',          
+          :vendordata_dynamic_auth_username            => 'user',
         })
       end
 
