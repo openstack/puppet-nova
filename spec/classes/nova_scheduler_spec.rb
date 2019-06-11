@@ -22,6 +22,7 @@ describe 'nova::scheduler' do
     it { is_expected.to contain_nova_config('scheduler/workers').with_value(4) }
     it { is_expected.to contain_nova_config('scheduler/driver').with_value('filter_scheduler') }
     it { is_expected.to contain_nova_config('scheduler/discover_hosts_in_cells_interval').with_value('<SERVICE DEFAULT>') }
+    it { is_expected.to contain_nova_config('scheduler/query_placement_for_image_type_support').with_value('<SERVICE DEFAULT>') }
 
     context 'with manage_service as false' do
       let :params do
@@ -64,6 +65,14 @@ describe 'nova::scheduler' do
       end
 
       it { is_expected.to contain_nova_config('scheduler/discover_hosts_in_cells_interval').with_value(15) }
+    end
+
+    context 'with query_placement_for_image_type_support' do
+      let :params do
+        { :query_placement_for_image_type_support => true }
+      end
+
+      it { is_expected.to contain_nova_config('scheduler/query_placement_for_image_type_support').with_value(true) }
     end
 
     context 'with default database parameters' do
