@@ -227,21 +227,6 @@ describe 'nova::compute' do
       end
     end
 
-    context 'with neutron_enabled set to false' do
-      let :params do
-        { :neutron_enabled => false }
-      end
-
-      it 'installs bridge-utils package for nova-network' do
-        is_expected.to contain_package('bridge-utils').with(
-          :ensure => 'present',
-        )
-        is_expected.to contain_package('bridge-utils').that_requires('Anchor[nova::install::begin]')
-        is_expected.to contain_package('bridge-utils').that_comes_before('Anchor[nova::install::end]')
-      end
-
-    end
-
     context 'when neutron_physnets_numa_nodes_mapping and neutron_tunnel_numa_nodes are empty' do
       let :params do
         { :neutron_physnets_numa_nodes_mapping => {},
@@ -262,19 +247,6 @@ describe 'nova::compute' do
       it { is_expected.to contain_nova_config('neutron_physnet_foo/numa_nodes').with(:value => '0,1') }
       it { is_expected.to contain_nova_config('neutron_physnet_bar/numa_nodes').with(:value => '0') }
       it { is_expected.to contain_nova_config('neutron_tunnel/numa_nodes').with(:value => '1') }
-    end
-
-    context 'with install_bridge_utils set to false' do
-      let :params do
-        { :install_bridge_utils => false }
-      end
-
-      it 'does not install bridge-utils package for nova-network' do
-        is_expected.to_not contain_package('bridge-utils').with(
-          :ensure => 'present',
-        )
-      end
-
     end
 
     context 'with vnc_enabled set to false and spice_enabled set to true' do

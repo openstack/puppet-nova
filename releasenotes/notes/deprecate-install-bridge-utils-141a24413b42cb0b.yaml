@@ -1,0 +1,13 @@
+---
+upgrade:
+  - |
+    The neutron_enabled and install_bridge_utils parameters in nova::compute is
+    deprecated and has no effect. The bridge-utils package is no longer maintained
+    by using the install_bridge_utils parameter.
+deprecations:
+  - |
+    The neutron_enabled parameter in nova::compute is deprecated, it had no effect
+    except for in conjunction with install_bridge_utils which is also deprecated.
+  - |
+    The install_bridge_utils parameter in nova::compute is deprecated and has no
+    effect. The bridge-utils package is now not managed by the nova::compute class.
