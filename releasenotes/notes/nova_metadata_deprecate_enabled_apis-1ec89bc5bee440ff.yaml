@@ -1,0 +1,9 @@
+---
+fixes:
+  - |
+    enabled_apis won't get set in nova::api when
+    nova_metadata_wsgi_enabled == true.
+    But the enabled_apis list get also modified for this case, so
+    we need to move setting the config outside the conditional.
+    Since the config is right now also set in nova::metadata this
+    deprecates it in nova::metadata to only use nova::api.
