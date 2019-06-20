@@ -1,0 +1,5 @@
+---
+features:
+  - |
+    New class, nova::keystone::service_user, is introduced to configure
+    parameters to service token feature.
