@@ -39,6 +39,10 @@
 #   (Optional) The tenant to use for the nova service user
 #   Defaults to 'services'
 #
+# [*roles*]
+#   (Optional) List of roles assigned to the nova service user
+#   Defaults to ['admin']
+#
 # [*email*]
 #   (Optional) The email address for the nova service user
 #   Defaults to 'nova@localhost'
@@ -62,6 +66,7 @@ class nova::keystone::auth(
   $service_description     = 'Openstack Compute Service',
   $region                  = 'RegionOne',
   $tenant                  = 'services',
+  $roles                   = ['admin'],
   $email                   = 'nova@localhost',
   $public_url              = 'http://127.0.0.1:8774/v2.1',
   $internal_url            = 'http://127.0.0.1:8774/v2.1',
@@ -90,6 +95,7 @@ class nova::keystone::auth(
     password            => $password,
     email               => $email,
     tenant              => $tenant,
+    roles               => $roles,
     public_url          => $public_url,
     admin_url           => $admin_url,
     internal_url        => $internal_url,

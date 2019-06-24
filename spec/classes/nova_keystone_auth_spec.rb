@@ -46,9 +46,20 @@ describe 'nova::keystone::auth' do
       )}
     end
 
+    context 'when overriding roles' do
+      before do
+        params.merge!( :roles => ['admin', 'service'] )
+      end
+
+      it { should contain_keystone_user_role('nova@services').with(
+        :ensure => 'present',
+        :roles  => ['admin', 'service']
+      )}
+    end
+
     context 'when setting auth name' do
       before do
-         params.merge!( :auth_name => 'foo' )
+        params.merge!( :auth_name => 'foo' )
       end
 
       it { should contain_keystone_user('foo').with(

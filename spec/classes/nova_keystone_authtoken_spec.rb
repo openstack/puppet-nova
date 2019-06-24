@@ -42,6 +42,7 @@ describe 'nova::keystone::authtoken' do
         is_expected.to contain_nova_config('keystone_authtoken/memcached_servers').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('keystone_authtoken/region_name').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('keystone_authtoken/token_cache_time').with_value('<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('keystone_authtoken/service_token_roles').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('keystone_authtoken/service_token_roles_required').with_value('<SERVICE DEFAULT>')
       end
     end
@@ -83,7 +84,8 @@ describe 'nova::keystone::authtoken' do
           :manage_memcache_package              => true,
           :region_name                          => 'region2',
           :token_cache_time                     => '301',
-          :service_token_roles_required         => false,
+          :service_token_roles                  => ['service'],
+          :service_token_roles_required         => true,
         })
       end
 
@@ -119,6 +121,7 @@ describe 'nova::keystone::authtoken' do
         is_expected.to contain_nova_config('keystone_authtoken/memcached_servers').with_value('memcached01:11211,memcached02:11211')
         is_expected.to contain_nova_config('keystone_authtoken/region_name').with_value(params[:region_name])
         is_expected.to contain_nova_config('keystone_authtoken/token_cache_time').with_value(params[:token_cache_time])
+        is_expected.to contain_nova_config('keystone_authtoken/service_token_roles').with_value(params[:service_token_roles])
         is_expected.to contain_nova_config('keystone_authtoken/service_token_roles_required').with_value(params[:service_token_roles_required])
       end
 
