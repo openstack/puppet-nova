@@ -101,7 +101,7 @@ class nova::cron::purge_shadow_tables (
   $cron_cmd = 'nova-manage db purge'
 
   cron { 'nova-manage db purge':
-    command     => "${sleep}${cron_cmd} --before `date --date='today - ${age} days' +%D` ${verbose_real} \
+    command     => "${sleep}${cron_cmd} --before `date --date='today - ${age} days' +\\%D` ${verbose_real} \
                     ${all_cells_real} >>${destination} 2>&1",
     environment => 'PATH=/bin:/usr/bin:/usr/sbin SHELL=/bin/sh',
     user        => pick($user, $::nova::params::nova_user),
