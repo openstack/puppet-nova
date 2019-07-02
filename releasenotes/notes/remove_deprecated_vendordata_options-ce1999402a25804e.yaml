@@ -1,0 +1,6 @@
+---
+deprecations:
+  - |
+    The deprecated ``vendordata*`` config option has been
+    removed from api and metadata class. Use ::nova::vendordata
+    instead.

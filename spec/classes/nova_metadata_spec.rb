@@ -43,46 +43,18 @@ describe 'nova::metadata' do
           :local_metadata_per_cell                     => true,
           :metadata_cache_expiration                   => 15,
           :dhcp_domain                                 => 'foo',
-          :vendordata_jsonfile_path                    => '/tmp',
-          :vendordata_providers                        => ['StaticJSON', 'DynamicJSON'],
-          :vendordata_dynamic_targets                  => ['join@http://127.0.0.1:9999/v1/'],
-          :vendordata_dynamic_connect_timeout          => 30,
-          :vendordata_dynamic_read_timeout             => 30,
-          :vendordata_dynamic_failure_fatal            => false,
-          :vendordata_dynamic_auth_auth_type           => 'password',
-          :vendordata_dynamic_auth_auth_url            => 'http://127.0.0.1:5000',
-          :vendordata_dynamic_auth_os_region_name      => 'RegionOne',
-          :vendordata_dynamic_auth_password            => 'secrete',
-          :vendordata_dynamic_auth_project_domain_name => 'Default',
-          :vendordata_dynamic_auth_project_name        => 'project',
-          :vendordata_dynamic_auth_user_domain_name    => 'Default',
-          :vendordata_dynamic_auth_username            => 'user',
         })
       end
 
       it 'configures various stuff' do
         is_expected.to contain_nova_config('api/local_metadata_per_cell').with('value' => true)
         is_expected.to contain_nova_config('api/metadata_cache_expiration').with('value' => '15')
-        is_expected.to contain_nova_config('api/vendordata_jsonfile_path').with('value' => '/tmp')
-        is_expected.to contain_nova_config('api/vendordata_providers').with('value' => 'StaticJSON,DynamicJSON')
-        is_expected.to contain_nova_config('api/vendordata_dynamic_targets').with('value' => 'join@http://127.0.0.1:9999/v1/')
-        is_expected.to contain_nova_config('api/vendordata_dynamic_connect_timeout').with('value' => '30')
-        is_expected.to contain_nova_config('api/vendordata_dynamic_read_timeout').with('value' => '30')
-        is_expected.to contain_nova_config('api/vendordata_dynamic_failure_fatal').with('value' => false)
         is_expected.to contain_nova_config('api/dhcp_domain').with('value' => 'foo')
         is_expected.to contain_nova_config('neutron/service_metadata_proxy').with('value' => true)
         is_expected.to contain_nova_config('neutron/metadata_proxy_shared_secret').with('value' => 'secrete').with_secret(true)
         is_expected.to contain_oslo__middleware('nova_config').with(
           :enable_proxy_headers_parsing => true,
         )
-        is_expected.to contain_nova_config('vendordata_dynamic_auth/auth_type').with('value' => 'password')
-        is_expected.to contain_nova_config('vendordata_dynamic_auth/auth_url').with('value' => 'http://127.0.0.1:5000')
-        is_expected.to contain_nova_config('vendordata_dynamic_auth/os_region_name').with('value' => 'RegionOne')
-        is_expected.to contain_nova_config('vendordata_dynamic_auth/password').with('value' => 'secrete').with_secret(true)
-        is_expected.to contain_nova_config('vendordata_dynamic_auth/project_domain_name').with('value' => 'Default')
-        is_expected.to contain_nova_config('vendordata_dynamic_auth/project_name').with('value' => 'project')
-        is_expected.to contain_nova_config('vendordata_dynamic_auth/user_domain_name').with('value' => 'Default')
-        is_expected.to contain_nova_config('vendordata_dynamic_auth/username').with('value' => 'user')
       end
     end
 
