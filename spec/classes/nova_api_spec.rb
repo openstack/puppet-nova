@@ -55,7 +55,6 @@ describe 'nova::api' do
         is_expected.to contain_oslo__middleware('nova_config').with(
           :enable_proxy_headers_parsing => '<SERVICE DEFAULT>',
         )
-        is_expected.to contain_nova_config('api/metadata_cache_expiration').with('value' => '<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('api/max_limit').with('value' => '<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('api/compute_link_prefix').with('value' => '<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('api/glance_link_prefix').with('value' => '<SERVICE DEFAULT>')
@@ -65,11 +64,6 @@ describe 'nova::api' do
         is_expected.to contain_nova_config('api/enable_instance_password').with('value' => '<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('DEFAULT/password_length').with('value' => '<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('DEFAULT/allow_resize_to_same_host').with('value' => false)
-      end
-
-      it 'unconfigures neutron_metadata proxy' do
-        is_expected.to contain_nova_config('neutron/service_metadata_proxy').with(:value => false)
-        is_expected.to contain_nova_config('neutron/metadata_proxy_shared_secret').with(:ensure => 'absent')
       end
     end
 
@@ -84,11 +78,9 @@ describe 'nova::api' do
           :osapi_compute_listen_port                   => 8874,
           :use_forwarded_for                           => false,
           :ratelimits                                  => '(GET, "*", .*, 100, MINUTE);(POST, "*", .*, 200, MINUTE)',
-          :neutron_metadata_proxy_shared_secret        => 'secrete',
           :osapi_compute_workers                       => 1,
           :metadata_workers                            => 2,
           :enable_proxy_headers_parsing                => true,
-          :metadata_cache_expiration                   => 15,
           :max_limit                                   => 1000,
           :compute_link_prefix                         => 'https://10.0.0.1:7777/',
           :glance_link_prefix                          => 'https://10.0.0.1:6666/',
@@ -124,12 +116,9 @@ describe 'nova::api' do
         is_expected.to contain_nova_config('api/use_forwarded_for').with('value' => false)
         is_expected.to contain_nova_config('DEFAULT/osapi_compute_workers').with('value' => '1')
         is_expected.to contain_nova_config('DEFAULT/metadata_workers').with('value' => '2')
-        is_expected.to contain_nova_config('api/metadata_cache_expiration').with('value' => '15')
         is_expected.to contain_nova_config('api/max_limit').with('value' => '1000')
         is_expected.to contain_nova_config('api/compute_link_prefix').with('value' => 'https://10.0.0.1:7777/')
         is_expected.to contain_nova_config('api/glance_link_prefix').with('value' => 'https://10.0.0.1:6666/')
-        is_expected.to contain_nova_config('neutron/service_metadata_proxy').with('value' => true)
-        is_expected.to contain_nova_config('neutron/metadata_proxy_shared_secret').with('value' => 'secrete').with_secret(true)
         is_expected.to contain_oslo__middleware('nova_config').with(
           :enable_proxy_headers_parsing => true,
         )
