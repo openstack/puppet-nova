@@ -62,7 +62,7 @@
 # [*memcache_socket_timeout*]
 #   (Optional) Timeout in seconds for every call to a server.
 #   (dogpile.cache.memcache and oslo_cache.memcache_pool backends only).
-#   (integer value)
+#   (floating point value)
 #   Defaults to $::os_service_default
 #
 # [*memcache_pool_maxsize*]
