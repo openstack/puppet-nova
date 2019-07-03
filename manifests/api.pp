@@ -168,14 +168,6 @@
 #   metadata handling from api class.
 #   Defaults to false
 #
-# [*neutron_metadata_proxy_shared_secret*]
-#   (optional) Shared secret to validate proxies Neutron metadata requests
-#   Defaults to undef
-#
-# [*metadata_cache_expiration*]
-#   (optional) This option is the time (in seconds) to cache metadata.
-#   Defaults to $::os_service_default
-#
 # [*fping_path*]
 #   (optional) Full path to fping.
 #   Defaults to undef
@@ -196,7 +188,6 @@ class nova::api(
   $sync_db                                     = true,
   $sync_db_api                                 = true,
   $db_online_data_migrations                   = false,
-  $neutron_metadata_proxy_shared_secret        = undef,
   $ratelimits                                  = undef,
   $ratelimits_factory                          =
     'nova.api.openstack.compute.limits:RateLimitingMiddleware.factory',
@@ -205,7 +196,6 @@ class nova::api(
   $instance_name_template                      = undef,
   $service_name                                = $::nova::params::api_service_name,
   $enable_proxy_headers_parsing                = $::os_service_default,
-  $metadata_cache_expiration                   = $::os_service_default,
   $max_limit                                   = $::os_service_default,
   $compute_link_prefix                         = $::os_service_default,
   $glance_link_prefix                          = $::os_service_default,
@@ -301,20 +291,6 @@ as a standalone service, or httpd for being run by a httpd server")
       'DEFAULT/metadata_workers':                    value => $metadata_workers;
       'DEFAULT/metadata_listen':                     value => $metadata_listen;
       'DEFAULT/metadata_listen_port':                value => $metadata_listen_port;
-      'api/metadata_cache_expiration':               value => $metadata_cache_expiration;
-    }
-
-    if ($neutron_metadata_proxy_shared_secret){
-      nova_config {
-        'neutron/service_metadata_proxy': value => true;
-        'neutron/metadata_proxy_shared_secret':
-          value => $neutron_metadata_proxy_shared_secret, secret => true;
-      }
-    } else {
-      nova_config {
-        'neutron/service_metadata_proxy':       value  => false;
-        'neutron/metadata_proxy_shared_secret': ensure => absent;
-      }
     }
 
     oslo::middleware {'nova_config':

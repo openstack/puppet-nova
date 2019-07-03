@@ -1,0 +1,5 @@
+---
+deprecations:
+  - |
+    Removes deprecated neutron_metadata_proxy_shared_secret and
+    metadata_cache_expiration parameter from nova::api class.
