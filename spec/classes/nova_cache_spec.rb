@@ -38,7 +38,7 @@ describe 'nova::cache' do
           :debug_cache_backend                  => false,
           :memcache_servers                     => ['memcached01:11211', 'memcached02:11211'],
           :memcache_dead_retry                  => '60',
-          :memcache_socket_timeout              => '300',
+          :memcache_socket_timeout              => '300.0',
           :memcache_pool_maxsize                => '10',
           :memcache_pool_unused_timeout         => '120',
           :memcache_pool_connection_get_timeout => '360',
@@ -56,7 +56,7 @@ describe 'nova::cache' do
         is_expected.to contain_nova_config('cache/debug_cache_backend').with_value('false')
         is_expected.to contain_nova_config('cache/memcache_servers').with_value('memcached01:11211,memcached02:11211')
         is_expected.to contain_nova_config('cache/memcache_dead_retry').with_value('60')
-        is_expected.to contain_nova_config('cache/memcache_socket_timeout').with_value('300')
+        is_expected.to contain_nova_config('cache/memcache_socket_timeout').with_value('300.0')
         is_expected.to contain_nova_config('cache/memcache_pool_maxsize').with_value('10')
         is_expected.to contain_nova_config('cache/memcache_pool_unused_timeout').with_value('120')
         is_expected.to contain_nova_config('cache/memcache_pool_connection_get_timeout').with_value('360')
