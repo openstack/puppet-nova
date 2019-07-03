@@ -398,7 +398,6 @@ as a standalone service, or httpd for being run by a httpd server")
     }
 
     nova_config {
-      'DEFAULT/enabled_apis':                        value => join($enabled_apis_real, ',');
       'DEFAULT/metadata_workers':                    value => $metadata_workers;
       'DEFAULT/metadata_listen':                     value => $metadata_listen;
       'DEFAULT/metadata_listen_port':                value => $metadata_listen_port;
@@ -424,6 +423,7 @@ as a standalone service, or httpd for being run by a httpd server")
   }
 
   nova_config {
+    'DEFAULT/enabled_apis':                        value => join($enabled_apis_real, ',');
     'wsgi/api_paste_config':                       value => $api_paste_config;
     'DEFAULT/osapi_compute_listen':                value => $api_bind_address;
     'DEFAULT/osapi_compute_listen_port':           value => $osapi_compute_listen_port;

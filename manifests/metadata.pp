@@ -4,10 +4,6 @@
 #
 # === Parameters
 #
-# [*enabled_apis*]
-#   (optional) A list of apis to enable
-#   Defaults to ['metadata'] in case of wsgi
-#
 # [*neutron_metadata_proxy_shared_secret*]
 #   (optional) Shared secret to validate proxies Neutron metadata requests
 #   Defaults to undef
@@ -38,6 +34,10 @@
 #   Defaults to $::os_service_default
 #
 # DEPRECATED
+#
+#  [*enabled_apis*]
+#   (optional) A list of apis to enable
+#   Defaults to undef.
 #
 # [*vendordata_jsonfile_path*]
 #   (optional) Represent the path to the data file.
@@ -106,13 +106,13 @@
 #   Defaults to undef.
 #
 class nova::metadata(
-  $enabled_apis                                = 'metadata',
   $neutron_metadata_proxy_shared_secret        = undef,
   $enable_proxy_headers_parsing                = $::os_service_default,
   $metadata_cache_expiration                   = $::os_service_default,
   $local_metadata_per_cell                     = $::os_service_default,
   $dhcp_domain                                 = $::os_service_default,
   # DEPRECATED PARAMETERS
+  $enabled_apis                                = undef,
   $vendordata_jsonfile_path                    = undef,
   $vendordata_providers                        = undef,
   $vendordata_dynamic_targets                  = undef,
@@ -153,6 +153,10 @@ class nova::metadata(
     vendordata_caller => 'metadata',
   }
 
+  if $enabled_apis != undef {
+    warning('enabled_apis parameter is deprecated, use nova::compute::enabled_apis instead.')
+  }
+
   # TODO(mwhahaha): backwards compatibility until we drop it from
   # nova::network::network
   if defined('$::nova::neutron::dhcp_domain') and $::nova::neutron::dhcp_domain != undef {
@@ -165,7 +169,6 @@ class nova::metadata(
   })
 
   nova_config {
-    'DEFAULT/enabled_apis':                        value => $enabled_apis;
     'api/metadata_cache_expiration':               value => $metadata_cache_expiration;
     'api/local_metadata_per_cell':                 value => $local_metadata_per_cell;
   }

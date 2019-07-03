@@ -20,7 +20,6 @@ describe 'nova::metadata' do
       it { is_expected.to contain_class('nova::keystone::authtoken') }
 
       it 'configures various stuff' do
-        is_expected.to contain_nova_config('DEFAULT/enabled_apis').with('value' => 'metadata')
         is_expected.to contain_nova_config('api/metadata_cache_expiration').with('value' => '<SERVICE DEFAULT>')
         is_expected.to contain_oslo__middleware('nova_config').with(
           :enable_proxy_headers_parsing => '<SERVICE DEFAULT>',
