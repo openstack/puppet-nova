@@ -21,11 +21,6 @@ describe 'nova::metadata' do
 
       it 'configures various stuff' do
         is_expected.to contain_nova_config('api/metadata_cache_expiration').with('value' => '<SERVICE DEFAULT>')
-        is_expected.to contain_oslo__middleware('nova_config').with(
-          :enable_proxy_headers_parsing => '<SERVICE DEFAULT>',
-          :max_request_body_size        => '<SERVICE DEFAULT>',
-        )
-        is_expected.to contain_nova_config('api/metadata_cache_expiration').with('value' => '<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('api/local_metadata_per_cell').with('value' => '<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('api/dhcp_domain').with('value' => '<SERVICE DEFAULT>')
       end
@@ -39,12 +34,10 @@ describe 'nova::metadata' do
     context 'with overridden parameters' do
       before do
         params.merge!({
-          :neutron_metadata_proxy_shared_secret => 'secrete',
-          :enable_proxy_headers_parsing         => true,
-          :max_request_body_size                => '102400',
-          :local_metadata_per_cell              => true,
-          :metadata_cache_expiration            => 15,
-          :dhcp_domain                          => 'foo',
+          :neutron_metadata_proxy_shared_secret        => 'secrete',
+          :local_metadata_per_cell                     => true,
+          :metadata_cache_expiration                   => 15,
+          :dhcp_domain                                 => 'foo',
         })
       end
 
@@ -54,10 +47,6 @@ describe 'nova::metadata' do
         is_expected.to contain_nova_config('api/dhcp_domain').with('value' => 'foo')
         is_expected.to contain_nova_config('neutron/service_metadata_proxy').with('value' => true)
         is_expected.to contain_nova_config('neutron/metadata_proxy_shared_secret').with('value' => 'secrete').with_secret(true)
-        is_expected.to contain_oslo__middleware('nova_config').with(
-          :enable_proxy_headers_parsing => true,
-          :max_request_body_size        => '102400',
-        )
       end
     end
 
