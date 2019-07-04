@@ -85,6 +85,10 @@
 #   middleware should parse the proxy headers or not.(boolean value)
 #   Defaults to $::os_service_default
 #
+# [*max_request_body_size*]
+#   (Optional) Set max request body size
+#   Defaults to $::os_service_default.
+#
 # [*validate*]
 #   (optional) Whether to validate the service is working after any service refreshes
 #   Defaults to false
@@ -196,6 +200,7 @@ class nova::api(
   $instance_name_template                      = undef,
   $service_name                                = $::nova::params::api_service_name,
   $enable_proxy_headers_parsing                = $::os_service_default,
+  $max_request_body_size                       = $::os_service_default,
   $max_limit                                   = $::os_service_default,
   $compute_link_prefix                         = $::os_service_default,
   $glance_link_prefix                          = $::os_service_default,
@@ -295,6 +300,7 @@ as a standalone service, or httpd for being run by a httpd server")
 
     oslo::middleware {'nova_config':
       enable_proxy_headers_parsing => $enable_proxy_headers_parsing,
+      max_request_body_size        => $max_request_body_size,
     }
   }
 

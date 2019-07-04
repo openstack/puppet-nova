@@ -1,0 +1,5 @@
+---
+features:
+  - |
+    Add support to configure `[oslo_middleware]/max_request_body_size` with
+    `$max_request_body_size`.

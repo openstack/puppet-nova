@@ -13,6 +13,10 @@
 #   middleware should parse the proxy headers or not.(boolean value)
 #   Defaults to $::os_service_default
 #
+# [*max_request_body_size*]
+#   (Optional) Set max request body size
+#   Defaults to $::os_service_default.
+#
 # [*metadata_cache_expiration*]
 #   (optional) This option is the time (in seconds) to cache metadata.
 #   Defaults to $::os_service_default
@@ -42,6 +46,7 @@
 class nova::metadata(
   $neutron_metadata_proxy_shared_secret        = undef,
   $enable_proxy_headers_parsing                = $::os_service_default,
+  $max_request_body_size                       = $::os_service_default,
   $metadata_cache_expiration                   = $::os_service_default,
   $local_metadata_per_cell                     = $::os_service_default,
   $dhcp_domain                                 = $::os_service_default,
@@ -75,6 +80,7 @@ class nova::metadata(
 
   oslo::middleware {'nova_config':
     enable_proxy_headers_parsing => $enable_proxy_headers_parsing,
+    max_request_body_size        => $max_request_body_size,
   }
 
   if ($neutron_metadata_proxy_shared_secret){
