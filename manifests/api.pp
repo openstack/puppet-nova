@@ -297,11 +297,11 @@ as a standalone service, or httpd for being run by a httpd server")
       'DEFAULT/metadata_listen':                     value => $metadata_listen;
       'DEFAULT/metadata_listen_port':                value => $metadata_listen_port;
     }
+  }
 
-    oslo::middleware {'nova_config':
-      enable_proxy_headers_parsing => $enable_proxy_headers_parsing,
-      max_request_body_size        => $max_request_body_size,
-    }
+  oslo::middleware {'nova_config':
+    enable_proxy_headers_parsing => $enable_proxy_headers_parsing,
+    max_request_body_size        => $max_request_body_size,
   }
 
   nova_config {

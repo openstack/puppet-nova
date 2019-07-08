@@ -8,15 +8,6 @@
 #   (optional) Shared secret to validate proxies Neutron metadata requests
 #   Defaults to undef
 #
-# [*enable_proxy_headers_parsing*]
-#   (optional) This determines if the HTTPProxyToWSGI
-#   middleware should parse the proxy headers or not.(boolean value)
-#   Defaults to $::os_service_default
-#
-# [*max_request_body_size*]
-#   (Optional) Set max request body size
-#   Defaults to $::os_service_default.
-#
 # [*metadata_cache_expiration*]
 #   (optional) This option is the time (in seconds) to cache metadata.
 #   Defaults to $::os_service_default
@@ -43,15 +34,24 @@
 #   (optional) A list of apis to enable
 #   Defaults to undef.
 #
+# [*enable_proxy_headers_parsing*]
+#   (optional) This determines if the HTTPProxyToWSGI
+#   middleware should parse the proxy headers or not.(boolean value)
+#   Defaults to undef.
+#
+# [*max_request_body_size*]
+#   (Optional) Set max request body size
+#   Defaults to undef.
+#
 class nova::metadata(
   $neutron_metadata_proxy_shared_secret        = undef,
-  $enable_proxy_headers_parsing                = $::os_service_default,
-  $max_request_body_size                       = $::os_service_default,
   $metadata_cache_expiration                   = $::os_service_default,
   $local_metadata_per_cell                     = $::os_service_default,
   $dhcp_domain                                 = $::os_service_default,
   # DEPRECATED PARAMETERS
   $enabled_apis                                = undef,
+  $enable_proxy_headers_parsing                = undef,
+  $max_request_body_size                       = undef,
 ) inherits nova::params {
 
   include ::nova::deps
@@ -60,6 +60,15 @@ class nova::metadata(
 
   if $enabled_apis != undef {
     warning('enabled_apis parameter is deprecated, use nova::compute::enabled_apis instead.')
+  }
+
+  if $enable_proxy_headers_parsing {
+    warning('enable_proxy_headers_parsing in ::nova::metadata is deprecated, has no effect \
+and will be removed in the future. Please use the one ::nova::api.')
+  }
+  if $max_request_body_size {
+    warning('max_request_body_size in ::nova::metadata is deprecated, has no effect \
+and will be removed in the future. Please use the one ::nova::api.')
   }
 
   # TODO(mwhahaha): backwards compatibility until we drop it from
@@ -76,11 +85,6 @@ class nova::metadata(
   nova_config {
     'api/metadata_cache_expiration':               value => $metadata_cache_expiration;
     'api/local_metadata_per_cell':                 value => $local_metadata_per_cell;
-  }
-
-  oslo::middleware {'nova_config':
-    enable_proxy_headers_parsing => $enable_proxy_headers_parsing,
-    max_request_body_size        => $max_request_body_size,
   }
 
   if ($neutron_metadata_proxy_shared_secret){

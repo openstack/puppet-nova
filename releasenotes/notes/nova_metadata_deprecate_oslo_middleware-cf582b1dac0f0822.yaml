@@ -1,0 +1,16 @@
+---
+deprecations:
+  - |
+    Deprecates oslo::middleware parameters enable_proxy_headers_parsing
+    and max_request_body_size in ::nova::metadata.
+    Use ::nova::api instead.
+fixes:
+  - |
+    enable_proxy_headers_parsing should not only be configurabe if
+    !$nova_metadata_wsgi_enabled , Therefore it needs to be moved outside
+    the condition.
+    But at the moment enable_proxy_headers_parsing can also be set via
+    ::nova::metadata which conficts.
+    This change deprecates oslo::middleware related parameters
+    enable_proxy_headers_parsing and max_request_body_size in
+    ::nova::metadata. In future ::nova::api should be used instead.
