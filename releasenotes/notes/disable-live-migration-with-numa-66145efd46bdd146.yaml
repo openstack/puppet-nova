@@ -1,0 +1,9 @@
+---
+upgrade:
+  - |
+    Add support to enable/disable live-migration for NUMA topology instances
+
+    Add configuration parameter `workarounds/enable_numa_live_migration`
+    (defaults to false) which allows to enable/disable live-migration
+    for NUMA topology instances.
+
