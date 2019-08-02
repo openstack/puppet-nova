@@ -276,7 +276,7 @@ class nova::compute::libvirt (
   nova_config {
     'DEFAULT/compute_driver':           value => $compute_driver;
     'DEFAULT/preallocate_images':       value => $preallocate_images;
-    'vnc/vncserver_listen':             value => $vncserver_listen;
+    'vnc/server_listen':                value => $vncserver_listen;
     'libvirt/virt_type':                value => $libvirt_virt_type;
     'libvirt/cpu_mode':                 value => $libvirt_cpu_mode_real;
     'libvirt/snapshot_image_format':    value => $libvirt_snapshot_image_format;
