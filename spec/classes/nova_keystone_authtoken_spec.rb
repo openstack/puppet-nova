@@ -61,8 +61,7 @@ describe 'nova::keystone::authtoken' do
           :auth_type                            => 'password',
           :auth_version                         => 'v3',
           :cache                                => 'somevalue',
-          :cafile                               =>
-'/opt/stack/data/cafile.pem',
+          :cafile                               => '/opt/stack/data/cafile.pem',
           :certfile                             => 'certfile.crt',
           :delay_auth_decision                  => false,
           :enforce_token_bind                   => 'permissive',
@@ -78,8 +77,7 @@ describe 'nova::keystone::authtoken' do
           :memcache_secret_key                  => 'secret_key',
           :memcache_security_strategy           => 'ENCRYPT',
           :memcache_use_advanced_pool           => true,
-          :memcached_servers                    =>
-['memcached01:11211','memcached02:11211'],
+          :memcached_servers                    => ['memcached01:11211','memcached02:11211'],
           :manage_memcache_package              => true,
           :region_name                          => 'region2',
           :token_cache_time                     => '301',
@@ -88,7 +86,7 @@ describe 'nova::keystone::authtoken' do
       end
 
       it 'configure keystone_authtoken' do
-        is_expected.to contain_nova_config('keystone_authtoken/www_authenticate_uri').with_value('https://10.0.0.1:9999/') 
+        is_expected.to contain_nova_config('keystone_authtoken/www_authenticate_uri').with_value('https://10.0.0.1:9999/')
         is_expected.to contain_nova_config('keystone_authtoken/username').with_value(params[:username])
         is_expected.to contain_nova_config('keystone_authtoken/password').with_value(params[:password]).with_secret(true)
         is_expected.to contain_nova_config('keystone_authtoken/auth_url').with_value(params[:auth_url])
