@@ -161,6 +161,16 @@
 #   (in seconds). Set to -1 to disable caching completely. Integer value
 #   Defaults to $::os_service_default.
 #
+# [*service_token_roles*]
+#  (Optional) A choice of roles that must be present in a service token.
+#  Service tokens are allowed to request that an expired token
+#  can be used and so this check should tightly control that
+#  only actual services should be sending this token. Roles
+#  here are applied as an ANY check so any role in this list
+#  must be present. For backwards compatibility reasons this
+#  currently only affects the allow_expired check. (list value)
+#  Defaults to $::os_service_default.
+#
 # [*service_token_roles_required*]
 #   (optional) backwards compatibility to ensure that the service tokens are
 #   compared against a list of possible roles for validity
@@ -219,6 +229,7 @@ class nova::keystone::authtoken(
   $manage_memcache_package        = false,
   $region_name                    = $::os_service_default,
   $token_cache_time               = $::os_service_default,
+  $service_token_roles            = $::os_service_default,
   $service_token_roles_required   = $::os_service_default,
   # DEPRECATED PARAMETERS
   $check_revocations_for_cached   = undef,
@@ -272,6 +283,7 @@ class nova::keystone::authtoken(
     manage_memcache_package        => $manage_memcache_package,
     region_name                    => $region_name,
     token_cache_time               => $token_cache_time,
+    service_token_roles            => $service_token_roles,
     service_token_roles_required   => $service_token_roles_required,
   }
 }

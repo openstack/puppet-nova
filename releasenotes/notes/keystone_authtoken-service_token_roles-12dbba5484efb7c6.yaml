@@ -1,0 +1,9 @@
+---
+features:
+  - |
+    New hieradata, nova::keystone::authtoken::service_token_roles, is
+    introduced so that specific role can be assigned to the service user
+    who can use service token feature.
+  - |
+    New hieradata, nova::keystone::roles is introduced to configure customized
+    role for nova user in keystone identity.
