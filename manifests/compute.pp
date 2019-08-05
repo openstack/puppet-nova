@@ -330,11 +330,11 @@ class nova::compute (
     include ::nova::vncproxy::common
 
     nova_config {
-      'vnc/vncserver_proxyclient_address': value => $vncserver_proxyclient_address;
+      'vnc/server_proxyclient_address': value => $vncserver_proxyclient_address;
     }
   } else {
     nova_config {
-      'vnc/vncserver_proxyclient_address': ensure => absent;
+      'vnc/server_proxyclient_address': ensure => absent;
     }
   }
 

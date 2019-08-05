@@ -58,7 +58,7 @@ describe 'nova::compute::libvirt' do
       it { is_expected.to contain_nova_config('libvirt/inject_password').with_value(false)}
       it { is_expected.to contain_nova_config('libvirt/inject_key').with_value(false)}
       it { is_expected.to contain_nova_config('libvirt/inject_partition').with_value(-2)}
-      it { is_expected.to contain_nova_config('vnc/vncserver_listen').with_value('127.0.0.1')}
+      it { is_expected.to contain_nova_config('vnc/server_listen').with_value('127.0.0.1')}
       it { is_expected.to contain_nova_config('DEFAULT/remove_unused_base_images').with_ensure('absent')}
       it { is_expected.to contain_nova_config('DEFAULT/remove_unused_original_minimum_age_seconds').with_ensure('absent')}
       it { is_expected.to contain_nova_config('libvirt/remove_unused_resized_minimum_age_seconds').with_ensure('absent')}
@@ -116,7 +116,7 @@ describe 'nova::compute::libvirt' do
       it { is_expected.to contain_nova_config('libvirt/hw_disk_discard').with_value('unmap')}
       it { is_expected.to contain_nova_config('libvirt/hw_machine_type').with_value('x86_64=machinetype1,armv7l=machinetype2')}
       it { is_expected.to contain_nova_config('libvirt/enabled_perf_events').with_value('cmt,mbml,mbmt')}
-      it { is_expected.to contain_nova_config('vnc/vncserver_listen').with_value('0.0.0.0')}
+      it { is_expected.to contain_nova_config('vnc/server_listen').with_value('0.0.0.0')}
       it { is_expected.to contain_nova_config('DEFAULT/remove_unused_base_images').with_value(true)}
       it { is_expected.to contain_nova_config('DEFAULT/remove_unused_original_minimum_age_seconds').with_value(3600)}
       it { is_expected.to contain_nova_config('libvirt/remove_unused_resized_minimum_age_seconds').with_value(3600)}
@@ -185,7 +185,7 @@ describe 'nova::compute::libvirt' do
         end
 
         it { is_expected.to contain_class('nova::migration::libvirt')}
-        it { is_expected.to contain_nova_config('vnc/vncserver_listen').with_value('0.0.0.0')}
+        it { is_expected.to contain_nova_config('vnc/server_listen').with_value('0.0.0.0')}
         it { is_expected.to contain_file_line('/etc/default/libvirtd libvirtd opts').with(:line => libvirt_options) }
         it { is_expected.to contain_file_line('/etc/libvirt/libvirtd.conf listen_tls').with(:line => "listen_tls = 0") }
         it { is_expected.to contain_file_line('/etc/libvirt/libvirtd.conf listen_tcp').with(:line => "listen_tcp = 1") }
@@ -200,7 +200,7 @@ describe 'nova::compute::libvirt' do
         end
 
         it { is_expected.to contain_class('nova::migration::libvirt')}
-        it { is_expected.to contain_nova_config('vnc/vncserver_listen').with_value('::0')}
+        it { is_expected.to contain_nova_config('vnc/server_listen').with_value('::0')}
         it { is_expected.to contain_file_line('/etc/default/libvirtd libvirtd opts').with(:line => libvirt_options) }
         it { is_expected.to contain_file_line('/etc/libvirt/libvirtd.conf listen_tls').with(:line => "listen_tls = 0") }
         it { is_expected.to contain_file_line('/etc/libvirt/libvirtd.conf listen_tcp').with(:line => "listen_tcp = 1") }
@@ -291,7 +291,7 @@ describe 'nova::compute::libvirt' do
       it { is_expected.to contain_nova_config('libvirt/inject_password').with_value(false)}
       it { is_expected.to contain_nova_config('libvirt/inject_key').with_value(false)}
       it { is_expected.to contain_nova_config('libvirt/inject_partition').with_value(-2)}
-      it { is_expected.to contain_nova_config('vnc/vncserver_listen').with_value('127.0.0.1')}
+      it { is_expected.to contain_nova_config('vnc/server_listen').with_value('127.0.0.1')}
       it { is_expected.to contain_nova_config('DEFAULT/remove_unused_base_images').with_ensure('absent')}
       it { is_expected.to contain_nova_config('DEFAULT/remove_unused_original_minimum_age_seconds').with_ensure('absent')}
       it { is_expected.to contain_nova_config('libvirt/remove_unused_resized_minimum_age_seconds').with_ensure('absent')}
@@ -312,7 +312,7 @@ describe 'nova::compute::libvirt' do
       end
 
       it { is_expected.to contain_nova_config('libvirt/virt_type').with_value('qemu')}
-      it { is_expected.to contain_nova_config('vnc/vncserver_listen').with_value('0.0.0.0')}
+      it { is_expected.to contain_nova_config('vnc/server_listen').with_value('0.0.0.0')}
       it { is_expected.to contain_nova_config('DEFAULT/remove_unused_base_images').with_value(true)}
       it { is_expected.to contain_nova_config('DEFAULT/remove_unused_original_minimum_age_seconds').with_value(3600)}
       it { is_expected.to contain_nova_config('libvirt/remove_unused_resized_minimum_age_seconds').with_value(3600)}
@@ -334,7 +334,7 @@ describe 'nova::compute::libvirt' do
         end
 
         it { is_expected.to contain_class('nova::migration::libvirt')}
-        it { is_expected.to contain_nova_config('vnc/vncserver_listen').with_value('0.0.0.0')}
+        it { is_expected.to contain_nova_config('vnc/server_listen').with_value('0.0.0.0')}
         it { is_expected.to contain_file_line('/etc/sysconfig/libvirtd libvirtd args').with(:line => 'LIBVIRTD_ARGS="--listen"') }
         it { is_expected.to contain_file_line('/etc/libvirt/libvirtd.conf listen_tls').with(:line => "listen_tls = 0") }
         it { is_expected.to contain_file_line('/etc/libvirt/libvirtd.conf listen_tcp').with(:line => "listen_tcp = 1") }
@@ -349,7 +349,7 @@ describe 'nova::compute::libvirt' do
         end
 
         it { is_expected.to contain_class('nova::migration::libvirt')}
-        it { is_expected.to contain_nova_config('vnc/vncserver_listen').with_value('::0')}
+        it { is_expected.to contain_nova_config('vnc/server_listen').with_value('::0')}
         it { is_expected.to contain_file_line('/etc/sysconfig/libvirtd libvirtd args').with(:line => 'LIBVIRTD_ARGS="--listen"') }
         it { is_expected.to contain_file_line('/etc/libvirt/libvirtd.conf listen_tls').with(:line => "listen_tls = 0") }
         it { is_expected.to contain_file_line('/etc/libvirt/libvirtd.conf listen_tcp').with(:line => "listen_tcp = 1") }
@@ -401,7 +401,7 @@ describe 'nova::compute::libvirt' do
 
       it { is_expected.to contain_nova_config('DEFAULT/compute_driver').with_value('libvirt.LibvirtDriver')}
       it { is_expected.to contain_nova_config('libvirt/virt_type').with_value('kvm')}
-      it { is_expected.to contain_nova_config('vnc/vncserver_listen').with_value('127.0.0.1')}
+      it { is_expected.to contain_nova_config('vnc/server_listen').with_value('127.0.0.1')}
     end
 
   end
