@@ -1,0 +1,7 @@
+---
+features:
+  - |
+    Adds log_filters parameter to nova::compute::libvirt.
+    Defines a filter to select a different logging level
+    for a given category log outputs, as specified in
+    https://libvirt.org/logging.html . Default undef

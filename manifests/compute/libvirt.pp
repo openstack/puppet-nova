@@ -153,6 +153,12 @@
 #   zero or negative value mean to disable memory usage statistics.
 #   Defaults to $::os_service_default
 #
+# [*log_filters*]
+#   (optional) Defines a filter to select a different logging level
+#   for a given category log outputs, as specified in
+#   https://libvirt.org/logging.html
+#   Defaults to undef
+#
 class nova::compute::libvirt (
   $ensure_package                             = 'present',
   $libvirt_virt_type                          = 'kvm',
@@ -182,6 +188,7 @@ class nova::compute::libvirt (
   $volume_use_multipath                       = $::os_service_default,
   $nfs_mount_options                          = $::os_service_default,
   $mem_stats_period_seconds                   = $::os_service_default,
+  $log_filters                                = undef,
 ) inherits nova::params {
 
   include ::nova::deps
@@ -215,6 +222,12 @@ class nova::compute::libvirt (
   if $log_outputs {
     libvirtd_config {
       'log_outputs': value => "\"${log_outputs}\"";
+    }
+  }
+
+  if $log_filters {
+    libvirtd_config {
+      'log_filters': value => "\"${log_filters}\"";
     }
   }
 
