@@ -12,6 +12,7 @@ describe 'basic nova' do
       include ::openstack_integration::mysql
       include ::openstack_integration::keystone
       include ::openstack_integration::neutron
+      include ::openstack_integration::placement
       include ::openstack_integration::nova
 
       nova_aggregate { 'test_aggregate':
