@@ -177,25 +177,6 @@
 #   true/false
 #   Defaults to $::os_service_default.
 #
-# DEPRECATED PARAMETERS
-#
-# [*check_revocations_for_cached*]
-#   (Optional) If true, the revocation list will be checked for cached tokens.
-#   This requires that PKI tokens are configured on the identity server.
-#   boolean value.
-#   Defaults to undef.
-#
-# [*hash_algorithms*]
-#   (Optional) Hash algorithms to use for hashing PKI tokens. This may be a
-#   single algorithm or multiple. The algorithms are those supported by Python
-#   standard hashlib.new(). The hashes will be tried in the order given, so put
-#   the preferred one first for performance. The result of the first hash will
-#   be stored in the cache. This will typically be set to multiple values only
-#   while migrating from a less secure algorithm to a more secure one. Once all
-#   the old tokens are expired this option should be set to a single value for
-#   better performance. List value.
-#   Defaults to undef.
-#
 class nova::keystone::authtoken(
   $username                       = 'nova',
   $password                       = $::os_service_default,
@@ -231,23 +212,12 @@ class nova::keystone::authtoken(
   $token_cache_time               = $::os_service_default,
   $service_token_roles            = $::os_service_default,
   $service_token_roles_required   = $::os_service_default,
-  # DEPRECATED PARAMETERS
-  $check_revocations_for_cached   = undef,
-  $hash_algorithms                = undef,
 ) {
 
   include ::nova::deps
 
   if is_service_default($password) {
     fail('Please set password for nova service user')
-  }
-
-  if $check_revocations_for_cached {
-    warning('check_revocations_for_cached parameter is deprecated, has no effect and will be removed in the future.')
-  }
-
-  if $hash_algorithms {
-    warning('hash_algorithms parameter is deprecated, has no effect and will be removed in the future.')
   }
 
   keystone::resource::authtoken { 'nova_config':
