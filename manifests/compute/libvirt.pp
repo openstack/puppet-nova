@@ -169,6 +169,13 @@
 #   https://libvirt.org/logging.html
 #   Defaults to undef
 #
+# [*tls_priority*]
+#   (optional) Override the compile time default TLS priority string. The
+#   default is usually "NORMAL" unless overridden at build time.
+#   Only set this if it is desired for libvirt to deviate from
+#   the global default settings.
+#   Defaults to undef
+#
 class nova::compute::libvirt (
   $ensure_package                             = 'present',
   $libvirt_virt_type                          = 'kvm',
@@ -201,6 +208,7 @@ class nova::compute::libvirt (
   $nfs_mount_options                          = $::os_service_default,
   $mem_stats_period_seconds                   = $::os_service_default,
   $log_filters                                = undef,
+  $tls_priority                               = undef,
 ) inherits nova::params {
 
   include ::nova::deps
@@ -240,6 +248,12 @@ class nova::compute::libvirt (
   if $log_filters {
     libvirtd_config {
       'log_filters': value => "\"${log_filters}\"";
+    }
+  }
+
+  if $tls_priority {
+    libvirtd_config {
+      'tls_priority': value => "\"${tls_priority}\"";
     }
   }
 

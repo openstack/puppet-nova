@@ -68,6 +68,7 @@ describe 'nova::compute::libvirt' do
       it { is_expected.to contain_nova_config('libvirt/nfs_mount_options').with_ensure('<SERVICE DEFAULT>')}
       it { is_expected.to contain_nova_config('libvirt/mem_stats_period_seconds').with_value('<SERVICE DEFAULT>')}
       it { is_expected.to contain_libvirtd_config('log_filters').with_ensure('absent')}
+      it { is_expected.to contain_libvirtd_config('tls_priority').with_ensure('absent')}
     end
 
     describe 'with params' do
@@ -98,6 +99,7 @@ describe 'nova::compute::libvirt' do
           :nfs_mount_options                          => 'rw,intr,nolock',
           :mem_stats_period_seconds                   => 20,
           :log_filters                                => '1:qemu',
+          :tls_priority                               => 'NORMAL:-VERS-SSL3.0',
         }
       end
 
@@ -127,6 +129,7 @@ describe 'nova::compute::libvirt' do
       it { is_expected.to contain_nova_config('libvirt/nfs_mount_options').with_value('rw,intr,nolock')}
       it { is_expected.to contain_nova_config('libvirt/mem_stats_period_seconds').with_value(20)}
       it { is_expected.to contain_libvirtd_config('log_filters').with_value("\"#{params[:log_filters]}\"")}
+      it { is_expected.to contain_libvirtd_config('tls_priority').with_value("\"#{params[:tls_priority]}\"")}
       it {
         is_expected.to contain_service('libvirt').with(
           :name     => 'custom_service',

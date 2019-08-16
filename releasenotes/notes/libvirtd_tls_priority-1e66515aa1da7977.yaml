@@ -1,0 +1,8 @@
+---
+features:
+  - |
+    Add tls_priority parameter to nova::compute::libvirt class
+    to override the compile time default TLS priority string. The
+    default is usually "NORMAL" unless overridden at build time.
+    Only set this if it is desired for libvirt to deviate from
+    the global default settings.
