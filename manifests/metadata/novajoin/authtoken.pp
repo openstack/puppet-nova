@@ -161,25 +161,6 @@
 #   (in seconds). Set to -1 to disable caching completely. Integer value
 #   Defaults to $::os_service_default.
 #
-# === Deprecated parameters
-#
-# [*check_revocations_for_cached*]
-#   (Optional) If true, the revocation list will be checked for cached tokens.
-#   This requires that PKI tokens are configured on the identity server.
-#   boolean value.
-#   Defaults to $::os_service_default.
-#
-# [*hash_algorithms*]
-#   (Optional) Hash algorithms to use for hashing PKI tokens. This may be a
-#   single algorithm or multiple. The algorithms are those supported by Python
-#   standard hashlib.new(). The hashes will be tried in the order given, so put
-#   the preferred one first for performance. The result of the first hash will
-#   be stored in the cache. This will typically be set to multiple values only
-#   while migrating from a less secure algorithm to a more secure one. Once all
-#   the old tokens are expired this option should be set to a single value for
-#   better performance. List value.
-#   Defaults to $::os_service_default.
-#
 class nova::metadata::novajoin::authtoken(
   $username                       = 'novajoin',
   $password                       = $::os_service_default,
@@ -213,21 +194,10 @@ class nova::metadata::novajoin::authtoken(
   $manage_memcache_package        = false,
   $region_name                    = $::os_service_default,
   $token_cache_time               = $::os_service_default,
-  ## DEPRECATED PARAMETERS
-  $check_revocations_for_cached   = undef,
-  $hash_algorithms                = undef,
 ) {
 
   if is_service_default($password) {
     fail('Please set password for novajoin service user')
-  }
-
-  if $check_revocations_for_cached {
-    warning('check_revocations_for_cached is deprecated, will be removed and has no effect')
-  }
-
-  if $hash_algorithms {
-    warning('hash_algorithms is deprecated, will be removed and has no effect')
   }
 
   keystone::resource::authtoken { 'novajoin_config':

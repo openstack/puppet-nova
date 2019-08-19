@@ -1,0 +1,5 @@
+---
+upgrade:
+  - |
+    The deprecated pki related options check_revocations_for_cached and
+    hash_algorithms option has been removed.
