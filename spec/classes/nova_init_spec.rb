@@ -40,6 +40,7 @@ describe 'nova' do
         is_expected.to contain_nova_config('DEFAULT/transport_url').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('oslo_messaging_rabbit/heartbeat_timeout_threshold').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('oslo_messaging_rabbit/heartbeat_rate').with_value('<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('oslo_messaging_rabbit/heartbeat_in_pthread').with_value('<SERVICE DEFAULT>')
       end
 
       it 'configures various things' do
@@ -79,6 +80,7 @@ describe 'nova' do
           :control_exchange                        => 'nova',
           :rabbit_heartbeat_timeout_threshold      => '60',
           :rabbit_heartbeat_rate                   => '10',
+          :rabbit_heartbeat_in_pthread             => true,
           :lock_path                               => '/var/locky/path',
           :state_path                              => '/var/lib/nova2',
           :service_down_time                       => '120',
@@ -137,6 +139,7 @@ describe 'nova' do
         is_expected.to contain_nova_config('DEFAULT/control_exchange').with_value('nova')
         is_expected.to contain_nova_config('oslo_messaging_rabbit/heartbeat_timeout_threshold').with_value('60')
         is_expected.to contain_nova_config('oslo_messaging_rabbit/heartbeat_rate').with_value('10')
+        is_expected.to contain_nova_config('oslo_messaging_rabbit/heartbeat_in_pthread').with_value(true)
       end
 
       it 'configures host' do
