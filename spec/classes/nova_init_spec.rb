@@ -62,6 +62,8 @@ describe 'nova' do
         is_expected.to contain_nova_config('DEFAULT/ssl_only').with_value(false)
         is_expected.to contain_nova_config('DEFAULT/cert').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('DEFAULT/key').with_value('<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('console/ssl_ciphers').with_value('<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('console/ssl_minimum_version').with_value('<SERVICE DEFAULT>')
       end
 
       it 'configures block_device_allocate params' do
@@ -110,6 +112,8 @@ describe 'nova' do
           :ssl_only                                => true,
           :cert                                    => '/etc/ssl/private/snakeoil.pem',
           :key                                     => '/etc/ssl/certs/snakeoil.pem',
+          :console_ssl_ciphers                     => 'kEECDH+aECDSA+AES:kEECDH+AES+aRSA:kEDH+aRSA+AES',
+          :console_ssl_minimum_version             => 'tlsv1_2',
         }
       end
 
@@ -177,6 +181,8 @@ describe 'nova' do
         is_expected.to contain_nova_config('DEFAULT/ssl_only').with_value(true)
         is_expected.to contain_nova_config('DEFAULT/cert').with_value('/etc/ssl/private/snakeoil.pem')
         is_expected.to contain_nova_config('DEFAULT/key').with_value('/etc/ssl/certs/snakeoil.pem')
+        is_expected.to contain_nova_config('console/ssl_ciphers').with_value('kEECDH+aECDSA+AES:kEECDH+AES+aRSA:kEDH+aRSA+AES')
+        is_expected.to contain_nova_config('console/ssl_minimum_version').with_value('tlsv1_2')
       end
 
       context 'with multiple notification_driver' do
