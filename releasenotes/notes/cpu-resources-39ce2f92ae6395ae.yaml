@@ -1,0 +1,16 @@
+---
+features:
+  - |
+    Add new parameter ``[compute] cpu_dedicated_set`` to specify
+    list or range of physical CPU cores to reserve to be used for
+    allocating PCPU resources to virtual machine processes.
+    Defaults to ``$::os_service_default``.
+deprecations:
+  - |
+    The ``vcpu_pin_set`` parameter is deprecated and superseded by
+    ``cpu_shared_set`` and ``cpu_dedicated_set`` parameters, where
+    ``cpu_shared_set`` and ``cpu_dedicated_set`` is used to define
+    list or range of VCPU and PCPU resources for virtual machine
+    instances respectively.
+    When used ``vcpu_pin_set`` can not be defined with
+    ``cpu_dedicated_set`` parameter.
