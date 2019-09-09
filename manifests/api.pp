@@ -118,6 +118,14 @@
 #   to make nova be a web app using apache mod_wsgi.
 #   Defaults to '$::nova::params::api_service_name'
 #
+# [*metadata_service_name*]
+#   (optional) Name of the service that will be providing the
+#   server functionality of nova-api-meatadata.
+#   If the value is undef, no management of the service will be
+#   done by puppet. If the value is defined, and manage_service
+#   is set to true, the service will be managed by Puppet.
+#   Default to $::nova::params::api_metadata_service_name
+#
 # [*max_limit*]
 #   (optional) This option is limit the maximum number of items in a single response.
 #   Defaults to $::os_service_default
@@ -199,6 +207,7 @@ class nova::api(
   $validation_options                          = {},
   $instance_name_template                      = undef,
   $service_name                                = $::nova::params::api_service_name,
+  $metadata_service_name                       = $::nova::params::api_metadata_service_name,
   $enable_proxy_headers_parsing                = $::os_service_default,
   $max_request_body_size                       = $::os_service_default,
   $max_limit                                   = $::os_service_default,
@@ -289,6 +298,16 @@ as a standalone service, or httpd for being run by a httpd server")
     ensure_package => $ensure_package,
     package_name   => $::nova::params::api_package_name,
     service_name   => $::nova::params::api_service_name,
+  }
+
+  if $::nova::params::api_metadata_service_name {
+    nova::generic_service { 'api-metadata':
+      enabled        => $service_enabled,
+      manage_service => $manage_service,
+      ensure_package => $ensure_package,
+      package_name   => $::nova::params::api_package_name,
+      service_name   => $::nova::params::api_metadata_service_name,
+    }
   }
 
   if !$nova_metadata_wsgi_enabled {

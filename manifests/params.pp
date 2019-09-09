@@ -31,6 +31,7 @@ class nova::params {
       $genisoimage_package_name          = 'genisoimage'
       # service names
       $api_service_name                  = 'openstack-nova-api'
+      $api_metadata_service_name         = undef
       $compute_service_name              = 'openstack-nova-compute'
       $conductor_service_name            = 'openstack-nova-conductor'
       $libvirt_service_name              = 'libvirtd'
@@ -107,6 +108,7 @@ class nova::params {
       $lock_path                         = '/var/lock/nova'
       case $::os_package_type {
         'debian': {
+          $api_metadata_service_name       = 'nova-api-metadata'
           $spicehtml5proxy_package_name    = 'nova-consoleproxy'
           $spicehtml5proxy_service_name    = 'nova-spicehtml5proxy'
           $vncproxy_package_name           = 'nova-consoleproxy'
@@ -117,6 +119,7 @@ class nova::params {
           $virtlog_service_name            = 'virtlogd'
         }
         default: {
+          $api_metadata_service_name       = undef
           $spicehtml5proxy_package_name    = 'nova-spiceproxy'
           $spicehtml5proxy_service_name    = 'nova-spiceproxy'
           $vncproxy_package_name           = 'nova-novncproxy'
