@@ -1,0 +1,5 @@
+---
+features:
+  - |
+    New class nova::metadata::novajoin::policy allows novajoin policy overrides
+    to be written to /etc/novajoin/policy.json.

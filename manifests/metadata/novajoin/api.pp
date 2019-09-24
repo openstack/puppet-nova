@@ -128,6 +128,7 @@ class nova::metadata::novajoin::api (
   $ipa_realm                 = undef,
 ) {
   include ::nova::metadata::novajoin::authtoken
+  include ::nova::metadata::novajoin::policy
 
   if ! $service_user {
     fail('service_user is missing')
