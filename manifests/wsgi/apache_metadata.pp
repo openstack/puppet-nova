@@ -16,7 +16,7 @@
 #
 #   [*api_port*]
 #     The port for Nova API service.
-#     Optional. Defaults to 8774
+#     Optional. Defaults to 8775
 #
 #   [*bind_host*]
 #     The host/ip address Apache will listen on.
