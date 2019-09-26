@@ -1,0 +1,5 @@
+---
+features:
+  - |
+    A new nova::compute::libvirt::virtlogd class has been added to manage
+    virtlogd configration.
