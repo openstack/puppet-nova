@@ -96,6 +96,30 @@ hosts="[u\'example\']"
         end
       end
 
+      describe '#pythondict2hash' do
+        it 'should return a hash with key-value when provided with a unicode python dict' do
+          s = "{u'key': 'value', u'key2': 'value2'}"
+          expect(provider_class.pythondict2hash(s)).to eq({"key"=>"value", "key2"=>"value2"})
+        end
+
+        it 'should return a hash with key-value when provided with a python dict' do
+          s = "{'key': 'value', 'key2': 'value2'}"
+          expect(provider_class.pythondict2hash(s)).to eq({"key"=>"value", "key2"=>"value2"})
+        end
+      end
+
+      describe '#parsestring' do
+        it 'should call string2hash when provided with a string' do
+          s = "key='value', key2='value2'"
+          expect(provider_class.parsestring(s)).to eq({"key"=>"value", "key2"=>"value2"})
+        end
+
+        it 'should call pythondict2hash when provided with a hash' do
+          s = "{u'key': 'value', u'key2': 'value2'}"
+          expect(provider_class.parsestring(s)).to eq({"key"=>"value", "key2"=>"value2"})
+        end
+      end
+
     end
   end
 
