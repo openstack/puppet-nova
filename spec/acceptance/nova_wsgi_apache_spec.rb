@@ -15,6 +15,13 @@ describe 'basic nova' do
       include ::openstack_integration::placement
       include ::openstack_integration::nova
 
+      nova_aggregate { 'test_aggregate':
+        ensure            => present,
+        availability_zone => 'zone1',
+        metadata          => 'test=property',
+        require           => Class['nova::api'],
+      }
+
       nova_flavor { 'test_flavor':
         ensure  => present,
         name    => 'test_flavor',
@@ -54,6 +61,13 @@ describe 'basic nova' do
       it { is_expected.to have_entry('1 0 * * * nova-manage db archive_deleted_rows  --max_rows 100  >>/var/log/nova/nova-rowsflush.log 2>&1').with_user('nova') }
     end
 
+    describe 'nova aggregate' do
+      it 'should create new aggregate' do
+        shell('openstack --os-identity-api-version 3 --os-username nova --os-password a_big_secret --os-tenant-name services --os-user-domain-name Default --os-project-domain-name Default --os-auth-url http://127.0.0.1:5000/v3 aggregate list') do |r|
+          expect(r.stdout).to match(/test_aggregate/)
+        end
+      end
+    end
     describe 'nova flavor' do
       it 'should create new flavor' do
         shell('openstack --os-identity-api-version 3 --os-username nova --os-password a_big_secret --os-tenant-name services --os-user-domain-name Default --os-project-domain-name Default --os-auth-url http://127.0.0.1:5000/v3 flavor list') do |r|
