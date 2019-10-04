@@ -272,7 +272,7 @@ describe 'nova::compute' do
           :spice_enabled => true, }
       end
 
-      it { is_expected.to raise_error Puppet::Error, /vnc_enabled and spice_enabled is mutually exclusive/ }
+      it { should raise_error(Puppet::Error, /vnc_enabled and spice_enabled is mutually exclusive/) }
     end
 
     context 'with force_config_drive parameter set to true' do

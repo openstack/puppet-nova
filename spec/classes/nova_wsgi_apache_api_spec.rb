@@ -101,7 +101,7 @@ describe 'nova::wsgi::apache_api' do
         "include nova"
       end
 
-      it { is_expected.to raise_error Puppet::Error, /::nova::api class must be declared in composition layer./ }
+      it { should raise_error(Puppet::Error, /::nova::api class must be declared in composition layer./) }
     end
 
   end
