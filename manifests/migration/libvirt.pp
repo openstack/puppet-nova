@@ -199,7 +199,7 @@ class nova::migration::libvirt(
           file_line { '/etc/sysconfig/libvirtd libvirtd args':
             path  => '/etc/sysconfig/libvirtd',
             line  => 'LIBVIRTD_ARGS="--listen"',
-            match => 'LIBVIRTD_ARGS=',
+            match => '^LIBVIRTD_ARGS=',
             tag   => 'libvirt-file_line',
           }
         }
