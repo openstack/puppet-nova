@@ -7,7 +7,8 @@ group :development, :test, :system_tests do
         :require => 'false'
   else
     gem 'puppet-openstack_spec_helper',
-        :git => 'https://opendev.org/openstack/puppet-openstack_spec_helper',
+        :git     => 'https://opendev.org/openstack/puppet-openstack_spec_helper',
+        :branch  => 'stable/train',
         :require => 'false'
   end
 end
