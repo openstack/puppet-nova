@@ -26,9 +26,7 @@ describe 'nova::compute' do
 
       it { is_expected.to contain_nova_config('DEFAULT/allow_resize_to_same_host').with(:value => 'false') }
       it { is_expected.to contain_nova_config('DEFAULT/resize_confirm_window').with_value('<SERVICE DEFAULT>') }
-      it { is_expected.to contain_nova_config('DEFAULT/vcpu_pin_set').with(:value => '<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('DEFAULT/resume_guests_state_on_host_boot').with_value('<SERVICE DEFAULT>') }
-      it { is_expected.to contain_nova_config('compute/cpu_shared_set').with(:value => '<SERVICE DEFAULT>') }
       it { is_expected.to_not contain_nova_config('vnc/novncproxy_base_url') }
       it { is_expected.to contain_nova_config('key_manager/backend').with_value('nova.keymgr.conf_key_mgr.ConfKeyManager') }
       it { is_expected.to contain_nova_config('barbican/barbican_endpoint').with_value('<SERVICE DEFAULT>') }
@@ -95,8 +93,6 @@ describe 'nova::compute' do
           :heal_instance_info_cache_interval  => '120',
           :config_drive_format                => 'vfat',
           :resize_confirm_window              => '3',
-          :vcpu_pin_set                       => ['4-12','^8','15'],
-          :cpu_shared_set                     => ['4-12','^8','15'],
           :resume_guests_state_on_host_boot   => true,
           :keymgr_backend                     => 'castellan.key_manager.barbican_key_manager.BarbicanKeyManager',
           :barbican_endpoint                  => 'http://localhost',
@@ -156,10 +152,6 @@ describe 'nova::compute' do
 
       it { is_expected.to contain_nova_config('DEFAULT/resize_confirm_window').with_value('3') }
 
-      it { is_expected.to contain_nova_config('DEFAULT/vcpu_pin_set').with(:value => '4-12,^8,15') }
-
-      it { is_expected.to contain_nova_config('compute/cpu_shared_set').with(:value => '4-12,^8,15') }
-
       it { is_expected.to contain_nova_config('DEFAULT/max_concurrent_live_migrations').with_value('4') }
 
       it { is_expected.to contain_nova_config('DEFAULT/sync_power_state_pool_size').with_value('10') }
@@ -207,24 +199,65 @@ describe 'nova::compute' do
       end
     end
 
-    context 'when vcpu_pin_set and pci params are empty' do
+    context 'should raise an error, when cpu_dedicated_set and vcpu_pin_set both are defined' do
       let :params do
-        { :vcpu_pin_set    => ""}
+        { :vcpu_pin_set      => ['4-12','^8','15'],
+          :cpu_dedicated_set => ['4-12','^8','15'], }
       end
 
-      it 'clears vcpu_pin_set configuration' do
-        is_expected.to contain_nova_config('DEFAULT/vcpu_pin_set').with(:value => '<SERVICE DEFAULT>')
-      end
+      it { should raise_error(Puppet::Error, /vcpu_pin_set is deprecated. vcpu_pin_set and cpu_dedicated_set are mutually exclusive./) }
     end
 
-    context 'when cpu_shared_set is empty' do
+    context 'when cpu_shared_set and cpu_dedicated_set both are set, but not vcpu_pin_set' do
       let :params do
-        { :cpu_shared_set    => ""}
+        { :cpu_shared_set    => ['4-12','^8','15'],
+          :cpu_dedicated_set => ['2-10','^5','14'], }
       end
 
-      it 'clears cpu_shared_set configuration' do
-        is_expected.to contain_nova_config('compute/cpu_shared_set').with(:value => '<SERVICE DEFAULT>')
+      it { is_expected.to contain_nova_config('compute/cpu_shared_set').with(:value => '4-12,^8,15') }
+      it { is_expected.to contain_nova_config('compute/cpu_dedicated_set').with(:value => '2-10,^5,14') }
+      it { is_expected.to contain_nova_config('compute/vcpu_pin_set').with(:ensure => 'absent') }
+    end
+
+    context 'when cpu_dedicated_set is defined but cpu_shared_set is not' do
+      let :params do
+        { :cpu_dedicated_set => ['4-12','^8','15'] }
       end
+
+      it { is_expected.to contain_nova_config('compute/cpu_dedicated_set').with(:value => '4-12,^8,15') }
+      it { is_expected.to contain_nova_config('compute/cpu_shared_set').with(:value => '<SERVICE DEFAULT>') }
+      it { is_expected.to contain_nova_config('compute/vcpu_pin_set').with(:ensure => 'absent') }
+    end
+
+    context 'when cpu_shared_set is defined, but cpu_dedicated_set and vcpu_pin_set are not' do
+      let :params do
+        { :cpu_shared_set => ['4-12', '^8', '15'] }
+      end
+
+      it { is_expected.to contain_nova_config('compute/cpu_shared_set').with(:value => '4-12,^8,15') }
+      it { is_expected.to contain_nova_config('compute/cpu_dedicated_set').with(:value => '<SERVICE DEFAULT>') }
+      it { is_expected.to contain_nova_config('compute/vcpu_pin_set').with(:ensure => 'absent') }
+    end
+
+    context 'when cpu_shared_set and vcpu_pin_set are defined, but cpu_dedicated_set is not' do
+      let :params do
+        { :cpu_shared_set => ['4-12','^8','15'],
+          :vcpu_pin_set   => ['2-10','^5','14'], }
+      end
+
+      it { is_expected.to contain_nova_config('compute/cpu_shared_set').with(:value => '4-12,^8,15') }
+      it { is_expected.to contain_nova_config('compute/vcpu_pin_set').with(:value => '2-10,^5,14') }
+      it { is_expected.to contain_nova_config('compute/cpu_dedicated_set').with(:value => '<SERVICE DEFAULT>') }
+    end
+
+    context 'when vcpu_pin_set is set, but cpu_shared_set and cpu_dedicated_set are not' do
+      let :params do
+         { :vcpu_pin_set => ['4-12','^8','15'] }
+      end
+
+      it { is_expected.to contain_nova_config('compute/vcpu_pin_set').with(:value => '4-12,^8,15') }
+      it { is_expected.to contain_nova_config('compute/cpu_shared_set').with(:value => '<SERVICE DEFAULT>') }
+      it { is_expected.to contain_nova_config('compute/cpu_dedicated_set').with(:value => '<SERVICE DEFAULT>') }
     end
 
     context 'when neutron_physnets_numa_nodes_mapping and neutron_tunnel_numa_nodes are empty' do
