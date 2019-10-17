@@ -25,6 +25,8 @@ describe 'nova::scheduler' do
     it { is_expected.to contain_nova_config('scheduler/query_placement_for_image_type_support').with_value('<SERVICE DEFAULT>') }
     it { is_expected.to contain_nova_config('scheduler/limit_tenants_to_placement_aggregate').with_value('<SERVICE DEFAULT>')}
 
+    it { is_expected.to contain_class('nova::availability_zone') }
+
     context 'with manage_service as false' do
       let :params do
         { :enabled        => true,
