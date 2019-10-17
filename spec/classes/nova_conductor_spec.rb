@@ -20,6 +20,8 @@ describe 'nova::conductor' do
       :ensure    => 'running'
     )}
 
+    it { is_expected.to contain_class('nova::availability_zone') }
+
     context 'with manage_service as false' do
       let :params do
         { :enabled        => true,
