@@ -46,11 +46,7 @@ describe 'nova::compute' do
 
       it { is_expected.to contain_nova_config('DEFAULT/force_raw_images').with(:value => true) }
 
-      it 'configures availability zones' do
-        is_expected.to contain_nova_config('DEFAULT/default_availability_zone').with_value('<SERVICE DEFAULT>')
-        is_expected.to contain_nova_config('DEFAULT/default_schedule_zone').with_value('<SERVICE DEFAULT>')
-        is_expected.to contain_nova_config('DEFAULT/internal_service_availability_zone').with_value('<SERVICE DEFAULT>')
-      end
+      it { is_expected.to contain_class('nova::availability_zone') }
 
       it { is_expected.to contain_nova_config('DEFAULT/heal_instance_info_cache_interval').with_value('60') }
 

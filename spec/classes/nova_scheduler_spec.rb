@@ -23,6 +23,8 @@ describe 'nova::scheduler' do
     it { is_expected.to contain_nova_config('scheduler/driver').with_value('filter_scheduler') }
     it { is_expected.to contain_nova_config('scheduler/discover_hosts_in_cells_interval').with_value('<SERVICE DEFAULT>') }
 
+    it { is_expected.to contain_class('nova::availability_zone') }
+
     context 'with manage_service as false' do
       let :params do
         { :enabled        => true,

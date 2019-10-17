@@ -44,6 +44,8 @@ describe 'nova::api' do
 
       it { is_expected.to contain_nova_config('DEFAULT/instance_name_template').with_ensure('absent')}
 
+      it { is_expected.to contain_class('nova::availability_zone') }
+
       it 'configures various stuff' do
         is_expected.to contain_nova_config('wsgi/api_paste_config').with('value' => 'api-paste.ini')
         is_expected.to contain_nova_config('DEFAULT/osapi_compute_listen').with('value' => '0.0.0.0')

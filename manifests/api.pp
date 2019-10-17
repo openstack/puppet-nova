@@ -341,6 +341,7 @@ class nova::api(
   include ::nova::db
   include ::nova::policy
   include ::nova::keystone::authtoken
+  include ::nova::availability_zone
 
   if $install_cinder_client {
     include ::cinder::client
