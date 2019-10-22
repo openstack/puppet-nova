@@ -42,12 +42,17 @@
 #   (5 minutes).
 #   Defaults to 300.
 #
+# [*manage_service*]
+#   (optional) Whether to start/stop the service
+#   Defaults to false
+#
 class nova::compute::libvirt_guests (
   $enabled                           = false,
   $package_ensure                    = 'present',
   $shutdown_timeout                  = '300',
   $on_boot                           = 'ignore',
   $on_shutdown                       = 'shutdown',
+  $manage_service                    = false,
 ) {
   include ::nova::params
   include ::nova::deps
@@ -55,9 +60,6 @@ class nova::compute::libvirt_guests (
   Anchor['nova::config::begin']
   -> File_line<| tag == 'libvirt-guests-file_line'|>
   -> Anchor['nova::config::end']
-
-  File_line<| tag == 'libvirt-guests-file_line' |>
-  ~> Service['libvirt-guests']
 
   case $::osfamily {
     'RedHat': {
@@ -84,7 +86,7 @@ class nova::compute::libvirt_guests (
 
       nova::generic_service { 'libvirt-guests':
         enabled        => $enabled,
-        manage_service => $enabled,
+        manage_service => $manage_service,
         package_name   => $::nova::params::libvirt_guests_package_name,
         service_name   => $::nova::params::libvirt_guests_service_name,
         ensure_package => $package_ensure
