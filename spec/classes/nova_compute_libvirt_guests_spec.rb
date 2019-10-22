@@ -55,6 +55,16 @@ describe 'nova::compute::libvirt_guests' do
       )}
     end
 
+    context 'while not managing service state' do
+      let :params do
+        { :enabled           => false,
+          :manage_service    => false,
+        }
+      end
+
+      it { is_expected.to contain_service('libvirt-guests').without_ensure }
+    end
+
   end
 
   on_supported_os({
