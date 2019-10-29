@@ -30,7 +30,7 @@
             "version_requirement": ">=15.4.0 <16.0.0"
         },
         {
-            "name": "puppetlabs/rabbitmq",
+            "name": "puppet/rabbitmq",
             "version_requirement": ">=8.4.0 <9.0.0"
         },
         {
