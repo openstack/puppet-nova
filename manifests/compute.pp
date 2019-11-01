@@ -96,15 +96,15 @@
 #   server is in resized state longer than that time.
 #   Defaults to $::os_service_default
 #
-# [*vcpu_pin_set*]
-#   (optional) A list or range of physical CPU cores to reserve
-#   for virtual machine processes
+# [*cpu_shared_set*]
+#   (optional) A list or range of host CPU cores to which emulator threads can be
+#   scheduled, if vcpu_pin_set is set, or to which both emulator threads and processes
+#   for unpinned instance CPUs (VCPUs) can be scheduled, if vcpu_pin_set is unset.
 #   Defaults to $::os_service_default
 #
-# [*cpu_shared_set*]
-#   (optional) A list or range of physical CPU cores to reserve
-#   for best-effort guest vCPU resources (e.g. emulator threads in
-#   libvirt/QEMU)
+# [*cpu_dedicated_set*]
+#   (optional) A list or range of host CPU cores to which processes for pinned
+#   instance CPUs (PCPUs) can be scheduled.
 #   Defaults to $::os_service_default
 #
 # [*resume_guests_state_on_host_boot*]
@@ -187,6 +187,16 @@
 #   Applicable only for cases when Neutron was disabled
 #   Defaults to undef
 #
+# [*vcpu_pin_set*]
+#   (optional) A list or range of host CPU cores to which processes for
+#   unpinned instance CPUs (VCPUs) can be scheduled, if cpu_shared_set is set,
+#   or to which both emulator threads and processes for unpinned instance CPUs
+#   (VCPUs) can be scheduled, if cpu_shared_set is unset.
+#   This option has been superseded by the ``cpu_shared_set`` and
+#   ``cpu_dedicated_set`` options, which allows co-existence of
+#   pinned and unpinned instances on the same host.
+#   Defaults to undef
+#
 class nova::compute (
   $enabled                                     = true,
   $manage_service                              = true,
@@ -208,8 +218,8 @@ class nova::compute (
   $config_drive_format                         = $::os_service_default,
   $allow_resize_to_same_host                   = false,
   $resize_confirm_window                       = $::os_service_default,
-  $vcpu_pin_set                                = $::os_service_default,
   $cpu_shared_set                              = $::os_service_default,
+  $cpu_dedicated_set                           = $::os_service_default,
   $resume_guests_state_on_host_boot            = $::os_service_default,
   $barbican_auth_endpoint                      = $::os_service_default,
   $barbican_endpoint                           = $::os_service_default,
@@ -228,13 +238,14 @@ class nova::compute (
   $vnc_keymap                                  = undef,
   $neutron_enabled                             = undef,
   $install_bridge_utils                        = undef,
+  $vcpu_pin_set                                = undef,
 ) {
 
   include ::nova::deps
   include ::nova::params
 
-  $vcpu_pin_set_real = pick(join(any2array($vcpu_pin_set), ','), $::os_service_default)
   $cpu_shared_set_real = pick(join(any2array($cpu_shared_set), ','), $::os_service_default)
+  $cpu_dedicated_set_real = pick(join(any2array($cpu_dedicated_set), ','), $::os_service_default)
 
   include ::nova::pci
   include ::nova::compute::vgpu
@@ -254,6 +265,43 @@ class nova::compute (
 
   if ($vnc_enabled and $spice_enabled) {
     fail('vnc_enabled and spice_enabled is mutually exclusive')
+  }
+
+  if $vcpu_pin_set {
+    warning('vcpu_pin_set is deprecated, instead use cpu_dedicated_set or cpu_shared_set.')
+  }
+
+  if !empty($vcpu_pin_set) or $vcpu_pin_set != undef {
+    $vcpu_pin_set_real = join(any2array($vcpu_pin_set), ',')
+  } else {
+    $vcpu_pin_set_real = undef
+  }
+
+  if $vcpu_pin_set_real  and !is_service_default($cpu_dedicated_set_real) {
+    fail('vcpu_pin_set is deprecated. vcpu_pin_set and cpu_dedicated_set are mutually exclusive.')
+  }
+
+  if $vcpu_pin_set_real != undef {
+    # handle the following conditions:
+    #
+    # 1. if vcpu_pin_set is set but cpu_shared_set is not set.
+    # 2. if cpu_shared_set and vcpu_pin_set both are set, but cpu_dedicated_set is not set.
+    nova_config {
+      'compute/cpu_shared_set':    value => $cpu_shared_set_real;
+      'compute/cpu_dedicated_set': value => $cpu_dedicated_set_real;
+      'compute/vcpu_pin_set':      value => $vcpu_pin_set_real;
+    }
+  } else {
+    # handle the following conditions:
+    #
+    # 3. if cpu_dedicated_set is set but cpu_shared_set is not set.
+    # 4. if cpu_shared_set is set but vcpu_pin_set and cpu_dedicated_set are not set.
+    # 5. if cpu_shared_set and cpu_dedicated_set both are set, then ignore vcpu_pin_set.
+    nova_config {
+      'compute/cpu_shared_set':    value  => $cpu_shared_set_real;
+      'compute/cpu_dedicated_set': value  => $cpu_dedicated_set_real;
+      'compute/vcpu_pin_set':      ensure => absent; # when undef, don't include in conf.
+    }
   }
 
   # cryptsetup is required when Barbican is encrypting volumes
@@ -309,9 +357,7 @@ class nova::compute (
     'DEFAULT/reserved_huge_pages':               value => $reserved_huge_pages_real;
     'DEFAULT/heal_instance_info_cache_interval': value => $heal_instance_info_cache_interval;
     'DEFAULT/resize_confirm_window':             value => $resize_confirm_window;
-    'DEFAULT/vcpu_pin_set':                      value => $vcpu_pin_set_real;
     'DEFAULT/resume_guests_state_on_host_boot':  value => $resume_guests_state_on_host_boot;
-    'compute/cpu_shared_set':                    value => $cpu_shared_set_real;
     'key_manager/backend':                       value => $keymgr_backend;
     'barbican/auth_endpoint':                    value => $barbican_auth_endpoint;
     'barbican/barbican_endpoint':                value => $barbican_endpoint;
