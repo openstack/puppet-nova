@@ -1,0 +1,4 @@
+---
+features:
+  - |
+    Added nova::scheduler::max_placement_results parameter.
