@@ -271,10 +271,10 @@ class nova::compute (
     warning('vcpu_pin_set is deprecated, instead use cpu_dedicated_set or cpu_shared_set.')
   }
 
-  if !empty($vcpu_pin_set) or $vcpu_pin_set != undef {
-    $vcpu_pin_set_real = join(any2array($vcpu_pin_set), ',')
-  } else {
+  if empty($vcpu_pin_set) {
     $vcpu_pin_set_real = undef
+  } else {
+    $vcpu_pin_set_real = join(any2array($vcpu_pin_set), ',')
   }
 
   if $vcpu_pin_set_real  and !is_service_default($cpu_dedicated_set_real) {
