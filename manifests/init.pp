@@ -419,10 +419,6 @@
 #   exceptions in the API service
 #   Defaults to undef
 #
-# [*upgrade_level_consoleauth*]
-#   (optional) Sets a version cap for messages sent to consoleauth services
-#   Defaults to undef
-#
 class nova(
   $ensure_package                         = 'present',
   $database_connection                    = undef,
@@ -516,7 +512,6 @@ class nova(
   $notify_api_faults                      = undef,
   $image_service                          = undef,
   $notify_on_api_faults                   = undef,
-  $upgrade_level_consoleauth              = undef,
 ) inherits nova::params {
 
   include ::nova::deps
@@ -535,10 +530,6 @@ class nova(
 
   if $notify_on_api_faults {
     warning('The notify_on_api_faults parameter is deprecated.')
-  }
-
-  if $upgrade_level_consoleauth {
-    warning('The nova::upgrade_level_consoleauth parameter is deprecated and has no effect')
   }
 
   if $image_service {

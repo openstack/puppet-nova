@@ -1,0 +1,5 @@
+---
+upgrade:
+  - |
+    The deprecated parameter nova::upgrade_level_consoleauth and the class
+    nova::consoleauth is now removed.
