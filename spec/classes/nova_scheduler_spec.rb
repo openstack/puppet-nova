@@ -1,13 +1,11 @@
 require 'spec_helper'
 
 describe 'nova::scheduler' do
-
   let :pre_condition do
     'include nova'
   end
 
-  shared_examples 'nova-scheduler' do
-
+  shared_examples 'nova::scheduler' do
     it { is_expected.to contain_package('nova-scheduler').with(
       :name   => platform_params[:scheduler_package_name],
       :ensure => 'present'
@@ -23,7 +21,8 @@ describe 'nova::scheduler' do
     it { is_expected.to contain_nova_config('scheduler/driver').with_value('filter_scheduler') }
     it { is_expected.to contain_nova_config('scheduler/discover_hosts_in_cells_interval').with_value('<SERVICE DEFAULT>') }
     it { is_expected.to contain_nova_config('scheduler/query_placement_for_image_type_support').with_value('<SERVICE DEFAULT>') }
-    it { is_expected.to contain_nova_config('scheduler/limit_tenants_to_placement_aggregate').with_value('<SERVICE DEFAULT>')}
+    it { is_expected.to contain_nova_config('scheduler/limit_tenants_to_placement_aggregate').with_value('<SERVICE DEFAULT>') }
+    it { is_expected.to contain_nova_config('scheduler/max_placement_results').with_value('<SERVICE DEFAULT>') }
 
     it { is_expected.to contain_class('nova::availability_zone') }
 
@@ -86,6 +85,14 @@ describe 'nova::scheduler' do
       it { is_expected.to contain_nova_config('scheduler/limit_tenants_to_placement_aggregate').with_value(true) }
     end
 
+    context 'with max_placement_results' do
+      let :params do
+        { :max_placement_results => 10 }
+      end
+
+      it { is_expected.to contain_nova_config('scheduler/max_placement_results').with_value(10) }
+    end
+
     context 'with default database parameters' do
       let :pre_condition do
         "include nova"
@@ -134,8 +141,7 @@ describe 'nova::scheduler' do
         end
       end
 
-      it_configures 'nova-scheduler'
+      it_behaves_like 'nova::scheduler'
     end
   end
-
 end
