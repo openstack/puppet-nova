@@ -21,7 +21,6 @@ class nova::params {
       $libvirt_guests_package_name       = 'libvirt-client'
       $libvirt_daemon_package_prefix     = 'libvirt-daemon-'
       $libvirt_nwfilter_package_name     = 'libvirt-daemon-config-nwfilter'
-      $network_package_name              = 'openstack-nova-network'
       $scheduler_package_name            = 'openstack-nova-scheduler'
       $tgt_package_name                  = 'scsi-target-utils'
       $vncproxy_package_name             = 'openstack-nova-novncproxy'
@@ -38,7 +37,6 @@ class nova::params {
       $libvirt_guests_service_name       = 'libvirt-guests'
       $virtlock_service_name             = 'virtlockd'
       $virtlog_service_name              = undef
-      $network_service_name              = 'openstack-nova-network'
       $scheduler_service_name            = 'openstack-nova-scheduler'
       $tgt_service_name                  = 'tgtd'
       $vncproxy_service_name             = 'openstack-nova-novncproxy'
@@ -86,7 +84,6 @@ class nova::params {
       } else {
         $libvirt_package_name            = 'libvirt-bin'
       }
-      $network_package_name              = 'nova-network'
       $scheduler_package_name            = 'nova-scheduler'
       $tgt_package_name                  = 'tgt'
       $ceph_client_package_name          = 'ceph'
@@ -95,7 +92,6 @@ class nova::params {
       $api_service_name                  = 'nova-api'
       $compute_service_name              = 'nova-compute'
       $conductor_service_name            = 'nova-conductor'
-      $network_service_name              = 'nova-network'
       $scheduler_service_name            = 'nova-scheduler'
       $vncproxy_service_name             = 'nova-novncproxy'
       $serialproxy_service_name          = 'nova-serialproxy'
