@@ -67,6 +67,10 @@
 #    all cron jobs at the same time on all hosts this job is configured.
 #    Defaults to 0.
 #
+#  [*all_cells*]
+#    (optional) Adds --all-cells to the archive command
+#    Defaults to false.
+#
 
 class nova::cron::archive_deleted_rows (
   $minute         = 1,
@@ -80,6 +84,7 @@ class nova::cron::archive_deleted_rows (
   $until_complete = false,
   $purge          = false,
   $maxdelay       = 0,
+  $all_cells      = false,
 ) {
 
   include ::nova::deps
@@ -99,6 +104,13 @@ class nova::cron::archive_deleted_rows (
     $purge_real = ''
   }
 
+  if $all_cells {
+    $all_cells_real = '--all-cells'
+  }
+  else {
+    $all_cells_real = ''
+  }
+
   if $maxdelay == 0 {
     $sleep = ''
   } else {
@@ -108,7 +120,8 @@ class nova::cron::archive_deleted_rows (
   $cron_cmd = 'nova-manage db archive_deleted_rows'
 
   cron { 'nova-manage db archive_deleted_rows':
-    command     => "${sleep}${cron_cmd} ${purge_real} --max_rows ${max_rows} ${until_complete_real} >>${destination} 2>&1",
+    command     => "${sleep}${cron_cmd} ${purge_real} --max_rows ${max_rows} ${until_complete_real} \
+${all_cells_real} >>${destination} 2>&1",
     environment => 'PATH=/bin:/usr/bin:/usr/sbin SHELL=/bin/sh',
     user        => pick($user, $::nova::params::nova_user),
     minute      => $minute,
