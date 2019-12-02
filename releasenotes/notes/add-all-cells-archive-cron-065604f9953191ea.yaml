@@ -1,0 +1,6 @@
+---
+features:
+  - Adds --all-cells to the archive command
+    based on an empty_table boolean flag.
+    If true, it will run in archive command
+    on all configured cells.
