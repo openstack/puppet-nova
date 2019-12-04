@@ -71,6 +71,10 @@
 #    (optional) Adds --all-cells to the archive command
 #    Defaults to false.
 #
+#  [*age*]
+#    (optional) Adds a retention policy when purging the shadow tables
+#    Defaults to undef.
+#
 
 class nova::cron::archive_deleted_rows (
   $minute         = 1,
@@ -85,6 +89,7 @@ class nova::cron::archive_deleted_rows (
   $purge          = false,
   $maxdelay       = 0,
   $all_cells      = false,
+  $age            = undef,
 ) {
 
   include ::nova::deps
@@ -117,10 +122,16 @@ class nova::cron::archive_deleted_rows (
     $sleep = "sleep `expr \${RANDOM} \\% ${maxdelay}`; "
   }
 
+  if $age {
+    $age_real = "--before `date --date=\'today - ${age} days\' +\\%F`"
+  } else {
+    $age_real = ''
+  }
+
   $cron_cmd = 'nova-manage db archive_deleted_rows'
 
   cron { 'nova-manage db archive_deleted_rows':
-    command     => "${sleep}${cron_cmd} ${purge_real} --max_rows ${max_rows} ${until_complete_real} \
+    command     => "${sleep}${cron_cmd} ${purge_real} --max_rows ${max_rows} ${age_real} ${until_complete_real} \
 ${all_cells_real} >>${destination} 2>&1",
     environment => 'PATH=/bin:/usr/bin:/usr/sbin SHELL=/bin/sh',
     user        => pick($user, $::nova::params::nova_user),
