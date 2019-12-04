@@ -1,0 +1,6 @@
+---
+features:
+  - Adds --before to the archive command
+    based on age parameter provided.
+    If added, it will run with
+    --before `date --date='today - age days' +\\%F`
