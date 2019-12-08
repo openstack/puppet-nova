@@ -58,10 +58,10 @@ class nova::scheduler(
   $max_placement_results                  = $::os_service_default,
 ) {
 
-  include ::nova::deps
-  include ::nova::db
-  include ::nova::params
-  include ::nova::availability_zone
+  include nova::deps
+  include nova::db
+  include nova::params
+  include nova::availability_zone
 
   nova::generic_service { 'scheduler':
     enabled        => $enabled,

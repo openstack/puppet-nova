@@ -92,8 +92,8 @@ class nova::cron::archive_deleted_rows (
   $age            = undef,
 ) {
 
-  include ::nova::deps
-  include ::nova::params
+  include nova::deps
+  include nova::params
 
   if $until_complete {
     $until_complete_real = '--until-complete'

@@ -214,7 +214,7 @@ class nova::keystone::authtoken(
   $service_token_roles_required   = $::os_service_default,
 ) {
 
-  include ::nova::deps
+  include nova::deps
 
   if is_service_default($password) {
     fail('Please set password for nova service user')

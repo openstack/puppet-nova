@@ -17,9 +17,9 @@ class nova::compute::ironic (
   $compute_driver        = 'ironic.IronicDriver'
 ) {
 
-  include ::nova::deps
+  include nova::deps
   require ::nova::ironic::common
-  include ::ironic::client
+  include ironic::client
 
   nova_config {
     'DEFAULT/compute_driver':           value => $compute_driver;

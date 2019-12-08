@@ -514,10 +514,10 @@ class nova(
   $notify_on_api_faults                   = undef,
 ) inherits nova::params {
 
-  include ::nova::deps
+  include nova::deps
 
   # maintain backward compatibility
-  include ::nova::db
+  include nova::db
 
   validate_legacy(Array, 'validate_array', $enabled_ssl_apis)
   if empty($enabled_ssl_apis) and $use_ssl {

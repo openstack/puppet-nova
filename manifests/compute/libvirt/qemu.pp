@@ -54,7 +54,7 @@ class nova::compute::libvirt::qemu(
   $libvirt_version    = $::nova::compute::libvirt::version::default,
 ) inherits nova::compute::libvirt::version {
 
-  include ::nova::deps
+  include nova::deps
   require ::nova::compute::libvirt
 
   Anchor['nova::config::begin']

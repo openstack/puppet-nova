@@ -14,7 +14,7 @@
 class nova::compute::pci(
   $passthrough = $::os_service_default
 ) {
-  include ::nova::deps
+  include nova::deps
 
   $picked_passthrough = pick_default($::nova::compute::pci_passthrough,$passthrough)
 

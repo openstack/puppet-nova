@@ -74,8 +74,8 @@ class nova::compute::rbd (
   $ceph_client_ensure           = 'present',
 ) {
 
-  include ::nova::deps
-  include ::nova::params
+  include nova::deps
+  include nova::params
 
   if $manage_ceph_client {
     # Install ceph client libraries

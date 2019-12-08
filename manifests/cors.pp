@@ -45,7 +45,7 @@ class nova::cors (
   $allow_headers     = $::os_service_default,
 ) {
 
-  include ::nova::deps
+  include nova::deps
 
   oslo::cors { 'nova_config':
     allowed_origin    => $allowed_origin,

@@ -107,7 +107,7 @@ class nova::migration::libvirt(
   $crl_file                          = undef,
 ){
 
-  include ::nova::deps
+  include nova::deps
 
   if $transport {
     $transport_real = $transport

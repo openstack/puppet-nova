@@ -17,7 +17,7 @@ class nova::patch::config (
   $monkey_patch_modules                = $::os_service_default,
 ) {
 
-  include ::nova::deps
+  include nova::deps
 
   $monkey_patch_modules_real = pick(join(any2array($monkey_patch_modules), ','), $::os_service_default)
 

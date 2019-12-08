@@ -224,8 +224,8 @@ class nova::compute::libvirt (
   $tls_priority                               = undef,
 ) inherits nova::params {
 
-  include ::nova::deps
-  include ::nova::params
+  include nova::deps
+  include nova::params
 
   # libvirt_cpu_mode has different defaults depending on hypervisor.
   if !$libvirt_cpu_mode {
@@ -249,7 +249,7 @@ class nova::compute::libvirt (
   }
 
   if $migration_support {
-    include ::nova::migration::libvirt
+    include nova::migration::libvirt
   }
 
   if $log_outputs {
@@ -283,7 +283,7 @@ class nova::compute::libvirt (
   #
   # If you're using hiera:
   #  - set nova::compute::libvirt::manage_libvirt_services to false
-  #  - include ::nova::compute::libvirt::services in your composition layer
+  #  - include nova::compute::libvirt::services in your composition layer
   #  - select which services you want to deploy with
   #    ::nova::compute::libvirt::services:* parameters.
   #
@@ -292,7 +292,7 @@ class nova::compute::libvirt (
   #  - select which services you want to deploy with
   #    ::nova::compute::libvirt::*_service_name parameters.
   if $manage_libvirt_services {
-    class { '::nova::compute::libvirt::services':
+    class { 'nova::compute::libvirt::services':
       libvirt_service_name  => $libvirt_service_name,
       virtlock_service_name => $virtlock_service_name,
       virtlog_service_name  => $virtlog_service_name,

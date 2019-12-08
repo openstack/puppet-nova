@@ -128,11 +128,11 @@ describe 'nova::metadata::novajoin::auth' do
 
     context 'when configuring novajoin and the keystone endpoint' do
       let :pre_condition do
-        "class { '::nova::metadata::novajoin::authtoken':
+        "class { 'nova::metadata::novajoin::authtoken':
            password => 'secrete',
          }
-         class { '::ipaclient': password => 'join_otp', }
-         class { '::nova::metadata::novajoin::api':
+         class { 'ipaclient': password => 'join_otp', }
+         class { 'nova::metadata::novajoin::api':
            service_password => 'secrete',
            transport_url => 'rabbit://127.0.0.1//',
          }"

@@ -75,8 +75,8 @@ class nova::cron::purge_shadow_tables (
   $maxdelay     = 0,
 ) {
 
-  include ::nova::deps
-  include ::nova::params
+  include nova::deps
+  include nova::params
 
   if $verbose {
     $verbose_real = '--verbose'

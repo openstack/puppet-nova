@@ -38,7 +38,7 @@ class nova::db::postgresql(
   $setup_cell0 = true,
 ) {
 
-  include ::nova::deps
+  include nova::deps
 
   ::openstacklib::db::postgresql { 'nova':
     password_hash => postgresql_password($user, $password),

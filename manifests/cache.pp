@@ -102,7 +102,7 @@ class nova::cache (
   $manage_backend_package               = true,
 ) {
 
-  include ::nova::deps
+  include nova::deps
 
   oslo::cache { 'nova_config':
     config_prefix                        => $config_prefix,

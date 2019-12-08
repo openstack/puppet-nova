@@ -11,8 +11,8 @@
 class nova::client(
   $ensure = 'present'
 ) {
-  include ::nova::deps
-  include ::nova::params
+  include nova::deps
+  include nova::params
 
   package { 'python-novaclient':
     ensure => $ensure,

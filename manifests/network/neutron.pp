@@ -124,7 +124,7 @@ class nova::network::neutron (
   $dhcp_domain                     = undef,
 ) {
 
-  include ::nova::deps
+  include nova::deps
 
   if $neutron_url {
     warning('nova::network::neutron::neutron_url is deprecated, nova behaviour will be default to looking up \

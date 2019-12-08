@@ -76,7 +76,7 @@ class nova::keystone::auth(
   $configure_user_role     = true,
 ) {
 
-  include ::nova::deps
+  include nova::deps
 
 
   if $configure_endpoint {

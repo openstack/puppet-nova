@@ -35,11 +35,11 @@ class nova::conductor(
   $enable_new_services = $::os_service_default,
 ) {
 
-  include ::nova::deps
-  include ::nova::db
-  include ::nova::params
-  include ::nova::workarounds
-  include ::nova::availability_zone
+  include nova::deps
+  include nova::db
+  include nova::params
+  include nova::workarounds
+  include nova::availability_zone
 
   nova::generic_service { 'conductor':
     enabled        => $enabled,

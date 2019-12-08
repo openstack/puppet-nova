@@ -119,8 +119,8 @@ class nova::logging(
   $log_date_format               = $::os_service_default,
 ) {
 
-  include ::nova::deps
-  include ::nova::params
+  include nova::deps
+  include nova::params
 
   if !is_service_default($log_dir) {
     # This should force an update the selinux role if the logfile exists.

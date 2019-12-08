@@ -7,7 +7,7 @@
 #
 define nova::manage::floating ( $network ) {
 
-  include ::nova::deps
+  include nova::deps
 
   nova_floating { $name:
     ensure   => present,

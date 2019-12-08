@@ -51,7 +51,7 @@ class nova::ironic::common (
   $project_domain_name  = 'Default',
 ) {
 
-  include ::nova::deps
+  include nova::deps
 
   nova_config {
     'ironic/auth_plugin':          value => $auth_plugin;

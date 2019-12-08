@@ -27,8 +27,8 @@ class nova::compute::libvirt::services (
   $libvirt_virt_type     = 'kvm',
 ) inherits nova::params {
 
-  include ::nova::deps
-  include ::nova::params
+  include nova::deps
+  include nova::params
 
   if $libvirt_service_name {
     # libvirt-nwfilter

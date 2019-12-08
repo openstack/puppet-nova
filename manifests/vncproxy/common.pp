@@ -23,7 +23,7 @@ class nova::vncproxy::common (
   $vncproxy_path     = undef,
 ) {
 
-  include ::nova::deps
+  include nova::deps
 
   if defined('$::nova::compute::vncproxy_host') {
     $compute_vncproxy_host_real = $::nova::compute::vncproxy_host

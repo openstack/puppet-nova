@@ -41,7 +41,7 @@ class nova::db::mysql_api(
   $allowed_hosts = undef,
 ) {
 
-  include ::nova::deps
+  include nova::deps
 
   ::openstacklib::db::mysql { 'nova_api':
     user          => $user,

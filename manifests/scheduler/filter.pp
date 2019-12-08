@@ -134,7 +134,7 @@ class nova::scheduler::filter (
   $scheduler_host_manager                         = undef,
 ) {
 
-  include ::nova::deps
+  include nova::deps
 
   # The following values are following this rule:
   # - default is $::os_service_default so Puppet won't try to configure it.

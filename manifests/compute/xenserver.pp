@@ -273,7 +273,7 @@ class nova::compute::xenserver(
   $introduce_vdi_retry_wait              = $::os_service_default,
 ) {
 
-  include ::nova::deps
+  include nova::deps
 
   nova_config {
     'DEFAULT/compute_driver':                          value => $compute_driver;

@@ -38,8 +38,8 @@ define nova::generic_service(
   $ensure_package = 'present'
 ) {
 
-  include ::nova::deps
-  include ::nova::params
+  include nova::deps
+  include nova::params
 
   $nova_title = "nova-${name}"
 

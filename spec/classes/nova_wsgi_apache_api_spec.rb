@@ -6,10 +6,10 @@ describe 'nova::wsgi::apache_api' do
 
       let :pre_condition do
         "include nova
-         class { '::nova::keystone::authtoken':
+         class { 'nova::keystone::authtoken':
            password => 'secrete',
          }
-         class { '::nova::api':
+         class { 'nova::api':
            service_name   => 'httpd',
          }"
       end
@@ -41,10 +41,10 @@ describe 'nova::wsgi::apache_api' do
     context 'when overriding parameters using different ports' do
       let :pre_condition do
         "include nova
-         class { '::nova::keystone::authtoken':
+         class { 'nova::keystone::authtoken':
            password => 'secrete',
          }
-         class { '::nova::api':
+         class { 'nova::api':
            service_name   => 'httpd',
          }"
       end

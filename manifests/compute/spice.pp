@@ -51,7 +51,7 @@ class nova::compute::spice(
   $keymap                           = undef,
 ) {
 
-  include ::nova::deps
+  include nova::deps
 
   if $keymap {
     warning('keymap parameter is deprecated, has no effect and will be removed in the future.')

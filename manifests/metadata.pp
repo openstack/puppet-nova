@@ -54,9 +54,9 @@ class nova::metadata(
   $max_request_body_size                       = undef,
 ) inherits nova::params {
 
-  include ::nova::deps
-  include ::nova::db
-  include ::nova::keystone::authtoken
+  include nova::deps
+  include nova::db
+  include nova::keystone::authtoken
 
   if $enabled_apis != undef {
     warning('enabled_apis parameter is deprecated, use nova::compute::enabled_apis instead.')

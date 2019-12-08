@@ -29,8 +29,8 @@ describe 'nova::metadata::novajoin::api' do
   end
 
   let :pre_condition do
-    "class { '::ipaclient': password => 'join_otp', }
-     class { '::nova::metadata::novajoin::authtoken':
+    "class { 'ipaclient': password => 'join_otp', }
+     class { 'nova::metadata::novajoin::authtoken':
        password => 'passw0rd',
      }"
   end

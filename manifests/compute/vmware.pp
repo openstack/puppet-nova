@@ -72,7 +72,7 @@ class nova::compute::vmware(
   $datastore_regex    = $::os_service_default,
 ) {
 
-  include ::nova::deps
+  include nova::deps
 
   nova_config {
     'DEFAULT/compute_driver':    value => $compute_driver;

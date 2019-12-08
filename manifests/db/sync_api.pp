@@ -27,8 +27,8 @@ class nova::db::sync_api(
   $db_sync_timeout = 300,
 ) {
 
-  include ::nova::deps
-  include ::nova::params
+  include nova::deps
+  include nova::params
 
   exec { 'nova-db-sync-api':
     command     => "/usr/bin/nova-manage ${extra_params} api_db sync",
@@ -49,6 +49,6 @@ class nova::db::sync_api(
   }
 
   if $cellv2_setup {
-    include ::nova::cell_v2::simple_setup
+    include nova::cell_v2::simple_setup
   }
 }

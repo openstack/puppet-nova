@@ -14,7 +14,7 @@
 class nova::pci(
   $aliases = $::os_service_default
 ) {
-  include ::nova::deps
+  include nova::deps
 
   if $aliases and
       !is_service_default($aliases) and

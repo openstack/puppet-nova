@@ -96,7 +96,7 @@ class nova::vendordata(
   # DEPRECATED
   $vendordata_caller                           = undef,
 ) inherits nova::params {
-  include ::nova::deps
+  include nova::deps
 
   # TODO(mschuppert): In order to keep backward compatibility we rely on the
   # pick function. When vendordata parameters got removed from ::nova::api and

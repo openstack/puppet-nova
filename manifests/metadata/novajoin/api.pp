@@ -127,8 +127,8 @@ class nova::metadata::novajoin::api (
   $configure_kerberos        = false,
   $ipa_realm                 = undef,
 ) {
-  include ::nova::metadata::novajoin::authtoken
-  include ::nova::metadata::novajoin::policy
+  include nova::metadata::novajoin::authtoken
+  include nova::metadata::novajoin::policy
 
   if ! $service_user {
     fail('service_user is missing')

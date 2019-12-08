@@ -18,8 +18,8 @@ class nova::db::sync(
   $db_sync_timeout = 300,
 ) {
 
-  include ::nova::deps
-  include ::nova::params
+  include nova::deps
+  include nova::params
 
   exec { 'nova-db-sync':
     command     => "/usr/bin/nova-manage ${extra_params} db sync",

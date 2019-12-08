@@ -32,7 +32,7 @@ class nova::config (
   $nova_paste_api_ini = {},
 ) {
 
-  include ::nova::deps
+  include nova::deps
 
   validate_legacy(Hash, 'validate_hash', $nova_config)
   validate_legacy(Hash, 'validate_hash', $nova_paste_api_ini)

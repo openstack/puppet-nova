@@ -61,7 +61,7 @@ class nova::cinder (
 
 ) {
 
-  include ::nova::deps
+  include nova::deps
 
   nova_config {
     'cinder/password':            value => $password, secret => true;

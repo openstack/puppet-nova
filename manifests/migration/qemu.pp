@@ -22,7 +22,7 @@ class nova::migration::qemu(
   $migration_port_max = 49215,
 ){
 
-  include ::nova::deps
+  include nova::deps
 
   Anchor['nova::config::begin']
   -> Augeas<| tag == 'qemu-conf-augeas'|>

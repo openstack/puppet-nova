@@ -36,8 +36,8 @@ class nova::spicehtml5proxy(
   $ensure_package = 'present'
 ) {
 
-  include ::nova::deps
-  include ::nova::params
+  include nova::deps
+  include nova::params
 
   # Nodes running spicehtml5proxy do *not* need (and in fact, don't care)
   # about [spice]/enable to be set. This setting is for compute nodes,

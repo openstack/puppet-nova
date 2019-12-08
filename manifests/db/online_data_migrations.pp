@@ -18,8 +18,8 @@ class nova::db::online_data_migrations(
   $db_sync_timeout = 300,
 ) {
 
-  include ::nova::deps
-  include ::nova::params
+  include nova::deps
+  include nova::params
 
   exec { 'nova-db-online-data-migrations':
     command     => "/usr/bin/nova-manage ${extra_params} db online_data_migrations",

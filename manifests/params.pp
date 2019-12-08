@@ -3,7 +3,7 @@
 # These parameters need to be accessed from several locations and
 # should be considered to be constant
 class nova::params {
-  include ::openstacklib::defaults
+  include openstacklib::defaults
   $pyvers = $::openstacklib::defaults::pyvers
   $client_package = "python${pyvers}-novaclient"
   $group          = 'nova'

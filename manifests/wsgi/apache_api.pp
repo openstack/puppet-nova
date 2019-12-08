@@ -123,11 +123,11 @@ class nova::wsgi::apache_api (
   $custom_wsgi_process_options = {},
 ) {
 
-  include ::nova::params
-  include ::apache
-  include ::apache::mod::wsgi
+  include nova::params
+  include apache
+  include apache::mod::wsgi
   if $ssl {
-    include ::apache::mod::ssl
+    include apache::mod::ssl
   }
 
   if ! defined(Class[::nova::api]) {

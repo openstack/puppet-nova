@@ -152,7 +152,7 @@ describe 'nova::keystone::auth' do
 
     context 'when configuring nova-api and the keystone endpoint' do
       let :pre_condition do
-        "class { '::nova::keystone::authtoken':
+        "class { 'nova::keystone::authtoken':
            password => 'secrete',
          }
          class { 'nova::api': }

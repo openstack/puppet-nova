@@ -12,7 +12,7 @@
 class nova::compute::vgpu(
   $enabled_vgpu_types = $::os_service_default
 ) {
-  include ::nova::deps
+  include nova::deps
 
   nova_config {
     'devices/enabled_vgpu_types': value => join(any2array($enabled_vgpu_types), ',');

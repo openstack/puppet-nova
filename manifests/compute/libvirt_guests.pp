@@ -54,8 +54,8 @@ class nova::compute::libvirt_guests (
   $on_shutdown                       = 'shutdown',
   $manage_service                    = false,
 ) {
-  include ::nova::params
-  include ::nova::deps
+  include nova::params
+  include nova::deps
 
   Anchor['nova::config::begin']
   -> File_line<| tag == 'libvirt-guests-file_line'|>

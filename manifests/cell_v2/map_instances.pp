@@ -25,8 +25,8 @@ class nova::cell_v2::map_instances (
   $extra_params = '',
 ) {
 
-  include ::nova::deps
-  include ::nova::params
+  include nova::deps
+  include nova::params
 
   if (!$cell_uuid and !$cell_name) {
     fail('Either cell_uuid or cell_name must be provided')

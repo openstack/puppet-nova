@@ -32,8 +32,8 @@ class nova::serialproxy(
   $ensure_package       = 'present'
 ) {
 
-  include ::nova::deps
-  include ::nova::params
+  include nova::deps
+  include nova::params
 
   nova_config {
     'serial_console/serialproxy_port':    value => $serialproxy_port;

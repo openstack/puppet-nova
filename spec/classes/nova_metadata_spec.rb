@@ -4,7 +4,7 @@ describe 'nova::metadata' do
 
   let :pre_condition do
     "include nova
-     class { '::nova::keystone::authtoken':
+     class { 'nova::keystone::authtoken':
        password => 'passw0rd',
      }"
   end
@@ -53,7 +53,7 @@ describe 'nova::metadata' do
     context 'with default database parameters' do
       let :pre_condition do
         "include nova
-         class { '::nova::keystone::authtoken':
+         class { 'nova::keystone::authtoken':
            password => 'a_big_secret',
          }"
       end
@@ -74,7 +74,7 @@ describe 'nova::metadata' do
            api_slave_connection    => 'mysql://user:pass@slave/db2',
            database_idle_timeout   => '30',
          }
-         class { '::nova::keystone::authtoken':
+         class { 'nova::keystone::authtoken':
            password => 'passw0rd',
          }
         "

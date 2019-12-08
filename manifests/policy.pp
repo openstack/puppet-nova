@@ -28,8 +28,8 @@ class nova::policy (
   $policy_path = '/etc/nova/policy.json',
 ) {
 
-  include ::nova::deps
-  include ::nova::params
+  include nova::deps
+  include nova::params
 
   validate_legacy(Hash, 'validate_hash', $policies)
 

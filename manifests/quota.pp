@@ -92,7 +92,7 @@ class nova::quota(
   $max_age                           = 0,
 ) {
 
-  include ::nova::deps
+  include nova::deps
 
   nova_config {
     'quota/instances':                   value => $instances;

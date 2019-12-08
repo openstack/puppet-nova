@@ -69,7 +69,7 @@ class nova::placement(
   $os_interface        = undef,
 ) inherits nova::params {
 
-  include ::nova::deps
+  include nova::deps
 
   if $os_interface {
     warning('nova::placement::os_interface is deprecated for removal, please use valid_interfaces instead.')

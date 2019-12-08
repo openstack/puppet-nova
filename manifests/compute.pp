@@ -241,15 +241,15 @@ class nova::compute (
   $vcpu_pin_set                                = undef,
 ) {
 
-  include ::nova::deps
-  include ::nova::params
+  include nova::deps
+  include nova::params
 
   $cpu_shared_set_real = pick(join(any2array($cpu_shared_set), ','), $::os_service_default)
   $cpu_dedicated_set_real = pick(join(any2array($cpu_dedicated_set), ','), $::os_service_default)
 
-  include ::nova::pci
-  include ::nova::compute::vgpu
-  include ::nova::vendordata
+  include nova::pci
+  include nova::compute::vgpu
+  include nova::vendordata
 
   if $vnc_keymap {
     warning('vnc_keymap parameter is deprecated, has no effect and will be removed in the future.')
@@ -350,7 +350,7 @@ class nova::compute (
     $reserved_huge_pages_real = $::os_service_default
   }
 
-  include ::nova::availability_zone
+  include nova::availability_zone
 
   nova_config {
     'DEFAULT/reserved_host_memory_mb':           value => $reserved_host_memory;
@@ -373,7 +373,7 @@ class nova::compute (
   ensure_resource('nova_config', 'DEFAULT/allow_resize_to_same_host', { value => $allow_resize_to_same_host })
 
   if ($vnc_enabled) {
-    include ::nova::vncproxy::common
+    include nova::vncproxy::common
 
     nova_config {
       'vnc/server_proxyclient_address': value => $vncserver_proxyclient_address;

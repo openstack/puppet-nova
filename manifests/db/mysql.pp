@@ -47,7 +47,7 @@ class nova::db::mysql(
   $setup_cell0   = true,
 ) {
 
-  include ::nova::deps
+  include nova::deps
 
   ::openstacklib::db::mysql { 'nova':
     user          => $user,

@@ -225,11 +225,11 @@ class nova::api(
   $fping_path                                  = undef,
 ) inherits nova::params {
 
-  include ::nova::deps
-  include ::nova::db
-  include ::nova::policy
-  include ::nova::keystone::authtoken
-  include ::nova::availability_zone
+  include nova::deps
+  include nova::db
+  include nova::policy
+  include nova::keystone::authtoken
+  include nova::availability_zone
 
   if !$nova_metadata_wsgi_enabled {
     warning('Running nova metadata api via evenlet is deprecated and will be removed in Stein release.')
@@ -240,7 +240,7 @@ class nova::api(
   }
 
   if $install_cinder_client {
-    include ::cinder::client
+    include cinder::client
     Class['cinder::client'] ~> Nova::Generic_service['api']
   }
 
@@ -351,13 +351,13 @@ as a standalone service, or httpd for being run by a httpd server")
   # Added arg and if statement prevents this from being run
   # where db is not active i.e. the compute
   if $sync_db {
-    include ::nova::db::sync
+    include nova::db::sync
   }
   if $sync_db_api {
-    include ::nova::db::sync_api
+    include nova::db::sync_api
   }
   if $db_online_data_migrations {
-    include ::nova::db::online_data_migrations
+    include nova::db::online_data_migrations
   }
 
   # Remove auth configuration from api-paste.ini

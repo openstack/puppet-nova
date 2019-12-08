@@ -80,7 +80,7 @@ class nova::keystone::service_user(
   $region_name             = $::os_service_default,
 ) {
 
-  include ::nova::deps
+  include nova::deps
 
   keystone::resource::service_user { 'nova_config':
     username                => $username,

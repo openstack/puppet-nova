@@ -76,8 +76,8 @@ class nova::vncproxy(
   $vencrypt_ca       = undef,
 ) {
 
-  include ::nova::deps
-  include ::nova::params
+  include nova::deps
+  include nova::params
 
   if (!$allow_noauth and !$allow_vencrypt) {
     fail('Either allow_noauth or allow_vencrypt must be true')

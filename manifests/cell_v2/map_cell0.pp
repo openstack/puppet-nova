@@ -15,8 +15,8 @@ class nova::cell_v2::map_cell0 (
   $extra_params = '',
 ) {
 
-  include ::nova::deps
-  include ::nova::params
+  include nova::deps
+  include nova::params
 
   exec { 'nova-cell_v2-map_cell0':
     path        => ['/bin', '/usr/bin'],
