@@ -289,7 +289,7 @@ class nova::compute (
     nova_config {
       'compute/cpu_shared_set':    value => $cpu_shared_set_real;
       'compute/cpu_dedicated_set': value => $cpu_dedicated_set_real;
-      'compute/vcpu_pin_set':      value => $vcpu_pin_set_real;
+      'DEFAULT/vcpu_pin_set':      value => $vcpu_pin_set_real;
     }
   } else {
     # handle the following conditions:
@@ -300,7 +300,7 @@ class nova::compute (
     nova_config {
       'compute/cpu_shared_set':    value  => $cpu_shared_set_real;
       'compute/cpu_dedicated_set': value  => $cpu_dedicated_set_real;
-      'compute/vcpu_pin_set':      ensure => absent; # when undef, don't include in conf.
+      'DEFAULT/vcpu_pin_set':      ensure => absent; # when undef, don't include in conf.
     }
   }
 
