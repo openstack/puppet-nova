@@ -212,7 +212,7 @@ describe 'nova::compute' do
 
       it { is_expected.to contain_nova_config('compute/cpu_shared_set').with(:value => '4-12,^8,15') }
       it { is_expected.to contain_nova_config('compute/cpu_dedicated_set').with(:value => '2-10,^5,14') }
-      it { is_expected.to contain_nova_config('compute/vcpu_pin_set').with(:ensure => 'absent') }
+      it { is_expected.to contain_nova_config('DEFAULT/vcpu_pin_set').with(:ensure => 'absent') }
     end
 
     context 'when cpu_dedicated_set is defined but cpu_shared_set is not' do
@@ -222,7 +222,7 @@ describe 'nova::compute' do
 
       it { is_expected.to contain_nova_config('compute/cpu_dedicated_set').with(:value => '4-12,^8,15') }
       it { is_expected.to contain_nova_config('compute/cpu_shared_set').with(:value => '<SERVICE DEFAULT>') }
-      it { is_expected.to contain_nova_config('compute/vcpu_pin_set').with(:ensure => 'absent') }
+      it { is_expected.to contain_nova_config('DEFAULT/vcpu_pin_set').with(:ensure => 'absent') }
     end
 
     context 'when cpu_shared_set is defined, but cpu_dedicated_set and vcpu_pin_set are not' do
@@ -232,7 +232,7 @@ describe 'nova::compute' do
 
       it { is_expected.to contain_nova_config('compute/cpu_shared_set').with(:value => '4-12,^8,15') }
       it { is_expected.to contain_nova_config('compute/cpu_dedicated_set').with(:value => '<SERVICE DEFAULT>') }
-      it { is_expected.to contain_nova_config('compute/vcpu_pin_set').with(:ensure => 'absent') }
+      it { is_expected.to contain_nova_config('DEFAULT/vcpu_pin_set').with(:ensure => 'absent') }
     end
 
     context 'when cpu_shared_set and vcpu_pin_set are defined, but cpu_dedicated_set is not' do
@@ -242,7 +242,7 @@ describe 'nova::compute' do
       end
 
       it { is_expected.to contain_nova_config('compute/cpu_shared_set').with(:value => '4-12,^8,15') }
-      it { is_expected.to contain_nova_config('compute/vcpu_pin_set').with(:value => '2-10,^5,14') }
+      it { is_expected.to contain_nova_config('DEFAULT/vcpu_pin_set').with(:value => '2-10,^5,14') }
       it { is_expected.to contain_nova_config('compute/cpu_dedicated_set').with(:value => '<SERVICE DEFAULT>') }
     end
 
@@ -251,7 +251,7 @@ describe 'nova::compute' do
          { :vcpu_pin_set => ['4-12','^8','15'] }
       end
 
-      it { is_expected.to contain_nova_config('compute/vcpu_pin_set').with(:value => '4-12,^8,15') }
+      it { is_expected.to contain_nova_config('DEFAULT/vcpu_pin_set').with(:value => '4-12,^8,15') }
       it { is_expected.to contain_nova_config('compute/cpu_shared_set').with(:value => '<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('compute/cpu_dedicated_set').with(:value => '<SERVICE DEFAULT>') }
     end
