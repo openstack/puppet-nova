@@ -180,10 +180,6 @@
 #   metadata handling from api class.
 #   Defaults to false
 #
-# [*fping_path*]
-#   (optional) Full path to fping.
-#   Defaults to undef
-#
 class nova::api(
   $enabled                                     = true,
   $manage_service                              = true,
@@ -222,7 +218,6 @@ class nova::api(
   $allow_resize_to_same_host                   = false,
   # DEPRECATED PARAMETER
   $nova_metadata_wsgi_enabled                  = false,
-  $fping_path                                  = undef,
 ) inherits nova::params {
 
   include nova::deps
@@ -233,10 +228,6 @@ class nova::api(
 
   if !$nova_metadata_wsgi_enabled {
     warning('Running nova metadata api via evenlet is deprecated and will be removed in Stein release.')
-  }
-
-  if $fping_path {
-    warning('fping_path is deprecated, has no effect and will be removed in the future.')
   }
 
   if $install_cinder_client {
