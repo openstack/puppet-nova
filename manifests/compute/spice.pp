@@ -33,12 +33,6 @@
 #   (optional) Path of the spice html file for the html5 console proxy
 #   Defaults to '/spice_auto.html'
 #
-# DEPRECATED PARAMETERS
-#
-# [*keymap*]
-#   (optional) keymap for spice
-#   Defaults to undef
-#
 class nova::compute::spice(
   $agent_enabled                    = true,
   $server_listen                    = undef,
@@ -47,15 +41,9 @@ class nova::compute::spice(
   $proxy_protocol                   = 'http',
   $proxy_port                       = '6082',
   $proxy_path                       = '/spice_auto.html',
-  # DEPRECATED PARAMETERS
-  $keymap                           = undef,
 ) {
 
   include nova::deps
-
-  if $keymap {
-    warning('keymap parameter is deprecated, has no effect and will be removed in the future.')
-  }
 
   if $proxy_host {
     $html5proxy_base_url = "${proxy_protocol}://${proxy_host}:${proxy_port}${proxy_path}"
