@@ -118,27 +118,10 @@ class nova::network::neutron (
   $vif_plugging_timeout            = '300',
   $default_floating_pool           = 'nova',
   # DEPRECATED PARAMS
-  $neutron_url                     = undef,
-  $neutron_url_timeout             = undef,
-  $firewall_driver                 = undef,
   $dhcp_domain                     = undef,
 ) {
 
   include nova::deps
-
-  if $neutron_url {
-    warning('nova::network::neutron::neutron_url is deprecated, nova behaviour will be default to looking up \
-    the neutron endpoint in the keystone catalog, please use nova::network::neutron::neutron_endpoint_override to override')
-  }
-
-  if $neutron_url_timeout {
-    warning('nova::network::neutron::neutron_url_timeout is deprecated, please use neutron_timeout instead.')
-  }
-
-  if $firewall_driver {
-    warning('nova::network::neutron::firewall_driver is deprecated and will be removed in a future release')
-  }
-
 
   # TODO(mwhahaha): remove me when tripleo switches to use the metadata version
   # of dhcp_domain
@@ -148,22 +131,11 @@ class nova::network::neutron (
     })
   }
 
-  # TODO(tobias-urdin): Remove these in the T release.
-  nova_config {
-    'DEFAULT/firewall_driver': value => $firewall_driver;
-  }
-
-  nova_config {
-    'neutron/url': value => $neutron_url;
-  }
-
-  $neutron_timeout_real = pick($neutron_url_timeout, $neutron_timeout)
-
   nova_config {
     'DEFAULT/vif_plugging_is_fatal':   value => $vif_plugging_is_fatal;
     'DEFAULT/vif_plugging_timeout':    value => $vif_plugging_timeout;
     'neutron/default_floating_pool':   value => $default_floating_pool;
-    'neutron/timeout':                 value => $neutron_timeout_real;
+    'neutron/timeout':                 value => $neutron_timeout;
     'neutron/project_name':            value => $neutron_project_name;
     'neutron/project_domain_name':     value => $neutron_project_domain_name;
     'neutron/region_name':             value => $neutron_region_name;

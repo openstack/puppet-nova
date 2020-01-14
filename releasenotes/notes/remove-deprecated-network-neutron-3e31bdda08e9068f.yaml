@@ -1,0 +1,9 @@
+---
+upgrade:
+  - |
+    The deprecated parameter neutron_url in nova::network::neutron is removed.
+  - |
+    The deprecated parameter neutron_url_timeout in nova::network::neutron is removed.
+    Please use the neutron_timeout parameter instead.
+  - |
+    The deprecated parameter firewall_driver in nova::network::neutron is removed.
