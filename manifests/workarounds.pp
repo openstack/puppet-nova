@@ -4,17 +4,22 @@
 #
 # === Parameters:
 #
+# DEPRECATED
+#
 #  [*enable_numa_live_migration*]
 #   (optional) Whether to enable live migration for NUMA topology instances.
-#   Defaults to false
+#   Defaults to undef
 #
 class nova::workarounds (
-  $enable_numa_live_migration = false,
+  # DEPRECATED PARAMETER
+  $enable_numa_live_migration = undef,
 ) {
 
-  nova_config {
-    'workarounds/enable_numa_live_migration': value => $enable_numa_live_migration;
+  if $enable_numa_live_migration != undef {
+    warning('The enable_numa_live_migration parameter is deprecated')
+    nova_config {
+      'workarounds/enable_numa_live_migration': value => $enable_numa_live_migration;
+    }
   }
 
 }
-

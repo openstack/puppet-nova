@@ -9,7 +9,7 @@ describe 'nova::workarounds' do
   shared_examples 'nova::workarounds' do
 
     context 'with default parameters' do
-      it { is_expected.to contain_nova_config('workarounds/enable_numa_live_migration').with_value(false) }
+      it { is_expected.not_to contain_resources('nova_config') }
     end
 
     context 'with overridden parameters' do
