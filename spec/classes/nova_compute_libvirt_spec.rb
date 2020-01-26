@@ -68,6 +68,7 @@ describe 'nova::compute::libvirt' do
       it { is_expected.to contain_nova_config('libvirt/nfs_mount_options').with_ensure('<SERVICE DEFAULT>')}
       it { is_expected.to contain_nova_config('libvirt/num_pcie_ports').with_ensure('<SERVICE DEFAULT>')}
       it { is_expected.to contain_nova_config('libvirt/mem_stats_period_seconds').with_value('<SERVICE DEFAULT>')}
+      it { is_expected.to contain_libvirtd_config('log_outputs').with_ensure('absent')}
       it { is_expected.to contain_libvirtd_config('log_filters').with_ensure('absent')}
       it { is_expected.to contain_libvirtd_config('tls_priority').with_ensure('absent')}
     end

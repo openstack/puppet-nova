@@ -256,17 +256,29 @@ class nova::compute::libvirt (
     libvirtd_config {
       'log_outputs': value => "\"${log_outputs}\"";
     }
+  } else {
+    libvirtd_config {
+      'log_outputs': ensure => 'absent';
+    }
   }
 
   if $log_filters {
     libvirtd_config {
       'log_filters': value => "\"${log_filters}\"";
     }
+  } else {
+    libvirtd_config {
+      'log_filters': ensure => 'absent';
+    }
   }
 
   if $tls_priority {
     libvirtd_config {
       'tls_priority': value => "\"${tls_priority}\"";
+    }
+  } else {
+    libvirtd_config {
+      'tls_priority': ensure => 'absent';
     }
   }
 
