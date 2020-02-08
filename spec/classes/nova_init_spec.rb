@@ -31,9 +31,8 @@ describe 'nova' do
         is_expected.to contain_nova_config('glance/api_servers').with_value('http://localhost:9292')
       end
 
-      it 'configures auth_strategy' do
-        is_expected.to contain_nova_config('api/auth_strategy').with_value('keystone')
-        is_expected.to_not contain_nova_config('DEFAULT/use_deprecated_auth').with_value(false)
+      it 'does not configure auth_strategy' do
+        is_expected.not_to contain_nova_config('api/auth_strategy')
       end
 
       it 'configures rabbit' do
@@ -130,7 +129,6 @@ describe 'nova' do
 
       it 'configures auth_strategy' do
         is_expected.to contain_nova_config('api/auth_strategy').with_value('foo')
-        is_expected.to_not contain_nova_config('DEFAULT/use_deprecated_auth').with_value(true)
       end
 
       it 'configures rabbit' do

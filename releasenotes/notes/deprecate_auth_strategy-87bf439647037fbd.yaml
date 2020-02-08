@@ -1,0 +1,5 @@
+---
+deprecations:
+  - |
+    nova::auth_strategy was deprecated because the corresponding parameter
+    is not was deprecated.
