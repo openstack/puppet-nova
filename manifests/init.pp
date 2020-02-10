@@ -211,10 +211,6 @@
 #   IP address.
 #   Defaults to $::os_service_default.
 #
-# [*auth_strategy*]
-#   (optional) The strategy to use for auth: noauth or keystone.
-#   Defaults to 'keystone'
-#
 # [*service_down_time*]
 #   (optional) Maximum time since last check-in for up service.
 #   Defaults to 60
@@ -419,6 +415,10 @@
 #   exceptions in the API service
 #   Defaults to undef
 #
+# [*auth_strategy*]
+#   (optional) The strategy to use for auth: noauth or keystone.
+#   Defaults to undef
+#
 class nova(
   $ensure_package                         = 'present',
   $database_connection                    = undef,
@@ -469,7 +469,6 @@ class nova(
   $amqp_username                          = $::os_service_default,
   $amqp_password                          = $::os_service_default,
   $host                                   = $::os_service_default,
-  $auth_strategy                          = 'keystone',
   $service_down_time                      = 60,
   $state_path                             = '/var/lib/nova',
   $lock_path                              = $::nova::params::lock_path,
@@ -512,6 +511,7 @@ class nova(
   $notify_api_faults                      = undef,
   $image_service                          = undef,
   $notify_on_api_faults                   = undef,
+  $auth_strategy                          = undef,
 ) inherits nova::params {
 
   include nova::deps
@@ -625,12 +625,16 @@ but should be one of: ssh-rsa, ssh-dsa, ssh-ecdsa.")
     nova_config { 'glance/api_servers': value => $glance_api_servers }
   }
 
+  if $auth_strategy {
+    warning('The auth_strategy parameter is deprecated, and will be removed in a future release.')
+    nova_config { 'api/auth_strategy': value => $auth_strategy }
+  }
+
   nova_config {
     'DEFAULT/ssl_only':              value => $ssl_only;
     'DEFAULT/cert':                  value => $cert;
     'DEFAULT/key':                   value => $key;
     'DEFAULT/my_ip':                 value => $my_ip;
-    'api/auth_strategy':             value => $auth_strategy;
     'DEFAULT/host':                  value => $host;
     'DEFAULT/cpu_allocation_ratio':  value => $cpu_allocation_ratio;
     'DEFAULT/ram_allocation_ratio':  value => $ram_allocation_ratio;
