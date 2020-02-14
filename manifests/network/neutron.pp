@@ -79,27 +79,6 @@
 #   (optional) Default pool for floating IPs
 #   Defaults to 'nova'
 #
-### DEPRECATED PARAMS
-#
-# [*neutron_url*]
-#   (optional) URL for connecting to the Neutron networking service.
-#   Defaults to undef
-#
-# [*neutron_url_timeout*]
-#   (optional) Timeout value for connecting to neutron in seconds.
-#   Defaults to undef
-#
-# [*firewall_driver*]
-#   (optional) Firewall driver.
-#   This prevents nova from maintaining a firewall so it does not interfere
-#   with Neutron's. Set to 'nova.virt.firewall.IptablesFirewallDriver'
-#   to re-enable the Nova firewall.
-#   Defaults to undef
-#
-# [*dhcp_domain*]
-#   (optional) domain to use for building the hostnames
-#   Defaults to undef
-#
 class nova::network::neutron (
   $neutron_password                = false,
   $neutron_auth_type               = 'v3password',
@@ -117,19 +96,9 @@ class nova::network::neutron (
   $vif_plugging_is_fatal           = true,
   $vif_plugging_timeout            = '300',
   $default_floating_pool           = 'nova',
-  # DEPRECATED PARAMS
-  $dhcp_domain                     = undef,
 ) {
 
   include nova::deps
-
-  # TODO(mwhahaha): remove me when tripleo switches to use the metadata version
-  # of dhcp_domain
-  if $dhcp_domain != undef {
-    ensure_resource('nova_config', 'api/dhcp_domain', {
-      value => $dhcp_domain
-    })
-  }
 
   nova_config {
     'DEFAULT/vif_plugging_is_fatal':   value => $vif_plugging_is_fatal;

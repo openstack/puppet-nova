@@ -1,0 +1,5 @@
+---
+upgrade:
+  - |
+    The deprecated parameter dhcp_domain in nova::network::neutron is removed.
+    Please use the nova::metadata::dhcp_domain parameter instead.
