@@ -1,0 +1,13 @@
+---
+deprecations:
+  - |
+    nova::glance_api_servers has been deprecated. The config option and
+    behavior of distributing requests round-robin over a list have been
+    deprecated for removal from nova.
+    nova::glance_api_endpoint can be used as an alternative in the case
+    of a single glance endpoint.
+features:
+  - |
+    nova::glance_api_endpoint has been added. This provides similar
+    functionality to nova::glance_api_servers for a single glance endpoint
+    versus a list of glance servers.

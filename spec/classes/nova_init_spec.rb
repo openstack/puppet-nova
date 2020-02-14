@@ -27,8 +27,8 @@ describe 'nova' do
         :refreshonly => true
       )}
 
-      it 'configures glance api servers' do
-        is_expected.to contain_nova_config('glance/api_servers').with_value('http://localhost:9292')
+      it 'does not configure glance api servers' do
+        is_expected.to_not contain_nova_config('glance/api_servers')
       end
 
       it 'does not configure auth_strategy' do
@@ -73,7 +73,8 @@ describe 'nova' do
 
       let :params do
         {
-          :glance_api_servers                      => 'http://localhost:9292',
+          :glance_endpoint_override                => 'http://localhost:9292',
+          :glance_api_servers                      => ['http://localhost:9292', 'http://localhost:9293'],
           :default_transport_url                   => 'rabbit://rabbit_user:password@localhost:5673',
           :rpc_response_timeout                    => '30',
           :control_exchange                        => 'nova',
@@ -123,8 +124,12 @@ describe 'nova' do
         })
       end
 
+      it 'configures glance endpoint_override' do
+        is_expected.to contain_nova_config('glance/endpoint_override').with_value('http://localhost:9292')
+      end
+
       it 'configures glance api servers' do
-        is_expected.to contain_nova_config('glance/api_servers')
+        is_expected.to contain_nova_config('glance/api_servers').with_value(['http://localhost:9292', 'http://localhost:9293'])
       end
 
       it 'configures auth_strategy' do
