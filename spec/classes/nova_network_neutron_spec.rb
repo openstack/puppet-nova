@@ -93,18 +93,6 @@ describe 'nova::network::neutron' do
         should contain_nova_config('DEFAULT/vif_plugging_timeout').with_value(params[:vif_plugging_timeout])
       end
     end
-
-    context 'with deprecated class parameters' do
-      before do
-        params.merge!(
-          :dhcp_domain => 'foo',
-        )
-      end
-
-      it 'configures neutron endpoint in nova.conf' do
-        should contain_nova_config('api/dhcp_domain').with_value(params[:dhcp_domain])
-      end
-    end
   end
 
   on_supported_os({
