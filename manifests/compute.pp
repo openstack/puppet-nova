@@ -172,6 +172,16 @@
 #   (optional) whether to wait for ``network-vif-plugged`` events before starting guest transfer
 #   Defaults to $::os_service_default
 #
+# [*max_disk_devices_to_attach*]
+#   (optional) specifies max number of devices that can be attached
+#   to a single server.
+#   Note that the number of disks supported by an server depends
+#   on the bus used. For example, the ide disk bus is limited
+#   to 4 attached devices. The configured maximum is enforced
+#   during server create, rebuild, evacuate, unshelve, live migrate,
+#   and attach volume.
+#   Defaults to $::os_service_default
+#
 # DEPRECATED PARAMETERS
 #
 # [*vnc_keymap*]
@@ -234,6 +244,7 @@ class nova::compute (
   $neutron_physnets_numa_nodes_mapping         = {},
   $neutron_tunnel_numa_nodes                   = [],
   $live_migration_wait_for_vif_plug            = $::os_service_default,
+  $max_disk_devices_to_attach                  = $::os_service_default,
   # DEPRECATED PARAMETERS
   $vnc_keymap                                  = undef,
   $neutron_enabled                             = undef,
@@ -368,6 +379,7 @@ class nova::compute (
     'compute/consecutive_build_service_disable_threshold':
       value => $consecutive_build_service_disable_threshold;
     'compute/live_migration_wait_for_vif_plug':  value => $live_migration_wait_for_vif_plug;
+    'compute/max_disk_devices_to_attach':        value => $max_disk_devices_to_attach;
   }
 
   ensure_resource('nova_config', 'DEFAULT/allow_resize_to_same_host', { value => $allow_resize_to_same_host })

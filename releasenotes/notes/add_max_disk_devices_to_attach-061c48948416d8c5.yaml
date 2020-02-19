@@ -1,0 +1,10 @@
+---
+features:
+  - |
+    Add parameter `max_disk_devices_to_attach` that specifies
+    max number of devices that can be attached to a single server.
+    Note that the number of disks supported by an server depends
+    on the bus used. For example, the ide disk bus is limited
+    to 4 attached devices. The configured maximum is enforced
+    during server create, rebuild, evacuate, unshelve, live migrate,
+    and attach volume.
