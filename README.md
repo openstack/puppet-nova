@@ -53,7 +53,6 @@ class { 'nova':
   database_connection     => 'mysql://nova:a_big_secret@127.0.0.1/nova?charset=utf8',
   api_database_connection => 'mysql://nova:a_big_secret@127.0.0.1/nova_api?charset=utf8',
   default_transport_url   => 'rabbit://nova:an_even_bigger_secret@127.0.0.1:5672/nova',
-  glance_api_servers      => 'localhost:9292',
 }
 
 class { 'nova::compute':
@@ -80,12 +79,12 @@ nova is a combination of Puppet manifest and ruby code to delivery configuration
 The `nova_config` provider is a children of the ini_setting provider. It allows one to write an entry in the `/etc/nova/nova.conf` file.
 
 ```puppet
-nova_config { 'DEFAULT/glance_api_servers' :
-  value => 'http://localhost:9292',
+nova_config { 'DEFAULT/my_ip' :
+  value => '192.0.2.1',
 }
 ```
 
-This will write 'http://localhost:9292' in the `[DEFAULT]` section.
+This will write 'my_ip=192.0.2.1' in the `[DEFAULT]` section.
 
 ##### name
 

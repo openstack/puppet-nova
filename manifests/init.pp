@@ -65,9 +65,9 @@
 #   option.
 #   Defaults to $::os_service_default
 #
-# [*glance_api_servers*]
-#   (optional) List of addresses for api servers.
-#   Defaults to 'http://localhost:9292'
+# [*glance_endpoint_override*]
+#   (optional) Override the endpoint to use to talk to Glance.
+#   Defaults to $::os_service_default
 #
 # [*rabbit_use_ssl*]
 #   (optional) Boolean. Connect over SSL for RabbitMQ. (boolean value)
@@ -419,6 +419,10 @@
 #   (optional) The strategy to use for auth: noauth or keystone.
 #   Defaults to undef
 #
+# [*glance_api_servers*]
+#   (optional) List of addresses for api servers.
+#   Defaults to undef
+#
 class nova(
   $ensure_package                         = 'present',
   $database_connection                    = undef,
@@ -436,9 +440,7 @@ class nova(
   $default_transport_url                  = $::os_service_default,
   $rpc_response_timeout                   = $::os_service_default,
   $control_exchange                       = $::os_service_default,
-  # these glance params should be optional
-  # this should probably just be configured as a glance client
-  $glance_api_servers                     = 'http://localhost:9292',
+  $glance_endpoint_override               = $::os_service_default,
   $rabbit_use_ssl                         = $::os_service_default,
   $rabbit_heartbeat_timeout_threshold     = $::os_service_default,
   $rabbit_heartbeat_rate                  = $::os_service_default,
@@ -512,6 +514,7 @@ class nova(
   $image_service                          = undef,
   $notify_on_api_faults                   = undef,
   $auth_strategy                          = undef,
+  $glance_api_servers                     = undef,
 ) inherits nova::params {
 
   include nova::deps
@@ -622,6 +625,9 @@ but should be one of: ssh-rsa, ssh-dsa, ssh-ecdsa.")
   }
 
   if $glance_api_servers {
+    warning(
+      'The glance_api_servers parameter is deprecated, and will be removed in a future release.'
+    )
     nova_config { 'glance/api_servers': value => $glance_api_servers }
   }
 
@@ -752,6 +758,7 @@ but should be one of: ssh-rsa, ssh-dsa, ssh-ecdsa.")
     'upgrade_levels/intercell':   value => $upgrade_level_intercell;
     'upgrade_levels/network':     value => $upgrade_level_network;
     'upgrade_levels/scheduler':   value => $upgrade_level_scheduler;
+    'glance/endpoint_override':   value => $glance_endpoint_override;
   }
 
 }
