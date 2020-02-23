@@ -1,0 +1,6 @@
+---
+features:
+  - |
+    The parameters prefixed with neutron in nova::network::neutron class were
+    deprecated, to be replaced by the shortened parameters without neutron
+    prefix.
