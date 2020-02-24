@@ -71,20 +71,10 @@ and will be removed in the future. Please use the one ::nova::api.')
 and will be removed in the future. Please use the one ::nova::api.')
   }
 
-  # TODO(mwhahaha): backwards compatibility until we drop it from
-  # nova::network::network
-  if defined('$::nova::neutron::dhcp_domain') and $::nova::neutron::dhcp_domain != undef {
-    $dhcp_domain_real = $::nova::neutron::dhcp_domain
-  } else {
-    $dhcp_domain_real = $dhcp_domain
-  }
-  ensure_resource('nova_config', 'api/dhcp_domain', {
-    value => $dhcp_domain_real
-  })
-
   nova_config {
-    'api/metadata_cache_expiration':               value => $metadata_cache_expiration;
-    'api/local_metadata_per_cell':                 value => $local_metadata_per_cell;
+    'api/dhcp_domain':               value => $dhcp_domain;
+    'api/metadata_cache_expiration': value => $metadata_cache_expiration;
+    'api/local_metadata_per_cell':   value => $local_metadata_per_cell;
   }
 
   if ($neutron_metadata_proxy_shared_secret){
