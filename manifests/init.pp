@@ -281,6 +281,19 @@
 #   (optional) SSL key file (if separate from cert).
 #   Defaults to $::os_service_default
 #
+# [*console_ssl_ciphers*]
+#   (optional) OpenSSL cipher preference string that specifies what ciphers to
+#   allow for TLS connections from clients.  See the man page for the OpenSSL
+#   'ciphers' command for details of the cipher preference string format and
+#   allowed values.
+#   Defaults to $::os_service_default
+#
+# [*console_ssl_minimum_version*]
+#   (optional) Minimum allowed SSL/TLS protocol version.  Valid values are
+#   'default', 'tlsv1_1', 'tlsv1_2', and 'tlsv1_3'.  A value of 'default' will
+#   use the underlying system OpenSSL defaults.
+#   Defaults to $::os_service_default
+#
 # [*notification_transport_url*]
 #   (optional) A URL representing the messaging driver to use for notifications
 #   and its full configuration. Transport URLs take the form:
@@ -487,6 +500,8 @@ class nova(
   $ssl_only                               = false,
   $cert                                   = $::os_service_default,
   $key                                    = $::os_service_default,
+  $console_ssl_ciphers                    = $::os_service_default,
+  $console_ssl_minimum_version            = $::os_service_default,
   $notification_transport_url             = $::os_service_default,
   $notification_driver                    = $::os_service_default,
   $notification_topics                    = $::os_service_default,
@@ -640,6 +655,8 @@ but should be one of: ssh-rsa, ssh-dsa, ssh-ecdsa.")
     'DEFAULT/ssl_only':              value => $ssl_only;
     'DEFAULT/cert':                  value => $cert;
     'DEFAULT/key':                   value => $key;
+    'console/ssl_ciphers':           value => $console_ssl_ciphers;
+    'console/ssl_minimum_version':   value => $console_ssl_minimum_version;
     'DEFAULT/my_ip':                 value => $my_ip;
     'DEFAULT/host':                  value => $host;
     'DEFAULT/cpu_allocation_ratio':  value => $cpu_allocation_ratio;
