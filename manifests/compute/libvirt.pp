@@ -187,6 +187,15 @@
 #   the global default settings.
 #   Defaults to undef
 #
+# [*pmem_namespaces*]
+#   (optional) Configure persistent memory(pmem) namespaces. These namespaces
+#   must have been already created on the host. This config option is in the
+#   following format: "$LABEL:$NSNAME[|$NSNAME][,$LABEL:$NSNAME[|$NSNAME]]"
+#   $NSNAME is the name of the pmem namespace. $LABEL represents one resource
+#   class, this is used to generate the resource class name as
+#   CUSTOM_PMEM_NAMESPACE_$LABEL.
+#   Defaults to $::os_service_default
+
 class nova::compute::libvirt (
   $ensure_package                             = 'present',
   $libvirt_virt_type                          = 'kvm',
@@ -222,6 +231,7 @@ class nova::compute::libvirt (
   $mem_stats_period_seconds                   = $::os_service_default,
   $log_filters                                = undef,
   $tls_priority                               = undef,
+  $pmem_namespaces                            = $::os_service_default,
 ) inherits nova::params {
 
   include nova::deps
@@ -332,6 +342,7 @@ class nova::compute::libvirt (
     'libvirt/nfs_mount_options':        value => $nfs_mount_options;
     'libvirt/num_pcie_ports':           value => $num_pcie_ports;
     'libvirt/mem_stats_period_seconds': value => $mem_stats_period_seconds;
+    'libvirt/pmem_namespaces':          value => $pmem_namespaces;
   }
 
   # cpu_model param is only valid if cpu_mode=custom
