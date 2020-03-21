@@ -1,0 +1,5 @@
+---
+features:
+  - |
+    Add support for managing configuration for persistent memory(pmem)
+    namespaces.
