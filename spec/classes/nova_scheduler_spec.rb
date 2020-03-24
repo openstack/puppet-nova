@@ -23,6 +23,8 @@ describe 'nova::scheduler' do
     it { is_expected.to contain_nova_config('scheduler/driver').with_value('filter_scheduler') }
     it { is_expected.to contain_nova_config('scheduler/discover_hosts_in_cells_interval').with_value('<SERVICE DEFAULT>') }
     it { is_expected.to contain_nova_config('scheduler/limit_tenants_to_placement_aggregate').with_value('<SERVICE DEFAULT>')}
+    it { is_expected.to contain_nova_config('scheduler/placement_aggregate_required_for_tenants').with_value('<SERVICE DEFAULT>') }
+
     it { is_expected.to contain_class('nova::availability_zone') }
 
     context 'with manage_service as false' do
@@ -74,6 +76,14 @@ describe 'nova::scheduler' do
       end
 
       it { is_expected.to contain_nova_config('scheduler/limit_tenants_to_placement_aggregate').with_value(true) }
+    end
+
+    context 'with placement_aggregate_required_for_tenants' do
+      let :params do
+        { :placement_aggregate_required_for_tenants => true }
+      end
+
+      it { is_expected.to contain_nova_config('scheduler/placement_aggregate_required_for_tenants').with_value(true) }
     end
 
     context 'with default database parameters' do

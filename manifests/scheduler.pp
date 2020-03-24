@@ -35,14 +35,24 @@
 #   zones will only be available to specific set of tenants.
 #   Defaults to $::os_service_default
 #
+# [*placement_aggregate_required_for_tenants*]
+#   (Optional) This setting controls if a tenant with no aggregate affinity
+#   will be allowed to schedule to any availalbe node when
+#   ``limit_tenants_to_placement_aggregate`` is set to True.
+#   If aggregates are used to limit some tenants but not all, then this should
+#   be False.
+#   If all tenants should be confined via aggregate, then this should be True.
+#   Defaults to $::os_service_default
+#
 class nova::scheduler(
-  $enabled                              = true,
-  $manage_service                       = true,
-  $ensure_package                       = 'present',
-  $workers                              = $::os_workers,
-  $scheduler_driver                     = 'filter_scheduler',
-  $discover_hosts_in_cells_interval     = $::os_service_default,
-  $limit_tenants_to_placement_aggregate = $::os_service_default,
+  $enabled                                  = true,
+  $manage_service                           = true,
+  $ensure_package                           = 'present',
+  $workers                                  = $::os_workers,
+  $scheduler_driver                         = 'filter_scheduler',
+  $discover_hosts_in_cells_interval         = $::os_service_default,
+  $limit_tenants_to_placement_aggregate     = $::os_service_default,
+  $placement_aggregate_required_for_tenants = $::os_service_default,
 ) {
 
   include ::nova::deps
@@ -59,10 +69,11 @@ class nova::scheduler(
   }
 
   nova_config {
-    'scheduler/workers':                              value => $workers;
-    'scheduler/driver':                               value => $scheduler_driver;
-    'scheduler/discover_hosts_in_cells_interval':     value => $discover_hosts_in_cells_interval;
-    'scheduler/limit_tenants_to_placement_aggregate': value => $limit_tenants_to_placement_aggregate;
+    'scheduler/workers':                                  value => $workers;
+    'scheduler/driver':                                   value => $scheduler_driver;
+    'scheduler/discover_hosts_in_cells_interval':         value => $discover_hosts_in_cells_interval;
+    'scheduler/limit_tenants_to_placement_aggregate':     value => $limit_tenants_to_placement_aggregate;
+    'scheduler/placement_aggregate_required_for_tenants': value => $placement_aggregate_required_for_tenants;
   }
 
 }
