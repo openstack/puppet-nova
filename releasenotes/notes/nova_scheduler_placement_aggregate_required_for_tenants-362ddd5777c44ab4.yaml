@@ -1,0 +1,9 @@
+---
+features:
+  - |
+    Add parameter `placement_aggregate_required_for_tenants` which controls
+    whether or not a tenant with no aggregate affinity will be allowed to
+    schedule to any available node, when `limit_tenants_to_placement_aggregate`
+    is set to True.
+    Default value for this parameter is False.
+
