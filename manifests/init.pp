@@ -37,10 +37,6 @@
 #   (optional) Interval between retries of opening a database connection.
 #   Defaults to undef.
 #
-# [*database_min_pool_size*]
-#   (optional) Minimum number of SQL connections to keep open in a pool.
-#   Defaults to undef.
-#
 # [*database_max_pool_size*]
 #   (optional) Maximum number of SQL connections to keep open in a pool.
 #   Defaults to undef.
@@ -436,6 +432,10 @@
 #   (optional) List of addresses for api servers.
 #   Defaults to undef
 #
+# [*database_min_pool_size*]
+#   (optional) Minimum number of SQL connections to keep open in a pool.
+#   Defaults to undef.
+#
 class nova(
   $ensure_package                         = 'present',
   $database_connection                    = undef,
@@ -445,7 +445,6 @@ class nova(
   $block_device_allocate_retries          = $::os_service_default,
   $block_device_allocate_retries_interval = $::os_service_default,
   $database_idle_timeout                  = undef,
-  $database_min_pool_size                 = undef,
   $database_max_pool_size                 = undef,
   $database_max_retries                   = undef,
   $database_retry_interval                = undef,
@@ -530,6 +529,7 @@ class nova(
   $notify_on_api_faults                   = undef,
   $auth_strategy                          = undef,
   $glance_api_servers                     = undef,
+  $database_min_pool_size                 = undef,
 ) inherits nova::params {
 
   include nova::deps

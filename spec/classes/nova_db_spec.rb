@@ -13,7 +13,6 @@ describe 'nova::db' do
       it { should_not contain_nova_config('api_database/connection') }
       it { should_not contain_nova_config('api_database/slave_connection') }
       it { should_not contain_nova_config('database/connection_recycle_time') }
-      it { should_not contain_nova_config('database/min_pool_size') }
       it { should_not contain_nova_config('database/max_pool_size') }
       it { should_not contain_nova_config('database/max_retries') }
       it { should_not contain_nova_config('database/retry_interval') }
@@ -36,7 +35,6 @@ describe 'nova::db' do
         :slave_connection        => 'mysql+pymysql://user:pass@slave/db1',
         :db_max_retries          => '<SERVICE DEFAULT>',
         :connection_recycle_time => '<SERVICE DEFAULT>',
-        :min_pool_size           => '<SERVICE DEFAULT>',
         :max_pool_size           => '<SERVICE DEFAULT>',
         :max_retries             => '<SERVICE DEFAULT>',
         :retry_interval          => '<SERVICE DEFAULT>',
