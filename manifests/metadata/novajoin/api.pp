@@ -127,6 +127,7 @@ class nova::metadata::novajoin::api (
   $configure_kerberos        = false,
   $ipa_realm                 = undef,
 ) {
+  include nova::params
   include nova::metadata::novajoin::authtoken
   include nova::metadata::novajoin::policy
 
@@ -138,16 +139,9 @@ class nova::metadata::novajoin::api (
     fail('service_password is missing')
   }
 
-  case $::osfamily {
-    'RedHat': {
-      $package_name        = 'python-novajoin'
-      $service_name        = 'novajoin-server'
-      $notify_service_name = 'novajoin-notify'
-    }
-    default: {
-      fail("Unsupported osfamily: ${::osfamily} operatingsystem")
-    }
-  } # Case $::osfamily
+  if ! $nova::params::novajoin_package_name {
+    fail("Unsupported osfamily: ${::osfamily} operatingsystem")
+  }
 
   if $enable_ipa_client_install {
     require ::ipaclient
@@ -162,7 +156,7 @@ class nova::metadata::novajoin::api (
 
   package { 'python-novajoin':
     ensure => $ensure_package,
-    name   => $package_name,
+    name   => $nova::params::novajoin_package_name,
     tag    => ['openstack', 'novajoin-package'],
   }
 
@@ -227,7 +221,7 @@ class nova::metadata::novajoin::api (
 
   service { 'novajoin-server':
     ensure     => $service_ensure,
-    name       => $service_name,
+    name       => $nova::params::novajoin_service_name,
     enable     => $enabled,
     hasstatus  => true,
     hasrestart => true,
@@ -236,7 +230,7 @@ class nova::metadata::novajoin::api (
 
   service { 'novajoin-notify':
     ensure     => $service_ensure,
-    name       => $notify_service_name,
+    name       => $nova::params::notify_service_name,
     enable     => $enabled,
     hasstatus  => true,
     hasrestart => true,
