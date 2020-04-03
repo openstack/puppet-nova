@@ -176,7 +176,8 @@ describe 'nova::metadata::novajoin::api' do
     end
 
     it { should contain_package('python-novajoin').with(
-        :tag => ['openstack', 'novajoin-package'],
+        :name => platform_params[:novajoin_package_name],
+        :tag  => ['openstack', 'novajoin-package'],
     )}
   end
 
@@ -192,6 +193,17 @@ describe 'nova::metadata::novajoin::api' do
       if facts[:osfamily] == 'RedHat'
         it_behaves_like 'nova::metadata::novajoin::api'
         it_behaves_like 'nova::metadata::novajoin::api on RedHat'
+        let (:platform_params) do
+          if facts[:operatingsystem] == 'Fedora'
+            { :novajoin_package_name => 'python3-novajoin' }
+          else
+            if facts[:operatingsystemmajrelease] > '7'
+              { :novajoin_package_name => 'python3-novajoin' }
+            else
+              { :novajoin_package_name => 'python-novajoin' }
+            end
+          end
+        end
       end
     end
   end

@@ -16,6 +16,7 @@ class nova::params {
       $python_package_name               = "python${pyvers}-nova"
       $compute_package_name              = 'openstack-nova-compute'
       $conductor_package_name            = 'openstack-nova-conductor'
+      $novajoin_package_name             = "python${pyvers}-novajoin"
       $doc_package_name                  = 'openstack-nova-doc'
       $libvirt_package_name              = 'libvirt'
       $libvirt_guests_package_name       = 'libvirt-client'
@@ -39,6 +40,8 @@ class nova::params {
       $virtlog_service_name              = undef
       $scheduler_service_name            = 'openstack-nova-scheduler'
       $tgt_service_name                  = 'tgtd'
+      $novajoin_service_name             = 'novajoin-server'
+      $notify_service_name               = 'novajoin-notify'
       $vncproxy_service_name             = 'openstack-nova-novncproxy'
       $serialproxy_service_name          = 'openstack-nova-serialproxy'
       $spicehtml5proxy_service_name      = 'openstack-nova-spicehtml5proxy'
@@ -78,6 +81,7 @@ class nova::params {
       $python_package_name               = "python${pyvers}-nova"
       $compute_package_name              = 'nova-compute'
       $conductor_package_name            = 'nova-conductor'
+      $novajoin_package_name             = undef
       $doc_package_name                  = 'nova-doc'
       if ($::operatingsystem == 'Debian') and (versioncmp($::operatingsystemmajrelease, '9') >= 0 ) {
         $libvirt_package_name            = 'libvirt-daemon-system'
@@ -96,6 +100,8 @@ class nova::params {
       $vncproxy_service_name             = 'nova-novncproxy'
       $serialproxy_service_name          = 'nova-serialproxy'
       $tgt_service_name                  = 'tgt'
+      $novajoin_service_name             = undef
+      $notify_service_name               = undef
       $nova_wsgi_script_path             = '/usr/lib/cgi-bin/nova'
       $nova_api_wsgi_script_source       = '/usr/bin/nova-api-wsgi'
       $nova_metadata_wsgi_script_source  = '/usr/bin/nova-metadata-wsgi'
