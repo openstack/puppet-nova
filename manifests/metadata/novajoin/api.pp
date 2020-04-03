@@ -139,7 +139,7 @@ class nova::metadata::novajoin::api (
     fail('service_password is missing')
   }
 
-  if ! $nova::params::novajoin_package_name {
+  if $nova::params::novajoin_package_name == undef {
     fail("Unsupported osfamily: ${::osfamily} operatingsystem")
   }
 
