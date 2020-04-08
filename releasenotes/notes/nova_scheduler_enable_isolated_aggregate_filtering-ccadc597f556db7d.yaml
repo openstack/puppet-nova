@@ -1,0 +1,7 @@
+---
+features:
+  - |
+    Add parameter `enable_isolated_aggregate_filtering` which allows the
+    scheduler to restrict hosts in aggregates based on matching required
+    traits in the aggregate metadata and the instance flavor/image.
+    Default value for this parameter is False.
