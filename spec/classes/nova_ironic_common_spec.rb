@@ -12,6 +12,7 @@ describe 'nova::ironic::common' do
         is_expected.to contain_nova_config('ironic/auth_url').with_value('http://127.0.0.1:5000/')
         is_expected.to contain_nova_config('ironic/project_name').with_value('services')
         is_expected.to contain_nova_config('ironic/endpoint_override').with_value('<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('ironic/region_name').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('ironic/api_max_retries').with('value' => '<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('ironic/api_retry_interval').with('value' => '<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('ironic/user_domain_name').with_value('Default')
@@ -28,6 +29,7 @@ describe 'nova::ironic::common' do
           :auth_url            => 'http://10.0.0.10:5000/',
           :project_name        => 'services2',
           :endpoint_override   => 'http://10.0.0.10:6385/v1',
+          :region_name         => 'regionTwo',
           :api_max_retries     => 60,
           :api_retry_interval  => 2,
           :user_domain_name    => 'custom_domain',
@@ -42,6 +44,7 @@ describe 'nova::ironic::common' do
         is_expected.to contain_nova_config('ironic/auth_url').with_value('http://10.0.0.10:5000/')
         is_expected.to contain_nova_config('ironic/project_name').with_value('services2')
         is_expected.to contain_nova_config('ironic/endpoint_override').with_value('http://10.0.0.10:6385/v1')
+        is_expected.to contain_nova_config('ironic/region_name').with_value('regionTwo')
         is_expected.to contain_nova_config('ironic/api_max_retries').with('value' => '60')
         is_expected.to contain_nova_config('ironic/api_retry_interval').with('value' => '2')
         is_expected.to contain_nova_config('ironic/user_domain_name').with('value' => 'custom_domain')

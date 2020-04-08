@@ -1,0 +1,5 @@
+---
+features:
+  - |
+    The new parameter, nova::ironic::common::region_name was added to set
+    keystone region used to connect to ironic in admin context.
