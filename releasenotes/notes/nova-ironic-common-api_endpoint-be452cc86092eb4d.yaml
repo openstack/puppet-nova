@@ -1,0 +1,6 @@
+---
+deprecations:
+  - |
+    The nova::ironic::common::api_endpoint is deprecated and has no effect,
+    because the corresponding [ironic]api_endpoint was removed in Nova.
+    The nova::ironic::common::endpoint_override should be used instead.
