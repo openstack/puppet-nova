@@ -50,6 +50,12 @@
 #   If all tenants should be confined via aggregate, then this should be True.
 #   Defaults to $::os_service_default
 #
+# [*enable_isolated_aggregate_filtering*]
+#   (Optional) This setting allows the scheduler to restrict hosts in aggregates
+#   based on matching required traits in the aggregate metadata and the instance
+#   flavor/image.
+#   Defaults to $::os_service_default
+#
 class nova::scheduler(
   $enabled                                  = true,
   $manage_service                           = true,
@@ -60,6 +66,7 @@ class nova::scheduler(
   $query_placement_for_image_type_support   = $::os_service_default,
   $limit_tenants_to_placement_aggregate     = $::os_service_default,
   $placement_aggregate_required_for_tenants = $::os_service_default,
+  $enable_isolated_aggregate_filtering      = $::os_service_default,
 ) {
 
   include ::nova::deps
@@ -82,6 +89,7 @@ class nova::scheduler(
     'scheduler/query_placement_for_image_type_support':   value => $query_placement_for_image_type_support;
     'scheduler/limit_tenants_to_placement_aggregate':     value => $limit_tenants_to_placement_aggregate;
     'scheduler/placement_aggregate_required_for_tenants': value => $placement_aggregate_required_for_tenants;
+    'scheduler/enable_isolated_aggregate_filtering':      value => $enable_isolated_aggregate_filtering;
   }
 
 }
