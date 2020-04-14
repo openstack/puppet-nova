@@ -27,10 +27,8 @@ class Puppet::Provider::Nova < Puppet::Provider::Openstack
     @credentials.password = nova_credentials['password']
     @credentials.project_name = nova_credentials['project_name']
     @credentials.auth_url = auth_endpoint
-    if @credentials.version == '3'
-      @credentials.user_domain_name = nova_credentials['user_domain_name']
-      @credentials.project_domain_name = nova_credentials['project_domain_name']
-    end
+    @credentials.user_domain_name = nova_credentials['user_domain_name']
+    @credentials.project_domain_name = nova_credentials['project_domain_name']
     if nova_credentials['region_name']
       @credentials.region_name = nova_credentials['region_name']
     end
@@ -88,19 +86,22 @@ class Puppet::Provider::Nova < Puppet::Provider::Openstack
         auth_keys.all?{|k| !conf['keystone_authtoken'][k].nil?}
       creds = Hash[ auth_keys.map \
                    { |k| [k, conf['keystone_authtoken'][k].strip] } ]
-      if conf['neutron'] and conf['neutron']['region_name']
-        creds['region_name'] = conf['neutron']['region_name'].strip
+      if !conf['keystone_authtoken']['region_name'].nil?
+        creds['region_name'] = conf['keystone_authtoken']['region_name'].strip
       end
+
       if !conf['keystone_authtoken']['project_domain_name'].nil?
         creds['project_domain_name'] = conf['keystone_authtoken']['project_domain_name'].strip
       else
         creds['project_domain_name'] = 'Default'
       end
+
       if !conf['keystone_authtoken']['user_domain_name'].nil?
         creds['user_domain_name'] = conf['keystone_authtoken']['user_domain_name'].strip
       else
         creds['user_domain_name'] = 'Default'
       end
+
       return creds
     else
       raise(Puppet::Error, "File: #{conf_filename} does not contain all " +
