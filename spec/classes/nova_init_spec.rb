@@ -192,7 +192,7 @@ describe 'nova' do
         before { params.merge!( :notification_driver => ['ceilometer.compute.nova_notifier', 'nova.openstack.common.notifier.rpc_notifier']) }
 
         it { is_expected.to contain_nova_config('oslo_messaging_notifications/driver').with_value(
-          'ceilometer.compute.nova_notifier,nova.openstack.common.notifier.rpc_notifier'
+          ['ceilometer.compute.nova_notifier', 'nova.openstack.common.notifier.rpc_notifier']
         ) }
       end
 
