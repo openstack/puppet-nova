@@ -24,6 +24,10 @@
 #   (optional) Override the endpoint to use to talk to Ironic.
 #   Defaults to $::os_service_default
 #
+# [*region_name*]
+#   (optional) Region name for connecting to ironic in admin context
+#   through the OpenStack Identity service.
+#
 # [*api_max_retries*]
 #   Max times for ironic driver to poll ironic api
 #
@@ -51,6 +55,7 @@ class nova::ironic::common (
   $project_name         = 'services',
   $username             = 'admin',
   $endpoint_override    = $::os_service_default,
+  $region_name          = $::os_service_default,
   $api_max_retries      = $::os_service_default,
   $api_retry_interval   = $::os_service_default,
   $user_domain_name     = 'Default',
@@ -73,6 +78,7 @@ Use nova::ironic::common::endpoint_override instead.')
     'ironic/auth_url':            value => $auth_url;
     'ironic/project_name':        value => $project_name;
     'ironic/endpoint_override':   value => $endpoint_override;
+    'ironic/region_name':         value => $region_name;
     'ironic/api_max_retries':     value => $api_max_retries;
     'ironic/api_retry_interval':  value => $api_retry_interval;
     'ironic/user_domain_name':    value => $user_domain_name;
