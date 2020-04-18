@@ -17,13 +17,13 @@ describe 'nova::metadata::novajoin::api' do
       :keytab                    => '/etc/novajoin/krb5.keytab',
       :log_dir                   => '/var/log/novajoin',
       :manage_service            => true,
-      :service_user              => 'novajoin',
-      :project_domain_name       => 'default',
+      :username                  => 'novajoin',
+      :project_domain_name       => 'Default',
       :project_name              => 'services',
-      :user_domain_id            => 'default',
+      :user_domain_name          => 'Default',
       :ipa_domain                => 'EXAMPLE.COM',
       :keystone_auth_url         => 'https://keystone.example.com:5000',
-      :service_password          => 'my_secret_password',
+      :password                  => 'my_secret_password',
       :transport_url             => 'rabbit:rabbit_pass@rabbit_host',
     }
   end
@@ -52,13 +52,13 @@ describe 'nova::metadata::novajoin::api' do
        :keytab                    => '/etc/krb5.conf',
        :log_dir                   => '/var/log/novajoin',
        :manage_service            => true,
-       :service_user              => 'novajoin1',
-       :project_domain_name       => 'default',
+       :username                  => 'novajoin1',
+       :project_domain_name       => 'Default',
        :project_name              => 'services',
-       :user_domain_id            => 'default',
+       :user_domain_name          => 'Default',
        :ipa_domain                => 'EXAMPLE2.COM',
        :keystone_auth_url         => 'https://keystone2.example.com:5000',
-       :service_password          => 'my_secret_password2',
+       :password                  => 'my_secret_password2',
        :transport_url             => 'rabbit:rabbit_pass2@rabbit_host',
      }
     ].each do |param_set|
@@ -106,11 +106,12 @@ describe 'nova::metadata::novajoin::api' do
         it {
           should contain_novajoin_config('service_credentials/auth_type').with_value(param_hash[:auth_type])
           should contain_novajoin_config('service_credentials/auth_url').with_value(param_hash[:keystone_auth_url])
-          should contain_novajoin_config('service_credentials/password').with_value(param_hash[:service_password])
+          should contain_novajoin_config('service_credentials/password').with_value(param_hash[:password])
           should contain_novajoin_config('service_credentials/project_name').with_value(param_hash[:project_name])
-          should contain_novajoin_config('service_credentials/user_domain_id').with_value(param_hash[:user_domain_id])
+          should_not contain_novajoin_config('service_credentials/user_domain_id')
+          should contain_novajoin_config('service_credentials/user_domain_name').with_value(param_hash[:user_domain_name])
           should contain_novajoin_config('service_credentials/project_domain_name').with_value(param_hash[:project_domain_name])
-          should contain_novajoin_config('service_credentials/username').with_value(param_hash[:service_user])
+          should contain_novajoin_config('service_credentials/username').with_value(param_hash[:username])
         }
 
         it {
@@ -129,26 +130,37 @@ describe 'nova::metadata::novajoin::api' do
 
         it { should contain_file("/var/log/novajoin").with(
           'ensure'  => 'directory',
-          'owner'   => "#{param_hash[:service_user]}",
-          'group'   => "#{param_hash[:service_user]}",
+          'owner'   => "#{param_hash[:username]}",
+          'group'   => "#{param_hash[:username]}",
           'recurse' => true
         )}
 
         it { should contain_file("#{param_hash[:keytab]}").with(
-          'owner'   => "#{param_hash[:service_user]}",
+          'owner'   => "#{param_hash[:username]}",
           'require' => 'Exec[get-service-user-keytab]',
         )}
       end
     end
 
+    context 'with deprecated user_domain_id' do
+      let :params do
+        default_params.merge({ :user_domain_id => 'default' })
+      end
+
+      it {
+          should contain_novajoin_config('service_credentials/user_domain_id').with_value('default')
+          should_not contain_novajoin_config('service_credentials/user_domain_name')
+      }
+    end
+
     context 'with disabled service managing' do
       let :params do
         {
-          :manage_service    => false,
-          :enabled           => false,
-          :ipa_domain        => 'EXAMPLE.COM',
-          :service_password  => 'my_secret_password',
-          :transport_url     => 'rabbit:rabbit_pass@rabbit_host',
+          :manage_service => false,
+          :enabled        => false,
+          :ipa_domain     => 'EXAMPLE.COM',
+          :password       => 'my_secret_password',
+          :transport_url  => 'rabbit:rabbit_pass@rabbit_host',
         }
       end
 

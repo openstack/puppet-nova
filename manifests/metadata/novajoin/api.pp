@@ -5,7 +5,7 @@
 #
 # === Parameters
 #
-# [*service_password*]
+# [*password*]
 #   (required) Password for the novajoin service user.
 #
 # [*transport_url*]
@@ -76,21 +76,21 @@
 #   (optional) If Puppet should manage service startup / shutdown.
 #   Defaults to true.
 #
-# [*service_user*]
+# [*user_domain_name*]
+#   (optional) Domain name for novajoin user.
+#   Defaults to 'Default'
+#
+# [*username*]
 #   (optional) User that the novajoin services run as.
 #   Defaults to 'novajoin'
 #
 # [*project_domain_name*]
 #   (optional) Domain name containing project (for novajoin auth).
-#   Defaults to 'default'
+#   Defaults to 'Default'
 #
 # [*project_name*]
 #   (optional) Project name (for novajoin auth).
 #   Defaults to 'services'
-#
-# [*user_domain_id*]
-#   (optional) Domain for novajoin user.
-#   Defaults to 'default'
 #
 # [*configure_kerberos*]
 #   (optional) Whether or not to create a kerberos configuration file.
@@ -99,6 +99,20 @@
 # [*ipa_realm*]
 #   (optional) Kerberos realm. If left empty, the kerberos configuration will
 #   take the domain and upcase it.
+#   Defaults to undef
+#
+# DEPRECATED PARAMETERS
+#
+# [*service_password*]
+#   (optional) Password for the novajoin service user.
+#   Defaults to undef
+#
+# [*service_user*]
+#   (optional) User that the novajoin services run as.
+#   Defaults to undef
+#
+# [*user_domain_id*]
+#   (optional) Domain for novajoin user.
 #   Defaults to undef
 #
 class nova::metadata::novajoin::api (
@@ -119,24 +133,44 @@ class nova::metadata::novajoin::api (
   $keytab                    = '/etc/novajoin/krb5.keytab',
   $log_dir                   = '/var/log/novajoin',
   $manage_service            = true,
-  $service_password          = undef,
-  $service_user              = 'novajoin',
-  $project_domain_name       = 'default',
+  $password                  = undef,
+  $user_domain_name          = 'Default',
+  $username                  = 'novajoin',
+  $project_domain_name       = 'Default',
   $project_name              = 'services',
-  $user_domain_id            = 'default',
   $configure_kerberos        = false,
   $ipa_realm                 = undef,
+  # DEPRECATED PARAMETERS
+  $service_password          = undef,
+  $service_user              = undef,
+  $user_domain_id            = undef,
 ) {
   include nova::params
   include nova::metadata::novajoin::authtoken
   include nova::metadata::novajoin::policy
 
-  if ! $service_user {
-    fail('service_user is missing')
+  if $service_user != undef {
+    warning('nova::metadata::novajoin::api::service_user is deprecated. \
+Use username parameter instead')
+    $username_real = $service_user
+  } else {
+    $username_real = $username
   }
 
-  if ! $service_password {
-    fail('service_password is missing')
+  if $service_password != undef {
+    warning('nova::metadata::novajoin::api::service_password is deprecated. \
+Use password parameter instead')
+    $password_real = $service_password
+  } else {
+    $password_real = $password
+  }
+
+  if ! $username_real {
+    fail('username is missing')
+  }
+
+  if ! $password_real {
+    fail('password is missing')
   }
 
   if $nova::params::novajoin_package_name == undef {
@@ -162,8 +196,8 @@ class nova::metadata::novajoin::api (
 
   file { '/var/log/novajoin':
     ensure  => directory,
-    owner   => $service_user,
-    group   => $service_user,
+    owner   => $username_real,
+    group   => $username_real,
     recurse => true,
   }
 
@@ -185,8 +219,8 @@ class nova::metadata::novajoin::api (
 
     file { '/etc/novajoin/krb5.conf':
       content => template('nova/krb5.conf.erb'),
-      owner   => $service_user,
-      group   => $service_user,
+      owner   => $username_real,
+      group   => $username_real,
     }
   }
 
@@ -203,12 +237,23 @@ class nova::metadata::novajoin::api (
     'DEFAULT/transport_url':                   value => $transport_url;
     'service_credentials/auth_type':           value => $auth_type;
     'service_credentials/auth_url':            value => $keystone_auth_url;
-    'service_credentials/password':            value => $service_password;
-    'service_credentials/username':            value => $service_user;
+    'service_credentials/password':            value => $password_real;
+    'service_credentials/username':            value => $username_real;
     'service_credentials/project_name':        value => $project_name;
-    'service_credentials/user_domain_id':      value => $user_domain_id;
     'service_credentials/project_domain_name':
       value => $project_domain_name;
+  }
+
+  if $user_domain_id != undef {
+    warning('nova::metadata::novajoin::api::user_domain_id is deprecated. \
+Use user_domain_name instead')
+    novajoin_config {
+      'service_credentials/user_domain_id': value => $user_domain_id;
+    }
+  } else {
+    novajoin_config {
+      'service_credentials/user_domain_name': value => $user_domain_name;
+    }
   }
 
   if $manage_service {
@@ -243,7 +288,7 @@ class nova::metadata::novajoin::api (
     creates => $keytab,
   }
 
-  ensure_resource('file', $keytab, { owner => $service_user, require => Exec['get-service-user-keytab'] })
+  ensure_resource('file', $keytab, { owner => $username_real, require => Exec['get-service-user-keytab'] })
 
   Package<| tag == 'novajoin-package' |> -> Exec['get-service-user-keytab']
   Novajoin_config<||> ~> Service<| title == 'novajoin-server'|>
