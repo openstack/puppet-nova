@@ -1,0 +1,7 @@
+---
+deprecations:
+  - |
+    The nova::compute::allow_resize_to_same_host parameter is deprecated and
+    has no effect now, because its actual parameter in nova is used only by
+    nova-api. Use nova::api::allow_resize_to_same_host instead to set the
+    parameter at the node where nova-api is actually running.

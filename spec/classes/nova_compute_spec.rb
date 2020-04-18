@@ -24,7 +24,6 @@ describe 'nova::compute' do
         })
       end
 
-      it { is_expected.to contain_nova_config('DEFAULT/allow_resize_to_same_host').with(:value => 'false') }
       it { is_expected.to contain_nova_config('DEFAULT/resize_confirm_window').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('DEFAULT/resume_guests_state_on_host_boot').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to_not contain_nova_config('vnc/novncproxy_base_url') }
