@@ -79,12 +79,6 @@
 #   (optional) Config drive format. One of iso9660 (default) or vfat
 #   Defaults to undef
 #
-# [*allow_resize_to_same_host*]
-#   (optional) Allow destination machine to match source for resize.
-#   Useful when testing in single-host environments. Note that this
-#   can also be set in the api.pp class.
-#   Defaults to false
-#
 # [*resize_confirm_window*]
 #   (optional) Automatically confirm resizes after N seconds.
 #   Resize functionality will save the existing server before resizing.
@@ -207,6 +201,12 @@
 #   pinned and unpinned instances on the same host.
 #   Defaults to undef
 #
+# [*allow_resize_to_same_host*]
+#   (optional) Allow destination machine to match source for resize.
+#   Useful when testing in single-host environments. Note that generally
+#   this should be set in the api.pp class instead.
+#   Defaults to undef
+#
 class nova::compute (
   $enabled                                     = true,
   $manage_service                              = true,
@@ -226,7 +226,6 @@ class nova::compute (
   $reserved_host_memory                        = '512',
   $heal_instance_info_cache_interval           = '60',
   $config_drive_format                         = $::os_service_default,
-  $allow_resize_to_same_host                   = false,
   $resize_confirm_window                       = $::os_service_default,
   $cpu_shared_set                              = $::os_service_default,
   $cpu_dedicated_set                           = $::os_service_default,
@@ -250,6 +249,7 @@ class nova::compute (
   $neutron_enabled                             = undef,
   $install_bridge_utils                        = undef,
   $vcpu_pin_set                                = undef,
+  $allow_resize_to_same_host                   = undef,
 ) {
 
   include nova::deps
@@ -280,6 +280,11 @@ class nova::compute (
 
   if $vcpu_pin_set {
     warning('vcpu_pin_set is deprecated, instead use cpu_dedicated_set or cpu_shared_set.')
+  }
+
+  if $allow_resize_to_same_host != undef {
+    warning('allow_resize_to_same_host is deprecated, and has no effect. \
+Use the same parameter in nova::api class.')
   }
 
   if empty($vcpu_pin_set) {
@@ -381,8 +386,6 @@ class nova::compute (
     'compute/live_migration_wait_for_vif_plug':  value => $live_migration_wait_for_vif_plug;
     'compute/max_disk_devices_to_attach':        value => $max_disk_devices_to_attach;
   }
-
-  ensure_resource('nova_config', 'DEFAULT/allow_resize_to_same_host', { value => $allow_resize_to_same_host })
 
   if ($vnc_enabled) {
     include nova::vncproxy::common
