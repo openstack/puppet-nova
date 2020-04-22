@@ -1,0 +1,14 @@
+---
+features:
+  - |
+    service_username and service_password in nova::metadata::novajoin::api are
+    now deprecated and will be removed in a future release. Use username and
+    password instead.
+  - |
+    The nova::metadata::novajoin::user_domain_id parameter is deprecated now.
+    Use user_domain_name instead.
+upgrade:
+  - |
+    The default value for nova::metadata::novajoin::project_domain_name is now
+    ``Default`` instead of ``default`` to be consistent with general domain
+    setup in OpenStack.
