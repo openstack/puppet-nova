@@ -15,6 +15,9 @@ describe 'nova::cinder' do
         should contain_nova_config('cinder/project_domain_name').with_value('Default')
         should contain_nova_config('cinder/username').with_value('cinder')
         should contain_nova_config('cinder/user_domain_name').with_value('Default')
+        should contain_nova_config('cinder/os_region_name').with_value('<SERVICE DEFAULT>')
+        should contain_nova_config('cinder/catalog_info').with_value('<SERVICE DEFAULT>')
+        should contain_nova_config('cinder/cross_az_attach').with_value('<SERVICE DEFAULT>')
       end
 
     end
@@ -27,6 +30,9 @@ describe 'nova::cinder' do
           :auth_url            => 'http://10.0.0.10:5000/v3',
           :timeout             => 60,
           :region_name         => 'RegionOne',
+          :os_region_name      => 'RegionOne',
+          :catalog_info        => 'volumev3:cinderv3:publicURL',
+          :cross_az_attach     => true,
         }
       end
 
@@ -40,6 +46,9 @@ describe 'nova::cinder' do
         should contain_nova_config('cinder/project_domain_name').with_value('Default')
         should contain_nova_config('cinder/username').with_value('cinder')
         should contain_nova_config('cinder/user_domain_name').with_value('Default')
+        should contain_nova_config('cinder/os_region_name').with_value('RegionOne')
+        should contain_nova_config('cinder/catalog_info').with_value('volumev3:cinderv3:publicURL')
+        should contain_nova_config('cinder/cross_az_attach').with_value(true)
       end
 
     end
