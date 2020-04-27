@@ -52,9 +52,6 @@ describe 'nova' do
         is_expected.to contain_nova_config('DEFAULT/transport_url').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('DEFAULT/rpc_response_timeout').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('DEFAULT/control_exchange').with_value('<SERVICE DEFAULT>')
-        is_expected.to contain_nova_config('cinder/os_region_name').with_value('<SERVICE DEFAULT>')
-        is_expected.to contain_nova_config('cinder/cross_az_attach').with_value('<SERVICE DEFAULT>')
-        is_expected.to contain_nova_config('cinder/catalog_info').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('DEFAULT/cpu_allocation_ratio').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('DEFAULT/ram_allocation_ratio').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('DEFAULT/disk_allocation_ratio').with_value('<SERVICE DEFAULT>')
@@ -94,8 +91,6 @@ describe 'nova' do
           :notification_topics                     => 'openstack',
           :notification_format                     => 'unversioned',
           :report_interval                         => '60',
-          :os_region_name                          => 'MyRegion',
-          :cross_az_attach                         => 'MyAZ',
           :ovsdb_connection                        => 'tcp:127.0.0.1:6640',
           :upgrade_level_cells                     => '1.0.0',
           :upgrade_level_cert                      => '1.0.0',
@@ -179,8 +174,6 @@ describe 'nova' do
         is_expected.to contain_nova_config('notifications/notification_format').with_value('unversioned')
         is_expected.to contain_nova_config('DEFAULT/report_interval').with_value('60')
         is_expected.to contain_nova_config('DEFAULT/ovsdb_connection').with_value('tcp:127.0.0.1:6640')
-        is_expected.to contain_nova_config('cinder/os_region_name').with_value('MyRegion')
-        is_expected.to contain_nova_config('cinder/cross_az_attach').with_value('MyAZ')
         is_expected.to contain_nova_config('DEFAULT/ssl_only').with_value(true)
         is_expected.to contain_nova_config('DEFAULT/cert').with_value('/etc/ssl/private/snakeoil.pem')
         is_expected.to contain_nova_config('DEFAULT/key').with_value('/etc/ssl/certs/snakeoil.pem')

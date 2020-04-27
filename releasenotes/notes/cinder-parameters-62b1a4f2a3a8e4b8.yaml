@@ -1,0 +1,10 @@
+---
+deprecations:
+  - |
+    The following parameters in nova class has been deprecated and will be
+    removed in a future release. Use the new parameters in nova::cinder class
+    instead.
+
+    - ``nova::os_region_name`` ( now ``nova::cinder::os_region_name``)
+    - ``nova::cinder_catalog_info`` ( now ``nova::cinder::catalog_info``)
+    - ``nova::cross_az_attach`` ( now ``nova::cinder::cross_az_attach``)

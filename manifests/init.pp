@@ -316,23 +316,9 @@
 #   for notifications on VM and task state changes.
 #   Defaults to undef
 #
-# [*os_region_name*]
-#   (optional) Sets the os_region_name flag. For environments with
-#   more than one endpoint per service, this is required to make
-#   things such as cinder volume attach work. If you don't set this
-#   and you have multiple endpoints, you will get AmbiguousEndpoint
-#   exceptions in the nova API service.
-#   Defaults to $::os_service_default
-#
 # [*ovsdb_connection*]
 #   (optional) Sets the ovsdb connection string. This is used by os-vif
 #   to interact with openvswitch on the host.
-#   Defaults to $::os_service_default
-#
-# [*cinder_catalog_info*]
-#   (optional) Info to match when looking for cinder in the service
-#   catalog. Format is: separated values of the form:
-#   <service_type>:<service_name>:<endpoint_type>
 #   Defaults to $::os_service_default
 #
 # [*upgrade_level_cells*]
@@ -405,10 +391,6 @@
 #   If unable to do so, will use "127.0.0.1".
 #   Defaults to $::os_service_default.
 #
-#  [*cross_az_attach*]
-#   (optional) Allow attach between instance and volume in different availability zones.
-#   Defaults to $::os_service_default
-#
 # DEPRECATED PARAMETERS
 #
 # [*notify_api_faults*]
@@ -435,6 +417,24 @@
 # [*database_min_pool_size*]
 #   (optional) Minimum number of SQL connections to keep open in a pool.
 #   Defaults to undef.
+#
+# [*os_region_name*]
+#   (optional) Sets the os_region_name flag. For environments with
+#   more than one endpoint per service, this is required to make
+#   things such as cinder volume attach work. If you don't set this
+#   and you have multiple endpoints, you will get AmbiguousEndpoint
+#   exceptions in the nova API service.
+#   Defaults to undef
+#
+# [*cinder_catalog_info*]
+#   (optional) Info to match when looking for cinder in the service
+#   catalog. Format is: separated values of the form:
+#   <service_type>:<service_name>:<endpoint_type>
+#   Defaults to undef
+#
+#  [*cross_az_attach*]
+#   (optional) Allow attach between instance and volume in different availability zones.
+#   Defaults to undef
 #
 class nova(
   $ensure_package                         = 'present',
@@ -506,9 +506,7 @@ class nova(
   $notification_topics                    = $::os_service_default,
   $notification_format                    = $::os_service_default,
   $notify_on_state_change                 = undef,
-  $os_region_name                         = $::os_service_default,
   $ovsdb_connection                       = $::os_service_default,
-  $cinder_catalog_info                    = $::os_service_default,
   $upgrade_level_cells                    = $::os_service_default,
   $upgrade_level_cert                     = $::os_service_default,
   $upgrade_level_compute                  = $::os_service_default,
@@ -522,7 +520,6 @@ class nova(
   $disk_allocation_ratio                  = $::os_service_default,
   $purge_config                           = false,
   $my_ip                                  = $::os_service_default,
-  $cross_az_attach                        = $::os_service_default,
   # DEPRECATED PARAMETERS
   $notify_api_faults                      = undef,
   $image_service                          = undef,
@@ -530,6 +527,9 @@ class nova(
   $auth_strategy                          = undef,
   $glance_api_servers                     = undef,
   $database_min_pool_size                 = undef,
+  $os_region_name                         = undef,
+  $cinder_catalog_info                    = undef,
+  $cross_az_attach                        = undef,
 ) inherits nova::params {
 
   include nova::deps
@@ -548,6 +548,21 @@ class nova(
 
   if $notify_on_api_faults {
     warning('The notify_on_api_faults parameter is deprecated.')
+  }
+
+  if $os_region_name != undef {
+    warning('The os_region_name parameter is deprecated and will be removed \
+in a future release. Use nova::cinder::os_region_name instead')
+  }
+
+  if $cinder_catalog_info != undef {
+    warning('The catalog_info parameter is deprecated and will be removed \
+in a future release. Use nova::cinder::catalog_info instead')
+  }
+
+  if $cross_az_attach != undef {
+    warning('The cross_az_attach parameter is deprecated and will be removed \
+in a future release. Use nova::cinder::cross_az_attach instead')
   }
 
   if $image_service {
@@ -742,7 +757,6 @@ but should be one of: ssh-rsa, ssh-dsa, ssh-ecdsa.")
   }
 
   nova_config {
-    'cinder/catalog_info':                            value => $cinder_catalog_info;
     'DEFAULT/ovsdb_connection':                       value => $ovsdb_connection;
     'notifications/notification_format':              value => $notification_format;
     # Following may need to be broken out to different nova services
@@ -765,8 +779,6 @@ but should be one of: ssh-rsa, ssh-dsa, ssh-ecdsa.")
   }
 
   nova_config {
-    'cinder/os_region_name':      value => $os_region_name;
-    'cinder/cross_az_attach':     value => $cross_az_attach;
     'upgrade_levels/cells':       value => $upgrade_level_cells;
     'upgrade_levels/cert':        value => $upgrade_level_cert;
     'upgrade_levels/compute':     value => $upgrade_level_compute;
