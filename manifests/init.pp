@@ -391,6 +391,10 @@
 #   If unable to do so, will use "127.0.0.1".
 #   Defaults to $::os_service_default.
 #
+# [*cross_az_attach*]
+#   (optional) Allow attach between instance and volume in different availability zones.
+#   Defaults to $::os_service_default
+#
 # DEPRECATED PARAMETERS
 #
 # [*notify_api_faults*]
@@ -430,10 +434,6 @@
 #   (optional) Info to match when looking for cinder in the service
 #   catalog. Format is: separated values of the form:
 #   <service_type>:<service_name>:<endpoint_type>
-#   Defaults to undef
-#
-#  [*cross_az_attach*]
-#   (optional) Allow attach between instance and volume in different availability zones.
 #   Defaults to undef
 #
 class nova(
@@ -520,6 +520,7 @@ class nova(
   $disk_allocation_ratio                  = $::os_service_default,
   $purge_config                           = false,
   $my_ip                                  = $::os_service_default,
+  $cross_az_attach                        = $::os_service_default,
   # DEPRECATED PARAMETERS
   $notify_api_faults                      = undef,
   $image_service                          = undef,
@@ -529,7 +530,6 @@ class nova(
   $database_min_pool_size                 = undef,
   $os_region_name                         = undef,
   $cinder_catalog_info                    = undef,
-  $cross_az_attach                        = undef,
 ) inherits nova::params {
 
   include nova::deps
@@ -558,11 +558,6 @@ in a future release. Use nova::cinder::os_region_name instead')
   if $cinder_catalog_info != undef {
     warning('The catalog_info parameter is deprecated and will be removed \
 in a future release. Use nova::cinder::catalog_info instead')
-  }
-
-  if $cross_az_attach != undef {
-    warning('The cross_az_attach parameter is deprecated and will be removed \
-in a future release. Use nova::cinder::cross_az_attach instead')
   }
 
   if $image_service {
@@ -779,6 +774,7 @@ but should be one of: ssh-rsa, ssh-dsa, ssh-ecdsa.")
   }
 
   nova_config {
+    'cinder/cross_az_attach':     value => $cross_az_attach;
     'upgrade_levels/cells':       value => $upgrade_level_cells;
     'upgrade_levels/cert':        value => $upgrade_level_cert;
     'upgrade_levels/compute':     value => $upgrade_level_compute;

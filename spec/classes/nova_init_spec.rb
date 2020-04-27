@@ -52,6 +52,7 @@ describe 'nova' do
         is_expected.to contain_nova_config('DEFAULT/transport_url').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('DEFAULT/rpc_response_timeout').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('DEFAULT/control_exchange').with_value('<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('cinder/cross_az_attach').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('DEFAULT/cpu_allocation_ratio').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('DEFAULT/ram_allocation_ratio').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('DEFAULT/disk_allocation_ratio').with_value('<SERVICE DEFAULT>')
@@ -91,6 +92,7 @@ describe 'nova' do
           :notification_topics                     => 'openstack',
           :notification_format                     => 'unversioned',
           :report_interval                         => '60',
+          :cross_az_attach                         => true,
           :ovsdb_connection                        => 'tcp:127.0.0.1:6640',
           :upgrade_level_cells                     => '1.0.0',
           :upgrade_level_cert                      => '1.0.0',
@@ -139,6 +141,7 @@ describe 'nova' do
         is_expected.to contain_nova_config('DEFAULT/transport_url').with_value('rabbit://rabbit_user:password@localhost:5673')
         is_expected.to contain_nova_config('DEFAULT/rpc_response_timeout').with_value('30')
         is_expected.to contain_nova_config('DEFAULT/control_exchange').with_value('nova')
+        is_expected.to contain_nova_config('cinder/cross_az_attach').with_value(true)
         is_expected.to contain_nova_config('oslo_messaging_rabbit/heartbeat_timeout_threshold').with_value('60')
         is_expected.to contain_nova_config('oslo_messaging_rabbit/heartbeat_rate').with_value('10')
         is_expected.to contain_nova_config('oslo_messaging_rabbit/heartbeat_in_pthread').with_value(true)
