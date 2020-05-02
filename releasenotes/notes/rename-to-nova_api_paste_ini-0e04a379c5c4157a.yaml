@@ -1,0 +1,8 @@
+---
+deprecations:
+  - |
+    The ``nova::config::nova_paste_api_ini`` parameter has been deprecated and
+    will be removed in a future release. Use ``nova_api_paste_ini`` instead.
+  - |
+    The ``nova_paste_api_ini`` resource has been deprecated and will be removed
+    in a future release. Use ``nova_api_paste_ini`` resource instead.
