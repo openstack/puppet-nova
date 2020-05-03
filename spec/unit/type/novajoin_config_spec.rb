@@ -52,12 +52,12 @@ describe 'Puppet::Type.type(:novajoin_config)' do
 
   it 'should autorequire the package that install the file' do
     catalog = Puppet::Resource::Catalog.new
-    package = Puppet::Type.type(:package).new(:name => 'novajoin')
-    catalog.add_resource package, @novajoin_config
+    anchor = Puppet::Type.type(:anchor).new(:name => 'nova::install::end')
+    catalog.add_resource anchor, @novajoin_config
     dependency = @novajoin_config.autorequire
     expect(dependency.size).to eq(1)
     expect(dependency[0].target).to eq(@novajoin_config)
-    expect(dependency[0].source).to eq(package)
+    expect(dependency[0].source).to eq(anchor)
   end
 
 

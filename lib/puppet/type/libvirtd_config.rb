@@ -39,8 +39,8 @@ Puppet::Type.newtype(:libvirtd_config) do
     defaultto false
   end
 
-  autorequire(:package) do
-    'libvirt-daemon'
+  autorequire(:anchor) do
+    ['nova::install::end']
   end
 
 end

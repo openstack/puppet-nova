@@ -46,8 +46,8 @@ Puppet::Type.newtype(:novajoin_config) do
     defaultto('<SERVICE DEFAULT>')
   end
 
-  autorequire(:package) do
-    'novajoin'
+  autorequire(:anchor) do
+    ['nova::install::end']
   end
 
 end
