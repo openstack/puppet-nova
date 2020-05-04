@@ -351,18 +351,6 @@ as a standalone service, or httpd for being run by a httpd server")
     include nova::db::online_data_migrations
   }
 
-  # Remove auth configuration from api-paste.ini
-  nova_paste_api_ini {
-    'filter:authtoken/auth_uri':          ensure => absent;
-    'filter:authtoken/auth_host':         ensure => absent;
-    'filter:authtoken/auth_port':         ensure => absent;
-    'filter:authtoken/auth_protocol':     ensure => absent;
-    'filter:authtoken/admin_tenant_name': ensure => absent;
-    'filter:authtoken/admin_user':        ensure => absent;
-    'filter:authtoken/admin_password':    ensure => absent;
-    'filter:authtoken/auth_admin_prefix': ensure => absent;
-  }
-
   if $validate {
     #Shrinking the variables names in favor of not
     #having more than 140 chars per line
