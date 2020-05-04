@@ -54,8 +54,8 @@ Puppet::Type.newtype(:nova_config) do
     defaultto('<SERVICE DEFAULT>')
   end
 
-  autorequire(:package) do
-    'nova-common'
+  autorequire(:anchor) do
+    ['nova::install::end']
   end
 
 end

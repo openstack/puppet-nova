@@ -60,8 +60,8 @@ Puppet::Type.newtype(:nova_flavor) do
   end
 
   # Require the nova-api service to be running
-  autorequire(:service) do
-    ['nova-api']
+  autorequire(:anchor) do
+    ['nova::service::end']
   end
 
   newparam(:name, :namevar => true) do
