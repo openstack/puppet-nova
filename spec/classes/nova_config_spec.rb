@@ -9,7 +9,7 @@ describe 'nova::config' do
           'DEFAULT/bar' => { 'value'  => 'barValue' },
           'DEFAULT/baz' => { 'ensure' => 'absent' }
         },
-        :nova_paste_api_ini => {
+        :nova_api_paste_ini => {
           'DEFAULT/foo2' => { 'value'  => 'fooValue' },
           'DEFAULT/bar2' => { 'value'  => 'barValue' },
           'DEFAULT/baz2' => { 'ensure' => 'absent' }
@@ -27,9 +27,9 @@ describe 'nova::config' do
       }
 
       it {
-        should contain_nova_paste_api_ini('DEFAULT/foo2').with_value('fooValue')
-        should contain_nova_paste_api_ini('DEFAULT/bar2').with_value('barValue')
-        should contain_nova_paste_api_ini('DEFAULT/baz2').with_ensure('absent')
+        should contain_nova_api_paste_ini('DEFAULT/foo2').with_value('fooValue')
+        should contain_nova_api_paste_ini('DEFAULT/bar2').with_value('barValue')
+        should contain_nova_api_paste_ini('DEFAULT/baz2').with_ensure('absent')
       }
     end
   end

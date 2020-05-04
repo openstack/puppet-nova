@@ -1,9 +1,9 @@
-Puppet::Type.newtype(:nova_paste_api_ini) do
+Puppet::Type.newtype(:nova_api_paste_ini) do
 
   ensurable
 
   newparam(:name, :namevar => true) do
-    desc 'Section/setting name to manage from /etc/nova/api-paste.ini (DEPRECATED)'
+    desc 'Section/setting name to manage from /etc/nova/api-paste.ini'
     newvalues(/\S+\/\S+/)
   end
 

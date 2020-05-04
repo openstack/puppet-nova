@@ -333,7 +333,7 @@ as a standalone service, or httpd for being run by a httpd server")
   }
 
   if ($ratelimits != undef) {
-    nova_paste_api_ini {
+    nova_api_paste_ini {
       'filter:ratelimit/paste.filter_factory': value => $ratelimits_factory;
       'filter:ratelimit/limits':               value => $ratelimits;
     }

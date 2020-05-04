@@ -1,22 +1,10 @@
 Puppet::Type.type(:nova_paste_api_ini).provide(
   :ini_setting,
-  :parent => Puppet::Type.type(:ini_setting).provider(:ruby)
+  :parent => Puppet::Type.type(:nova_api_paste_ini).provider(:ini_setting)
 ) do
 
-  def section
-    resource[:name].split('/', 2).first
+  def create
+    super
+    warning('nova_paste_api_ini is deprecated. Use nova_api_paste_ini')
   end
-
-  def setting
-    resource[:name].split('/', 2).last
-  end
-
-  def separator
-    '='
-  end
-
-  def self.file_path
-    '/etc/nova/api-paste.ini'
-  end
-
 end
