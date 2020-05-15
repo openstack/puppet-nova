@@ -44,6 +44,13 @@
 #   If all tenants should be confined via aggregate, then this should be True.
 #   Defaults to $::os_service_default
 #
+# [*query_placement_for_availability_zone*]
+#   (Optional) This setting allows the scheduler to look up a host aggregate
+#   with metadata key of availability zone set to the value provided by
+#   incoming request, and request result from placement be limited to that
+#   aggregate.
+#   Defaults to $::os_service_default
+#
 class nova::scheduler(
   $enabled                                  = true,
   $manage_service                           = true,
@@ -53,6 +60,7 @@ class nova::scheduler(
   $discover_hosts_in_cells_interval         = $::os_service_default,
   $limit_tenants_to_placement_aggregate     = $::os_service_default,
   $placement_aggregate_required_for_tenants = $::os_service_default,
+  $query_placement_for_availability_zone    = $::os_service_default,
 ) {
 
   include ::nova::deps
@@ -74,6 +82,7 @@ class nova::scheduler(
     'scheduler/discover_hosts_in_cells_interval':         value => $discover_hosts_in_cells_interval;
     'scheduler/limit_tenants_to_placement_aggregate':     value => $limit_tenants_to_placement_aggregate;
     'scheduler/placement_aggregate_required_for_tenants': value => $placement_aggregate_required_for_tenants;
+    'scheduler/query_placement_for_availability_zone':    value => $query_placement_for_availability_zone;
   }
 
 }
