@@ -4,7 +4,7 @@ describe 'nova::db::postgresql_api' do
 
   shared_examples_for 'nova::db::postgresql' do
     let :req_params do
-      { :password => 'pw' }
+      { :password => 'novapass' }
     end
 
     let :pre_condition do
@@ -16,12 +16,14 @@ describe 'nova::db::postgresql_api' do
         req_params
       end
 
-      it { is_expected.to contain_postgresql__server__db('nova_api').with(
-        :user     => 'nova_api',
-        :password => 'md581802bf81b206888b50950e640d70549'
+      it { is_expected.to contain_openstacklib__db__postgresql('nova_api').with(
+        :user       => 'nova_api',
+        :password   => 'novapass',
+        :dbname     => 'nova_api',
+        :encoding   => nil,
+        :privileges => 'ALL',
       )}
     end
-
   end
 
   on_supported_os({

@@ -17,19 +17,19 @@ describe 'nova::db::postgresql' do
       end
 
       it { should contain_openstacklib__db__postgresql('nova').with(
-        :password_hash => 'md557ae0608fad632bf0155cb9502a6b454',
-        :dbname        => 'nova',
-        :user          => 'nova',
-        :encoding      => nil,
-        :privileges    => 'ALL',
+        :password   => 'pw',
+        :dbname     => 'nova',
+        :user       => 'nova',
+        :encoding   => nil,
+        :privileges => 'ALL',
       )}
 
       it { should contain_openstacklib__db__postgresql('nova_cell0').with(
-        :password_hash => 'md557ae0608fad632bf0155cb9502a6b454',
-        :dbname        => 'nova_cell0',
-        :user          => 'nova',
-        :encoding      => nil,
-        :privileges    => 'ALL',
+        :password   => 'pw',
+        :dbname     => 'nova_cell0',
+        :user       => 'nova',
+        :encoding   => nil,
+        :privileges => 'ALL',
       )}
     end
 

@@ -9,7 +9,7 @@ describe 'nova::db::mysql' do
     end
 
     let :required_params do
-      { :password => "qwerty" }
+      { :password => "novapass" }
     end
 
     context 'with only required params' do
@@ -17,31 +17,29 @@ describe 'nova::db::mysql' do
         required_params
       end
       it { is_expected.to contain_openstacklib__db__mysql('nova').with(
-        :user          => 'nova',
-        :password_hash => '*AA1420F182E88B9E5F874F6FBE7459291E8F4601',
-        :charset       => 'utf8',
-        :collate       => 'utf8_general_ci',
+        :user     => 'nova',
+        :password => 'novapass',
+        :charset  => 'utf8',
+        :collate  => 'utf8_general_ci',
       )}
 
       it { is_expected.to contain_openstacklib__db__mysql('nova_cell0').with(
-        :user          => 'nova',
-        :password_hash => '*AA1420F182E88B9E5F874F6FBE7459291E8F4601',
-        :charset       => 'utf8',
-        :collate       => 'utf8_general_ci',
-        :create_user   => false,
+        :user        => 'nova',
+        :password    => 'novapass',
+        :charset     => 'utf8',
+        :collate     => 'utf8_general_ci',
+        :create_user => false,
       )}
     end
 
     context 'overriding allowed_hosts param to array' do
       let :params do
-        { :password       => 'novapass',
-          :allowed_hosts  => ['127.0.0.1','%'],
-        }.merge(required_params)
+        { :allowed_hosts  => ['127.0.0.1','%'] }.merge(required_params)
       end
 
       it { is_expected.to contain_openstacklib__db__mysql('nova').with(
         :user          => 'nova',
-        :password_hash => '*AA1420F182E88B9E5F874F6FBE7459291E8F4601',
+        :password      => 'novapass',
         :charset       => 'utf8',
         :collate       => 'utf8_general_ci',
         :allowed_hosts => ['127.0.0.1','%'],
@@ -50,14 +48,12 @@ describe 'nova::db::mysql' do
 
     context 'overriding allowed_hosts param to string' do
       let :params do
-        { :password       => 'novapass2',
-          :allowed_hosts  => '192.168.1.1',
-        }.merge(required_params)
+        { :allowed_hosts  => '192.168.1.1' }.merge(required_params)
       end
 
       it { is_expected.to contain_openstacklib__db__mysql('nova').with(
         :user          => 'nova',
-        :password_hash => '*AA1420F182E88B9E5F874F6FBE7459291E8F4601',
+        :password      => 'novapass',
         :charset       => 'utf8',
         :collate       => 'utf8_general_ci',
         :allowed_hosts => '192.168.1.1',
@@ -66,9 +62,7 @@ describe 'nova::db::mysql' do
 
     context 'when overriding charset' do
       let :params do
-        { :password => 'novapass',
-          :charset => 'latin1',
-        }.merge(required_params)
+        { :charset => 'latin1' }.merge(required_params)
       end
 
       it { is_expected.to contain_openstacklib__db__mysql('nova').with(
@@ -78,7 +72,7 @@ describe 'nova::db::mysql' do
 
     context 'when disabling cell0 setup' do
       let :params do
-        { :setup_cell0 => false}.merge(required_params)
+        { :setup_cell0 => false }.merge(required_params)
       end
 
       it { is_expected.to_not contain_openstacklib__db__mysql('nova_cell0') }

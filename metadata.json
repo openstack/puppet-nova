@@ -34,10 +34,6 @@
             "version_requirement": ">=8.4.0 <11.0.0"
         },
         {
-            "name": "puppetlabs/mysql",
-            "version_requirement": ">=6.0.0 <11.0.0"
-        },
-        {
             "name": "puppetlabs/stdlib",
             "version_requirement": ">=5.0.0 <7.0.0"
         },

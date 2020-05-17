@@ -51,7 +51,7 @@ class nova::db::mysql(
 
   ::openstacklib::db::mysql { 'nova':
     user          => $user,
-    password_hash => mysql::password($password),
+    password      => $password,
     dbname        => $dbname,
     host          => $host,
     charset       => $charset,
@@ -63,7 +63,7 @@ class nova::db::mysql(
     # need for cell_v2
     ::openstacklib::db::mysql { 'nova_cell0':
       user          => $user,
-      password_hash => mysql::password($password),
+      password      => $password,
       dbname        => "${dbname}_cell0",
       host          => $host,
       charset       => $charset,

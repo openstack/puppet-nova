@@ -45,7 +45,7 @@ class nova::db::mysql_api(
 
   ::openstacklib::db::mysql { 'nova_api':
     user          => $user,
-    password_hash => mysql::password($password),
+    password      => $password,
     dbname        => $dbname,
     host          => $host,
     charset       => $charset,

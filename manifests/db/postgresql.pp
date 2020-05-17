@@ -41,21 +41,21 @@ class nova::db::postgresql(
   include nova::deps
 
   ::openstacklib::db::postgresql { 'nova':
-    password_hash => postgresql_password($user, $password),
-    dbname        => $dbname,
-    user          => $user,
-    encoding      => $encoding,
-    privileges    => $privileges,
+    password   => $password,
+    dbname     => $dbname,
+    user       => $user,
+    encoding   => $encoding,
+    privileges => $privileges,
   }
 
   if $setup_cell0 {
     # need for cell_v2
     ::openstacklib::db::postgresql { 'nova_cell0':
-      password_hash => postgresql_password($user, $password),
-      dbname        => "${dbname}_cell0",
-      user          => $user,
-      encoding      => $encoding,
-      privileges    => $privileges,
+      password   => $password,
+      dbname     => "${dbname}_cell0",
+      user       => $user,
+      encoding   => $encoding,
+      privileges => $privileges,
     }
   }
 
