@@ -1,0 +1,5 @@
+---
+deprecations:
+  - |
+    The deprecated ``nova::vendordata::vendordata_caller`` parameter has been
+    removed.
