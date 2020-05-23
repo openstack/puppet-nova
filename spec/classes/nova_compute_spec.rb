@@ -50,23 +50,6 @@ describe 'nova::compute' do
 
       it { is_expected.to contain_class('nova::availability_zone') }
 
-      it 'configures vendordata' do
-        is_expected.to contain_nova_config('api/vendordata_jsonfile_path').with('value' => '<SERVICE DEFAULT>')
-        is_expected.to contain_nova_config('api/vendordata_providers').with('value' => '<SERVICE DEFAULT>')
-        is_expected.to contain_nova_config('api/vendordata_dynamic_targets').with('value' => '<SERVICE DEFAULT>')
-        is_expected.to contain_nova_config('api/vendordata_dynamic_connect_timeout').with('value' => '<SERVICE DEFAULT>')
-        is_expected.to contain_nova_config('api/vendordata_dynamic_read_timeout').with('value' => '<SERVICE DEFAULT>')
-        is_expected.to contain_nova_config('api/vendordata_dynamic_failure_fatal').with('value' => '<SERVICE DEFAULT>')
-        is_expected.to contain_nova_config('vendordata_dynamic_auth/auth_type').with('value' => '<SERVICE DEFAULT>')
-        is_expected.to contain_nova_config('vendordata_dynamic_auth/auth_url').with('value' => '<SERVICE DEFAULT>')
-        is_expected.to contain_nova_config('vendordata_dynamic_auth/os_region_name').with('value' => '<SERVICE DEFAULT>')
-        is_expected.to contain_nova_config('vendordata_dynamic_auth/password').with('value' => '<SERVICE DEFAULT>')
-        is_expected.to contain_nova_config('vendordata_dynamic_auth/project_domain_name').with('value' => 'Default')
-        is_expected.to contain_nova_config('vendordata_dynamic_auth/project_name').with('value' => '<SERVICE DEFAULT>')
-        is_expected.to contain_nova_config('vendordata_dynamic_auth/user_domain_name').with('value' => 'Default')
-        is_expected.to contain_nova_config('vendordata_dynamic_auth/username').with('value' => '<SERVICE DEFAULT>')
-      end
-
       it { is_expected.to contain_nova_config('DEFAULT/heal_instance_info_cache_interval').with_value('60') }
 
       it 'installs genisoimage package and sets config_drive_format' do

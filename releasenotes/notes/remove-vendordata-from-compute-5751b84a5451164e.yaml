@@ -1,0 +1,6 @@
+---
+upgrade:
+  - |
+    The ``nova::vendordata`` class is not automatically included by
+    ``nova::compute``. The class should be included explicitly if vandordata
+    configuration is required at nova-compute.

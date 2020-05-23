@@ -260,7 +260,6 @@ class nova::compute (
 
   include nova::pci
   include nova::compute::vgpu
-  include nova::vendordata
 
   if $vnc_keymap {
     warning('vnc_keymap parameter is deprecated, has no effect and will be removed in the future.')
