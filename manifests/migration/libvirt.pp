@@ -89,6 +89,11 @@
 #   "transport" option.
 #   Defaults to undef
 #
+# [*libvirt_version*]
+#   (optional) installed libvirt version. Default is automatic detected depending
+#   of the used OS installed via ::nova::compute::libvirt::version::default .
+#   Defaults to ::nova::compute::libvirt::version::default
+#
 class nova::migration::libvirt(
   $transport                         = undef,
   $auth                              = 'none',
@@ -105,7 +110,8 @@ class nova::migration::libvirt(
   $client_extraparams                = {},
   $ca_file                           = undef,
   $crl_file                          = undef,
-){
+  $libvirt_version                   = $::nova::compute::libvirt::version::default,
+) inherits nova::compute::libvirt::version {
 
   include ::nova::deps
 
@@ -233,12 +239,37 @@ class nova::migration::libvirt(
 
     case $::osfamily {
       'RedHat': {
-        if $transport_real != 'ssh' {
-          file_line { '/etc/sysconfig/libvirtd libvirtd args':
-            path  => '/etc/sysconfig/libvirtd',
-            line  => 'LIBVIRTD_ARGS="--listen"',
-            match => '^LIBVIRTD_ARGS=',
-            tag   => 'libvirt-file_line',
+        if versioncmp($libvirt_version, '5.6') >= 0 {
+          $manage_services = pick($::nova::compute::libvirt::manage_libvirt_services, true)
+
+          if $manage_services {
+            if $transport_real == 'tls' {
+              service { 'libvirtd-tls':
+                ensure  => 'running',
+                name    => 'libvirtd-tls.socket',
+                enable  => true,
+                require => Anchor['nova::config::end']
+              }
+              Service['libvirtd-tls'] -> Service<| title == 'libvirt' |>
+            } elsif $transport_real == 'tcp' {
+              service { 'libvirtd-tcp':
+                ensure  => 'running',
+                name    => 'libvirtd-tcp.socket',
+                enable  => true,
+                require => Anchor['nova::config::end']
+              }
+              Service['libvirtd-tcp'] -> Service<| title == 'libvirt' |>
+            }
+          }
+
+        } else {
+          if $transport_real != 'ssh' {
+            file_line { '/etc/sysconfig/libvirtd libvirtd args':
+              path  => '/etc/sysconfig/libvirtd',
+              line  => 'LIBVIRTD_ARGS="--listen"',
+              match => '^LIBVIRTD_ARGS=',
+              tag   => 'libvirt-file_line',
+            }
           }
         }
       }
