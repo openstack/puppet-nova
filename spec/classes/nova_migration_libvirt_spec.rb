@@ -239,21 +239,42 @@ describe 'nova::migration::libvirt' do
 
   end
 
+  shared_examples_for 'nova migration with libvirt in Debian' do
+    it { is_expected.to contain_file_line('/etc/default/libvirtd libvirtd opts').with(:line => 'libvirtd_opts="-l"') }
+  end
+
+  shared_examples_for 'nova migration with libvirt in RedHat' do
+    context 'with tls transport' do
+      let(:params) do
+        { :transport => 'tls' }
+      end
+
+      it { is_expected.to contain_service('libvirtd-tls').with(
+        :name   => 'libvirtd-tls.socket',
+        :ensure => 'running',
+        :enable => true,
+        )}
+    end
+
+    context 'with tls transport' do
+      let(:params) do
+        { :transport => 'tcp' }
+      end
+
+      it { is_expected.to contain_service('libvirtd-tcp').with(
+        :name   => 'libvirtd-tcp.socket',
+        :ensure => 'running',
+        :enable => true,
+        )}
+    end
+  end
+
   on_supported_os({
     :supported_os => OSDefaults.get_supported_os
   }).each do |os,facts|
     context "on #{os}" do
       let (:facts) do
         facts.merge!(OSDefaults.get_facts({ :os_workers => 5 }))
-      end
-
-      let (:platform_params) do
-        case facts[:osfamily]
-        when 'Debian'
-            it { is_expected.to contain_file_line('/etc/default/libvirtd libvirtd opts').with(:line => 'libvirtd_opts="-l"') }
-        when 'RedHat'
-            it { is_expected.to contain_file_line('/etc/sysconfig/libvirtd libvirtd args').with(:line => 'LIBVIRTD_ARGS="--listen"') }
-        end
       end
 
       it_configures 'nova migration with libvirt'

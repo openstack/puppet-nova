@@ -1,0 +1,7 @@
+---
+features:
+  - |
+    Now puppet-nova supports configuration of libvirtd-tls.socket and
+    libvirtd-tcp.socket, which should be enabled according to the transport
+    protocol when libvirt is running under systemd. This feature is enforced
+    since libvirt v5.8.
