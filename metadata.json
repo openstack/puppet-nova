@@ -78,7 +78,7 @@
     "requirements": [
         {
             "name": "puppet",
-            "version_requirement": ">= 5.0.0 < 7.0.0"
+            "version_requirement": ">= 6.0.0 < 7.0.0"
         }
     ],
     "source": "git://github.com/openstack/puppet-nova.git",
