@@ -86,7 +86,7 @@ exclude_patterns = []
 #show_authors = False
 
 # The name of the Pygments (syntax highlighting) style to use.
-pygments_style = 'sphinx'
+pygments_style = 'native'
 
 # A list of ignored prefixes for module index sorting.
 #modindex_common_prefix = []
@@ -250,6 +250,6 @@ texinfo_documents = [
 locale_dirs = ['locale/']
 
 # openstackdocstheme options
-repository_name = 'openstack/puppet-nova'
-bug_project = 'puppet-nova'
-bug_tag = ''
+openstackdocs_repo_name = 'openstack/puppet-nova'
+openstackdocs_bug_project = 'puppet-nova'
+openstackdocs_bug_tag = ''
