@@ -103,5 +103,8 @@ class nova::compute::libvirt::services (
     }
     Package<| name == 'libvirt' |> -> Service['virtlogd']
   }
+  if $libvirt_service_name and $virtlog_service_name {
+    Service['virtlogd'] -> Service['libvirt']
+  }
 
 }
