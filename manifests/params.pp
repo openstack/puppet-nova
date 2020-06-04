@@ -52,16 +52,11 @@ class nova::params {
       $nova_api_wsgi_script_source       = '/usr/bin/nova-api-wsgi'
       $nova_metadata_wsgi_script_source  = '/usr/bin/nova-metadata-wsgi'
       case $::operatingsystem {
-        'RedHat', 'CentOS', 'Scientific', 'OracleLinux': {
-          if (versioncmp($::operatingsystemmajrelease, '7') < 0) {
-            $messagebus_service_name  = 'messagebus'
-          } else {
-            $messagebus_service_name = 'dbus'
-          }
+        'Fedora': {
+          $messagebus_service_name  = undef
         }
         default: {
-          # not required on Fedora
-          $messagebus_service_name  = undef
+          $messagebus_service_name  = 'dbus'
         }
       }
       $nova_user                    = 'nova'
