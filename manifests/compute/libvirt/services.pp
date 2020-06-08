@@ -61,20 +61,18 @@ class nova::compute::libvirt::services (
       tag    => ['openstack', 'nova-support-package'],
     }
     service { 'libvirt' :
-      ensure   => running,
-      enable   => true,
-      name     => $libvirt_service_name,
-      provider => $::nova::params::special_service_provider,
-      require  => Anchor['nova::install::end'],
+      ensure  => running,
+      enable  => true,
+      name    => $libvirt_service_name,
+      require => Anchor['nova::install::end'],
     }
 
     # messagebus
     if($::osfamily == 'RedHat' and $::operatingsystem != 'Fedora') {
       service { 'messagebus':
-        ensure   => running,
-        enable   => true,
-        name     => $::nova::params::messagebus_service_name,
-        provider => $::nova::params::special_service_provider,
+        ensure => running,
+        enable => true,
+        name   => $::nova::params::messagebus_service_name,
       }
       Package['libvirt'] -> Service['messagebus'] -> Service['libvirt']
     }
@@ -86,20 +84,18 @@ class nova::compute::libvirt::services (
 
   if $virtlock_service_name {
     service { 'virtlockd':
-      ensure   => running,
-      enable   => true,
-      name     => $virtlock_service_name,
-      provider => $::nova::params::special_service_provider,
+      ensure => running,
+      enable => true,
+      name   => $virtlock_service_name,
     }
     Package<| name == 'libvirt' |> -> Service['virtlockd']
   }
 
   if $virtlog_service_name {
     service { 'virtlogd':
-      ensure   => running,
-      enable   => true,
-      name     => $virtlog_service_name,
-      provider => $::nova::params::special_service_provider,
+      ensure => running,
+      enable => true,
+      name   => $virtlog_service_name,
     }
     Package<| name == 'libvirt' |> -> Service['virtlogd']
   }

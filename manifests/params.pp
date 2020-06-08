@@ -55,19 +55,12 @@ class nova::params {
         'RedHat', 'CentOS', 'Scientific', 'OracleLinux': {
           if (versioncmp($::operatingsystemmajrelease, '7') < 0) {
             $messagebus_service_name  = 'messagebus'
-            $special_service_provider = undef
           } else {
-            if (versioncmp($::puppetversion, '4.5') < 0) {
-              $special_service_provider = 'redhat'
-            } else {
-              $special_service_provider = undef
-            }
             $messagebus_service_name = 'dbus'
           }
         }
         default: {
           # not required on Fedora
-          $special_service_provider = undef
           $messagebus_service_name  = undef
         }
       }
@@ -116,7 +109,6 @@ class nova::params {
           $vncproxy_package_name           = 'nova-consoleproxy'
           $serialproxy_package_name        = 'nova-consoleproxy'
           # Use default provider on Debian
-          $special_service_provider        = undef
           $virtlock_service_name           = 'virtlockd'
           $virtlog_service_name            = 'virtlogd'
         }
@@ -127,7 +119,6 @@ class nova::params {
           $vncproxy_package_name           = 'nova-novncproxy'
           $serialproxy_package_name        = 'nova-serialproxy'
           # Use default provider on Debian
-          $special_service_provider        = undef
           $virtlock_service_name           = 'virtlockd'
           $virtlog_service_name            = 'virtlogd'
         }
