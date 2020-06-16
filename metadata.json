@@ -89,5 +89,5 @@
     ],
     "source": "git://github.com/openstack/puppet-nova.git",
     "summary": "Puppet module for OpenStack Nova",
-    "version": "15.5.0"
+    "version": "15.6.0"
 }
