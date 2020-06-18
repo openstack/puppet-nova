@@ -337,10 +337,6 @@
 #  (optional) Sets a version cap for messages sent to conductor services
 #  Defaults to $::os_service_default
 #
-# [*upgrade_level_console*]
-#  (optional) Sets a version cap for messages sent to console services
-#  Defaults to $::os_service_default
-#
 # [*upgrade_level_intercell*]
 #  (optional) Sets a version cap for messages sent between cells services
 #  Defaults to $::os_service_default
@@ -436,6 +432,10 @@
 #   <service_type>:<service_name>:<endpoint_type>
 #   Defaults to undef
 #
+# [*upgrade_level_console*]
+#  (optional) Sets a version cap for messages sent to console services
+#  Defaults to undef
+#
 class nova(
   $ensure_package                         = 'present',
   $database_connection                    = undef,
@@ -511,7 +511,6 @@ class nova(
   $upgrade_level_cert                     = $::os_service_default,
   $upgrade_level_compute                  = $::os_service_default,
   $upgrade_level_conductor                = $::os_service_default,
-  $upgrade_level_console                  = $::os_service_default,
   $upgrade_level_intercell                = $::os_service_default,
   $upgrade_level_network                  = $::os_service_default,
   $upgrade_level_scheduler                = $::os_service_default,
@@ -530,6 +529,7 @@ class nova(
   $database_min_pool_size                 = undef,
   $os_region_name                         = undef,
   $cinder_catalog_info                    = undef,
+  $upgrade_level_console                  = undef,
 ) inherits nova::params {
 
   include nova::deps
@@ -563,6 +563,11 @@ in a future release. Use nova::cinder::catalog_info instead')
   if $image_service {
     warning('The unused image_service parameter is deprecated, as we are \
 already using python-glanceclient instead of old glance client.')
+  }
+
+  if $upgrade_level_console != undef {
+    warning('The upgrade_level_console parameter is deprecated, and has \
+no effect.')
   }
 
   if $use_ssl {
@@ -779,7 +784,6 @@ but should be one of: ssh-rsa, ssh-dsa, ssh-ecdsa.")
     'upgrade_levels/cert':        value => $upgrade_level_cert;
     'upgrade_levels/compute':     value => $upgrade_level_compute;
     'upgrade_levels/conductor':   value => $upgrade_level_conductor;
-    'upgrade_levels/console':     value => $upgrade_level_console;
     'upgrade_levels/intercell':   value => $upgrade_level_intercell;
     'upgrade_levels/network':     value => $upgrade_level_network;
     'upgrade_levels/scheduler':   value => $upgrade_level_scheduler;
