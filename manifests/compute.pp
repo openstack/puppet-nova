@@ -178,10 +178,6 @@
 #
 # DEPRECATED PARAMETERS
 #
-# [*vnc_keymap*]
-#   (optional) The keymap to use with VNC (ls -alh /usr/share/qemu/keymaps to list available keymaps)
-#   Defaults to undef
-#
 # [*neutron_enabled*]
 #   (optional) Whether to use Neutron for networking of VMs
 #   Defaults to undef
@@ -245,7 +241,6 @@ class nova::compute (
   $live_migration_wait_for_vif_plug            = $::os_service_default,
   $max_disk_devices_to_attach                  = $::os_service_default,
   # DEPRECATED PARAMETERS
-  $vnc_keymap                                  = undef,
   $neutron_enabled                             = undef,
   $install_bridge_utils                        = undef,
   $vcpu_pin_set                                = undef,
@@ -260,10 +255,6 @@ class nova::compute (
 
   include nova::pci
   include nova::compute::vgpu
-
-  if $vnc_keymap {
-    warning('vnc_keymap parameter is deprecated, has no effect and will be removed in the future.')
-  }
 
   if $neutron_enabled {
     warning('neutron_enabled is deprecated and has no effect, was only used for install_bridge_utils')
