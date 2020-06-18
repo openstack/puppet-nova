@@ -20,10 +20,6 @@
 #   (Optional) The amount of scheduler workers.
 #   Defaults to $::os_workers
 #
-# [*scheduler_driver*]
-#   (Optional) Default driver to use for the scheduler
-#   Defaults to 'filter_scheduler'
-#
 # [*discover_hosts_in_cells_interval*]
 #   (Optional) This value controls how often (in seconds) the scheduler should
 #   attempt to discover new hosts that have been added to cells.
@@ -68,12 +64,17 @@
 #   aggregate.
 #   Defaults to $::os_service_default
 #
+# DEPRECATED PARAMETERS
+#
+# [*scheduler_driver*]
+#   (Optional) Default driver to use for the scheduler
+#   Defaults to undef
+#
 class nova::scheduler(
   $enabled                                  = true,
   $manage_service                           = true,
   $ensure_package                           = 'present',
   $workers                                  = $::os_workers,
-  $scheduler_driver                         = 'filter_scheduler',
   $discover_hosts_in_cells_interval         = $::os_service_default,
   $query_placement_for_image_type_support   = $::os_service_default,
   $limit_tenants_to_placement_aggregate     = $::os_service_default,
@@ -81,6 +82,8 @@ class nova::scheduler(
   $max_placement_results                    = $::os_service_default,
   $enable_isolated_aggregate_filtering      = $::os_service_default,
   $query_placement_for_availability_zone    = $::os_service_default,
+  # DEPRECATED PARAMETERS
+  $scheduler_driver                         = undef,
 ) {
 
   include nova::deps
@@ -98,7 +101,6 @@ class nova::scheduler(
 
   nova_config {
     'scheduler/workers':                                  value => $workers;
-    'scheduler/driver':                                   value => $scheduler_driver;
     'scheduler/discover_hosts_in_cells_interval':         value => $discover_hosts_in_cells_interval;
     'scheduler/query_placement_for_image_type_support':   value => $query_placement_for_image_type_support;
     'scheduler/limit_tenants_to_placement_aggregate':     value => $limit_tenants_to_placement_aggregate;
@@ -106,5 +108,17 @@ class nova::scheduler(
     'scheduler/max_placement_results':                    value => $max_placement_results;
     'scheduler/enable_isolated_aggregate_filtering':      value => $enable_isolated_aggregate_filtering;
     'scheduler/query_placement_for_availability_zone':    value => $query_placement_for_availability_zone;
+  }
+
+  if $scheduler_driver != undef {
+    warning('The scheduler_driver parameter is deprecated and will be removed \
+in a future release')
+    nova_config {
+      'scheduler/driver': value => $scheduler_driver;
+    }
+  } else {
+    nova_config {
+      'scheduler/driver': ensure => absent;
+    }
   }
 }

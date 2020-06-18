@@ -1,0 +1,5 @@
+---
+deprecations:
+  - |
+    The ``nova::scheduler::scheduler_driver`` parameter has been deprecated and
+    will be removed in a future release.
