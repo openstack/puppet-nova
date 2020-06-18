@@ -1,0 +1,5 @@
+---
+deprecations:
+  - |
+    The ``nova::upgrade_level_console`` parameter has been deprecated and
+    has no effect now.
