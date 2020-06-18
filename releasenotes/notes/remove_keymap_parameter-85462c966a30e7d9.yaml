@@ -1,0 +1,4 @@
+---
+upgrade:
+  - |
+    The deprecated ``nova::compute::vnc_keymap`` option has been removed.
