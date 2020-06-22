@@ -1,0 +1,4 @@
+---
+upgrade:
+  - |
+    The ``nova::placement::os_interface`` parameter has been removed.

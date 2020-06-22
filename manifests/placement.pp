@@ -48,13 +48,6 @@
 #   and not the Identity service API IP and port.
 #   Defaults to 'http://127.0.0.1:5000/v3'
 #
-# DEPRECATED PARAMETERS
-#
-# [*os_interface*]
-#   (optional) interface name used for getting the keystone endpoint for
-#   the placement API.
-#   Defaults to undef
-
 class nova::placement(
   $password            = false,
   $auth_type           = 'password',
@@ -65,16 +58,9 @@ class nova::placement(
   $project_name        = 'services',
   $user_domain_name    = 'Default',
   $username            = 'placement',
-  # DEPRECATED PARAMETERS
-  $os_interface        = undef,
 ) inherits nova::params {
 
   include nova::deps
-
-  if $os_interface {
-    warning('nova::placement::os_interface is deprecated for removal, please use valid_interfaces instead.')
-  }
-  $valid_interfaces_real = pick($os_interface, $valid_interfaces)
 
   nova_config {
     'placement/auth_type':           value => $auth_type;
@@ -85,7 +71,7 @@ class nova::placement(
     'placement/user_domain_name':    value => $user_domain_name;
     'placement/username':            value => $username;
     'placement/region_name':         value => $region_name;
-    'placement/valid_interfaces':    value => $valid_interfaces_real;
+    'placement/valid_interfaces':    value => $valid_interfaces;
   }
 
 }
