@@ -55,7 +55,7 @@ class nova::compute::libvirt::qemu(
 ) inherits nova::compute::libvirt::version {
 
   include nova::deps
-  require ::nova::compute::libvirt
+  require nova::compute::libvirt
 
   Anchor['nova::config::begin']
   -> Augeas<| tag == 'qemu-conf-augeas'|>

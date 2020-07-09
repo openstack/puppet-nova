@@ -18,7 +18,7 @@ class nova::compute::ironic (
 ) {
 
   include nova::deps
-  require ::nova::ironic::common
+  require nova::ironic::common
   include ironic::client
 
   nova_config {

@@ -178,7 +178,7 @@ Use password parameter instead')
   }
 
   if $enable_ipa_client_install {
-    require ::ipaclient
+    require ipaclient
     # If we're installing IPA here, the hostname fact won't be populated yet,
     # so we'll use a command to get it.
     $ipa_hostname_real = '`grep xmlrpc_uri /etc/ipa/default.conf | cut -d/ -f3`'
