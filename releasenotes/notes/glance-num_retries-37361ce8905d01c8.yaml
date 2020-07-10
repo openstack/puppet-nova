@@ -1,0 +1,5 @@
+---
+features:
+  - |
+    The new ``nova::glance_num_retries`` parameter has been added to support
+    ``[glance] num_retries`` parameter in nova.
