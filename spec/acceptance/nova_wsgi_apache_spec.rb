@@ -64,14 +64,14 @@ describe 'basic nova' do
 
     describe 'nova aggregate' do
       it 'should create new aggregate' do
-        shell('openstack --os-identity-api-version 3 --os-username nova --os-password a_big_secret --os-tenant-name services --os-user-domain-name Default --os-project-domain-name Default --os-auth-url http://127.0.0.1:5000/v3 aggregate list') do |r|
+        command('openstack --os-identity-api-version 3 --os-username nova --os-password a_big_secret --os-tenant-name services --os-user-domain-name Default --os-project-domain-name Default --os-auth-url http://127.0.0.1:5000/v3 aggregate list') do |r|
           expect(r.stdout).to match(/test_aggregate/)
         end
       end
     end
     describe 'nova flavor' do
       it 'should create new flavor' do
-        shell('openstack --os-identity-api-version 3 --os-username nova --os-password a_big_secret --os-tenant-name services --os-user-domain-name Default --os-project-domain-name Default --os-auth-url http://127.0.0.1:5000/v3 flavor list') do |r|
+        command('openstack --os-identity-api-version 3 --os-username nova --os-password a_big_secret --os-tenant-name services --os-user-domain-name Default --os-project-domain-name Default --os-auth-url http://127.0.0.1:5000/v3 flavor list') do |r|
           expect(r.stdout).to match(/test_flavor/)
         end
       end

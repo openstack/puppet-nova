@@ -3,7 +3,7 @@
       - puppet-openstack-check-jobs
       - puppet-openstack-module-unit-jobs
       - puppet-openstack-integration-jobs-all
-      - puppet-openstack-beaker-jobs
+      - puppet-openstack-litmus-jobs
       - release-notes-jobs-python3
     check:
       jobs:
