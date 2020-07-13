@@ -43,6 +43,8 @@ describe 'nova' do
       end
 
       it 'configures various things' do
+        is_expected.to contain_nova_config('glance/endpoint_override').with_value('<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('glance/num_retries').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('DEFAULT/state_path').with_value('/var/lib/nova')
         is_expected.to contain_nova_config('oslo_concurrency/lock_path').with_value(platform_params[:lock_path])
         is_expected.to contain_nova_config('DEFAULT/service_down_time').with_value('60')
@@ -74,6 +76,7 @@ describe 'nova' do
       let :params do
         {
           :glance_endpoint_override                => 'http://localhost:9292',
+          :glance_num_retries                      => 3,
           :glance_api_servers                      => ['http://localhost:9292', 'http://localhost:9293'],
           :default_transport_url                   => 'rabbit://rabbit_user:password@localhost:5673',
           :rpc_response_timeout                    => '30',
@@ -124,11 +127,9 @@ describe 'nova' do
         })
       end
 
-      it 'configures glance endpoint_override' do
+      it 'configures glance parameters' do
         is_expected.to contain_nova_config('glance/endpoint_override').with_value('http://localhost:9292')
-      end
-
-      it 'configures glance api servers' do
+        is_expected.to contain_nova_config('glance/num_retries').with_value(3)
         is_expected.to contain_nova_config('glance/api_servers').with_value(['http://localhost:9292', 'http://localhost:9293'])
       end
 

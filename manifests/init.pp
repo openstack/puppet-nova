@@ -65,6 +65,10 @@
 #   (optional) Override the endpoint to use to talk to Glance.
 #   Defaults to $::os_service_default
 #
+# [*glance_num_retries*]
+#   (optional) Number of retries in glance operation
+#   Defaults to $::os_service_default
+#
 # [*rabbit_use_ssl*]
 #   (optional) Boolean. Connect over SSL for RabbitMQ. (boolean value)
 #   Defaults to $::os_service_default
@@ -453,6 +457,7 @@ class nova(
   $rpc_response_timeout                   = $::os_service_default,
   $control_exchange                       = $::os_service_default,
   $glance_endpoint_override               = $::os_service_default,
+  $glance_num_retries                     = $::os_service_default,
   $rabbit_use_ssl                         = $::os_service_default,
   $rabbit_heartbeat_timeout_threshold     = $::os_service_default,
   $rabbit_heartbeat_rate                  = $::os_service_default,
@@ -788,6 +793,7 @@ but should be one of: ssh-rsa, ssh-dsa, ssh-ecdsa.")
     'upgrade_levels/network':     value => $upgrade_level_network;
     'upgrade_levels/scheduler':   value => $upgrade_level_scheduler;
     'glance/endpoint_override':   value => $glance_endpoint_override;
+    'glance/num_retries':         value => $glance_num_retries;
   }
 
 }
