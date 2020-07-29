@@ -92,21 +92,6 @@
 #   (optional) Separator character(s) for image property namespace and name
 #   Defaults to $::os_service_default
 #
-# DEPRECATED
-#
-# [*baremetal_scheduler_default_filters*]
-#   An array of filters to be used by default for baremetal hosts
-#   No longer used. Defaults to undef
-#
-# [*scheduler_use_baremetal_filters*]
-#   Use baremetal_scheduler_default_filters or not.
-#   No longer used. Defaults to undef
-#
-# [*scheduler_host_manager*]
-#   The scheduler host manager class to use.
-#   No longer used. Defaults to undef
-#
-
 class nova::scheduler::filter (
   $scheduler_max_attempts                         = '3',
   $scheduler_host_subset_size                     = '1',
@@ -128,10 +113,6 @@ class nova::scheduler::filter (
   $restrict_isolated_hosts_to_isolated_images     = $::os_service_default,
   $aggregate_image_properties_isolation_namespace = $::os_service_default,
   $aggregate_image_properties_isolation_separator = $::os_service_default,
-  # DEPRECATED
-  $baremetal_scheduler_default_filters            = undef,
-  $scheduler_use_baremetal_filters                = undef,
-  $scheduler_host_manager                         = undef,
 ) {
 
   include nova::deps
@@ -156,12 +137,6 @@ class nova::scheduler::filter (
   } else {
     warning('scheduler_available_filters must be an array and will fail in the future')
     $scheduler_available_filters_real = any2array($scheduler_available_filters)
-  }
-
-  if $baremetal_scheduler_default_filters or $scheduler_use_baremetal_filters or $scheduler_host_manager {
-    warning('The scheduler_host_manager, baremetal_scheduler_default_filters and \
-scheduler_use_baremetal_filters parameters are deprecated and will have \
-no effect. Baremetal scheduling now uses custom resource classes.')
   }
 
   if !is_service_default($isolated_images) and !empty($isolated_images){

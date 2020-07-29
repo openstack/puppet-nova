@@ -52,18 +52,6 @@ describe 'nova::scheduler::filter' do
       it { is_expected.to contain_nova_config('filter_scheduler/available_filters').with_value(['nova_filter1','nova_filter2']) }
     end
 
-    context 'when overriding deprecated params' do
-      let :params do
-        {
-          :scheduler_use_baremetal_filters      => true,
-          :baremetal_scheduler_default_filters  => ['ExactRamFilter','ExactDiskFilter','ExactCoreFilter'],
-        }
-      end
-
-      it { is_expected.to_not contain_nova_config('filter_scheduler/use_baremetal_filters') }
-      it { is_expected.to_not contain_nova_config('filter_scheduler/baremetal_enabled_filters') }
-    end
-
     context 'when overriding params with empty arrays' do
       let :params do
         { :isolated_images                      => [],

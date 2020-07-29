@@ -1,0 +1,8 @@
+---
+upgrade:
+  - |
+    The following deprecated parameters have been removed.
+
+    - ``nova::scheduler::filter::baremetal_scheduler_default_filters``
+    - ``nova::scheduler::filter::scheduler_use_baremetal_filters``
+    - ``nova::scheduler::filter::scheduler_host_manager``
