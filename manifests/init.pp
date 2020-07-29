@@ -397,18 +397,8 @@
 #
 # DEPRECATED PARAMETERS
 #
-# [*notify_api_faults*]
-#   (optional) If set, send api.fault notifications on caught
-#   exceptions in the API service
-#   Defaults to undef
-#
 # [*image_service*]
 #   (optional) Service used to search for and retrieve images.
-#
-# [*notify_on_api_faults*]
-#   (optional) If set, send api.fault notifications on caught
-#   exceptions in the API service
-#   Defaults to undef
 #
 # [*auth_strategy*]
 #   (optional) The strategy to use for auth: noauth or keystone.
@@ -526,9 +516,7 @@ class nova(
   $my_ip                                  = $::os_service_default,
   $cross_az_attach                        = $::os_service_default,
   # DEPRECATED PARAMETERS
-  $notify_api_faults                      = undef,
   $image_service                          = undef,
-  $notify_on_api_faults                   = undef,
   $auth_strategy                          = undef,
   $glance_api_servers                     = undef,
   $database_min_pool_size                 = undef,
@@ -545,14 +533,6 @@ class nova(
   validate_legacy(Array, 'validate_array', $enabled_ssl_apis)
   if empty($enabled_ssl_apis) and $use_ssl {
       warning('enabled_ssl_apis is empty but use_ssl is set to true')
-  }
-
-  if $notify_api_faults {
-    warning('The notify_api_faults parameter is deprecated.')
-  }
-
-  if $notify_on_api_faults {
-    warning('The notify_on_api_faults parameter is deprecated.')
   }
 
   if $os_region_name != undef {

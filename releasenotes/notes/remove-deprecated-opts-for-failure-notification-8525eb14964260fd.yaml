@@ -1,0 +1,7 @@
+---
+upgrade:
+  - |
+    The following parameters have been removed.
+
+    - ``nova::notify_api_faults``
+    - ``nova::notify_on_api_faults``
