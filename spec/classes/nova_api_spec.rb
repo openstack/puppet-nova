@@ -6,6 +6,7 @@ describe 'nova::api' do
     "include nova
      class { 'nova::keystone::authtoken':
        password => 'passw0rd',
+       params => { 'username' => 'novae' },
      }"
   end
 
@@ -143,7 +144,7 @@ describe 'nova::api' do
         })
       end
       it { is_expected.to contain_openstacklib__service_validation('nova-api').with(
-        :command   => 'nova --os-auth-url http://127.0.0.1:5000/ --os-project-name services --os-username nova --os-password passw0rd flavor-list',
+        :command   => 'nova --os-auth-url http://127.0.0.1:5000/ --os-project-name services --os-username novae --os-password passw0rd flavor-list',
         :subscribe => 'Service[nova-api]',
       )}
 
