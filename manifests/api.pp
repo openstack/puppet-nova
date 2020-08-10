@@ -352,19 +352,22 @@ as a standalone service, or httpd for being run by a httpd server")
   }
 
   if $validate {
-    #Shrinking the variables names in favor of not
-    #having more than 140 chars per line
-    #Admin user real
-    $aur = $::nova::keystone::authtoken::username
-    #Admin password real
-    $apr = $::nova::keystone::authtoken::password
-    #Admin tenant name real
-    $atnr = $::nova::keystone::authtoken::project_name
-    #Keystone Auth URI
-    $kau = $::nova::keystone::authtoken::www_authenticate_uri
+    $authtoken_values = {
+      'username' => $::nova::keystone::authtoken::username,
+      'password' => $::nova::keystone::authtoken::password,
+      'project_name' => $::nova::keystone::authtoken::project_name,
+      'www_authenticate_uri' => $::nova::keystone::authtoken::www_authenticate_uri,
+    }
+    $authtoken = merge($authtoken_values, $::nova::keystone::authtoken::params)
     $defaults = {
       'nova-api' => {
-        'command'  => "nova --os-auth-url ${kau} --os-project-name ${atnr} --os-username ${aur} --os-password ${apr} flavor-list",
+        'command'  => @("CMD"/L)
+          nova --os-auth-url ${authtoken['www_authenticate_uri']} \
+          --os-project-name ${authtoken['project_name']} \
+          --os-username ${authtoken['username']} \
+          --os-password ${authtoken['password']} \
+          flavor-list
+          |- CMD
       }
     }
     $validation_options_hash = merge ($defaults, $validation_options)

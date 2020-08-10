@@ -86,6 +86,7 @@ describe 'nova::keystone::authtoken' do
           :service_token_roles                  => ['service'],
           :service_token_roles_required         => true,
           :interface                            => 'internal',
+          :params                               => { 'service_type' => "compute" },
         })
       end
 
@@ -124,10 +125,24 @@ describe 'nova::keystone::authtoken' do
         is_expected.to contain_nova_config('keystone_authtoken/service_token_roles').with_value(params[:service_token_roles])
         is_expected.to contain_nova_config('keystone_authtoken/service_token_roles_required').with_value(params[:service_token_roles_required])
         is_expected.to contain_nova_config('keystone_authtoken/interface').with_value(params[:interface])
+        is_expected.to contain_nova_config('keystone_authtoken/service_type').with_value(params[:params]['service_type'])
       end
 
       it 'installs python memcache package' do
         is_expected.to contain_package('python-memcache')
+      end
+    end
+
+    context 'when overriding parameters via params hash' do
+      before do
+        params.merge!({
+          :username                             => 'myuser',
+          :params                               => { 'username' => "myotheruser" },
+        })
+      end
+
+      it 'configure keystone_authtoken' do
+        is_expected.to contain_nova_config('keystone_authtoken/username').with_value(params[:params]['username'])
       end
     end
   end
