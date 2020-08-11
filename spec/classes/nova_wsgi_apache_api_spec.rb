@@ -55,6 +55,7 @@ describe 'nova::wsgi::apache_api' do
           :bind_host                   => '10.42.51.1',
           :api_port                    => 12345,
           :ssl                         => false,
+          :vhost_custom_fragment       => 'Timeout 99',
           :wsgi_process_display_name   => 'nova-api',
           :workers                     => 37,
           :custom_wsgi_process_options => {
@@ -79,6 +80,7 @@ describe 'nova::wsgi::apache_api' do
         :ssl                         => false,
         :threads                     => 1,
         :user                        => 'nova',
+        :vhost_custom_fragment       => 'Timeout 99',
         :workers                     => 37,
         :wsgi_daemon_process         => 'nova-api',
         :wsgi_process_display_name   => 'nova-api',
