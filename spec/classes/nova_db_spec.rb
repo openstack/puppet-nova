@@ -18,6 +18,7 @@ describe 'nova::db' do
       it { should_not contain_nova_config('database/retry_interval') }
       it { should_not contain_nova_config('database/max_overflow') }
       it { should_not contain_nova_config('database/pool_timeout') }
+      it { should_not contain_nova_config('database/mysql_enable_ndb') }
     end
 
     context 'with overridden parameters' do
@@ -40,6 +41,7 @@ describe 'nova::db' do
         :retry_interval          => '<SERVICE DEFAULT>',
         :max_overflow            => '<SERVICE DEFAULT>',
         :pool_timeout            => '<SERVICE DEFAULT>',
+        :mysql_enable_ndb        => '<SERVICE DEFAULT>',
       )}
 
       it { should contain_nova_config('api_database/connection').with_value('mysql+pymysql://user:pass@db/db2').with_secret(true) }
