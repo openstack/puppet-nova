@@ -1,6 +1,6 @@
 Puppet::Type.newtype(:nova_floating) do
 
-  @doc = "Manage creation/deletion of nova floating ip ranges. "
+  @doc = "Manage creation/deletion of nova floating ip ranges. (DEPRECATED!)"
 
   ensurable
 
