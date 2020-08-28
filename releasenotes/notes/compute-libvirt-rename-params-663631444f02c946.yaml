@@ -1,0 +1,19 @@
+---
+deprecations:
+  - |
+    The following parameters in the ``nova::compute::libvirt`` class have been
+    renamed to shorten names without ``libvirt_`` prefix. The old parameter
+    names have been deprecated and will be removed in a future release.
+
+    - ``libvirt_virt_type``
+    - ``libvirt_cpu_mode``
+    - ``libvirt_cpu_model``
+    - ``libvirt_cpu_model_extra_flags``
+    - ``libvirt_snapshot_image_format``
+    - ``libvirt_disk_cachemodes``
+    - ``libvirt_hw_disk_discard``
+    - ``libvirt_hw_machine_type``
+    - ``libvirt_inject_password``
+    - ``libvirt_inject_key``
+    - ``libvirt_inject_partition``
+    - ``libvirt_enabled_perf_events``
