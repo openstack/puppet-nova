@@ -1,0 +1,8 @@
+---
+deprecations:
+  - |
+    The following items has been deprecated and has no effect now, because
+    nova-network has been removed from nova.
+
+    - The ``nova::manage::floatingip`` class
+    - The ``nova_floating`` type and its provider
