@@ -96,7 +96,6 @@ class nova::db (
 ) {
 
   include nova::deps
-  include nova::params
 
   if $::nova::database_min_pool_size or $database_min_pool_size {
     warning('The database_min_pool_size parameter is deprecated, and will be removed in a future release.')
@@ -115,10 +114,6 @@ class nova::db (
   $database_max_overflow_real = pick($::nova::database_max_overflow, $database_max_overflow)
 
   if !is_service_default($database_connection_real) {
-
-    validate_legacy(Oslo::Dbconn, 'validate_re', $database_connection_real,
-      ['^(sqlite|mysql(\+pymysql)?|postgresql):\/\/(\S+:\S+@\S+\/\S+)?'])
-
     oslo::db { 'nova_config':
       db_max_retries          => $database_db_max_retries,
       connection              => $database_connection_real,
