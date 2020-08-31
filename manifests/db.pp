@@ -129,15 +129,14 @@ class nova::db (
   }
 
   if !is_service_default($api_database_connection_real) {
-
-    validate_legacy(Oslo::Dbconn, 'validate_re', $api_database_connection_real,
-      ['^(sqlite|mysql(\+pymysql)?|postgresql):\/\/(\S+:\S+@\S+\/\S+)?'])
-
-    nova_config {
-      'api_database/connection':       value => $api_database_connection_real, secret => true;
-      'api_database/slave_connection': value => $api_slave_connection_real, secret => true;
+    oslo::db { 'api_database':
+      config                 => 'nova_config',
+      config_group           => 'api_database',
+      connection             => $api_database_connection_real,
+      slave_connection       => $api_slave_connection_real,
+      # Package management should be disabled here to avoid conflict.
+      manage_backend_package => false
     }
-
   }
 
 }

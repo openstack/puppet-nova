@@ -44,8 +44,12 @@ describe 'nova::db' do
         :mysql_enable_ndb        => '<SERVICE DEFAULT>',
       )}
 
-      it { should contain_nova_config('api_database/connection').with_value('mysql+pymysql://user:pass@db/db2').with_secret(true) }
-      it { should contain_nova_config('api_database/slave_connection').with_value('mysql+pymysql://user:pass@slave/db2').with_secret(true) }
+      it { should contain_oslo__db('api_database').with(
+        :config                  => 'nova_config',
+        :config_group            => 'api_database',
+        :connection              => 'mysql+pymysql://user:pass@db/db2',
+        :slave_connection        => 'mysql+pymysql://user:pass@slave/db2',
+      )}
     end
   end
 
