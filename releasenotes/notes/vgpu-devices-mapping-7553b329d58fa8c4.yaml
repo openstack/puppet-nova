@@ -1,0 +1,9 @@
+---
+features:
+  - |
+    Add parameter `vgpu_types_device_addresses_mapping` to provide mapping
+    for multiple vgpu devices and corresponding device addresses.
+deprecations:
+  - |
+    Deprecate parameter `enabled_vgpu_types` which was used for providing
+    list of vgpu devices and instead use `vgpu_types_device_addresses_mapping`.
