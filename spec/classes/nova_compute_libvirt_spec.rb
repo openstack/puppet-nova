@@ -30,7 +30,7 @@ describe 'nova::compute::libvirt' do
 
       it {
         is_expected.to contain_package('libvirt').with(
-          :name   => 'libvirt-bin',
+          :name   => 'libvirt-daemon-system',
           :ensure => 'present'
         )
         is_expected.to contain_package('libvirt').that_requires('Anchor[nova::install::begin]')
