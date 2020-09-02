@@ -32,8 +32,8 @@ class nova::compute::libvirt::version {
       }
     }
     'Debian': {
-      if versioncmp($facts['os']['release']['full'], '18.10') >= 0 {
-        $default = '4.6'
+      if versioncmp($facts['os']['release']['full'], '18.04') >= 0 {
+        $default = '6.0'
       } else {
         $default = '4.0'
       }
