@@ -397,9 +397,6 @@
 #
 # DEPRECATED PARAMETERS
 #
-# [*image_service*]
-#   (optional) Service used to search for and retrieve images.
-#
 # [*auth_strategy*]
 #   (optional) The strategy to use for auth: noauth or keystone.
 #   Defaults to undef
@@ -516,7 +513,6 @@ class nova(
   $my_ip                                  = $::os_service_default,
   $cross_az_attach                        = $::os_service_default,
   # DEPRECATED PARAMETERS
-  $image_service                          = undef,
   $auth_strategy                          = undef,
   $glance_api_servers                     = undef,
   $database_min_pool_size                 = undef,
@@ -543,11 +539,6 @@ in a future release. Use nova::cinder::os_region_name instead')
   if $cinder_catalog_info != undef {
     warning('The catalog_info parameter is deprecated and will be removed \
 in a future release. Use nova::cinder::catalog_info instead')
-  }
-
-  if $image_service {
-    warning('The unused image_service parameter is deprecated, as we are \
-already using python-glanceclient instead of old glance client.')
   }
 
   if $upgrade_level_console != undef {
