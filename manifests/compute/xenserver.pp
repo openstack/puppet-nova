@@ -1,5 +1,6 @@
 # == Class: nova::compute::xenserver
 #
+# DEPRECATED !
 # Configures nova-compute to manage xen guests
 #
 # === Parameters:
@@ -274,6 +275,9 @@ class nova::compute::xenserver(
 ) {
 
   include nova::deps
+
+  warning('The nova::compute::xenapi class is deprecated and will be removed \
+in a future release. The XenAPIDriver driver has been deprecated in nova')
 
   nova_config {
     'DEFAULT/compute_driver':                          value => $compute_driver;
