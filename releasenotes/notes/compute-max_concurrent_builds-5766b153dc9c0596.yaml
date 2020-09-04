@@ -1,0 +1,6 @@
+---
+deprecations:
+  - |
+    The ``nova::compute::ironic::max_concurrent_builds`` parameter has been
+    deprecated and will be removed in a future release.
+    Use the ``nova::compute::max_concurrent_builds`` parameter instead.
