@@ -27,11 +27,11 @@
 #   Defaults to 'host-model' if virt_type is set to kvm,
 #   otherwise defaults to 'none'.
 #
-# [*cpu_model*]
-#   (optional) The named libvirt CPU model (see names listed in
+# [*cpu_models*]
+#   (optional) The named libvirt CPU models (see names listed in
 #   /usr/share/libvirt/cpu_map.xml). Only has effect if
 #   cpu_mode="custom" and virt_type="kvm|qemu".
-#   Defaults to undef
+#   Defaults to []
 #
 # [*cpu_model_extra_flags*]
 #   (optional) This allows specifying granular CPU feature flags when
@@ -270,7 +270,7 @@ class nova::compute::libvirt (
   $vncserver_listen                           = '127.0.0.1',
   $migration_support                          = false,
   $cpu_mode                                   = false,
-  $cpu_model                                  = undef,
+  $cpu_models                                 = [],
   $cpu_model_extra_flags                      = undef,
   $snapshot_image_format                      = $::os_service_default,
   $disk_cachemodes                            = [],
@@ -332,14 +332,6 @@ in a future release. Use the cpu_mode parameter instead')
     $cpu_mode_real = $libvirt_cpu_mode
   } else {
     $cpu_mode_real = $cpu_mode
-  }
-
-  if $libvirt_cpu_model != undef {
-    warning('The libvirt_cpu_model parameter was deprecated and will be removed \
-in a future release. Use the cpu_model parameter instead')
-    $cpu_model_real = $libvirt_cpu_model
-  } else {
-    $cpu_model_real = $cpu_model
   }
 
   if $libvirt_cpu_model_extra_flags != undef {
@@ -522,20 +514,33 @@ in a future release. Use the enabled_perf_events parameter instead')
     'libvirt/pmem_namespaces':          value => $pmem_namespaces;
   }
 
+  if $libvirt_cpu_model != undef {
+    warning('The libvirt_cpu_model parameter was deprecated an will be removed \
+in a future release. Use the cpu_models parameter instead')
+    validate_legacy(String, 'validate_string', $libvirt_cpu_model)
+    $cpu_models_real = [$libvirt_cpu_model]
+  } else {
+    validate_legacy(Array, 'validate_array', $cpu_models)
+    $cpu_models_real = $cpu_models
+  }
+
   # cpu_model param is only valid if cpu_mode=custom
   # otherwise it should be commented out
   if $cpu_mode_default == 'custom' {
-    validate_legacy(String, 'validate_string', $cpu_model_real)
-    nova_config {
-      'libvirt/cpu_model': value => $cpu_model_real;
+    if empty($cpu_models_real){
+      $cpu_models_value = $::os_service_default
+    } else {
+      $cpu_models_value = join($cpu_models_real, ',')
     }
   } else {
-    nova_config {
-      'libvirt/cpu_model': ensure => absent;
+    if !empty($cpu_models_real) {
+      warning('$cpu_models requires that $cpu_mode => "custom" and will be ignored')
     }
-    if $cpu_model_real {
-      warning('$cpu_model requires that $cpu_mode => "custom" and will be ignored')
-    }
+    $cpu_models_value = $::os_service_default
+  }
+  nova_config {
+    'libvirt/cpu_model' : ensure => absent;
+    'libvirt/cpu_models': value  => $cpu_models_value;
   }
 
   if $cpu_mode_default != 'none' and $cpu_model_extra_flags_real {
