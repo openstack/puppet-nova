@@ -1,0 +1,10 @@
+---
+deprecations:
+  - |
+    The ``nova::compute::xenapi`` class has been deprecated and will be removed
+    in a future release. The XenApiDriver driver has already been deprecated in
+    nova.
+  - |
+    The ``nova::compute::vmware`` class has been deprecated and will be removed
+    in a future release. The vmwareapi driver has already been deprecated in
+    nova.

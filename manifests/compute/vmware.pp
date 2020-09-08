@@ -1,4 +1,6 @@
+# == Class: nova::compute::vmware
 #
+# DEPRECATED !
 # Configure the VMware compute driver for nova.
 #
 # === Parameters
@@ -73,6 +75,9 @@ class nova::compute::vmware(
 ) {
 
   include nova::deps
+
+  warning('The nova::compute::vmware class is deprecated and will be removed \
+in a future release. The vmwareapi driver has been deprecated in nova')
 
   nova_config {
     'DEFAULT/compute_driver':    value => $compute_driver;
