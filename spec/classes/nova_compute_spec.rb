@@ -32,6 +32,7 @@ describe 'nova::compute' do
       it { is_expected.to contain_nova_config('barbican/barbican_api_version').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('barbican/auth_endpoint').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('glance/verify_glance_signatures').with_value('<SERVICE DEFAULT>') }
+      it { is_expected.to contain_nova_config('DEFAULT/max_concurrent_builds').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('DEFAULT/max_concurrent_live_migrations').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('DEFAULT/sync_power_state_pool_size').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('DEFAULT/sync_power_state_interval').with_value('<SERVICE DEFAULT>') }
@@ -77,6 +78,7 @@ describe 'nova::compute' do
           :barbican_endpoint                  => 'http://localhost',
           :barbican_api_version               => 'v1',
           :barbican_auth_endpoint             => 'http://127.0.0.1:5000/v3',
+          :max_concurrent_builds              => 15,
           :max_concurrent_live_migrations     => '4',
           :sync_power_state_pool_size         => '10',
           :sync_power_state_interval          => '0',
@@ -127,24 +129,16 @@ describe 'nova::compute' do
       end
 
       it { is_expected.to contain_nova_config('DEFAULT/heal_instance_info_cache_interval').with_value('120') }
-
       it { is_expected.to contain_nova_config('DEFAULT/force_raw_images').with(:value => false) }
-
       it { is_expected.to contain_nova_config('DEFAULT/resize_confirm_window').with_value('3') }
-
+      it { is_expected.to contain_nova_config('DEFAULT/max_concurrent_builds').with_value('15') }
       it { is_expected.to contain_nova_config('DEFAULT/max_concurrent_live_migrations').with_value('4') }
-
       it { is_expected.to contain_nova_config('DEFAULT/sync_power_state_pool_size').with_value('10') }
-
       it { is_expected.to contain_nova_config('DEFAULT/sync_power_state_interval').with_value('0') }
-
       it { is_expected.to contain_nova_config('compute/consecutive_build_service_disable_threshold').with_value('9') }
-
       it { is_expected.to contain_nova_config('DEFAULT/resume_guests_state_on_host_boot').with_value(true) }
       it { is_expected.to contain_nova_config('glance/verify_glance_signatures').with_value(true) }
-
       it { is_expected.to contain_nova_config('compute/live_migration_wait_for_vif_plug').with_value(true) }
-
       it { is_expected.to contain_nova_config('compute/max_disk_devices_to_attach').with_value(20) }
 
       it 'configures nova config_drive_format to vfat' do

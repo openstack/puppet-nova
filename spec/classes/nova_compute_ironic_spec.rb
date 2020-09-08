@@ -7,7 +7,6 @@ describe 'nova::compute::ironic' do
     context 'with default parameters' do
       it 'configures ironic in nova.conf' do
         is_expected.to contain_nova_config('DEFAULT/compute_driver').with_value('ironic.IronicDriver')
-        is_expected.to contain_nova_config('DEFAULT/max_concurrent_builds').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_class('ironic::client')
       end
     end
@@ -15,14 +14,12 @@ describe 'nova::compute::ironic' do
     context 'with overridden parameters' do
       let :params do
         {
-          :compute_driver        => 'ironic.FoobarDriver',
-          :max_concurrent_builds => 15,
+          :compute_driver => 'ironic.FoobarDriver',
         }
       end
 
       it 'configures ironic in nova.conf' do
         is_expected.to contain_nova_config('DEFAULT/compute_driver').with_value('ironic.FoobarDriver')
-        is_expected.to contain_nova_config('DEFAULT/max_concurrent_builds').with_value(15)
       end
     end
 
