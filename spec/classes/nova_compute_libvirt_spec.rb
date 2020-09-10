@@ -14,9 +14,7 @@ describe 'nova::compute::libvirt' do
     describe 'with default parameters' do
 
       let :params do
-        {
-          :libvirt_cpu_model_extra_flags  => 'pcid,pdpe1gb',
-        }
+        {}
       end
 
       it { is_expected.to contain_class('nova::params')}
@@ -32,7 +30,7 @@ describe 'nova::compute::libvirt' do
 
       it {
         is_expected.to contain_package('libvirt').with(
-          :name   => 'libvirtd',
+          :name   => 'libvirt-bin',
           :ensure => 'present'
         )
         is_expected.to contain_package('libvirt').that_requires('Anchor[nova::install::begin]')
@@ -52,8 +50,8 @@ describe 'nova::compute::libvirt' do
       it { is_expected.to contain_nova_config('libvirt/virt_type').with_value('kvm')}
       it { is_expected.to contain_nova_config('libvirt/cpu_mode').with_value('host-model')}
       it { is_expected.to contain_nova_config('libvirt/cpu_model').with_ensure('absent')}
-      it { is_expected.to contain_nova_config('libvirt/cpu_model_extra_flags').with_ensure('pcid,pdpe1gb')}
-      it { is_expected.to contain_nova_config('libvirt/snapshot_image_format').with_ensure('absent')}
+      it { is_expected.to contain_nova_config('libvirt/cpu_model_extra_flags').with_ensure('absent')}
+      it { is_expected.to contain_nova_config('libvirt/snapshot_image_format').with_value('<SERVICE DEFAULT>')}
       it { is_expected.to contain_nova_config('libvirt/disk_cachemodes').with_ensure('absent')}
       it { is_expected.to contain_nova_config('libvirt/inject_password').with_value(false)}
       it { is_expected.to contain_nova_config('libvirt/inject_key').with_value(false)}
@@ -65,11 +63,12 @@ describe 'nova::compute::libvirt' do
       it { is_expected.to contain_nova_config('libvirt/rx_queue_size').with_value('<SERVICE DEFAULT>')}
       it { is_expected.to contain_nova_config('libvirt/tx_queue_size').with_value('<SERVICE DEFAULT>')}
       it { is_expected.to contain_nova_config('libvirt/volume_use_multipath').with_value('<SERVICE DEFAULT>')}
-      it { is_expected.to contain_nova_config('libvirt/nfs_mount_options').with_ensure('<SERVICE DEFAULT>')}
-      it { is_expected.to contain_nova_config('libvirt/num_pcie_ports').with_ensure('<SERVICE DEFAULT>')}
+      it { is_expected.to contain_nova_config('libvirt/nfs_mount_options').with_value('<SERVICE DEFAULT>')}
+      it { is_expected.to contain_nova_config('libvirt/num_pcie_ports').with_value('<SERVICE DEFAULT>')}
       it { is_expected.to contain_nova_config('libvirt/mem_stats_period_seconds').with_value('<SERVICE DEFAULT>')}
-      it { is_expected.to contain_libvirtd_config('log_filters').with_ensure('absent')}
-      it { is_expected.to contain_libvirtd_config('tls_priority').with_ensure('absent')}
+      it { is_expected.to_not contain_libvirtd_config('log_outputs')}
+      it { is_expected.to_not contain_libvirtd_config('log_filters')}
+      it { is_expected.to_not contain_libvirtd_config('tls_priority')}
     end
 
     describe 'with params' do
@@ -114,8 +113,8 @@ describe 'nova::compute::libvirt' do
       it { is_expected.to contain_nova_config('libvirt/virt_type').with_value('qemu')}
       it { is_expected.to contain_nova_config('libvirt/cpu_mode').with_value('host-passthrough')}
       it { is_expected.to contain_nova_config('libvirt/cpu_model').with_ensure('absent')}
-      it { is_expected.to contain_nova_config('libvirt/cpu_model_extra_flags').with_ensure('pcid')}
-      it { is_expected.to contain_nova_config('libvirt/snapshot_image_format').with_ensure('absent')}
+      it { is_expected.to contain_nova_config('libvirt/cpu_model_extra_flags').with_value('pcid')}
+      it { is_expected.to contain_nova_config('libvirt/snapshot_image_format').with_value('raw')}
       it { is_expected.to contain_nova_config('libvirt/disk_cachemodes').with_value('file=directsync,block=none')}
       it { is_expected.to contain_nova_config('libvirt/hw_disk_discard').with_value('unmap')}
       it { is_expected.to contain_nova_config('libvirt/hw_machine_type').with_value('x86_64=machinetype1,armv7l=machinetype2')}
@@ -193,10 +192,6 @@ describe 'nova::compute::libvirt' do
         it { is_expected.to contain_class('nova::migration::libvirt')}
         it { is_expected.to contain_nova_config('vnc/server_listen').with_value('0.0.0.0')}
         it { is_expected.to contain_file_line('/etc/default/libvirtd libvirtd opts').with(:line => libvirt_options) }
-        it { is_expected.to contain_file_line('/etc/libvirt/libvirtd.conf listen_tls').with(:line => "listen_tls = 0") }
-        it { is_expected.to contain_file_line('/etc/libvirt/libvirtd.conf listen_tcp').with(:line => "listen_tcp = 1") }
-        it { is_expected.not_to contain_file_line('/etc/libvirt/libvirtd.conf auth_tls')}
-        it { is_expected.to contain_file_line('/etc/libvirt/libvirtd.conf auth_tcp').with(:line => "auth_tcp = \"none\"") }
       end
 
       context 'with vncserver_listen set to ::0' do
@@ -208,10 +203,6 @@ describe 'nova::compute::libvirt' do
         it { is_expected.to contain_class('nova::migration::libvirt')}
         it { is_expected.to contain_nova_config('vnc/server_listen').with_value('::0')}
         it { is_expected.to contain_file_line('/etc/default/libvirtd libvirtd opts').with(:line => libvirt_options) }
-        it { is_expected.to contain_file_line('/etc/libvirt/libvirtd.conf listen_tls').with(:line => "listen_tls = 0") }
-        it { is_expected.to contain_file_line('/etc/libvirt/libvirtd.conf listen_tcp').with(:line => "listen_tcp = 1") }
-        it { is_expected.not_to contain_file_line('/etc/libvirt/libvirtd.conf auth_tls')}
-        it { is_expected.to contain_file_line('/etc/libvirt/libvirtd.conf auth_tcp').with(:line => "auth_tcp = \"none\"") }
       end
 
       context 'with custom libvirt service name on Debian platforms' do
@@ -301,7 +292,7 @@ describe 'nova::compute::libvirt' do
       it { is_expected.to contain_nova_config('DEFAULT/remove_unused_base_images').with_ensure('absent')}
       it { is_expected.to contain_nova_config('DEFAULT/remove_unused_original_minimum_age_seconds').with_ensure('absent')}
       it { is_expected.to contain_nova_config('libvirt/remove_unused_resized_minimum_age_seconds').with_ensure('absent')}
-      it { is_expected.to contain_nova_config('libvirt/nfs_mount_options').with_ensure('<SERVICE DEFAULT>')}
+      it { is_expected.to contain_nova_config('libvirt/nfs_mount_options').with_value('<SERVICE DEFAULT>')}
     end
 
     describe 'with params' do
@@ -342,10 +333,6 @@ describe 'nova::compute::libvirt' do
         it { is_expected.to contain_class('nova::migration::libvirt')}
         it { is_expected.to contain_nova_config('vnc/server_listen').with_value('0.0.0.0')}
         it { is_expected.to contain_file_line('/etc/sysconfig/libvirtd libvirtd args').with(:line => 'LIBVIRTD_ARGS="--listen"') }
-        it { is_expected.to contain_file_line('/etc/libvirt/libvirtd.conf listen_tls').with(:line => "listen_tls = 0") }
-        it { is_expected.to contain_file_line('/etc/libvirt/libvirtd.conf listen_tcp').with(:line => "listen_tcp = 1") }
-        it { is_expected.not_to contain_file_line('/etc/libvirt/libvirtd.conf auth_tls')}
-        it { is_expected.to contain_file_line('/etc/libvirt/libvirtd.conf auth_tcp').with(:line => "auth_tcp = \"none\"") }
       end
 
       context 'with vncserver_listen set to ::0' do
@@ -357,10 +344,6 @@ describe 'nova::compute::libvirt' do
         it { is_expected.to contain_class('nova::migration::libvirt')}
         it { is_expected.to contain_nova_config('vnc/server_listen').with_value('::0')}
         it { is_expected.to contain_file_line('/etc/sysconfig/libvirtd libvirtd args').with(:line => 'LIBVIRTD_ARGS="--listen"') }
-        it { is_expected.to contain_file_line('/etc/libvirt/libvirtd.conf listen_tls').with(:line => "listen_tls = 0") }
-        it { is_expected.to contain_file_line('/etc/libvirt/libvirtd.conf listen_tcp').with(:line => "listen_tcp = 1") }
-        it { is_expected.not_to contain_file_line('/etc/libvirt/libvirtd.conf auth_tls')}
-        it { is_expected.to contain_file_line('/etc/libvirt/libvirtd.conf auth_tcp').with(:line => "auth_tcp = \"none\"") }
       end
 
     end
@@ -416,31 +399,14 @@ describe 'nova::compute::libvirt' do
     :supported_os => OSDefaults.get_supported_os
   }).each do |os,facts|
     context "on #{os}" do
+      let (:facts) do
+        facts.merge!(OSDefaults.get_facts())
+      end
 
-      case [:osfamily]
+      case facts[:osfamily]
       when 'Debian'
-
-        case [:operatingsystem]
-        when 'Debian'
-          let (:facts) do
-            facts.merge!(OSDefaults.get_facts({
-              :os_package_family => 'debian',
-              :operatingsystemmajrelease => '8'}))
-          end
-          it_behaves_like 'debian-nova-compute-libvirt'
-        when 'Ubuntu'
-          let (:facts) do
-            facts.merge!(OSDefaults.get_facts({
-              :os_package_family => 'ubuntu',
-              :operatingsystemmajrelease => '16.04'}))
-          end
-          it_behaves_like 'debian-nova-compute-libvirt'
-        end
-
+        it_behaves_like 'debian-nova-compute-libvirt'
       when 'RedHat'
-        let (:facts) do
-          facts.merge!(OSDefaults.get_facts({ :os_package_type => 'rpm' }))
-        end
         it_behaves_like 'redhat-nova-compute-libvirt'
       end
     end
