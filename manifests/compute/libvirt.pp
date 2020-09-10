@@ -361,7 +361,7 @@ class nova::compute::libvirt (
     }
   }
 
-  if $libvirt_cpu_mode_real != 'none' {
+  if $libvirt_cpu_mode_real != 'none' and $libvirt_cpu_model_extra_flags {
     validate_legacy(String, 'validate_string', $libvirt_cpu_model_extra_flags)
     nova_config {
       'libvirt/cpu_model_extra_flags': value => $libvirt_cpu_model_extra_flags;
