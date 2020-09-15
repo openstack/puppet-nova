@@ -24,6 +24,9 @@ describe 'nova::compute' do
         })
       end
 
+      it { is_expected.to contain_nova_config('DEFAULT/reserved_host_memory_mb').with_value('512') }
+      it { is_expected.to contain_nova_config('DEFAULT/reserved_host_disk_mb').with_value('<SERVICE DEFAULT>') }
+      it { is_expected.to contain_nova_config('DEFAULT/reserved_huge_pages').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('DEFAULT/resize_confirm_window').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('DEFAULT/resume_guests_state_on_host_boot').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to_not contain_nova_config('vnc/novncproxy_base_url') }
@@ -37,7 +40,6 @@ describe 'nova::compute' do
       it { is_expected.to contain_nova_config('DEFAULT/sync_power_state_pool_size').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('DEFAULT/sync_power_state_interval').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('compute/consecutive_build_service_disable_threshold').with_value('<SERVICE DEFAULT>') }
-      it { is_expected.to contain_nova_config('DEFAULT/reserved_huge_pages').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('compute/live_migration_wait_for_vif_plug').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('compute/max_disk_devices_to_attach').with_value('<SERVICE DEFAULT>') }
 
@@ -70,6 +72,7 @@ describe 'nova::compute' do
           :vncproxy_host                      => '127.0.0.1',
           :force_raw_images                   => false,
           :reserved_host_memory               => '0',
+          :reserved_host_disk                 => '20',
           :heal_instance_info_cache_interval  => '120',
           :config_drive_format                => 'vfat',
           :resize_confirm_window              => '3',
@@ -104,10 +107,6 @@ describe 'nova::compute' do
         })
       end
 
-      it 'configures ironic in nova.conf' do
-        is_expected.to contain_nova_config('DEFAULT/reserved_host_memory_mb').with_value('0')
-      end
-
       it 'configures barbican service' do
         is_expected.to contain_nova_config('key_manager/backend').with_value('castellan.key_manager.barbican_key_manager.BarbicanKeyManager')
         is_expected.to contain_nova_config('barbican/barbican_endpoint').with_value('http://localhost')
@@ -128,6 +127,8 @@ describe 'nova::compute' do
         is_expected.to contain_nova_config('spice/enabled').with_value(false)
       end
 
+      it { is_expected.to contain_nova_config('DEFAULT/reserved_host_memory_mb').with_value('0') }
+      it { is_expected.to contain_nova_config('DEFAULT/reserved_host_disk_mb').with_value('20') }
       it { is_expected.to contain_nova_config('DEFAULT/heal_instance_info_cache_interval').with_value('120') }
       it { is_expected.to contain_nova_config('DEFAULT/force_raw_images').with(:value => false) }
       it { is_expected.to contain_nova_config('DEFAULT/resize_confirm_window').with_value('3') }

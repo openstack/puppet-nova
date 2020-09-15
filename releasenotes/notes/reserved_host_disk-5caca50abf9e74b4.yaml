@@ -1,0 +1,5 @@
+---
+features:
+  - |
+    Add new parameter `reserved_host_disk`. This sets the amount of disk
+    resources in MB to make them always available to host.

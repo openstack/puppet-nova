@@ -75,6 +75,11 @@
 #   The amount of memory in MB reserved for the host.
 #   Defaults to '512'
 #
+# [*reserved_host_disk*]
+#   Reserved host disk
+#   The amount of disk in MB reserved for the host.
+#   Defaults to $::os_service_default
+#
 # [*config_drive_format*]
 #   (optional) Config drive format. One of iso9660 (default) or vfat
 #   Defaults to undef
@@ -224,6 +229,7 @@ class nova::compute (
   $instance_usage_audit_period                 = 'month',
   $force_raw_images                            = true,
   $reserved_host_memory                        = '512',
+  $reserved_host_disk                          = $::os_service_default,
   $heal_instance_info_cache_interval           = '60',
   $config_drive_format                         = $::os_service_default,
   $resize_confirm_window                       = $::os_service_default,
@@ -369,6 +375,7 @@ Use the same parameter in nova::api class.')
 
   nova_config {
     'DEFAULT/reserved_host_memory_mb':           value => $reserved_host_memory;
+    'DEFAULT/reserved_host_disk_mb':             value => $reserved_host_disk;
     'DEFAULT/reserved_huge_pages':               value => $reserved_huge_pages_real;
     'DEFAULT/heal_instance_info_cache_interval': value => $heal_instance_info_cache_interval;
     'DEFAULT/resize_confirm_window':             value => $resize_confirm_window;
