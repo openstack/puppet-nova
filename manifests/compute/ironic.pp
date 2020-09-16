@@ -29,9 +29,6 @@ class nova::compute::ironic (
   if $max_concurrent_builds != undef {
     warning('The nova::compute::ironic::max_concurrent_builds parameter is deprecated \
 and will be removed in a future release. Use nova::compute::max_concurrent_builds instead.')
-    nova_config {
-    'DEFAULT/max_concurrent_builds': value => $max_concurrent_builds;
-    }
   }
 
 }
