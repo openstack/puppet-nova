@@ -253,3 +253,4 @@ locale_dirs = ['locale/']
 openstackdocs_repo_name = 'openstack/puppet-nova'
 openstackdocs_bug_project = 'puppet-nova'
 openstackdocs_bug_tag = ''
+openstackdocs_auto_name = False
