@@ -43,6 +43,10 @@ class nova::compute::vgpu(
         nova_config {
           "vgpu_${vgpu_type}/device_addresses": value => join(any2array($device_addresses), ',');
         }
+      } else {
+        nova_config {
+          "vgpu_${vgpu_type}/device_addresses": ensure => absent;
+        }
       }
     }
   } else {

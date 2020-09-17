@@ -29,6 +29,7 @@ describe 'nova::compute::vgpu' do
         }
       end
       it { is_expected.to contain_nova_config('devices/enabled_vgpu_types').with_value('nvidia-35') }
+      it { is_expected.to contain_nova_config('vgpu_nvidia-35/device_addresses').with_ensure('absent') }
     end
 
     context 'with multiple vgpu devices' do
