@@ -24,16 +24,31 @@ describe 'nova::compute' do
         })
       end
 
+      it 'does not configures barbican service' do
+        is_expected.to contain_nova_config('key_manager/backend').with_value('nova.keymgr.conf_key_mgr.ConfKeyManager')
+        is_expected.to contain_nova_config('barbican/barbican_endpoint').with_value('<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('barbican/barbican_api_version').with_value('<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('barbican/auth_endpoint').with_value('<SERVICE DEFAULT>')
+        is_expected.to_not contain_package('cryptsetup').with( :ensure => 'present' )
+      end
+
+      it 'does not configure vncproxy base url in nova.conf' do
+        is_expected.to contain_nova_config('vnc/enabled').with_value(true)
+        is_expected.to_not contain_nova_config('vnc/novncproxy_base_url')
+        is_expected.to contain_nova_config('vnc/server_proxyclient_address').with_value('127.0.0.1')
+      end
+
+      it 'should have spice disabled' do
+        is_expected.to contain_nova_config('spice/enabled').with_value(false)
+      end
+
       it { is_expected.to contain_nova_config('DEFAULT/reserved_host_memory_mb').with_value('512') }
       it { is_expected.to contain_nova_config('DEFAULT/reserved_host_disk_mb').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('DEFAULT/reserved_huge_pages').with_value('<SERVICE DEFAULT>') }
+      it { is_expected.to contain_nova_config('DEFAULT/heal_instance_info_cache_interval').with_value('60') }
+      it { is_expected.to contain_nova_config('DEFAULT/force_raw_images').with_value(true) }
       it { is_expected.to contain_nova_config('DEFAULT/resize_confirm_window').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('DEFAULT/resume_guests_state_on_host_boot').with_value('<SERVICE DEFAULT>') }
-      it { is_expected.to_not contain_nova_config('vnc/novncproxy_base_url') }
-      it { is_expected.to contain_nova_config('key_manager/backend').with_value('nova.keymgr.conf_key_mgr.ConfKeyManager') }
-      it { is_expected.to contain_nova_config('barbican/barbican_endpoint').with_value('<SERVICE DEFAULT>') }
-      it { is_expected.to contain_nova_config('barbican/barbican_api_version').with_value('<SERVICE DEFAULT>') }
-      it { is_expected.to contain_nova_config('barbican/auth_endpoint').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('glance/verify_glance_signatures').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('DEFAULT/max_concurrent_builds').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('DEFAULT/max_concurrent_live_migrations').with_value('<SERVICE DEFAULT>') }
@@ -43,20 +58,14 @@ describe 'nova::compute' do
       it { is_expected.to contain_nova_config('compute/live_migration_wait_for_vif_plug').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('compute/max_disk_devices_to_attach').with_value('<SERVICE DEFAULT>') }
 
-      it { is_expected.to_not contain_package('cryptsetup').with( :ensure => 'present' )}
-
       it { is_expected.to_not contain_package('bridge-utils').with(
         :ensure => 'present',
       ) }
 
-      it { is_expected.to contain_nova_config('DEFAULT/force_raw_images').with(:value => true) }
-
       it { is_expected.to contain_class('nova::availability_zone') }
 
-      it { is_expected.to contain_nova_config('DEFAULT/heal_instance_info_cache_interval').with_value('60') }
-
       it 'installs genisoimage package and sets config_drive_format' do
-        is_expected.to contain_nova_config('DEFAULT/config_drive_format').with(:value => '<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('DEFAULT/config_drive_format').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_package('genisoimage').with(
           :ensure => 'present',
         )
@@ -130,15 +139,15 @@ describe 'nova::compute' do
       it { is_expected.to contain_nova_config('DEFAULT/reserved_host_memory_mb').with_value('0') }
       it { is_expected.to contain_nova_config('DEFAULT/reserved_host_disk_mb').with_value('20') }
       it { is_expected.to contain_nova_config('DEFAULT/heal_instance_info_cache_interval').with_value('120') }
-      it { is_expected.to contain_nova_config('DEFAULT/force_raw_images').with(:value => false) }
+      it { is_expected.to contain_nova_config('DEFAULT/force_raw_images').with_value(false) }
       it { is_expected.to contain_nova_config('DEFAULT/resize_confirm_window').with_value('3') }
+      it { is_expected.to contain_nova_config('DEFAULT/resume_guests_state_on_host_boot').with_value(true) }
       it { is_expected.to contain_nova_config('DEFAULT/max_concurrent_builds').with_value('15') }
       it { is_expected.to contain_nova_config('DEFAULT/max_concurrent_live_migrations').with_value('4') }
       it { is_expected.to contain_nova_config('DEFAULT/sync_power_state_pool_size').with_value('10') }
       it { is_expected.to contain_nova_config('DEFAULT/sync_power_state_interval').with_value('0') }
-      it { is_expected.to contain_nova_config('compute/consecutive_build_service_disable_threshold').with_value('9') }
-      it { is_expected.to contain_nova_config('DEFAULT/resume_guests_state_on_host_boot').with_value(true) }
       it { is_expected.to contain_nova_config('glance/verify_glance_signatures').with_value(true) }
+      it { is_expected.to contain_nova_config('compute/consecutive_build_service_disable_threshold').with_value('9') }
       it { is_expected.to contain_nova_config('compute/live_migration_wait_for_vif_plug').with_value(true) }
       it { is_expected.to contain_nova_config('compute/max_disk_devices_to_attach').with_value(20) }
 
@@ -153,7 +162,7 @@ describe 'nova::compute' do
     context 'with reserved_huge_pages string' do
       let :params do
         {
-            :reserved_huge_pages => "foo"
+          :reserved_huge_pages => "foo"
         }
       end
       it 'configures nova reserved_huge_pages entries' do
@@ -166,7 +175,7 @@ describe 'nova::compute' do
     context 'with reserved_huge_pages array' do
       let :params do
         {
-            :reserved_huge_pages => ["foo", "bar"]
+          :reserved_huge_pages => ["foo", "bar"]
         }
       end
       it 'configures nova reserved_huge_pages entries' do
@@ -191,9 +200,9 @@ describe 'nova::compute' do
           :cpu_dedicated_set => ['2-10','^5','14'], }
       end
 
-      it { is_expected.to contain_nova_config('compute/cpu_shared_set').with(:value => '4-12,^8,15') }
-      it { is_expected.to contain_nova_config('compute/cpu_dedicated_set').with(:value => '2-10,^5,14') }
-      it { is_expected.to contain_nova_config('DEFAULT/vcpu_pin_set').with(:ensure => 'absent') }
+      it { is_expected.to contain_nova_config('compute/cpu_shared_set').with_value('4-12,^8,15') }
+      it { is_expected.to contain_nova_config('compute/cpu_dedicated_set').with_value('2-10,^5,14') }
+      it { is_expected.to contain_nova_config('DEFAULT/vcpu_pin_set').with_ensure('absent') }
     end
 
     context 'when cpu_dedicated_set is defined but cpu_shared_set is not' do
@@ -201,9 +210,9 @@ describe 'nova::compute' do
         { :cpu_dedicated_set => ['4-12','^8','15'] }
       end
 
-      it { is_expected.to contain_nova_config('compute/cpu_dedicated_set').with(:value => '4-12,^8,15') }
-      it { is_expected.to contain_nova_config('compute/cpu_shared_set').with(:value => '<SERVICE DEFAULT>') }
-      it { is_expected.to contain_nova_config('DEFAULT/vcpu_pin_set').with(:ensure => 'absent') }
+      it { is_expected.to contain_nova_config('compute/cpu_dedicated_set').with_value('4-12,^8,15') }
+      it { is_expected.to contain_nova_config('compute/cpu_shared_set').with_value('<SERVICE DEFAULT>') }
+      it { is_expected.to contain_nova_config('DEFAULT/vcpu_pin_set').with_ensure('absent') }
     end
 
     context 'when cpu_shared_set is defined, but cpu_dedicated_set and vcpu_pin_set are not' do
@@ -211,9 +220,9 @@ describe 'nova::compute' do
         { :cpu_shared_set => ['4-12', '^8', '15'] }
       end
 
-      it { is_expected.to contain_nova_config('compute/cpu_shared_set').with(:value => '4-12,^8,15') }
-      it { is_expected.to contain_nova_config('compute/cpu_dedicated_set').with(:value => '<SERVICE DEFAULT>') }
-      it { is_expected.to contain_nova_config('DEFAULT/vcpu_pin_set').with(:ensure => 'absent') }
+      it { is_expected.to contain_nova_config('compute/cpu_shared_set').with_value('4-12,^8,15') }
+      it { is_expected.to contain_nova_config('compute/cpu_dedicated_set').with_value('<SERVICE DEFAULT>') }
+      it { is_expected.to contain_nova_config('DEFAULT/vcpu_pin_set').with_ensure('absent') }
     end
 
     context 'when cpu_shared_set and vcpu_pin_set are defined, but cpu_dedicated_set is not' do
@@ -222,9 +231,9 @@ describe 'nova::compute' do
           :vcpu_pin_set   => ['2-10','^5','14'], }
       end
 
-      it { is_expected.to contain_nova_config('compute/cpu_shared_set').with(:value => '4-12,^8,15') }
-      it { is_expected.to contain_nova_config('DEFAULT/vcpu_pin_set').with(:value => '2-10,^5,14') }
-      it { is_expected.to contain_nova_config('compute/cpu_dedicated_set').with(:value => '<SERVICE DEFAULT>') }
+      it { is_expected.to contain_nova_config('compute/cpu_shared_set').with_value('4-12,^8,15') }
+      it { is_expected.to contain_nova_config('DEFAULT/vcpu_pin_set').with_value('2-10,^5,14') }
+      it { is_expected.to contain_nova_config('compute/cpu_dedicated_set').with_value('<SERVICE DEFAULT>') }
     end
 
     context 'when vcpu_pin_set is set, but cpu_shared_set and cpu_dedicated_set are not' do
@@ -232,9 +241,9 @@ describe 'nova::compute' do
          { :vcpu_pin_set => ['4-12','^8','15'] }
       end
 
-      it { is_expected.to contain_nova_config('DEFAULT/vcpu_pin_set').with(:value => '4-12,^8,15') }
-      it { is_expected.to contain_nova_config('compute/cpu_shared_set').with(:value => '<SERVICE DEFAULT>') }
-      it { is_expected.to contain_nova_config('compute/cpu_dedicated_set').with(:value => '<SERVICE DEFAULT>') }
+      it { is_expected.to contain_nova_config('DEFAULT/vcpu_pin_set').with_value('4-12,^8,15') }
+      it { is_expected.to contain_nova_config('compute/cpu_shared_set').with_value('<SERVICE DEFAULT>') }
+      it { is_expected.to contain_nova_config('compute/cpu_dedicated_set').with_value('<SERVICE DEFAULT>') }
     end
 
     context 'when neutron_physnets_numa_nodes_mapping and neutron_tunnel_numa_nodes are empty' do
@@ -243,8 +252,8 @@ describe 'nova::compute' do
           :neutron_tunnel_numa_nodes           => [], }
       end
 
-      it { is_expected.to contain_nova_config('neutron/physnets').with(:ensure => 'absent') }
-      it { is_expected.to contain_nova_config('neutron_tunnel/numa_nodes').with(:ensure => 'absent') }
+      it { is_expected.to contain_nova_config('neutron/physnets').with_ensure('absent') }
+      it { is_expected.to contain_nova_config('neutron_tunnel/numa_nodes').with_ensure('absent') }
     end
 
     context 'when neutron_physnets_numa_nodes_mapping and neutron_tunnel_numa_nodes are set to valid values' do
@@ -253,10 +262,10 @@ describe 'nova::compute' do
           :neutron_tunnel_numa_nodes           => 1, }
       end
 
-      it { is_expected.to contain_nova_config('neutron/physnets').with(:value => 'foo,bar') }
-      it { is_expected.to contain_nova_config('neutron_physnet_foo/numa_nodes').with(:value => '0,1') }
-      it { is_expected.to contain_nova_config('neutron_physnet_bar/numa_nodes').with(:value => '0') }
-      it { is_expected.to contain_nova_config('neutron_tunnel/numa_nodes').with(:value => '1') }
+      it { is_expected.to contain_nova_config('neutron/physnets').with_value('foo,bar') }
+      it { is_expected.to contain_nova_config('neutron_physnet_foo/numa_nodes').with_value('0,1') }
+      it { is_expected.to contain_nova_config('neutron_physnet_bar/numa_nodes').with_value('0') }
+      it { is_expected.to contain_nova_config('neutron_tunnel/numa_nodes').with_value('1') }
     end
 
     context 'with vnc_enabled set to false and spice_enabled set to true' do
