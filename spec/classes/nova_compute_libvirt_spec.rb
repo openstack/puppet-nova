@@ -57,9 +57,9 @@ describe 'nova::compute::libvirt' do
       it { is_expected.to contain_nova_config('libvirt/inject_key').with_value(false)}
       it { is_expected.to contain_nova_config('libvirt/inject_partition').with_value(-2)}
       it { is_expected.to contain_nova_config('vnc/server_listen').with_value('127.0.0.1')}
-      it { is_expected.to contain_nova_config('DEFAULT/remove_unused_base_images').with_ensure('absent')}
-      it { is_expected.to contain_nova_config('DEFAULT/remove_unused_original_minimum_age_seconds').with_ensure('absent')}
-      it { is_expected.to contain_nova_config('libvirt/remove_unused_resized_minimum_age_seconds').with_ensure('absent')}
+      it { is_expected.to contain_nova_config('DEFAULT/remove_unused_base_images').with_value('<SERVICE DEFAULT>')}
+      it { is_expected.to contain_nova_config('DEFAULT/remove_unused_original_minimum_age_seconds').with_value('<SERVICE DEFAULT>')}
+      it { is_expected.to contain_nova_config('libvirt/remove_unused_resized_minimum_age_seconds').with_value('<SERVICE DEFAULT>')}
       it { is_expected.to contain_nova_config('libvirt/rx_queue_size').with_value('<SERVICE DEFAULT>')}
       it { is_expected.to contain_nova_config('libvirt/tx_queue_size').with_value('<SERVICE DEFAULT>')}
       it { is_expected.to contain_nova_config('libvirt/volume_use_multipath').with_value('<SERVICE DEFAULT>')}
@@ -292,9 +292,9 @@ describe 'nova::compute::libvirt' do
       it { is_expected.to contain_nova_config('libvirt/inject_key').with_value(false)}
       it { is_expected.to contain_nova_config('libvirt/inject_partition').with_value(-2)}
       it { is_expected.to contain_nova_config('vnc/server_listen').with_value('127.0.0.1')}
-      it { is_expected.to contain_nova_config('DEFAULT/remove_unused_base_images').with_ensure('absent')}
-      it { is_expected.to contain_nova_config('DEFAULT/remove_unused_original_minimum_age_seconds').with_ensure('absent')}
-      it { is_expected.to contain_nova_config('libvirt/remove_unused_resized_minimum_age_seconds').with_ensure('absent')}
+      it { is_expected.to contain_nova_config('DEFAULT/remove_unused_base_images').with_value('<SERVICE DEFAULT>')}
+      it { is_expected.to contain_nova_config('DEFAULT/remove_unused_original_minimum_age_seconds').with_value('<SERVICE DEFAULT>')}
+      it { is_expected.to contain_nova_config('libvirt/remove_unused_resized_minimum_age_seconds').with_value('<SERVICE DEFAULT>')}
       it { is_expected.to contain_nova_config('libvirt/nfs_mount_options').with_value('<SERVICE DEFAULT>')}
     end
 

@@ -1,0 +1,12 @@
+---
+upgrade:
+  - |
+    The default value of the following parameters has been changed to
+    $::os_service_default. The previous default, undef, can still be used to
+    remove parameters from config file, but this behavior will be removed
+    in a future release. Make sure that $::os_service_default is used instead
+    of undef.
+
+    - ``nova::compute::libvirt::remove_unused_resized_minimum_age_seconds``
+    - ``nova::compute::libvirt::remove_unused_base_images``
+    - ``nova::compute::libvirt::remove_unused_original_minimum_age_seconds``
