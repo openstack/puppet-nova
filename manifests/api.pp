@@ -167,9 +167,7 @@
 #   Defaults to true
 #
 # [*allow_resize_to_same_host*]
-#   (optional) Allow destination machine to match source for resize. Note that this
-#   is also settable in the compute class. In some situations you need it set here
-#   and in others you need it set there.
+#   (optional) Allow destination machine to match source for resize.
 #   Defaults to false
 #
 # DEPRECATED
