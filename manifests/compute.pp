@@ -10,7 +10,8 @@
 #
 # [*heal_instance_info_cache_interval*]
 #   (optional) Controls how often the instance info should be updated.
-#   Defaults to '60' , to disable you can set the value to zero.
+#   Defaults to $::os_service_default
+#   To disable you can set the value to zero.
 #
 # [*manage_service*]
 #   (optional) Whether to start/stop the service
@@ -68,12 +69,12 @@
 #
 # [*force_raw_images*]
 #   (optional) Force backing images to raw format.
-#   Defaults to true
+#   Defaults to $::os_service_default
 #
 # [*reserved_host_memory*]
 #   Reserved host memory
 #   The amount of memory in MB reserved for the host.
-#   Defaults to '512'
+#   Defaults to $::os_service_default
 #
 # [*reserved_host_disk*]
 #   Reserved host disk
@@ -227,10 +228,10 @@ class nova::compute (
   $virtio_nic                                  = false,
   $instance_usage_audit                        = false,
   $instance_usage_audit_period                 = 'month',
-  $force_raw_images                            = true,
-  $reserved_host_memory                        = '512',
+  $force_raw_images                            = $::os_service_default,
+  $reserved_host_memory                        = $::os_service_default,
   $reserved_host_disk                          = $::os_service_default,
-  $heal_instance_info_cache_interval           = '60',
+  $heal_instance_info_cache_interval           = $::os_service_default,
   $config_drive_format                         = $::os_service_default,
   $resize_confirm_window                       = $::os_service_default,
   $cpu_shared_set                              = $::os_service_default,

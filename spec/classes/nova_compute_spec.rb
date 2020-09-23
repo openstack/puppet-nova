@@ -42,11 +42,11 @@ describe 'nova::compute' do
         is_expected.to contain_nova_config('spice/enabled').with_value(false)
       end
 
-      it { is_expected.to contain_nova_config('DEFAULT/reserved_host_memory_mb').with_value('512') }
+      it { is_expected.to contain_nova_config('DEFAULT/reserved_host_memory_mb').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('DEFAULT/reserved_host_disk_mb').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('DEFAULT/reserved_huge_pages').with_value('<SERVICE DEFAULT>') }
-      it { is_expected.to contain_nova_config('DEFAULT/heal_instance_info_cache_interval').with_value('60') }
-      it { is_expected.to contain_nova_config('DEFAULT/force_raw_images').with_value(true) }
+      it { is_expected.to contain_nova_config('DEFAULT/heal_instance_info_cache_interval').with_value('<SERVICE DEFAULT>') }
+      it { is_expected.to contain_nova_config('DEFAULT/force_raw_images').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('DEFAULT/resize_confirm_window').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('DEFAULT/resume_guests_state_on_host_boot').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('glance/verify_glance_signatures').with_value('<SERVICE DEFAULT>') }
