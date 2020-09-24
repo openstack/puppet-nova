@@ -7,7 +7,6 @@ deprecations:
 
     - ``libvirt_virt_type``
     - ``libvirt_cpu_mode``
-    - ``libvirt_cpu_model``
     - ``libvirt_cpu_model_extra_flags``
     - ``libvirt_snapshot_image_format``
     - ``libvirt_disk_cachemodes``

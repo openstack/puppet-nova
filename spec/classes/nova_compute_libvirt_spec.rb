@@ -49,6 +49,7 @@ describe 'nova::compute::libvirt' do
       it { is_expected.to contain_nova_config('DEFAULT/preallocate_images').with_value('<SERVICE DEFAULT>')}
       it { is_expected.to contain_nova_config('libvirt/virt_type').with_value('kvm')}
       it { is_expected.to contain_nova_config('libvirt/cpu_mode').with_value('host-model')}
+      it { is_expected.to contain_nova_config('libvirt/cpu_models').with_value('<SERVICE DEFAULT>')}
       it { is_expected.to contain_nova_config('libvirt/cpu_model').with_ensure('absent')}
       it { is_expected.to contain_nova_config('libvirt/cpu_model_extra_flags').with_ensure('absent')}
       it { is_expected.to contain_nova_config('libvirt/snapshot_image_format').with_value('<SERVICE DEFAULT>')}
@@ -78,7 +79,7 @@ describe 'nova::compute::libvirt' do
           :virt_type                                  => 'qemu',
           :vncserver_listen                           => '0.0.0.0',
           :cpu_mode                                   => 'host-passthrough',
-          :cpu_model                                  => 'kvm64',
+          :cpu_models                                 => ['kvm64', 'qemu64'],
           :cpu_model_extra_flags                      => 'pcid',
           :snapshot_image_format                      => 'raw',
           :disk_cachemodes                            => ['file=directsync','block=none'],
@@ -114,6 +115,7 @@ describe 'nova::compute::libvirt' do
       it { is_expected.to contain_nova_config('DEFAULT/preallocate_images').with_value('space')}
       it { is_expected.to contain_nova_config('libvirt/virt_type').with_value('qemu')}
       it { is_expected.to contain_nova_config('libvirt/cpu_mode').with_value('host-passthrough')}
+      it { is_expected.to contain_nova_config('libvirt/cpu_models').with_value('<SERVICE DEFAULT>')}
       it { is_expected.to contain_nova_config('libvirt/cpu_model').with_ensure('absent')}
       it { is_expected.to contain_nova_config('libvirt/cpu_model_extra_flags').with_value('pcid')}
       it { is_expected.to contain_nova_config('libvirt/snapshot_image_format').with_value('raw')}
@@ -159,12 +161,26 @@ describe 'nova::compute::libvirt' do
     describe 'with custom cpu_mode' do
       let :params do
         { :cpu_mode              => 'custom',
-          :cpu_model             => 'kvm64',
+          :cpu_models            => ['kvm64', 'qemu64'],
           :cpu_model_extra_flags => 'pcid' }
       end
 
       it { is_expected.to contain_nova_config('libvirt/cpu_mode').with_value('custom')}
-      it { is_expected.to contain_nova_config('libvirt/cpu_model').with_value('kvm64')}
+      it { is_expected.to contain_nova_config('libvirt/cpu_models').with_value('kvm64,qemu64')}
+      it { is_expected.to contain_nova_config('libvirt/cpu_model').with_ensure('absent')}
+      it { is_expected.to contain_nova_config('libvirt/cpu_model_extra_flags').with_value('pcid')}
+    end
+
+    describe 'with custom cpu_mode with deprecated libvirt_cpu_model' do
+      let :params do
+        { :cpu_mode              => 'custom',
+          :libvirt_cpu_model     => 'kvm64',
+          :cpu_model_extra_flags => 'pcid' }
+      end
+
+      it { is_expected.to contain_nova_config('libvirt/cpu_mode').with_value('custom')}
+      it { is_expected.to contain_nova_config('libvirt/cpu_models').with_value('kvm64')}
+      it { is_expected.to contain_nova_config('libvirt/cpu_model').with_ensure('absent')}
       it { is_expected.to contain_nova_config('libvirt/cpu_model_extra_flags').with_value('pcid')}
     end
 
@@ -414,5 +430,4 @@ describe 'nova::compute::libvirt' do
       end
     end
   end
-
 end

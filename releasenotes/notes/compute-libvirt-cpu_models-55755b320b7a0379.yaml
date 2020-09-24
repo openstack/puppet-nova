@@ -1,0 +1,6 @@
+---
+deprecations:
+  - |
+    The ``nova::compute::libvirt::libvirt_cpu_model`` parameter has been
+    deprecated and will be removed in a future release. Use the ``cpu_models``
+    parameter instead.
