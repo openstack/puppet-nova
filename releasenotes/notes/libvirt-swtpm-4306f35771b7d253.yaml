@@ -1,0 +1,10 @@
+---
+features:
+  - |
+    The following parameters have been added to the ``nova::compute::libvirt``
+    class. These parameters can be used to configure the corresponding
+    parameters in nova, to set up emulated TPM support.
+
+    - ``swtpm_enabled``
+    - ``swtpm_user``
+    - ``swtpm_group``

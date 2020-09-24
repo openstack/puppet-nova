@@ -196,6 +196,20 @@
 #   CUSTOM_PMEM_NAMESPACE_$LABEL.
 #   Defaults to $::os_service_default
 #
+# [*swtpm_enabled*]
+#   (optional) Enable emulated Trusted Platform Module (TPM) for guests.
+#   Defaults to $::os_service_default
+#
+# [*swtpm_user*]
+#   (optional) Configure the user that the swtpm binary, used for emulated
+#   Trusted Platform Module (TPM) functionality, runs as.
+#   Defaults to $::os_service_default
+#
+# [*swtpm_group*]
+#   (optional) Configure the group that the swtpm binary, used for emulated
+#   Trusted Platform Module (TPM) functionality, runs as.
+#   Defaults to $::os_service_default
+#
 # DEPRECATED PARAMETERS
 #
 # [*libvirt_virt_type*]
@@ -300,6 +314,9 @@ class nova::compute::libvirt (
   $log_filters                                = undef,
   $tls_priority                               = undef,
   $pmem_namespaces                            = $::os_service_default,
+  $swtpm_enabled                              = $::os_service_default,
+  $swtpm_user                                 = $::os_service_default,
+  $swtpm_group                                = $::os_service_default,
   # DEPRECATED PARAMETERS
   $libvirt_virt_type                          = undef,
   $libvirt_cpu_mode                           = undef,
@@ -512,6 +529,9 @@ in a future release. Use the enabled_perf_events parameter instead')
     'libvirt/num_pcie_ports':           value => $num_pcie_ports;
     'libvirt/mem_stats_period_seconds': value => $mem_stats_period_seconds;
     'libvirt/pmem_namespaces':          value => $pmem_namespaces;
+    'libvirt/swtpm_enabled':            value => $swtpm_enabled;
+    'libvirt/swtpm_user'   :            value => $swtpm_user;
+    'libvirt/swtpm_group':              value => $swtpm_group;
   }
 
   if $libvirt_cpu_model != undef {
