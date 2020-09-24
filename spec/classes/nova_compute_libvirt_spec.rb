@@ -75,16 +75,16 @@ describe 'nova::compute::libvirt' do
     describe 'with params' do
       let :params do
         { :ensure_package                             => 'latest',
-          :libvirt_virt_type                          => 'qemu',
+          :virt_type                                  => 'qemu',
           :vncserver_listen                           => '0.0.0.0',
-          :libvirt_cpu_mode                           => 'host-passthrough',
-          :libvirt_cpu_model                          => 'kvm64',
-          :libvirt_cpu_model_extra_flags              => 'pcid',
-          :libvirt_snapshot_image_format              => 'raw',
-          :libvirt_disk_cachemodes                    => ['file=directsync','block=none'],
-          :libvirt_hw_disk_discard                    => 'unmap',
-          :libvirt_hw_machine_type                    => 'x86_64=machinetype1,armv7l=machinetype2',
-          :libvirt_enabled_perf_events                => ['cmt', 'mbml', 'mbmt'],
+          :cpu_mode                                   => 'host-passthrough',
+          :cpu_model                                  => 'kvm64',
+          :cpu_model_extra_flags                      => 'pcid',
+          :snapshot_image_format                      => 'raw',
+          :disk_cachemodes                            => ['file=directsync','block=none'],
+          :hw_disk_discard                            => 'unmap',
+          :hw_machine_type                            => 'x86_64=machinetype1,armv7l=machinetype2',
+          :enabled_perf_events                        => ['cmt', 'mbml', 'mbmt'],
           :remove_unused_base_images                  => true,
           :remove_unused_resized_minimum_age_seconds  => 3600,
           :remove_unused_original_minimum_age_seconds => 3600,
@@ -158,9 +158,9 @@ describe 'nova::compute::libvirt' do
 
     describe 'with custom cpu_mode' do
       let :params do
-        { :libvirt_cpu_mode              => 'custom',
-          :libvirt_cpu_model             => 'kvm64',
-          :libvirt_cpu_model_extra_flags => 'pcid' }
+        { :cpu_mode              => 'custom',
+          :cpu_model             => 'kvm64',
+          :cpu_model_extra_flags => 'pcid' }
       end
 
       it { is_expected.to contain_nova_config('libvirt/cpu_mode').with_value('custom')}
@@ -170,7 +170,7 @@ describe 'nova::compute::libvirt' do
 
     describe 'with qcow2 as snapshot_image_format' do
       let :params do
-        { :libvirt_snapshot_image_format => 'qcow2' }
+        { :snapshot_image_format => 'qcow2' }
       end
 
       it { is_expected.to contain_nova_config('libvirt/snapshot_image_format').with_value('qcow2')}
@@ -178,7 +178,7 @@ describe 'nova::compute::libvirt' do
 
     describe 'with qemu as virt_type' do
       let :params do
-        { :libvirt_virt_type => 'qemu' }
+        { :virt_type => 'qemu' }
       end
 
       it { is_expected.to contain_nova_config('libvirt/cpu_mode').with_value('none')}
@@ -300,12 +300,12 @@ describe 'nova::compute::libvirt' do
 
     describe 'with params' do
       let :params do
-        { :libvirt_virt_type                          => 'qemu',
+        { :virt_type                                  => 'qemu',
           :vncserver_listen                           => '0.0.0.0',
           :remove_unused_base_images                  => true,
           :remove_unused_resized_minimum_age_seconds  => 3600,
           :remove_unused_original_minimum_age_seconds => 3600,
-          :libvirt_enabled_perf_events                => ['cmt', 'mbml', 'mbmt'],
+          :enabled_perf_events                        => ['cmt', 'mbml', 'mbmt'],
           :nfs_mount_options                          => 'rw,intr,nolock',
           :mem_stats_period_seconds                   => 20,
         }
