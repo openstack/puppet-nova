@@ -20,6 +20,16 @@
 #   (Optional) The amount of scheduler workers.
 #   Defaults to $::os_workers
 #
+# [*max_attempts*]
+#   (optional) Maximum number of attempts to schedule an instance
+#   Defaults to $::os_service_default
+#
+# [*periodic_task_interval*]
+#   (Optional) This value controls how often (in seconds) to run periodic tasks
+#   in the scheduler. The specific tasks that are run for each period are
+#   determined by the particular scheduler being used.
+#   Defaults to $::os_service_default
+#
 # [*discover_hosts_in_cells_interval*]
 #   (Optional) This value controls how often (in seconds) the scheduler should
 #   attempt to discover new hosts that have been added to cells.
@@ -75,6 +85,8 @@ class nova::scheduler(
   $manage_service                           = true,
   $ensure_package                           = 'present',
   $workers                                  = $::os_workers,
+  $max_attempts                             = $::os_service_default,
+  $periodic_task_interval                   = $::os_service_default,
   $discover_hosts_in_cells_interval         = $::os_service_default,
   $query_placement_for_image_type_support   = $::os_service_default,
   $limit_tenants_to_placement_aggregate     = $::os_service_default,
@@ -99,8 +111,15 @@ class nova::scheduler(
     ensure_package => $ensure_package,
   }
 
+  # TODO(tkajinam): Remove this when we remove the deprecated parameters
+  #                 from the nova::scheduler::filter class
+  $max_attempts_real = pick($::nova::scheduler::filter::scheduler_max_attempts, $max_attempts)
+  $periodic_task_interval_real = pick($::nova::scheduler::filter::periodic_task_interval, $periodic_task_interval)
+
   nova_config {
     'scheduler/workers':                                  value => $workers;
+    'scheduler/max_attempts':                             value => $max_attempts_real;
+    'scheduler/periodic_task_interval':                   value => $periodic_task_interval_real;
     'scheduler/discover_hosts_in_cells_interval':         value => $discover_hosts_in_cells_interval;
     'scheduler/query_placement_for_image_type_support':   value => $query_placement_for_image_type_support;
     'scheduler/limit_tenants_to_placement_aggregate':     value => $limit_tenants_to_placement_aggregate;

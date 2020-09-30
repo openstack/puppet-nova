@@ -9,8 +9,6 @@ describe 'nova::scheduler::filter' do
   shared_examples 'nova::scheduler::filter' do
 
     context 'with default parameters' do
-      it { is_expected.to contain_nova_config('scheduler/max_attempts').with_value('3') }
-      it { is_expected.to contain_nova_config('scheduler/periodic_task_interval').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('filter_scheduler/host_subset_size').with_value('1') }
       it { is_expected.to contain_nova_config('filter_scheduler/max_io_ops_per_host').with_value('8') }
       it { is_expected.to contain_nova_config('filter_scheduler/max_instances_per_host').with_value('50') }
@@ -38,7 +36,7 @@ describe 'nova::scheduler::filter' do
 
     context 'when overriding params' do
       let :params do
-        { :scheduler_max_attempts               => '4',
+        {
           :scheduler_host_subset_size           => '3',
           :max_io_ops_per_host                  => '16',
           :max_instances_per_host               => '100',
@@ -47,7 +45,6 @@ describe 'nova::scheduler::filter' do
           :scheduler_default_filters            => ['RetryFilter','AvailabilityZoneFilter'],
           :scheduler_available_filters          => ['nova_filter1','nova_filter2'],
           :scheduler_weight_classes             => 'nova.scheduler.weights.compute.BuildFailureWeigher',
-          :periodic_task_interval               => 120,
           :track_instance_changes               => true,
           :ram_weight_multiplier                => 10,
           :cpu_weight_multiplier                => 20,
@@ -59,8 +56,6 @@ describe 'nova::scheduler::filter' do
         }
       end
 
-      it { is_expected.to contain_nova_config('scheduler/max_attempts').with_value('4') }
-      it { is_expected.to contain_nova_config('scheduler/periodic_task_interval').with_value(120) }
       it { is_expected.to contain_nova_config('filter_scheduler/host_subset_size').with_value('3') }
       it { is_expected.to contain_nova_config('filter_scheduler/max_io_ops_per_host').with_value('16') }
       it { is_expected.to contain_nova_config('filter_scheduler/max_instances_per_host').with_value('100') }

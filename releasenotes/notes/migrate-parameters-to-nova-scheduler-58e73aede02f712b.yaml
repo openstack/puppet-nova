@@ -1,0 +1,11 @@
+---
+deprecations:
+  - |
+    The following parmaeters in the ``nova::scheduler::filter`` class have been
+    deprecated and will be removed in a future release. Use the new parameters
+    in the ``nova::scheduler`` class.
+
+    - ``nova::scheduler::filter::scheduler_max_attempts`` is replaced by
+      ``nova::scheduler::max_attempts``
+    - ``nova::scheduler::filter::periodic_task_interval`` is replaced by
+      ``nova::scheduler::periodic_task_interval``
