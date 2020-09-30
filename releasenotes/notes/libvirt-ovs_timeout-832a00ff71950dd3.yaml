@@ -1,0 +1,5 @@
+---
+features:
+  - |
+    The new ``nova::compute::libvirt::ovs_timeout`` parameter has been added
+    to support the ovs_timeout parameter in libvirtd.conf.

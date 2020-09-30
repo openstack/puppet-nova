@@ -132,11 +132,6 @@
 #   you actually want to deploy.
 #   Defaults to true for backward compatibility.
 #
-# [*log_outputs*]
-#   (optional) Defines log outputs, as specified in
-#   https://libvirt.org/logging.html
-#   Defaults to undef
-#
 # [*rx_queue_size*]
 #   (optional) virtio-net rx queue size
 #   Valid values are 256, 512, 1024
@@ -174,6 +169,20 @@
 #   zero or negative value mean to disable memory usage statistics.
 #   Defaults to $::os_service_default
 #
+# [*pmem_namespaces*]
+#   (optional) Configure persistent memory(pmem) namespaces. These namespaces
+#   must have been already created on the host. This config option is in the
+#   following format: "$LABEL:$NSNAME[|$NSNAME][,$LABEL:$NSNAME[|$NSNAME]]"
+#   $NSNAME is the name of the pmem namespace. $LABEL represents one resource
+#   class, this is used to generate the resource class name as
+#   CUSTOM_PMEM_NAMESPACE_$LABEL.
+#   Defaults to $::os_service_default
+#
+# [*log_outputs*]
+#   (optional) Defines log outputs, as specified in
+#   https://libvirt.org/logging.html
+#   Defaults to undef
+#
 # [*log_filters*]
 #   (optional) Defines a filter to select a different logging level
 #   for a given category log outputs, as specified in
@@ -187,14 +196,9 @@
 #   the global default settings.
 #   Defaults to undef
 #
-# [*pmem_namespaces*]
-#   (optional) Configure persistent memory(pmem) namespaces. These namespaces
-#   must have been already created on the host. This config option is in the
-#   following format: "$LABEL:$NSNAME[|$NSNAME][,$LABEL:$NSNAME[|$NSNAME]]"
-#   $NSNAME is the name of the pmem namespace. $LABEL represents one resource
-#   class, this is used to generate the resource class name as
-#   CUSTOM_PMEM_NAMESPACE_$LABEL.
-#   Defaults to $::os_service_default
+# [*ovs_timeout*]
+#   (optional) A timeout for openvswitch calls made by libvirt
+#   Defaults to undef
 #
 # [*swtpm_enabled*]
 #   (optional) Enable emulated Trusted Platform Module (TPM) for guests.
@@ -303,7 +307,6 @@ class nova::compute::libvirt (
   $compute_driver                             = 'libvirt.LibvirtDriver',
   $preallocate_images                         = $::os_service_default,
   $manage_libvirt_services                    = true,
-  $log_outputs                                = undef,
   $rx_queue_size                              = $::os_service_default,
   $tx_queue_size                              = $::os_service_default,
   $file_backed_memory                         = undef,
@@ -311,12 +314,14 @@ class nova::compute::libvirt (
   $nfs_mount_options                          = $::os_service_default,
   $num_pcie_ports                             = $::os_service_default,
   $mem_stats_period_seconds                   = $::os_service_default,
-  $log_filters                                = undef,
-  $tls_priority                               = undef,
   $pmem_namespaces                            = $::os_service_default,
   $swtpm_enabled                              = $::os_service_default,
   $swtpm_user                                 = $::os_service_default,
   $swtpm_group                                = $::os_service_default,
+  $log_outputs                                = undef,
+  $log_filters                                = undef,
+  $tls_priority                               = undef,
+  $ovs_timeout                                = undef,
   # DEPRECATED PARAMETERS
   $libvirt_virt_type                          = undef,
   $libvirt_cpu_mode                           = undef,
@@ -475,6 +480,16 @@ in a future release. Use the enabled_perf_events parameter instead')
   } else {
     libvirtd_config {
       'tls_priority': ensure => 'absent';
+    }
+  }
+
+  if $ovs_timeout {
+    libvirtd_config {
+      'ovs_timeout': value => $ovs_timeout;
+    }
+  } else {
+    libvirtd_config {
+      'ovs_timeout': ensure => 'absent';
     }
   }
 

@@ -74,6 +74,7 @@ describe 'nova::compute::libvirt' do
       it { is_expected.to contain_libvirtd_config('log_outputs').with_ensure('absent')}
       it { is_expected.to contain_libvirtd_config('log_filters').with_ensure('absent')}
       it { is_expected.to contain_libvirtd_config('tls_priority').with_ensure('absent')}
+      it { is_expected.to contain_libvirtd_config('ovs_timeout').with_ensure('absent')}
     end
 
     describe 'with params' do
@@ -97,19 +98,20 @@ describe 'nova::compute::libvirt' do
           :virtlog_service_name                       => 'virtlog',
           :compute_driver                             => 'libvirt.FoobarDriver',
           :preallocate_images                         => 'space',
-          :log_outputs                                => '1:file:/var/log/libvirt/libvirtd.log',
           :rx_queue_size                              => 512,
           :tx_queue_size                              => 1024,
           :volume_use_multipath                       => false,
           :nfs_mount_options                          => 'rw,intr,nolock',
           :num_pcie_ports                             => 16,
           :mem_stats_period_seconds                   => 20,
-          :log_filters                                => '1:qemu',
-          :tls_priority                               => 'NORMAL:-VERS-SSL3.0',
           :pmem_namespaces                            => '128G:ns0|ns1|ns2|ns3',
           :swtpm_enabled                              => true,
           :swtpm_user                                 => 'libvirt',
-          :swtpm_group                                => 'libvirt'
+          :swtpm_group                                => 'libvirt',
+          :log_outputs                                => '1:file:/var/log/libvirt/libvirtd.log',
+          :log_filters                                => '1:qemu',
+          :tls_priority                               => 'NORMAL:-VERS-SSL3.0',
+          :ovs_timeout                                => 10,
         }
       end
 
@@ -133,7 +135,6 @@ describe 'nova::compute::libvirt' do
       it { is_expected.to contain_nova_config('DEFAULT/remove_unused_base_images').with_value(true)}
       it { is_expected.to contain_nova_config('DEFAULT/remove_unused_original_minimum_age_seconds').with_value(3600)}
       it { is_expected.to contain_nova_config('libvirt/remove_unused_resized_minimum_age_seconds').with_value(3600)}
-      it { is_expected.to contain_libvirtd_config('log_outputs').with_value("\"#{params[:log_outputs]}\"")}
       it { is_expected.to contain_nova_config('libvirt/rx_queue_size').with_value(512)}
       it { is_expected.to contain_nova_config('libvirt/tx_queue_size').with_value(1024)}
       it { is_expected.to contain_nova_config('libvirt/volume_use_multipath').with_value(false)}
@@ -144,8 +145,10 @@ describe 'nova::compute::libvirt' do
       it { is_expected.to contain_nova_config('libvirt/swtpm_enabled').with_value(true)}
       it { is_expected.to contain_nova_config('libvirt/swtpm_user').with_value('libvirt')}
       it { is_expected.to contain_nova_config('libvirt/swtpm_group').with_value('libvirt')}
-      it { is_expected.to contain_libvirtd_config('log_filters').with_value("\"#{params[:log_filters]}\"")}
-      it { is_expected.to contain_libvirtd_config('tls_priority').with_value("\"#{params[:tls_priority]}\"")}
+      it { is_expected.to contain_libvirtd_config('log_outputs').with_value('"1:file:/var/log/libvirt/libvirtd.log"')}
+      it { is_expected.to contain_libvirtd_config('log_filters').with_value('"1:qemu"')}
+      it { is_expected.to contain_libvirtd_config('tls_priority').with_value('"NORMAL:-VERS-SSL3.0"')}
+      it { is_expected.to contain_libvirtd_config('ovs_timeout').with_value(10)}
       it {
         is_expected.to contain_service('libvirt').with(
           :name     => 'custom_service',
