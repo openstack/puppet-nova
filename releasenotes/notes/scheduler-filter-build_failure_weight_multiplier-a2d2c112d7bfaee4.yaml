@@ -1,0 +1,6 @@
+---
+features:
+  - |
+    The new ``nova::scheduler::filter::build_failure_weight_multiplier``
+    parameter has been added, to support the corresponding parameter in
+    nova-scheduler.
