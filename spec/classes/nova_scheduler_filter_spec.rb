@@ -26,6 +26,7 @@ describe 'nova::scheduler::filter' do
       it { is_expected.to contain_nova_config('filter_scheduler/io_ops_weight_multiplier').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('filter_scheduler/soft_affinity_weight_multiplier').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('filter_scheduler/soft_anti_affinity_weight_multiplier').with_value('<SERVICE DEFAULT>') }
+      it { is_expected.to contain_nova_config('filter_scheduler/build_failure_weight_multiplier').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('filter_scheduler/restrict_isolated_hosts_to_isolated_images').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('filter_scheduler/aggregate_image_properties_isolation_namespace').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('filter_scheduler/aggregate_image_properties_isolation_separator').with_value('<SERVICE DEFAULT>') }
@@ -35,17 +36,42 @@ describe 'nova::scheduler::filter' do
       it { is_expected.to_not contain_nova_config('scheduler/host_manager') }
     end
 
-    context 'when overriding params with non-empty arrays' do
+    context 'when overriding params' do
       let :params do
         { :scheduler_max_attempts               => '4',
+          :scheduler_host_subset_size           => '3',
+          :max_io_ops_per_host                  => '16',
+          :max_instances_per_host               => '100',
           :isolated_images                      => ['ubuntu1','centos2'],
           :isolated_hosts                       => ['192.168.1.2','192.168.1.3'],
           :scheduler_default_filters            => ['RetryFilter','AvailabilityZoneFilter'],
-          :scheduler_available_filters          => ['nova_filter1','nova_filter2']
+          :scheduler_available_filters          => ['nova_filter1','nova_filter2'],
+          :scheduler_weight_classes             => 'nova.scheduler.weights.compute.BuildFailureWeigher',
+          :periodic_task_interval               => 120,
+          :track_instance_changes               => true,
+          :ram_weight_multiplier                => 10,
+          :cpu_weight_multiplier                => 20,
+          :disk_weight_multiplier               => 30,
+          :io_ops_weight_multiplier             => 40,
+          :soft_affinity_weight_multiplier      => 50,
+          :soft_anti_affinity_weight_multiplier => 60,
+          :build_failure_weight_multiplier      => 100,
         }
       end
 
       it { is_expected.to contain_nova_config('scheduler/max_attempts').with_value('4') }
+      it { is_expected.to contain_nova_config('scheduler/periodic_task_interval').with_value(120) }
+      it { is_expected.to contain_nova_config('filter_scheduler/host_subset_size').with_value('3') }
+      it { is_expected.to contain_nova_config('filter_scheduler/max_io_ops_per_host').with_value('16') }
+      it { is_expected.to contain_nova_config('filter_scheduler/max_instances_per_host').with_value('100') }
+      it { is_expected.to contain_nova_config('filter_scheduler/track_instance_changes').with_value(true) }
+      it { is_expected.to contain_nova_config('filter_scheduler/ram_weight_multiplier').with_value(10) }
+      it { is_expected.to contain_nova_config('filter_scheduler/cpu_weight_multiplier').with_value(20) }
+      it { is_expected.to contain_nova_config('filter_scheduler/disk_weight_multiplier').with_value(30) }
+      it { is_expected.to contain_nova_config('filter_scheduler/io_ops_weight_multiplier').with_value(40) }
+      it { is_expected.to contain_nova_config('filter_scheduler/soft_affinity_weight_multiplier').with_value(50) }
+      it { is_expected.to contain_nova_config('filter_scheduler/soft_anti_affinity_weight_multiplier').with_value(60) }
+      it { is_expected.to contain_nova_config('filter_scheduler/build_failure_weight_multiplier').with_value(100) }
       it { is_expected.to contain_nova_config('filter_scheduler/isolated_images').with_value('ubuntu1,centos2') }
       it { is_expected.to contain_nova_config('filter_scheduler/isolated_hosts').with_value('192.168.1.2,192.168.1.3') }
       it { is_expected.to contain_nova_config('filter_scheduler/enabled_filters').with_value('RetryFilter,AvailabilityZoneFilter') }

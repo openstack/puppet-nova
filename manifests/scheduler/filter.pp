@@ -80,6 +80,11 @@
 #   (optional) Multiplier used for weighing hosts for group soft-anti-affinity
 #   Defaults to $::os_service_default
 #
+# [*build_failure_weight_multiplier*]
+#   (optional) Multiplier used for weighing hosts that have had recent build
+#   failures
+#   Defaults to $::os_service_default
+#
 # [*restrict_isolated_hosts_to_isolated_images*]
 #   (optional) Prevent non-isolated images from being built on isolated hosts.
 #   Defaults to $::os_service_default
@@ -110,6 +115,7 @@ class nova::scheduler::filter (
   $io_ops_weight_multiplier                       = $::os_service_default,
   $soft_affinity_weight_multiplier                = $::os_service_default,
   $soft_anti_affinity_weight_multiplier           = $::os_service_default,
+  $build_failure_weight_multiplier                = $::os_service_default,
   $restrict_isolated_hosts_to_isolated_images     = $::os_service_default,
   $aggregate_image_properties_isolation_namespace = $::os_service_default,
   $aggregate_image_properties_isolation_separator = $::os_service_default,
@@ -189,6 +195,8 @@ class nova::scheduler::filter (
       value => $soft_affinity_weight_multiplier;
     'filter_scheduler/soft_anti_affinity_weight_multiplier':
       value => $soft_anti_affinity_weight_multiplier;
+    'filter_scheduler/build_failure_weight_multiplier':
+      value => $build_failure_weight_multiplier;
     'filter_scheduler/restrict_isolated_hosts_to_isolated_images':
       value => $restrict_isolated_hosts_to_isolated_images;
     'filter_scheduler/aggregate_image_properties_isolation_namespace':
