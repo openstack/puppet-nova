@@ -4,10 +4,6 @@
 #
 # === Parameters:
 #
-# [*scheduler_max_attempts*]
-#   (optional) Maximum number of attempts to schedule an instance
-#   Defaults to '3'
-#
 # [*scheduler_host_subset_size*]
 #   (optional) defines the subset size that a host is chosen from
 #   Defaults to '1'
@@ -40,12 +36,6 @@
 # [*scheduler_weight_classes*]
 #   (optional) Which weight class names to use for weighing hosts
 #   Defaults to 'nova.scheduler.weights.all_weighers'
-#
-# [*periodic_task_interval*]
-#   (optional) This value controls how often (in seconds) to run periodic tasks
-#   in the scheduler. The specific tasks that are run for each period are
-#   determined by the particular scheduler being used.
-#   Defaults to $::os_service_default
 #
 # [*track_instance_changes*]
 #   (optional) Enable querying of individual hosts for instance information.
@@ -97,8 +87,19 @@
 #   (optional) Separator character(s) for image property namespace and name
 #   Defaults to $::os_service_default
 #
+# DEPRECATED PARAMETERS
+#
+# [*scheduler_max_attempts*]
+#   (optional) Maximum number of attempts to schedule an instance
+#   Defaults to undef
+#
+# [*periodic_task_interval*]
+#   (optional) This value controls how often (in seconds) to run periodic tasks
+#   in the scheduler. The specific tasks that are run for each period are
+#   determined by the particular scheduler being used.
+#   Defaults to undef
+#
 class nova::scheduler::filter (
-  $scheduler_max_attempts                         = '3',
   $scheduler_host_subset_size                     = '1',
   $max_io_ops_per_host                            = '8',
   $max_instances_per_host                         = '50',
@@ -107,7 +108,6 @@ class nova::scheduler::filter (
   $scheduler_available_filters                    = ['nova.scheduler.filters.all_filters'],
   $scheduler_default_filters                      = $::os_service_default,
   $scheduler_weight_classes                       = 'nova.scheduler.weights.all_weighers',
-  $periodic_task_interval                         = $::os_service_default,
   $track_instance_changes                         = $::os_service_default,
   $ram_weight_multiplier                          = $::os_service_default,
   $cpu_weight_multiplier                          = $::os_service_default,
@@ -119,9 +119,22 @@ class nova::scheduler::filter (
   $restrict_isolated_hosts_to_isolated_images     = $::os_service_default,
   $aggregate_image_properties_isolation_namespace = $::os_service_default,
   $aggregate_image_properties_isolation_separator = $::os_service_default,
+  # DEPRECATED PARAMETERS
+  $scheduler_max_attempts                         = undef,
+  $periodic_task_interval                         = undef,
 ) {
 
   include nova::deps
+
+  if $scheduler_max_attempts != undef {
+    warning('The nova::scheduler::filter::scheduler_max_attempts parameter has been deprecated and \
+will be removed in a future release. Use the nova::scheduler::max_attempts parameter instead.')
+  }
+
+  if $periodic_task_interval != undef {
+    warning('The nova::scheduler::filter::periodic_task_interval parameter has been deprecated and \
+will be removed in a future release. Use the nova::scheduler::periodic_task_interval parameter instead.')
+  }
 
   # The following values are following this rule:
   # - default is $::os_service_default so Puppet won't try to configure it.
@@ -156,12 +169,6 @@ class nova::scheduler::filter (
     $isolated_hosts_real = join($isolated_hosts, ',')
   } else {
     $isolated_hosts_real = $::os_service_default
-  }
-
-  # TODO(aschultz): these should probably be in nova::scheduler ...
-  nova_config {
-    'scheduler/max_attempts':           value => $scheduler_max_attempts;
-    'scheduler/periodic_task_interval': value => $periodic_task_interval;
   }
 
   nova_config {
