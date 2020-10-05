@@ -1,0 +1,6 @@
+---
+features:
+  - |
+    The new ``nova::scheduler::filter::shuffle_best_same_weighed_hosts``
+    parameter has been added, to manage the corresponding parameter in
+    nova-scheduler.
