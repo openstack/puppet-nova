@@ -1,0 +1,6 @@
+---
+features:
+  - |
+    The new ``nova::scheduler::filter::cross_cell_move_weight_multiplier``
+    parameter has been added, to manage the corresponding parameter in
+    nova-scheduler.
