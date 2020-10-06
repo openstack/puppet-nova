@@ -22,15 +22,6 @@ require 'spec_helper'
 
 describe 'nova::migration::libvirt' do
 
-  generate = {}
-  # needed for Puppet 4.x
-  before(:each) {
-    Puppet::Parser::Functions.newfunction(:generate, :type => :rvalue) {
-        |args| generate.call()
-    }
-    generate.stubs(:call).returns('0000-111-111')
-  }
-
   # function here is needed for Puppet 5.5.7+
   let :pre_condition do
    'function generate($a, $b) { return "0000-111-111" }
