@@ -231,12 +231,51 @@ describe 'nova::migration::libvirt' do
   end
 
   shared_examples_for 'nova migration with libvirt in Debian' do
-    it { is_expected.to contain_file_line('/etc/default/libvirtd libvirtd opts').with(
-      :path  => '/etc/default/libvirtd',
-      :line  => 'libvirtd_opts="-l"',
-      :match => 'libvirtd_opts=',
-      :tag   => 'libvirt-file_line',
-    ) }
+    context 'with libvirt < 5.6' do
+      let :params do
+        { :transport       => 'tls',
+          :libvirt_version => '4.0' }
+      end
+
+      it { is_expected.to contain_file_line('/etc/default/libvirtd libvirtd opts').with(
+        :path  => '/etc/default/libvirtd',
+        :line  => 'libvirtd_opts="-l"',
+        :match => 'libvirtd_opts=',
+        :tag   => 'libvirt-file_line',
+      ) }
+      it { is_expected.to_not contain_service('libvirtd-tls') }
+      it { is_expected.to_not contain_service('libvirtd-tcp') }
+    end
+
+    context 'with libvirt >= 5.6' do
+      context 'with tls transport' do
+        let :params do
+          { :transport       => 'tls',
+            :libvirt_version => '6.0' }
+        end
+
+        it { is_expected.to_not contain_file_line('/etc/default/libvirtd libvirtd opts') }
+        it { is_expected.to contain_service('libvirtd-tls').with(
+          :name   => 'libvirtd-tls.socket',
+          :ensure => 'running',
+          :enable => true,
+          )}
+      end
+
+      context 'with tcp transport' do
+        let :params do
+          { :transport       => 'tcp',
+            :libvirt_version => '6.0' }
+        end
+
+        it { is_expected.to_not contain_file_line('/etc/default/libvirtd libvirtd opts') }
+        it { is_expected.to contain_service('libvirtd-tcp').with(
+          :name   => 'libvirtd-tcp.socket',
+          :ensure => 'running',
+          :enable => true,
+          )}
+      end
+    end
   end
 
   shared_examples_for 'nova migration with libvirt in RedHat' do
