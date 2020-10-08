@@ -267,56 +267,62 @@ class nova::migration::libvirt(
       }
     }
 
-    case $::osfamily {
-      'RedHat': {
-        if versioncmp($libvirt_version, '5.6') >= 0 {
-          $manage_services = pick($::nova::compute::libvirt::manage_libvirt_services, true)
+    if $transport_real == 'tls' or $transport_real == 'tcp' {
+      if versioncmp($libvirt_version, '5.6') >= 0 {
+        # Since libvirt >= 5.6 and libvirtd is managed by systemd,
+        # system socket should be activated by systemd, not by --listen option
+        $manage_services = pick($::nova::compute::libvirt::manage_libvirt_services, true)
 
-          if $manage_services {
-            if $transport_real == 'tls' {
-              service { 'libvirtd-tls':
-                ensure  => 'running',
-                name    => 'libvirtd-tls.socket',
-                enable  => true,
-                require => Anchor['nova::config::end']
-              }
-              Service['libvirtd-tls'] -> Service<| title == 'libvirt' |>
-            } elsif $transport_real == 'tcp' {
-              service { 'libvirtd-tcp':
-                ensure  => 'running',
-                name    => 'libvirtd-tcp.socket',
-                enable  => true,
-                require => Anchor['nova::config::end']
-              }
-              Service['libvirtd-tcp'] -> Service<| title == 'libvirt' |>
-            }
+        if $manage_services {
+          service { "libvirtd-${transport_real}":
+            ensure  => 'running',
+            name    => "libvirtd-${transport_real}.socket",
+            enable  => true,
+            require => Anchor['nova::config::end']
           }
-
-        } else {
-          if $transport_real != 'ssh' {
-            file_line { '/etc/sysconfig/libvirtd libvirtd args':
-              path  => '/etc/sysconfig/libvirtd',
-              line  => 'LIBVIRTD_ARGS="--listen"',
-              match => '^LIBVIRTD_ARGS=',
-              tag   => 'libvirt-file_line',
-            }
-          }
+          Service["libvirtd-${transport_real}"] -> Service<| title == 'libvirt' |>
         }
+
+        # --listen option should be disabled in newer libvirt
+        $libvirtd_service_listen = false
+
+      } else {
+        # For older libvirt --listen option should be used.
+        $libvirtd_service_listen = true
       }
 
-      'Debian': {
-        if $transport_real != 'ssh' {
+      case $::osfamily {
+        'RedHat': {
+          if $libvirtd_service_listen {
+            $libvirtd_args = '"--listen"'
+          } else {
+            $libvirtd_args = ''
+          }
+
+          file_line { '/etc/sysconfig/libvirtd libvirtd args':
+            path  => '/etc/sysconfig/libvirtd',
+            line  => "LIBVIRTD_ARGS=${libvirtd_args}",
+            match => '^LIBVIRTD_ARGS=',
+            tag   => 'libvirt-file_line',
+          }
+        }
+        'Debian': {
+          if $libvirtd_service_listen {
+            $libvirtd_opts = '"-l"'
+          } else {
+            $libvirtd_opts = ''
+          }
+
           file_line { "/etc/default/${::nova::compute::libvirt::libvirt_service_name} libvirtd opts":
             path  => "/etc/default/${::nova::compute::libvirt::libvirt_service_name}",
-            line  => 'libvirtd_opts="-l"',
+            line  => "libvirtd_opts=${libvirtd_opts}",
             match => 'libvirtd_opts=',
             tag   => 'libvirt-file_line',
           }
         }
-      }
-
-      default:  {
-        warning("Unsupported osfamily: ${::osfamily}, make sure you are configuring this yourself")
+        default: {
+          warning("Unsupported osfamily: ${::osfamily}, make sure you are configuring this yourself")
+        }
       }
     }
   }

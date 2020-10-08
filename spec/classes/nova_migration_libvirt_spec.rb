@@ -266,10 +266,10 @@ describe 'nova::migration::libvirt' do
 
   shared_examples_for 'nova migration with libvirt in RedHat' do
     context 'with libvirt < 5.6' do
-        let :params do
-          { :transport       => 'tls',
-            :libvirt_version => '4.5' }
-        end
+      let :params do
+        { :transport       => 'tls',
+          :libvirt_version => '4.5' }
+      end
 
       it { is_expected.to contain_file_line('/etc/sysconfig/libvirtd libvirtd args').with(
         :path  => '/etc/sysconfig/libvirtd',
@@ -289,12 +289,17 @@ describe 'nova::migration::libvirt' do
             :libvirt_version => '5.6' }
         end
 
-        it { is_expected.to_not contain_file_line('/etc/sysconfig/libvirtd libvirtd args') }
+        it { is_expected.to contain_file_line('/etc/sysconfig/libvirtd libvirtd args').with(
+          :path  => '/etc/sysconfig/libvirtd',
+          :line  => 'LIBVIRTD_ARGS=',
+          :match => '^LIBVIRTD_ARGS=',
+          :tag   => 'libvirt-file_line',
+        )}
         it { is_expected.to contain_service('libvirtd-tls').with(
           :name   => 'libvirtd-tls.socket',
           :ensure => 'running',
           :enable => true,
-          )}
+        )}
       end
 
       context 'with tcp transport' do
@@ -303,12 +308,17 @@ describe 'nova::migration::libvirt' do
             :libvirt_version => '5.6' }
         end
 
-        it { is_expected.to_not contain_file_line('/etc/sysconfig/libvirtd libvirtd args') }
+        it { is_expected.to contain_file_line('/etc/sysconfig/libvirtd libvirtd args').with(
+          :path  => '/etc/sysconfig/libvirtd',
+          :line  => 'LIBVIRTD_ARGS=',
+          :match => '^LIBVIRTD_ARGS=',
+          :tag   => 'libvirt-file_line',
+        )}
         it { is_expected.to contain_service('libvirtd-tcp').with(
           :name   => 'libvirtd-tcp.socket',
           :ensure => 'running',
           :enable => true,
-          )}
+        )}
       end
     end
   end
