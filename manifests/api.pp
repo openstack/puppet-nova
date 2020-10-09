@@ -287,7 +287,7 @@ class nova::api(
     }
     Service <| title == 'httpd' |> { tag +> 'nova-service' }
     # make sure we start apache before nova-api to avoid binding issues
-    Service[$service_name] -> Service['nova-api']
+    Service['nova-api'] -> Service[$service_name]
   } else {
     fail("Invalid service_name. Either nova-api/openstack-nova-api for running \
 as a standalone service, or httpd for being run by a httpd server")

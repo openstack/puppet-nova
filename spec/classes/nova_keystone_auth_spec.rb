@@ -166,7 +166,7 @@ describe 'nova::keystone::auth' do
         }
       end
 
-      it { should contain_keystone_endpoint('RegionOne/nova::compute').with_notify(platform_params[:nova_api_notify]) }
+      it { should contain_keystone_endpoint('RegionOne/nova::compute').with_before(['Anchor[nova::service::end]']) }
     end
   end
 
@@ -176,19 +176,6 @@ describe 'nova::keystone::auth' do
     context "on #{os}" do
       let (:facts) do
         facts.merge!(OSDefaults.get_facts())
-      end
-
-      let (:platform_params) do
-        case facts[:osfamily]
-        when 'Debian'
-          {
-            :nova_api_notify => ['Service[nova-api]'],
-          }
-        when 'RedHat'
-          {
-            :nova_api_notify => [],
-          }
-        end
       end
 
       it_behaves_like 'nova::keystone::auth'
