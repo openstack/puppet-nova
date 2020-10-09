@@ -265,12 +265,6 @@ describe 'nova::compute::libvirt' do
 
 
   shared_examples 'redhat-nova-compute-libvirt' do
-    before do
-      facts.merge!({ :operatingsystem => 'RedHat', :osfamily => 'RedHat',
-        :operatingsystemrelease => 6.5,
-        :operatingsystemmajrelease => '6' })
-    end
-
     describe 'with default parameters' do
 
       it { is_expected.to contain_class('nova::params')}
@@ -298,21 +292,6 @@ describe 'nova::compute::libvirt' do
         :before => ['Service[libvirt]'],
         :name   => 'dbus'
       ) }
-
-      describe 'on rhel 7' do
-        before do
-          facts.merge!({
-            :operatingsystemrelease => 7.0,
-            :operatingsystemmajrelease => '7'
-          })
-        end
-
-        it { is_expected.to contain_service('libvirt')}
-
-        it { is_expected.to contain_service('messagebus').with(
-          :name => 'dbus'
-        )}
-      end
 
       it { is_expected.to contain_nova_config('DEFAULT/compute_driver').with_value('libvirt.LibvirtDriver')}
       it { is_expected.to contain_nova_config('libvirt/virt_type').with_value('kvm')}
