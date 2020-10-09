@@ -53,6 +53,11 @@ Puppet::Type.newtype(:nova_aggregate) do
     ['auth_url', 'project_name', 'username', 'password']
   end
 
+  # Require the nova-api service to be running
+  autorequire(:anchor) do
+    ['nova::service::end']
+  end
+
   newparam(:name, :namevar => true) do
     desc 'Name for the new aggregate'
     validate do |value|
