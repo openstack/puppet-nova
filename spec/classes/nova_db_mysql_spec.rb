@@ -16,6 +16,9 @@ describe 'nova::db::mysql' do
       let :params do
         required_params
       end
+
+      it { is_expected.to contain_class('nova::deps') }
+
       it { is_expected.to contain_openstacklib__db__mysql('nova').with(
         :user     => 'nova',
         :password => 'novapass',
