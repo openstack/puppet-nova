@@ -16,6 +16,8 @@ describe 'nova::db::postgresql' do
         req_params
       end
 
+      it { is_expected.to contain_class('nova::deps') }
+
       it { should contain_openstacklib__db__postgresql('nova').with(
         :password   => 'pw',
         :dbname     => 'nova',
