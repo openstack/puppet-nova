@@ -1,0 +1,5 @@
+---
+features:
+  - |
+    The new ``nova::keystone::authtoken::service_type`` parameter has been
+    added to configure the service_type parameter in authtoken middleware.
