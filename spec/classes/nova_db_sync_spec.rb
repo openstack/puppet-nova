@@ -4,6 +4,8 @@ describe 'nova::db::sync' do
 
   shared_examples_for 'nova-dbsync' do
 
+    it { is_expected.to contain_class('nova::deps') }
+
     it 'runs nova-db-sync' do
       is_expected.to contain_exec('nova-db-sync').with(
         :command     => '/usr/bin/nova-manage  db sync',
