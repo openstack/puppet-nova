@@ -82,28 +82,6 @@
 #   which you may need to search key words ``VIR_PERF_PARAM_*``
 #   Defaults to $::os_service_default
 #
-# [*remove_unused_base_images*]
-#   (optional) Should unused base images be removed?
-#   If undef is specified, remove the line in nova.conf
-#   otherwise, use a boolean to remove or not the base images.
-#   Defaults to $::os_service_default
-#
-# [*remove_unused_resized_minimum_age_seconds*]
-#   (optional) Unused resized base images younger
-#   than this will not be removed
-#   If undef is specified, remove the line in nova.conf
-#   otherwise, use a integer or a string to define after
-#   how many seconds it will be removed.
-#   Defaults to $::os_service_default
-#
-# [*remove_unused_original_minimum_age_seconds*]
-#   (optional) Unused unresized base images younger
-#   than this will not be removed
-#   If undef is specified, remove the line in nova.conf
-#   otherwise, use a integer or a string to define after
-#   how many seconds it will be removed.
-#   Defaults to $::os_service_default
-#
 # [*libvirt_service_name*]
 #   (optional) libvirt service name.
 #   Defaults to $::nova::params::libvirt_service_name
@@ -282,6 +260,28 @@
 #   which you may need to search key words ``VIR_PERF_PARAM_*``
 #   Defaults to undef
 #
+# [*remove_unused_base_images*]
+#   (optional) Should unused base images be removed?
+#   If undef is specified, remove the line in nova.conf
+#   otherwise, use a boolean to remove or not the base images.
+#   Defaults to undef
+#
+# [*remove_unused_resized_minimum_age_seconds*]
+#   (optional) Unused resized base images younger
+#   than this will not be removed
+#   If undef is specified, remove the line in nova.conf
+#   otherwise, use a integer or a string to define after
+#   how many seconds it will be removed.
+#   Defaults to undef
+#
+# [*remove_unused_original_minimum_age_seconds*]
+#   (optional) Unused unresized base images younger
+#   than this will not be removed
+#   If undef is specified, remove the line in nova.conf
+#   otherwise, use a integer or a string to define after
+#   how many seconds it will be removed.
+#   Defaults to undef
+#
 class nova::compute::libvirt (
   $ensure_package                             = 'present',
   $virt_type                                  = 'kvm',
@@ -298,9 +298,6 @@ class nova::compute::libvirt (
   $inject_key                                 = false,
   $inject_partition                           = -2,
   $enabled_perf_events                        = $::os_service_default,
-  $remove_unused_base_images                  = $::os_service_default,
-  $remove_unused_resized_minimum_age_seconds  = $::os_service_default,
-  $remove_unused_original_minimum_age_seconds = $::os_service_default,
   $libvirt_service_name                       = $::nova::params::libvirt_service_name,
   $virtlock_service_name                      = $::nova::params::virtlock_service_name,
   $virtlog_service_name                       = $::nova::params::virtlog_service_name,
@@ -335,10 +332,39 @@ class nova::compute::libvirt (
   $libvirt_inject_key                         = undef,
   $libvirt_inject_partition                   = undef,
   $libvirt_enabled_perf_events                = undef,
+  $remove_unused_base_images                  = undef,
+  $remove_unused_resized_minimum_age_seconds  = undef,
+  $remove_unused_original_minimum_age_seconds = undef,
 ) inherits nova::params {
 
   include nova::deps
   include nova::params
+
+  if $remove_unused_base_images != undef {
+    warning('The remove_unused_base_images parameter was deprecated and \
+will be removed in a future release. Use the nova::compute::image_cache class')
+  }
+
+  if $remove_unused_resized_minimum_age_seconds != undef {
+    warning('The remove_unused_resized_minimum_age_seconds parameter was deprecated and \
+will be removed in a future release. Use the nova::compute::image_cache class')
+  }
+
+  if $remove_unused_original_minimum_age_seconds != undef {
+    warning('The remove_unused_original_minimum_age_seconds parameter was deprecated and \
+will be removed in a future release. Use the nova::compute::image_cache class')
+  }
+
+  # TODO(tkajinam): Remove this when removing deprecated image cache parameters
+  include nova::compute::image_cache
+
+  # Cleanup deprecated image cache parameters
+  nova_config {
+    'DEFAULT/remove_unused_base_images':                  ensure => 'absent';
+    'DEFAULT/remove_unused_original_minimum_age_seconds': ensure => 'absent';
+    'libvirt/remove_unused_resize_minimum_age_seconds':   ensure => 'absent';
+  }
+
 
   if $libvirt_virt_type != undef {
     warning('The libvirt_virt_type parameter was deprecated and will be removed \
@@ -599,42 +625,6 @@ in a future release. Use the cpu_models parameter instead')
   } else {
     nova_config {
       'libvirt/disk_cachemodes': ensure => absent;
-    }
-  }
-
-  if $remove_unused_resized_minimum_age_seconds == undef {
-    warning('Use $::os_service_default instead of undef for the remove_unused_resized_minimum_age_seconds \
-parameter. The current behavior for undef will be changed in a future release')
-    nova_config {
-      'libvirt/remove_unused_resized_minimum_age_seconds': ensure => absent;
-    }
-  } else {
-    nova_config {
-      'libvirt/remove_unused_resized_minimum_age_seconds': value => $remove_unused_resized_minimum_age_seconds;
-    }
-  }
-
-  if $remove_unused_base_images == undef {
-    warning('Use $::os_service_default instead of undef for the remove_unused_base_images \
-parameter. The current behavior for undef will be changed in a future release')
-    nova_config {
-      'DEFAULT/remove_unused_base_images': ensure => absent;
-    }
-  } else {
-    nova_config {
-      'DEFAULT/remove_unused_base_images': value => $remove_unused_base_images;
-    }
-  }
-
-  if $remove_unused_original_minimum_age_seconds == undef {
-    warning('Use $::os_service_default instead of undef for the remove_unused_original_minimum_age_seconds \
-parameter. The current behavior for undef will be changed in a future release')
-    nova_config {
-      'DEFAULT/remove_unused_original_minimum_age_seconds': ensure => absent;
-    }
-  } else {
-    nova_config {
-      'DEFAULT/remove_unused_original_minimum_age_seconds': value => $remove_unused_original_minimum_age_seconds;
     }
   }
 }

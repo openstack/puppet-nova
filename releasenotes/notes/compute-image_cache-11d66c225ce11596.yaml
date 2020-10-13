@@ -1,0 +1,14 @@
+---
+features:
+  - |
+    The new ``nova::compute::image_cache`` class has been added to manage
+    parameters for image cache feature.
+deprecations:
+  - |
+    The following parameters in the ``nova::compute::libvirt`` class have been
+    deprecated and will be removed in a future release. Use the corresponding
+    parameter in the new ``nova::compute::image_cache`` class.
+
+    - ``remove_unused_base_images``
+    - ``remove_unused_original_minimum_age_seconds``
+    - ``remove_unused_resize_minimum_age_seconds``
