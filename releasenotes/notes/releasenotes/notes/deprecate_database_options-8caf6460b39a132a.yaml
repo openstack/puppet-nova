@@ -1,0 +1,14 @@
+---
+deprecations:
+  - |
+    The following options have been deprecated and take no effect, as those
+    options have been moved to nova::db class:
+    - ``nova::database_connection``
+    - ``nova::slave_connection``
+    - ``nova::api_database_connection``
+    - ``nova::api_slave_connection``
+    - ``nova::database_idle_timeout``
+    - ``nova::database_max_overflow``
+    - ``nova::database_max_pool_size``
+    - ``nova::database_max_retries``
+    - ``nova::database_retry_interval``
