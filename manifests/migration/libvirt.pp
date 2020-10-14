@@ -244,13 +244,23 @@ class nova::migration::libvirt(
         $manage_services = pick($::nova::compute::libvirt::manage_libvirt_services, true)
 
         if $manage_services {
+          # libvirtd.service should be stopped before socket service is started.
+          # Otherwise, socket service fails to start.
+          exec { 'stop libvirtd.service':
+            path    => ['/sbin', '/usr/sbin', '/bin', '/usr/bin'],
+            command => 'systemctl -q stop libvirtd.service',
+            unless  => "systemctl -q is-active libvirtd-${transport_real}.socket",
+            require => Anchor['nova::install::end']
+          }
+
           service { "libvirtd-${transport_real}":
             ensure  => 'running',
             name    => "libvirtd-${transport_real}.socket",
             enable  => true,
             require => Anchor['nova::config::end']
           }
-          Service["libvirtd-${transport_real}"] -> Service<| title == 'libvirt' |>
+
+          Exec['stop libvirtd.service'] -> Service["libvirtd-${transport_real}"] -> Service<| title == 'libvirt' |>
         }
 
         # --listen option should be disabled in newer libvirt
