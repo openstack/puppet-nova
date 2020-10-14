@@ -42,6 +42,8 @@ describe 'nova::migration::libvirt' do
       it { is_expected.to contain_nova_config('libvirt/live_migration_completion_timeout').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('libvirt/live_migration_uri').with_value('qemu+tcp://%s/system') }
       it { is_expected.to contain_nova_config('libvirt/live_migration_inbound_addr').with_value('<SERVICE DEFAULT>')}
+      it { is_expected.to contain_nova_config('libvirt/live_migration_permit_post_copy').with_value('<SERVICE DEFAULT>')}
+      it { is_expected.to contain_nova_config('libvirt/live_migration_permit_auto_converge').with_value('<SERVICE DEFAULT>')}
     end
 
     context 'with override_uuid enabled' do
@@ -107,6 +109,17 @@ describe 'nova::migration::libvirt' do
       end
       it { is_expected.to contain_nova_config('libvirt/live_migration_tunnelled').with(:value => true) }
       it { is_expected.to contain_nova_config('libvirt/live_migration_completion_timeout').with_value('1500') }
+    end
+
+    context 'with live migration auto converge on' do
+      let :params do
+        {
+          :live_migration_permit_post_copy     => false,
+          :live_migration_permit_auto_converge => true,
+        }
+      end
+      it { is_expected.to contain_nova_config('libvirt/live_migration_permit_post_copy').with(:value => false) }
+      it { is_expected.to contain_nova_config('libvirt/live_migration_permit_auto_converge').with(:value => true) }
     end
 
     context 'with auth set to sasl' do

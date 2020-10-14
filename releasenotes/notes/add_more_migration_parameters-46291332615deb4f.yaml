@@ -1,0 +1,8 @@
+---
+features:
+  - |
+    The new ``nova::migration::libvirt::live_migration_permit_post_copy``
+    parameter has been added to support post copy mode in live migration.
+  - |
+    The new ``nova::migration::libvirt::live_migration_permit_auto_converge``
+    parameter has been added to support auto converge in live migration.
