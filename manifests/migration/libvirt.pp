@@ -51,6 +51,22 @@
 #   to 0 to disable timeouts.
 #   Defaults to $::os_service_default
 #
+# [*live_migration_permit_post_copy*]
+#   (optional) This option allows nova to switch an on-going live migration
+#   to post-copy mode, i.e., switch the active VM to the one on the destination
+#   node before the migration is complete, therefore ensuring an upper bound
+#   on the memory that needs to be transferred.
+#   Post-copy requires libvirt>=1.3.3 and QEMU>=2.5.0.
+#   Defaults to $::os_service_default
+#
+# [*live_migration_permit_auto_converge*]
+#   (optional) This option allows nova to start live migration with auto
+#   converge on. Auto converge throttles down CPU if a progress of on-going
+#   live migration is slow. Auto converge will only be used if this flag is
+#   set to True and post copy is not permitted or post copy is unavailable
+#   due to the version of libvirt and QEMU in use.
+#   Defaults to $::os_service_default
+#
 # [*override_uuid*]
 #   (optional) Set uuid not equal to output from dmidecode (boolean)
 #   Defaults to false
@@ -95,22 +111,24 @@
 #   Defaults to ::nova::compute::libvirt::version::default
 #
 class nova::migration::libvirt(
-  $transport                         = undef,
-  $auth                              = 'none',
-  $listen_address                    = undef,
-  $live_migration_inbound_addr       = $::os_service_default,
-  $live_migration_tunnelled          = $::os_service_default,
-  $live_migration_with_native_tls    = $::os_service_default,
-  $live_migration_completion_timeout = $::os_service_default,
-  $override_uuid                     = false,
-  $configure_libvirt                 = true,
-  $configure_nova                    = true,
-  $client_user                       = undef,
-  $client_port                       = undef,
-  $client_extraparams                = {},
-  $ca_file                           = undef,
-  $crl_file                          = undef,
-  $libvirt_version                   = $::nova::compute::libvirt::version::default,
+  $transport                           = undef,
+  $auth                                = 'none',
+  $listen_address                      = undef,
+  $live_migration_inbound_addr         = $::os_service_default,
+  $live_migration_tunnelled            = $::os_service_default,
+  $live_migration_with_native_tls      = $::os_service_default,
+  $live_migration_completion_timeout   = $::os_service_default,
+  $live_migration_permit_post_copy     = $::os_service_default,
+  $live_migration_permit_auto_converge = $::os_service_default,
+  $override_uuid                       = false,
+  $configure_libvirt                   = true,
+  $configure_nova                      = true,
+  $client_user                         = undef,
+  $client_port                         = undef,
+  $client_extraparams                  = {},
+  $ca_file                             = undef,
+  $crl_file                            = undef,
+  $libvirt_version                     = $::nova::compute::libvirt::version::default,
 ) inherits nova::compute::libvirt::version {
 
   include ::nova::deps
@@ -165,11 +183,13 @@ class nova::migration::libvirt(
     $live_migration_uri = "qemu+${transport_real}://${prefix}%s${postfix}/system${extra_params}"
 
     nova_config {
-      'libvirt/live_migration_uri':                value => $live_migration_uri;
-      'libvirt/live_migration_tunnelled':          value => $live_migration_tunnelled;
-      'libvirt/live_migration_with_native_tls':    value => $live_migration_with_native_tls;
-      'libvirt/live_migration_completion_timeout': value => $live_migration_completion_timeout;
-      'libvirt/live_migration_inbound_addr':       value => $live_migration_inbound_addr;
+      'libvirt/live_migration_uri':                  value => $live_migration_uri;
+      'libvirt/live_migration_tunnelled':            value => $live_migration_tunnelled;
+      'libvirt/live_migration_with_native_tls':      value => $live_migration_with_native_tls;
+      'libvirt/live_migration_completion_timeout':   value => $live_migration_completion_timeout;
+      'libvirt/live_migration_inbound_addr':         value => $live_migration_inbound_addr;
+      'libvirt/live_migration_permit_post_copy':     value => $live_migration_permit_post_copy;
+      'libvirt/live_migration_permit_auto_converge': value => $live_migration_permit_auto_converge;
     }
   }
 
