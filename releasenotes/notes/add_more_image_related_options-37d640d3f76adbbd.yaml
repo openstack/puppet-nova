@@ -1,0 +1,8 @@
+---
+features:
+  - |
+    The new ``nova::compute::use_cow_images`` parameter has been added to
+    enable use of copy-on-write images.
+  - |
+    The new ``nova::compute::virt_mkfs`` parameter has been added to support
+    to specify the mkfs commands for ephemeral devices.
