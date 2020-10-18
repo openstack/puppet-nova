@@ -66,9 +66,18 @@
 #   Time period must be hour, day, month or year
 #   Defaults to 'month'
 #
+# [*use_cow_images*]
+#   (optional) Enable use of copy-on-write (cow) images.
+#   Defaults to $::os_service_default
+#
 # [*force_raw_images*]
 #   (optional) Force backing images to raw format.
 #   Defaults to true
+#
+# [*virt_mkfs*]
+#   (optional) Name of the mkfs commands for ephemeral device.
+#   The format is <os_type>=<mkfs command>
+#   Defaults to $::os_service_default
 #
 # [*reserved_host_memory*]
 #   Reserved host memory
@@ -270,7 +279,9 @@ class nova::compute (
   $virtio_nic                                  = false,
   $instance_usage_audit                        = false,
   $instance_usage_audit_period                 = 'month',
+  $use_cow_images                              = $::os_service_default,
   $force_raw_images                            = true,
+  $virt_mkfs                                   = $::os_service_default,
   $reserved_host_memory                        = '512',
   $heal_instance_info_cache_interval           = '60',
   $config_drive_format                         = $::os_service_default,
@@ -425,6 +436,9 @@ Use the same parameter in nova::api class.')
   include nova::availability_zone
 
   nova_config {
+    'DEFAULT/use_cow_images':                    value => $use_cow_images;
+    'DEFAULT/force_raw_images':                  value => $force_raw_images;
+    'DEFAULT/virt_mkfs':                         value => $virt_mkfs;
     'DEFAULT/reserved_host_memory_mb':           value => $reserved_host_memory;
     'DEFAULT/reserved_huge_pages':               value => $reserved_huge_pages_real;
     'DEFAULT/heal_instance_info_cache_interval': value => $heal_instance_info_cache_interval;
@@ -499,10 +513,6 @@ Use the same parameter in nova::api class.')
       'DEFAULT/instance_usage_audit':        ensure => absent;
       'DEFAULT/instance_usage_audit_period': ensure => absent;
     }
-  }
-
-  nova_config {
-    'DEFAULT/force_raw_images': value => $force_raw_images;
   }
 
   if is_service_default($config_drive_format) or $config_drive_format == 'iso9660' {
