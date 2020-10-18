@@ -1,4 +1,4 @@
 ---
 upgrade:
   - |
-    The ``nova::compute::xenserver`` class has beenremoved.
+    The ``nova::compute::xenserver`` class has been removed.
