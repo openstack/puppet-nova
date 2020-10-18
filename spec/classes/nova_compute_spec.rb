@@ -40,6 +40,9 @@ describe 'nova::compute' do
       it { is_expected.to contain_nova_config('compute/live_migration_wait_for_vif_plug').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('compute/max_disk_devices_to_attach').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('DEFAULT/default_access_ip_network_name').with_value('<SERVICE DEFAULT>') }
+      it { is_expected.to contain_nova_config('DEFAULT/running_deleted_instance_action').with_value('<SERVICE DEFAULT>') }
+      it { is_expected.to contain_nova_config('DEFAULT/running_deleted_instance_poll_interval').with_value('<SERVICE DEFAULT>') }
+      it { is_expected.to contain_nova_config('DEFAULT/running_deleted_instance_timeout').with_value('<SERVICE DEFAULT>') }
 
       it { is_expected.to_not contain_package('cryptsetup').with( :ensure => 'present' )}
 
@@ -103,6 +106,9 @@ describe 'nova::compute' do
           :live_migration_wait_for_vif_plug   => true,
           :max_disk_devices_to_attach         => 20,
           :default_access_ip_network_name     => 'public',
+          :running_deleted_instance_action    => 'shutdown',
+          :running_deleted_instance_poll_interval => '900',
+          :running_deleted_instance_timeout   => '200',
         }
       end
 
@@ -166,6 +172,9 @@ describe 'nova::compute' do
 
       it { is_expected.to contain_nova_config('compute/max_disk_devices_to_attach').with_value(20) }
       it { is_expected.to contain_nova_config('DEFAULT/default_access_ip_network_name').with_value('public') }
+      it { is_expected.to contain_nova_config('DEFAULT/running_deleted_instance_action').with_value('shutdown') }
+      it { is_expected.to contain_nova_config('DEFAULT/running_deleted_instance_poll_interval').with_value('900') }
+      it { is_expected.to contain_nova_config('DEFAULT/running_deleted_instance_timeout').with_value('200') }
 
       it 'configures nova config_drive_format to vfat' do
         is_expected.to contain_nova_config('DEFAULT/config_drive_format').with_value('vfat')
