@@ -1,0 +1,17 @@
+---
+features:
+  - |
+    The new ``nova::compute::reboot_timeout`` parameter has been added to
+    support to set a time interval after which an instance is hard rebooted
+    automatically.- |
+  - |
+    The new ``nova::compute::instance_build_timeout`` parameter has been
+    added to support to specify the maximum time for instance to build.
+  - |
+    The new ``nova::compute::rescue_timeout`` parameter has been added to
+    support to set an interval to wait before un-rescuing an instance
+    stuck in RESCUE.
+  - |
+    The new ``nova::compute::shutdown_timeout`` parameter has been added to
+    support to set a time to wait in seconds for an instance to perform
+    a clean shutdown.
