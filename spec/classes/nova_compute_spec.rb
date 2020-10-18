@@ -47,7 +47,11 @@ describe 'nova::compute' do
       it { is_expected.to contain_nova_config('DEFAULT/reserved_huge_pages').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('DEFAULT/heal_instance_info_cache_interval').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('DEFAULT/force_raw_images').with_value('<SERVICE DEFAULT>') }
+      it { is_expected.to contain_nova_config('DEFAULT/reboot_timeout').with_value('<SERVICE DEFAULT>') }
+      it { is_expected.to contain_nova_config('DEFAULT/instance_build_timeout').with_value('<SERVICE DEFAULT>') }
+      it { is_expected.to contain_nova_config('DEFAULT/rescue_timeout').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('DEFAULT/resize_confirm_window').with_value('<SERVICE DEFAULT>') }
+      it { is_expected.to contain_nova_config('DEFAULT/shutdown_timeout').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('DEFAULT/resume_guests_state_on_host_boot').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('glance/verify_glance_signatures').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('DEFAULT/max_concurrent_builds').with_value('<SERVICE DEFAULT>') }
@@ -88,7 +92,11 @@ describe 'nova::compute' do
           :reserved_host_disk                 => '20',
           :heal_instance_info_cache_interval  => '120',
           :config_drive_format                => 'vfat',
+          :reboot_timeout                     => '180',
+          :instance_build_timeout             => '300',
+          :rescue_timeout                     => '120',
           :resize_confirm_window              => '3',
+          :shutdown_timeout                   => '100',
           :resume_guests_state_on_host_boot   => true,
           :keymgr_backend                     => 'castellan.key_manager.barbican_key_manager.BarbicanKeyManager',
           :barbican_endpoint                  => 'http://localhost',
@@ -148,7 +156,11 @@ describe 'nova::compute' do
       it { is_expected.to contain_nova_config('DEFAULT/reserved_host_disk_mb').with_value('20') }
       it { is_expected.to contain_nova_config('DEFAULT/heal_instance_info_cache_interval').with_value('120') }
       it { is_expected.to contain_nova_config('DEFAULT/force_raw_images').with_value(false) }
+      it { is_expected.to contain_nova_config('DEFAULT/reboot_timeout').with_value('180') }
+      it { is_expected.to contain_nova_config('DEFAULT/instance_build_timeout').with_value('300') }
+      it { is_expected.to contain_nova_config('DEFAULT/rescue_timeout').with_value('120') }
       it { is_expected.to contain_nova_config('DEFAULT/resize_confirm_window').with_value('3') }
+      it { is_expected.to contain_nova_config('DEFAULT/shutdown_timeout').with_value('100') }
       it { is_expected.to contain_nova_config('DEFAULT/resume_guests_state_on_host_boot').with_value(true) }
       it { is_expected.to contain_nova_config('DEFAULT/max_concurrent_builds').with_value('15') }
       it { is_expected.to contain_nova_config('DEFAULT/max_concurrent_live_migrations').with_value('4') }
