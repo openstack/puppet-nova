@@ -57,6 +57,7 @@ describe 'nova::compute' do
       it { is_expected.to contain_nova_config('compute/consecutive_build_service_disable_threshold').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('compute/live_migration_wait_for_vif_plug').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('compute/max_disk_devices_to_attach').with_value('<SERVICE DEFAULT>') }
+      it { is_expected.to contain_nova_config('DEFAULT/default_access_ip_network_name').with_value('<SERVICE DEFAULT>') }
 
       it { is_expected.to_not contain_package('bridge-utils').with(
         :ensure => 'present',
@@ -98,6 +99,7 @@ describe 'nova::compute' do
           :consecutive_build_service_disable_threshold => '9',
           :live_migration_wait_for_vif_plug   => true,
           :max_disk_devices_to_attach         => 20,
+          :default_access_ip_network_name     => 'public',
         }
       end
 
@@ -150,6 +152,7 @@ describe 'nova::compute' do
       it { is_expected.to contain_nova_config('compute/consecutive_build_service_disable_threshold').with_value('9') }
       it { is_expected.to contain_nova_config('compute/live_migration_wait_for_vif_plug').with_value(true) }
       it { is_expected.to contain_nova_config('compute/max_disk_devices_to_attach').with_value(20) }
+      it { is_expected.to contain_nova_config('DEFAULT/default_access_ip_network_name').with_value('public') }
 
       it 'configures nova config_drive_format to vfat' do
         is_expected.to contain_nova_config('DEFAULT/config_drive_format').with_value('vfat')
