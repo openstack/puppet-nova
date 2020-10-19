@@ -78,9 +78,8 @@ class nova::keystone::auth(
 
   include nova::deps
 
-
   if $configure_endpoint {
-    Keystone_endpoint["${region}/${service_name}::compute"] ~> Service <| name == 'nova-api' |>
+    Keystone_endpoint["${region}/${service_name}::compute"] -> Anchor['nova::service::end']
   }
 
   keystone::resource::service_identity { 'nova':

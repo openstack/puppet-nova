@@ -40,6 +40,11 @@ Puppet::Type.newtype(:nova_service) do
 
   ensurable
 
+  # Require the nova-api service to be running
+  autorequire(:anchor) do
+    ['nova::service::end']
+  end
+
   newparam(:name, :namevar => true) do
     desc 'Name of host'
     validate do |value|
