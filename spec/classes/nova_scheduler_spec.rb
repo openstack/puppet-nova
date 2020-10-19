@@ -140,7 +140,7 @@ describe 'nova::scheduler' do
 
     context 'with default database parameters' do
       let :pre_condition do
-        "include nova"
+        "include nova::db"
       end
 
       it { is_expected.to_not contain_nova_config('database/connection') }
@@ -150,10 +150,10 @@ describe 'nova::scheduler' do
 
     context 'with overridden database parameters' do
       let :pre_condition do
-        "class { 'nova':
-           database_connection   => 'mysql://user:pass@db/db',
-           slave_connection      => 'mysql://user:pass@slave/db',
-           database_idle_timeout => '30',
+        "class { 'nova::db':
+           database_connection              => 'mysql://user:pass@db/db',
+           slave_connection                 => 'mysql://user:pass@slave/db',
+           database_connection_recycle_time => '30',
          }
         "
       end

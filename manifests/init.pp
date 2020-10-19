@@ -9,42 +9,6 @@
 #   (optional) The state of nova packages
 #   Defaults to 'present'
 #
-# [*database_connection*]
-#   (optional) Connection url for the nova database.
-#   Defaults to undef.
-#
-# [*slave_connection*]
-#   (optional) Connection url to connect to nova slave database (read-only).
-#   Defaults to undef.
-#
-# [*api_database_connection*]
-#   (optional) Connection url for the nova API database.
-#   Defaults to undef.
-#
-# [*api_slave_connection*]
-#   (optional) Connection url to connect to nova API slave database (read-only).
-#   Defaults to undef.
-#
-# [*database_max_retries*]
-#   (optional) Maximum database connection retries during startup.
-#   Defaults to undef.
-#
-# [*database_idle_timeout*]
-#   (optional) Timeout before idle database connections are reaped.
-#   Defaults to undef.
-#
-# [*database_retry_interval*]
-#   (optional) Interval between retries of opening a database connection.
-#   Defaults to undef.
-#
-# [*database_max_pool_size*]
-#   (optional) Maximum number of SQL connections to keep open in a pool.
-#   Defaults to undef.
-#
-# [*database_max_overflow*]
-#   (optional) If set, use this value for max_overflow with sqlalchemy.
-#   Defaults to: undef.
-#
 # [*default_transport_url*]
 #    (optional) A URL representing the messaging driver to use and its full
 #    configuration. Transport URLs take the form:
@@ -427,19 +391,46 @@
 #  (optional) Sets a version cap for messages sent to console services
 #  Defaults to undef
 #
+# [*database_connection*]
+#   (optional) Connection url for the nova database.
+#   Defaults to undef.
+#
+# [*slave_connection*]
+#   (optional) Connection url to connect to nova slave database (read-only).
+#   Defaults to undef.
+#
+# [*api_database_connection*]
+#   (optional) Connection url for the nova API database.
+#   Defaults to undef.
+#
+# [*api_slave_connection*]
+#   (optional) Connection url to connect to nova API slave database (read-only).
+#   Defaults to undef.
+#
+# [*database_max_retries*]
+#   (optional) Maximum database connection retries during startup.
+#   Defaults to undef.
+#
+# [*database_idle_timeout*]
+#   (optional) Timeout before idle database connections are reaped.
+#   Defaults to undef.
+#
+# [*database_retry_interval*]
+#   (optional) Interval between retries of opening a database connection.
+#   Defaults to undef.
+#
+# [*database_max_pool_size*]
+#   (optional) Maximum number of SQL connections to keep open in a pool.
+#   Defaults to undef.
+#
+# [*database_max_overflow*]
+#   (optional) If set, use this value for max_overflow with sqlalchemy.
+#   Defaults to: undef.
+#
 class nova(
   $ensure_package                         = 'present',
-  $database_connection                    = undef,
-  $slave_connection                       = undef,
-  $api_database_connection                = undef,
-  $api_slave_connection                   = undef,
   $block_device_allocate_retries          = $::os_service_default,
   $block_device_allocate_retries_interval = $::os_service_default,
-  $database_idle_timeout                  = undef,
-  $database_max_pool_size                 = undef,
-  $database_max_retries                   = undef,
-  $database_retry_interval                = undef,
-  $database_max_overflow                  = undef,
   $default_transport_url                  = $::os_service_default,
   $rpc_response_timeout                   = $::os_service_default,
   $control_exchange                       = $::os_service_default,
@@ -519,6 +510,15 @@ class nova(
   $os_region_name                         = undef,
   $cinder_catalog_info                    = undef,
   $upgrade_level_console                  = undef,
+  $database_connection                    = undef,
+  $slave_connection                       = undef,
+  $api_database_connection                = undef,
+  $api_slave_connection                   = undef,
+  $database_idle_timeout                  = undef,
+  $database_max_pool_size                 = undef,
+  $database_max_retries                   = undef,
+  $database_retry_interval                = undef,
+  $database_max_overflow                  = undef,
 ) inherits nova::params {
 
   include nova::deps
@@ -544,6 +544,52 @@ in a future release. Use nova::cinder::catalog_info instead')
   if $upgrade_level_console != undef {
     warning('The upgrade_level_console parameter is deprecated, and has \
 no effect.')
+  }
+
+  if $database_connection != undef {
+    warning('The database_connection parameter is deprecated and will be \
+removed in a future realse. Use nova::db::database_connection instead')
+  }
+
+  if $slave_connection != undef {
+    warning('The slave_connection parameter is deprecated and will be \
+removed in a future realse. Use nova::db::slave_connection instead')
+  }
+
+  if $api_database_connection != undef {
+    warning('The api_database_connection parameter is deprecated and will be \
+removed in a future realse. Use nova::db::api_database_connection instead')
+  }
+
+  if $api_slave_connection != undef {
+    warning('The api_slave_connection parameter is deprecated and will be \
+removed in a future realse. Use nova::db::api_slave_connection instead')
+  }
+
+  if $database_idle_timeout != undef {
+    warning('The database_idle_timeout parameter is deprecated and will be \
+removed in a future realse. Use nova::db::database_connection_recycle_time \
+instead')
+  }
+
+  if $database_max_pool_size != undef {
+    warning('The database_max_pool_size parameter is deprecated and will be \
+removed in a future realse. Use nova::db::database_max_pool_size instead')
+  }
+
+  if $database_max_retries!= undef {
+    warning('The database_max_retries parameter is deprecated and will be \
+removed in a future realse. Use nova::db::database_max_retries instead')
+  }
+
+  if $database_retry_interval != undef {
+    warning('The database_retry_interval parameter is deprecated and will be \
+removed in a future realse. Use nova::db::database_retry_interval instead')
+  }
+
+  if $database_max_overflow != undef {
+    warning('The database_max_overflow parameter is deprecated and will be \
+removed in a future realse. Use nova::db::database_max_overflow instead')
   }
 
   if $use_ssl {
