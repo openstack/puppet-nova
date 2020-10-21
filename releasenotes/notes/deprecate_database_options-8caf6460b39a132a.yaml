@@ -1,8 +1,9 @@
 ---
 deprecations:
   - |
-    The following options have been deprecated and take no effect, as those
-    options have been moved to nova::db class:
+    The following options have been deprecated, as those options have been
+    moved to nova::db class.
+
     - ``nova::database_connection``
     - ``nova::slave_connection``
     - ``nova::api_database_connection``
