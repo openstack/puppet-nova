@@ -6,6 +6,9 @@ describe 'nova' do
 
     context 'with default parameters' do
 
+      it { is_expected.to contain_class('nova::deps') }
+      it { is_expected.to contain_class('nova::workarounds') }
+
       it 'installs packages' do
         is_expected.to contain_package('python-nova').with(
           :ensure => 'present',
@@ -115,6 +118,9 @@ describe 'nova' do
           :console_ssl_minimum_version             => 'tlsv1_2',
         }
       end
+
+      it { is_expected.to contain_class('nova::deps') }
+      it { is_expected.to contain_class('nova::workarounds') }
 
       it 'installs packages' do
         is_expected.to contain_package('nova-common').with('ensure' => '2012.1.1-15.el6')

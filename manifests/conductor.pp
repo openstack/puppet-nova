@@ -38,7 +38,6 @@ class nova::conductor(
   include nova::deps
   include nova::db
   include nova::params
-  include nova::workarounds
   include nova::availability_zone
 
   nova::generic_service { 'conductor':
