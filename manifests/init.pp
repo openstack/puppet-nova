@@ -522,6 +522,7 @@ class nova(
 ) inherits nova::params {
 
   include nova::deps
+  include nova::workarounds
 
   # maintain backward compatibility
   include nova::db
