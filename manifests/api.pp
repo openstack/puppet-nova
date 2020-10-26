@@ -314,20 +314,21 @@ as a standalone service, or httpd for being run by a httpd server")
   }
 
   nova_config {
-    'DEFAULT/enabled_apis':                        value => join($enabled_apis_real, ',');
-    'wsgi/api_paste_config':                       value => $api_paste_config;
-    'DEFAULT/osapi_compute_listen':                value => $api_bind_address;
-    'DEFAULT/osapi_compute_listen_port':           value => $osapi_compute_listen_port;
-    'DEFAULT/osapi_compute_workers':               value => $osapi_compute_workers;
-    'DEFAULT/enable_network_quota':                value => $enable_network_quota;
-    'DEFAULT/password_length':                     value => $password_length;
-    'api/use_forwarded_for':                       value => $use_forwarded_for;
-    'api/max_limit':                               value => $max_limit;
-    'api/compute_link_prefix':                     value => $compute_link_prefix;
-    'api/glance_link_prefix':                      value => $glance_link_prefix;
-    'api/hide_server_address_states':              value => $hide_server_address_states;
-    'api/allow_instance_snapshots':                value => $allow_instance_snapshots;
-    'api/enable_instance_password':                value => $enable_instance_password;
+    'DEFAULT/enabled_apis':              value => join($enabled_apis_real, ',');
+    'wsgi/api_paste_config':             value => $api_paste_config;
+    'DEFAULT/osapi_compute_listen':      value => $api_bind_address;
+    'DEFAULT/osapi_compute_listen_port': value => $osapi_compute_listen_port;
+    'DEFAULT/osapi_compute_workers':     value => $osapi_compute_workers;
+    'DEFAULT/enable_network_quota':      value => $enable_network_quota;
+    'DEFAULT/password_length':           value => $password_length;
+    'api/use_forwarded_for':             value => $use_forwarded_for;
+    'api/max_limit':                     value => $max_limit;
+    'api/compute_link_prefix':           value => $compute_link_prefix;
+    'api/glance_link_prefix':            value => $glance_link_prefix;
+    'api/hide_server_address_states':    value => $hide_server_address_states;
+    'api/allow_instance_snapshots':      value => $allow_instance_snapshots;
+    'api/enable_instance_password':      value => $enable_instance_password;
+    'DEFAULT/allow_resize_to_same_host': value => $allow_resize_to_same_host;
   }
 
   if ($ratelimits != undef) {
@@ -371,6 +372,4 @@ as a standalone service, or httpd for being run by a httpd server")
     $validation_options_hash = merge ($defaults, $validation_options)
     create_resources('openstacklib::service_validation', $validation_options_hash, {'subscribe' => 'Service[nova-api]'})
   }
-
-  ensure_resource('nova_config', 'DEFAULT/allow_resize_to_same_host', { value => $allow_resize_to_same_host })
 }
