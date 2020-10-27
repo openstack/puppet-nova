@@ -51,6 +51,14 @@
 #   to 0 to disable timeouts.
 #   Defaults to $::os_service_default
 #
+# [*live_migration_timeout_action*]
+#   (optional) This option will be used to determine what action will be taken
+#   against a VM after live_migration_completion_timeout expires. By default,
+#   the live migrate operation will be aborted after completion timeout.
+#   If it is set to force_complete, the compute service will either pause the
+#   VM or trigger post-copy depending on if post copy is enabled and available
+#   Defaults to $::os_service_default
+#
 # [*live_migration_permit_post_copy*]
 #   (optional) This option allows nova to switch an on-going live migration
 #   to post-copy mode, i.e., switch the active VM to the one on the destination
@@ -118,6 +126,7 @@ class nova::migration::libvirt(
   $live_migration_tunnelled            = $::os_service_default,
   $live_migration_with_native_tls      = $::os_service_default,
   $live_migration_completion_timeout   = $::os_service_default,
+  $live_migration_timeout_action       = $::os_service_default,
   $live_migration_permit_post_copy     = $::os_service_default,
   $live_migration_permit_auto_converge = $::os_service_default,
   $override_uuid                       = false,
@@ -187,6 +196,7 @@ class nova::migration::libvirt(
       'libvirt/live_migration_tunnelled':            value => $live_migration_tunnelled;
       'libvirt/live_migration_with_native_tls':      value => $live_migration_with_native_tls;
       'libvirt/live_migration_completion_timeout':   value => $live_migration_completion_timeout;
+      'libvirt/live_migration_timeout_action':       value => $live_migration_timeout_action;
       'libvirt/live_migration_inbound_addr':         value => $live_migration_inbound_addr;
       'libvirt/live_migration_permit_post_copy':     value => $live_migration_permit_post_copy;
       'libvirt/live_migration_permit_auto_converge': value => $live_migration_permit_auto_converge;

@@ -49,6 +49,7 @@ describe 'nova::migration::libvirt' do
       it { is_expected.to contain_nova_config('libvirt/live_migration_tunnelled').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('libvirt/live_migration_with_native_tls').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('libvirt/live_migration_completion_timeout').with_value('<SERVICE DEFAULT>') }
+      it { is_expected.to contain_nova_config('libvirt/live_migration_timeout_action').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('libvirt/live_migration_uri').with_value('qemu+tcp://%s/system') }
       it { is_expected.to contain_nova_config('libvirt/live_migration_inbound_addr').with_value('<SERVICE DEFAULT>')}
       it { is_expected.to contain_nova_config('libvirt/live_migration_permit_post_copy').with_value('<SERVICE DEFAULT>')}
@@ -114,10 +115,12 @@ describe 'nova::migration::libvirt' do
         {
           :live_migration_tunnelled          => true,
           :live_migration_completion_timeout => '1500',
+          :live_migration_timeout_action     => 'force_complete',
         }
       end
       it { is_expected.to contain_nova_config('libvirt/live_migration_tunnelled').with(:value => true) }
       it { is_expected.to contain_nova_config('libvirt/live_migration_completion_timeout').with_value('1500') }
+      it { is_expected.to contain_nova_config('libvirt/live_migration_timeout_action').with_value('force_complete') }
     end
 
     context 'with live migration auto converge on' do

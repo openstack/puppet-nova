@@ -1,0 +1,4 @@
+---
+features:
+  - |
+    Added parameter live_migration_timeout_action to nova::migration::libvirt.
