@@ -81,7 +81,7 @@
             "version_requirement": ">= 6.0.0 < 7.0.0"
         }
     ],
-    "source": "git://github.com/openstack/puppet-nova.git",
+    "source": "https://opendev.org/openstack/puppet-nova.git",
     "summary": "Puppet module for OpenStack Nova",
     "version": "18.0.0"
 }
