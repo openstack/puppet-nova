@@ -223,6 +223,7 @@ class nova::api(
   include nova::policy
   include nova::keystone::authtoken
   include nova::availability_zone
+  include nova::pci
 
   if !$nova_metadata_wsgi_enabled {
     warning('Running nova metadata api via evenlet is deprecated and will be removed in Stein release.')
