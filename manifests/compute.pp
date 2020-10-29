@@ -94,6 +94,15 @@
 #   (optional) Config drive format. One of iso9660 (default) or vfat
 #   Defaults to undef
 #
+# [*update_resources_interval*]
+#   (optional) Interval for updating compute resources.
+#   This option specifies how often the update_available_resources periodic
+#   task should run. A number less than 0 means to disable the task completely
+#   Leaving this at the default of 0 will cause this to run at the default
+#   periodic interval. Setting it to any positive value will cause it to run
+#   at approximately that number of seconds.
+#   Defaults to $::os_service_default
+#
 # [*reboot_timeout*]
 #   (optioanl) Time interval after which an instance is hard rebooted
 #   automatically. Setting this option to a time period in seconds will
@@ -303,6 +312,7 @@ class nova::compute (
   $reserved_host_disk                          = $::os_service_default,
   $heal_instance_info_cache_interval           = $::os_service_default,
   $config_drive_format                         = $::os_service_default,
+  $update_resources_interval                   = $::os_service_default,
   $reboot_timeout                              = $::os_service_default,
   $instance_build_timeout                      = $::os_service_default,
   $rescue_timeout                              = $::os_service_default,
@@ -462,6 +472,7 @@ Use the same parameter in nova::api class.')
     'DEFAULT/reserved_host_disk_mb':             value => $reserved_host_disk;
     'DEFAULT/reserved_huge_pages':               value => $reserved_huge_pages_real;
     'DEFAULT/heal_instance_info_cache_interval': value => $heal_instance_info_cache_interval;
+    'DEFAULT/update_resources_interval':         value => $update_resources_interval;
     'DEFAULT/reboot_timeout':                    value => $reboot_timeout;
     'DEFAULT/instance_build_timeout':            value => $instance_build_timeout;
     'DEFAULT/rescue_timeout':                    value => $rescue_timeout;
