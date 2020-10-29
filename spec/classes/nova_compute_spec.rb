@@ -49,6 +49,7 @@ describe 'nova::compute' do
       it { is_expected.to contain_nova_config('DEFAULT/reserved_host_disk_mb').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('DEFAULT/reserved_huge_pages').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('DEFAULT/heal_instance_info_cache_interval').with_value('<SERVICE DEFAULT>') }
+      it { is_expected.to contain_nova_config('DEFAULT/update_resources_interval').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('DEFAULT/reboot_timeout').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('DEFAULT/instance_build_timeout').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('DEFAULT/rescue_timeout').with_value('<SERVICE DEFAULT>') }
@@ -98,6 +99,7 @@ describe 'nova::compute' do
           :reserved_host_disk                 => '20',
           :heal_instance_info_cache_interval  => '120',
           :config_drive_format                => 'vfat',
+          :update_resources_interval          => '300',
           :reboot_timeout                     => '180',
           :instance_build_timeout             => '300',
           :rescue_timeout                     => '120',
@@ -166,6 +168,7 @@ describe 'nova::compute' do
       it { is_expected.to contain_nova_config('DEFAULT/reserved_host_memory_mb').with_value('0') }
       it { is_expected.to contain_nova_config('DEFAULT/reserved_host_disk_mb').with_value('20') }
       it { is_expected.to contain_nova_config('DEFAULT/heal_instance_info_cache_interval').with_value('120') }
+      it { is_expected.to contain_nova_config('DEFAULT/update_resources_interval').with_value('300') }
       it { is_expected.to contain_nova_config('DEFAULT/reboot_timeout').with_value('180') }
       it { is_expected.to contain_nova_config('DEFAULT/instance_build_timeout').with_value('300') }
       it { is_expected.to contain_nova_config('DEFAULT/rescue_timeout').with_value('120') }
