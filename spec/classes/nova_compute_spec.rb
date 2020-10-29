@@ -49,6 +49,7 @@ describe 'nova::compute' do
       it { is_expected.to contain_nova_config('DEFAULT/running_deleted_instance_action').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('DEFAULT/running_deleted_instance_poll_interval').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('DEFAULT/running_deleted_instance_timeout').with_value('<SERVICE DEFAULT>') }
+      it { is_expected.to contain_nova_config('DEFAULT/compute_monitors').with_value('<SERVICE DEFAULT>') }
 
       it { is_expected.to_not contain_package('cryptsetup').with( :ensure => 'present' )}
 
@@ -121,6 +122,7 @@ describe 'nova::compute' do
           :running_deleted_instance_action    => 'shutdown',
           :running_deleted_instance_poll_interval => '900',
           :running_deleted_instance_timeout   => '200',
+          :compute_monitors                   => ['cpu.virt_driver','fake'],
         }
       end
 
@@ -190,6 +192,7 @@ describe 'nova::compute' do
       it { is_expected.to contain_nova_config('DEFAULT/running_deleted_instance_action').with_value('shutdown') }
       it { is_expected.to contain_nova_config('DEFAULT/running_deleted_instance_poll_interval').with_value('900') }
       it { is_expected.to contain_nova_config('DEFAULT/running_deleted_instance_timeout').with_value('200') }
+      it { is_expected.to contain_nova_config('DEFAULT/compute_monitors').with_value('cpu.virt_driver,fake') }
 
       it 'configures nova config_drive_format to vfat' do
         is_expected.to contain_nova_config('DEFAULT/config_drive_format').with_value('vfat')
