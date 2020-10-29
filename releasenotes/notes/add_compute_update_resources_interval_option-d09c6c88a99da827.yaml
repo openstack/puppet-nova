@@ -1,0 +1,5 @@
+---
+features:
+  - |
+    Add the ``update_resources_interval`` parameter which specifies
+    the interval in seconds for updating compute resources.
