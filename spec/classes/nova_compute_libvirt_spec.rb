@@ -53,6 +53,7 @@ describe 'nova::compute::libvirt' do
       it { is_expected.to contain_nova_config('libvirt/cpu_model').with_ensure('absent')}
       it { is_expected.to contain_nova_config('libvirt/cpu_model_extra_flags').with_ensure('absent')}
       it { is_expected.to contain_nova_config('libvirt/snapshot_image_format').with_value('<SERVICE DEFAULT>')}
+      it { is_expected.to contain_nova_config('libvirt/snapshots_directory').with_value('<SERVICE DEFAULT>')}
       it { is_expected.to contain_nova_config('libvirt/disk_cachemodes').with_ensure('absent')}
       it { is_expected.to contain_nova_config('libvirt/inject_password').with_value(false)}
       it { is_expected.to contain_nova_config('libvirt/inject_key').with_value(false)}
@@ -83,6 +84,7 @@ describe 'nova::compute::libvirt' do
           :cpu_models                                 => ['kvm64', 'qemu64'],
           :cpu_model_extra_flags                      => 'pcid',
           :snapshot_image_format                      => 'raw',
+          :snapshots_directory                        => '/var/lib/nova/snapshots',
           :disk_cachemodes                            => ['file=directsync','block=none'],
           :hw_disk_discard                            => 'unmap',
           :hw_machine_type                            => 'x86_64=machinetype1,armv7l=machinetype2',
@@ -121,6 +123,7 @@ describe 'nova::compute::libvirt' do
       it { is_expected.to contain_nova_config('libvirt/cpu_model').with_ensure('absent')}
       it { is_expected.to contain_nova_config('libvirt/cpu_model_extra_flags').with_value('pcid')}
       it { is_expected.to contain_nova_config('libvirt/snapshot_image_format').with_value('raw')}
+      it { is_expected.to contain_nova_config('libvirt/snapshots_directory').with_value('/var/lib/nova/snapshots')}
       it { is_expected.to contain_nova_config('libvirt/disk_cachemodes').with_value('file=directsync,block=none')}
       it { is_expected.to contain_nova_config('libvirt/hw_disk_discard').with_value('unmap')}
       it { is_expected.to contain_nova_config('libvirt/hw_machine_type').with_value('x86_64=machinetype1,armv7l=machinetype2')}

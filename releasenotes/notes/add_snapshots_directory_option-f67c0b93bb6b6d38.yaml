@@ -1,0 +1,5 @@
+---
+features:
+  - |
+    Add the parameter ``snapshots_directory`` to specify the location where
+    libvirt driver will store snapshots before uploading them to image service.
