@@ -261,6 +261,7 @@ class nova::compute (
 
   include nova::deps
   include nova::params
+  include nova::workarounds
 
   $cpu_shared_set_real = pick(join(any2array($cpu_shared_set), ','), $::os_service_default)
   $cpu_dedicated_set_real = pick(join(any2array($cpu_dedicated_set), ','), $::os_service_default)
