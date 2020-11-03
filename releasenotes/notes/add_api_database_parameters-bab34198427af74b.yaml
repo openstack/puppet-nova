@@ -1,0 +1,11 @@
+---
+features:
+  - |
+    Add the support to configure following parameters for api_database:
+
+    - ``nova::db::api_database_connection_recycle_time``
+    - ``nova::db::api_database_max_pool_size``
+    - ``nova::db::api_database_max_retries``
+    - ``nova::db::api_database_retry_interval``
+    - ``nova::db::api_database_max_overflow``
+    - ``nova::db::api_database_pool_timeout``
