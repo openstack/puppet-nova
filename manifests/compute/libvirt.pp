@@ -44,6 +44,11 @@
 #   have a preference and only operate on raw or qcow2
 #   Defaults to $::os_service_default
 #
+# [*snapshots_directory*]
+#   (optional) Location where libvirt driver will store snapshots before
+#   uploading them to image service
+#   Defaults to $::os_service_default
+#
 # [*disk_cachemodes*]
 #   (optional) A list of cachemodes for different disk types, e.g.
 #   ["file=directsync", "block=none"]
@@ -291,6 +296,7 @@ class nova::compute::libvirt (
   $cpu_models                                 = [],
   $cpu_model_extra_flags                      = undef,
   $snapshot_image_format                      = $::os_service_default,
+  $snapshots_directory                        = $::os_service_default,
   $disk_cachemodes                            = [],
   $hw_disk_discard                            = $::os_service_default,
   $hw_machine_type                            = $::os_service_default,
@@ -556,6 +562,7 @@ in a future release. Use the enabled_perf_events parameter instead')
     'libvirt/virt_type':                value => $virt_type_real;
     'libvirt/cpu_mode':                 value => $cpu_mode_default;
     'libvirt/snapshot_image_format':    value => $snapshot_image_format_real;
+    'libvirt/snapshots_directory':      value => $snapshots_directory;
     'libvirt/inject_password':          value => $inject_password_real;
     'libvirt/inject_key':               value => $inject_key_real;
     'libvirt/inject_partition':         value => $inject_partition_real;
