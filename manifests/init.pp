@@ -146,10 +146,6 @@
 #   (Optional) Password for decrypting ssl_key_file (if encrypted)
 #   Defaults to $::os_service_default.
 #
-# [*amqp_allow_insecure_clients*]
-#   (Optional) Accept clients using either SSL or plain TCP
-#   Defaults to $::os_service_default.
-#
 # [*amqp_sasl_mechanisms*]
 #   (Optional) Space separated list of acceptable SASL mechanisms
 #   Defaults to $::os_service_default.
@@ -427,6 +423,10 @@
 #   (optional) If set, use this value for max_overflow with sqlalchemy.
 #   Defaults to: undef.
 #
+# [*amqp_allow_insecure_clients*]
+#   (Optional) Accept clients using either SSL or plain TCP
+#   Defaults to undef.
+#
 class nova(
   $ensure_package                         = 'present',
   $block_device_allocate_retries          = $::os_service_default,
@@ -459,7 +459,6 @@ class nova(
   $amqp_ssl_cert_file                     = $::os_service_default,
   $amqp_ssl_key_file                      = $::os_service_default,
   $amqp_ssl_key_password                  = $::os_service_default,
-  $amqp_allow_insecure_clients            = $::os_service_default,
   $amqp_sasl_mechanisms                   = $::os_service_default,
   $amqp_sasl_config_dir                   = $::os_service_default,
   $amqp_sasl_config_name                  = $::os_service_default,
@@ -519,6 +518,7 @@ class nova(
   $database_max_retries                   = undef,
   $database_retry_interval                = undef,
   $database_max_overflow                  = undef,
+  $amqp_allow_insecure_clients            = undef,
 ) inherits nova::params {
 
   include nova::deps
@@ -530,6 +530,11 @@ class nova(
   validate_legacy(Array, 'validate_array', $enabled_ssl_apis)
   if empty($enabled_ssl_apis) and $use_ssl {
       warning('enabled_ssl_apis is empty but use_ssl is set to true')
+  }
+
+  if $amqp_allow_insecure_clients != undef {
+    warning('The amqp_allow_insecure_clients parameter is deprecated and \
+will be removed in a future release.')
   }
 
   if $os_region_name != undef {
@@ -719,22 +724,21 @@ but should be one of: ssh-rsa, ssh-dsa, ssh-ecdsa.")
   }
 
   oslo::messaging::amqp { 'nova_config':
-    server_request_prefix  => $amqp_server_request_prefix,
-    broadcast_prefix       => $amqp_broadcast_prefix,
-    group_request_prefix   => $amqp_group_request_prefix,
-    container_name         => $amqp_container_name,
-    idle_timeout           => $amqp_idle_timeout,
-    trace                  => $amqp_trace,
-    ssl_ca_file            => $amqp_ssl_ca_file,
-    ssl_cert_file          => $amqp_ssl_cert_file,
-    ssl_key_file           => $amqp_ssl_key_file,
-    ssl_key_password       => $amqp_ssl_key_password,
-    allow_insecure_clients => $amqp_allow_insecure_clients,
-    sasl_mechanisms        => $amqp_sasl_mechanisms,
-    sasl_config_dir        => $amqp_sasl_config_dir,
-    sasl_config_name       => $amqp_sasl_config_name,
-    username               => $amqp_username,
-    password               => $amqp_password,
+    server_request_prefix => $amqp_server_request_prefix,
+    broadcast_prefix      => $amqp_broadcast_prefix,
+    group_request_prefix  => $amqp_group_request_prefix,
+    container_name        => $amqp_container_name,
+    idle_timeout          => $amqp_idle_timeout,
+    trace                 => $amqp_trace,
+    ssl_ca_file           => $amqp_ssl_ca_file,
+    ssl_cert_file         => $amqp_ssl_cert_file,
+    ssl_key_file          => $amqp_ssl_key_file,
+    ssl_key_password      => $amqp_ssl_key_password,
+    sasl_mechanisms       => $amqp_sasl_mechanisms,
+    sasl_config_dir       => $amqp_sasl_config_dir,
+    sasl_config_name      => $amqp_sasl_config_name,
+    username              => $amqp_username,
+    password              => $amqp_password,
   }
 
   # SSL Options
