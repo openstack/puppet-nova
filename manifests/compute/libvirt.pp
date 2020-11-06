@@ -368,7 +368,7 @@ will be removed in a future release. Use the nova::compute::image_cache class')
   nova_config {
     'DEFAULT/remove_unused_base_images':                  ensure => 'absent';
     'DEFAULT/remove_unused_original_minimum_age_seconds': ensure => 'absent';
-    'libvirt/remove_unused_resize_minimum_age_seconds':   ensure => 'absent';
+    'libvirt/remove_unused_resized_minimum_age_seconds':  ensure => 'absent';
   }
 
 
