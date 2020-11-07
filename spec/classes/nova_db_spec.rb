@@ -7,33 +7,21 @@ describe 'nova::db' do
 
   shared_examples 'nova::db' do
     context 'with default parameters' do
-      it { should_not contain_nova_config('database/db_max_retries') }
-      it { should_not contain_nova_config('database/connection') }
-      it { should_not contain_nova_config('database/slave_connection') }
-      it { should_not contain_nova_config('api_database/connection') }
-      it { should_not contain_nova_config('api_database/slave_connection') }
-      it { should_not contain_nova_config('database/connection_recycle_time') }
-      it { should_not contain_nova_config('database/max_pool_size') }
-      it { should_not contain_nova_config('database/max_retries') }
-      it { should_not contain_nova_config('database/retry_interval') }
-      it { should_not contain_nova_config('database/max_overflow') }
-      it { should_not contain_nova_config('database/pool_timeout') }
-      it { should_not contain_nova_config('database/mysql_enable_ndb') }
+      it { should_not contain_oslo__db('nova_config') }
+      it { should_not contain_oslo__db('api_database') }
     end
 
-    context 'with overridden parameters' do
+    context 'with connection parameters' do
       before :each do
         params.merge!(
-          :database_connection           => 'mysql+pymysql://user:pass@db/db1',
-          :slave_connection              => 'mysql+pymysql://user:pass@slave/db1',
-          :api_database_connection       => 'mysql+pymysql://user:pass@db/db2',
-          :api_slave_connection          => 'mysql+pymysql://user:pass@slave/db2',
+          :database_connection     => 'mysql+pymysql://user:pass@db/db1',
+          :api_database_connection => 'mysql+pymysql://user:pass@db/db2'
         )
       end
 
       it { should contain_oslo__db('nova_config').with(
         :connection              => 'mysql+pymysql://user:pass@db/db1',
-        :slave_connection        => 'mysql+pymysql://user:pass@slave/db1',
+        :slave_connection        => '<SERVICE DEFAULT>',
         :db_max_retries          => '<SERVICE DEFAULT>',
         :connection_recycle_time => '<SERVICE DEFAULT>',
         :max_pool_size           => '<SERVICE DEFAULT>',
@@ -43,12 +31,68 @@ describe 'nova::db' do
         :pool_timeout            => '<SERVICE DEFAULT>',
         :mysql_enable_ndb        => '<SERVICE DEFAULT>',
       )}
+      it { should contain_oslo__db('api_database').with(
+        :config                  => 'nova_config',
+        :config_group            => 'api_database',
+        :connection              => 'mysql+pymysql://user:pass@db/db2',
+        :slave_connection        => '<SERVICE DEFAULT>',
+        :connection_recycle_time => '<SERVICE DEFAULT>',
+        :max_pool_size           => '<SERVICE DEFAULT>',
+        :max_retries             => '<SERVICE DEFAULT>',
+        :retry_interval          => '<SERVICE DEFAULT>',
+        :max_overflow            => '<SERVICE DEFAULT>',
+        :pool_timeout            => '<SERVICE DEFAULT>',
+      )}
+    end
+
+    context 'with overridden parameters' do
+      before :each do
+        params.merge!(
+          :database_connection                  => 'mysql+pymysql://user:pass@db/db1',
+          :slave_connection                     => 'mysql+pymysql://user:pass@slave/db1',
+          :database_connection_recycle_time     => '1800',
+          :database_max_pool_size               => '30',
+          :database_max_retries                 => '20',
+          :database_retry_interval              => '15',
+          :database_max_overflow                => '5',
+          :database_pool_timeout                => '20',
+          :database_db_max_retries              => '10',
+          :mysql_enable_ndb                     => 'true',
+          :api_database_connection              => 'mysql+pymysql://user:pass@db/db2',
+          :api_slave_connection                 => 'mysql+pymysql://user:pass@slave/db2',
+          :api_database_connection_recycle_time => '600',
+          :api_database_max_pool_size           => '20',
+          :api_database_max_retries             => '10',
+          :api_database_retry_interval          => '5',
+          :api_database_max_overflow            => '0',
+          :api_database_pool_timeout            => '30',
+        )
+      end
+
+      it { should contain_oslo__db('nova_config').with(
+        :connection              => 'mysql+pymysql://user:pass@db/db1',
+        :slave_connection        => 'mysql+pymysql://user:pass@slave/db1',
+        :connection_recycle_time => '1800',
+        :max_pool_size           => '30',
+        :max_retries             => '20',
+        :retry_interval          => '15',
+        :max_overflow            => '5',
+        :pool_timeout            => '20',
+        :db_max_retries          => '10',
+        :mysql_enable_ndb        => 'true',
+      )}
 
       it { should contain_oslo__db('api_database').with(
         :config                  => 'nova_config',
         :config_group            => 'api_database',
         :connection              => 'mysql+pymysql://user:pass@db/db2',
         :slave_connection        => 'mysql+pymysql://user:pass@slave/db2',
+        :connection_recycle_time => '600',
+        :max_pool_size           => '20',
+        :max_retries             => '10',
+        :retry_interval          => '5',
+        :max_overflow            => '0',
+        :pool_timeout            => '30',
       )}
     end
   end
