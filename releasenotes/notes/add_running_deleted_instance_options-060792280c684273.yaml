@@ -1,0 +1,14 @@
+---
+features:
+  - |
+    The new ``nova::compute::running_deleted_instance_action`` parameter has
+    been added to support to select the action to be taken when a instance is
+    identified as deleted.
+  - |
+    The new ``nova::compute::running_deleted_instance_poll_interval``
+    parameter has been added to support to set a time interval to wait
+    between runs for the clean up action.
+  - |
+    The new ``nova::compute::running_deleted_instance_timeout`` parameter has
+    been added to support to set a time interval to wait for the deleted
+    instances cleanup.
