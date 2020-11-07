@@ -10,14 +10,19 @@ describe 'nova::workarounds' do
 
     context 'with default parameters' do
       it { is_expected.to contain_nova_config('workarounds/enable_numa_live_migration').with_value(false) }
+      it { is_expected.to contain_nova_config('workarounds/never_download_image_if_on_rbd').with_value('<SERVICE DEFAULT>') }
     end
 
     context 'with overridden parameters' do
       let :params do
-        { :enable_numa_live_migration => true,}
+        {
+          :enable_numa_live_migration => true,
+          :never_download_image_if_on_rbd => true
+        }
       end
 
       it { is_expected.to contain_nova_config('workarounds/enable_numa_live_migration').with_value('true') }
+      it { is_expected.to contain_nova_config('workarounds/never_download_image_if_on_rbd').with_value('true') }
     end
 
   end
