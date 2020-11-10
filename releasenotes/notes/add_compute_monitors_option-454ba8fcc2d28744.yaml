@@ -1,0 +1,5 @@
+---
+features:
+  - |
+    Add ``compute_monitors`` parameter which specifies a list of monitors that
+    can be used for getting compute metrics.
