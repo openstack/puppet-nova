@@ -66,6 +66,7 @@ describe 'nova' do
         is_expected.to contain_nova_config('DEFAULT/key').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('console/ssl_ciphers').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('console/ssl_minimum_version').with_value('<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('DEFAULT/dhcp_domain').with_value('<SERVICE DEFAULT>')
       end
 
       it 'configures block_device_allocate params' do
@@ -116,6 +117,8 @@ describe 'nova' do
           :key                                     => '/etc/ssl/certs/snakeoil.pem',
           :console_ssl_ciphers                     => 'kEECDH+aECDSA+AES:kEECDH+AES+aRSA:kEDH+aRSA+AES',
           :console_ssl_minimum_version             => 'tlsv1_2',
+          :dhcp_domain                             => 'foo',
+
         }
       end
 
@@ -187,6 +190,7 @@ describe 'nova' do
         is_expected.to contain_nova_config('DEFAULT/key').with_value('/etc/ssl/certs/snakeoil.pem')
         is_expected.to contain_nova_config('console/ssl_ciphers').with_value('kEECDH+aECDSA+AES:kEECDH+AES+aRSA:kEDH+aRSA+AES')
         is_expected.to contain_nova_config('console/ssl_minimum_version').with_value('tlsv1_2')
+        is_expected.to contain_nova_config('DEFAULT/dhcp_domain').with_value('foo')
       end
 
       context 'with multiple notification_driver' do
