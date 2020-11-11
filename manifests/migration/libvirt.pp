@@ -79,6 +79,11 @@
 #   (optional) Set uuid not equal to output from dmidecode (boolean)
 #   Defaults to false
 #
+# [*host_uuid*]
+#   (optional) Set host_uuid to this value, instead of generating a random
+#   uuid, if override_uuid is set to true.
+#   Defaults to undef
+#
 # [*configure_libvirt*]
 #   (optional) Whether or not configure libvirt bits.
 #   Defaults to true.
@@ -130,6 +135,7 @@ class nova::migration::libvirt(
   $live_migration_permit_post_copy     = $::os_service_default,
   $live_migration_permit_auto_converge = $::os_service_default,
   $override_uuid                       = false,
+  $host_uuid                           = undef,
   $configure_libvirt                   = true,
   $configure_nova                      = true,
   $client_user                         = undef,
@@ -217,19 +223,21 @@ class nova::migration::libvirt(
 
     if $override_uuid {
       if ! $::libvirt_uuid {
-        $host_uuid = generate('/bin/cat', '/proc/sys/kernel/random/uuid')
+        $host_uuid_real = pick(
+          $host_uuid,
+          generate('/bin/cat', '/proc/sys/kernel/random/uuid'))
         file { '/etc/libvirt/libvirt_uuid':
-          content => $host_uuid,
+          content => $host_uuid_real,
           require => Package['libvirt'],
         }
       } else {
-        $host_uuid = $::libvirt_uuid
+        $host_uuid_real = $::libvirt_uuid
       }
 
       augeas { 'libvirt-conf-uuid':
         context => '/files/etc/libvirt/libvirtd.conf',
         changes => [
-          "set host_uuid ${host_uuid}",
+          "set host_uuid ${host_uuid_real}",
         ],
         notify  => Service['libvirt'],
         require => Package['libvirt'],

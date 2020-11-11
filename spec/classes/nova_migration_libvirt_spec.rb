@@ -64,6 +64,24 @@ describe 'nova::migration::libvirt' do
       }).that_requires('Package[libvirt]').that_notifies('Service[libvirt]') }
     end
 
+    context 'with override_uuid enabled and host_uuid set' do
+      let :params do
+        {
+          :override_uuid => true,
+          :host_uuid => 'a8debd9d-e359-4bb2-8c77-edee431f94f2',
+        }
+      end
+
+      it { is_expected.to contain_file('/etc/libvirt/libvirt_uuid').with({
+        :content => 'a8debd9d-e359-4bb2-8c77-edee431f94f2',
+      }).that_requires('Package[libvirt]') }
+
+      it { is_expected.to contain_augeas('libvirt-conf-uuid').with({
+        :context => '/files/etc/libvirt/libvirtd.conf',
+        :changes => [ "set host_uuid a8debd9d-e359-4bb2-8c77-edee431f94f2" ],
+      }).that_requires('Package[libvirt]').that_notifies('Service[libvirt]') }
+    end
+
     context 'with tls enabled' do
       let :params do
         {
