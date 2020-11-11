@@ -24,11 +24,11 @@
 #   service.
 #   Defaults to $::os_service_default
 #
+# DEPRECATED
+#
 # [*dhcp_domain*]
 #   (optional) domain to use for building the hostnames
-#   Defaults to $::os_service_default
-#
-# DEPRECATED
+#   Defaults to undef.
 #
 #  [*enabled_apis*]
 #   (optional) A list of apis to enable
@@ -47,8 +47,8 @@ class nova::metadata(
   $neutron_metadata_proxy_shared_secret        = undef,
   $metadata_cache_expiration                   = $::os_service_default,
   $local_metadata_per_cell                     = $::os_service_default,
-  $dhcp_domain                                 = $::os_service_default,
   # DEPRECATED PARAMETERS
+  $dhcp_domain                                 = undef,
   $enabled_apis                                = undef,
   $enable_proxy_headers_parsing                = undef,
   $max_request_body_size                       = undef,
@@ -70,17 +70,9 @@ and will be removed in the future. Please use the one ::nova::api.')
     warning('max_request_body_size in ::nova::metadata is deprecated, has no effect \
 and will be removed in the future. Please use the one ::nova::api.')
   }
-
-  # TODO(mwhahaha): backwards compatibility until we drop it from
-  # nova::network::network
-  if defined('$::nova::neutron::dhcp_domain') and $::nova::neutron::dhcp_domain != undef {
-    $dhcp_domain_real = $::nova::neutron::dhcp_domain
-  } else {
-    $dhcp_domain_real = $dhcp_domain
+  if $dhcp_domain {
+    warning('dhcp_domain in nova::metadata is deprecated, use nova::dhcp_domain instead.')
   }
-  ensure_resource('nova_config', 'api/dhcp_domain', {
-    value => $dhcp_domain_real
-  })
 
   nova_config {
     'api/metadata_cache_expiration':               value => $metadata_cache_expiration;

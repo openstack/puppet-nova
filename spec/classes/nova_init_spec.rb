@@ -62,6 +62,7 @@ describe 'nova' do
         is_expected.to contain_nova_config('DEFAULT/ssl_only').with_value(false)
         is_expected.to contain_nova_config('DEFAULT/cert').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('DEFAULT/key').with_value('<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('DEFAULT/dhcp_domain').with_value('<SERVICE DEFAULT>')
       end
 
       it 'configures block_device_allocate params' do
@@ -110,6 +111,8 @@ describe 'nova' do
           :ssl_only                                => true,
           :cert                                    => '/etc/ssl/private/snakeoil.pem',
           :key                                     => '/etc/ssl/certs/snakeoil.pem',
+          :dhcp_domain                             => 'foo',
+
         }
       end
 
@@ -177,6 +180,7 @@ describe 'nova' do
         is_expected.to contain_nova_config('DEFAULT/ssl_only').with_value(true)
         is_expected.to contain_nova_config('DEFAULT/cert').with_value('/etc/ssl/private/snakeoil.pem')
         is_expected.to contain_nova_config('DEFAULT/key').with_value('/etc/ssl/certs/snakeoil.pem')
+        is_expected.to contain_nova_config('DEFAULT/dhcp_domain').with_value('foo')
       end
 
       context 'with multiple notification_driver' do
