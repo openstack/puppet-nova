@@ -409,6 +409,10 @@
 #   (optional) Allow attach between instance and volume in different availability zones.
 #   Defaults to $::os_service_default
 #
+# [*dhcp_domain*]
+#   (optional) domain to use for building the hostnames
+#   Defaults to $::os_service_default
+#
 # DEPRECATED PARAMETERS
 #
 # [*notify_api_faults*]
@@ -523,6 +527,7 @@ class nova(
   $purge_config                           = false,
   $my_ip                                  = $::os_service_default,
   $cross_az_attach                        = $::os_service_default,
+  $dhcp_domain                            = $::os_service_default,
   # DEPRECATED PARAMETERS
   $notify_api_faults                      = undef,
   $image_service                          = undef,
@@ -651,6 +656,8 @@ but should be one of: ssh-rsa, ssh-dsa, ssh-ecdsa.")
     nova_config { 'api/auth_strategy': value => $auth_strategy }
   }
 
+  $dhcp_domain_real = pick($::nova::metadata::dhcp_domain, $dhcp_domain)
+
   nova_config {
     'DEFAULT/ssl_only':              value => $ssl_only;
     'DEFAULT/cert':                  value => $cert;
@@ -662,6 +669,7 @@ but should be one of: ssh-rsa, ssh-dsa, ssh-ecdsa.")
     'DEFAULT/cpu_allocation_ratio':  value => $cpu_allocation_ratio;
     'DEFAULT/ram_allocation_ratio':  value => $ram_allocation_ratio;
     'DEFAULT/disk_allocation_ratio': value => $disk_allocation_ratio;
+    'DEFAULT/dhcp_domain':           value => $dhcp_domain_real;
   }
 
   oslo::messaging::rabbit {'nova_config':
