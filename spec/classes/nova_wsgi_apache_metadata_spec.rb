@@ -99,7 +99,7 @@ describe 'nova::wsgi::apache_metadata' do
         "include nova"
       end
 
-      it { should raise_error(Puppet::Error, /::nova::metadata class must be declared in composition layer./) }
+      it { should raise_error(Puppet::Error, /nova::metadata class must be declared in composition layer./) }
     end
 
   end

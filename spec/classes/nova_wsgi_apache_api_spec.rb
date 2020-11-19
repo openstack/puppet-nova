@@ -97,13 +97,13 @@ describe 'nova::wsgi::apache_api' do
       )}
     end
 
-    context 'when ::nova::api is missing in the composition layer' do
+    context 'when nova::api is missing in the composition layer' do
 
       let :pre_condition do
         "include nova"
       end
 
-      it { should raise_error(Puppet::Error, /::nova::api class must be declared in composition layer./) }
+      it { should raise_error(Puppet::Error, /nova::api class must be declared in composition layer./) }
     end
 
   end
