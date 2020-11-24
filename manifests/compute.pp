@@ -176,6 +176,12 @@
 #   and attach volume.
 #   Defaults to $::os_service_default
 #
+# [*default_access_ip_network_name*]
+#   (optioanal) Name of the network to be used to set access IPs for
+#   instances. If there are multiple IPs to choose from, an arbitrary
+#   one will be chosen.
+#   Defaults to $::os_service_default
+#
 # DEPRECATED PARAMETERS
 #
 # [*vnc_keymap*]
@@ -244,6 +250,7 @@ class nova::compute (
   $neutron_tunnel_numa_nodes                   = [],
   $live_migration_wait_for_vif_plug            = $::os_service_default,
   $max_disk_devices_to_attach                  = $::os_service_default,
+  $default_access_ip_network_name              = $::os_service_default,
   # DEPRECATED PARAMETERS
   $vnc_keymap                                  = undef,
   $neutron_enabled                             = undef,
@@ -386,6 +393,7 @@ Use the same parameter in nova::api class.')
       value => $consecutive_build_service_disable_threshold;
     'compute/live_migration_wait_for_vif_plug':  value => $live_migration_wait_for_vif_plug;
     'compute/max_disk_devices_to_attach':        value => $max_disk_devices_to_attach;
+    'DEFAULT/default_access_ip_network_name':    value => $default_access_ip_network_name;
   }
 
   if ($vnc_enabled) {

@@ -1,0 +1,6 @@
+---
+features:
+  - |
+    The new ``nova::compute::default_access_ip_network_name`` parameter
+    has been added to support to set the network name for instances access
+    IPs.
