@@ -85,6 +85,11 @@ describe 'nova::compute' do
         is_expected.to contain_package('genisoimage').that_requires('Anchor[nova::install::begin]')
         is_expected.to contain_package('genisoimage').that_comes_before('Anchor[nova::install::end]')
       end
+
+      it 'configures nova pci_passthrough_whitelist' do
+        is_expected.to contain_class('nova::compute::pci')
+        is_expected.to contain_nova_config('pci/passthrough_whitelist').with(:value => '<SERVICE DEFAULT>')
+      end
     end
 
     context 'with overridden parameters' do
@@ -208,6 +213,56 @@ describe 'nova::compute' do
         is_expected.to contain_nova_config('DEFAULT/reserved_huge_pages').with(
           'value' => 'foo'
         )
+      end
+    end
+
+    context 'with pci params array' do
+      let :params do
+        {
+          :pci_passthrough => [
+            {
+              "vendor_id"  => "8086",
+              "product_id" => "0126"
+            },
+            {
+              "vendor_id"        => "9096",
+              "product_id"       => "1520",
+              "physical_network" => "physnet1"
+            }
+          ],
+        }
+      end
+
+      it 'configures nova pci_passthrough_whitelist entries' do
+        is_expected.to contain_class('nova::compute::pci')
+        is_expected.to contain_nova_config('pci/passthrough_whitelist').with(
+          'value' => ['{"vendor_id":"8086","product_id":"0126"}','{"vendor_id":"9096","product_id":"1520","physical_network":"physnet1"}']
+        )
+      end
+    end
+
+    context 'with pci params JSON encoded string (deprecated)' do
+      let :params do
+        {
+          :pci_passthrough => "[{\"vendor_id\":\"8086\",\"product_id\":\"0126\"},{\"vendor_id\":\"9096\",\"product_id\":\"1520\",\"physical_network\":\"physnet1\"}]",
+        }
+      end
+
+      it 'configures nova pci_passthrough_whitelist entries' do
+        is_expected.to contain_class('nova::compute::pci')
+        is_expected.to contain_nova_config('pci/passthrough_whitelist').with(
+          'value' => ['{"vendor_id":"8086","product_id":"0126"}','{"vendor_id":"9096","product_id":"1520","physical_network":"physnet1"}']
+        )
+      end
+    end
+
+    context 'when vcpu_pin_set and pci params are empty' do
+      let :params do
+        { :pci_passthrough => ""}
+      end
+      it 'clears pci_passthrough configuration' do
+        is_expected.to contain_class('nova::compute::pci')
+        is_expected.to contain_nova_config('pci/passthrough_whitelist').with(:value => '<SERVICE DEFAULT>')
       end
     end
 
