@@ -85,6 +85,39 @@
 #   (Optional) (Optional) Whether to install the backend package for the cache.
 #   Defaults to true
 #
+# [*tls_enabled*]
+#   (Optional) Global toggle for TLS usage when comunicating with
+#   the caching servers.
+#   Default to $::os_service_default
+#
+# [*tls_cafile*]
+#   (Optional) Path to a file of concatenated CA certificates in PEM
+#   format necessary to establish the caching server's authenticity.
+#   If tls_enabled is False, this option is ignored.
+#   Default to $::os_service_default
+#
+# [*tls_certfile*]
+#   (Optional) Path to a single file in PEM format containing the
+#   client's certificate as well as any number of CA certificates
+#   needed to establish the certificate's authenticity. This file
+#   is only required when client side authentication is necessary.
+#   If tls_enabled is False, this option is ignored.
+#   Default to $::os_service_default
+#
+# [*tls_keyfile*]
+#   (Optional) Path to a single file containing the client's private
+#   key in. Otherwhise the private key will be taken from the file
+#   specified in tls_certfile. If tls_enabled is False, this option
+#   is ignored.
+#   Default to $::os_service_default
+#
+# [*tls_allowed_ciphers*]
+#   (Optional) Set the available ciphers for sockets created with
+#   the TLS context. It should be a string in the OpenSSL cipher
+#   list format. If not specified, all OpenSSL enabled ciphers will
+#   be available.
+#   Default to $::os_service_default
+#
 class nova::cache (
   $config_prefix                        = $::os_service_default,
   $expiration_time                      = $::os_service_default,
@@ -100,6 +133,11 @@ class nova::cache (
   $memcache_pool_unused_timeout         = $::os_service_default,
   $memcache_pool_connection_get_timeout = $::os_service_default,
   $manage_backend_package               = true,
+  $tls_enabled                          = $::os_service_default,
+  $tls_cafile                           = $::os_service_default,
+  $tls_certfile                         = $::os_service_default,
+  $tls_keyfile                          = $::os_service_default,
+  $tls_allowed_ciphers                  = $::os_service_default,
 ) {
 
   include nova::deps
@@ -119,5 +157,10 @@ class nova::cache (
     memcache_pool_unused_timeout         => $memcache_pool_unused_timeout,
     memcache_pool_connection_get_timeout => $memcache_pool_connection_get_timeout,
     manage_backend_package               => $manage_backend_package,
+    tls_enabled                          => $tls_enabled,
+    tls_cafile                           => $tls_cafile,
+    tls_certfile                         => $tls_certfile,
+    tls_keyfile                          => $tls_keyfile,
+    tls_allowed_ciphers                  => $tls_allowed_ciphers,
   }
 }
