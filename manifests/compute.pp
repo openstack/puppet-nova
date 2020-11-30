@@ -79,6 +79,24 @@
 #   (optional) Config drive format. One of iso9660 (default) or vfat
 #   Defaults to undef
 #
+# [*reboot_timeout*]
+#   (optioanl) Time interval after which an instance is hard rebooted
+#   automatically. Setting this option to a time period in seconds will
+#   automatically hard reboot an instance if it has been stuck in a rebooting
+#   state longer than N seconds.
+#   Defaults to $::os_service_default
+#
+# [*instance_build_timeout*]
+#   (optional) Maximum time in seconds that an instance can take to build.
+#   If this timer expires, instance status will be changed to ERROR.
+#   Enabling this option will make sure an instance will not be stuck
+#   in BUILD state for a longer period.
+#   Defaults to $::os_service_default
+#
+# [*rescue_timeout*]
+#   (optional) Interval to wait before un-rescuing an instance stuck in RESCUE.
+#   Defaults to $::os_service_default
+#
 # [*resize_confirm_window*]
 #   (optional) Automatically confirm resizes after N seconds.
 #   Resize functionality will save the existing server before resizing.
@@ -88,6 +106,14 @@
 #   server status from resized to active. Setting this option to a time
 #   period (in seconds) will automatically confirm the resize if the
 #   server is in resized state longer than that time.
+#   Defaults to $::os_service_default
+#
+# [*shutdown_timeout*]
+#   (optional) Total time to wait in seconds for an instance to perform a clean
+#   shutdown. It determines the overall period (in seconds) a VM is allowed to
+#   perform a clean shutdown. While performing stop, rescue and shelve, rebuild
+#   operations, configuring this option gives the VM a chance to perform a
+#   controlled shutdown before the instance is powered off.
 #   Defaults to $::os_service_default
 #
 # [*cpu_shared_set*]
@@ -248,7 +274,11 @@ class nova::compute (
   $reserved_host_memory                        = '512',
   $heal_instance_info_cache_interval           = '60',
   $config_drive_format                         = $::os_service_default,
+  $reboot_timeout                              = $::os_service_default,
+  $instance_build_timeout                      = $::os_service_default,
+  $rescue_timeout                              = $::os_service_default,
   $resize_confirm_window                       = $::os_service_default,
+  $shutdown_timeout                            = $::os_service_default,
   $cpu_shared_set                              = $::os_service_default,
   $cpu_dedicated_set                           = $::os_service_default,
   $resume_guests_state_on_host_boot            = $::os_service_default,
@@ -399,7 +429,11 @@ Use the same parameter in nova::api class.')
     'DEFAULT/reserved_host_memory_mb':           value => $reserved_host_memory;
     'DEFAULT/reserved_huge_pages':               value => $reserved_huge_pages_real;
     'DEFAULT/heal_instance_info_cache_interval': value => $heal_instance_info_cache_interval;
+    'DEFAULT/reboot_timeout':                    value => $reboot_timeout;
+    'DEFAULT/instance_build_timeout':            value => $instance_build_timeout;
+    'DEFAULT/rescue_timeout':                    value => $rescue_timeout;
     'DEFAULT/resize_confirm_window':             value => $resize_confirm_window;
+    'DEFAULT/shutdown_timeout':                  value => $shutdown_timeout;
     'DEFAULT/resume_guests_state_on_host_boot':  value => $resume_guests_state_on_host_boot;
     'key_manager/backend':                       value => $keymgr_backend;
     'barbican/auth_endpoint':                    value => $barbican_auth_endpoint;
