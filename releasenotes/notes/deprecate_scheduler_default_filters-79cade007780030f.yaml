@@ -1,0 +1,6 @@
+---
+deprecations:
+  - |
+    nova has renamed the `DEFAULT/scheduler_default_filters` to
+    `filter_scheduler/enabled_filters`. `scheduler_default_filters` has been
+    renamed to `scheduler_enabled_filter` to match this change.

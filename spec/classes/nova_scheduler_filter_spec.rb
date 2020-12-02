@@ -44,7 +44,7 @@ describe 'nova::scheduler::filter' do
           :max_instances_per_host               => '100',
           :isolated_images                      => ['ubuntu1','centos2'],
           :isolated_hosts                       => ['192.168.1.2','192.168.1.3'],
-          :scheduler_default_filters            => ['RetryFilter','AvailabilityZoneFilter'],
+          :scheduler_enabled_filters            => ['RetryFilter','AvailabilityZoneFilter'],
           :scheduler_available_filters          => ['nova_filter1','nova_filter2'],
           :scheduler_weight_classes             => 'nova.scheduler.weights.compute.BuildFailureWeigher',
           :track_instance_changes               => true,
@@ -84,7 +84,7 @@ describe 'nova::scheduler::filter' do
         { :isolated_images                      => [],
           :isolated_hosts                       => [],
           :scheduler_available_filters          => [],
-          :scheduler_default_filters            => [],
+          :scheduler_enabled_filters            => [],
         }
       end
 
