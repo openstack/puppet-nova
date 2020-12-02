@@ -22,7 +22,7 @@ describe 'nova::metadata' do
       it 'configures various stuff' do
         is_expected.to contain_nova_config('api/metadata_cache_expiration').with('value' => '<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('api/local_metadata_per_cell').with('value' => '<SERVICE DEFAULT>')
-        is_expected.to_not contain_nova_config('api/dhcp_domain')
+        is_expected.to contain_nova_config('api/dhcp_domain').with('value' => '<SERVICE DEFAULT>')
       end
 
       it 'unconfigures neutron_metadata proxy' do
@@ -44,7 +44,7 @@ describe 'nova::metadata' do
       it 'configures various stuff' do
         is_expected.to contain_nova_config('api/local_metadata_per_cell').with('value' => true)
         is_expected.to contain_nova_config('api/metadata_cache_expiration').with('value' => '15')
-        is_expected.to_not contain_nova_config('api/dhcp_domain')
+        is_expected.to contain_nova_config('api/dhcp_domain').with('value' => 'foo')
         is_expected.to contain_nova_config('neutron/service_metadata_proxy').with('value' => true)
         is_expected.to contain_nova_config('neutron/metadata_proxy_shared_secret').with('value' => 'secrete').with_secret(true)
       end

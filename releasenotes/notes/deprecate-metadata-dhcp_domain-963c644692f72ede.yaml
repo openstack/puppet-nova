@@ -1,8 +1,0 @@
----
-fixes:
-  - |
-    The nova::metadata::dhcp_domain paramater has been deprecated by
-    nova::dhcp_domain as the nova config option is also required for
-    nova-compute.
-    [Bug `1903908 <https://bugs.launchpad.net/nova/+bug/1903908>`_]
-
