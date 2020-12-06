@@ -233,6 +233,12 @@
 #   been marked as deleted in database to be eligible for cleanup.
 #   Defaults to $::os_service_default
 #
+# [*compute_monitors*]
+#   (optional) A comma-separated list of monitors that can be used for getting
+#   compute metrics. Only one monitor per namespace (For example: cpu) can be
+#   loaded at a time.
+#   Defaults to $::os_service_default
+#
 # DEPRECATED PARAMETERS
 #
 # [*vnc_keymap*]
@@ -311,6 +317,7 @@ class nova::compute (
   $running_deleted_instance_action             = $::os_service_default,
   $running_deleted_instance_poll_interval      = $::os_service_default,
   $running_deleted_instance_timeout            = $::os_service_default,
+  $compute_monitors                            = $::os_service_default,
   # DEPRECATED PARAMETERS
   $vnc_keymap                                  = undef,
   $neutron_enabled                             = undef,
@@ -465,6 +472,7 @@ Use the same parameter in nova::api class.')
     'DEFAULT/running_deleted_instance_poll_interval':
       value => $running_deleted_instance_poll_interval;
     'DEFAULT/running_deleted_instance_timeout':  value => $running_deleted_instance_timeout;
+    'DEFAULT/compute_monitors':                  value => join(any2array($compute_monitors), ',');
   }
 
   if ($vnc_enabled) {
