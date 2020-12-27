@@ -136,7 +136,7 @@ class nova::wsgi::apache_api (
     include apache::mod::ssl
   }
 
-  if ! defined(Class[::nova::api]) {
+  if ! defined(Class[nova::api]) {
     fail('::nova::api class must be declared in composition layer.')
   }
 

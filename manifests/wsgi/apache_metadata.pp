@@ -129,8 +129,8 @@ class nova::wsgi::apache_metadata (
     ensure_package => $ensure_package,
   }
 
-  if ! defined(Class[::nova::metadata]) {
-    fail('::nova::metadata class must be declared in composition layer.')
+  if ! defined(Class[nova::metadata]) {
+    fail('nova::metadata class must be declared in composition layer.')
   }
 
   Service <| title == 'httpd' |> { tag +> 'nova-service' }
