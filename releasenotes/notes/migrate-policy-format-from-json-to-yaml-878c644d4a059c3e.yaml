@@ -1,0 +1,4 @@
+---
+upgrade:
+  - |
+    Now policy.yaml is used by default instead of policy.json.

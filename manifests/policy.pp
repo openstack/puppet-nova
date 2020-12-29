@@ -20,12 +20,12 @@
 #   Defaults to empty hash.
 #
 # [*policy_path*]
-#   (Optional) Path to the nova policy.json file
-#   Defaults to /etc/nova/policy.json
+#   (Optional) Path to the nova policy.yaml file
+#   Defaults to /etc/nova/policy.yaml
 #
 class nova::policy (
   $policies    = {},
-  $policy_path = '/etc/nova/policy.json',
+  $policy_path = '/etc/nova/policy.yaml',
 ) {
 
   include nova::deps
@@ -34,9 +34,10 @@ class nova::policy (
   validate_legacy(Hash, 'validate_hash', $policies)
 
   $policy_defaults = {
-    file_path  => $policy_path,
-    file_user  => 'root',
-    file_group => $::nova::params::group,
+    file_path   => $policy_path,
+    file_user   => 'root',
+    file_group  => $::nova::params::group,
+    file_format => 'yaml',
   }
 
   create_resources('openstacklib::policy::base', $policies, $policy_defaults)
