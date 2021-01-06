@@ -79,14 +79,14 @@ class nova::cron::purge_shadow_tables (
   include nova::params
 
   if $verbose {
-    $verbose_real = '--verbose'
+    $verbose_real = ' --verbose'
   }
   else {
     $verbose_real = ''
   }
 
   if $all_cells {
-    $all_cells_real = '--all-cells'
+    $all_cells_real = ' --all-cells'
   }
   else {
     $all_cells_real = ''
@@ -101,8 +101,8 @@ class nova::cron::purge_shadow_tables (
   $cron_cmd = 'nova-manage db purge'
 
   cron { 'nova-manage db purge':
-    command     => "${sleep}${cron_cmd} --before `date --date='today - ${age} days' +\\%D` ${verbose_real} \
-                    ${all_cells_real} >>${destination} 2>&1",
+    command     => "${sleep}${cron_cmd} --before `date --date='today - ${age} days' +\\%D`${verbose_real}${all_cells_real} \
+>>${destination} 2>&1",
     environment => 'PATH=/bin:/usr/bin:/usr/sbin SHELL=/bin/sh',
     user        => pick($user, $::nova::params::nova_user),
     minute      => $minute,

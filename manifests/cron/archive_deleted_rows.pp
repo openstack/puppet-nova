@@ -96,21 +96,21 @@ class nova::cron::archive_deleted_rows (
   include nova::params
 
   if $until_complete {
-    $until_complete_real = '--until-complete'
+    $until_complete_real = ' --until-complete'
   }
   else {
     $until_complete_real = ''
   }
 
   if $purge {
-    $purge_real = '--purge'
+    $purge_real = ' --purge'
   }
   else {
     $purge_real = ''
   }
 
   if $all_cells {
-    $all_cells_real = '--all-cells'
+    $all_cells_real = ' --all-cells'
   }
   else {
     $all_cells_real = ''
@@ -123,7 +123,7 @@ class nova::cron::archive_deleted_rows (
   }
 
   if $age {
-    $age_real = "--before `date --date=\'today - ${age} days\' +\\%F`"
+    $age_real = " --before `date --date=\'today - ${age} days\' +\\%F`"
   } else {
     $age_real = ''
   }
@@ -131,8 +131,8 @@ class nova::cron::archive_deleted_rows (
   $cron_cmd = 'nova-manage db archive_deleted_rows'
 
   cron { 'nova-manage db archive_deleted_rows':
-    command     => "${sleep}${cron_cmd} ${purge_real} --max_rows ${max_rows} ${age_real} ${until_complete_real} \
-${all_cells_real} >>${destination} 2>&1",
+    command     => "${sleep}${cron_cmd}${purge_real} --max_rows ${max_rows}${age_real}${until_complete_real}${all_cells_real} \
+>>${destination} 2>&1",
     environment => 'PATH=/bin:/usr/bin:/usr/sbin SHELL=/bin/sh',
     user        => pick($user, $::nova::params::nova_user),
     minute      => $minute,
