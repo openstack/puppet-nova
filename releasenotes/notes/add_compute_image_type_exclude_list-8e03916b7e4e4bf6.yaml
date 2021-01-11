@@ -1,0 +1,5 @@
+---
+features:
+  - |
+    Add the ``image_type_exclude_list`` parameter to prevent the compute
+    service advertising support for specific image types.

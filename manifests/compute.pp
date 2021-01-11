@@ -263,6 +263,11 @@
 #   on creation.
 #   Defaults to $::os_service_default
 #
+# [*image_type_exclude_list*]
+#   (optional) List of image formats that should not be advertised as supported
+#   by the compute service.
+#   Defaults to $::os_service_default
+#
 # DEPRECATED PARAMETERS
 #
 # [*neutron_enabled*]
@@ -350,6 +355,7 @@ class nova::compute (
   $running_deleted_instance_timeout            = $::os_service_default,
   $compute_monitors                            = $::os_service_default,
   $default_ephemeral_format                    = $::os_service_default,
+  $image_type_exclude_list                     = $::os_service_default,
   # DEPRECATED PARAMETERS
   $neutron_enabled                             = undef,
   $install_bridge_utils                        = undef,
@@ -363,6 +369,8 @@ class nova::compute (
 
   $cpu_shared_set_real = pick(join(any2array($cpu_shared_set), ','), $::os_service_default)
   $cpu_dedicated_set_real = pick(join(any2array($cpu_dedicated_set), ','), $::os_service_default)
+
+  $image_type_exclude_list_real = pick(join(any2array($image_type_exclude_list), ','), $::os_service_default)
 
   $max_concurrent_builds_real = pick(
     $::nova::compute::ironic::max_concurrent_builds,
@@ -513,6 +521,7 @@ Use the same parameter in nova::api class.')
     'DEFAULT/running_deleted_instance_timeout':  value => $running_deleted_instance_timeout;
     'DEFAULT/compute_monitors':                  value => join(any2array($compute_monitors), ',');
     'DEFAULT/default_ephemeral_format':          value => $default_ephemeral_format;
+    'compute/image_type_exclude_list':           value => $image_type_exclude_list_real;
   }
 
   if ($vnc_enabled) {

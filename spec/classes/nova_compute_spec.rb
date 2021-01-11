@@ -70,6 +70,7 @@ describe 'nova::compute' do
       it { is_expected.to contain_nova_config('DEFAULT/running_deleted_instance_timeout').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('DEFAULT/compute_monitors').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('DEFAULT/default_ephemeral_format').with_value('<SERVICE DEFAULT>') }
+      it { is_expected.to contain_nova_config('compute/image_type_exclude_list').with_value('<SERVICE DEFAULT>') }
 
       it { is_expected.to_not contain_package('bridge-utils').with(
         :ensure => 'present',
@@ -129,6 +130,7 @@ describe 'nova::compute' do
           :running_deleted_instance_timeout   => '200',
           :compute_monitors                   => ['cpu.virt_driver','fake'],
           :default_ephemeral_format           => 'ext4',
+          :image_type_exclude_list            => ['raw','ami'],
         }
       end
 
@@ -194,6 +196,7 @@ describe 'nova::compute' do
       it { is_expected.to contain_nova_config('DEFAULT/running_deleted_instance_timeout').with_value('200') }
       it { is_expected.to contain_nova_config('DEFAULT/compute_monitors').with_value('cpu.virt_driver,fake') }
       it { is_expected.to contain_nova_config('DEFAULT/default_ephemeral_format').with_value('ext4') }
+      it { is_expected.to contain_nova_config('compute/image_type_exclude_list').with_value('raw,ami') }
 
       it 'configures nova config_drive_format to vfat' do
         is_expected.to contain_nova_config('DEFAULT/config_drive_format').with_value('vfat')
@@ -201,6 +204,15 @@ describe 'nova::compute' do
           :ensure => 'present',
         )
       end
+    end
+
+    context 'with image_type_exclude_list set to empty list' do
+      let :params do
+        {
+          :image_type_exclude_list => []
+        }
+      end
+      it { is_expected.to contain_nova_config('compute/image_type_exclude_list').with_value('<SERVICE DEFAULT>') }
     end
 
     context 'with reserved_huge_pages string' do
