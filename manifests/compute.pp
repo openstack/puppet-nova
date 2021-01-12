@@ -359,8 +359,8 @@ class nova::compute (
   include nova::deps
   include nova::params
 
-  $cpu_shared_set_real = pick(join(any2array($cpu_shared_set), ','), $::os_service_default)
-  $cpu_dedicated_set_real = pick(join(any2array($cpu_dedicated_set), ','), $::os_service_default)
+  $cpu_shared_set_real = join(any2array($cpu_shared_set), ',')
+  $cpu_dedicated_set_real = join(any2array($cpu_dedicated_set), ',')
 
   $image_type_exclude_list_real = pick(join(any2array($image_type_exclude_list), ','), $::os_service_default)
 
