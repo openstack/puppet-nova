@@ -647,8 +647,6 @@ but should be one of: ssh-rsa, ssh-dsa, ssh-ecdsa.")
     nova_config { 'api/auth_strategy': value => $auth_strategy }
   }
 
-  $dhcp_domain_real = pick($::nova::metadata::dhcp_domain, $dhcp_domain)
-
   nova_config {
     'DEFAULT/ssl_only':              value => $ssl_only;
     'DEFAULT/cert':                  value => $cert;
@@ -660,7 +658,7 @@ but should be one of: ssh-rsa, ssh-dsa, ssh-ecdsa.")
     'DEFAULT/cpu_allocation_ratio':  value => $cpu_allocation_ratio;
     'DEFAULT/ram_allocation_ratio':  value => $ram_allocation_ratio;
     'DEFAULT/disk_allocation_ratio': value => $disk_allocation_ratio;
-    'DEFAULT/dhcp_domain':           value => $dhcp_domain_real;
+    'DEFAULT/dhcp_domain':           value => $dhcp_domain;
   }
 
   oslo::messaging::rabbit {'nova_config':
