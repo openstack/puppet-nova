@@ -266,6 +266,14 @@
 # [*image_type_exclude_list*]
 #   (optional) List of image formats that should not be advertised as supported
 #   by the compute service.
+#
+# [*block_device_allocate_retries*]
+#   (optional) Number of times to retry block device allocation on failures
+#   Defaults to $::os_service_default
+#
+# [*block_device_allocate_retries_interval*]
+#   (optional) Waiting time interval (seconds) between block device allocation
+#   retries on failures
 #   Defaults to $::os_service_default
 #
 # DEPRECATED PARAMETERS
@@ -356,6 +364,8 @@ class nova::compute (
   $compute_monitors                            = $::os_service_default,
   $default_ephemeral_format                    = $::os_service_default,
   $image_type_exclude_list                     = $::os_service_default,
+  $block_device_allocate_retries               = $::os_service_default,
+  $block_device_allocate_retries_interval      = $::os_service_default,
   # DEPRECATED PARAMETERS
   $neutron_enabled                             = undef,
   $install_bridge_utils                        = undef,
@@ -487,6 +497,13 @@ Use the same parameter in nova::api class.')
 
   include nova::availability_zone
 
+  $block_device_allocate_retries_real = pick(
+    $::nova::block_device_allocate_retries,
+    $block_device_allocate_retries)
+  $block_device_allocate_retries_interval_real = pick(
+    $::nova::block_device_allocate_retries_interval,
+    $block_device_allocate_retries_interval)
+
   nova_config {
     'DEFAULT/use_cow_images':                    value => $use_cow_images;
     'DEFAULT/force_raw_images':                  value => $force_raw_images;
@@ -522,6 +539,9 @@ Use the same parameter in nova::api class.')
     'DEFAULT/compute_monitors':                  value => join(any2array($compute_monitors), ',');
     'DEFAULT/default_ephemeral_format':          value => $default_ephemeral_format;
     'compute/image_type_exclude_list':           value => $image_type_exclude_list_real;
+    'DEFAULT/block_device_allocate_retries':     value => $block_device_allocate_retries_real;
+    'DEFAULT/block_device_allocate_retries_interval':
+      value => $block_device_allocate_retries_interval_real;
   }
 
   if ($vnc_enabled) {

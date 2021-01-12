@@ -71,6 +71,8 @@ describe 'nova::compute' do
       it { is_expected.to contain_nova_config('DEFAULT/compute_monitors').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('DEFAULT/default_ephemeral_format').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('compute/image_type_exclude_list').with_value('<SERVICE DEFAULT>') }
+      it { is_expected.to contain_nova_config('DEFAULT/block_device_allocate_retries').with_value('<SERVICE DEFAULT>') }
+      it { is_expected.to contain_nova_config('DEFAULT/block_device_allocate_retries_interval').with_value('<SERVICE DEFAULT>') }
 
       it { is_expected.to_not contain_package('bridge-utils').with(
         :ensure => 'present',
@@ -131,6 +133,8 @@ describe 'nova::compute' do
           :compute_monitors                   => ['cpu.virt_driver','fake'],
           :default_ephemeral_format           => 'ext4',
           :image_type_exclude_list            => ['raw','ami'],
+          :block_device_allocate_retries      => 60,
+          :block_device_allocate_retries_interval => 3,
         }
       end
 
@@ -197,6 +201,8 @@ describe 'nova::compute' do
       it { is_expected.to contain_nova_config('DEFAULT/compute_monitors').with_value('cpu.virt_driver,fake') }
       it { is_expected.to contain_nova_config('DEFAULT/default_ephemeral_format').with_value('ext4') }
       it { is_expected.to contain_nova_config('compute/image_type_exclude_list').with_value('raw,ami') }
+      it { is_expected.to contain_nova_config('DEFAULT/block_device_allocate_retries').with_value(60) }
+      it { is_expected.to contain_nova_config('DEFAULT/block_device_allocate_retries_interval').with_value(3) }
 
       it 'configures nova config_drive_format to vfat' do
         is_expected.to contain_nova_config('DEFAULT/config_drive_format').with_value('vfat')
