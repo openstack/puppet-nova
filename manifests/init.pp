@@ -25,14 +25,6 @@
 #   option.
 #   Defaults to $::os_service_default
 #
-# [*glance_endpoint_override*]
-#   (optional) Override the endpoint to use to talk to Glance.
-#   Defaults to $::os_service_default
-#
-# [*glance_num_retries*]
-#   (optional) Number of retries in glance operation
-#   Defaults to $::os_service_default
-#
 # [*rabbit_use_ssl*]
 #   (optional) Boolean. Connect over SSL for RabbitMQ. (boolean value)
 #   Defaults to $::os_service_default
@@ -365,10 +357,6 @@
 #   (optional) The strategy to use for auth: noauth or keystone.
 #   Defaults to undef
 #
-# [*glance_api_servers*]
-#   (optional) List of addresses for api servers.
-#   Defaults to undef
-#
 # [*database_min_pool_size*]
 #   (optional) Minimum number of SQL connections to keep open in a pool.
 #   Defaults to undef.
@@ -431,6 +419,14 @@
 #   (Optional) Accept clients using either SSL or plain TCP
 #   Defaults to undef.
 #
+# [*glance_endpoint_override*]
+#   (optional) Override the endpoint to use to talk to Glance.
+#   Defaults to undef.
+#
+# [*glance_num_retries*]
+#   (optional) Number of retries in glance operation
+#   Defaults to undef.
+#
 class nova(
   $ensure_package                         = 'present',
   $block_device_allocate_retries          = $::os_service_default,
@@ -438,8 +434,6 @@ class nova(
   $default_transport_url                  = $::os_service_default,
   $rpc_response_timeout                   = $::os_service_default,
   $control_exchange                       = $::os_service_default,
-  $glance_endpoint_override               = $::os_service_default,
-  $glance_num_retries                     = $::os_service_default,
   $rabbit_use_ssl                         = $::os_service_default,
   $rabbit_heartbeat_timeout_threshold     = $::os_service_default,
   $rabbit_heartbeat_rate                  = $::os_service_default,
@@ -509,7 +503,6 @@ class nova(
   $dhcp_domain                            = $::os_service_default,
   # DEPRECATED PARAMETERS
   $auth_strategy                          = undef,
-  $glance_api_servers                     = undef,
   $database_min_pool_size                 = undef,
   $os_region_name                         = undef,
   $cinder_catalog_info                    = undef,
@@ -524,6 +517,8 @@ class nova(
   $database_retry_interval                = undef,
   $database_max_overflow                  = undef,
   $amqp_allow_insecure_clients            = undef,
+  $glance_endpoint_override               = undef,
+  $glance_num_retries                     = undef,
 ) inherits nova::params {
 
   include nova::deps
@@ -598,6 +593,16 @@ removed in a future realse. Use nova::db::database_retry_interval instead')
   if $database_max_overflow != undef {
     warning('The database_max_overflow parameter is deprecated and will be \
 removed in a future realse. Use nova::db::database_max_overflow instead')
+  }
+
+  if $glance_endpoint_override != undef {
+    warning('The glance_endpoint_override parameter is deprecated. \
+Use nova::glance::endpoint_override instead.')
+  }
+
+  if $glance_num_retries != undef {
+    warning('The glance_num_retries parameter is deprecated. \
+Use nova::glance::num_retries instead.')
   }
 
   if $use_ssl {
@@ -682,13 +687,6 @@ but should be one of: ssh-rsa, ssh-dsa, ssh-ecdsa.")
 
   resources { 'nova_config':
     purge => $purge_config,
-  }
-
-  if $glance_api_servers {
-    warning(
-      'The glance_api_servers parameter is deprecated, and will be removed in a future release.'
-    )
-    nova_config { 'glance/api_servers': value => $glance_api_servers }
   }
 
   if $auth_strategy {
@@ -817,8 +815,8 @@ but should be one of: ssh-rsa, ssh-dsa, ssh-ecdsa.")
     'upgrade_levels/intercell':   value => $upgrade_level_intercell;
     'upgrade_levels/network':     value => $upgrade_level_network;
     'upgrade_levels/scheduler':   value => $upgrade_level_scheduler;
-    'glance/endpoint_override':   value => $glance_endpoint_override;
-    'glance/num_retries':         value => $glance_num_retries;
   }
 
+  # TODO(tkajinam): Remove this when we remove the deprecated glance_* options
+  include nova::glance
 }
