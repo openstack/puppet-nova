@@ -1,0 +1,5 @@
+---
+features:
+  - |
+    Now puppet-nova supports configurations required to download Glance images
+    into the libvirt image cache via RBD.
