@@ -1,0 +1,5 @@
+---
+deprecations:
+  - |
+    Support of the vmwareapi driver was initially deprecated, but it was
+    undeprecated because nova has undeprecated its support.
