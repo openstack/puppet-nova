@@ -9,9 +9,9 @@ describe 'nova::scheduler::filter' do
   shared_examples 'nova::scheduler::filter' do
 
     context 'with default parameters' do
-      it { is_expected.to contain_nova_config('filter_scheduler/host_subset_size').with_value('1') }
-      it { is_expected.to contain_nova_config('filter_scheduler/max_io_ops_per_host').with_value('8') }
-      it { is_expected.to contain_nova_config('filter_scheduler/max_instances_per_host').with_value('50') }
+      it { is_expected.to contain_nova_config('filter_scheduler/host_subset_size').with_value('<SERVICE DEFAULT>') }
+      it { is_expected.to contain_nova_config('filter_scheduler/max_io_ops_per_host').with_value('<SERVICE DEFAULT>') }
+      it { is_expected.to contain_nova_config('filter_scheduler/max_instances_per_host').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('filter_scheduler/available_filters').with_value(['nova.scheduler.filters.all_filters']) }
       it { is_expected.to contain_nova_config('filter_scheduler/weight_classes').with_value('nova.scheduler.weights.all_weighers') }
       it { is_expected.to contain_nova_config('filter_scheduler/isolated_images').with_value('<SERVICE DEFAULT>') }
