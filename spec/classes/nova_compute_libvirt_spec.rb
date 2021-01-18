@@ -69,6 +69,7 @@ describe 'nova::compute::libvirt' do
       it { is_expected.to contain_nova_config('libvirt/swtpm_enabled').with_value('<SERVICE DEFAULT>')}
       it { is_expected.to contain_nova_config('libvirt/swtpm_user').with_value('<SERVICE DEFAULT>')}
       it { is_expected.to contain_nova_config('libvirt/swtpm_group').with_value('<SERVICE DEFAULT>')}
+      it { is_expected.to contain_nova_config('libvirt/max_queues').with_value('<SERVICE DEFAULT>')}
       it { is_expected.to contain_libvirtd_config('log_outputs').with_ensure('absent')}
       it { is_expected.to contain_libvirtd_config('log_filters').with_ensure('absent')}
       it { is_expected.to contain_libvirtd_config('tls_priority').with_ensure('absent')}
@@ -108,6 +109,7 @@ describe 'nova::compute::libvirt' do
           :log_filters                                => '1:qemu',
           :tls_priority                               => 'NORMAL:-VERS-SSL3.0',
           :ovs_timeout                                => 10,
+          :max_queues                                 => 4,
         }
       end
 
@@ -139,6 +141,7 @@ describe 'nova::compute::libvirt' do
       it { is_expected.to contain_nova_config('libvirt/swtpm_enabled').with_value(true)}
       it { is_expected.to contain_nova_config('libvirt/swtpm_user').with_value('libvirt')}
       it { is_expected.to contain_nova_config('libvirt/swtpm_group').with_value('libvirt')}
+      it { is_expected.to contain_nova_config('libvirt/max_queues').with_value(4)}
       it { is_expected.to contain_libvirtd_config('log_outputs').with_value('"1:file:/var/log/libvirt/libvirtd.log"')}
       it { is_expected.to contain_libvirtd_config('log_filters').with_value('"1:qemu"')}
       it { is_expected.to contain_libvirtd_config('tls_priority').with_value('"NORMAL:-VERS-SSL3.0"')}

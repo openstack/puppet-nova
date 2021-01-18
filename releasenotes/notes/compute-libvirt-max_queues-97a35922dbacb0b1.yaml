@@ -1,0 +1,5 @@
+---
+features:
+  - |
+    Adds parameter nova::compute::libvirt::max_queues to configure the libvirt
+    max_queues.
