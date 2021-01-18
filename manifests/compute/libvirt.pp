@@ -195,7 +195,15 @@
 #   class, this is used to generate the resource class name as
 #   CUSTOM_PMEM_NAMESPACE_$LABEL.
 #   Defaults to $::os_service_default
-
+#
+# [*max_queues*]
+#   (optional) The maximum number of virtio queue pairs that can be enabled
+#   when creating a multiqueue guest. The number of virtio queues allocated
+#   will be the lesser of the CPUs requested by the guest and the max value
+#   defined. By default, this value is set to none meaning the legacy limits
+#   based on the reported kernel major version will be used.
+#   Defaults to $::os_service_default
+#
 class nova::compute::libvirt (
   $ensure_package                             = 'present',
   $libvirt_virt_type                          = 'kvm',
@@ -232,6 +240,7 @@ class nova::compute::libvirt (
   $log_filters                                = undef,
   $tls_priority                               = undef,
   $pmem_namespaces                            = $::os_service_default,
+  $max_queues                                 = $::os_service_default,
 ) inherits nova::params {
 
   include ::nova::deps
@@ -331,6 +340,7 @@ class nova::compute::libvirt (
     'libvirt/num_pcie_ports':           value => $num_pcie_ports;
     'libvirt/mem_stats_period_seconds': value => $mem_stats_period_seconds;
     'libvirt/pmem_namespaces':          value => $pmem_namespaces;
+    'libvirt/max_queues':               value => $max_queues;
   }
 
   # cpu_model param is only valid if cpu_mode=custom
