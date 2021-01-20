@@ -26,6 +26,7 @@ describe 'nova::compute' do
 
       it { is_expected.to contain_nova_config('DEFAULT/use_cow_images').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('DEFAULT/virt_mkfs').with_value('<SERVICE DEFAULT>') }
+      it { is_expected.to contain_nova_config('DEFAULT/update_resources_interval').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('DEFAULT/reboot_timeout').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('DEFAULT/instance_build_timeout').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('DEFAULT/rescue_timeout').with_value('<SERVICE DEFAULT>') }
@@ -102,6 +103,7 @@ describe 'nova::compute' do
           :reserved_host_memory               => '0',
           :heal_instance_info_cache_interval  => '120',
           :config_drive_format                => 'vfat',
+          :update_resources_interval          => '300',
           :reboot_timeout                     => '180',
           :instance_build_timeout             => '300',
           :rescue_timeout                     => '120',
@@ -171,6 +173,7 @@ describe 'nova::compute' do
       it { is_expected.to contain_nova_config('DEFAULT/use_cow_images').with_value(false) }
       it { is_expected.to contain_nova_config('DEFAULT/force_raw_images').with(:value => false) }
       it { is_expected.to contain_nova_config('DEFAULT/virt_mkfs').with_value('windows=mkfs.ntfs --force --fast %(target)s') }
+      it { is_expected.to contain_nova_config('DEFAULT/update_resources_interval').with_value('300') }
       it { is_expected.to contain_nova_config('DEFAULT/reboot_timeout').with_value('180') }
       it { is_expected.to contain_nova_config('DEFAULT/instance_build_timeout').with_value('300') }
       it { is_expected.to contain_nova_config('DEFAULT/rescue_timeout').with_value('120') }
