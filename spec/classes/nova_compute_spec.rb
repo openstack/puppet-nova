@@ -24,14 +24,6 @@ describe 'nova::compute' do
         })
       end
 
-      it 'does not configures barbican service' do
-        is_expected.to contain_nova_config('key_manager/backend').with_value('nova.keymgr.conf_key_mgr.ConfKeyManager')
-        is_expected.to contain_nova_config('barbican/barbican_endpoint').with_value('<SERVICE DEFAULT>')
-        is_expected.to contain_nova_config('barbican/barbican_api_version').with_value('<SERVICE DEFAULT>')
-        is_expected.to contain_nova_config('barbican/auth_endpoint').with_value('<SERVICE DEFAULT>')
-        is_expected.to_not contain_package('cryptsetup').with( :ensure => 'present' )
-      end
-
       it 'does not configure vncproxy base url in nova.conf' do
         is_expected.to contain_nova_config('vnc/enabled').with_value(true)
         is_expected.to_not contain_nova_config('vnc/novncproxy_base_url')
