@@ -7,16 +7,16 @@ describe 'nova::quota' do
 
   let :default_params do
     {
-      :instances                   => 10,
-      :cores                       => 20,
-      :ram                         => 51200,
-      :metadata_items              => 128,
-      :injected_files              => 5,
-      :injected_file_content_bytes => 10240,
-      :injected_file_path_length   => 255,
-      :key_pairs                   => 100,
-      :server_groups               => 10,
-      :server_group_members        => 10,
+      :instances                   => '<SERVICE DEFAULT>',
+      :cores                       => '<SERVICE DEFAULT>',
+      :ram                         => '<SERVICE DEFAULT>',
+      :metadata_items              => '<SERVICE DEFAULT>',
+      :injected_files              => '<SERVICE DEFAULT>',
+      :injected_file_content_bytes => '<SERVICE DEFAULT>',
+      :injected_file_path_length   => '<SERVICE DEFAULT>',
+      :key_pairs                   => '<SERVICE DEFAULT>',
+      :server_groups               => '<SERVICE DEFAULT>',
+      :server_group_members        => '<SERVICE DEFAULT>',
     }
   end
 
