@@ -21,9 +21,6 @@ describe 'nova::quota' do
       :key_pairs                   => 100,
       :server_groups               => 10,
       :server_group_members        => 10,
-      :reservation_expire          => 86400,
-      :until_refresh               => 0,
-      :max_age                     => 0
     }
   end
 
@@ -61,9 +58,6 @@ describe 'nova::quota' do
           :key_pairs                   => 200,
           :server_groups               => 20,
           :server_group_members        => 20,
-          :reservation_expire          => 6400,
-          :until_refresh               => 30,
-          :max_age                     => 60
         })
       end
 

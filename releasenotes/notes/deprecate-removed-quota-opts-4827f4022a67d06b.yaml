@@ -1,0 +1,10 @@
+---
+deprecations:
+  - |
+    The following parameters of the ``nova::quota`` class have been deprecated
+    and have no effect now. These parameters will be removed in a future
+    release.
+
+    - ``reservation_expire``
+    - ``until_refresh``
+    - ``max_age``

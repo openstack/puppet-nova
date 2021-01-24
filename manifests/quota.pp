@@ -60,17 +60,19 @@
 #   (optional) Number of servers per server group
 #   Defaults to 10
 #
+# DEPRECATED PARAMETERS
+#
 # [*reservation_expire*]
 #   (optional) Time until reservations expire in seconds
-#   Defaults to 86400
+#   Defaults to undef
 #
 # [*until_refresh*]
 #   (optional) Count of reservations until usage is refreshed
-#   Defaults to 0
+#   Defaults to undef
 #
 # [*max_age*]
 #   (optional) Number of seconds between subsequent usage refreshes
-#   Defaults to 0
+#   Defaults to undef
 #
 class nova::quota(
   $instances                         = 10,
@@ -87,12 +89,23 @@ class nova::quota(
   $key_pairs                         = 100,
   $server_groups                     = 10,
   $server_group_members              = 10,
-  $reservation_expire                = 86400,
-  $until_refresh                     = 0,
-  $max_age                           = 0,
+  # DEPRECATED PARAMETERS
+  $reservation_expire                = undef,
+  $until_refresh                     = undef,
+  $max_age                           = undef,
 ) {
 
   include nova::deps
+
+  [
+    'reservation_expire',
+    'until_refresh',
+    'max_age',
+  ].each |String $removed_opt| {
+    if getvar("${removed_opt}") != undef {
+      warning("The ${removed_opt} parameter is deprecated and has no effect")
+    }
+  }
 
   nova_config {
     'quota/instances':                   value => $instances;
@@ -109,8 +122,11 @@ class nova::quota(
     'quota/key_pairs':                   value => $key_pairs;
     'quota/server_groups':               value => $server_groups;
     'quota/server_group_members':        value => $server_group_members;
-    'quota/reservation_expire':          value => $reservation_expire;
-    'quota/until_refresh':               value => $until_refresh;
-    'quota/max_age':                     value => $max_age;
+  }
+
+  nova_config {
+    'quota/reservation_expire': ensure => absent;
+    'quota/until_refresh':      ensure => absent;
+    'quota/max_age':            ensure => absent;
   }
 }
