@@ -12,6 +12,7 @@ describe 'nova::glance' do
         is_expected.to contain_nova_config('glance/endpoint_override').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('glance/valid_interfaces').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('glance/num_retries').with_value('<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('glance/verify_glance_signatures').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('glance/enable_rbd_download').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('glance/rbd_user').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('glance/rbd_connect_timeout').with_value('<SERVICE DEFAULT>')
@@ -23,14 +24,15 @@ describe 'nova::glance' do
     context 'with specific parameters' do
       let :params do
         {
-          :endpoint_override   => 'http://localhost:9292',
-          :valid_interfaces    => 'internal',
-          :num_retries         => 3,
-          :enable_rbd_download => true,
-          :rbd_user            => 'nova',
-          :rbd_connect_timeout => 5,
-          :rbd_pool            => 'images',
-          :rbd_ceph_conf       => '/etc/ceph/ceph.conf',
+          :endpoint_override        => 'http://localhost:9292',
+          :valid_interfaces         => 'internal',
+          :num_retries              => 3,
+          :verify_glance_signatures => false,
+          :enable_rbd_download      => true,
+          :rbd_user                 => 'nova',
+          :rbd_connect_timeout      => 5,
+          :rbd_pool                 => 'images',
+          :rbd_ceph_conf            => '/etc/ceph/ceph.conf',
         }
       end
 
@@ -38,6 +40,7 @@ describe 'nova::glance' do
         is_expected.to contain_nova_config('glance/endpoint_override').with_value('http://localhost:9292')
         is_expected.to contain_nova_config('glance/valid_interfaces').with_value('internal')
         is_expected.to contain_nova_config('glance/num_retries').with_value(3)
+        is_expected.to contain_nova_config('glance/verify_glance_signatures').with_value(false)
         is_expected.to contain_nova_config('glance/enable_rbd_download').with_value(true)
         is_expected.to contain_nova_config('glance/rbd_user').with_value('nova')
         is_expected.to contain_nova_config('glance/rbd_connect_timeout').with_value(5)

@@ -56,7 +56,6 @@ describe 'nova::compute' do
       it { is_expected.to contain_nova_config('DEFAULT/resize_confirm_window').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('DEFAULT/shutdown_timeout').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('DEFAULT/resume_guests_state_on_host_boot').with_value('<SERVICE DEFAULT>') }
-      it { is_expected.to contain_nova_config('glance/verify_glance_signatures').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('DEFAULT/max_concurrent_builds').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('DEFAULT/max_concurrent_live_migrations').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('DEFAULT/sync_power_state_pool_size').with_value('<SERVICE DEFAULT>') }
@@ -122,7 +121,6 @@ describe 'nova::compute' do
           :max_concurrent_live_migrations     => '4',
           :sync_power_state_pool_size         => '10',
           :sync_power_state_interval          => '0',
-          :verify_glance_signatures           => true,
           :consecutive_build_service_disable_threshold => '9',
           :live_migration_wait_for_vif_plug   => true,
           :max_disk_devices_to_attach         => 20,
@@ -190,7 +188,6 @@ describe 'nova::compute' do
       it { is_expected.to contain_nova_config('DEFAULT/max_concurrent_live_migrations').with_value('4') }
       it { is_expected.to contain_nova_config('DEFAULT/sync_power_state_pool_size').with_value('10') }
       it { is_expected.to contain_nova_config('DEFAULT/sync_power_state_interval').with_value('0') }
-      it { is_expected.to contain_nova_config('glance/verify_glance_signatures').with_value(true) }
       it { is_expected.to contain_nova_config('compute/consecutive_build_service_disable_threshold').with_value('9') }
       it { is_expected.to contain_nova_config('compute/live_migration_wait_for_vif_plug').with_value(true) }
       it { is_expected.to contain_nova_config('compute/max_disk_devices_to_attach').with_value(20) }
