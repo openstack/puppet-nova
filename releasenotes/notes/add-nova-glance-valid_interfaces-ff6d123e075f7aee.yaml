@@ -1,0 +1,4 @@
+---
+features:
+  - |
+    Added parameter valid_interfaces to nova::glance class.
