@@ -1,0 +1,17 @@
+---
+features:
+  - |
+    The new ``nova::glance`` class has been added to manage configurations
+    to determine usage of the Glance service.
+
+upgrade:
+  - |
+    The deprecated ``nova::glance_api_servers`` parameter has been removed.
+
+deprecations:
+  - |
+    The following parameters in the ``nova`` class has been deprecated. Use
+    the new ``nova::glance`` class instead.
+
+    - ``glance_endpoint_override``
+    - ``glance_num_retries``
