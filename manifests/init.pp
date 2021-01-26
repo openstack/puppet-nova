@@ -310,15 +310,6 @@
 #   in the nova config.
 #   Defaults to false.
 #
-# [*block_device_allocate_retries*]
-#   (optional) Number of times to retry block device allocation on failures
-#   Defaults to $::os_service_default
-#
-# [*block_device_allocate_retries_interval*]
-#   (optional) Waiting time interval (seconds) between block device allocation
-#   retries on failures
-#   Defaults to $::os_service_default
-#
 # [*cpu_allocation_ratio*]
 #   (optional) Virtual CPU to physical CPU allocation ratio which affects all
 #   CPU filters.  This can be set on the scheduler, or can be overridden
@@ -427,10 +418,17 @@
 #   (optional) Number of retries in glance operation
 #   Defaults to undef.
 #
+# [*block_device_allocate_retries*]
+#   (optional) Number of times to retry block device allocation on failures
+#   Defaults to undef.
+#
+# [*block_device_allocate_retries_interval*]
+#   (optional) Waiting time interval (seconds) between block device allocation
+#   retries on failures
+#   Defaults to undef.
+#
 class nova(
   $ensure_package                         = 'present',
-  $block_device_allocate_retries          = $::os_service_default,
-  $block_device_allocate_retries_interval = $::os_service_default,
   $default_transport_url                  = $::os_service_default,
   $rpc_response_timeout                   = $::os_service_default,
   $control_exchange                       = $::os_service_default,
@@ -519,6 +517,8 @@ class nova(
   $amqp_allow_insecure_clients            = undef,
   $glance_endpoint_override               = undef,
   $glance_num_retries                     = undef,
+  $block_device_allocate_retries          = undef,
+  $block_device_allocate_retries_interval = undef,
 ) inherits nova::params {
 
   include nova::deps
@@ -603,6 +603,16 @@ Use nova::glance::endpoint_override instead.')
   if $glance_num_retries != undef {
     warning('The glance_num_retries parameter is deprecated. \
 Use nova::glance::num_retries instead.')
+  }
+
+  if $block_device_allocate_retries != undef {
+    warning('The block_device_allocate_retries parameter is deprecated. \
+Use nova::compute::block_device_allocate_retries instead')
+  }
+
+  if $block_device_allocate_retries_interval != undef {
+    warning('The block_device_allocate_retries_interval parameter is deprecated. \
+Use nova::compute::block_device_allocate_retries_interval instead')
   }
 
   if $use_ssl {
@@ -792,8 +802,6 @@ but should be one of: ssh-rsa, ssh-dsa, ssh-ecdsa.")
     'DEFAULT/service_down_time':                      value => $service_down_time;
     'DEFAULT/rootwrap_config':                        value => $rootwrap_config;
     'DEFAULT/report_interval':                        value => $report_interval;
-    'DEFAULT/block_device_allocate_retries':          value => $block_device_allocate_retries;
-    'DEFAULT/block_device_allocate_retries_interval': value => $block_device_allocate_retries_interval;
   }
 
   oslo::concurrency { 'nova_config': lock_path => $lock_path }

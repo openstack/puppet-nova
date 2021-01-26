@@ -65,10 +65,6 @@ describe 'nova' do
         is_expected.to contain_nova_config('DEFAULT/dhcp_domain').with_value('<SERVICE DEFAULT>')
       end
 
-      it 'configures block_device_allocate params' do
-        is_expected.to contain_nova_config('DEFAULT/block_device_allocate_retries').with_value('<SERVICE DEFAULT>')
-        is_expected.to contain_nova_config('DEFAULT/block_device_allocate_retries_interval').with_value('<SERVICE DEFAULT>')
-      end
     end
 
     context 'with overridden parameters' do
@@ -104,8 +100,6 @@ describe 'nova' do
           :upgrade_level_network                   => '1.0.0',
           :upgrade_level_scheduler                 => '1.0.0',
           :purge_config                            => false,
-          :block_device_allocate_retries           => '60',
-          :block_device_allocate_retries_interval  => '3',
           :my_ip                                   => '192.0.2.1',
           :ssl_only                                => true,
           :cert                                    => '/etc/ssl/private/snakeoil.pem',
@@ -193,11 +187,6 @@ describe 'nova' do
         it { is_expected.to contain_nova_config('oslo_messaging_notifications/driver').with_value(
           ['ceilometer.compute.nova_notifier', 'nova.openstack.common.notifier.rpc_notifier']
         ) }
-      end
-
-      it 'configures block_device_allocate params' do
-        is_expected.to contain_nova_config('DEFAULT/block_device_allocate_retries').with_value('60')
-        is_expected.to contain_nova_config('DEFAULT/block_device_allocate_retries_interval').with_value('3')
       end
     end
 

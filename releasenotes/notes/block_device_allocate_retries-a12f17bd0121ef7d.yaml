@@ -1,0 +1,8 @@
+---
+deprecations:
+  - |
+    The following parameters have been deprecated. Use the same parameters of
+    the ``nova::compute`` class instead.
+
+    - ``nova::block_device_allocate_retries``
+    - ``nova::block_device_allocate_retries_interval``
