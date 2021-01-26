@@ -55,7 +55,7 @@
 #
 # [*instance_name_template*]
 #   (optional) Template string to be used to generate instance names
-#   Defaults to undef
+#   Defaults to $::os_service_default
 #
 # [*sync_db*]
 #   (optional) Run nova-manage db sync on api nodes after installing the package.
@@ -199,7 +199,7 @@ class nova::api(
     'nova.api.openstack.compute.limits:RateLimitingMiddleware.factory',
   $validate                                    = false,
   $validation_options                          = {},
-  $instance_name_template                      = undef,
+  $instance_name_template                      = $::os_service_default,
   $service_name                                = $::nova::params::api_service_name,
   $metadata_service_name                       = $::nova::params::api_metadata_service_name,
   $enable_proxy_headers_parsing                = $::os_service_default,
@@ -235,13 +235,13 @@ class nova::api(
   }
 
   if $instance_name_template {
-    nova_config {
-      'DEFAULT/instance_name_template': value => $instance_name_template;
-    }
+    $instance_name_template_real = $instance_name_template
   } else {
-    nova_config{
-      'DEFAULT/instance_name_template': ensure => absent;
-    }
+    warning('Using a false value for instance_name_template is deprecated. Use $::os_service_default instead.')
+    $instance_name_template_real = $::os_service_default
+  }
+  nova_config {
+    'DEFAULT/instance_name_template': value => $instance_name_template_real;
   }
 
   # enable metadata in eventlet if we do not run metadata via wsgi (nova::metadata)
