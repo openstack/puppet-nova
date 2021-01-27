@@ -1,0 +1,11 @@
+---
+deprecations:
+  - |
+    The following parameters of the ``nova::quota`` class have been deprecated
+    and now have no effect. These parameters will be removed in a future
+    release.
+
+    - ``floating_ips``
+    - ``fixed_ips``
+    - ``security_groups``
+    - ``security_group_rules``
