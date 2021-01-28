@@ -47,27 +47,27 @@ describe 'nova::api' do
       it { is_expected.to contain_class('nova::availability_zone') }
 
       it 'configures various stuff' do
-        is_expected.to contain_nova_config('DEFAULT/instance_name_template').with('value' => '<SERVICE DEFAULT>')
-        is_expected.to contain_nova_config('wsgi/api_paste_config').with('value' => 'api-paste.ini')
-        is_expected.to contain_nova_config('DEFAULT/osapi_compute_listen').with('value' => '0.0.0.0')
-        is_expected.to contain_nova_config('DEFAULT/osapi_compute_listen_port').with('value' => '8774')
-        is_expected.to contain_nova_config('DEFAULT/metadata_listen').with('value' => '0.0.0.0')
-        is_expected.to contain_nova_config('DEFAULT/metadata_listen_port').with('value' => '8775')
-        is_expected.to contain_nova_config('DEFAULT/osapi_compute_workers').with('value' => '5')
-        is_expected.to contain_nova_config('DEFAULT/metadata_workers').with('value' => '5')
+        is_expected.to contain_nova_config('DEFAULT/instance_name_template').with_value('<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('wsgi/api_paste_config').with_value('api-paste.ini')
+        is_expected.to contain_nova_config('DEFAULT/osapi_compute_listen').with_value('0.0.0.0')
+        is_expected.to contain_nova_config('DEFAULT/osapi_compute_listen_port').with_value('8774')
+        is_expected.to contain_nova_config('DEFAULT/metadata_listen').with_value('0.0.0.0')
+        is_expected.to contain_nova_config('DEFAULT/metadata_listen_port').with_value('8775')
+        is_expected.to contain_nova_config('DEFAULT/osapi_compute_workers').with_value('5')
+        is_expected.to contain_nova_config('DEFAULT/metadata_workers').with_value('5')
         is_expected.to contain_oslo__middleware('nova_config').with(
           :enable_proxy_headers_parsing => '<SERVICE DEFAULT>',
           :max_request_body_size        => '<SERVICE DEFAULT>',
         )
-        is_expected.to contain_nova_config('api/max_limit').with('value' => '<SERVICE DEFAULT>')
-        is_expected.to contain_nova_config('api/compute_link_prefix').with('value' => '<SERVICE DEFAULT>')
-        is_expected.to contain_nova_config('api/glance_link_prefix').with('value' => '<SERVICE DEFAULT>')
-        is_expected.to contain_nova_config('api/hide_server_address_states').with('value' => '<SERVICE DEFAULT>')
-        is_expected.to contain_nova_config('api/allow_instance_snapshots').with('value' => '<SERVICE DEFAULT>')
-        is_expected.to contain_nova_config('DEFAULT/enable_network_quota').with('value' => '<SERVICE DEFAULT>')
-        is_expected.to contain_nova_config('api/enable_instance_password').with('value' => '<SERVICE DEFAULT>')
-        is_expected.to contain_nova_config('DEFAULT/password_length').with('value' => '<SERVICE DEFAULT>')
-        is_expected.to contain_nova_config('DEFAULT/allow_resize_to_same_host').with('value' => false)
+        is_expected.to contain_nova_config('api/max_limit').with_value('<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('api/compute_link_prefix').with_value('<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('api/glance_link_prefix').with_value('<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('api/hide_server_address_states').with_value('<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('api/allow_instance_snapshots').with_value('<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('DEFAULT/enable_network_quota').with_value('<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('api/enable_instance_password').with_value('<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('DEFAULT/password_length').with_value('<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('DEFAULT/allow_resize_to_same_host').with_value(false)
       end
     end
 
@@ -114,26 +114,26 @@ describe 'nova::api' do
       end
 
       it 'configures various stuff' do
-        is_expected.to contain_nova_config('DEFAULT/osapi_compute_listen').with('value' => '192.168.56.210')
-        is_expected.to contain_nova_config('DEFAULT/osapi_compute_listen_port').with('value' => '8874')
-        is_expected.to contain_nova_config('DEFAULT/metadata_listen').with('value' => '127.0.0.1')
-        is_expected.to contain_nova_config('DEFAULT/metadata_listen_port').with('value' => '8875')
-        is_expected.to contain_nova_config('api/use_forwarded_for').with('value' => false)
-        is_expected.to contain_nova_config('DEFAULT/osapi_compute_workers').with('value' => '1')
-        is_expected.to contain_nova_config('DEFAULT/metadata_workers').with('value' => '2')
-        is_expected.to contain_nova_config('api/max_limit').with('value' => '1000')
-        is_expected.to contain_nova_config('api/compute_link_prefix').with('value' => 'https://10.0.0.1:7777/')
-        is_expected.to contain_nova_config('api/glance_link_prefix').with('value' => 'https://10.0.0.1:6666/')
+        is_expected.to contain_nova_config('DEFAULT/osapi_compute_listen').with_value('192.168.56.210')
+        is_expected.to contain_nova_config('DEFAULT/osapi_compute_listen_port').with_value('8874')
+        is_expected.to contain_nova_config('DEFAULT/metadata_listen').with_value('127.0.0.1')
+        is_expected.to contain_nova_config('DEFAULT/metadata_listen_port').with_value('8875')
+        is_expected.to contain_nova_config('api/use_forwarded_for').with_value(false)
+        is_expected.to contain_nova_config('DEFAULT/osapi_compute_workers').with_value('1')
+        is_expected.to contain_nova_config('DEFAULT/metadata_workers').with_value('2')
+        is_expected.to contain_nova_config('api/max_limit').with_value('1000')
+        is_expected.to contain_nova_config('api/compute_link_prefix').with_value('https://10.0.0.1:7777/')
+        is_expected.to contain_nova_config('api/glance_link_prefix').with_value('https://10.0.0.1:6666/')
         is_expected.to contain_oslo__middleware('nova_config').with(
           :enable_proxy_headers_parsing => true,
           :max_request_body_size        => '102400',
         )
-        is_expected.to contain_nova_config('api/hide_server_address_states').with('value' => 'building')
-        is_expected.to contain_nova_config('api/allow_instance_snapshots').with('value' => true)
-        is_expected.to contain_nova_config('DEFAULT/enable_network_quota').with('value' => false)
-        is_expected.to contain_nova_config('api/enable_instance_password').with('value' => true)
-        is_expected.to contain_nova_config('DEFAULT/password_length').with('value' => '12')
-        is_expected.to contain_nova_config('DEFAULT/allow_resize_to_same_host').with('value' => true)
+        is_expected.to contain_nova_config('api/hide_server_address_states').with_value('building')
+        is_expected.to contain_nova_config('api/allow_instance_snapshots').with_value(true)
+        is_expected.to contain_nova_config('DEFAULT/enable_network_quota').with_value(false)
+        is_expected.to contain_nova_config('api/enable_instance_password').with_value(true)
+        is_expected.to contain_nova_config('DEFAULT/password_length').with_value('12')
+        is_expected.to contain_nova_config('DEFAULT/allow_resize_to_same_host').with_value(true)
       end
     end
 
