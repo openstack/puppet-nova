@@ -10,6 +10,7 @@ describe 'nova::glance' do
 
       it 'configure default params' do
         is_expected.to contain_nova_config('glance/endpoint_override').with_value('<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('glance/valid_interfaces').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('glance/num_retries').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('glance/enable_rbd_download').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('glance/rbd_user').with_value('<SERVICE DEFAULT>')
@@ -23,6 +24,7 @@ describe 'nova::glance' do
       let :params do
         {
           :endpoint_override   => 'http://localhost:9292',
+          :valid_interfaces    => 'internal',
           :num_retries         => 3,
           :enable_rbd_download => true,
           :rbd_user            => 'nova',
@@ -34,6 +36,7 @@ describe 'nova::glance' do
 
       it 'configure glance params' do
         is_expected.to contain_nova_config('glance/endpoint_override').with_value('http://localhost:9292')
+        is_expected.to contain_nova_config('glance/valid_interfaces').with_value('internal')
         is_expected.to contain_nova_config('glance/num_retries').with_value(3)
         is_expected.to contain_nova_config('glance/enable_rbd_download').with_value(true)
         is_expected.to contain_nova_config('glance/rbd_user').with_value('nova')
