@@ -1,0 +1,8 @@
+---
+deprecations:
+  - |
+    Default value of ``nova::api::instance_name_template`` has been changed
+    from ``undef`` to ``$::os_service_default``. The parameter still accepts
+    any false value then unsets the parameter, but this behavior will be
+    changed in a future release. Use ``$::os_service_default`` if you want to
+    use the default defined in nova implementation.

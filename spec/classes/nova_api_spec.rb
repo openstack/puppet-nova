@@ -43,11 +43,11 @@ describe 'nova::api' do
         is_expected.to contain_nova_config('DEFAULT/enabled_apis').with_value('osapi_compute,metadata')
       end
 
-      it { is_expected.to contain_nova_config('DEFAULT/instance_name_template').with_ensure('absent')}
 
       it { is_expected.to contain_class('nova::availability_zone') }
 
       it 'configures various stuff' do
+        is_expected.to contain_nova_config('DEFAULT/instance_name_template').with('value' => '<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('wsgi/api_paste_config').with('value' => 'api-paste.ini')
         is_expected.to contain_nova_config('DEFAULT/osapi_compute_listen').with('value' => '0.0.0.0')
         is_expected.to contain_nova_config('DEFAULT/osapi_compute_listen_port').with('value' => '8774')
