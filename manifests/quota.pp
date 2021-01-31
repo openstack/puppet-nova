@@ -6,43 +6,43 @@
 #
 # [*instances*]
 #   (optional) Number of instances
-#   Defaults to 10
+#   Defaults to $::os_service_default
 #
 # [*cores*]
 #   (optional) Number of cores
-#   Defaults to 20
+#   Defaults to $::os_service_default
 #
 # [*ram*]
 #   (optional) Ram in MB
-#   Defaults to 51200
+#   Defaults to $::os_service_default
 #
 # [*metadata_items*]
 #   (optional) Number of metadata items per instance
-#   Defaults to 128
+#   Defaults to $::os_service_default
 #
 # [*injected_files*]
 #   (optional) Number of files that can be injected per instance
-#   Defaults to 5
+#   Defaults to $::os_service_default
 #
 # [*injected_file_content_bytes*]
 #   (optional) Maximum size in bytes of injected files
-#   Defaults to 10240
+#   Defaults to $::os_service_default
 #
 # [*injected_file_path_length*]
 #   (optional) Maximum size in bytes of injected file path
-#   Defaults to 255
+#   Defaults to $::os_service_default
 #
 # [*key_pairs*]
 #   (optional) Number of key pairs
-#   Defaults to 100
+#   Defaults to $::os_service_default
 #
 # [*server_groups*]
 #   (optional) Number of server groups per project
-#   Defaults to 10
+#   Defaults to $::os_service_default
 #
 # [*server_group_members*]
 #   (optional) Number of servers per server group
-#   Defaults to 10
+#   Defaults to $::os_service_default
 #
 # DEPRECATED PARAMETERS
 #
@@ -75,16 +75,16 @@
 #   Defaults to undef
 #
 class nova::quota(
-  $instances                         = 10,
-  $cores                             = 20,
-  $ram                               = 51200,
-  $metadata_items                    = 128,
-  $injected_files                    = 5,
-  $injected_file_content_bytes       = 10240,
-  $injected_file_path_length         = 255,
-  $key_pairs                         = 100,
-  $server_groups                     = 10,
-  $server_group_members              = 10,
+  $instances                         = $::os_service_default,
+  $cores                             = $::os_service_default,
+  $ram                               = $::os_service_default,
+  $metadata_items                    = $::os_service_default,
+  $injected_files                    = $::os_service_default,
+  $injected_file_content_bytes       = $::os_service_default,
+  $injected_file_path_length         = $::os_service_default,
+  $key_pairs                         = $::os_service_default,
+  $server_groups                     = $::os_service_default,
+  $server_group_members              = $::os_service_default,
   # DEPRECATED PARAMETERS
   $reservation_expire                = undef,
   $until_refresh                     = undef,
