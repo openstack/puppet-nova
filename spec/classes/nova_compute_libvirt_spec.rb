@@ -219,7 +219,6 @@ describe 'nova::compute::libvirt' do
 
         it { is_expected.to contain_class('nova::migration::libvirt')}
         it { is_expected.to contain_nova_config('vnc/server_listen').with_value('0.0.0.0')}
-        it { is_expected.to contain_file_line('/etc/default/libvirtd libvirtd opts').with(:line => libvirt_options) }
       end
 
       context 'with vncserver_listen set to ::0' do
@@ -230,17 +229,6 @@ describe 'nova::compute::libvirt' do
 
         it { is_expected.to contain_class('nova::migration::libvirt')}
         it { is_expected.to contain_nova_config('vnc/server_listen').with_value('::0')}
-        it { is_expected.to contain_file_line('/etc/default/libvirtd libvirtd opts').with(:line => libvirt_options) }
-      end
-
-      context 'with custom libvirt service name on Debian platforms' do
-        let :params do
-          { :libvirt_service_name  => 'libvirtd',
-            :vncserver_listen      => '0.0.0.0',
-            :migration_support     => true }
-        end
-        it { is_expected.to contain_file_line('/etc/default/libvirtd libvirtd opts').with(:line => libvirt_options) }
-
       end
     end
 
@@ -351,7 +339,6 @@ describe 'nova::compute::libvirt' do
 
         it { is_expected.to contain_class('nova::migration::libvirt')}
         it { is_expected.to contain_nova_config('vnc/server_listen').with_value('0.0.0.0')}
-        it { is_expected.to contain_file_line('/etc/sysconfig/libvirtd libvirtd args').with(:line => 'LIBVIRTD_ARGS="--listen"') }
       end
 
       context 'with vncserver_listen set to ::0' do
@@ -362,7 +349,6 @@ describe 'nova::compute::libvirt' do
 
         it { is_expected.to contain_class('nova::migration::libvirt')}
         it { is_expected.to contain_nova_config('vnc/server_listen').with_value('::0')}
-        it { is_expected.to contain_file_line('/etc/sysconfig/libvirtd libvirtd args').with(:line => 'LIBVIRTD_ARGS="--listen"') }
       end
 
     end
