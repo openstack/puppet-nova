@@ -1,0 +1,14 @@
+---
+features:
+  - |
+    This modules now supports modular libvirt daemons. Here is the list of
+    daemons currently supported.
+
+    - virtnodedevd
+    - virtproxyd
+    - virtqemud
+    - virtsecretd
+    - virtstoraged
+
+    More information regarding modular libvirt daemons is available here.
+    `Libvirt Daemons <https://libvirt.org/daemons.html>` _.

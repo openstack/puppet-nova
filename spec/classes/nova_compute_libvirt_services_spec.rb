@@ -13,12 +13,37 @@ describe 'nova::compute::libvirt::services' do
 
     context 'with overridden parameters' do
       let :params do
-        { :libvirt_service_name => false }
+        {
+          :libvirt_service_name => false,
+          :modular_libvirt      => false,
+        }
       end
 
       it 'disable libvirt service' do
         is_expected.not_to contain_package('libvirt')
         is_expected.not_to contain_service('libvirt')
+      end
+    end
+
+    context 'with default parameters and modular-libvirt true' do
+      let :params do
+        {
+          :modular_libvirt => true
+        }
+      end
+
+      it 'deploys libvirt packages and services with modular-libvirt' do
+        is_expected.to contain_package('libvirt')
+        is_expected.to contain_package('virtqemu')
+        is_expected.to contain_package('virtsecret')
+        is_expected.to contain_package('virtstorage')
+        is_expected.to contain_package('virtnodedev')
+        is_expected.to contain_service('virtlogd')
+        is_expected.to contain_service('virtproxyd')
+        is_expected.to contain_service('virtnodedevd')
+        is_expected.to contain_service('virtsecretd')
+        is_expected.to contain_service('virtstoraged')
+        is_expected.to contain_service('virtqemud')
       end
     end
   end
