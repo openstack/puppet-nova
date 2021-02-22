@@ -37,6 +37,11 @@ class nova::params {
       $libvirt_guests_service_name       = 'libvirt-guests'
       $virtlock_service_name             = 'virtlockd'
       $virtlog_service_name              = 'virtlogd'
+      $virtsecret_service_name           = 'virtsecretd'
+      $virtnodedev_service_name          = 'virtnodedevd'
+      $virtqemu_service_name             = 'virtqemud'
+      $virtproxy_service_name            = 'virtproxyd'
+      $virtstorage_service_name          = 'virtstoraged'
       $scheduler_service_name            = 'openstack-nova-scheduler'
       $tgt_service_name                  = 'tgtd'
       $novajoin_service_name             = 'novajoin-server'
@@ -44,6 +49,7 @@ class nova::params {
       $vncproxy_service_name             = 'openstack-nova-novncproxy'
       $serialproxy_service_name          = 'openstack-nova-serialproxy'
       $spicehtml5proxy_service_name      = 'openstack-nova-spicehtml5proxy'
+      $modular_libvirt                   = false
       # redhat specific config defaults
       $root_helper                       = 'sudo nova-rootwrap'
       $lock_path                         = '/var/lib/nova/tmp'
@@ -98,24 +104,36 @@ class nova::params {
       $lock_path                         = '/var/lock/nova'
       case $::os_package_type {
         'debian': {
-          $api_metadata_service_name       = 'nova-api-metadata'
-          $spicehtml5proxy_package_name    = 'nova-consoleproxy'
-          $spicehtml5proxy_service_name    = 'nova-spicehtml5proxy'
-          $vncproxy_package_name           = 'nova-consoleproxy'
-          $serialproxy_package_name        = 'nova-consoleproxy'
+          $api_metadata_service_name    = 'nova-api-metadata'
+          $spicehtml5proxy_package_name = 'nova-consoleproxy'
+          $spicehtml5proxy_service_name = 'nova-spicehtml5proxy'
+          $vncproxy_package_name        = 'nova-consoleproxy'
+          $serialproxy_package_name     = 'nova-consoleproxy'
           # Use default provider on Debian
-          $virtlock_service_name           = 'virtlockd'
-          $virtlog_service_name            = 'virtlogd'
+          $virtlock_service_name        = 'virtlockd'
+          $virtlog_service_name         = 'virtlogd'
+          $virtsecret_service_name      = 'virtsecretd'
+          $virtnodedev_service_name     = 'virtnodedevd'
+          $virtqemu_service_name        = 'virtqemud'
+          $virtproxy_service_name       = 'virtproxyd'
+          $virtstorage_service_name     = 'virtstoraged'
+          $modular_libvirt              = false
         }
         default: {
-          $api_metadata_service_name       = undef
-          $spicehtml5proxy_package_name    = 'nova-spiceproxy'
-          $spicehtml5proxy_service_name    = 'nova-spiceproxy'
-          $vncproxy_package_name           = 'nova-novncproxy'
-          $serialproxy_package_name        = 'nova-serialproxy'
+          $api_metadata_service_name    = undef
+          $spicehtml5proxy_package_name = 'nova-spiceproxy'
+          $spicehtml5proxy_service_name = 'nova-spiceproxy'
+          $vncproxy_package_name        = 'nova-novncproxy'
+          $serialproxy_package_name     = 'nova-serialproxy'
           # Use default provider on Debian
-          $virtlock_service_name           = 'virtlockd'
-          $virtlog_service_name            = 'virtlogd'
+          $virtlock_service_name        = 'virtlockd'
+          $virtlog_service_name         = 'virtlogd'
+          $virtsecret_service_name      = 'virtsecretd'
+          $virtnodedev_service_name     = 'virtnodedevd'
+          $virtqemu_service_name        = 'virtqemud'
+          $virtproxy_service_name       = 'virtproxyd'
+          $virtstorage_service_name     = 'virtstoraged'
+          $modular_libvirt              = false
         }
       }
       $libvirt_service_name            = 'libvirtd'

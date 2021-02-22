@@ -99,6 +99,11 @@
 #   (optional) virtlog service name.
 #   Defaults to $::nova::params::virtlog_service_name
 #
+# [*modular_libvirt*]
+#   (optional) Whether to enable modular libvirt daemons or use monolithic
+#   libvirt daemon.
+#   Defaults to $::nova::params::modular_libvirt
+#
 # [*compute_driver*]
 #   (optional) Compute driver.
 #   Defaults to 'libvirt.LibvirtDriver'
@@ -325,6 +330,7 @@ class nova::compute::libvirt (
   $libvirt_service_name                       = $::nova::params::libvirt_service_name,
   $virtlock_service_name                      = $::nova::params::virtlock_service_name,
   $virtlog_service_name                       = $::nova::params::virtlog_service_name,
+  $modular_libvirt                            = $::nova::params::modular_libvirt,
   $compute_driver                             = 'libvirt.LibvirtDriver',
   $preallocate_images                         = $::os_service_default,
   $manage_libvirt_services                    = true,
@@ -517,11 +523,13 @@ in a future release. Use the enabled_perf_events parameter instead')
     }
   }
 
-  libvirtd_config {
-    'log_outputs':  value => pick($log_outputs, $::os_service_default), quote => true;
-    'log_filters':  value => pick($log_filters, $::os_service_default), quote => true;
-    'tls_priority': value => pick($tls_priority, $::os_service_default), quote => true;
-    'ovs_timeout':  value => pick($ovs_timeout, $::os_service_default);
+  if !$modular_libvirt {
+    libvirtd_config {
+      'log_outputs':  value => pick($log_outputs, $::os_service_default), quote => true;
+      'log_filters':  value => pick($log_filters, $::os_service_default), quote => true;
+      'tls_priority': value => pick($tls_priority, $::os_service_default), quote => true;
+      'ovs_timeout':  value => pick($ovs_timeout, $::os_service_default);
+    }
   }
 
   unless $rx_queue_size == $::os_service_default or $rx_queue_size in [256, 512, 1024] {
