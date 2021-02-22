@@ -97,6 +97,7 @@ describe 'nova::compute::libvirt' do
           :preallocate_images                         => 'space',
           :rx_queue_size                              => 512,
           :tx_queue_size                              => 1024,
+          :images_type                                => 'raw',
           :volume_use_multipath                       => false,
           :nfs_mount_options                          => 'rw,intr,nolock',
           :num_pcie_ports                             => 16,
@@ -133,6 +134,7 @@ describe 'nova::compute::libvirt' do
       it { is_expected.to contain_nova_config('vnc/server_listen').with_value('0.0.0.0')}
       it { is_expected.to contain_nova_config('libvirt/rx_queue_size').with_value(512)}
       it { is_expected.to contain_nova_config('libvirt/tx_queue_size').with_value(1024)}
+      it { is_expected.to contain_nova_config('libvirt/images_type').with_value('raw')}
       it { is_expected.to contain_nova_config('libvirt/volume_use_multipath').with_value(false)}
       it { is_expected.to contain_nova_config('libvirt/nfs_mount_options').with_value('rw,intr,nolock')}
       it { is_expected.to contain_nova_config('libvirt/num_pcie_ports').with_value(16)}

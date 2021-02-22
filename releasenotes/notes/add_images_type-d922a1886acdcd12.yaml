@@ -1,0 +1,10 @@
+---
+features:
+  - Add new parameter "nova::compute::libvirt::images_type", VM Images format.
+    If default is specified, then use_cow_images flag is used instead of this
+    one.
+
+deprecations:
+  - The "images_type" parameter will be required if rbd ephemeral storage is
+    used in a future release. Ensure the parameter is set to 'rbd' if
+    the deployment use rbd as its ephemeral storage backend.

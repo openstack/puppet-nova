@@ -125,8 +125,31 @@ class nova::compute::rbd (
   }
 
   if $ephemeral_storage {
+
+    #  TODO(tkajinam): Remove this implementation in X
+    if defined('$::nova::compute::libvirt::images_type') {
+      # When nova::compute::libvirt is evaluated before nova::compute::rbd, we
+      # never set it here unless $::nova::compute::libvirt::images_type is
+      # default, for backwards compatibility
+      $images_type_real = $::nova::compute::libvirt::images_type
+      if is_service_default($images_type_real) {
+        warning('nova::compute::libvirt::images_type will be required if rbd ephemeral storage is used.')
+        nova_config {
+          'libvirt/images_type': value => 'rbd';
+        }
+      } elsif $images_type_real != 'rbd' {
+        fail('nova::compute::libvirt::images_type should be rbd if rbd ephemeral storage is used.')
+      }
+    }
+    else {
+    # This is when only nova::compute::rbd is used,
+    # or when nova::compute::rbd is evaluated before nova::compute::libvirt
+      nova_config {
+        'libvirt/images_type': value => 'rbd';
+      }
+    }
+
     nova_config {
-      'libvirt/images_type':          value => 'rbd';
       'libvirt/images_rbd_pool':      value => $libvirt_images_rbd_pool;
       'libvirt/images_rbd_ceph_conf': value => $libvirt_images_rbd_ceph_conf;
     }
