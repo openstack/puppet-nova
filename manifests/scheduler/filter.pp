@@ -6,11 +6,15 @@
 #
 # [*scheduler_host_subset_size*]
 #   (optional) defines the subset size that a host is chosen from
-#   Defaults to '1'
+#   Defaults to $::os_service_default
 #
 # [*max_io_ops_per_host*]
 #   (optional) Ignore hosts that have too many builds/resizes/snaps/migrations
-#   Defaults to '8'
+#   Defaults to $::os_service_default
+#
+# [*max_instances_per_host*]
+#   (optional) Ignore hosts that have too many instances
+#   Defaults to $::os_service_default
 #
 # [*isolated_images*]
 #   (optional) An array of images to run on isolated host
@@ -19,10 +23,6 @@
 # [*isolated_hosts*]
 #   (optional) An array of hosts reserved for specific images
 #   Defaults to $::os_service_default
-#
-# [*max_instances_per_host*]
-#   (optional) Ignore hosts that have too many instances
-#   Defaults to '50'
 #
 # [*scheduler_available_filters*]
 #   (optional) An array with filter classes available to the scheduler.
@@ -114,9 +114,9 @@
 #
 
 class nova::scheduler::filter (
-  $scheduler_host_subset_size                     = '1',
-  $max_io_ops_per_host                            = '8',
-  $max_instances_per_host                         = '50',
+  $scheduler_host_subset_size                     = $::os_service_default,
+  $max_io_ops_per_host                            = $::os_service_default,
+  $max_instances_per_host                         = $::os_service_default,
   $isolated_images                                = $::os_service_default,
   $isolated_hosts                                 = $::os_service_default,
   $scheduler_available_filters                    = ['nova.scheduler.filters.all_filters'],
