@@ -1,0 +1,31 @@
+meta:
+  schema_version: '<%= @schema_version %>'
+providers:
+  # for details check https://docs.openstack.org/nova/latest/admin/managing-resource-providers.html
+<% @custom_inventories.each do |provider| -%>
+  - identification:
+<% if provider['name'] -%>
+      name: '<%= provider['name'] %>'
+<% elsif provider['uuid'] -%>
+      uuid: '<%= provider['uuid'] %>'
+<% else -%>
+      uuid: '$COMPUTE_NODE'
+<% end -%>
+<% unless provider['inventories'].nil? -%>
+    inventories:
+      additional:
+<% provider['inventories'].each do |key,inventory| -%>
+        - <%= key %>:
+<% inventory.each do |key,value| -%>
+            <%= key %>: <%= value %>
+<% end -%>
+<% end -%>
+<% end -%>
+<% unless provider['traits'].nil? -%>
+    traits:
+      additional:
+<% provider['traits'].each do |trait| -%>
+        - '<%= trait %>'
+<% end -%>
+<% end -%>
+<% end -%>

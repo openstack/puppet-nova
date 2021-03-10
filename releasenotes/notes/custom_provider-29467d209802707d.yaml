@@ -1,0 +1,8 @@
+---
+features:
+  - |
+    Nova supports to configure resource provider inventory and traits using a
+    standardized YAML file format starting victoria release [1]. This adds the
+    nova::compute::provider class to configure the custom provider yaml file
+    via puppet-nova.
+    [1] https://docs.openstack.org/nova/latest/admin/managing-resource-providers.html
