@@ -1,0 +1,5 @@
+---
+features:
+  - |
+    Support for the ``workarounds/ensure_libvirt_rbd_instance_dir_cleanup``
+    parameter has been added.
