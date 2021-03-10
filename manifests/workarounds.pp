@@ -9,6 +9,12 @@
 #  glance and uploading to ceph instead of a COW clone
 #  Defaults to $::os_service_default
 #
+# [*ensure_libvirt_rbd_instance_dir_cleanup*]
+#  (optional) Ensure the instance directory is removed during clean up when using
+#  rbd. When enabled this workaround will ensure that the instance directory is
+#  always removed during cleanup on hosts using ``[libvirt]/images_type=rbd``
+#  Defaults to $::os_service_default
+#
 # DEPRECATED
 #
 #  [*enable_numa_live_migration*]
@@ -17,6 +23,7 @@
 #
 class nova::workarounds (
   $never_download_image_if_on_rbd = $::os_service_default,
+  $ensure_libvirt_rbd_instance_dir_cleanup = $::os_service_default,
   # DEPRECATED PARAMETER
   $enable_numa_live_migration     = undef,
 ) {
@@ -29,7 +36,10 @@ class nova::workarounds (
   }
 
   nova_config {
-    'workarounds/never_download_image_if_on_rbd': value => $never_download_image_if_on_rbd;
+    'workarounds/never_download_image_if_on_rbd':
+      value => $never_download_image_if_on_rbd;
+    'workarounds/ensure_libvirt_rbd_instance_dir_cleanup':
+      value => $ensure_libvirt_rbd_instance_dir_cleanup;
   }
 
 }
