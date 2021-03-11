@@ -19,7 +19,6 @@ describe 'nova::api' do
     context 'with default parameters' do
 
       it { is_expected.to contain_class('nova::keystone::authtoken') }
-      it { is_expected.to contain_class('cinder::client').that_notifies('Nova::Generic_service[api]') }
 
       it 'installs nova-api package and service' do
         is_expected.to contain_service('nova-api').with(
@@ -300,15 +299,6 @@ describe 'nova::api' do
       end
 
     end
-
-    context 'when disabling cinder client installation' do
-      before do
-        params.merge!({ :install_cinder_client => false })
-      end
-
-      it { is_expected.to_not contain_class('cinder::client') }
-    end
-
 
     context 'when service_name is not valid' do
       before do

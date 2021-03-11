@@ -162,10 +162,6 @@
 #   (optional) Length of generated instance admin passwords (integer value)
 #   Defaults to $::os_service_default
 #
-# [*install_cinder_client*]
-#   (optional) Whether the cinder::client class should be used to install the cinder client.
-#   Defaults to true
-#
 # [*allow_resize_to_same_host*]
 #   (optional) Allow destination machine to match source for resize.
 #   Defaults to false
@@ -177,6 +173,10 @@
 #   going to be removed in the Sein release we can deprecate this and plan to remove
 #   metadata handling from api class.
 #   Defaults to false
+#
+# [*install_cinder_client*]
+#   (optional) Whether the cinder::client class should be used to install the cinder client.
+#   Defaults to undef
 #
 class nova::api(
   $enabled                                     = true,
@@ -212,10 +212,10 @@ class nova::api(
   $enable_network_quota                        = $::os_service_default,
   $enable_instance_password                    = $::os_service_default,
   $password_length                             = $::os_service_default,
-  $install_cinder_client                       = true,
   $allow_resize_to_same_host                   = false,
   # DEPRECATED PARAMETER
   $nova_metadata_wsgi_enabled                  = false,
+  $install_cinder_client                       = undef,
 ) inherits nova::params {
 
   include nova::deps
@@ -229,9 +229,8 @@ class nova::api(
     warning('Running nova metadata api via evenlet is deprecated and will be removed in Stein release.')
   }
 
-  if $install_cinder_client {
-    include cinder::client
-    Class['cinder::client'] ~> Nova::Generic_service['api']
+  if $install_cinder_client != undef {
+    warning('The nova::api::install_cinder_client parameter is deprecated and has no effect')
   }
 
   if $instance_name_template {

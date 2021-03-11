@@ -1,0 +1,5 @@
+---
+deprecations:
+  - |
+    The ``nova::api::install_cinder_client`` parameter has been deprecated and
+    has no effect. This parameter will be removed in a future release.
