@@ -74,6 +74,11 @@
 #   aggregate.
 #   Defaults to $::os_service_default
 #
+# [*query_placement_for_routed_network_aggregates*]
+#   (Optional) This setting allows to enable the scheduler to filter
+#   compute hosts affined to routed network segment aggregates.
+#   Defaults to $::os_service_default
+#
 # DEPRECATED PARAMETERS
 #
 # [*scheduler_driver*]
@@ -81,21 +86,22 @@
 #   Defaults to undef
 #
 class nova::scheduler(
-  $enabled                                  = true,
-  $manage_service                           = true,
-  $ensure_package                           = 'present',
-  $workers                                  = $::os_workers,
-  $max_attempts                             = $::os_service_default,
-  $periodic_task_interval                   = $::os_service_default,
-  $discover_hosts_in_cells_interval         = $::os_service_default,
-  $query_placement_for_image_type_support   = $::os_service_default,
-  $limit_tenants_to_placement_aggregate     = $::os_service_default,
-  $placement_aggregate_required_for_tenants = $::os_service_default,
-  $max_placement_results                    = $::os_service_default,
-  $enable_isolated_aggregate_filtering      = $::os_service_default,
-  $query_placement_for_availability_zone    = $::os_service_default,
+  $enabled                                       = true,
+  $manage_service                                = true,
+  $ensure_package                                = 'present',
+  $workers                                       = $::os_workers,
+  $max_attempts                                  = $::os_service_default,
+  $periodic_task_interval                        = $::os_service_default,
+  $discover_hosts_in_cells_interval              = $::os_service_default,
+  $query_placement_for_image_type_support        = $::os_service_default,
+  $limit_tenants_to_placement_aggregate          = $::os_service_default,
+  $placement_aggregate_required_for_tenants      = $::os_service_default,
+  $max_placement_results                         = $::os_service_default,
+  $enable_isolated_aggregate_filtering           = $::os_service_default,
+  $query_placement_for_availability_zone         = $::os_service_default,
+  $query_placement_for_routed_network_aggregates = $::os_service_default,
   # DEPRECATED PARAMETERS
-  $scheduler_driver                         = undef,
+  $scheduler_driver                              = undef,
 ) {
 
   include nova::deps
@@ -117,16 +123,17 @@ class nova::scheduler(
   $periodic_task_interval_real = pick($::nova::scheduler::filter::periodic_task_interval, $periodic_task_interval)
 
   nova_config {
-    'scheduler/workers':                                  value => $workers;
-    'scheduler/max_attempts':                             value => $max_attempts_real;
-    'scheduler/periodic_task_interval':                   value => $periodic_task_interval_real;
-    'scheduler/discover_hosts_in_cells_interval':         value => $discover_hosts_in_cells_interval;
-    'scheduler/query_placement_for_image_type_support':   value => $query_placement_for_image_type_support;
-    'scheduler/limit_tenants_to_placement_aggregate':     value => $limit_tenants_to_placement_aggregate;
-    'scheduler/placement_aggregate_required_for_tenants': value => $placement_aggregate_required_for_tenants;
-    'scheduler/max_placement_results':                    value => $max_placement_results;
-    'scheduler/enable_isolated_aggregate_filtering':      value => $enable_isolated_aggregate_filtering;
-    'scheduler/query_placement_for_availability_zone':    value => $query_placement_for_availability_zone;
+    'scheduler/workers':                                       value => $workers;
+    'scheduler/max_attempts':                                  value => $max_attempts_real;
+    'scheduler/periodic_task_interval':                        value => $periodic_task_interval_real;
+    'scheduler/discover_hosts_in_cells_interval':              value => $discover_hosts_in_cells_interval;
+    'scheduler/query_placement_for_image_type_support':        value => $query_placement_for_image_type_support;
+    'scheduler/limit_tenants_to_placement_aggregate':          value => $limit_tenants_to_placement_aggregate;
+    'scheduler/placement_aggregate_required_for_tenants':      value => $placement_aggregate_required_for_tenants;
+    'scheduler/max_placement_results':                         value => $max_placement_results;
+    'scheduler/enable_isolated_aggregate_filtering':           value => $enable_isolated_aggregate_filtering;
+    'scheduler/query_placement_for_availability_zone':         value => $query_placement_for_availability_zone;
+    'scheduler/query_placement_for_routed_network_aggregates': value => $query_placement_for_routed_network_aggregates;
   }
 
   if $scheduler_driver != undef {
