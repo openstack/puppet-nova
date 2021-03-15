@@ -628,8 +628,8 @@ Use nova::compute::block_device_allocate_retries_interval instead')
     file { '/var/lib/nova/.ssh':
       ensure  => directory,
       mode    => '0700',
-      owner   => 'nova',
-      group   => 'nova',
+      owner   => $::nova::params::nova_user,
+      group   => $::nova::params::nova_group,
       require => Anchor['nova::config::begin'],
       before  => Anchor['nova::config::end'],
     }
@@ -668,8 +668,8 @@ but should be one of: ssh-rsa, ssh-dsa, ssh-ecdsa.")
       file { $nova_private_key_file:
         content => $nova_private_key[key],
         mode    => '0600',
-        owner   => 'nova',
-        group   => 'nova',
+        owner   => $::nova::params::nova_user,
+        group   => $::nova::params::nova_group,
         require => File['/var/lib/nova/.ssh'],
       }
     }
