@@ -17,7 +17,7 @@
 #   Defaults to $::nova::params::virtlog_service_name
 #
 # [*libvirt_virt_type*]
-#   (optional) Libvirt domain type. Options are: kvm, lxc, qemu, uml, xen
+#   (optional) Libvirt domain type. Options are: kvm, lxc, qemu, parallels
 #   Defaults to 'kvm'
 #
 class nova::compute::libvirt::services (

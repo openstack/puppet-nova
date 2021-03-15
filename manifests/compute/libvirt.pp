@@ -10,7 +10,7 @@
 #   Defaults to 'present'
 #
 # [*virt_type*]
-#   (optional) Libvirt domain type. Options are: kvm, lxc, qemu, uml, xen
+#   (optional) Libvirt domain type. Options are: kvm, lxc, qemu, parallels
 #   Defaults to 'kvm'
 #
 # [*vncserver_listen*]
@@ -208,7 +208,7 @@
 # DEPRECATED PARAMETERS
 #
 # [*libvirt_virt_type*]
-#   (optional) Libvirt domain type. Options are: kvm, lxc, qemu, uml, xen
+#   (optional) Libvirt domain type. Options are: kvm, lxc, qemu, paralells
 #   Defaults to undef
 #
 # [*libvirt_cpu_mode*]

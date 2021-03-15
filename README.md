@@ -104,7 +104,7 @@ If value is equal to ensure_absent_val then the resource will behave as if `ensu
 Limitations
 -----------
 
-* Supports libvirt, xenserver and vmware compute drivers.
+* Supports libvirt and vmware compute drivers.
 * Tested on EL and Debian derivatives.
 
 Development
