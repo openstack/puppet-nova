@@ -10,10 +10,6 @@
             "version_requirement": ">=2.5.1"
         },
         {
-            "name": "openstack/cinder",
-            "version_requirement": ">=18.3.0 <19.0.0"
-        },
-        {
             "name": "puppetlabs/inifile",
             "version_requirement": ">=2.0.0 <3.0.0"
         },
