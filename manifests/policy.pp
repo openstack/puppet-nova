@@ -4,6 +4,10 @@
 #
 # === Parameters
 #
+# [*enforce_scope*]
+#  (Optional) Whether or not to enforce scope when evaluating policies.
+#  Defaults to $::os_service_default.
+#
 # [*policies*]
 #   (Optional) Set of policies to configure for nova
 #   Example :
@@ -24,8 +28,9 @@
 #   Defaults to /etc/nova/policy.yaml
 #
 class nova::policy (
-  $policies    = {},
-  $policy_path = '/etc/nova/policy.yaml',
+  $enforce_scope = $::os_service_default,
+  $policies      = {},
+  $policy_path   = '/etc/nova/policy.yaml',
 ) {
 
   include nova::deps
@@ -33,15 +38,18 @@ class nova::policy (
 
   validate_legacy(Hash, 'validate_hash', $policies)
 
-  $policy_defaults = {
+  Openstacklib::Policy::Base {
     file_path   => $policy_path,
     file_user   => 'root',
     file_group  => $::nova::params::group,
     file_format => 'yaml',
   }
 
-  create_resources('openstacklib::policy::base', $policies, $policy_defaults)
+  create_resources('openstacklib::policy::base', $policies)
 
-  oslo::policy { 'nova_config': policy_file => $policy_path }
+  oslo::policy { 'nova_config':
+    enforce_scope => $enforce_scope,
+    policy_file   => $policy_path
+  }
 
 }

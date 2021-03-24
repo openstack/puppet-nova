@@ -1,0 +1,5 @@
+---
+features:
+  - |
+    The new ``nova::policy::enforce_scope`` parameter has been added to
+    support the corresponding parameter in oslo.policy library.
