@@ -197,10 +197,6 @@
 #   Example of valid value: castellan.key_manager.barbican_key_manager.BarbicanKeyManager
 #   Defaults to 'nova.keymgr.conf_key_mgr.ConfKeyManager'.
 #
-# [*verify_glance_signatures*]
-#   (optional) Whether to verify image signatures. (boolean value)
-#   Defaults to $::os_service_default
-#
 # [*reserved_huge_pages*]
 #   (optional) Number of huge memory pages to reserved per NUMA host cell.
 #   Defaults to $::os_service_default
@@ -311,6 +307,10 @@
 #   [ { "vendor_id" => "1234","product_id" => "5678" },
 #     { "vendor_id" => "4321","product_id" => "8765", "physical_network" => "default" } ]
 #
+# [*verify_glance_signatures*]
+#   (optional) Whether to verify image signatures. (boolean value)
+#   Defaults to undef
+#
 class nova::compute (
   $enabled                                     = true,
   $manage_service                              = true,
@@ -351,7 +351,6 @@ class nova::compute (
   $sync_power_state_interval                   = $::os_service_default,
   $consecutive_build_service_disable_threshold = $::os_service_default,
   $keymgr_backend                              = 'nova.keymgr.conf_key_mgr.ConfKeyManager',
-  $verify_glance_signatures                    = $::os_service_default,
   $reserved_huge_pages                         = $::os_service_default,
   $neutron_physnets_numa_nodes_mapping         = {},
   $neutron_tunnel_numa_nodes                   = [],
@@ -372,6 +371,7 @@ class nova::compute (
   $vcpu_pin_set                                = undef,
   $allow_resize_to_same_host                   = undef,
   $pci_passthrough                             = undef,
+  $verify_glance_signatures                    = undef,
 ) {
 
   include nova::deps
@@ -415,6 +415,14 @@ class nova::compute (
     warning('allow_resize_to_same_host is deprecated, and has no effect. \
 Use the same parameter in nova::api class.')
   }
+
+  if $verify_glance_signatures != undef {
+    # NOTE(tkajinam): If nova::glance is defined first and the deployment doesn't use hieradata
+    #                 it doesn't pick up this value correctly and unset the parameter.
+    #                 However we'd avoid hard failure here and just leave warning.
+    warning('verify_glance_signatures is deprecated. Use the same parameter in nova::glance')
+  }
+  include nova::glance
 
   if empty($vcpu_pin_set) {
     $vcpu_pin_set_real = undef
@@ -601,7 +609,6 @@ Use the same parameter in nova::api class.')
 
   nova_config {
     'DEFAULT/config_drive_format':     value => $config_drive_format;
-    'glance/verify_glance_signatures': value => $verify_glance_signatures;
   }
 
 }
