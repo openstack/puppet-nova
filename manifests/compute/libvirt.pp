@@ -129,6 +129,11 @@
 #   (optional) Available capacity in MiB for file-backed memory.
 #   Defaults to $::os_service_default
 #
+# [*images_type*]
+#   (optional) VM Images format.
+#   Valid Values are raw, flat, qcow2, lvm, rbd, ploop, default
+#   Defaults to $::os_service_default
+#
 # [*volume_use_multipath*]
 #   (optional) Use multipath connection of the
 #   iSCSI or FC volume. Volumes can be connected in the
@@ -321,6 +326,7 @@ class nova::compute::libvirt (
   $rx_queue_size                              = $::os_service_default,
   $tx_queue_size                              = $::os_service_default,
   $file_backed_memory                         = undef,
+  $images_type                                = $::os_service_default,
   $volume_use_multipath                       = $::os_service_default,
   $nfs_mount_options                          = $::os_service_default,
   $num_pcie_ports                             = $::os_service_default,
@@ -561,6 +567,32 @@ in a future release. Use the enabled_perf_events parameter instead')
       virtlock_service_name => $virtlock_service_name,
       virtlog_service_name  => $virtlog_service_name,
       libvirt_virt_type     => $virt_type_real,
+    }
+  }
+
+  # TODO(tkajinam): Remove this implementation in X
+  if defined('$::nova::compute::rbd::ephemeral_storage') {
+    if $::nova::compute::rbd::ephemeral_storage {
+      # When nova::compute::rbd is evaluated before nova::compute::libvirt, we
+      # need to fail setting images_type because it would have been handled in
+      # nova::compute::rbd
+      if is_service_default($images_type) {
+        warning('nova::compute::libvirt::images_type will be required if rbd ephemeral storage is used.')
+      } elsif $images_type != 'rbd' {
+        fail('nova::compute::libvirt::images_type should be rbd if rbd ephemeral storage is used.')
+      }
+    } else {
+      nova_config {
+        'libvirt/images_type': value => $images_type;
+      }
+    }
+  } else {
+    # This is when only nova::compute::libvirt is used,
+    # or when nova::compute::libvirt is evaluated before nova::compute::rbd
+    if !is_service_default($images_type) {
+      nova_config {
+        'libvirt/images_type': value => $images_type;
+      }
     }
   }
 
