@@ -284,6 +284,14 @@
 #   this should be set in the api.pp class instead.
 #   Defaults to undef
 #
+# [*pci_passthrough*]
+#   DEPRECATED. Use nova::compute::pci::passthrough instead.
+#   (optional) Pci passthrough list of hash.
+#   Defaults to undef
+#   Example of format:
+#   [ { "vendor_id" => "1234","product_id" => "5678" },
+#     { "vendor_id" => "4321","product_id" => "8765", "physical_network" => "default" } ]
+#
 class nova::compute (
   $enabled                                     = true,
   $manage_service                              = true,
@@ -340,6 +348,7 @@ class nova::compute (
   $install_bridge_utils                        = undef,
   $vcpu_pin_set                                = undef,
   $allow_resize_to_same_host                   = undef,
+  $pci_passthrough                             = undef,
 ) {
 
   include nova::deps
@@ -350,6 +359,12 @@ class nova::compute (
   $cpu_dedicated_set_real = pick(join(any2array($cpu_dedicated_set), ','), $::os_service_default)
 
   include nova::pci
+  if $pci_passthrough {
+    # Note: also remove the pick from nova::compute::pci
+    warning('The pci_passthrough parameter is deprecated and will be removed in X. Please use nova::compute::pci::passthrough instead.')
+  }
+  include nova::compute::pci
+
   include nova::compute::vgpu
   include nova::vendordata
 
