@@ -1,0 +1,5 @@
+---
+features:
+  - |
+    There is now a new policy_dirs parameter in the nova::policy class,
+    so one can set a custom path.

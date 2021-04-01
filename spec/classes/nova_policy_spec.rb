@@ -7,6 +7,7 @@ describe 'nova::policy' do
         :enforce_scope        => false,
         :enforce_new_defaults => false,
         :policy_path          => '/etc/nova/policy.yaml',
+        :policy_dirs          => '/etc/nova/policy.d',
         :policies             => {
           'context_is_admin' => {
             'key'   => 'context_is_admin',
@@ -28,6 +29,7 @@ describe 'nova::policy' do
         :enforce_scope        => false,
         :enforce_new_defaults => false,
         :policy_file          => '/etc/nova/policy.yaml',
+        :policy_dirs          => '/etc/nova/policy.d',
       )
     end
   end
