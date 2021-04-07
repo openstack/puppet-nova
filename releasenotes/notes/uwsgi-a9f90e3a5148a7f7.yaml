@@ -1,0 +1,8 @@
+---
+features:
+  - |
+    Two new calsses nova::wsgi::wsgi_api and nova::wsgi::wsgi_api_metadata
+    exist to allow configuring uwsgi in operating systems that support this
+    (ie: currently Debian). This helps configuring the number of processes,
+    threads and listen socket. Also, two new nova_api_uwsgi_config and
+    nova_api_metadata_uwsgi_config provider now exist.
