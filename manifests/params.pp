@@ -37,7 +37,7 @@ class nova::params {
       $libvirt_service_name              = 'libvirtd'
       $libvirt_guests_service_name       = 'libvirt-guests'
       $virtlock_service_name             = 'virtlockd'
-      $virtlog_service_name              = undef
+      $virtlog_service_name              = 'virtlogd'
       $scheduler_service_name            = 'openstack-nova-scheduler'
       $tgt_service_name                  = 'tgtd'
       $novajoin_service_name             = 'novajoin-server'
