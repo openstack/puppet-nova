@@ -28,6 +28,10 @@
 #   (optional) Enables TLS client cert verification when vnc_tls is enabled.
 #   Defaults to true.
 #
+# [*default_tls_verify*]
+#   (optional) Enables TLS client cert verification.
+#   Defaults to true.
+#
 # [*memory_backing_dir*]
 #   (optional) This directory is used for memoryBacking source if configured as file.
 #   NOTE: big files will be stored here
@@ -49,6 +53,7 @@ class nova::compute::libvirt::qemu(
   $max_processes      = 4096,
   $vnc_tls            = false,
   $vnc_tls_verify     = true,
+  $default_tls_verify = true,
   $memory_backing_dir = undef,
   $nbd_tls            = false,
   $libvirt_version    = $::nova::compute::libvirt::version::default,
@@ -73,6 +78,11 @@ class nova::compute::libvirt::qemu(
       $vnc_tls_value = 0
       $vnc_tls_verify_value = 0
     }
+    if $default_tls_verify {
+      $default_tls_verify_value = $default_tls_verify ? { true => 1, false => 0 }
+    } else {
+      $default_tls_verify_value = 0
+    }
 
     if $nbd_tls {
       $nbd_tls_value = 1
@@ -85,6 +95,7 @@ class nova::compute::libvirt::qemu(
       "set max_processes ${max_processes}",
       "set vnc_tls ${vnc_tls_value}",
       "set vnc_tls_x509_verify ${vnc_tls_verify_value}",
+      "set default_tls_x509_verify ${default_tls_verify_value}",
     ]
     if $group and !empty($group) {
       $augues_group_changes = ["set group ${group}"]
@@ -117,6 +128,7 @@ class nova::compute::libvirt::qemu(
       'rm group',
       'rm vnc_tls',
       'rm vnc_tls_x509_verify',
+      'rm default_tls_x509_verify',
       'rm memory_backing_dir',
     ]
     if versioncmp($libvirt_version, '4.5') >= 0 {
