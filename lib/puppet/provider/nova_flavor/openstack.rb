@@ -89,11 +89,17 @@ Puppet::Type.type(:nova_flavor).provide(
   def self.instances
     request('flavor', 'list', ['--long', '--all']).collect do |attrs|
       project = request('flavor', 'show', [attrs[:id], '-c', 'access_project_ids'])
+
+      access_project_ids = project[:access_project_ids]
       # Client can return None and this should be considered as ''
-      if project[:access_project_ids].downcase.chomp == 'none'
+      if access_project_ids.downcase.chomp == 'none'
         project_value = ''
+      # If the ids are formatted as Array, surrounding [] should be removed
+      elsif access_project_ids.start_with?('[') and access_project_ids.end_with?(']')
+        # TODO(tkajinam): We'd need to consider multiple projects can be returned
+        project_value = access_project_ids[1..-2]
       else
-        project_value = project[:access_project_ids]
+        project_value = access_project_ids
       end
       properties = Hash[attrs[:properties].scan(/(\S+)='([^']*)'/)] rescue nil
       new(
