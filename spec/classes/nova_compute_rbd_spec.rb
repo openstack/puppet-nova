@@ -23,11 +23,7 @@ require 'spec_helper'
 describe 'nova::compute::rbd' do
 
   let :params do
-    { :libvirt_rbd_user             => 'nova',
-      :libvirt_rbd_secret_uuid      => false,
-      :libvirt_images_rbd_pool      => 'rbd',
-      :libvirt_images_rbd_ceph_conf => '/etc/ceph/ceph.conf',
-      :ephemeral_storage            => true }
+    { :libvirt_rbd_user => 'nova' }
   end
 
   shared_examples_for 'nova compute rbd' do
@@ -38,6 +34,9 @@ describe 'nova::compute::rbd' do
         is_expected.to contain_nova_config('libvirt/images_rbd_pool').with_value('rbd')
         is_expected.to contain_nova_config('libvirt/images_rbd_ceph_conf').with_value('/etc/ceph/ceph.conf')
         is_expected.to contain_nova_config('libvirt/rbd_user').with_value('nova')
+        is_expected.to contain_nova_config('libvirt/images_rbd_glance_store_name').with_value('<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('libvirt/images_rbd_glance_copy_poll_interval').with_value('<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('libvirt/images_rbd_glance_copy_timeout').with_value('<SERVICE DEFAULT>')
     end
 
     it 'installs client package' do
@@ -50,10 +49,13 @@ describe 'nova::compute::rbd' do
     context 'when overriding default parameters' do
       before :each do
         params.merge!(
-          :libvirt_rbd_user             => 'joe',
-          :libvirt_rbd_secret_uuid      => false,
-          :libvirt_images_rbd_pool      => 'AnotherPool',
-          :libvirt_images_rbd_ceph_conf => '/tmp/ceph.conf'
+          :libvirt_rbd_user                             => 'joe',
+          :libvirt_rbd_secret_uuid                      => false,
+          :libvirt_images_rbd_pool                      => 'AnotherPool',
+          :libvirt_images_rbd_ceph_conf                 => '/tmp/ceph.conf',
+          :libvirt_images_rbd_glance_store_name         => 'glance_rbd_store',
+          :libvirt_images_rbd_glance_copy_poll_interval => 30,
+          :libvirt_images_rbd_glance_copy_timeout       => 300
         )
       end
 
@@ -61,6 +63,9 @@ describe 'nova::compute::rbd' do
           is_expected.to contain_nova_config('libvirt/images_rbd_pool').with_value('AnotherPool')
           is_expected.to contain_nova_config('libvirt/images_rbd_ceph_conf').with_value('/tmp/ceph.conf')
           is_expected.to contain_nova_config('libvirt/rbd_user').with_value('joe')
+          is_expected.to contain_nova_config('libvirt/images_rbd_glance_store_name').with_value('glance_rbd_store')
+          is_expected.to contain_nova_config('libvirt/images_rbd_glance_copy_poll_interval').with_value(30)
+          is_expected.to contain_nova_config('libvirt/images_rbd_glance_copy_timeout').with_value(300)
       end
     end
 
@@ -121,8 +126,11 @@ describe 'nova::compute::rbd' do
       end
 
       it 'should only set user and secret_uuid in nova.conf ' do
-          is_expected.to_not contain_nova_config('libvirt/images_rbd_pool').with_value('rbd')
-          is_expected.to_not contain_nova_config('libvirt/images_rbd_ceph_conf').with_value('/etc/ceph/ceph.conf')
+          is_expected.to contain_nova_config('libvirt/images_rbd_pool').with_ensure('absent')
+          is_expected.to contain_nova_config('libvirt/images_rbd_ceph_conf').with_ensure('absent')
+          is_expected.to contain_nova_config('libvirt/images_rbd_glance_store_name').with_ensure('absent')
+          is_expected.to contain_nova_config('libvirt/images_rbd_glance_copy_poll_interval').with_ensure('absent')
+          is_expected.to contain_nova_config('libvirt/images_rbd_glance_copy_timeout').with_ensure('absent')
           is_expected.to contain_nova_config('libvirt/rbd_user').with_value('nova')
           is_expected.to contain_nova_config('libvirt/rbd_secret_uuid').with_value('UUID')
       end
