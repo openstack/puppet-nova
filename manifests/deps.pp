@@ -27,6 +27,16 @@ class nova::deps {
   -> Nova_paste_api_ini<||>
   ~> Anchor['nova::config::end']
 
+  # On any uwsgi config change, we must restart Nova APIs.
+  Anchor['nova::config::begin']
+  -> Nova_api_uwsgi_config<||>
+  ~> Anchor['nova::config::end']
+
+  Anchor['nova::config::begin']
+  -> Nova_api_metadata_uwsgi_config<||>
+  ~> Anchor['nova::config::end']
+
+
   # Support packages need to be installed in the install phase, but we don't
   # put them in the chain above because we don't want any false dependencies
   # between packages with the nova-package tag and the nova-support-package
