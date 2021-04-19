@@ -10,7 +10,7 @@ describe 'nova::wsgi::uwsgi_api_metadata' do
 
       it {
         is_expected.to contain_nova_api_metadata_uwsgi_config('uwsgi/processes').with_value(facts[:os_workers])
-        is_expected.to contain_nova_api_metadata_uwsgi_config('uwsgi/threads').with_value('32')
+        is_expected.to contain_nova_api_metadata_uwsgi_config('uwsgi/threads').with_value('1')
         is_expected.to contain_nova_api_metadata_uwsgi_config('uwsgi/listen').with_value('100')
       }
     end
