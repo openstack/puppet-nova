@@ -1,6 +1,6 @@
 Puppet::Type.type(:nova_api_uwsgi_config).provide(
-  :openstackconfig,
-  :parent => Puppet::Type.type(:openstack_config).provider(:ruby)
+  :ini_setting,
+  :parent => Puppet::Type.type(:openstack_config).provider(:ini_setting)
 ) do
 
   def self.file_path

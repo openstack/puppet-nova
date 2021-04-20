@@ -14,23 +14,12 @@ $LOAD_PATH.push(
     'inifile',
     'lib')
 )
-$LOAD_PATH.push(
-  File.join(
-    File.dirname(__FILE__),
-    '..',
-    '..',
-    '..',
-    'fixtures',
-    'modules',
-    'openstacklib',
-    'lib')
-)
 require 'spec_helper'
-provider_class = Puppet::Type.type(:nova_api_uwsgi_config).provider(:openstackconfig)
+provider_class = Puppet::Type.type(:nova_api_metadata_uwsgi_config).provider(:ini_setting)
 describe provider_class do
 
   it 'should default to the default setting when no other one is specified' do
-    resource = Puppet::Type::Nova_api_uwsgi_config.new(
+    resource = Puppet::Type::Nova_api_metadata_uwsgi_config.new(
       {:name => 'DEFAULT/foo', :value => 'bar'}
     )
     provider = provider_class.new(resource)
@@ -39,7 +28,7 @@ describe provider_class do
   end
 
   it 'should allow setting to be set explicitly' do
-    resource = Puppet::Type::Nova_api_uwsgi_config.new(
+    resource = Puppet::Type::Nova_api_metadata_uwsgi_config.new(
       {:name => 'dude/foo', :value => 'bar'}
     )
     provider = provider_class.new(resource)
@@ -48,7 +37,7 @@ describe provider_class do
   end
 
   it 'should ensure absent when <SERVICE DEFAULT> is specified as a value' do
-    resource = Puppet::Type::Nova_api_uwsgi_config.new(
+    resource = Puppet::Type::Nova_api_metadata_uwsgi_config.new(
       {:name => 'dude/foo', :value => '<SERVICE DEFAULT>'}
     )
     provider = provider_class.new(resource)
@@ -57,7 +46,7 @@ describe provider_class do
   end
 
   it 'should ensure absent when value matches ensure_absent_val' do
-    resource = Puppet::Type::Nova_api_uwsgi_config.new(
+    resource = Puppet::Type::Nova_api_metadata_uwsgi_config.new(
       {:name => 'dude/foo', :value => 'foo', :ensure_absent_val => 'foo' }
     )
     provider = provider_class.new(resource)
