@@ -1,0 +1,5 @@
+---
+features:
+  - |
+    Introducing default_tls_verify for qemu.
+    This effectively allows operators to enable or disable TLS client certificate verification.

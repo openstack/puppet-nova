@@ -25,6 +25,7 @@ describe 'nova::compute::libvirt::qemu' do
             "rm group",
             "rm vnc_tls",
             "rm vnc_tls_x509_verify",
+            "rm default_tls_x509_verify",
             "rm memory_backing_dir",
         ],
       }).that_notifies('Service[libvirt]') }
@@ -45,6 +46,7 @@ describe 'nova::compute::libvirt::qemu' do
             "rm group",
             "rm vnc_tls",
             "rm vnc_tls_x509_verify",
+            "rm default_tls_x509_verify",
             "rm memory_backing_dir",
             "rm nbd_tls",
         ],
@@ -65,6 +67,7 @@ describe 'nova::compute::libvirt::qemu' do
             "set max_processes 4096",
             "set vnc_tls 0",
             "set vnc_tls_x509_verify 0",
+            "set default_tls_x509_verify 1",
         ],
         :tag     => 'qemu-conf-augeas',
       }).that_notifies('Service[libvirt]') }
@@ -84,6 +87,7 @@ describe 'nova::compute::libvirt::qemu' do
             "set max_processes 4096",
             "set vnc_tls 0",
             "set vnc_tls_x509_verify 0",
+            "set default_tls_x509_verify 1",
             "set nbd_tls 0",
         ],
         :tag     => 'qemu-conf-augeas',
@@ -106,6 +110,7 @@ describe 'nova::compute::libvirt::qemu' do
             "set max_processes 131072",
             "set vnc_tls 0",
             "set vnc_tls_x509_verify 0",
+            "set default_tls_x509_verify 1",
         ],
         :tag     => 'qemu-conf-augeas',
       }).that_notifies('Service[libvirt]') }
@@ -127,6 +132,7 @@ describe 'nova::compute::libvirt::qemu' do
             "set max_processes 131072",
             "set vnc_tls 0",
             "set vnc_tls_x509_verify 0",
+            "set default_tls_x509_verify 1",
             "set nbd_tls 0",
         ],
         :tag     => 'qemu-conf-augeas',
@@ -151,6 +157,7 @@ describe 'nova::compute::libvirt::qemu' do
             "set max_processes 131072",
             "set vnc_tls 0",
             "set vnc_tls_x509_verify 0",
+            "set default_tls_x509_verify 1",
             "set group openvswitch",
             "set memory_backing_dir /tmp",
         ],
@@ -173,12 +180,34 @@ describe 'nova::compute::libvirt::qemu' do
             "set max_processes 4096",
             "set vnc_tls 1",
             "set vnc_tls_x509_verify 1",
+            "set default_tls_x509_verify 1",
         ],
         :tag     => 'qemu-conf-augeas',
       }).that_notifies('Service[libvirt]') }
     end
 
-    context 'when configuring qemu without vnc_tls_verify' do
+    context 'when configuring qemu with default_tls_verify enabled' do
+      let :params do
+        {
+          :configure_qemu => true,
+          :default_tls_verify => true,
+          :libvirt_version => '3.9',
+        }
+      end
+      it { is_expected.to contain_augeas('qemu-conf-limits').with({
+        :context => '/files/etc/libvirt/qemu.conf',
+        :changes => [
+            "set max_files 1024",
+            "set max_processes 4096",
+            "set vnc_tls 0",
+            "set vnc_tls_x509_verify 0",
+            "set default_tls_x509_verify 1",
+        ],
+        :tag     => 'qemu-conf-augeas',
+      }).that_notifies('Service[libvirt]') }
+    end
+
+    context 'when configuring qemu with vnc_tls_verify disabled' do
       let :params do
         {
           :configure_qemu => true,
@@ -194,6 +223,28 @@ describe 'nova::compute::libvirt::qemu' do
             "set max_processes 4096",
             "set vnc_tls 1",
             "set vnc_tls_x509_verify 0",
+            "set default_tls_x509_verify 1",
+        ],
+        :tag     => 'qemu-conf-augeas',
+      }).that_notifies('Service[libvirt]') }
+    end
+
+    context 'when configuring qemu with default_tls_verify disabled' do
+      let :params do
+        {
+          :configure_qemu => true,
+          :default_tls_verify => false,
+          :libvirt_version => '3.9',
+        }
+      end
+      it { is_expected.to contain_augeas('qemu-conf-limits').with({
+        :context => '/files/etc/libvirt/qemu.conf',
+        :changes => [
+            "set max_files 1024",
+            "set max_processes 4096",
+            "set vnc_tls 0",
+            "set vnc_tls_x509_verify 0",
+            "set default_tls_x509_verify 0",
         ],
         :tag     => 'qemu-conf-augeas',
       }).that_notifies('Service[libvirt]') }
@@ -214,6 +265,7 @@ describe 'nova::compute::libvirt::qemu' do
             "set max_processes 4096",
             "set vnc_tls 0",
             "set vnc_tls_x509_verify 0",
+            "set default_tls_x509_verify 1",
         ],
         :tag     => 'qemu-conf-augeas',
       }).that_notifies('Service[libvirt]') }
@@ -234,6 +286,7 @@ describe 'nova::compute::libvirt::qemu' do
             "set max_processes 4096",
             "set vnc_tls 0",
             "set vnc_tls_x509_verify 0",
+            "set default_tls_x509_verify 1",
             "set nbd_tls 1",
         ],
         :tag     => 'qemu-conf-augeas',
