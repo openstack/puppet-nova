@@ -52,6 +52,7 @@ describe 'nova' do
         is_expected.to contain_nova_config('DEFAULT/ovsdb_connection').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('DEFAULT/transport_url').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('DEFAULT/rpc_response_timeout').with_value('<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('DEFAULT/long_rpc_timeout').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('DEFAULT/control_exchange').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('cinder/cross_az_attach').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('DEFAULT/cpu_allocation_ratio').with_value('<SERVICE DEFAULT>')
@@ -75,6 +76,7 @@ describe 'nova' do
           :glance_num_retries                      => 3,
           :default_transport_url                   => 'rabbit://rabbit_user:password@localhost:5673',
           :rpc_response_timeout                    => '30',
+          :long_rpc_timeout                        => '1800',
           :control_exchange                        => 'nova',
           :rabbit_heartbeat_timeout_threshold      => '60',
           :rabbit_heartbeat_rate                   => '10',
@@ -137,6 +139,7 @@ describe 'nova' do
       it 'configures rabbit' do
         is_expected.to contain_nova_config('DEFAULT/transport_url').with_value('rabbit://rabbit_user:password@localhost:5673')
         is_expected.to contain_nova_config('DEFAULT/rpc_response_timeout').with_value('30')
+        is_expected.to contain_nova_config('DEFAULT/long_rpc_timeout').with_value('1800')
         is_expected.to contain_nova_config('DEFAULT/control_exchange').with_value('nova')
         is_expected.to contain_nova_config('cinder/cross_az_attach').with_value(true)
         is_expected.to contain_nova_config('oslo_messaging_rabbit/heartbeat_timeout_threshold').with_value('60')
