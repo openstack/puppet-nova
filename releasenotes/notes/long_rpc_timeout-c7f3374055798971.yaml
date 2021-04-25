@@ -1,0 +1,4 @@
+---
+features:
+  - |
+    Now the ``nova`` class supports the ``long_rpc_timeout`` parameter.

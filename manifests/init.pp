@@ -19,6 +19,11 @@
 #   (Optional) Seconds to wait for a response from a call. (integer value)
 #   Defaults to $::os_service_default.
 #
+# [*long_rpc_timeout*]
+#   (Optional) An alternative timeout value for RPC calls that have
+#   the potential to take a long time.
+#   Defaults to $::os_service_default.
+#
 # [*control_exchange*]
 #   (Optional) The default exchange under which topics are scoped. May be
 #   overridden by an exchange name specified in the transport_url
@@ -431,6 +436,7 @@ class nova(
   $ensure_package                         = 'present',
   $default_transport_url                  = $::os_service_default,
   $rpc_response_timeout                   = $::os_service_default,
+  $long_rpc_timeout                       = $::os_service_default,
   $control_exchange                       = $::os_service_default,
   $rabbit_use_ssl                         = $::os_service_default,
   $rabbit_heartbeat_timeout_threshold     = $::os_service_default,
@@ -786,6 +792,10 @@ but should be one of: ssh-rsa, ssh-dsa, ssh-ecdsa.")
     transport_url        => $default_transport_url,
     rpc_response_timeout => $rpc_response_timeout,
     control_exchange     => $control_exchange,
+  }
+
+  nova_config {
+    'DEFAULT/long_rpc_timeout': value => $long_rpc_timeout;
   }
 
   oslo::messaging::notifications { 'nova_config':
