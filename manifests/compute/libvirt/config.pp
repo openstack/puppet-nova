@@ -54,6 +54,8 @@ class nova::compute::libvirt::config (
   $virtstoraged_config = {},
 ) {
 
+  include nova::deps
+
   validate_legacy(Hash, 'validate_hash', $libvirtd_config)
   validate_legacy(Hash, 'validate_hash', $virtlogd_config)
   validate_legacy(Hash, 'validate_hash', $virtnodedevd_config)
