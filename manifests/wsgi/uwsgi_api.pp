@@ -15,7 +15,7 @@
 #
 # [*threads*]
 #   (Optional) Number of threads.
-#   Defaults to 32.
+#   Defaults to 1.
 #
 # [*listen_queue_size*]
 #   (Optional) Socket listen queue size.
@@ -23,7 +23,7 @@
 #
 class nova::wsgi::uwsgi_api (
   $processes         = $::os_workers,
-  $threads           = 32,
+  $threads           = 1,
   $listen_queue_size = 100,
 ){
 
@@ -31,6 +31,10 @@ class nova::wsgi::uwsgi_api (
 
   if $::os_package_type != 'debian'{
     warning('This class is only valid for Debian, as other operating systems are not using uwsgi by default.')
+  }
+
+  if $threads != 1 {
+    warning('The nova API currently does not support anything else than threads=1.')
   }
 
   nova_api_uwsgi_config {
