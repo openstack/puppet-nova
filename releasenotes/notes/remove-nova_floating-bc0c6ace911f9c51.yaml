@@ -1,0 +1,6 @@
+---
+upgrade:
+  - |
+    The ``nova::manage::floatingip`` class, the ``nova_floating`` type and its
+    provider have been removed.
+
