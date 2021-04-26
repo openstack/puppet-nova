@@ -20,7 +20,6 @@ describe 'nova::scheduler' do
     it { is_expected.to contain_nova_config('scheduler/workers').with_value(4) }
     it { is_expected.to contain_nova_config('scheduler/max_attempts').with_value('<SERVICE DEFAULT>') }
     it { is_expected.to contain_nova_config('scheduler/periodic_task_interval').with_value('<SERVICE DEFAULT>') }
-    it { is_expected.to contain_nova_config('scheduler/driver').with_ensure('absent') }
     it { is_expected.to contain_nova_config('scheduler/discover_hosts_in_cells_interval').with_value('<SERVICE DEFAULT>') }
     it { is_expected.to contain_nova_config('scheduler/query_placement_for_image_type_support').with_value('<SERVICE DEFAULT>') }
     it { is_expected.to contain_nova_config('scheduler/limit_tenants_to_placement_aggregate').with_value('<SERVICE DEFAULT>') }
@@ -73,14 +72,6 @@ describe 'nova::scheduler' do
       end
 
       it { is_expected.to contain_nova_config('scheduler/periodic_task_interval').with_value(300) }
-    end
-
-    context 'with scheduler driver' do
-      let :params do
-        { :scheduler_driver => 'custom driver' }
-      end
-
-      it { is_expected.to contain_nova_config('scheduler/driver').with_value('custom driver') }
     end
 
     context 'with discover_hosts_in_cells_interval' do
