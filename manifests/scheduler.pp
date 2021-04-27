@@ -24,12 +24,6 @@
 #   (optional) Maximum number of attempts to schedule an instance
 #   Defaults to $::os_service_default
 #
-# [*periodic_task_interval*]
-#   (Optional) This value controls how often (in seconds) to run periodic tasks
-#   in the scheduler. The specific tasks that are run for each period are
-#   determined by the particular scheduler being used.
-#   Defaults to $::os_service_default
-#
 # [*discover_hosts_in_cells_interval*]
 #   (Optional) This value controls how often (in seconds) the scheduler should
 #   attempt to discover new hosts that have been added to cells.
@@ -79,13 +73,20 @@
 #   compute hosts affined to routed network segment aggregates.
 #   Defaults to $::os_service_default
 #
+# DEPRECATED PARAMETERS
+#
+# [*periodic_task_interval*]
+#   (Optional) This value controls how often (in seconds) to run periodic tasks
+#   in the scheduler. The specific tasks that are run for each period are
+#   determined by the particular scheduler being used.
+#   Defaults to undef
+#
 class nova::scheduler(
   $enabled                                       = true,
   $manage_service                                = true,
   $ensure_package                                = 'present',
   $workers                                       = $::os_workers,
   $max_attempts                                  = $::os_service_default,
-  $periodic_task_interval                        = $::os_service_default,
   $discover_hosts_in_cells_interval              = $::os_service_default,
   $query_placement_for_image_type_support        = $::os_service_default,
   $limit_tenants_to_placement_aggregate          = $::os_service_default,
@@ -94,12 +95,18 @@ class nova::scheduler(
   $enable_isolated_aggregate_filtering           = $::os_service_default,
   $query_placement_for_availability_zone         = $::os_service_default,
   $query_placement_for_routed_network_aggregates = $::os_service_default,
+  # DEPRECATED PARAMETERS
+  $periodic_task_interval                        = undef,
 ) {
 
   include nova::deps
   include nova::db
   include nova::params
   include nova::availability_zone
+
+  if $periodic_task_interval != undef {
+    warning('The periodic_task_interval parameter is depreated and has no effect')
+  }
 
   nova::generic_service { 'scheduler':
     enabled        => $enabled,
@@ -112,7 +119,6 @@ class nova::scheduler(
   nova_config {
     'scheduler/workers':                                       value => $workers;
     'scheduler/max_attempts':                                  value => $max_attempts;
-    'scheduler/periodic_task_interval':                        value => $periodic_task_interval;
     'scheduler/discover_hosts_in_cells_interval':              value => $discover_hosts_in_cells_interval;
     'scheduler/query_placement_for_image_type_support':        value => $query_placement_for_image_type_support;
     'scheduler/limit_tenants_to_placement_aggregate':          value => $limit_tenants_to_placement_aggregate;
@@ -121,5 +127,9 @@ class nova::scheduler(
     'scheduler/enable_isolated_aggregate_filtering':           value => $enable_isolated_aggregate_filtering;
     'scheduler/query_placement_for_availability_zone':         value => $query_placement_for_availability_zone;
     'scheduler/query_placement_for_routed_network_aggregates': value => $query_placement_for_routed_network_aggregates;
+  }
+
+  nova_config {
+    'scheduler/periodic_task_interval': ensure => absent;
   }
 }
