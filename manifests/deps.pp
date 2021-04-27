@@ -48,13 +48,6 @@ class nova::deps {
   -> Package<| tag == 'nova-support-package'|>
   -> Anchor['nova::install::end']
 
-  # The following resources are managed by calling 'nova manage' and so the
-  # database must be provisioned before they can be applied.
-  Anchor['nova::dbsync_api::end']
-  -> Nova_floating<||>
-  Anchor['nova::dbsync::end']
-  -> Nova_floating<||>
-
   # all cache settings should be applied and all packages should be installed
   # before service startup
   Oslo::Cache<||> -> Anchor['nova::service::begin']
