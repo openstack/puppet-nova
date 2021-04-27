@@ -79,12 +79,6 @@
 #   compute hosts affined to routed network segment aggregates.
 #   Defaults to $::os_service_default
 #
-# DEPRECATED PARAMETERS
-#
-# [*scheduler_driver*]
-#   (Optional) Default driver to use for the scheduler
-#   Defaults to undef
-#
 class nova::scheduler(
   $enabled                                       = true,
   $manage_service                                = true,
@@ -100,8 +94,6 @@ class nova::scheduler(
   $enable_isolated_aggregate_filtering           = $::os_service_default,
   $query_placement_for_availability_zone         = $::os_service_default,
   $query_placement_for_routed_network_aggregates = $::os_service_default,
-  # DEPRECATED PARAMETERS
-  $scheduler_driver                              = undef,
 ) {
 
   include nova::deps
@@ -117,15 +109,10 @@ class nova::scheduler(
     ensure_package => $ensure_package,
   }
 
-  # TODO(tkajinam): Remove this when we remove the deprecated parameters
-  #                 from the nova::scheduler::filter class
-  $max_attempts_real = pick($::nova::scheduler::filter::scheduler_max_attempts, $max_attempts)
-  $periodic_task_interval_real = pick($::nova::scheduler::filter::periodic_task_interval, $periodic_task_interval)
-
   nova_config {
     'scheduler/workers':                                       value => $workers;
-    'scheduler/max_attempts':                                  value => $max_attempts_real;
-    'scheduler/periodic_task_interval':                        value => $periodic_task_interval_real;
+    'scheduler/max_attempts':                                  value => $max_attempts;
+    'scheduler/periodic_task_interval':                        value => $periodic_task_interval;
     'scheduler/discover_hosts_in_cells_interval':              value => $discover_hosts_in_cells_interval;
     'scheduler/query_placement_for_image_type_support':        value => $query_placement_for_image_type_support;
     'scheduler/limit_tenants_to_placement_aggregate':          value => $limit_tenants_to_placement_aggregate;
@@ -134,17 +121,5 @@ class nova::scheduler(
     'scheduler/enable_isolated_aggregate_filtering':           value => $enable_isolated_aggregate_filtering;
     'scheduler/query_placement_for_availability_zone':         value => $query_placement_for_availability_zone;
     'scheduler/query_placement_for_routed_network_aggregates': value => $query_placement_for_routed_network_aggregates;
-  }
-
-  if $scheduler_driver != undef {
-    warning('The scheduler_driver parameter is deprecated and will be removed \
-in a future release')
-    nova_config {
-      'scheduler/driver': value => $scheduler_driver;
-    }
-  } else {
-    nova_config {
-      'scheduler/driver': ensure => absent;
-    }
   }
 }

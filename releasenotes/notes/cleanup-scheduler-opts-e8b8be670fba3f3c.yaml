@@ -1,0 +1,9 @@
+---
+upgrade:
+  - |
+    The following deprecated parameters have been removed.
+
+    - ``nova::scheduler::scheduler_driver``
+    - ``nova::scheduler::filter::scheduler_max_attempts``
+    - ``nova::scheduler::filter::periodic_task_interval``
+    - ``nova::scheduler::filter::scheduler_default_filters``

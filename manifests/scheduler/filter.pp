@@ -96,23 +96,6 @@
 #   (optional) Separator character(s) for image property namespace and name
 #   Defaults to $::os_service_default
 #
-# DEPRECATED PARAMETERS
-#
-# [*scheduler_max_attempts*]
-#   (optional) Maximum number of attempts to schedule an instance
-#   Defaults to undef
-#
-# [*periodic_task_interval*]
-#   (optional) This value controls how often (in seconds) to run periodic tasks
-#   in the scheduler. The specific tasks that are run for each period are
-#   determined by the particular scheduler being used.
-#   Defaults to undef
-#
-# [*scheduler_default_filters*]
-#   (optional) An array of filters to be used by default
-#   Defaults to $::os_service_default
-#
-
 class nova::scheduler::filter (
   $scheduler_host_subset_size                     = $::os_service_default,
   $max_io_ops_per_host                            = $::os_service_default,
@@ -135,39 +118,18 @@ class nova::scheduler::filter (
   $restrict_isolated_hosts_to_isolated_images     = $::os_service_default,
   $aggregate_image_properties_isolation_namespace = $::os_service_default,
   $aggregate_image_properties_isolation_separator = $::os_service_default,
-  # DEPRECATED PARAMETERS
-  $scheduler_max_attempts                         = undef,
-  $periodic_task_interval                         = undef,
-  $scheduler_default_filters                      = undef,
 ) {
 
   include nova::deps
-
-  if $scheduler_max_attempts != undef {
-    warning('The nova::scheduler::filter::scheduler_max_attempts parameter has been deprecated and \
-will be removed in a future release. Use the nova::scheduler::max_attempts parameter instead.')
-  }
-
-  if $periodic_task_interval != undef {
-    warning('The nova::scheduler::filter::periodic_task_interval parameter has been deprecated and \
-will be removed in a future release. Use the nova::scheduler::periodic_task_interval parameter instead.')
-  }
-
-if $scheduler_default_filters != undef {
-    warning('The nova::scheduler::filter::scheduler_default_filters parameter has been deprecated and \
-will be removed in a future release. Use the nova::scheduler::schedumer_enabled_filters parameter instead.')
-  }
-
 
   # The following values are following this rule:
   # - default is $::os_service_default so Puppet won't try to configure it.
   # - if set, we'll validate it's an array that is not empty and configure the parameter.
   # - Otherwise, fallback to default.
 
-  $scheduler_enabled_filters_raw = pick($scheduler_default_filters, $scheduler_enabled_filters)
-  if !is_service_default($scheduler_enabled_filters_raw) and !empty($scheduler_enabled_filters_raw){
-    validate_legacy(Array, 'validate_array', $scheduler_enabled_filters_raw)
-    $scheduler_enabled_filters_real = join($scheduler_enabled_filters_raw, ',')
+  if !is_service_default($scheduler_enabled_filters) and !empty($scheduler_enabled_filters){
+    validate_legacy(Array, 'validate_array', $scheduler_enabled_filters)
+    $scheduler_enabled_filters_real = join($scheduler_enabled_filters, ',')
   } else {
     $scheduler_enabled_filters_real = $::os_service_default
   }
