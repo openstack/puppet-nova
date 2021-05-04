@@ -731,7 +731,8 @@ but should be one of: ssh-rsa, ssh-dsa, ssh-ecdsa.")
 
   nova_config {
     'cinder/catalog_info':                            value => $cinder_catalog_info;
-    'DEFAULT/ovsdb_connection':                       value => $ovsdb_connection;
+    'DEFAULT/ovsdb_connection':                       ensure => 'absent';
+    'vif_plug_ovs/ovsdb_connection':                  value => $ovsdb_connection;
     'notifications/notification_format':              value => $notification_format;
     # Following may need to be broken out to different nova services
     'DEFAULT/state_path':                             value => $state_path;
