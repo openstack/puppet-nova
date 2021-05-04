@@ -1,0 +1,17 @@
+---
+upgrade:
+  - |
+    The following deprecated parameters have been removed from
+    the ``nova::compute::libvirt`` class.
+
+    - ``libvirt_virt_type``
+    - ``libvirt_cpu_mode``
+    - ``libvirt_cpu_model``
+    - ``libvirt_cpu_model_extra_flags``
+    - ``libvirt_snapshot_image_format``
+    - ``libvirt_hw_dis_discard``
+    - ``libvirt_hw_machine_type``
+    - ``libvirt_hw_inject_password``
+    - ``libvirt_hw_inject_key``
+    - ``libvirt_hw_inject_partition``
+    - ``libvirt_enabled_perf_events``
