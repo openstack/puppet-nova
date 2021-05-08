@@ -22,13 +22,13 @@ eos
       it { is_expected.to contain_class('nova::deps')}
       it { is_expected.to contain_class('nova::compute::libvirt::virtlogd')}
 
-      it { is_expected.to contain_virtlogd_config('log_level').with_ensure('absent')}
-      it { is_expected.to contain_virtlogd_config('log_outputs').with_ensure('absent')}
-      it { is_expected.to contain_virtlogd_config('log_filters').with_ensure('absent')}
-      it { is_expected.to contain_virtlogd_config('max_clients').with_ensure('absent')}
-      it { is_expected.to contain_virtlogd_config('admin_max_clients').with_ensure('absent')}
-      it { is_expected.to contain_virtlogd_config('max_size').with_ensure('absent')}
-      it { is_expected.to contain_virtlogd_config('max_backups').with_ensure('absent')}
+      it { is_expected.to contain_virtlogd_config('log_level').with_value('<SERVICE DEFAULT>')}
+      it { is_expected.to contain_virtlogd_config('log_outputs').with_value('<SERVICE DEFAULT>').with_quote(true)}
+      it { is_expected.to contain_virtlogd_config('log_filters').with_value('<SERVICE DEFAULT>').with_quote(true)}
+      it { is_expected.to contain_virtlogd_config('max_clients').with_value('<SERVICE DEFAULT>')}
+      it { is_expected.to contain_virtlogd_config('admin_max_clients').with_value('<SERVICE DEFAULT>')}
+      it { is_expected.to contain_virtlogd_config('max_size').with_value('<SERVICE DEFAULT>')}
+      it { is_expected.to contain_virtlogd_config('max_backups').with_value('<SERVICE DEFAULT>')}
     end
 
     context 'with specified parameters' do
@@ -47,8 +47,8 @@ eos
       it { is_expected.to contain_class('nova::compute::libvirt::virtlogd')}
 
       it { is_expected.to contain_virtlogd_config('log_level').with_value(params[:log_level])}
-      it { is_expected.to contain_virtlogd_config('log_outputs').with_value("\"#{params[:log_outputs]}\"")}
-      it { is_expected.to contain_virtlogd_config('log_filters').with_value("\"#{params[:log_filters]}\"")}
+      it { is_expected.to contain_virtlogd_config('log_outputs').with_value(params[:log_outputs]).with_quote(true)}
+      it { is_expected.to contain_virtlogd_config('log_filters').with_value(params[:log_filters]).with_quote(true)}
       it { is_expected.to contain_virtlogd_config('max_clients').with_value(params[:max_clients])}
       it { is_expected.to contain_virtlogd_config('admin_max_clients').with_value(params[:admin_max_clients])}
       it { is_expected.to contain_virtlogd_config('max_size').with_value(params[:max_size])}

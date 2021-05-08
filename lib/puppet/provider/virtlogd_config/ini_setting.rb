@@ -3,6 +3,17 @@ Puppet::Type.type(:virtlogd_config).provide(
   :parent => Puppet::Type.type(:ini_setting).provider(:ruby)
 ) do
 
+  def exists?
+    if resource[:value] == ensure_absent_val
+      resource[:ensure] = :absent
+    elsif resource[:quote]
+      unless resource[:value].start_with?('"')
+        resource[:value] = '"' + resource[:value] + '"'
+      end
+    end
+    super
+  end
+
   def section
     ''
   end
@@ -13,6 +24,10 @@ Puppet::Type.type(:virtlogd_config).provide(
 
   def separator
     '='
+  end
+
+  def ensure_absent_val
+    resource[:ensure_absent_val]
   end
 
   def self.file_path

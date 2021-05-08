@@ -1,0 +1,30 @@
+---
+features:
+  - |
+    Now ``libvirtd_config`` and ``virtlogd_config`` supports the ``quote``
+    parameter. Setting this parameter quotes the value by ``" "``.
+
+  - |
+    Now ``libvirtd_config`` and ``virtlogd_config`` accepts
+    ``$::os_service_default`` as a mark to unset the parameter.
+
+deprecations:
+  - |
+    The default values of the following parameter have been changed from
+    ``undef`` to ``$::os_service_default``. Using ``undef`` is still supported
+    but that usage is deprecated.
+
+    - ``nova::compute::libvirt::log_outputs``
+    - ``nova::compute::libvirt::log_filters``
+    - ``nova::compute::libvirt::tls_priority``
+    - ``nova::compute::libvirt::ovs_timeout``
+    - ``nova::compute::libvirt::virtlogd::log_level``
+    - ``nova::compute::libvirt::virtlogd::log_filters``
+    - ``nova::compute::libvirt::virtlogd::log_outputs``
+    - ``nova::compute::libvirt::virtlogd::max_clients``
+    - ``nova::compute::libvirt::virtlogd::admin_max_clients``
+    - ``nova::compute::libvirt::virtlogd::max_size``
+    - ``nova::compute::libvirt::virtlogd::max_backups``
+    - ``nova::migration::libvirt::listen_address``
+    - ``nova::migration::libvirt::ca_file``
+    - ``nova::migration::libvirt::crl_file``
