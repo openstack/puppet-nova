@@ -6,124 +6,71 @@
 #
 # [*log_level*]
 #   Defines a log level to filter log outputs.
-#   Defaults to undef
+#   Defaults to $::os_service_default
 #
 # [*log_filters*]
 #   Defines a log filter to select a different logging level for
 #   for a given category log outputs.
-#   Defaults to undef
+#   Defaults to $::os_service_default
 #
 # [*log_outputs*]
 #   (optional) Defines log outputs, as specified in
 #   https://libvirt.org/logging.html
-#   Defaults to undef
+#   Defaults to $::os_service_default
 #
 # [*max_clients*]
 #   The maximum number of concurrent client connections to allow
 #   on primary socket.
-#   Defaults to undef
+#   Defaults to $::os_service_default
 #
 # [*admin_max_clients*]
 #   The maximum number of concurrent client connections to allow
 #   on administrative socket.
-#   Defaults to undef
+#   Defaults to $::os_service_default
 #
 # [*max_size*]
 #   Maximum file size before rolling over.
-#   Defaults to undef
+#   Defaults to $::os_service_default
 #
 # [*max_backups*]
 #   Maximum nuber of backup files to keep.
-#   Defaults to undef
+#   Defaults to $::os_service_default
 #
 class nova::compute::libvirt::virtlogd (
-  $log_level         = undef,
-  $log_filters       = undef,
-  $log_outputs       = undef,
-  $max_clients       = undef,
-  $admin_max_clients = undef,
-  $max_size          = undef,
-  $max_backups       = undef,
+  $log_level         = $::os_service_default,
+  $log_filters       = $::os_service_default,
+  $log_outputs       = $::os_service_default,
+  $max_clients       = $::os_service_default,
+  $admin_max_clients = $::os_service_default,
+  $max_size          = $::os_service_default,
+  $max_backups       = $::os_service_default,
 ) {
 
   include nova::deps
   require nova::compute::libvirt
 
-  if $log_level {
-    virtlogd_config {
-      'log_level': value => $log_level;
-    }
-  }
-  else {
-    virtlogd_config {
-      'log_level': ensure => 'absent';
-    }
-  }
-
-  if $log_filters {
-    virtlogd_config {
-      'log_filters': value => "\"${log_filters}\"";
-    }
-  }
-  else {
-    virtlogd_config {
-      'log_filters': ensure => 'absent';
+  [
+    'log_level',
+    'log_filters',
+    'log_outputs',
+    'max_clients',
+    'admin_max_clients',
+    'max_size',
+    'max_backups',
+  ].each |String $virtlogd_opt| {
+    if getvar($virtlogd_opt) == undef {
+      warning("Usage of undef for ${virtlogd_opt} has been deprecated.")
     }
   }
 
-  if $log_outputs {
-    virtlogd_config {
-      'log_outputs': value => "\"${log_outputs}\"";
-    }
-  }
-  else {
-    virtlogd_config {
-      'log_outputs': ensure => 'absent';
-    }
-  }
-
-  if $max_clients {
-    virtlogd_config {
-      'max_clients': value => $max_clients;
-    }
-  }
-  else {
-    virtlogd_config {
-      'max_clients': ensure => 'absent';
-    }
-  }
-
-  if $admin_max_clients {
-    virtlogd_config {
-      'admin_max_clients': value => $admin_max_clients;
-    }
-  }
-  else {
-    virtlogd_config {
-      'admin_max_clients': ensure => 'absent';
-    }
-  }
-
-  if $max_size {
-    virtlogd_config {
-      'max_size': value => $max_size;
-    }
-  }
-  else {
-    virtlogd_config {
-      'max_size': ensure => 'absent';
-    }
-  }
-
-  if $max_backups {
-    virtlogd_config {
-      'max_backups': value => $max_backups;
-    }
-  }
-  else {
-    virtlogd_config {
-      'max_backups': ensure => 'absent';
-    }
+  virtlogd_config {
+    'log_level':         value => pick($log_level, $::os_service_default);
+    'log_filters':       value => pick($log_filters, $::os_service_default), quote => true;
+    'log_outputs':       value => pick($log_outputs, $::os_service_default), quote => true;
+    'max_clients':       value => pick($max_clients, $::os_service_default);
+    'admin_max_clients': value => pick($admin_max_clients, $::os_service_default);
+    'max_size':          value => pick($max_size, $::os_service_default);
+    'max_backups':       value => pick($max_backups, $::os_service_default);
   }
 
   Anchor['nova::config::begin']

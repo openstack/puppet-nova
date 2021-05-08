@@ -35,8 +35,10 @@ describe 'nova::migration::libvirt' do
     context 'with default params' do
       it { is_expected.to contain_libvirtd_config('listen_tls').with_value('0') }
       it { is_expected.to contain_libvirtd_config('listen_tcp').with_value('1') }
-      it { is_expected.not_to contain_libvirtd_config('auth_tls') }
-      it { is_expected.to contain_libvirtd_config('auth_tcp').with_value("\"none\"") }
+      it { is_expected.to contain_libvirtd_config('auth_tls').with_value('<SERVICE DEFAULT>').with_quote(true) }
+      it { is_expected.to contain_libvirtd_config('auth_tcp').with_value('none').with_quote(true) }
+      it { is_expected.to contain_libvirtd_config('ca_file').with_value('<SERVICE DEFAULT>').with_quote(true) }
+      it { is_expected.to contain_libvirtd_config('crl_file').with_value('<SERVICE DEFAULT>').with_quote(true) }
       it { is_expected.to contain_nova_config('libvirt/live_migration_tunnelled').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('libvirt/live_migration_with_native_tls').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('libvirt/live_migration_completion_timeout').with_value('<SERVICE DEFAULT>') }
@@ -90,8 +92,10 @@ describe 'nova::migration::libvirt' do
       end
       it { is_expected.to contain_libvirtd_config('listen_tls').with_value('1') }
       it { is_expected.to contain_libvirtd_config('listen_tcp').with_value('0') }
-      it { is_expected.to contain_libvirtd_config('auth_tls').with_value("\"none\"") }
-      it { is_expected.not_to contain_libvirtd_config('auth_tcp') }
+      it { is_expected.to contain_libvirtd_config('auth_tls').with_value('none').with_quote(true) }
+      it { is_expected.to contain_libvirtd_config('auth_tcp').with_value('<SERVICE DEFAULT>').with_quote(true) }
+      it { is_expected.to contain_libvirtd_config('ca_file').with_value('<SERVICE DEFAULT>').with_quote(true) }
+      it { is_expected.to contain_libvirtd_config('crl_file').with_value('<SERVICE DEFAULT>').with_quote(true) }
       it { is_expected.to contain_nova_config('libvirt/live_migration_uri').with_value('qemu+tls://%s/system')}
     end
 
@@ -104,8 +108,10 @@ describe 'nova::migration::libvirt' do
       end
       it { is_expected.to contain_libvirtd_config('listen_tls').with_value('1') }
       it { is_expected.to contain_libvirtd_config('listen_tcp').with_value('0') }
-      it { is_expected.to contain_libvirtd_config('auth_tls').with_value("\"none\"") }
-      it { is_expected.not_to contain_libvirtd_config('auth_tcp') }
+      it { is_expected.to contain_libvirtd_config('auth_tls').with_value('none').with_quote(true) }
+      it { is_expected.to contain_libvirtd_config('auth_tcp').with_value('<SERVICE DEFAULT>').with_quote(true) }
+      it { is_expected.to contain_libvirtd_config('ca_file').with_value('<SERVICE DEFAULT>').with_quote(true) }
+      it { is_expected.to contain_libvirtd_config('crl_file').with_value('<SERVICE DEFAULT>').with_quote(true) }
       it { is_expected.to contain_nova_config('libvirt/live_migration_uri').with_value('qemu+tls://%s/system')}
       it { is_expected.to contain_nova_config('libvirt/live_migration_inbound_addr').with_value('host1.example.com')}
     end
@@ -149,19 +155,23 @@ describe 'nova::migration::libvirt' do
           :auth => 'sasl',
         }
       end
-      it { is_expected.not_to contain_libvirtd_config('auth_tls') }
-      it { is_expected.to contain_libvirtd_config('auth_tcp').with_value("\"sasl\"") }
+      it { is_expected.to contain_libvirtd_config('auth_tls').with_value('<SERVICE DEFAULT>').with_quote(true) }
+      it { is_expected.to contain_libvirtd_config('auth_tcp').with_value('sasl').with_quote(true) }
+      it { is_expected.to contain_libvirtd_config('ca_file').with_value('<SERVICE DEFAULT>').with_quote(true) }
+      it { is_expected.to contain_libvirtd_config('crl_file').with_value('<SERVICE DEFAULT>').with_quote(true) }
     end
 
     context 'with auth set to sasl and tls enabled' do
       let :params do
         {
-          :auth    => 'sasl',
+          :auth      => 'sasl',
           :transport => 'tls'
         }
       end
-      it { is_expected.to contain_libvirtd_config('auth_tls').with_value("\"sasl\"") }
-      it { is_expected.not_to contain_libvirtd_config('auth_tcp') }
+      it { is_expected.to contain_libvirtd_config('auth_tls').with_value('sasl').with_quote(true) }
+      it { is_expected.to contain_libvirtd_config('auth_tcp').with_value('<SERVICE DEFAULT>').with_quote(true) }
+      it { is_expected.to contain_libvirtd_config('ca_file').with_value('<SERVICE DEFAULT>').with_quote(true) }
+      it { is_expected.to contain_libvirtd_config('crl_file').with_value('<SERVICE DEFAULT>').with_quote(true) }
     end
 
     context 'with certificates set and tls enabled' do
@@ -172,8 +182,10 @@ describe 'nova::migration::libvirt' do
           :crl_file  => '/crl',
         }
       end
-      it { is_expected.to contain_libvirtd_config('ca_file').with_value("\"/ca\"") }
-      it { is_expected.to contain_libvirtd_config('crl_file').with_value("\"/crl\"") }
+      it { is_expected.to contain_libvirtd_config('auth_tls').with_value('none').with_quote(true) }
+      it { is_expected.to contain_libvirtd_config('auth_tcp').with_value('<SERVICE DEFAULT>').with_quote(true) }
+      it { is_expected.to contain_libvirtd_config('ca_file').with_value('/ca').with_quote(true) }
+      it { is_expected.to contain_libvirtd_config('crl_file').with_value('/crl').with_quote(true) }
     end
 
     context 'with auth set to an invalid setting' do
@@ -212,7 +224,7 @@ describe 'nova::migration::libvirt' do
           :listen_address => "127.0.0.1"
         }
       end
-      it { is_expected.to contain_libvirtd_config('listen_addr').with_value("\"127.0.0.1\"") }
+      it { is_expected.to contain_libvirtd_config('listen_addr').with_value('127.0.0.1').with_quote(true) }
     end
 
     context 'with ssh transport' do

@@ -16,7 +16,7 @@
 #
 # [*listen_address*]
 #   (optional) Bind libvirtd tcp/tls socket to the given address.
-#   Defaults to undef (bind to all addresses)
+#   Defaults to $::os_service_default (bind to all addresses)
 #
 # [*live_migration_inbound_addr*]
 #   (optional) The IP address or hostname to be used as the target for live
@@ -110,13 +110,13 @@
 #   (optional) Specifies the CA certificate that the TLS transport will use.
 #   Note that this is only used if the TLS transport is enabled via the
 #   "transport" option.
-#   Defaults to undef
+#   Defaults to $::os_service_default
 #
 # [*crl_file*]
 #   (optional) Specifies the CRL file that the TLS transport will use.
 #   Note that this is only used if the TLS transport is enabled via the
 #   "transport" option.
-#   Defaults to undef
+#   Defaults to $::os_service_default
 #
 # [*libvirt_version*]
 #   (optional) installed libvirt version. Default is automatic detected depending
@@ -126,7 +126,7 @@
 class nova::migration::libvirt(
   $transport                           = undef,
   $auth                                = 'none',
-  $listen_address                      = undef,
+  $listen_address                      = $::os_service_default,
   $live_migration_inbound_addr         = $::os_service_default,
   $live_migration_tunnelled            = $::os_service_default,
   $live_migration_with_native_tls      = $::os_service_default,
@@ -141,8 +141,8 @@ class nova::migration::libvirt(
   $client_user                         = undef,
   $client_port                         = undef,
   $client_extraparams                  = {},
-  $ca_file                             = undef,
-  $crl_file                            = undef,
+  $ca_file                             = $::os_service_default,
+  $crl_file                            = $::os_service_default,
   $libvirt_version                     = $::nova::compute::libvirt::version::default,
 ) inherits nova::compute::libvirt::version {
 
@@ -244,35 +244,42 @@ class nova::migration::libvirt(
       }
     }
 
-    libvirtd_config {
-      'listen_tls': value => $listen_tls;
-      'listen_tcp': value => $listen_tcp;
-    }
-
     if $transport_real == 'tls' {
-      libvirtd_config {
-        'auth_tls': value => "\"${auth}\"";
+      $auth_tls_real = $auth
+      $auth_tcp_real = $::os_service_default
+      $ca_file_real  = pick($ca_file, $::os_service_default)
+      $crl_file_real = pick($crl_file, $::os_service_default)
+
+      if $ca_file == undef {
+        warning('Usage of undef for the ca_file parameter has been deprecated')
       }
-      if $ca_file {
-        libvirtd_config {
-          'ca_file': value => "\"${ca_file}\"";
-        }
-      }
-      if $crl_file {
-        libvirtd_config {
-          'crl_file': value => "\"${crl_file}\"";
-        }
+      if $crl_file == undef {
+        warning('Usage of undef for the crl_file parameter has been deprecated')
       }
     } elsif $transport_real == 'tcp' {
-      libvirtd_config {
-        'auth_tcp': value => "\"${auth}\"";
-      }
+      $auth_tls_real = $::os_service_default
+      $auth_tcp_real = $auth
+      $ca_file_real  = $::os_service_default
+      $crl_file_real = $::os_service_default
+    } else {
+      $auth_tls_real = $::os_service_default
+      $auth_tcp_real = $::os_service_default
+      $ca_file_real  = $::os_service_default
+      $crl_file_real = $::os_service_default
     }
 
-    if $listen_address {
-      libvirtd_config {
-        'listen_addr': value => "\"${listen_address}\"";
-      }
+    if $listen_address == undef {
+      warning('Usage of undef for the listen_addrss parameter has been deprecated')
+    }
+
+    libvirtd_config {
+      'listen_tls':  value => $listen_tls;
+      'listen_tcp':  value => $listen_tcp;
+      'auth_tls':    value => $auth_tls_real, quote => true;
+      'auth_tcp':    value => $auth_tcp_real, quote => true;
+      'ca_file':     value => $ca_file_real, quote => true;
+      'crl_file':    value => $crl_file_real, quote => true;
+      'listen_addr': value => pick($listen_address, $::os_service_default), quote => true;
     }
 
     if $transport_real == 'tls' or $transport_real == 'tcp' {
