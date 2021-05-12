@@ -1,0 +1,22 @@
+---
+features:
+  - |
+    The new ``nova::key_manager`` class has been added. This class manages
+    basic options of key managers.
+
+  - |
+    The new ``nova::key_manager::barbican`` class has been added. This class
+    manages options of BarbicanKeyManager.
+
+deprecations:
+  - |
+    The ``nova::compute::keymgr_backend`` parameter has been deprecated. Use
+    the ``cinder::key_manager`` class.
+
+  - |
+    The following parameters of the ``nova::compute`` class have been
+    deprecated in favor of the new ``nova::barbican`` class.
+
+    - ``barbican_auth_endpoint``
+    - ``barbican_endpoint``
+    - ``barbican_api_version``
