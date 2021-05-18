@@ -1,0 +1,9 @@
+---
+upgrade:
+  - |
+    The following parameters have been removed from
+    the ``nova::compute::libvirt`` class.
+
+    - ``remove_unused_base_images``
+    - ``remove_unused_original_minimum_age_seconds``
+    - ``remove_unused_resize_minimum_age_seconds``
