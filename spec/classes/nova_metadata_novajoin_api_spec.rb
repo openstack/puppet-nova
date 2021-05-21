@@ -206,15 +206,7 @@ describe 'nova::metadata::novajoin::api' do
         it_behaves_like 'nova::metadata::novajoin::api'
         it_behaves_like 'nova::metadata::novajoin::api on RedHat'
         let (:platform_params) do
-          if facts[:operatingsystem] == 'Fedora'
-            { :novajoin_package_name => 'python3-novajoin' }
-          else
-            if facts[:operatingsystemmajrelease] > '7'
-              { :novajoin_package_name => 'python3-novajoin' }
-            else
-              { :novajoin_package_name => 'python-novajoin' }
-            end
-          end
+          { :novajoin_package_name => 'python3-novajoin' }
         end
       end
     end
