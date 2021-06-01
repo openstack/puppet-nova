@@ -1,0 +1,8 @@
+---
+features:
+  - |
+    Now the ``nova::compute::libvirt`` class supports the following two
+    parameters.
+
+    - ``device_detach_attempts``
+    - ``device_detach_timeout``

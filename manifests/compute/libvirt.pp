@@ -87,6 +87,17 @@
 #   which you may need to search key words ``VIR_PERF_PARAM_*``
 #   Defaults to $::os_service_default
 #
+# [*device_detach_attempts*]
+#   (optional) Maximum number of attempts the driver tries to detach a device
+#   in libvirt.
+#   Defaults to $::os_service_default
+#
+# [*device_detach_timeout*]
+#   (optional) Maximum number of seconds the driver waits for the success or
+#   the failure event from libvirt for a given device detach attempt before
+#   it re-trigger the detach.
+#   Defaults to $::os_service_default
+#
 # [*libvirt_service_name*]
 #   (optional) libvirt service name.
 #   Defaults to $::nova::params::libvirt_service_name
@@ -232,6 +243,8 @@ class nova::compute::libvirt (
   $inject_key                                 = false,
   $inject_partition                           = -2,
   $enabled_perf_events                        = $::os_service_default,
+  $device_detach_attempts                     = $::os_service_default,
+  $device_detach_timeout                      = $::os_service_default,
   $libvirt_service_name                       = $::nova::params::libvirt_service_name,
   $virtlock_service_name                      = $::nova::params::virtlock_service_name,
   $virtlog_service_name                       = $::nova::params::virtlog_service_name,
@@ -396,6 +409,8 @@ class nova::compute::libvirt (
     'libvirt/hw_disk_discard':             value => $hw_disk_discard;
     'libvirt/hw_machine_type':             value => $hw_machine_type;
     'libvirt/enabled_perf_events':         value => join(any2array($enabled_perf_events), ',');
+    'libvirt/device_detach_attempts':      value => $device_detach_attempts;
+    'libvirt/device_detach_timeout':       value => $device_detach_timeout;
     'libvirt/rx_queue_size':               value => $rx_queue_size;
     'libvirt/tx_queue_size':               value => $tx_queue_size;
     'libvirt/file_backed_memory':          value => $file_backed_memory;
