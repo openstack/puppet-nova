@@ -177,6 +177,20 @@
 #   CUSTOM_PMEM_NAMESPACE_$LABEL.
 #   Defaults to $::os_service_default
 #
+# [*swtpm_enabled*]
+#   (optional) Enable emulated Trusted Platform Module (TPM) for guests.
+#   Defaults to $::os_service_default
+#
+# [*swtpm_user*]
+#   (optional) Configure the user that the swtpm binary, used for emulated
+#   Trusted Platform Module (TPM) functionality, runs as.
+#   Defaults to $::os_service_default
+#
+# [*swtpm_group*]
+#   (optional) Configure the group that the swtpm binary, used for emulated
+#   Trusted Platform Module (TPM) functionality, runs as.
+#   Defaults to $::os_service_default
+#
 # [*log_outputs*]
 #   (optional) Defines log outputs, as specified in
 #   https://libvirt.org/logging.html
@@ -198,20 +212,6 @@
 # [*ovs_timeout*]
 #   (optional) A timeout for openvswitch calls made by libvirt
 #   Defaults to undef
-#
-# [*swtpm_enabled*]
-#   (optional) Enable emulated Trusted Platform Module (TPM) for guests.
-#   Defaults to $::os_service_default
-#
-# [*swtpm_user*]
-#   (optional) Configure the user that the swtpm binary, used for emulated
-#   Trusted Platform Module (TPM) functionality, runs as.
-#   Defaults to $::os_service_default
-#
-# [*swtpm_group*]
-#   (optional) Configure the group that the swtpm binary, used for emulated
-#   Trusted Platform Module (TPM) functionality, runs as.
-#   Defaults to $::os_service_default
 #
 # [*max_queues*]
 #   (optional) The maximum number of virtio queue pairs that can be enabled
