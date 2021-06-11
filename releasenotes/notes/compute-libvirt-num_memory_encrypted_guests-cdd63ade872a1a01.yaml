@@ -1,0 +1,5 @@
+---
+features:
+  - |
+    Adds parameter nova::compute::libvirt::num_memory_encrypted_guests
+    to configure the libvirt maximum number of guests with encrypted memory.

@@ -210,6 +210,11 @@
 #   based on the reported kernel major version will be used.
 #   Defaults to $::os_service_default
 #
+# [*num_memory_encrypted_guests*]
+#   (optional) The maximum number of guests with encrypted memory which can
+#   run concurrently on this compute host.
+#   Defaults to $::os_service_default
+#
 class nova::compute::libvirt (
   $ensure_package                             = 'present',
   $virt_type                                  = 'kvm',
@@ -250,6 +255,7 @@ class nova::compute::libvirt (
   $tls_priority                               = undef,
   $ovs_timeout                                = undef,
   $max_queues                                 = $::os_service_default,
+  $num_memory_encrypted_guests                = $::os_service_default,
 ) inherits nova::params {
 
   include nova::deps
@@ -377,31 +383,32 @@ class nova::compute::libvirt (
   }
 
   nova_config {
-    'DEFAULT/compute_driver':           value => $compute_driver;
-    'DEFAULT/preallocate_images':       value => $preallocate_images;
-    'vnc/server_listen':                value => $vncserver_listen;
-    'libvirt/virt_type':                value => $virt_type;
-    'libvirt/cpu_mode':                 value => $cpu_mode_default;
-    'libvirt/snapshot_image_format':    value => $snapshot_image_format;
-    'libvirt/snapshots_directory':      value => $snapshots_directory;
-    'libvirt/inject_password':          value => $inject_password;
-    'libvirt/inject_key':               value => $inject_key;
-    'libvirt/inject_partition':         value => $inject_partition;
-    'libvirt/hw_disk_discard':          value => $hw_disk_discard;
-    'libvirt/hw_machine_type':          value => $hw_machine_type;
-    'libvirt/enabled_perf_events':      value => join(any2array($enabled_perf_events), ',');
-    'libvirt/rx_queue_size':            value => $rx_queue_size;
-    'libvirt/tx_queue_size':            value => $tx_queue_size;
-    'libvirt/file_backed_memory':       value => $file_backed_memory;
-    'libvirt/volume_use_multipath':     value => $volume_use_multipath;
-    'libvirt/nfs_mount_options':        value => $nfs_mount_options;
-    'libvirt/num_pcie_ports':           value => $num_pcie_ports;
-    'libvirt/mem_stats_period_seconds': value => $mem_stats_period_seconds;
-    'libvirt/pmem_namespaces':          value => $pmem_namespaces;
-    'libvirt/swtpm_enabled':            value => $swtpm_enabled;
-    'libvirt/swtpm_user'   :            value => $swtpm_user;
-    'libvirt/swtpm_group':              value => $swtpm_group;
-    'libvirt/max_queues':               value => $max_queues;
+    'DEFAULT/compute_driver':              value => $compute_driver;
+    'DEFAULT/preallocate_images':          value => $preallocate_images;
+    'vnc/server_listen':                   value => $vncserver_listen;
+    'libvirt/virt_type':                   value => $virt_type;
+    'libvirt/cpu_mode':                    value => $cpu_mode_default;
+    'libvirt/snapshot_image_format':       value => $snapshot_image_format;
+    'libvirt/snapshots_directory':         value => $snapshots_directory;
+    'libvirt/inject_password':             value => $inject_password;
+    'libvirt/inject_key':                  value => $inject_key;
+    'libvirt/inject_partition':            value => $inject_partition;
+    'libvirt/hw_disk_discard':             value => $hw_disk_discard;
+    'libvirt/hw_machine_type':             value => $hw_machine_type;
+    'libvirt/enabled_perf_events':         value => join(any2array($enabled_perf_events), ',');
+    'libvirt/rx_queue_size':               value => $rx_queue_size;
+    'libvirt/tx_queue_size':               value => $tx_queue_size;
+    'libvirt/file_backed_memory':          value => $file_backed_memory;
+    'libvirt/volume_use_multipath':        value => $volume_use_multipath;
+    'libvirt/nfs_mount_options':           value => $nfs_mount_options;
+    'libvirt/num_pcie_ports':              value => $num_pcie_ports;
+    'libvirt/mem_stats_period_seconds':    value => $mem_stats_period_seconds;
+    'libvirt/pmem_namespaces':             value => $pmem_namespaces;
+    'libvirt/swtpm_enabled':               value => $swtpm_enabled;
+    'libvirt/swtpm_user'   :               value => $swtpm_user;
+    'libvirt/swtpm_group':                 value => $swtpm_group;
+    'libvirt/max_queues':                  value => $max_queues;
+    'libvirt/num_memory_encrypted_guests': value => $num_memory_encrypted_guests;
   }
 
   validate_legacy(Array, 'validate_array', $cpu_models)
