@@ -4,8 +4,8 @@
 # should be considered to be constant
 class nova::params {
   include openstacklib::defaults
-  $pyvers = $::openstacklib::defaults::pyvers
-  $client_package = "python${pyvers}-novaclient"
+
+  $client_package = 'python3-novaclient'
   $group          = 'nova'
 
   case $::osfamily {
@@ -13,10 +13,10 @@ class nova::params {
       # package names
       $api_package_name                  = 'openstack-nova-api'
       $common_package_name               = 'openstack-nova-common'
-      $python_package_name               = "python${pyvers}-nova"
+      $python_package_name               = 'python3-nova'
       $compute_package_name              = 'openstack-nova-compute'
       $conductor_package_name            = 'openstack-nova-conductor'
-      $novajoin_package_name             = "python${pyvers}-novajoin"
+      $novajoin_package_name             = 'python3-novajoin'
       $doc_package_name                  = 'openstack-nova-doc'
       $libvirt_package_name              = 'libvirt'
       $libvirt_guests_package_name       = 'libvirt-client'
@@ -66,7 +66,7 @@ class nova::params {
       # package names
       $api_package_name                  = 'nova-api'
       $common_package_name               = 'nova-common'
-      $python_package_name               = "python${pyvers}-nova"
+      $python_package_name               = 'python3-nova'
       $compute_package_name              = 'nova-compute'
       $conductor_package_name            = 'nova-conductor'
       $novajoin_package_name             = undef

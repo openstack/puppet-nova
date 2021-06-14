@@ -29,15 +29,7 @@ describe 'nova::client' do
         when 'Debian'
           { :client_package_name => 'python3-novaclient' }
         when 'RedHat'
-          if facts[:operatingsystem] == 'Fedora'
-            { :client_package_name => 'python3-novaclient' }
-          else
-            if facts[:operatingsystemmajrelease] > '7'
-              { :client_package_name => 'python3-novaclient' }
-            else
-              { :client_package_name => 'python-novaclient' }
-            end
-          end
+          { :client_package_name => 'python3-novaclient' }
         end
       end
 
