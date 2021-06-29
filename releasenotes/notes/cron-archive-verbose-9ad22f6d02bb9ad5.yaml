@@ -1,0 +1,5 @@
+---
+features:
+  - |
+    The new ``nova::cron::archive_deleted_rows::verbose`` parameter has been
+    added.

@@ -54,6 +54,7 @@
 #  [*verbose*]
 #    (optional) Adds --verbose to the purge command
 #    If specified, will print information about the purged rows.
+#    Defaults to false.
 #
 #  [*maxdelay*]
 #    (optional) In Seconds. Should be a positive integer.

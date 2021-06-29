@@ -61,11 +61,9 @@
 #    which will automatically do a full db purge when complete.
 #    Defaults to false.
 #
-#  [*maxdelay*]
-#    (optional) In Seconds. Should be a positive integer.
-#    Induces a random delay before running the cronjob to avoid running
-#    all cron jobs at the same time on all hosts this job is configured.
-#    Defaults to 0.
+#  [*age*]
+#    (optional) Adds a retention policy when purging the shadow tables
+#    Defaults to undef.
 #
 #  [*all_cells*]
 #    (optional) Adds --all-cells to the archive command
@@ -75,14 +73,21 @@
 #    (optional) Adds --task-log to the archive command
 #    Defaults to false.
 #
-#  [*age*]
-#    (optional) Adds a retention policy when purging the shadow tables
-#    Defaults to undef.
-#
 #  [*sleep*]
 #    (optional) The amount of time in seconds to sleep between batches when
 #    until_complete is used
 #    Defaults to undef.
+#
+#  [*verbose*]
+#    (optional) Adds --verbose to the purge command
+#    If specified, will print information about the archived rows.
+#    Defaults to false.
+#
+#  [*maxdelay*]
+#    (optional) In Seconds. Should be a positive integer.
+#    Induces a random delay before running the cronjob to avoid running
+#    all cron jobs at the same time on all hosts this job is configured.
+#    Defaults to 0.
 #
 class nova::cron::archive_deleted_rows (
   $minute         = 1,
@@ -95,11 +100,12 @@ class nova::cron::archive_deleted_rows (
   $destination    = '/var/log/nova/nova-rowsflush.log',
   $until_complete = false,
   $purge          = false,
-  $maxdelay       = 0,
+  $age            = undef,
   $all_cells      = false,
   $task_log       = false,
-  $age            = undef,
   $sleep          = undef,
+  $verbose        = false,
+  $maxdelay       = 0,
 ) {
 
   include nova::deps
@@ -117,6 +123,13 @@ class nova::cron::archive_deleted_rows (
   }
   else {
     $purge_real = ''
+  }
+
+  if $verbose {
+    $verbose_real = ' --verbose'
+  }
+  else {
+    $verbose_real = ''
   }
 
   if $all_cells {
@@ -154,7 +167,7 @@ class nova::cron::archive_deleted_rows (
   $cron_cmd = 'nova-manage db archive_deleted_rows'
 
   cron { 'nova-manage db archive_deleted_rows':
-    command     => "${delay_cmd}${cron_cmd}${purge_real} --max_rows ${max_rows}${age_real}${until_complete_real}${all_cells_real}${task_log_real}${sleep_real} \
+    command     => "${delay_cmd}${cron_cmd}${purge_real} --max_rows ${max_rows}${verbose_real}${age_real}${until_complete_real}${all_cells_real}${task_log_real}${sleep_real} \
 >>${destination} 2>&1",
     environment => 'PATH=/bin:/usr/bin:/usr/sbin SHELL=/bin/sh',
     user        => pick($user, $::nova::params::nova_user),
