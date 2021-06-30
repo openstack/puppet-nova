@@ -71,10 +71,19 @@ class nova::params {
       $conductor_package_name            = 'nova-conductor'
       $novajoin_package_name             = undef
       $doc_package_name                  = 'nova-doc'
-      if ($::operatingsystem == 'Debian') and (versioncmp($::operatingsystemmajrelease, '9') >= 0 ) {
-        $libvirt_package_name            = 'libvirt-daemon-system'
+      if ($::operatingsystem == 'Debian') {
+        if (versioncmp($::operatingsystemmajrelease, '9') >= 0 ) {
+          $libvirt_package_name          = 'libvirt-daemon-system'
+        } else {
+          $libvirt_package_name          = 'libvirt-bin'
+        }
       } else {
-        $libvirt_package_name            = 'libvirt-bin'
+        # $::operatingsystem == 'Ubuntu'
+        if versioncmp($::operatingsystemmajrelease, '20.04') >= 0 {
+          $libvirt_package_name          = 'libvirt-daemon-system'
+        } else {
+          $libvirt_package_name          = 'libvirt-bin'
+        }
       }
       $scheduler_package_name            = 'nova-scheduler'
       $tgt_package_name                  = 'tgt'
