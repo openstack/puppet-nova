@@ -1,0 +1,8 @@
+---
+features:
+  - |
+    Add parameters for Nova/Glance image copy when using multiple RBD Glance stores.
+
+    - ``nova::compute::rbd::libvirt_images_rbd_glance_store_name``
+    - ``nova::compute::rbd::libvirt_images_rbd_glance_copy_poll_interval``
+    - ``nova::compute::rbd::libvirt_images_rbd_glance_copy_timeout``

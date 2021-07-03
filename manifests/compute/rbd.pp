@@ -30,6 +30,23 @@
 #   (optional) The path to the ceph configuration file to use.
 #   Defaults to '/etc/ceph/ceph.conf'.
 #
+# [*libvirt_images_rbd_glance_store_name*]
+#   (optional) Name of the Glance store that represents the local rbd cluster.
+#   If set, this will allow Nova to request that Glance copy an image from
+#   an existing non-local store into the one named by this option before
+#   booting so that proper Copy-on-Write behavior is maintained.
+#   Defaults to $::os_service_default.
+#
+# [*libvirt_images_rbd_glance_copy_poll_interval*]
+#   (optional) The interval in seconds with which to poll Glance after asking
+#   for it to copy an image to the local rbd store.
+#   Defaults to $::os_service_default.
+#
+# [*libvirt_images_rbd_glance_copy_timeout*]
+#   (optional) The overall maximum time we will wait for Glance to complete
+#   an image copy to our local rbd store.
+#   Defaults to $::os_service_default.
+#
 # [*libvirt_rbd_user*]
 #   (Required) The RADOS client name for accessing rbd volumes.
 #
@@ -62,16 +79,20 @@
 #  (optional) Ensure value for ceph client package.
 #  Defaults to 'present'.
 
+
 class nova::compute::rbd (
   $libvirt_rbd_user,
-  $libvirt_rbd_secret_uuid      = false,
-  $libvirt_rbd_secret_key       = undef,
-  $libvirt_images_rbd_pool      = 'rbd',
-  $libvirt_images_rbd_ceph_conf = '/etc/ceph/ceph.conf',
-  $rbd_keyring                  = 'client.nova',
-  $ephemeral_storage            = true,
-  $manage_ceph_client           = true,
-  $ceph_client_ensure           = 'present',
+  $libvirt_rbd_secret_uuid                      = false,
+  $libvirt_rbd_secret_key                       = undef,
+  $libvirt_images_rbd_pool                      = 'rbd',
+  $libvirt_images_rbd_ceph_conf                 = '/etc/ceph/ceph.conf',
+  $libvirt_images_rbd_glance_store_name         = $::os_service_default,
+  $libvirt_images_rbd_glance_copy_poll_interval = $::os_service_default,
+  $libvirt_images_rbd_glance_copy_timeout       = $::os_service_default,
+  $rbd_keyring                                  = 'client.nova',
+  $ephemeral_storage                            = true,
+  $manage_ceph_client                           = true,
+  $ceph_client_ensure                           = 'present',
 ) {
 
   include nova::deps
@@ -150,13 +171,20 @@ class nova::compute::rbd (
     }
 
     nova_config {
-      'libvirt/images_rbd_pool':      value => $libvirt_images_rbd_pool;
-      'libvirt/images_rbd_ceph_conf': value => $libvirt_images_rbd_ceph_conf;
+      'libvirt/images_rbd_pool':                      value => $libvirt_images_rbd_pool;
+      'libvirt/images_rbd_ceph_conf':                 value => $libvirt_images_rbd_ceph_conf;
+      'libvirt/images_rbd_glance_store_name':         value => $libvirt_images_rbd_glance_store_name;
+      'libvirt/images_rbd_glance_copy_poll_interval': value => $libvirt_images_rbd_glance_copy_poll_interval;
+      'libvirt/images_rbd_glance_copy_timeout':       value => $libvirt_images_rbd_glance_copy_timeout;
+
     }
   } else {
     nova_config {
-      'libvirt/images_rbd_pool':      ensure => absent;
-      'libvirt/images_rbd_ceph_conf': ensure => absent;
+      'libvirt/images_rbd_pool':                      ensure => absent;
+      'libvirt/images_rbd_ceph_conf':                 ensure => absent;
+      'libvirt/images_rbd_glance_store_name':         ensure => absent;
+      'libvirt/images_rbd_glance_copy_poll_interval': ensure => absent;
+      'libvirt/images_rbd_glance_copy_timeout':       ensure => absent;
     }
   }
 
