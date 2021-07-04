@@ -2,14 +2,16 @@ require 'spec_helper'
 
 describe 'nova::cors' do
 
-  shared_examples_for 'nova cors' do
+  shared_examples_for 'nova::cors' do
     it 'configure cors default params' do
-      is_expected.to contain_nova_config('cors/allowed_origin').with_value('<SERVICE DEFAULT>')
-      is_expected.to contain_nova_config('cors/allow_credentials').with_value('<SERVICE DEFAULT>')
-      is_expected.to contain_nova_config('cors/expose_headers').with_value('<SERVICE DEFAULT>')
-      is_expected.to contain_nova_config('cors/max_age').with_value('<SERVICE DEFAULT>')
-      is_expected.to contain_nova_config('cors/allow_methods').with_value('<SERVICE DEFAULT>')
-      is_expected.to contain_nova_config('cors/allow_headers').with_value('<SERVICE DEFAULT>')
+      is_expected.to contain_oslo__cors('nova_config').with(
+        :allowed_origin    => '<SERVICE DEFAULT>',
+        :allow_credentials => '<SERVICE DEFAULT>',
+        :expose_headers    => '<SERVICE DEFAULT>',
+        :max_age           => '<SERVICE DEFAULT>',
+        :allow_methods     => '<SERVICE DEFAULT>',
+        :allow_headers     => '<SERVICE DEFAULT>',
+      )
     end
 
     context 'with specific parameters' do
@@ -24,12 +26,14 @@ describe 'nova::cors' do
       end
 
       it 'configure cors params' do
-        is_expected.to contain_nova_config('cors/allowed_origin').with_value('*')
-        is_expected.to contain_nova_config('cors/allow_credentials').with_value(true)
-        is_expected.to contain_nova_config('cors/expose_headers').with_value('Content-Language,Expires')
-        is_expected.to contain_nova_config('cors/max_age').with_value(3600)
-        is_expected.to contain_nova_config('cors/allow_methods').with_value('GET,POST,PUT,DELETE,OPTIONS')
-        is_expected.to contain_nova_config('cors/allow_headers').with_value('Content-Type,Cache-Control')
+        is_expected.to contain_oslo__cors('nova_config').with(
+          :allowed_origin    => '*',
+          :allow_credentials => true,
+          :expose_headers    => 'Content-Language,Expires',
+          :max_age           => 3600,
+          :allow_methods     => 'GET,POST,PUT,DELETE,OPTIONS',
+          :allow_headers     => 'Content-Type,Cache-Control',
+        )
       end
     end
   end
@@ -42,7 +46,7 @@ describe 'nova::cors' do
         facts.merge!(OSDefaults.get_facts())
       end
 
-      it_behaves_like 'nova cors'
+      it_behaves_like 'nova::cors'
     end
   end
 
