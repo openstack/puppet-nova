@@ -1,0 +1,7 @@
+---
+features:
+  - |
+    The new ``nova::cron::archive_deleted_rows::task_log`` parameter has been
+    added. This parameter enables the ``--task-log`` option of
+    the ``nova-manage archive_deleted_rows`` command so that task logs are also
+    processed by the command.

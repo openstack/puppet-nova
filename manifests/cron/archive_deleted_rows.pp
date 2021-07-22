@@ -71,6 +71,10 @@
 #    (optional) Adds --all-cells to the archive command
 #    Defaults to false.
 #
+#  [*task_log*]
+#    (optional) Adds --task-log to the archive command
+#    Defaults to false.
+#
 #  [*age*]
 #    (optional) Adds a retention policy when purging the shadow tables
 #    Defaults to undef.
@@ -89,6 +93,7 @@ class nova::cron::archive_deleted_rows (
   $purge          = false,
   $maxdelay       = 0,
   $all_cells      = false,
+  $task_log       = false,
   $age            = undef,
 ) {
 
@@ -116,6 +121,13 @@ class nova::cron::archive_deleted_rows (
     $all_cells_real = ''
   }
 
+  if $task_log {
+    $task_log_real = ' --task-log'
+  }
+  else {
+    $task_log_real = ''
+  }
+
   if $maxdelay == 0 {
     $sleep = ''
   } else {
@@ -131,7 +143,7 @@ class nova::cron::archive_deleted_rows (
   $cron_cmd = 'nova-manage db archive_deleted_rows'
 
   cron { 'nova-manage db archive_deleted_rows':
-    command     => "${sleep}${cron_cmd}${purge_real} --max_rows ${max_rows}${age_real}${until_complete_real}${all_cells_real} \
+    command     => "${sleep}${cron_cmd}${purge_real} --max_rows ${max_rows}${age_real}${until_complete_real}${all_cells_real}${task_log_real} \
 >>${destination} 2>&1",
     environment => 'PATH=/bin:/usr/bin:/usr/sbin SHELL=/bin/sh',
     user        => pick($user, $::nova::params::nova_user),
