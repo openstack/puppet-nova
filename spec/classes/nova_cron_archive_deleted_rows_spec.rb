@@ -16,6 +16,7 @@ describe 'nova::cron::archive_deleted_rows' do
         :all_cells      => false,
         :age            => false,
         :maxdelay       => 0,
+        :task_log       => false,
         :destination    => '/var/log/nova/nova-rowsflush.log' }
     end
 
@@ -67,6 +68,28 @@ describe 'nova::cron::archive_deleted_rows' do
       it 'configures a cron with all_cells' do
         is_expected.to contain_cron('nova-manage db archive_deleted_rows').with(
           :command     => "nova-manage db archive_deleted_rows --max_rows #{params[:max_rows]} --all-cells >>#{params[:destination]} 2>&1",
+          :environment => 'PATH=/bin:/usr/bin:/usr/sbin SHELL=/bin/sh',
+          :user        => params[:user],
+          :minute      => params[:minute],
+          :hour        => params[:hour],
+          :monthday    => params[:monthday],
+          :month       => params[:month],
+          :weekday     => params[:weekday],
+          :require     => 'Anchor[nova::dbsync::end]',
+        )
+      end
+    end
+
+    context 'task_log is true' do
+      before :each do
+        params.merge!(
+          :task_log => true,
+        )
+      end
+
+      it 'configures a cron with task_log' do
+        is_expected.to contain_cron('nova-manage db archive_deleted_rows').with(
+          :command     => "nova-manage db archive_deleted_rows --max_rows #{params[:max_rows]} --task-log >>#{params[:destination]} 2>&1",
           :environment => 'PATH=/bin:/usr/bin:/usr/sbin SHELL=/bin/sh',
           :user        => params[:user],
           :minute      => params[:minute],
