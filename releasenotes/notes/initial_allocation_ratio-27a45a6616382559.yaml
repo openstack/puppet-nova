@@ -1,0 +1,10 @@
+---
+features:
+  - |
+    The following parameters have been added to the ``nova`` class. These
+    parameters define allocation ratios used when nova initially creates
+    a resource provider record for each compute node.
+
+    - ``initial_cpu_allocation_ratio``
+    - ``initial_ram_allocation_ratio``
+    - ``initial_disk_allocation_ratio``

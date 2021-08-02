@@ -333,6 +333,18 @@
 #   per compute node.
 #   Defaults to $::os_service_default
 #
+# [*initial_cpu_allocation_ratio*]
+#   (optional) Initial virtual CPU to physical CPU allocation ratio.
+#   Defaults to $::os_service_default
+#
+# [*initial_ram_allocation_ratio*]
+#   (optional) Initial virtual RAM to physical RAM allocation ratio.
+#   Defaults to $::os_service_default
+#
+# [*initial_disk_allocation_ratio*]
+#   (optional) Initial virtual disk to physical disk allocation ratio.
+#   Defaults to $::os_service_default
+#
 # [*my_ip*]
 #   (optional) IP address of this host on the management network.
 #   If unset, will determine the IP programmatically based on the default route.
@@ -501,6 +513,9 @@ class nova(
   $cpu_allocation_ratio                   = $::os_service_default,
   $ram_allocation_ratio                   = $::os_service_default,
   $disk_allocation_ratio                  = $::os_service_default,
+  $initial_cpu_allocation_ratio           = $::os_service_default,
+  $initial_ram_allocation_ratio           = $::os_service_default,
+  $initial_disk_allocation_ratio          = $::os_service_default,
   $purge_config                           = false,
   $my_ip                                  = $::os_service_default,
   $cross_az_attach                        = $::os_service_default,
@@ -711,17 +726,20 @@ but should be one of: ssh-rsa, ssh-dsa, ssh-ecdsa.")
   }
 
   nova_config {
-    'DEFAULT/ssl_only':              value => $ssl_only;
-    'DEFAULT/cert':                  value => $cert;
-    'DEFAULT/key':                   value => $key;
-    'console/ssl_ciphers':           value => $console_ssl_ciphers;
-    'console/ssl_minimum_version':   value => $console_ssl_minimum_version;
-    'DEFAULT/my_ip':                 value => $my_ip;
-    'DEFAULT/host':                  value => $host;
-    'DEFAULT/cpu_allocation_ratio':  value => $cpu_allocation_ratio;
-    'DEFAULT/ram_allocation_ratio':  value => $ram_allocation_ratio;
-    'DEFAULT/disk_allocation_ratio': value => $disk_allocation_ratio;
-    'DEFAULT/dhcp_domain':           value => $dhcp_domain;
+    'DEFAULT/ssl_only':                      value => $ssl_only;
+    'DEFAULT/cert':                          value => $cert;
+    'DEFAULT/key':                           value => $key;
+    'console/ssl_ciphers':                   value => $console_ssl_ciphers;
+    'console/ssl_minimum_version':           value => $console_ssl_minimum_version;
+    'DEFAULT/my_ip':                         value => $my_ip;
+    'DEFAULT/host':                          value => $host;
+    'DEFAULT/cpu_allocation_ratio':          value => $cpu_allocation_ratio;
+    'DEFAULT/ram_allocation_ratio':          value => $ram_allocation_ratio;
+    'DEFAULT/disk_allocation_ratio':         value => $disk_allocation_ratio;
+    'DEFAULT/initial_cpu_allocation_ratio':  value => $initial_cpu_allocation_ratio;
+    'DEFAULT/initial_ram_allocation_ratio':  value => $initial_ram_allocation_ratio;
+    'DEFAULT/initial_disk_allocation_ratio': value => $initial_disk_allocation_ratio;
+    'DEFAULT/dhcp_domain':                   value => $dhcp_domain;
   }
 
   oslo::messaging::rabbit {'nova_config':
