@@ -51,16 +51,9 @@ class nova::params {
       $nova_wsgi_script_path             = '/var/www/cgi-bin/nova'
       $nova_api_wsgi_script_source       = '/usr/bin/nova-api-wsgi'
       $nova_metadata_wsgi_script_source  = '/usr/bin/nova-metadata-wsgi'
-      case $::operatingsystem {
-        'Fedora': {
-          $messagebus_service_name  = undef
-        }
-        default: {
-          $messagebus_service_name  = 'dbus'
-        }
-      }
-      $nova_user                    = 'nova'
-      $nova_group                   = 'nova'
+      $messagebus_service_name           = 'dbus'
+      $nova_user                         = 'nova'
+      $nova_group                        = 'nova'
     }
     'Debian': {
       # package names

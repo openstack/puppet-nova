@@ -6,29 +6,14 @@
 # or higher.
 #
 class nova::compute::libvirt::version {
-  # This will be 7.5 or 7.6 on RedHat, 9 on Debian, 18.10 or cosmic on Ubuntu, etc.
   case $facts['os']['family'] {
     'RedHat': {
-      case $facts['os']['name'] {
-        'RedHat', 'CentOS': {
-          if versioncmp($facts['os']['release']['full'], '8') >= 0 {
-            $default = '5.6'
-          } elsif versioncmp($facts['os']['release']['full'], '7.6') >= 0 {
-            $default = '4.5'
-          } else {
-            $default = '3.9'
-          }
-        }
-        'Fedora': {
-          if versioncmp($facts['os']['release']['full'], '29') >= 0 {
-            $default = '4.5'
-          } else {
-            $default = '3.9'
-          }
-        }
-        default: {
-          $default = '3.9'
-        }
+      if versioncmp($facts['os']['release']['full'], '8') >= 0 {
+        $default = '5.6'
+      } elsif versioncmp($facts['os']['release']['full'], '7.6') >= 0 {
+        $default = '4.5'
+      } else {
+        $default = '3.9'
       }
     }
     'Debian': {

@@ -350,36 +350,6 @@ describe 'nova::compute::libvirt' do
       end
     end
 
-    describe 'with default parameters on Fedora' do
-      before do
-        facts.merge!({ :operatingsystem => 'Fedora', :osfamily => 'RedHat' })
-      end
-
-      it { is_expected.to contain_class('nova::params')}
-
-      it { is_expected.to contain_package('libvirt').with(
-        :name   => 'libvirt-daemon-kvm',
-        :ensure => 'present'
-      ) }
-
-      it { is_expected.to contain_package('libvirt-nwfilter').with(
-        :name   => 'libvirt-daemon-config-nwfilter',
-        :ensure => 'present',
-        :before  => ['Service[libvirt]', 'Anchor[nova::install::end]'],
-      ) }
-
-      it { is_expected.to contain_service('libvirt').with(
-        :name   => 'libvirtd',
-        :enable => true,
-        :ensure => 'running',
-        :before => ['Service[nova-compute]']
-      )}
-
-      it { is_expected.to contain_nova_config('DEFAULT/compute_driver').with_value('libvirt.LibvirtDriver')}
-      it { is_expected.to contain_nova_config('libvirt/virt_type').with_value('kvm')}
-      it { is_expected.to contain_nova_config('vnc/server_listen').with_value('127.0.0.1')}
-    end
-
   end
 
   on_supported_os({
