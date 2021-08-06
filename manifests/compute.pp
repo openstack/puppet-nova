@@ -493,14 +493,10 @@ Use the same parameter in nova::api class.')
     }
   }
 
-  if !is_service_default($reserved_huge_pages) and !empty($reserved_huge_pages) {
-    if is_array($reserved_huge_pages) or is_string($reserved_huge_pages) {
-      $reserved_huge_pages_real = $reserved_huge_pages
-    } else {
-      fail("Invalid reserved_huge_pages parameter value: ${reserved_huge_pages}")
-    }
-  } else {
-    $reserved_huge_pages_real = $::os_service_default
+  $reserved_huge_pages_real = $reserved_huge_pages ? {
+    String  => $reserved_huge_pages,
+    Array   => $reserved_huge_pages,
+    default => fail("Invalid reserved_huge_pages parameter value: ${reserved_huge_pages}")
   }
 
   include nova::availability_zone
