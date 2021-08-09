@@ -123,7 +123,7 @@ Puppet::Type.type(:nova_aggregate).provide(
   end
 
   def self.pythondict2hash(input)
-    return JSON.parse(input.gsub(/u'(\w*)'/, '"\1"').gsub(/'/, '"'))
+    return JSON.parse(input.gsub(/u'([^']*)'/, '"\1"').gsub(/'/, '"'))
   end
 
   def self.parsestring(input)
