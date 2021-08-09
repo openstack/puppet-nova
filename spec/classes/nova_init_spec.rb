@@ -58,6 +58,9 @@ describe 'nova' do
         is_expected.to contain_nova_config('DEFAULT/cpu_allocation_ratio').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('DEFAULT/ram_allocation_ratio').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('DEFAULT/disk_allocation_ratio').with_value('<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('DEFAULT/initial_cpu_allocation_ratio').with_value('<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('DEFAULT/initial_ram_allocation_ratio').with_value('<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('DEFAULT/initial_disk_allocation_ratio').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('DEFAULT/ssl_only').with_value(false)
         is_expected.to contain_nova_config('DEFAULT/cert').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('DEFAULT/key').with_value('<SERVICE DEFAULT>')
@@ -496,15 +499,21 @@ describe 'nova' do
     context 'with allocation ratios set' do
       let :params do
         {
-          :cpu_allocation_ratio  => 32.0,
-          :ram_allocation_ratio  => 2.0,
-          :disk_allocation_ratio => 1.5,
+          :cpu_allocation_ratio          => 32.0,
+          :ram_allocation_ratio          => 2.0,
+          :disk_allocation_ratio         => 1.5,
+          :initial_cpu_allocation_ratio  => 64.0,
+          :initial_ram_allocation_ratio  => 4.0,
+          :initial_disk_allocation_ratio => 3.0,
         }
       end
 
-      it { is_expected.to contain_nova_config('DEFAULT/cpu_allocation_ratio').with_value('32.0') }
-      it { is_expected.to contain_nova_config('DEFAULT/ram_allocation_ratio').with_value('2.0') }
-      it { is_expected.to contain_nova_config('DEFAULT/disk_allocation_ratio').with_value('1.5') }
+      it { is_expected.to contain_nova_config('DEFAULT/cpu_allocation_ratio').with_value(32.0) }
+      it { is_expected.to contain_nova_config('DEFAULT/ram_allocation_ratio').with_value(2.0) }
+      it { is_expected.to contain_nova_config('DEFAULT/disk_allocation_ratio').with_value(1.5) }
+      it { is_expected.to contain_nova_config('DEFAULT/initial_cpu_allocation_ratio').with_value(64.0) }
+      it { is_expected.to contain_nova_config('DEFAULT/initial_ram_allocation_ratio').with_value(4.0) }
+      it { is_expected.to contain_nova_config('DEFAULT/initial_disk_allocation_ratio').with_value(3.0) }
     end
 
   end
