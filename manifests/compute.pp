@@ -256,15 +256,6 @@
 #
 # DEPRECATED PARAMETERS
 #
-# [*neutron_enabled*]
-#   (optional) Whether to use Neutron for networking of VMs
-#   Defaults to undef
-#
-# [*install_bridge_utils*]
-#   (optional) Whether to install the bridge-utils package or not.
-#   Applicable only for cases when Neutron was disabled
-#   Defaults to undef
-#
 # [*vcpu_pin_set*]
 #   (optional) A list or range of host CPU cores to which processes for
 #   unpinned instance CPUs (VCPUs) can be scheduled, if cpu_shared_set is set,
@@ -362,8 +353,6 @@ class nova::compute (
   $block_device_allocate_retries               = $::os_service_default,
   $block_device_allocate_retries_interval      = $::os_service_default,
   # DEPRECATED PARAMETERS
-  $neutron_enabled                             = undef,
-  $install_bridge_utils                        = undef,
   $vcpu_pin_set                                = undef,
   $allow_resize_to_same_host                   = undef,
   $pci_passthrough                             = undef,
@@ -394,14 +383,6 @@ class nova::compute (
   include nova::compute::pci
 
   include nova::compute::vgpu
-
-  if $neutron_enabled {
-    warning('neutron_enabled is deprecated and has no effect, was only used for install_bridge_utils')
-  }
-
-  if $install_bridge_utils {
-    warning('install_bridge_utils is deprecated and has no effect')
-  }
 
   if ($vnc_enabled and $spice_enabled) {
     fail('vnc_enabled and spice_enabled is mutually exclusive')

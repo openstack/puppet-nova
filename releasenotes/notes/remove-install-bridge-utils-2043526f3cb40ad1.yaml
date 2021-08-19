@@ -1,0 +1,8 @@
+---
+upgrade:
+  - |
+    The following two parameters of the ``nova::compute`` class have been
+    removed.
+
+    - ``neutron_enabled``
+    - ``install_bridge_utils``
