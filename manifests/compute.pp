@@ -382,10 +382,6 @@ class nova::compute (
 
   $image_type_exclude_list_real = pick(join(any2array($image_type_exclude_list), ','), $::os_service_default)
 
-  $max_concurrent_builds_real = pick(
-    $::nova::compute::ironic::max_concurrent_builds,
-    $max_concurrent_builds)
-
   include nova::pci
   if $pci_passthrough {
     # Note: also remove the pick from nova::compute::pci
@@ -515,7 +511,7 @@ Use the same parameter in nova::api class.')
     'DEFAULT/resize_confirm_window':             value => $resize_confirm_window;
     'DEFAULT/shutdown_timeout':                  value => $shutdown_timeout;
     'DEFAULT/resume_guests_state_on_host_boot':  value => $resume_guests_state_on_host_boot;
-    'DEFAULT/max_concurrent_builds':             value => $max_concurrent_builds_real;
+    'DEFAULT/max_concurrent_builds':             value => $max_concurrent_builds;
     'DEFAULT/max_concurrent_live_migrations':    value => $max_concurrent_live_migrations;
     'DEFAULT/sync_power_state_pool_size':        value => $sync_power_state_pool_size;
     'DEFAULT/sync_power_state_interval':         value => $sync_power_state_interval;

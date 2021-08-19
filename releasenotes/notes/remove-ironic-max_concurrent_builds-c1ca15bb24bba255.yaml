@@ -1,0 +1,5 @@
+---
+upgrade:
+  - |
+    The ``nova::compute::ironic::max_concurrent_builds`` parameter has been
+    removed.

@@ -8,14 +8,8 @@
 #   (optional) Compute driver.
 #   Defaults to 'ironic.IronicDriver'
 #
-# [*max_concurrent_builds*]
-#   (optional) Maximum number of instance builds to run concurrently
-#   Defaults to undef
-#
 class nova::compute::ironic (
   $compute_driver        = 'ironic.IronicDriver',
-  # DEPRECATED PARAMETERS
-  $max_concurrent_builds = undef,
 ) {
 
   include nova::deps
@@ -25,10 +19,4 @@ class nova::compute::ironic (
   nova_config {
     'DEFAULT/compute_driver': value => $compute_driver;
   }
-
-  if $max_concurrent_builds != undef {
-    warning('The nova::compute::ironic::max_concurrent_builds parameter is deprecated \
-and will be removed in a future release. Use nova::compute::max_concurrent_builds instead.')
-  }
-
 }
