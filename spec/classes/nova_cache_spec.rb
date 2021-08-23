@@ -3,33 +3,34 @@ require 'spec_helper'
 describe 'nova::cache' do
 
   let :params do
-    { }
+    {}
   end
 
-  shared_examples_for 'nova-cache' do
+  shared_examples_for 'nova::cache' do
 
     context 'with default parameters' do
       it 'configures cache' do
-        is_expected.to contain_nova_config('cache/config_prefix').with_value('<SERVICE DEFAULT>')
-        is_expected.to contain_nova_config('cache/expiration_time').with_value('<SERVICE DEFAULT>')
-        is_expected.to contain_nova_config('cache/backend').with_value('<SERVICE DEFAULT>')
-        is_expected.to contain_nova_config('cache/backend_argument').with_value('<SERVICE DEFAULT>')
-        is_expected.to contain_nova_config('cache/proxies').with_value('<SERVICE DEFAULT>')
-        is_expected.to contain_nova_config('cache/enabled').with_value('<SERVICE DEFAULT>')
-        is_expected.to contain_nova_config('cache/debug_cache_backend').with_value('<SERVICE DEFAULT>')
-        is_expected.to contain_nova_config('cache/memcache_servers').with_value('<SERVICE DEFAULT>')
-        is_expected.to contain_nova_config('cache/memcache_dead_retry').with_value('<SERVICE DEFAULT>')
-        is_expected.to contain_nova_config('cache/memcache_socket_timeout').with_value('<SERVICE DEFAULT>')
-        is_expected.to contain_nova_config('cache/memcache_pool_maxsize').with_value('<SERVICE DEFAULT>')
-        is_expected.to contain_nova_config('cache/memcache_pool_unused_timeout').with_value('<SERVICE DEFAULT>')
-        is_expected.to contain_nova_config('cache/memcache_pool_connection_get_timeout').with_value('<SERVICE DEFAULT>')
-        is_expected.to contain_nova_config('cache/tls_enabled').with_value('<SERVICE DEFAULT>')
-        is_expected.to contain_nova_config('cache/tls_cafile').with_value('<SERVICE DEFAULT>')
-        is_expected.to contain_nova_config('cache/tls_certfile').with_value('<SERVICE DEFAULT>')
-        is_expected.to contain_nova_config('cache/tls_keyfile').with_value('<SERVICE DEFAULT>')
-        is_expected.to contain_nova_config('cache/tls_allowed_ciphers').with_value('<SERVICE DEFAULT>')
-
-        is_expected.to contain_oslo__cache('nova_config').with_manage_backend_package(true)
+        is_expected.to contain_oslo__cache('nova_config').with(
+          :config_prefix                        => '<SERVICE DEFAULT>',
+          :expiration_time                      => '<SERVICE DEFAULT>',
+          :backend                              => '<SERVICE DEFAULT>',
+          :backend_argument                     => '<SERVICE DEFAULT>',
+          :proxies                              => '<SERVICE DEFAULT>',
+          :enabled                              => '<SERVICE DEFAULT>',
+          :debug_cache_backend                  => '<SERVICE DEFAULT>',
+          :memcache_servers                     => '<SERVICE DEFAULT>',
+          :memcache_dead_retry                  => '<SERVICE DEFAULT>',
+          :memcache_socket_timeout              => '<SERVICE DEFAULT>',
+          :memcache_pool_maxsize                => '<SERVICE DEFAULT>',
+          :memcache_pool_unused_timeout         => '<SERVICE DEFAULT>',
+          :memcache_pool_connection_get_timeout => '<SERVICE DEFAULT>',
+          :tls_enabled                          => '<SERVICE DEFAULT>',
+          :tls_cafile                           => '<SERVICE DEFAULT>',
+          :tls_certfile                         => '<SERVICE DEFAULT>',
+          :tls_keyfile                          => '<SERVICE DEFAULT>',
+          :tls_allowed_ciphers                  => '<SERVICE DEFAULT>',
+          :manage_backend_package               => true,
+        )
       end
     end
 
@@ -37,7 +38,7 @@ describe 'nova::cache' do
       let :params do
         {
           :config_prefix                        => 'prefix',
-          :expiration_time                      => '3600',
+          :expiration_time                      => 3600,
           :backend                              => 'oslo_cache.memcache_pool',
           :proxies                              => ['proxy01:8888', 'proxy02:8888'],
           :enabled                              => true,
@@ -48,36 +49,33 @@ describe 'nova::cache' do
           :memcache_pool_maxsize                => '10',
           :memcache_pool_unused_timeout         => '120',
           :memcache_pool_connection_get_timeout => '360',
-          :manage_backend_package               => false,
           :tls_enabled                          => false,
-          :tls_cafile                           => nil,
-          :tls_certfile                         => nil,
-          :tls_keyfile                          => nil,
-          :tls_allowed_ciphers                  => nil,
+          :manage_backend_package               => false,
         }
       end
 
       it 'configures cache' do
-        is_expected.to contain_nova_config('cache/config_prefix').with_value('prefix')
-        is_expected.to contain_nova_config('cache/expiration_time').with_value('3600')
-        is_expected.to contain_nova_config('cache/backend').with_value('oslo_cache.memcache_pool')
-        is_expected.to contain_nova_config('cache/backend_argument').with_value('<SERVICE DEFAULT>')
-        is_expected.to contain_nova_config('cache/proxies').with_value('proxy01:8888,proxy02:8888')
-        is_expected.to contain_nova_config('cache/enabled').with_value('true')
-        is_expected.to contain_nova_config('cache/debug_cache_backend').with_value('false')
-        is_expected.to contain_nova_config('cache/memcache_servers').with_value('memcached01:11211,memcached02:11211')
-        is_expected.to contain_nova_config('cache/memcache_dead_retry').with_value('60')
-        is_expected.to contain_nova_config('cache/memcache_socket_timeout').with_value('300.0')
-        is_expected.to contain_nova_config('cache/memcache_pool_maxsize').with_value('10')
-        is_expected.to contain_nova_config('cache/memcache_pool_unused_timeout').with_value('120')
-        is_expected.to contain_nova_config('cache/memcache_pool_connection_get_timeout').with_value('360')
-        is_expected.to contain_nova_config('cache/tls_enabled').with_value('false')
-        is_expected.to contain_nova_config('cache/tls_cafile').with_value('nil')
-        is_expected.to contain_nova_config('cache/tls_certfile').with_value('nil')
-        is_expected.to contain_nova_config('cache/tls_keyfile').with_value('nil')
-        is_expected.to contain_nova_config('cache/tls_allowed_ciphers').with_value('nil')
-
-        is_expected.to contain_oslo__cache('nova_config').with_manage_backend_package(false)
+        is_expected.to contain_oslo__cache('nova_config').with(
+          :config_prefix                        => 'prefix',
+          :expiration_time                      => 3600,
+          :backend                              => 'oslo_cache.memcache_pool',
+          :backend_argument                     => '<SERVICE DEFAULT>',
+          :proxies                              => ['proxy01:8888', 'proxy02:8888'],
+          :enabled                              => true,
+          :debug_cache_backend                  => false,
+          :memcache_servers                     => ['memcached01:11211', 'memcached02:11211'],
+          :memcache_dead_retry                  => '60',
+          :memcache_socket_timeout              => '300.0',
+          :memcache_pool_maxsize                => '10',
+          :memcache_pool_unused_timeout         => '120',
+          :memcache_pool_connection_get_timeout => '360',
+          :tls_enabled                          => false,
+          :tls_cafile                           => '<SERVICE DEFAULT>',
+          :tls_certfile                         => '<SERVICE DEFAULT>',
+          :tls_keyfile                          => '<SERVICE DEFAULT>',
+          :tls_allowed_ciphers                  => '<SERVICE DEFAULT>',
+          :manage_backend_package               => false,
+        )
       end
     end
   end
@@ -90,7 +88,7 @@ describe 'nova::cache' do
         facts.merge!(OSDefaults.get_facts())
       end
 
-      it_configures 'nova-cache'
+      it_configures 'nova::cache'
     end
   end
 
