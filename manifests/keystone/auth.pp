@@ -47,6 +47,14 @@
 #   (Optional) List of roles assigned to the nova service user
 #   Defaults to ['admin']
 #
+# [*system_scope*]
+#   Scope for system operations
+#   string; optional: default to 'all'
+#
+# [*system_roles*]
+#   List of system roles;
+#   string; optional: default to []
+#
 # [*email*]
 #   (Optional) The email address for the nova service user
 #   Defaults to 'nova@localhost'
@@ -72,6 +80,8 @@ class nova::keystone::auth(
   $region                  = 'RegionOne',
   $tenant                  = 'services',
   $roles                   = ['admin'],
+  $system_scope            = 'all',
+  $system_roles            = [],
   $email                   = 'nova@localhost',
   $public_url              = 'http://127.0.0.1:8774/v2.1',
   $internal_url            = 'http://127.0.0.1:8774/v2.1',
@@ -82,6 +92,9 @@ class nova::keystone::auth(
 ) {
 
   include nova::deps
+
+  Keystone_user_role<| name == "${auth_name}@${tenant}" |> -> Anchor['nova::service::end']
+  Keystone_user_role<| name == "${auth_name}@::::${system_scope}" |> -> Anchor['nova::service::end']
 
   if $configure_endpoint {
     Keystone_endpoint["${region}/${service_name}::${service_type}"] -> Anchor['nova::service::end']
@@ -100,6 +113,8 @@ class nova::keystone::auth(
     email               => $email,
     tenant              => $tenant,
     roles               => $roles,
+    system_scope        => $system_scope,
+    system_roles        => $system_roles,
     public_url          => $public_url,
     admin_url           => $admin_url,
     internal_url        => $internal_url,

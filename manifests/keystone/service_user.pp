@@ -28,6 +28,10 @@
 #   (Optional) Name of domain for $project_domain_name
 #   Defaults to 'Default'
 #
+# [*system_scope*]
+#   (Optional) Scope for system operations
+#   Defaults to $::os_service_default
+#
 # [*send_service_user_token*]
 #   (Optional) The service uses service token feature when this is set as true
 #   Defaults to 'false'
@@ -70,6 +74,7 @@ class nova::keystone::service_user(
   $project_name            = 'services',
   $user_domain_name        = 'Default',
   $project_domain_name     = 'Default',
+  $system_scope            = $::os_service_default,
   $send_service_user_token = false,
   $insecure                = $::os_service_default,
   $auth_type               = 'password',
@@ -91,6 +96,7 @@ class nova::keystone::service_user(
     auth_type               => $auth_type,
     user_domain_name        => $user_domain_name,
     project_domain_name     => $project_domain_name,
+    system_scope            => $system_scope,
     send_service_user_token => $send_service_user_token,
     insecure                => $insecure,
     cafile                  => $cafile,

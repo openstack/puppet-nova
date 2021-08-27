@@ -1,0 +1,14 @@
+---
+features:
+  - |
+    The ``nova::keystone::auth`` class now supports the following new
+    parameters to define system-scoped roles.
+
+    - ``system_scope``
+    - ``system_roles``
+
+  - |
+    The ``system_scope`` parameter has been added to the following classes.
+
+    - ``nova::keystone::authtoken``
+    - ``nova::keystone::service_user``
