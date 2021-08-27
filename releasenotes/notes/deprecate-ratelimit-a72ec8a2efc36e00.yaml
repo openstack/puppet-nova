@@ -1,0 +1,9 @@
+---
+deprecations:
+  - |
+    The following parameters of the ``nova::api`` class have been deprecated
+    and have no effect, because RateLimitingMiddleware was already removed from
+    nova.
+
+    - ``ratelimits``
+    - ``ratelimits_factory``
