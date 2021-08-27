@@ -161,6 +161,36 @@
 #   (in seconds). Set to -1 to disable caching completely. Integer value
 #   Defaults to $::os_service_default.
 #
+# [*service_token_roles*]
+#  (Optional) A choice of roles that must be present in a service token.
+#  Service tokens are allowed to request that an expired token
+#  can be used and so this check should tightly control that
+#  only actual services should be sending this token. Roles
+#  here are applied as an ANY check so any role in this list
+#  must be present. For backwards compatibility reasons this
+#  currently only affects the allow_expired check. (list value)
+#  Defaults to $::os_service_default.
+#
+# [*service_token_roles_required*]
+#   (optional) backwards compatibility to ensure that the service tokens are
+#   compared against a list of possible roles for validity
+#   true/false
+#   Defaults to $::os_service_default.
+#
+# [*service_type*]
+#  (Optional) The name or type of the service as it appears in the service
+#  catalog. This is used to validate tokens that have restricted access rules.
+#  Defaults to $::os_service_default.
+#
+# [*interface*]
+#  (Optional) Interface to use for the Identity API endpoint. Valid values are
+#  "public", "internal" or "admin".
+#  Defaults to $::os_service_default.
+#
+# [*params*]
+#  (Optional) Hash of additional parameters to pass through to the keystone
+#  authtoken class. Values set here override the individual parameters above.
+#
 class nova::metadata::novajoin::authtoken(
   $username                       = 'novajoin',
   $password                       = $::os_service_default,
@@ -194,44 +224,58 @@ class nova::metadata::novajoin::authtoken(
   $manage_memcache_package        = false,
   $region_name                    = $::os_service_default,
   $token_cache_time               = $::os_service_default,
+  $service_token_roles            = $::os_service_default,
+  $service_token_roles_required   = $::os_service_default,
+  $service_type                   = $::os_service_default,
+  $interface                      = $::os_service_default,
+  $params                         = {},
 ) {
+
+  include nova::deps
 
   if is_service_default($password) {
     fail('Please set password for novajoin service user')
   }
 
-  keystone::resource::authtoken { 'novajoin_config':
-    username                       => $username,
-    password                       => $password,
-    project_name                   => $project_name,
-    auth_url                       => $auth_url,
-    www_authenticate_uri           => $www_authenticate_uri,
-    auth_version                   => $auth_version,
-    auth_type                      => $auth_type,
-    auth_section                   => $auth_section,
-    user_domain_name               => $user_domain_name,
-    project_domain_name            => $project_domain_name,
-    insecure                       => $insecure,
-    cache                          => $cache,
-    cafile                         => $cafile,
-    certfile                       => $certfile,
-    delay_auth_decision            => $delay_auth_decision,
-    enforce_token_bind             => $enforce_token_bind,
-    http_connect_timeout           => $http_connect_timeout,
-    http_request_max_retries       => $http_request_max_retries,
-    include_service_catalog        => $include_service_catalog,
-    keyfile                        => $keyfile,
-    memcache_pool_conn_get_timeout => $memcache_pool_conn_get_timeout,
-    memcache_pool_dead_retry       => $memcache_pool_dead_retry,
-    memcache_pool_maxsize          => $memcache_pool_maxsize,
-    memcache_pool_socket_timeout   => $memcache_pool_socket_timeout,
-    memcache_secret_key            => $memcache_secret_key,
-    memcache_security_strategy     => $memcache_security_strategy,
-    memcache_use_advanced_pool     => $memcache_use_advanced_pool,
-    memcache_pool_unused_timeout   => $memcache_pool_unused_timeout,
-    memcached_servers              => $memcached_servers,
-    manage_memcache_package        => $manage_memcache_package,
-    region_name                    => $region_name,
-    token_cache_time               => $token_cache_time,
+  keystone::resource::authtoken {
+    'novajoin_config':
+      *                              => $params;
+    default:
+      username                       => $username,
+      password                       => $password,
+      project_name                   => $project_name,
+      auth_url                       => $auth_url,
+      www_authenticate_uri           => $www_authenticate_uri,
+      auth_version                   => $auth_version,
+      auth_type                      => $auth_type,
+      auth_section                   => $auth_section,
+      user_domain_name               => $user_domain_name,
+      project_domain_name            => $project_domain_name,
+      insecure                       => $insecure,
+      cache                          => $cache,
+      cafile                         => $cafile,
+      certfile                       => $certfile,
+      delay_auth_decision            => $delay_auth_decision,
+      enforce_token_bind             => $enforce_token_bind,
+      http_connect_timeout           => $http_connect_timeout,
+      http_request_max_retries       => $http_request_max_retries,
+      include_service_catalog        => $include_service_catalog,
+      keyfile                        => $keyfile,
+      memcache_pool_conn_get_timeout => $memcache_pool_conn_get_timeout,
+      memcache_pool_dead_retry       => $memcache_pool_dead_retry,
+      memcache_pool_maxsize          => $memcache_pool_maxsize,
+      memcache_pool_socket_timeout   => $memcache_pool_socket_timeout,
+      memcache_secret_key            => $memcache_secret_key,
+      memcache_security_strategy     => $memcache_security_strategy,
+      memcache_use_advanced_pool     => $memcache_use_advanced_pool,
+      memcache_pool_unused_timeout   => $memcache_pool_unused_timeout,
+      memcached_servers              => $memcached_servers,
+      manage_memcache_package        => $manage_memcache_package,
+      region_name                    => $region_name,
+      token_cache_time               => $token_cache_time,
+      service_token_roles            => $service_token_roles,
+      service_token_roles_required   => $service_token_roles_required,
+      service_type                   => $service_type,
+      interface                      => $interface;
   }
 }
