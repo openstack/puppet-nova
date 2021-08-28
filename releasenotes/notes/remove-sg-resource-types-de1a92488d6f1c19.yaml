@@ -1,0 +1,9 @@
+---
+upgrade:
+  - |
+    The following two resource types have been removed. These are dependent on
+    the APIs of python-novaclient which were already removed during Pike cycle.
+    Use the resource types provided by puppet-neutron instead.
+
+    - ``nova_security_group``
+    - ``nova_security_rule``
