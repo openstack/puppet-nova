@@ -1,0 +1,6 @@
+---
+features:
+  - |
+    Adds new purge_config parameter. When set to true, the policy file is
+    cleared during configuration process. This allows to remove any existing
+    rules before applying them or clean the file when all policies got removed.

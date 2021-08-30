@@ -16,12 +16,18 @@ describe 'nova::metadata::novajoin::policy' do
     end
 
     it 'set up the policies' do
-      is_expected.to contain_openstacklib__policy__base('context_is_admin').with({
-        :key         => 'context_is_admin',
-        :value       => 'foo:bar',
-        :file_user   => 'root',
-        :file_format => 'yaml',
-      })
+      is_expected.to contain_openstacklib__policy('/etc/novajoin/policy.yaml').with(
+        :policies     => {
+          'context_is_admin' => {
+            'key'   => 'context_is_admin',
+            'value' => 'foo:bar'
+          }
+        },
+        :policy_path  => '/etc/novajoin/policy.yaml',
+        :file_user    => 'root',
+        :file_format  => 'yaml',
+        :purge_config => false,
+      )
       is_expected.to contain_oslo__policy('novajoin_config').with(
         :policy_file => '/etc/novajoin/policy.yaml',
       )
