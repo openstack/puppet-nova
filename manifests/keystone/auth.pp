@@ -15,6 +15,10 @@
 #   (Optional) Name of the service.
 #   Defaults to 'nova'.
 #
+# [*service_type*]
+#   (Optional) Type of service.
+#   Defaults to 'compute'.
+#
 # [*service_description*]
 #   (Optional) Description for keystone service.
 #   Defaults to 'Openstack Compute Service'.
@@ -63,6 +67,7 @@ class nova::keystone::auth(
   $password,
   $auth_name               = 'nova',
   $service_name            = 'nova',
+  $service_type            = 'compute',
   $service_description     = 'Openstack Compute Service',
   $region                  = 'RegionOne',
   $tenant                  = 'services',
@@ -79,14 +84,14 @@ class nova::keystone::auth(
   include nova::deps
 
   if $configure_endpoint {
-    Keystone_endpoint["${region}/${service_name}::compute"] -> Anchor['nova::service::end']
+    Keystone_endpoint["${region}/${service_name}::${service_type}"] -> Anchor['nova::service::end']
   }
 
   keystone::resource::service_identity { 'nova':
     configure_user      => $configure_user,
     configure_user_role => $configure_user_role,
     configure_endpoint  => $configure_endpoint,
-    service_type        => 'compute',
+    service_type        => $service_type,
     service_description => $service_description,
     service_name        => $service_name,
     region              => $region,

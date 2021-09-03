@@ -15,6 +15,10 @@
 #   (optional) Name of the service.
 #   Defaults to 'novajoin'.
 #
+# [*service_type*]
+#   (Optional) Type of service.
+#   Defaults to 'compute-vendordata-plugin'.
+#
 # [*service_description*]
 #   (optional) Description for keystone service.
 #   Defaults to 'Openstack Compute Service'.
@@ -59,6 +63,7 @@ class nova::metadata::novajoin::auth(
   $password,
   $auth_name               = 'novajoin',
   $service_name            = 'novajoin',
+  $service_type            = 'compute-vendordata-plugin',
   $service_description     = 'Novajoin vendordata plugin',
   $region                  = 'RegionOne',
   $tenant                  = 'services',
@@ -72,15 +77,15 @@ class nova::metadata::novajoin::auth(
 ) {
 
   if $configure_endpoint {
-    Keystone_endpoint["${region}/${service_name}::compute-vendordata-plugin"] ~> Service <| name == 'novajoin-server' |>
-    Keystone_endpoint["${region}/${service_name}::compute-vendordata-plugin"] ~> Service <| name == 'novajoin-notify' |>
+    Keystone_endpoint["${region}/${service_name}::${service_type}"] ~> Service <| name == 'novajoin-server' |>
+    Keystone_endpoint["${region}/${service_name}::${service_type}"] ~> Service <| name == 'novajoin-notify' |>
   }
 
   keystone::resource::service_identity { 'novajoin':
     configure_user      => $configure_user,
     configure_user_role => $configure_user_role,
     configure_endpoint  => $configure_endpoint,
-    service_type        => 'compute-vendordata-plugin',
+    service_type        => $service_type,
     service_description => $service_description,
     service_name        => $service_name,
     region              => $region,

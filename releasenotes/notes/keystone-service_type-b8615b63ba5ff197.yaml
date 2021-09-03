@@ -1,0 +1,5 @@
+---
+features:
+  - |
+    Now service type of the nova service and the novajoin service is
+    configurable by the ``service_type`` parameter.
