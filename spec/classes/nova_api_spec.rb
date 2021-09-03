@@ -80,7 +80,6 @@ describe 'nova::api' do
           :metadata_listen_port         => 8875,
           :osapi_compute_listen_port    => 8874,
           :use_forwarded_for            => false,
-          :ratelimits                   => '(GET, "*", .*, 100, MINUTE);(POST, "*", .*, 200, MINUTE)',
           :osapi_compute_workers        => 1,
           :metadata_workers             => 2,
           :enable_proxy_headers_parsing => true,

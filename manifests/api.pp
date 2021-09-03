@@ -70,16 +70,6 @@
 #   installing the package - required on upgrade.
 #   Defaults to false.
 #
-# [*ratelimits*]
-#   (optional) A string that is a semicolon-separated list of 5-tuples.
-#   See http://docs.openstack.org/trunk/config-reference/content/configuring-compute-API.html
-#   Example: '(POST, "*", .*, 10, MINUTE);(POST, "*/servers", ^/servers, 50, DAY);(PUT, "*", .*, 10, MINUTE)'
-#   Defaults to undef
-#
-# [*ratelimits_factory*]
-#   (optional) The rate limiting factory to use
-#   Defaults to 'nova.api.openstack.compute.limits:RateLimitingMiddleware.factory'
-#
 # [*enable_proxy_headers_parsing*]
 #   (optional) This determines if the HTTPProxyToWSGI
 #   middleware should parse the proxy headers or not.(boolean value)
@@ -178,6 +168,16 @@
 #   (optional) Whether the cinder::client class should be used to install the cinder client.
 #   Defaults to undef
 #
+# [*ratelimits*]
+#   (optional) A string that is a semicolon-separated list of 5-tuples.
+#   See http://docs.openstack.org/trunk/config-reference/content/configuring-compute-API.html
+#   Example: '(POST, "*", .*, 10, MINUTE);(POST, "*/servers", ^/servers, 50, DAY);(PUT, "*", .*, 10, MINUTE)'
+#   Defaults to undef
+#
+# [*ratelimits_factory*]
+#   (optional) The rate limiting factory to use
+#   Defaults to undef
+#
 class nova::api(
   $enabled                                     = true,
   $manage_service                              = true,
@@ -194,9 +194,6 @@ class nova::api(
   $sync_db                                     = true,
   $sync_db_api                                 = true,
   $db_online_data_migrations                   = false,
-  $ratelimits                                  = undef,
-  $ratelimits_factory                          =
-    'nova.api.openstack.compute.limits:RateLimitingMiddleware.factory',
   $validate                                    = false,
   $validation_options                          = {},
   $instance_name_template                      = $::os_service_default,
@@ -216,6 +213,8 @@ class nova::api(
   # DEPRECATED PARAMETER
   $nova_metadata_wsgi_enabled                  = false,
   $install_cinder_client                       = undef,
+  $ratelimits                                  = undef,
+  $ratelimits_factory                          = undef,
 ) inherits nova::params {
 
   include nova::deps
@@ -231,6 +230,10 @@ class nova::api(
 
   if $install_cinder_client != undef {
     warning('The nova::api::install_cinder_client parameter is deprecated and has no effect')
+  }
+
+  if $ratelimits != undef {
+    warning('The nova::api::ratelimits parameter has been deprecated and has no effect')
   }
 
   if $instance_name_template {
@@ -329,13 +332,6 @@ as a standalone service, or httpd for being run by a httpd server")
     'api/allow_instance_snapshots':      value => $allow_instance_snapshots;
     'api/enable_instance_password':      value => $enable_instance_password;
     'DEFAULT/allow_resize_to_same_host': value => $allow_resize_to_same_host;
-  }
-
-  if ($ratelimits != undef) {
-    nova_api_paste_ini {
-      'filter:ratelimit/paste.filter_factory': value => $ratelimits_factory;
-      'filter:ratelimit/limits':               value => $ratelimits;
-    }
   }
 
   # Added arg and if statement prevents this from being run
