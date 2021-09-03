@@ -79,7 +79,11 @@
 #    (optional) Adds a retention policy when purging the shadow tables
 #    Defaults to undef.
 #
-
+#  [*sleep*]
+#    (optional) The amount of time in seconds to sleep between batches when
+#    until_complete is used
+#    Defaults to undef.
+#
 class nova::cron::archive_deleted_rows (
   $minute         = 1,
   $hour           = 0,
@@ -95,6 +99,7 @@ class nova::cron::archive_deleted_rows (
   $all_cells      = false,
   $task_log       = false,
   $age            = undef,
+  $sleep          = undef,
 ) {
 
   include nova::deps
@@ -129,9 +134,9 @@ class nova::cron::archive_deleted_rows (
   }
 
   if $maxdelay == 0 {
-    $sleep = ''
+    $delay_cmd = ''
   } else {
-    $sleep = "sleep `expr \${RANDOM} \\% ${maxdelay}`; "
+    $delay_cmd = "sleep `expr \${RANDOM} \\% ${maxdelay}`; "
   }
 
   if $age {
@@ -140,10 +145,16 @@ class nova::cron::archive_deleted_rows (
     $age_real = ''
   }
 
+  if $sleep != undef {
+    $sleep_real = " --sleep ${sleep}"
+  } else {
+    $sleep_real = ''
+  }
+
   $cron_cmd = 'nova-manage db archive_deleted_rows'
 
   cron { 'nova-manage db archive_deleted_rows':
-    command     => "${sleep}${cron_cmd}${purge_real} --max_rows ${max_rows}${age_real}${until_complete_real}${all_cells_real}${task_log_real} \
+    command     => "${delay_cmd}${cron_cmd}${purge_real} --max_rows ${max_rows}${age_real}${until_complete_real}${all_cells_real}${task_log_real}${sleep_real} \
 >>${destination} 2>&1",
     environment => 'PATH=/bin:/usr/bin:/usr/sbin SHELL=/bin/sh',
     user        => pick($user, $::nova::params::nova_user),

@@ -191,6 +191,28 @@ describe 'nova::cron::archive_deleted_rows' do
       end
     end
 
+    context 'until_complete enabled and sleep set' do
+      before :each do
+        params.merge!(
+          :until_complete => true,
+          :sleep          => 5,
+        )
+      end
+
+      it 'configures a cron with --before' do
+        is_expected.to contain_cron('nova-manage db archive_deleted_rows').with(
+          :command     => "nova-manage db archive_deleted_rows --max_rows #{params[:max_rows]} --until-complete --sleep #{params[:sleep]} >>#{params[:destination]} 2>&1",
+          :environment => 'PATH=/bin:/usr/bin:/usr/sbin SHELL=/bin/sh',
+          :user        => params[:user],
+          :minute      => params[:minute],
+          :hour        => params[:hour],
+          :monthday    => params[:monthday],
+          :month       => params[:month],
+          :weekday     => params[:weekday],
+          :require     => 'Anchor[nova::dbsync::end]',
+        )
+      end
+    end
   end
 
   on_supported_os({
