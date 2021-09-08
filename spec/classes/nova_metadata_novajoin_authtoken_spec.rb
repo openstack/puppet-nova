@@ -42,6 +42,10 @@ describe 'nova::metadata::novajoin::authtoken' do
         is_expected.to contain_novajoin_config('keystone_authtoken/memcached_servers').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_novajoin_config('keystone_authtoken/region_name').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_novajoin_config('keystone_authtoken/token_cache_time').with_value('<SERVICE DEFAULT>')
+        is_expected.to contain_novajoin_config('keystone_authtoken/service_token_roles').with_value('<SERVICE DEFAULT>')
+        is_expected.to contain_novajoin_config('keystone_authtoken/service_token_roles_required').with_value('<SERVICE DEFAULT>')
+        is_expected.to contain_novajoin_config('keystone_authtoken/service_type').with_value('<SERVICE DEFAULT>')
+        is_expected.to contain_novajoin_config('keystone_authtoken/interface').with_value('<SERVICE DEFAULT>')
       end
     end
 
@@ -60,8 +64,7 @@ describe 'nova::metadata::novajoin::authtoken' do
           :auth_type                            => 'password',
           :auth_version                         => 'v3',
           :cache                                => 'somevalue',
-          :cafile                               =>
-'/opt/stack/data/cafile.pem',
+          :cafile                               => '/opt/stack/data/cafile.pem',
           :certfile                             => 'certfile.crt',
           :delay_auth_decision                  => false,
           :enforce_token_bind                   => 'permissive',
@@ -77,11 +80,14 @@ describe 'nova::metadata::novajoin::authtoken' do
           :memcache_secret_key                  => 'secret_key',
           :memcache_security_strategy           => 'ENCRYPT',
           :memcache_use_advanced_pool           => true,
-          :memcached_servers                    =>
-['memcached01:11211','memcached02:11211'],
+          :memcached_servers                    => ['memcached01:11211','memcached02:11211'],
           :manage_memcache_package              => true,
           :region_name                          => 'region2',
           :token_cache_time                     => '301',
+          :service_token_roles                  => ['service'],
+          :service_token_roles_required         => true,
+          :service_type                         => 'identity',
+          :interface                            => 'internal',
         })
       end
 
@@ -117,10 +123,27 @@ describe 'nova::metadata::novajoin::authtoken' do
         is_expected.to contain_novajoin_config('keystone_authtoken/memcached_servers').with_value('memcached01:11211,memcached02:11211')
         is_expected.to contain_novajoin_config('keystone_authtoken/region_name').with_value(params[:region_name])
         is_expected.to contain_novajoin_config('keystone_authtoken/token_cache_time').with_value(params[:token_cache_time])
+        is_expected.to contain_novajoin_config('keystone_authtoken/service_token_roles').with_value(params[:service_token_roles])
+        is_expected.to contain_novajoin_config('keystone_authtoken/service_token_roles_required').with_value(params[:service_token_roles_required])
+        is_expected.to contain_novajoin_config('keystone_authtoken/interface').with_value(params[:interface])
+        is_expected.to contain_novajoin_config('keystone_authtoken/service_type').with_value(params[:service_type])
       end
 
       it 'installs python memcache package' do
         is_expected.to contain_package('python-memcache')
+      end
+    end
+
+    context 'when overriding parameters via params hash' do
+      before do
+        params.merge!({
+          :username => 'myuser',
+          :params   => { 'username' => 'myotheruser' },
+        })
+      end
+
+      it 'configure keystone_authtoken' do
+        is_expected.to contain_novajoin_config('keystone_authtoken/username').with_value(params[:params]['username'])
       end
     end
   end

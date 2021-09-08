@@ -1,0 +1,11 @@
+---
+features:
+  - |
+    The following parameters have been added to
+    the ``nova::metada::novajoin::authtoken`` class
+
+    - ``service_token_roles``
+    - ``service_token_roles_required``
+    - ``service_type``
+    - ``interface``
+    - ``params``
