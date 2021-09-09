@@ -1,0 +1,4 @@
+---
+features:
+  - |
+    The new ``nova::network::neutron::http_retries`` parameter has been added.

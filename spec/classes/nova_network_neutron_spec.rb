@@ -13,6 +13,7 @@ describe 'nova::network::neutron' do
       :auth_url                => 'http://127.0.0.1:5000/v3',
       :valid_interfaces        => '<SERVICE DEFAULT>',
       :endpoint_override       => '<SERVICE DEFAULT>',
+      :http_retries            => '<SERVICE DEFAULT>',
       :ovs_bridge              => 'br-int',
       :extension_sync_interval => '600',
       :vif_plugging_is_fatal   => true,
@@ -42,6 +43,7 @@ describe 'nova::network::neutron' do
         should contain_nova_config('neutron/auth_url').with_value(default_params[:auth_url])
         should contain_nova_config('neutron/valid_interfaces').with_value(default_params[:valid_interfaces])
         should contain_nova_config('neutron/endpoint_override').with_value(default_params[:endpoint_override])
+        should contain_nova_config('neutron/http_retries').with_value(default_params[:http_retries])
         should contain_nova_config('neutron/extension_sync_interval').with_value(default_params[:extension_sync_interval])
         should contain_nova_config('neutron/ovs_bridge').with_value(default_params[:ovs_bridge])
       end
@@ -64,6 +66,7 @@ describe 'nova::network::neutron' do
           :auth_url                => 'http://10.0.0.1:5000/v2',
           :valid_interfaces        => 'public',
           :endpoint_override       => 'http://127.0.0.1:9696',
+          :http_retries            => 3,
           :ovs_bridge              => 'br-int',
           :extension_sync_interval => '600',
           :vif_plugging_is_fatal   => false,
@@ -84,6 +87,7 @@ describe 'nova::network::neutron' do
         should contain_nova_config('neutron/auth_url').with_value(params[:auth_url])
         should contain_nova_config('neutron/valid_interfaces').with_value(params[:valid_interfaces])
         should contain_nova_config('neutron/endpoint_override').with_value(params[:endpoint_override])
+        should contain_nova_config('neutron/http_retries').with_value(params[:http_retries])
         should contain_nova_config('neutron/extension_sync_interval').with_value(params[:extension_sync_interval])
         should contain_nova_config('neutron/ovs_bridge').with_value(params[:ovs_bridge])
       end
