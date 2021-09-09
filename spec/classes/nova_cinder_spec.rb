@@ -17,6 +17,7 @@ describe 'nova::cinder' do
         should contain_nova_config('cinder/user_domain_name').with_value('Default')
         should contain_nova_config('cinder/os_region_name').with_value('<SERVICE DEFAULT>')
         should contain_nova_config('cinder/catalog_info').with_value('<SERVICE DEFAULT>')
+        should contain_nova_config('cinder/http_retries').with_value('<SERVICE DEFAULT>')
       end
 
     end
@@ -31,6 +32,7 @@ describe 'nova::cinder' do
           :region_name         => 'RegionOne',
           :os_region_name      => 'RegionOne',
           :catalog_info        => 'volumev3:cinderv3:publicURL',
+          :http_retries        => 3,
         }
       end
 
@@ -46,6 +48,7 @@ describe 'nova::cinder' do
         should contain_nova_config('cinder/user_domain_name').with_value('Default')
         should contain_nova_config('cinder/os_region_name').with_value('RegionOne')
         should contain_nova_config('cinder/catalog_info').with_value('volumev3:cinderv3:publicURL')
+        should contain_nova_config('cinder/http_retries').with_value(3)
       end
 
     end
