@@ -62,6 +62,11 @@
 #   <service_type>:<service_name>:<endpoint_type>
 #   Defaults to $::os_service_default
 #
+# [*http_retries*]
+#   (optional) Number of times cinderclient should retry on any failed http
+#   call.
+#   Defaults to $::os_service_default
+#
 class nova::cinder (
   $password            = $::os_service_default,
   $auth_type           = $::os_service_default,
@@ -74,6 +79,7 @@ class nova::cinder (
   $user_domain_name    = 'Default',
   $os_region_name      = $::os_service_default,
   $catalog_info        = $::os_service_default,
+  $http_retries        = $::os_service_default,
 ) {
 
   include nova::deps
@@ -93,5 +99,6 @@ class nova::cinder (
     'cinder/user_domain_name':    value => $user_domain_name;
     'cinder/os_region_name':      value => $os_region_name_real;
     'cinder/catalog_info':        value => $catalog_info_real;
+    'cinder/http_retries':        value => $http_retries;
   }
 }

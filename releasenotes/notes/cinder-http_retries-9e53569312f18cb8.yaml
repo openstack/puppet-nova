@@ -1,0 +1,4 @@
+---
+features:
+  - |
+    The new ``nova::cinder::http_retries`` parameter has been added.
