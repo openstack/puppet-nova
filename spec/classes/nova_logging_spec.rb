@@ -30,6 +30,7 @@ describe 'nova::logging' do
      :log_facility                   => 'LOG_FOO',
      :log_dir                        => '/var/log/foo',
      :log_file                       => '/var/log/foo/nova.log',
+     :watch_log_file                 => true,
      :debug                          => true,
     }
   end
@@ -59,13 +60,14 @@ describe 'nova::logging' do
   shared_examples 'basic default logging settings' do
     it 'configures nova logging settings with default values' do
       is_expected.to contain_oslo__log('nova_config').with(
-        :use_syslog  => '<SERVICE DEFAULT>',
-        :use_json    => '<SERVICE DEFAULT>',
-        :use_journal => '<SERVICE DEFAULT>',
-        :use_stderr  => '<SERVICE DEFAULT>',
-        :log_dir     => '/var/log/nova',
-        :log_file    => '<SERVICE DEFAULT>',
-        :debug       => '<SERVICE DEFAULT>',
+        :use_syslog     => '<SERVICE DEFAULT>',
+        :use_json       => '<SERVICE DEFAULT>',
+        :use_journal    => '<SERVICE DEFAULT>',
+        :use_stderr     => '<SERVICE DEFAULT>',
+        :log_dir        => '/var/log/nova',
+        :log_file       => '<SERVICE DEFAULT>',
+        :watch_log_file => '<SERVICE DEFAULT>',
+        :debug          => '<SERVICE DEFAULT>',
       )
       is_expected.to contain_file('/var/log/nova/nova-manage.log').with(
         :owner        => 'nova',
@@ -83,6 +85,7 @@ describe 'nova::logging' do
         :syslog_log_facility => 'LOG_FOO',
         :log_dir             => '/var/log/foo',
         :log_file            => '/var/log/foo/nova.log',
+        :watch_log_file      => true,
         :debug               => true,
       )
       is_expected.to contain_file('/var/log/foo/nova-manage.log').with(
