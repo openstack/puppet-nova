@@ -1,0 +1,4 @@
+---
+upgrade:
+  - |
+    The ``nova::compute::vgpu::enabled_vgpu_types`` parameter has been removed.
