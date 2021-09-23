@@ -74,7 +74,7 @@ describe 'nova::compute' do
       it 'installs genisoimage package and sets config_drive_format' do
         is_expected.to contain_nova_config('DEFAULT/config_drive_format').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_package('genisoimage').with(
-          :ensure => 'present',
+          :ensure => 'installed',
         )
         is_expected.to contain_package('genisoimage').that_requires('Anchor[nova::install::begin]')
         is_expected.to contain_package('genisoimage').that_comes_before('Anchor[nova::install::end]')
@@ -148,7 +148,7 @@ describe 'nova::compute' do
         is_expected.to contain_nova_config('barbican/barbican_endpoint').with_value('http://localhost')
         is_expected.to contain_nova_config('barbican/barbican_api_version').with_value('v1')
         is_expected.to contain_nova_config('barbican/auth_endpoint').with_value('http://127.0.0.1:5000/v3')
-        is_expected.to contain_package('cryptsetup').with( :ensure => 'present' )
+        is_expected.to contain_package('cryptsetup').with_ensure('installed')
       end
 
       it 'configures vnc in nova.conf' do
