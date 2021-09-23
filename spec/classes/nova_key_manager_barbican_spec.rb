@@ -15,7 +15,7 @@ describe 'nova::key_manager::barbican' do
         )
 
         is_expected.to contain_package('cryptsetup').with(
-          :ensure => 'present',
+          :ensure => 'installed',
           :tag    => 'openstack',
         )
       }
@@ -46,7 +46,7 @@ describe 'nova::key_manager::barbican' do
         )
 
         is_expected.to contain_package('cryptsetup').with(
-          :ensure => 'present',
+          :ensure => 'installed',
           :tag    => 'openstack',
         )
       }
