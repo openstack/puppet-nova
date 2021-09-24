@@ -9,19 +9,6 @@ describe 'nova::compute::vgpu' do
       end
     end
 
-    context 'with vgpu device' do
-      let :params do
-        {
-            :enabled_vgpu_types => "nvidia-35",
-        }
-      end
-      it 'configures nova vgpu device entries' do
-        is_expected.to contain_nova_config('devices/enabled_vgpu_types').with(
-          'value' => 'nvidia-35'
-        )
-      end
-    end
-
     context 'with vgpu types and device addresses mapping' do
       let :params do
         {
@@ -30,20 +17,6 @@ describe 'nova::compute::vgpu' do
       end
       it { is_expected.to contain_nova_config('devices/enabled_vgpu_types').with_value('nvidia-35') }
       it { is_expected.to contain_nova_config('vgpu_nvidia-35/device_addresses').with_ensure('absent') }
-    end
-
-    context 'with multiple vgpu devices' do
-      let :params do
-        {
-          :enabled_vgpu_types => ["nvidia-35","nvidia-36"]
-        }
-      end
-
-      it 'configures nova vgpu device entries' do
-        is_expected.to contain_nova_config('devices/enabled_vgpu_types').with(
-          'value' => "nvidia-35,nvidia-36"
-        )
-      end
     end
 
     context 'with multiple vgpu types and corresponding device addresses mapping' do
