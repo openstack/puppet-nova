@@ -35,6 +35,7 @@ describe 'nova::compute' do
       end
 
       it { is_expected.to contain_nova_config('DEFAULT/use_cow_images').with_value('<SERVICE DEFAULT>') }
+      it { is_expected.to contain_nova_config('DEFAULT/mkisofs_cmd').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('DEFAULT/force_raw_images').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('DEFAULT/virt_mkfs').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('DEFAULT/reserved_host_memory_mb').with_value('<SERVICE DEFAULT>') }
@@ -71,13 +72,13 @@ describe 'nova::compute' do
 
       it { is_expected.to contain_class('nova::availability_zone') }
 
-      it 'installs genisoimage package and sets config_drive_format' do
+      it 'installs mkisofs package and sets config_drive_format' do
         is_expected.to contain_nova_config('DEFAULT/config_drive_format').with_value('<SERVICE DEFAULT>')
-        is_expected.to contain_package('genisoimage').with(
+        is_expected.to contain_package(platform_params[:mkisofs_package]).with(
           :ensure => 'installed',
         )
-        is_expected.to contain_package('genisoimage').that_requires('Anchor[nova::install::begin]')
-        is_expected.to contain_package('genisoimage').that_comes_before('Anchor[nova::install::end]')
+        is_expected.to contain_package(platform_params[:mkisofs_package]).that_requires('Anchor[nova::install::begin]')
+        is_expected.to contain_package(platform_params[:mkisofs_package]).that_comes_before('Anchor[nova::install::end]')
       end
 
       it 'configures nova pci_passthrough_whitelist' do
@@ -92,6 +93,7 @@ describe 'nova::compute' do
           :ensure_package                     => '2012.1-2',
           :vncproxy_host                      => '127.0.0.1',
           :use_cow_images                     => false,
+          :mkisofs_cmd                        => 'mkisofs',
           :force_raw_images                   => false,
           :virt_mkfs                          => 'windows=mkfs.ntfs --force --fast %(target)s',
           :reserved_host_memory               => '0',
@@ -164,6 +166,7 @@ describe 'nova::compute' do
       end
 
       it { is_expected.to contain_nova_config('DEFAULT/use_cow_images').with_value(false) }
+      it { is_expected.to contain_nova_config('DEFAULT/mkisofs_cmd').with_value('mkisofs') }
       it { is_expected.to contain_nova_config('DEFAULT/force_raw_images').with_value(false) }
       it { is_expected.to contain_nova_config('DEFAULT/virt_mkfs').with_value('windows=mkfs.ntfs --force --fast %(target)s') }
       it { is_expected.to contain_nova_config('DEFAULT/reserved_host_memory_mb').with_value('0') }
@@ -195,7 +198,7 @@ describe 'nova::compute' do
 
       it 'configures nova config_drive_format to vfat' do
         is_expected.to contain_nova_config('DEFAULT/config_drive_format').with_value('vfat')
-        is_expected.to_not contain_package('genisoimage').with(
+        is_expected.to_not contain_package(platform_params[:mkisofs_package]).with(
           :ensure => 'present',
         )
       end
@@ -451,15 +454,28 @@ describe 'nova::compute' do
       let (:facts) do
         facts.merge!(OSDefaults.get_facts())
       end
-
-      let (:platform_params) do
-        case facts[:osfamily]
-        when 'Debian'
+      case facts[:osfamily]
+      when 'Debian'
+        let (:platform_params) do
           { :nova_compute_package => 'nova-compute',
-            :nova_compute_service => 'nova-compute' }
-        when 'RedHat'
+            :nova_compute_service => 'nova-compute',
+            :mkisofs_package => 'genisoimage' }
+        end
+      when 'RedHat'
+        let (:platform_params) do
           { :nova_compute_package => 'openstack-nova-compute',
             :nova_compute_service => 'openstack-nova-compute' }
+        end
+        if facts[:operatingsystemmajrelease] > '8'
+          before do
+            platform_params.merge!({
+              :mkisofs_package => 'xorriso' })
+          end
+        else
+          before do
+            platform_params.merge!({
+              :mkisofs_package => 'genisoimage' })
+          end
         end
       end
       it_behaves_like 'nova-compute'

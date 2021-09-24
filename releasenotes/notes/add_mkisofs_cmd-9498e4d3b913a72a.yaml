@@ -1,0 +1,6 @@
+---
+features:
+  - |
+    The new ``nova::compute::mkisofs_cmd`` parameter has been added to
+    change the mkisofs tools. This is going to assist with transition
+    from genisoimage to xorriso.
