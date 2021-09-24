@@ -378,6 +378,8 @@ class nova::compute (
   }
   include nova::compute::pci
 
+  # TODO(tkajinam): Replace this by nova::compute::mdev when we remove
+  #                 nova::compute::vgpu
   include nova::compute::vgpu
 
   if ($vnc_enabled and $spice_enabled) {
