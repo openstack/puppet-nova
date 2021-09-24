@@ -61,13 +61,6 @@
 #   flavor/image.
 #   Defaults to $::os_service_default
 #
-# [*query_placement_for_availability_zone*]
-#   (Optional) This setting allows the scheduler to look up a host aggregate
-#   with metadata key of availability zone set to the value provided by
-#   incoming request, and request result from placement be limited to that
-#   aggregate.
-#   Defaults to $::os_service_default
-#
 # [*query_placement_for_routed_network_aggregates*]
 #   (Optional) This setting allows to enable the scheduler to filter
 #   compute hosts affined to routed network segment aggregates.
@@ -79,6 +72,13 @@
 #   (Optional) This value controls how often (in seconds) to run periodic tasks
 #   in the scheduler. The specific tasks that are run for each period are
 #   determined by the particular scheduler being used.
+#   Defaults to undef
+#
+# [*query_placement_for_availability_zone*]
+#   (Optional) This setting allows the scheduler to look up a host aggregate
+#   with metadata key of availability zone set to the value provided by
+#   incoming request, and request result from placement be limited to that
+#   aggregate.
 #   Defaults to undef
 #
 class nova::scheduler(
@@ -93,10 +93,10 @@ class nova::scheduler(
   $placement_aggregate_required_for_tenants      = $::os_service_default,
   $max_placement_results                         = $::os_service_default,
   $enable_isolated_aggregate_filtering           = $::os_service_default,
-  $query_placement_for_availability_zone         = $::os_service_default,
   $query_placement_for_routed_network_aggregates = $::os_service_default,
   # DEPRECATED PARAMETERS
   $periodic_task_interval                        = undef,
+  $query_placement_for_availability_zone         = undef,
 ) {
 
   include nova::deps
@@ -107,6 +107,11 @@ class nova::scheduler(
   if $periodic_task_interval != undef {
     warning('The periodic_task_interval parameter is depreated and has no effect')
   }
+
+  if $query_placement_for_availability_zone != undef {
+    warning('The query_placement_for_availability_zone parameter is deprecated.')
+  }
+  $query_placement_for_availability_zone_real = pick($query_placement_for_availability_zone, $::os_service_default)
 
   nova::generic_service { 'scheduler':
     enabled        => $enabled,
@@ -125,7 +130,7 @@ class nova::scheduler(
     'scheduler/placement_aggregate_required_for_tenants':      value => $placement_aggregate_required_for_tenants;
     'scheduler/max_placement_results':                         value => $max_placement_results;
     'scheduler/enable_isolated_aggregate_filtering':           value => $enable_isolated_aggregate_filtering;
-    'scheduler/query_placement_for_availability_zone':         value => $query_placement_for_availability_zone;
+    'scheduler/query_placement_for_availability_zone':         value => $query_placement_for_availability_zone_real;
     'scheduler/query_placement_for_routed_network_aggregates': value => $query_placement_for_routed_network_aggregates;
   }
 
