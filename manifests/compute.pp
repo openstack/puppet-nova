@@ -54,6 +54,10 @@
 #   (optional) Whether to force the config drive to be attached to all VMs
 #   Defaults to false
 #
+# [*mkisofs_cmd*]
+#   (optional) Name or path of the tool used for ISO image creation.
+#   Defaults to $::os_service_default
+#
 # [*virtio_nic*]
 #   (optional) Whether to use virtio for the nic driver of VMs
 #   Defaults to false
@@ -326,6 +330,7 @@ class nova::compute (
   $virtio_nic                                  = false,
   $instance_usage_audit                        = false,
   $instance_usage_audit_period                 = 'month',
+  $mkisofs_cmd                                 = $::os_service_default,
   $use_cow_images                              = $::os_service_default,
   $force_raw_images                            = $::os_service_default,
   $virt_mkfs                                   = $::os_service_default,
@@ -510,6 +515,7 @@ Use the same parameter in nova::api class.')
 
   nova_config {
     'DEFAULT/use_cow_images':                    value => $use_cow_images;
+    'DEFAULT/mkisofs_cmd':                       value => $mkisofs_cmd;
     'DEFAULT/force_raw_images':                  value => $force_raw_images;
     'DEFAULT/virt_mkfs':                         value => $virt_mkfs;
     'DEFAULT/reserved_host_memory_mb':           value => $reserved_host_memory;
@@ -598,11 +604,10 @@ Use the same parameter in nova::api class.')
   }
 
   if is_service_default($config_drive_format) or $config_drive_format == 'iso9660' {
-    ensure_packages($::nova::params::genisoimage_package_name, {
+    ensure_packages($::nova::params::mkisofs_package_name, {
       tag => ['openstack', 'nova-support-package'],
     })
   }
-
   nova_config {
     'DEFAULT/config_drive_format':     value => $config_drive_format;
   }

@@ -28,7 +28,6 @@ class nova::params {
       $serialproxy_package_name          = 'openstack-nova-serialproxy'
       $spicehtml5proxy_package_name      = 'openstack-nova-console'
       $ceph_client_package_name          = 'ceph-common'
-      $genisoimage_package_name          = 'genisoimage'
       # service names
       $api_service_name                  = 'openstack-nova-api'
       $api_metadata_service_name         = undef
@@ -61,6 +60,11 @@ class nova::params {
       }
       $nova_user                    = 'nova'
       $nova_group                   = 'nova'
+      if $::operatingsystemmajrelease >= '9' {
+        $mkisofs_package_name            = 'xorriso'
+      } else {
+        $mkisofs_package_name            = 'genisoimage'
+      }
     }
     'Debian': {
       # package names
@@ -75,7 +79,7 @@ class nova::params {
       $scheduler_package_name            = 'nova-scheduler'
       $tgt_package_name                  = 'tgt'
       $ceph_client_package_name          = 'ceph'
-      $genisoimage_package_name          = 'genisoimage'
+      $mkisofs_package_name              = 'genisoimage'
       # service names
       $api_service_name                  = 'nova-api'
       $compute_service_name              = 'nova-compute'
