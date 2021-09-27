@@ -21,7 +21,7 @@
 #
 # [*service_description*]
 #   (Optional) Description for keystone service.
-#   Defaults to 'Openstack Compute Service'.
+#   Defaults to 'OpenStack Compute Service'.
 #
 # [*public_url*]
 #   (Optional) The endpoint's public url.
@@ -68,7 +68,7 @@ class nova::keystone::auth(
   $auth_name               = 'nova',
   $service_name            = 'nova',
   $service_type            = 'compute',
-  $service_description     = 'Openstack Compute Service',
+  $service_description     = 'OpenStack Compute Service',
   $region                  = 'RegionOne',
   $tenant                  = 'services',
   $roles                   = ['admin'],
