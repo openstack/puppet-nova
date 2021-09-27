@@ -1,172 +1,71 @@
+#
+# Unit tests for nova::keystone::auth
+#
+
 require 'spec_helper'
 
 describe 'nova::keystone::auth' do
-
-  let :params do
-    {
-      :password => 'nova_password'
-    }
-  end
-
-  let :default_params do
-    {
-      :auth_name    => 'nova',
-      :service_name => 'nova',
-      :region       => 'RegionOne',
-      :tenant       => 'services',
-      :email        => 'nova@localhost',
-      :public_url   => 'http://127.0.0.1:8774/v2.1',
-      :internal_url => 'http://127.0.0.1:8774/v2.1',
-      :admin_url    => 'http://127.0.0.1:8774/v2.1'
-    }
-  end
-
-  shared_examples 'nova::keystone::auth' do
-    context 'with default parameters' do
-      it { should contain_keystone_user('nova').with(
-        :ensure   => 'present',
-        :password => 'nova_password'
-      )}
-
-      it { should contain_keystone_user_role('nova@services').with(
-        :ensure => 'present',
-        :roles  => ['admin']
-      )}
-
-      it { should contain_keystone_service('nova::compute').with(
-        :ensure      => 'present',
-        :description => 'Openstack Compute Service'
-      )}
-
-      it { should contain_keystone_endpoint('RegionOne/nova::compute').with(
-        :ensure       => 'present',
-        :public_url   => 'http://127.0.0.1:8774/v2.1',
-        :admin_url    => 'http://127.0.0.1:8774/v2.1',
-        :internal_url => 'http://127.0.0.1:8774/v2.1'
-      )}
-    end
-
-    context 'when overriding roles' do
-      before do
-        params.merge!( :roles => ['admin', 'service'] )
-      end
-
-      it { should contain_keystone_user_role('nova@services').with(
-        :ensure => 'present',
-        :roles  => ['admin', 'service']
-      )}
-    end
-
-    context 'when setting auth name' do
-      before do
-        params.merge!( :auth_name => 'foo' )
-      end
-
-      it { should contain_keystone_user('foo').with(
-        :ensure   => 'present',
-        :password => 'nova_password'
-      )}
-
-      it { should contain_keystone_user_role('foo@services').with(
-        :ensure => 'present',
-        :roles  => ['admin']
-      )}
-
-      it { should contain_keystone_service('nova::compute').with(
-        :ensure      => 'present',
-        :description => 'Openstack Compute Service'
-      )}
-    end
-
-    context 'when overriding endpoint parameters' do
-      before do
-        params.merge!(
-          :region       => 'RegionTwo',
-          :public_url   => 'https://10.0.0.1:9774/v2.2',
-          :internal_url => 'https://10.0.0.3:9774/v2.2',
-          :admin_url    => 'https://10.0.0.2:9774/v2.2',
-        )
-      end
-
-      it { should contain_keystone_endpoint('RegionTwo/nova::compute').with(
-        :ensure       => 'present',
-        :public_url   => params[:public_url],
-        :internal_url => params[:internal_url],
-        :admin_url    => params[:admin_url]
-      )}
-
-    end
-
-    context 'when disabling endpoint configuration' do
-      before do
-        params.merge!( :configure_endpoint => false )
-      end
-
-      it { should_not contain_keystone_endpoint('RegionOne/nova::compute') }
-    end
-
-    context 'when disabling user configuration' do
-      before do
-        params.merge!( :configure_user => false )
-      end
-
-      it { should_not contain_keystone_user('nova') }
-      it { should contain_keystone_user_role('nova@services') }
-      it { should contain_keystone_service('nova::compute').with(
-        :ensure      => 'present',
-        :description => 'Openstack Compute Service'
-      )}
-    end
-
-    context 'when disabling user and user role configuration' do
+  shared_examples_for 'nova::keystone::auth' do
+    context 'with default class parameters' do
       let :params do
-        {
+        { :password => 'nova_password' }
+      end
+
+      it { is_expected.to contain_keystone__resource__service_identity('nova').with(
+        :configure_user      => true,
+        :configure_user_role => true,
+        :configure_endpoint  => true,
+        :service_name        => 'nova',
+        :service_type        => 'compute',
+        :service_description => 'Openstack Compute Service',
+        :region              => 'RegionOne',
+        :auth_name           => 'nova',
+        :password            => 'nova_password',
+        :email               => 'nova@localhost',
+        :tenant              => 'services',
+        :roles               => ['admin'],
+        :public_url          => 'http://127.0.0.1:8774/v2.1',
+        :internal_url        => 'http://127.0.0.1:8774/v2.1',
+        :admin_url           => 'http://127.0.0.1:8774/v2.1',
+      ) }
+    end
+
+    context 'when overriding parameters' do
+      let :params do
+        { :password            => 'nova_password',
+          :auth_name           => 'alt_nova',
+          :email               => 'alt_nova@alt_localhost',
+          :tenant              => 'alt_service',
+          :configure_endpoint  => false,
           :configure_user      => false,
           :configure_user_role => false,
-          :password            => 'nova_password'
-        }
+          :service_description => 'Alternative Openstack Compute Service',
+          :service_name        => 'alt_service',
+          :service_type        => 'alt_compute',
+          :region              => 'RegionTwo',
+          :roles               => ['admin', 'service'],
+          :public_url          => 'https://10.10.10.10:80',
+          :internal_url        => 'http://10.10.10.11:81',
+          :admin_url           => 'http://10.10.10.12:81' }
       end
 
-      it { should_not contain_keystone_user('nova') }
-      it { should_not contain_keystone_user_role('nova@services') }
-
-      it { should contain_keystone_service('nova::compute').with(
-        :ensure      => 'present',
-        :description => 'Openstack Compute Service'
-      )}
-    end
-
-    context 'when overriding service names' do
-      let :params do
-        {
-          :service_name => 'nova_service',
-          :password     => 'nova_password'
-        }
-      end
-
-      it { should contain_keystone_user('nova') }
-      it { should contain_keystone_user_role('nova@services') }
-      it { should contain_keystone_service('nova_service::compute') }
-      it { should contain_keystone_endpoint('RegionOne/nova_service::compute') }
-    end
-
-    context 'when configuring nova-api and the keystone endpoint' do
-      let :pre_condition do
-        "class { 'nova::keystone::authtoken':
-           password => 'secrete',
-         }
-         class { 'nova::api': }
-         include nova"
-      end
-
-      let :params do
-        {
-          :password     => 'test',
-          :service_name => 'nova',
-        }
-      end
-
-      it { should contain_keystone_endpoint('RegionOne/nova::compute').with_before(['Anchor[nova::service::end]']) }
+      it { is_expected.to contain_keystone__resource__service_identity('nova').with(
+        :configure_user      => false,
+        :configure_user_role => false,
+        :configure_endpoint  => false,
+        :service_name        => 'alt_service',
+        :service_type        => 'alt_compute',
+        :service_description => 'Alternative Openstack Compute Service',
+        :region              => 'RegionTwo',
+        :auth_name           => 'alt_nova',
+        :password            => 'nova_password',
+        :email               => 'alt_nova@alt_localhost',
+        :tenant              => 'alt_service',
+        :roles               => ['admin', 'service'],
+        :public_url          => 'https://10.10.10.10:80',
+        :internal_url        => 'http://10.10.10.11:81',
+        :admin_url           => 'http://10.10.10.12:81',
+      ) }
     end
   end
 
