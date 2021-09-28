@@ -93,15 +93,15 @@ class nova::cron::purge_shadow_tables (
   }
 
   if $maxdelay == 0 {
-    $sleep = ''
+    $delay_cmd = ''
   } else {
-    $sleep = "sleep `expr \${RANDOM} \\% ${maxdelay}`; "
+    $delay_cmd = "sleep `expr \${RANDOM} \\% ${maxdelay}`; "
   }
 
   $cron_cmd = 'nova-manage db purge'
 
   cron { 'nova-manage db purge':
-    command     => "${sleep}${cron_cmd} --before `date --date='today - ${age} days' +\\%D`${verbose_real}${all_cells_real} \
+    command     => "${delay_cmd}${cron_cmd} --before `date --date='today - ${age} days' +\\%D`${verbose_real}${all_cells_real} \
 >>${destination} 2>&1",
     environment => 'PATH=/bin:/usr/bin:/usr/sbin SHELL=/bin/sh',
     user        => pick($user, $::nova::params::nova_user),
