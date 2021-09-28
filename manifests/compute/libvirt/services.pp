@@ -88,7 +88,7 @@ class nova::compute::libvirt::services (
       enable => true,
       name   => $virtlock_service_name,
     }
-    Package<| name == 'libvirt' |> -> Service['virtlockd']
+    Package<| title == 'libvirt' |> -> Service['virtlockd']
   }
 
   if $virtlog_service_name {
@@ -97,7 +97,7 @@ class nova::compute::libvirt::services (
       enable => true,
       name   => $virtlog_service_name,
     }
-    Package<| name == 'libvirt' |> -> Service['virtlogd']
+    Package<| title == 'libvirt' |> -> Service['virtlogd']
   }
   if $libvirt_service_name and $virtlog_service_name {
     Service['virtlogd'] -> Service['libvirt']
