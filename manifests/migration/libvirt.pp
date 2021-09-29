@@ -123,6 +123,11 @@
 #   of the used OS installed via ::nova::compute::libvirt::version::default .
 #   Defaults to ::nova::compute::libvirt::version::default
 #
+# [*modular_libvirt*]
+#   (optional) Whether to enable modular libvirt daemons or use monolithic
+#   libvirt daemon.
+#   Defaults to undef
+#
 class nova::migration::libvirt(
   $transport                           = undef,
   $auth                                = 'none',
@@ -144,15 +149,20 @@ class nova::migration::libvirt(
   $ca_file                             = $::os_service_default,
   $crl_file                            = $::os_service_default,
   $libvirt_version                     = $::nova::compute::libvirt::version::default,
+  $modular_libvirt                     = undef,
 ) inherits nova::compute::libvirt::version {
 
   include nova::deps
+  include nova::params
 
   if $transport {
     $transport_real = $transport
   } else {
     $transport_real = 'tcp'
   }
+
+  $modular_libvirt_real = pick($modular_libvirt, $nova::params::modular_libvirt)
+
 
   validate_legacy(Enum['tcp', 'tls', 'ssh'], 'validate_re', $transport_real,
     [['^tcp$', '^tls$', '^ssh$'], 'Valid options for transport are tcp, tls, ssh.'])
@@ -234,13 +244,22 @@ class nova::migration::libvirt(
         $host_uuid_real = $::libvirt_uuid
       }
 
-      augeas { 'libvirt-conf-uuid':
-        context => '/files/etc/libvirt/libvirtd.conf',
-        changes => [
-          "set host_uuid ${host_uuid_real}",
-        ],
-        notify  => Service['libvirt'],
-        require => Package['libvirt'],
+      if $modular_libvirt_real {
+        ['virtqemud', 'virtproxyd', 'virtsecretd', 'virtnodedevd', 'virtstoraged'].each |String $daemon| {
+          augeas { "${daemon}-conf-uuid":
+            context => "/files/etc/libvirt/${daemon}.conf",
+            changes => ["set host_uuid ${host_uuid_real}"],
+            notify  => Service[$daemon],
+            require => Package['libvirt'],
+          }
+        }
+      } else {
+        augeas { 'libvirt-conf-uuid':
+          context => '/files/etc/libvirt/libvirtd.conf',
+          changes => ["set host_uuid ${host_uuid_real}"],
+          notify  => Service['libvirt'],
+          require => Package['libvirt'],
+        }
       }
     }
 
@@ -272,15 +291,20 @@ class nova::migration::libvirt(
       warning('Usage of undef for the listen_addrss parameter has been deprecated')
     }
 
-    libvirtd_config {
-      'listen_tls':  value => $listen_tls;
-      'listen_tcp':  value => $listen_tcp;
-      'auth_tls':    value => $auth_tls_real, quote => true;
-      'auth_tcp':    value => $auth_tcp_real, quote => true;
-      'ca_file':     value => $ca_file_real, quote => true;
-      'crl_file':    value => $crl_file_real, quote => true;
-      'listen_addr': value => pick($listen_address, $::os_service_default), quote => true;
+    $libvirt_listen_config = $modular_libvirt_real ? {
+      true    => 'virtproxyd_config',
+      default => 'libvirtd_config'
     }
+
+    create_resources( $libvirt_listen_config , {
+      'listen_tls' => { 'value' => $listen_tls },
+      'listen_tcp' => { 'value' => $listen_tcp },
+      'auth_tls'   => { 'value' => $auth_tls_real, 'quote' => true },
+      'auth_tcp'   => { 'value' => $auth_tcp_real, 'quote' => true },
+      'ca_file'    => { 'value' => $ca_file_real, 'quote'  => true },
+      'crl_file'   => { 'value' => $crl_file_real, 'quote' => true },
+      'listen_addr' => { 'value' => pick($listen_address, $::os_service_default), 'quote' => true }
+    })
 
     if $transport_real == 'tls' or $transport_real == 'tcp' {
       if versioncmp($libvirt_version, '5.6') >= 0 {
@@ -288,7 +312,7 @@ class nova::migration::libvirt(
         # system socket should be activated by systemd, not by --listen option
         $manage_services = pick($::nova::compute::libvirt::manage_libvirt_services, true)
 
-        if $manage_services {
+        if $manage_services and !$modular_libvirt_real {
           # libvirtd.service should be stopped before socket service is started.
           # Otherwise, socket service fails to start.
           exec { 'stop libvirtd.service':
