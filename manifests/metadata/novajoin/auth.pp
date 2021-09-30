@@ -49,7 +49,7 @@
 #
 # [*configure_endpoint*]
 #   (optional) Whether to create the endpoint.
-#   Defaults to true
+#   Defaults to false
 #
 # [*configure_user*]
 #   (optional) Whether to create the service user.
