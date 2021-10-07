@@ -7,7 +7,7 @@ describe 'nova::cinder' do
 
       it 'configures cinder in nova.conf' do
         should contain_nova_config('cinder/password').with_value('<SERVICE DEFAULT>').with_secret(true)
-        should contain_nova_config('cinder/auth_type').with_value('<SERVICE DEFAULT>')
+        should contain_nova_config('cinder/auth_type').with_value('password')
         should contain_nova_config('cinder/auth_url').with_value('<SERVICE DEFAULT>')
         should contain_nova_config('cinder/timeout').with_value('<SERVICE DEFAULT>')
         should contain_nova_config('cinder/region_name').with_value('<SERVICE DEFAULT>')

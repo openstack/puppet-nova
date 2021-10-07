@@ -10,8 +10,8 @@
 #   Defaults to $::os_service_default
 #
 # [*auth_type*]
-#   Name of the auth type to load (string value)
-#   Defaults to $::os_service_default
+#   (optional) Name of the auth type to load (string value)
+#   Defaults to 'password'
 #
 # [*auth_url*]
 #   (optional) Points to the OpenStack Identity server IP and port.
@@ -69,7 +69,7 @@
 #
 class nova::cinder (
   $password            = $::os_service_default,
-  $auth_type           = $::os_service_default,
+  $auth_type           = 'password',
   $auth_url            = $::os_service_default,
   $timeout             = $::os_service_default,
   $region_name         = $::os_service_default,
