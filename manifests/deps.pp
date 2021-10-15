@@ -24,6 +24,10 @@ class nova::deps {
 
   # paste-api.ini config should occur in the config block also.
   Anchor['nova::config::begin']
+  -> Nova_api_paste_ini<||>
+  ~> Anchor['nova::config::end']
+
+  Anchor['nova::config::begin']
   -> Nova_paste_api_ini<||>
   ~> Anchor['nova::config::end']
 

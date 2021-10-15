@@ -22,7 +22,7 @@
 #
 # [*nova_api_paste_ini*]
 #   (optional) Allow configuration of arbitrary Nova paste api configurations.
-#   The value is an hash of nova_paste_api_ini resources. Example:
+#   The value is an hash of nova_api_paste_ini resources. Example:
 #   { 'DEFAULT/foo' => { value => 'fooValue'},
 #     'DEFAULT/bar' => { value => 'barValue'}
 #   }
@@ -47,7 +47,7 @@ class nova::config (
 
   if $nova_paste_api_ini != undef {
     warning('nova_paste_api_ini is deprecated and will be removed in a future
-release. Use nova_api_paste_init')
+release. Use nova_api_paste_ini')
     $nova_api_paste_ini_real = $nova_paste_api_ini
   } else {
     $nova_api_paste_ini_real = $nova_api_paste_ini
