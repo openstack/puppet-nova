@@ -27,10 +27,6 @@ class nova::deps {
   -> Nova_api_paste_ini<||>
   ~> Anchor['nova::config::end']
 
-  Anchor['nova::config::begin']
-  -> Nova_paste_api_ini<||>
-  ~> Anchor['nova::config::end']
-
   # On any uwsgi config change, we must restart Nova APIs.
   Anchor['nova::config::begin']
   -> Nova_api_uwsgi_config<||>
