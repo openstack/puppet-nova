@@ -1,0 +1,7 @@
+---
+upgrade:
+  - |
+    The ``nova::config::nova_paste_api_ini`` parameter has been removed.
+  - |
+    The ``nova_paste_api_ini`` resource has been removed.
+
