@@ -1,0 +1,5 @@
+---
+features:
+  - |
+    The new ``key_val_separator`` parameter has been added to
+    the ``nova_api_paste_ini`` resource type.
