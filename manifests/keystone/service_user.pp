@@ -40,7 +40,7 @@
 #
 # [*auth_type*]
 #   (Optional) Authentication type to load
-#   Defaults to $::os_service_default
+#   Defaults to 'password'
 #
 # [*auth_version*]
 #   (Optional) API version of the admin Identity API endpoint.
