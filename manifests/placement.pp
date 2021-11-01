@@ -71,7 +71,7 @@ class nova::placement(
     'placement/user_domain_name':    value => $user_domain_name;
     'placement/username':            value => $username;
     'placement/region_name':         value => $region_name;
-    'placement/valid_interfaces':    value => $valid_interfaces;
+    'placement/valid_interfaces':    value => join(any2array($valid_interfaces), ',');
   }
 
 }

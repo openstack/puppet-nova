@@ -40,7 +40,7 @@ describe 'nova::placement' do
           :project_name        => 'service',
           :project_domain_name => 'default',
           :region_name         => 'RegionTwo',
-          :valid_interfaces    => 'internal',
+          :valid_interfaces    => 'internal,public',
           :username            => 'placement2',
           :user_domain_name    => 'default',
           :auth_url            => 'https://127.0.0.1:5000/v3',
@@ -57,6 +57,18 @@ describe 'nova::placement' do
         is_expected.to contain_nova_config('placement/username').with_value(params[:username])
         is_expected.to contain_nova_config('placement/user_domain_name').with_value(params[:user_domain_name])
         is_expected.to contain_nova_config('placement/auth_url').with_value(params[:auth_url])
+      end
+    end
+
+    context 'when valid_interfaces is an array' do
+      before do
+        params.merge!(
+          :valid_interfaces => ['internal', 'public']
+        )
+      end
+
+      it 'configures the valid_interfaces parameter with a commma-separated string' do
+        is_expected.to contain_nova_config('placement/valid_interfaces').with_value('internal,public')
       end
     end
   end

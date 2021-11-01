@@ -118,7 +118,7 @@ class nova::network::neutron (
     'neutron/user_domain_name':        value => $user_domain_name;
     'neutron/password':                value => $password, secret => true;
     'neutron/auth_url':                value => $auth_url;
-    'neutron/valid_interfaces':        value => $valid_interfaces;
+    'neutron/valid_interfaces':        value => join(any2array($valid_interfaces), ',');
     'neutron/endpoint_override':       value => $endpoint_override;
     'neutron/ovs_bridge':              value => $ovs_bridge;
     'neutron/extension_sync_interval': value => $extension_sync_interval;

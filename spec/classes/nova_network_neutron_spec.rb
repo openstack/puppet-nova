@@ -64,7 +64,7 @@ describe 'nova::network::neutron' do
           :username                => 'neutron2',
           :user_domain_name        => 'neutron_domain',
           :auth_url                => 'http://10.0.0.1:5000/v2',
-          :valid_interfaces        => 'public',
+          :valid_interfaces        => 'internal,public',
           :endpoint_override       => 'http://127.0.0.1:9696',
           :http_retries            => 3,
           :ovs_bridge              => 'br-int',
@@ -95,6 +95,17 @@ describe 'nova::network::neutron' do
       it 'configures neutron vif plugging events in nova.conf' do
         should contain_nova_config('DEFAULT/vif_plugging_is_fatal').with_value(params[:vif_plugging_is_fatal])
         should contain_nova_config('DEFAULT/vif_plugging_timeout').with_value(params[:vif_plugging_timeout])
+      end
+    end
+
+    context 'when valid_interfaces is an array' do
+      before do
+        params.merge!(
+          :valid_interfaces => ['internal', 'public']
+        )
+      end
+      it 'configures the valid_interfaces parameter with a commma-separated string' do
+        is_expected.to contain_nova_config('neutron/valid_interfaces').with_value('internal,public')
       end
     end
   end
