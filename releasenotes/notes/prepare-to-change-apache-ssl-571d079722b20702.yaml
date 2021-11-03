@@ -1,0 +1,9 @@
+---
+upgrade:
+  - |
+    Default value of the following two parameters will be changed from
+    ``true`` to ``false`` in a future release. Make sure the parameter is set
+    to the desired value.
+
+    - ``nova::wsgi::apache_api::ssl``
+    - ``nova::wsgi::apache_metadata::ssl``
