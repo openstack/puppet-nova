@@ -28,28 +28,16 @@
 #   (optional) domain to use for building the hostnames
 #   Defaults to $::os_service_default
 #
-# DEPRECATED
-#
-#  [*enabled_apis*]
-#   (optional) A list of apis to enable
-#   Defaults to undef.
-#
 class nova::metadata(
-  $neutron_metadata_proxy_shared_secret        = undef,
-  $metadata_cache_expiration                   = $::os_service_default,
-  $local_metadata_per_cell                     = $::os_service_default,
-  $dhcp_domain                                 = $::os_service_default,
-  # DEPRECATED PARAMETERS
-  $enabled_apis                                = undef,
+  $neutron_metadata_proxy_shared_secret = undef,
+  $metadata_cache_expiration            = $::os_service_default,
+  $local_metadata_per_cell              = $::os_service_default,
+  $dhcp_domain                          = $::os_service_default,
 ) inherits nova::params {
 
   include nova::deps
   include nova::db
   include nova::keystone::authtoken
-
-  if $enabled_apis != undef {
-    warning('enabled_apis parameter is deprecated, use nova::compute::enabled_apis instead.')
-  }
 
   nova_config {
     'api/dhcp_domain':               value => $dhcp_domain;
