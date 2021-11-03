@@ -96,7 +96,7 @@ class nova::wsgi::apache_metadata (
   $api_port                    = 8775,
   $bind_host                   = undef,
   $path                        = '/',
-  $ssl                         = true,
+  $ssl                         = undef,
   $workers                     = $::os_workers,
   $ssl_cert                    = undef,
   $ssl_key                     = undef,
@@ -116,10 +116,15 @@ class nova::wsgi::apache_metadata (
   $vhost_custom_fragment       = undef,
 ) {
 
+  if $ssl == undef {
+    warning('Default of the ssl parameter will be changed in a future release')
+  }
+  $ssl_real = pick($ssl, true)
+
   include nova::params
   include apache
   include apache::mod::wsgi
-  if $ssl {
+  if $ssl_real {
     include apache::mod::ssl
   }
 
@@ -142,7 +147,7 @@ class nova::wsgi::apache_metadata (
     path                        => $path,
     priority                    => $priority,
     servername                  => $servername,
-    ssl                         => $ssl,
+    ssl                         => $ssl_real,
     ssl_ca                      => $ssl_ca,
     ssl_cert                    => $ssl_cert,
     ssl_certs_dir               => $ssl_certs_dir,
