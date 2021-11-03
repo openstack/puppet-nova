@@ -1,0 +1,8 @@
+---
+upgrade:
+  - |
+    The following two parameters were removed from the ``nova::metadata``
+    class.
+
+    - ``enable_proxy_headers_parsing``
+    - ``max_request_body_size``

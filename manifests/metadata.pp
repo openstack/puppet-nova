@@ -34,15 +34,6 @@
 #   (optional) A list of apis to enable
 #   Defaults to undef.
 #
-# [*enable_proxy_headers_parsing*]
-#   (optional) This determines if the HTTPProxyToWSGI
-#   middleware should parse the proxy headers or not.(boolean value)
-#   Defaults to undef.
-#
-# [*max_request_body_size*]
-#   (Optional) Set max request body size
-#   Defaults to undef.
-#
 class nova::metadata(
   $neutron_metadata_proxy_shared_secret        = undef,
   $metadata_cache_expiration                   = $::os_service_default,
@@ -50,8 +41,6 @@ class nova::metadata(
   $dhcp_domain                                 = $::os_service_default,
   # DEPRECATED PARAMETERS
   $enabled_apis                                = undef,
-  $enable_proxy_headers_parsing                = undef,
-  $max_request_body_size                       = undef,
 ) inherits nova::params {
 
   include nova::deps
@@ -60,15 +49,6 @@ class nova::metadata(
 
   if $enabled_apis != undef {
     warning('enabled_apis parameter is deprecated, use nova::compute::enabled_apis instead.')
-  }
-
-  if $enable_proxy_headers_parsing {
-    warning('enable_proxy_headers_parsing in ::nova::metadata is deprecated, has no effect \
-and will be removed in the future. Please use the one ::nova::api.')
-  }
-  if $max_request_body_size {
-    warning('max_request_body_size in ::nova::metadata is deprecated, has no effect \
-and will be removed in the future. Please use the one ::nova::api.')
   }
 
   nova_config {
