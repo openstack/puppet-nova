@@ -370,6 +370,6 @@ as a standalone service, or httpd for being run by a httpd server")
       }
     }
     $validation_options_hash = merge ($defaults, $validation_options)
-    create_resources('openstacklib::service_validation', $validation_options_hash, {'subscribe' => 'Service[nova-api]'})
+    create_resources('openstacklib::service_validation', $validation_options_hash, {'subscribe' => 'Anchor[nova::service::end]'})
   }
 }
