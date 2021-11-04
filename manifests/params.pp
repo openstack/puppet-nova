@@ -95,8 +95,8 @@ class nova::params {
       # debian specific nova config
       $root_helper                       = 'sudo nova-rootwrap'
       $lock_path                         = '/var/lock/nova'
-      case $::os_package_type {
-        'debian': {
+      case $::operatingsystem {
+        'Debian': {
           $api_metadata_service_name    = 'nova-api-metadata'
           $spicehtml5proxy_package_name = 'nova-consoleproxy'
           $spicehtml5proxy_service_name = 'nova-spicehtml5proxy'

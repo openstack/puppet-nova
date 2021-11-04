@@ -74,9 +74,6 @@ describe 'nova::compute::libvirt_guests' do
 
       case [:osfamily]
       when 'RedHat'
-        let (:facts) do
-          facts.merge!(OSDefaults.get_facts({ :os_package_type => 'rpm' }))
-        end
         it_behaves_like 'redhat-nova-compute-libvirt-guests'
       end
     end

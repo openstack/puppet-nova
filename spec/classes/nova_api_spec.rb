@@ -319,7 +319,7 @@ describe 'nova::api' do
 
   shared_examples 'nova-api on Debian' do
     context 'with default parameters' do
-      it { is_expected.to contain_service('nova-api- metadata').with(
+      it { is_expected.to contain_service('nova-api-metadata').with(
         :name      => 'nova-api-metadata',
         :ensure    => 'running',
         :hasstatus => true,
@@ -348,7 +348,7 @@ describe 'nova::api' do
         end
       end
       it_behaves_like 'nova-api'
-      if facts[:os_package_type] == 'debian'
+      if facts[:operatingsystem] == 'Debian'
         it_behaves_like 'nova-api on Debian'
       end
     end
