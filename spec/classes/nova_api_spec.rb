@@ -143,7 +143,7 @@ describe 'nova::api' do
       end
       it { is_expected.to contain_openstacklib__service_validation('nova-api').with(
         :command   => 'nova --os-auth-url http://127.0.0.1:5000/ --os-project-name services --os-username novae --os-password passw0rd flavor-list',
-        :subscribe => 'Service[nova-api]',
+        :subscribe => 'Anchor[nova::service::end]',
       )}
 
     end
@@ -157,7 +157,7 @@ describe 'nova::api' do
       end
       it { is_expected.to contain_openstacklib__service_validation('nova-api').with(
         :command   => 'my-script',
-        :subscribe => 'Service[nova-api]',
+        :subscribe => 'Anchor[nova::service::end]',
       )}
     end
 
