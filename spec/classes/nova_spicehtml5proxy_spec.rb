@@ -67,19 +67,13 @@ describe 'nova::spicehtml5proxy' do
   }).each do |os,facts|
     context "on #{os}" do
       let (:facts) do
-        if facts[:operatingsystem] == 'Debian'
-          extra = { :os_package_type => 'debian' }
-        else
-          extra = {}
-        end
-
-        facts.merge!(OSDefaults.get_facts(extra))
+        facts.merge!(OSDefaults.get_facts())
       end
 
       let (:platform_params) do
         case facts[:osfamily]
         when 'Debian'
-          if facts[:os_package_type] == 'debian' then
+          if facts[:operatingsystem] == 'Debian' then
             package_name = 'nova-consoleproxy'
             service_name = 'nova-spicehtml5proxy'
           else
@@ -100,7 +94,7 @@ describe 'nova::spicehtml5proxy' do
 
       it_behaves_like 'nova::spicehtml5proxy'
 
-      if facts[:os_package_type] == 'debian'
+      if facts[:operatingsystem] == 'Debian'
         it_behaves_like 'nova::spicehtml5proxy on Debian'
       end
     end

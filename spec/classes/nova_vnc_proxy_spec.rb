@@ -135,10 +135,6 @@ describe 'nova::vncproxy' do
       'include nova'
     end
 
-    before do
-      facts.merge!( :os_package_type => 'debian' )
-    end
-
     it { is_expected.to contain_file_line('/etc/default/nova-consoleproxy:NOVA_CONSOLE_PROXY_TYPE').with(
       :path    => '/etc/default/nova-consoleproxy',
       :match   => '^NOVA_CONSOLE_PROXY_TYPE=(.*)$',
@@ -160,7 +156,7 @@ describe 'nova::vncproxy' do
       let (:platform_params) do
         case facts[:osfamily]
         when 'Debian'
-          if facts[:os_package_type] == 'debian'
+          if facts[:operatingsystem] == 'Debian'
             { :nova_vncproxy_package => 'nova-consoleproxy',
               :nova_vncproxy_service => 'nova-novncproxy' }
           else
@@ -175,7 +171,7 @@ describe 'nova::vncproxy' do
 
       it_behaves_like 'nova_vnc_proxy'
 
-      if facts[:os_package_type] == 'debian'
+      if facts[:operatingsystem] == 'Debian'
         it_behaves_like 'nova_vnc_proxy debian package'
       end
 
