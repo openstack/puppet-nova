@@ -60,6 +60,10 @@
 #   call.
 #   Defaults to $::os_service_default
 #
+# [*service_type*]
+#   (optional) The default service_type for endpoint URL discovery.
+#   Defaults to $::os_service_default
+#
 # [*ovs_bridge*]
 #   (optional) Name of Integration Bridge used by Open vSwitch
 #   Defaults to 'br-int'
@@ -97,6 +101,7 @@ class nova::network::neutron (
   $timeout                 = '30',
   $region_name             = 'RegionOne',
   $http_retries            = $::os_service_default,
+  $service_type            = $::os_service_default,
   $ovs_bridge              = 'br-int',
   $extension_sync_interval = '600',
   $vif_plugging_is_fatal   = true,
@@ -120,9 +125,10 @@ class nova::network::neutron (
     'neutron/auth_url':                value => $auth_url;
     'neutron/valid_interfaces':        value => join(any2array($valid_interfaces), ',');
     'neutron/endpoint_override':       value => $endpoint_override;
+    'neutron/http_retries':            value => $http_retries;
+    'neutron/service_type':            value => $service_type;
     'neutron/ovs_bridge':              value => $ovs_bridge;
     'neutron/extension_sync_interval': value => $extension_sync_interval;
     'neutron/auth_type':               value => $auth_type;
-    'neutron/http_retries':            value => $http_retries;
   }
 }

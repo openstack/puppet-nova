@@ -1,0 +1,4 @@
+---
+features:
+  - |
+    The new ``nova::network::neutron::service_type`` parameter has been added.
