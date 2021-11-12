@@ -17,7 +17,9 @@ describe 'nova::ironic::common' do
         is_expected.to contain_nova_config('ironic/api_retry_interval').with('value' => '<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('ironic/user_domain_name').with_value('Default')
         is_expected.to contain_nova_config('ironic/project_domain_name').with_value('Default')
-
+        is_expected.to contain_nova_config('ironic/service_type').with_value('<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('ironic/timeout').with_value('<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('ironic/valid_interfaces').with_value('<SERVICE DEFAULT>')
       end
     end
 
@@ -34,6 +36,9 @@ describe 'nova::ironic::common' do
           :api_retry_interval  => 2,
           :user_domain_name    => 'custom_domain',
           :project_domain_name => 'custom_domain',
+          :service_type        => 'baremetal',
+          :timeout             => 30,
+          :valid_interfaces    => 'internal',
         }
       end
 
@@ -49,7 +54,9 @@ describe 'nova::ironic::common' do
         is_expected.to contain_nova_config('ironic/api_retry_interval').with('value' => '2')
         is_expected.to contain_nova_config('ironic/user_domain_name').with('value' => 'custom_domain')
         is_expected.to contain_nova_config('ironic/project_domain_name').with('value' => 'custom_domain')
-
+        is_expected.to contain_nova_config('ironic/service_type').with_value('baremetal')
+        is_expected.to contain_nova_config('ironic/timeout').with_value(30)
+        is_expected.to contain_nova_config('ironic/valid_interfaces').with_value('internal')
       end
     end
   end

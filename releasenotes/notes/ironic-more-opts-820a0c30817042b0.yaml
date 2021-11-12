@@ -1,0 +1,9 @@
+---
+features:
+  - |
+    The following parameters have been added to the ``nova::ironic::common``
+    class.
+
+    - ``service_type``
+    - ``valid_intrerfaces``
+    - ``timeout``
