@@ -61,8 +61,10 @@ class nova::params {
       $nova_group                        = 'nova'
       if $::operatingsystemmajrelease >= '9' {
         $mkisofs_package_name            = 'xorriso'
+        $mkisofs_cmd                     = 'mkisofs'
       } else {
         $mkisofs_package_name            = 'genisoimage'
+        $mkisofs_cmd                     = false
       }
     }
     'Debian': {
@@ -79,6 +81,7 @@ class nova::params {
       $tgt_package_name                  = 'tgt'
       $ceph_client_package_name          = 'ceph'
       $mkisofs_package_name              = 'genisoimage'
+      $mkisofs_cmd                       = false
       # service names
       $api_service_name                  = 'nova-api'
       $compute_service_name              = 'nova-compute'
