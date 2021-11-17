@@ -42,6 +42,18 @@
 #   (Optional) Name of domain for $project_domain_name
 #   Defaults to 'Default'
 #
+# [*service_type*]
+#   (optional) The default service_type for endpoint URL discovery.
+#   Defaults to $::os_service_default
+#
+# [*valid_interfaces*]
+#   (Optional) The endpoint type to lookup when talking to Ironic.
+#   Defaults to $::os_service_default
+#
+# [*timeout*]
+#   (Optional) Timeout value for connecting to ironic in seconds.
+#   Defaults to $::os_service_default
+#
 # DEPRECATED PARAMETERS
 #
 # [*api_endpoint*]
@@ -60,6 +72,9 @@ class nova::ironic::common (
   $api_retry_interval   = $::os_service_default,
   $user_domain_name     = 'Default',
   $project_domain_name  = 'Default',
+  $service_type         = $::os_service_default,
+  $valid_interfaces     = $::os_service_default,
+  $timeout              = $::os_service_default,
   # DEPRECATED PARAMETERS
   $api_endpoint         = undef,
 ) {
@@ -83,6 +98,9 @@ Use nova::ironic::common::endpoint_override instead.')
     'ironic/api_retry_interval':  value => $api_retry_interval;
     'ironic/user_domain_name':    value => $user_domain_name;
     'ironic/project_domain_name': value => $project_domain_name;
+    'ironic/service_type':        value => $service_type;
+    'ironic/valid_interfaces':    value => join(any2array($valid_interfaces), ',');
+    'ironic/timeout':             value => $timeout;
   }
 
 }
