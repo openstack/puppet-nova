@@ -27,6 +27,11 @@ class nova::deps {
   -> Nova_api_paste_ini<||>
   ~> Anchor['nova::config::end']
 
+  # policy config should occur in the config block also.
+  Anchor['nova::config::begin']
+  -> Openstacklib::Policy<||>
+  ~> Anchor['nova::config::end']
+
   # On any uwsgi config change, we must restart Nova APIs.
   Anchor['nova::config::begin']
   -> Nova_api_uwsgi_config<||>
