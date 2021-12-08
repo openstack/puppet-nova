@@ -1,0 +1,9 @@
+---
+features:
+  - |
+    The following parameters have been added to the ``nova::api`` class.
+
+    - ``instance_list_per_project_cells``
+    - ``instance_list_cells_batch_strategy``
+    - ``instance_list_cells_batch_fixed_size``
+    - ``list_records_by_skipping_down_cells``

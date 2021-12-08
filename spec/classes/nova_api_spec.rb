@@ -67,32 +67,40 @@ describe 'nova::api' do
         is_expected.to contain_nova_config('api/enable_instance_password').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('DEFAULT/password_length').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('DEFAULT/allow_resize_to_same_host').with_value(false)
+        is_expected.to contain_nova_config('api/instance_list_per_project_cells').with_value('<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('api/instance_list_cells_batch_strategy').with_value('<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('api/instance_list_cells_batch_fixed_size').with_value('<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('api/list_records_by_skipping_down_cells').with_value('<SERVICE DEFAULT>')
       end
     end
 
     context 'with overridden parameters' do
       before do
         params.merge!({
-          :enabled                      => false,
-          :ensure_package               => '2012.1-2',
-          :api_bind_address             => '192.168.56.210',
-          :metadata_listen              => '127.0.0.1',
-          :metadata_listen_port         => 8875,
-          :osapi_compute_listen_port    => 8874,
-          :use_forwarded_for            => false,
-          :osapi_compute_workers        => 1,
-          :metadata_workers             => 2,
-          :enable_proxy_headers_parsing => true,
-          :max_request_body_size        => '102400',
-          :max_limit                    => 1000,
-          :compute_link_prefix          => 'https://10.0.0.1:7777/',
-          :glance_link_prefix           => 'https://10.0.0.1:6666/',
-          :hide_server_address_states   => 'building',
-          :allow_instance_snapshots     => true,
-          :enable_network_quota         => false,
-          :enable_instance_password     => true,
-          :password_length              => 12,
-          :allow_resize_to_same_host    => true,
+          :enabled                              => false,
+          :ensure_package                       => '2012.1-2',
+          :api_bind_address                     => '192.168.56.210',
+          :metadata_listen                      => '127.0.0.1',
+          :metadata_listen_port                 => 8875,
+          :osapi_compute_listen_port            => 8874,
+          :use_forwarded_for                    => false,
+          :osapi_compute_workers                => 1,
+          :metadata_workers                     => 2,
+          :enable_proxy_headers_parsing         => true,
+          :max_request_body_size                => '102400',
+          :max_limit                            => 1000,
+          :compute_link_prefix                  => 'https://10.0.0.1:7777/',
+          :glance_link_prefix                   => 'https://10.0.0.1:6666/',
+          :hide_server_address_states           => 'building',
+          :allow_instance_snapshots             => true,
+          :enable_network_quota                 => false,
+          :enable_instance_password             => true,
+          :password_length                      => 12,
+          :allow_resize_to_same_host            => true,
+          :instance_list_per_project_cells      => false,
+          :instance_list_cells_batch_strategy   => 'distributed',
+          :instance_list_cells_batch_fixed_size => 100,
+          :list_records_by_skipping_down_cells  => true,
         })
       end
 
@@ -132,6 +140,10 @@ describe 'nova::api' do
         is_expected.to contain_nova_config('api/enable_instance_password').with_value(true)
         is_expected.to contain_nova_config('DEFAULT/password_length').with_value('12')
         is_expected.to contain_nova_config('DEFAULT/allow_resize_to_same_host').with_value(true)
+        is_expected.to contain_nova_config('api/instance_list_per_project_cells').with_value(false)
+        is_expected.to contain_nova_config('api/instance_list_cells_batch_strategy').with_value('distributed')
+        is_expected.to contain_nova_config('api/instance_list_cells_batch_fixed_size').with_value(100)
+        is_expected.to contain_nova_config('api/list_records_by_skipping_down_cells').with_value(true)
       end
     end
 

@@ -156,6 +156,26 @@
 #   (optional) Allow destination machine to match source for resize.
 #   Defaults to false
 #
+# [*instance_list_per_project_cells*]
+#   (optional) Only query cell databases in which the tenant has mapped
+#   instances
+#   Defaults to $::os_service_default
+#
+# [*instance_list_cells_batch_strategy*]
+#   (optional) The method by which the API queries cell databases in smaller
+#   batches during large instance list operations.
+#   Defaults to $::os_service_default
+#
+# [*instance_list_cells_batch_fixed_size*]
+#   (optional) This controlls batch size of instances requested from each cell
+#   database if ``instance_list_cells_batch_strategy``` is set to ``fixed``
+#   Defaults to $::os_service_default
+#
+# [*list_records_by_skipping_down_cells*]
+#   (optional) Whether to skip the down cells and return the results from
+#   the up cells.
+#   Defaults to $::os_service_default
+#
 # DEPRECATED
 #
 # [*nova_metadata_wsgi_enabled*]
@@ -210,6 +230,10 @@ class nova::api(
   $enable_instance_password                    = $::os_service_default,
   $password_length                             = $::os_service_default,
   $allow_resize_to_same_host                   = false,
+  $instance_list_per_project_cells             = $::os_service_default,
+  $instance_list_cells_batch_strategy          = $::os_service_default,
+  $instance_list_cells_batch_fixed_size        = $::os_service_default,
+  $list_records_by_skipping_down_cells         = $::os_service_default,
   # DEPRECATED PARAMETER
   $nova_metadata_wsgi_enabled                  = false,
   $install_cinder_client                       = undef,
@@ -317,21 +341,25 @@ as a standalone service, or httpd for being run by a httpd server")
   }
 
   nova_config {
-    'DEFAULT/enabled_apis':              value => join($enabled_apis_real, ',');
-    'wsgi/api_paste_config':             value => $api_paste_config;
-    'DEFAULT/osapi_compute_listen':      value => $api_bind_address;
-    'DEFAULT/osapi_compute_listen_port': value => $osapi_compute_listen_port;
-    'DEFAULT/osapi_compute_workers':     value => $osapi_compute_workers;
-    'DEFAULT/enable_network_quota':      value => $enable_network_quota;
-    'DEFAULT/password_length':           value => $password_length;
-    'api/use_forwarded_for':             value => $use_forwarded_for;
-    'api/max_limit':                     value => $max_limit;
-    'api/compute_link_prefix':           value => $compute_link_prefix;
-    'api/glance_link_prefix':            value => $glance_link_prefix;
-    'api/hide_server_address_states':    value => $hide_server_address_states;
-    'api/allow_instance_snapshots':      value => $allow_instance_snapshots;
-    'api/enable_instance_password':      value => $enable_instance_password;
-    'DEFAULT/allow_resize_to_same_host': value => $allow_resize_to_same_host;
+    'DEFAULT/enabled_apis':                     value => join($enabled_apis_real, ',');
+    'wsgi/api_paste_config':                    value => $api_paste_config;
+    'DEFAULT/osapi_compute_listen':             value => $api_bind_address;
+    'DEFAULT/osapi_compute_listen_port':        value => $osapi_compute_listen_port;
+    'DEFAULT/osapi_compute_workers':            value => $osapi_compute_workers;
+    'DEFAULT/enable_network_quota':             value => $enable_network_quota;
+    'DEFAULT/password_length':                  value => $password_length;
+    'api/use_forwarded_for':                    value => $use_forwarded_for;
+    'api/max_limit':                            value => $max_limit;
+    'api/compute_link_prefix':                  value => $compute_link_prefix;
+    'api/glance_link_prefix':                   value => $glance_link_prefix;
+    'api/hide_server_address_states':           value => $hide_server_address_states;
+    'api/allow_instance_snapshots':             value => $allow_instance_snapshots;
+    'api/enable_instance_password':             value => $enable_instance_password;
+    'DEFAULT/allow_resize_to_same_host':        value => $allow_resize_to_same_host;
+    'api/instance_list_per_project_cells':      value => $instance_list_per_project_cells;
+    'api/instance_list_cells_batch_strategy':   value => $instance_list_cells_batch_strategy;
+    'api/instance_list_cells_batch_fixed_size': value => $instance_list_cells_batch_fixed_size;
+    'api/list_records_by_skipping_down_cells':  value => $list_records_by_skipping_down_cells;
   }
 
   # Added arg and if statement prevents this from being run
