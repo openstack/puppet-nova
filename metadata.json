@@ -2,10 +2,6 @@
     "author": "Puppet Labs and OpenStack Contributors",
     "dependencies": [
         {
-            "name": "puppetlabs/apache",
-            "version_requirement": ">=5.0.0"
-        },
-        {
             "name": "joshuabaird/ipaclient",
             "version_requirement": ">=2.5.1"
         },

@@ -135,11 +135,6 @@ class nova::wsgi::apache_api (
   $ssl_real = pick($ssl, true)
 
   include nova::params
-  include apache
-  include apache::mod::wsgi
-  if $ssl_real {
-    include apache::mod::ssl
-  }
 
   if ! defined(Class[nova::api]) {
     fail('::nova::api class must be declared in composition layer.')

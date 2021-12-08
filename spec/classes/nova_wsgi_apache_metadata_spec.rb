@@ -12,9 +12,6 @@ describe 'nova::wsgi::apache_metadata' do
          class { 'nova::metadata': }"
       end
       it { is_expected.to contain_class('nova::params') }
-      it { is_expected.to contain_class('apache') }
-      it { is_expected.to contain_class('apache::mod::wsgi') }
-      it { is_expected.to contain_class('apache::mod::ssl') }
       it { is_expected.to contain_openstacklib__wsgi__apache('nova_metadata_wsgi').with(
         :bind_port                   => 8775,
         :group                       => 'nova',
@@ -64,9 +61,6 @@ describe 'nova::wsgi::apache_metadata' do
       end
 
       it { is_expected.to contain_class('nova::params') }
-      it { is_expected.to contain_class('apache') }
-      it { is_expected.to contain_class('apache::mod::wsgi') }
-      it { is_expected.to_not contain_class('apache::mod::ssl') }
       it { is_expected.to contain_openstacklib__wsgi__apache('nova_metadata_wsgi').with(
         :bind_host                   => '10.42.51.1',
         :bind_port                   => 12345,
