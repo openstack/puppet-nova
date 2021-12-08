@@ -14,9 +14,6 @@ describe 'nova::wsgi::apache_api' do
          }"
       end
       it { is_expected.to contain_class('nova::params') }
-      it { is_expected.to contain_class('apache') }
-      it { is_expected.to contain_class('apache::mod::wsgi') }
-      it { is_expected.to contain_class('apache::mod::ssl') }
       it { is_expected.to contain_openstacklib__wsgi__apache('nova_api_wsgi').with(
         :bind_port                   => 8774,
         :group                       => 'nova',
@@ -68,9 +65,6 @@ describe 'nova::wsgi::apache_api' do
       end
 
       it { is_expected.to contain_class('nova::params') }
-      it { is_expected.to contain_class('apache') }
-      it { is_expected.to contain_class('apache::mod::wsgi') }
-      it { is_expected.to_not contain_class('apache::mod::ssl') }
       it { is_expected.to contain_openstacklib__wsgi__apache('nova_api_wsgi').with(
         :bind_host                   => '10.42.51.1',
         :bind_port                   => 12345,

@@ -122,11 +122,6 @@ class nova::wsgi::apache_metadata (
   $ssl_real = pick($ssl, true)
 
   include nova::params
-  include apache
-  include apache::mod::wsgi
-  if $ssl_real {
-    include apache::mod::ssl
-  }
 
   nova::generic_service { 'metadata-api':
     service_name   => false,
