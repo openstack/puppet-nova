@@ -310,9 +310,9 @@ class nova::migration::libvirt(
       if versioncmp($libvirt_version, '5.6') >= 0 {
         # Since libvirt >= 5.6 and libvirtd is managed by systemd,
         # system socket should be activated by systemd, not by --listen option
-        $manage_service = pick($::nova::compute::libvirt::manage_libvirt_service, true)
+        $manage_services = pick($::nova::compute::libvirt::manage_libvirt_services, true)
 
-        if $manage_service and !$modular_libvirt_real {
+        if $manage_services and !$modular_libvirt_real {
           # libvirtd.service should be stopped before socket service is started.
           # Otherwise, socket service fails to start.
           exec { 'stop libvirtd.service':
