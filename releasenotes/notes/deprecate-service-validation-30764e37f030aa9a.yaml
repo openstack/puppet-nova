@@ -1,0 +1,6 @@
+---
+deprecations:
+  - |
+    The service validation feature of the ``nova::api`` class is deprecated,
+    and the ``nova::api::validate`` parameter and
+    the ``nova::api::validate_options`` parameter have no effect now.

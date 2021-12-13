@@ -79,26 +79,6 @@
 #   (Optional) Set max request body size
 #   Defaults to $::os_service_default.
 #
-# [*validate*]
-#   (optional) Whether to validate the service is working after any service refreshes
-#   Defaults to false
-#
-# [*validation_options*]
-#   (optional) Service validation options
-#   Should be a hash of options defined in openstacklib::service_validation
-#   If empty, defaults values are taken from openstacklib function.
-#   Default command list nova flavors.
-#   Require validate set at True.
-#   Example:
-#   nova::api::validation_options:
-#     nova-api:
-#       command: check_nova.py
-#       path: /usr/bin:/bin:/usr/sbin:/sbin
-#       provider: shell
-#       tries: 5
-#       try_sleep: 10
-#   Defaults to {}
-#
 # [*service_name*]
 #   (optional) Name of the service that will be providing the
 #   server functionality of nova-api.
@@ -198,6 +178,18 @@
 #   (optional) The rate limiting factory to use
 #   Defaults to undef
 #
+# [*validate*]
+#   (optional) Whether to validate the service is working after any service refreshes
+#   Defaults to undef
+#
+# [*validation_options*]
+#   (optional) Service validation options
+#   Should be a hash of options defined in openstacklib::service_validation
+#   If empty, defaults values are taken from openstacklib function.
+#   Default command list nova flavors.
+#   Require validate set at True.
+#   Defaults to undef
+#
 class nova::api(
   $enabled                                     = true,
   $manage_service                              = true,
@@ -214,8 +206,6 @@ class nova::api(
   $sync_db                                     = true,
   $sync_db_api                                 = true,
   $db_online_data_migrations                   = false,
-  $validate                                    = false,
-  $validation_options                          = {},
   $instance_name_template                      = $::os_service_default,
   $service_name                                = $::nova::params::api_service_name,
   $metadata_service_name                       = $::nova::params::api_metadata_service_name,
@@ -239,6 +229,8 @@ class nova::api(
   $install_cinder_client                       = undef,
   $ratelimits                                  = undef,
   $ratelimits_factory                          = undef,
+  $validate                                    = undef,
+  $validation_options                          = undef,
 ) inherits nova::params {
 
   include nova::deps
@@ -258,6 +250,13 @@ class nova::api(
 
   if $ratelimits != undef {
     warning('The nova::api::ratelimits parameter has been deprecated and has no effect')
+  }
+
+  if $validate != undef {
+    warning('The nova::api::validate parameter has been deprecated and has no effect')
+  }
+  if $validation_options != undef {
+    warning('The nova::api::validation_options parameter has been deprecated and has no effect')
   }
 
   if $instance_name_template {
@@ -372,28 +371,5 @@ as a standalone service, or httpd for being run by a httpd server")
   }
   if $db_online_data_migrations {
     include nova::db::online_data_migrations
-  }
-
-  if $validate {
-    $authtoken_values = {
-      'username' => $::nova::keystone::authtoken::username,
-      'password' => $::nova::keystone::authtoken::password,
-      'project_name' => $::nova::keystone::authtoken::project_name,
-      'www_authenticate_uri' => $::nova::keystone::authtoken::www_authenticate_uri,
-    }
-    $authtoken = merge($authtoken_values, $::nova::keystone::authtoken::params)
-    $defaults = {
-      'nova-api' => {
-        'command'  => @("CMD"/L)
-          nova --os-auth-url ${authtoken['www_authenticate_uri']} \
-          --os-project-name ${authtoken['project_name']} \
-          --os-username ${authtoken['username']} \
-          --os-password ${authtoken['password']} \
-          flavor-list
-          |- CMD
-      }
-    }
-    $validation_options_hash = merge ($defaults, $validation_options)
-    create_resources('openstacklib::service_validation', $validation_options_hash, {'subscribe' => 'Anchor[nova::service::end]'})
   }
 }
