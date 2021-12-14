@@ -35,7 +35,6 @@ describe 'nova::api' do
         )
         is_expected.to contain_package('nova-api').that_requires('Anchor[nova::install::begin]')
         is_expected.to contain_package('nova-api').that_notifies('Anchor[nova::install::end]')
-        is_expected.to_not contain_exec('validate_nova_api')
       end
 
       it 'enable metadata in evenlet configuration' do
@@ -145,32 +144,6 @@ describe 'nova::api' do
         is_expected.to contain_nova_config('api/instance_list_cells_batch_fixed_size').with_value(100)
         is_expected.to contain_nova_config('api/list_records_by_skipping_down_cells').with_value(true)
       end
-    end
-
-    context 'while validating the service with default command' do
-      before do
-        params.merge!({
-          :validate => true,
-        })
-      end
-      it { is_expected.to contain_openstacklib__service_validation('nova-api').with(
-        :command   => 'nova --os-auth-url http://127.0.0.1:5000/ --os-project-name services --os-username novae --os-password passw0rd flavor-list',
-        :subscribe => 'Anchor[nova::service::end]',
-      )}
-
-    end
-
-    context 'while validating the service with custom command' do
-      before do
-        params.merge!({
-          :validate            => true,
-          :validation_options  => { 'nova-api' => { 'command' => 'my-script' } }
-        })
-      end
-      it { is_expected.to contain_openstacklib__service_validation('nova-api').with(
-        :command   => 'my-script',
-        :subscribe => 'Anchor[nova::service::end]',
-      )}
     end
 
     context 'while not managing service state' do
