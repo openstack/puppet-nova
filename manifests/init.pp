@@ -63,6 +63,11 @@
 #   will be run through a green thread.
 #   Defaults to $::os_service_default
 #
+# [*rabbit_retry_interval*]
+#   (Optional) How frequently to retry connecting with RabbitMQ.
+#   (integer value)
+#   Defaults to $::os_service_default
+#
 # [*kombu_ssl_ca_certs*]
 #   (optional) SSL certification authority file (valid only if SSL enabled).
 #   (string value)
@@ -455,6 +460,7 @@ class nova(
   $rabbit_heartbeat_rate                  = $::os_service_default,
   $rabbit_heartbeat_in_pthread            = $::os_service_default,
   $rabbit_ha_queues                       = $::os_service_default,
+  $rabbit_retry_interval                  = $::os_service_default,
   $kombu_ssl_ca_certs                     = $::os_service_default,
   $kombu_ssl_certfile                     = $::os_service_default,
   $kombu_ssl_keyfile                      = $::os_service_default,
@@ -756,6 +762,7 @@ but should be one of: ssh-rsa, ssh-dsa, ssh-ecdsa.")
     kombu_ssl_keyfile           => $kombu_ssl_keyfile,
     kombu_ssl_version           => $kombu_ssl_version,
     rabbit_ha_queues            => $rabbit_ha_queues,
+    rabbit_retry_interval       => $rabbit_retry_interval,
   }
 
   oslo::messaging::amqp { 'nova_config':

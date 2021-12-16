@@ -1,0 +1,4 @@
+---
+features:
+  - |
+    The new ``nova::rabbit_retry_interval`` parameter has been added.

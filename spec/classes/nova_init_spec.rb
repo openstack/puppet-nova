@@ -39,6 +39,7 @@ describe 'nova' do
         is_expected.to contain_nova_config('oslo_messaging_rabbit/heartbeat_timeout_threshold').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('oslo_messaging_rabbit/heartbeat_rate').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('oslo_messaging_rabbit/heartbeat_in_pthread').with_value('<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('oslo_messaging_rabbit/rabbit_retry_interval').with_value('<SERVICE DEFAULT>')
       end
 
       it 'configures various things' do
@@ -257,6 +258,16 @@ describe 'nova' do
         is_expected.to contain_oslo__messaging__rabbit('nova_config').with(
           :rabbit_use_ssl => '<SERVICE DEFAULT>',
         )
+      end
+    end
+
+    context 'with rabbit_retry_interval' do
+      let :params do
+        { :rabbit_retry_interval => 1 }
+      end
+
+      it 'configures rabbit' do
+        is_expected.to contain_nova_config('oslo_messaging_rabbit/rabbit_retry_interval').with_value(1)
       end
     end
 
