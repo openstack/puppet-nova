@@ -35,7 +35,7 @@ describe 'nova::compute' do
       end
 
       it { is_expected.to contain_nova_config('DEFAULT/use_cow_images').with_value('<SERVICE DEFAULT>') }
-      it { is_expected.to contain_nova_config('DEFAULT/mkisofs_cmd').with_value('<SERVICE DEFAULT>') }
+      it { is_expected.to contain_nova_config('DEFAULT/mkisofs_cmd').with_value(platform_params[:mkisofs_cmd]) }
       it { is_expected.to contain_nova_config('DEFAULT/force_raw_images').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('DEFAULT/virt_mkfs').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('DEFAULT/reserved_host_memory_mb').with_value('<SERVICE DEFAULT>') }
@@ -457,24 +457,33 @@ describe 'nova::compute' do
       case facts[:osfamily]
       when 'Debian'
         let (:platform_params) do
-          { :nova_compute_package => 'nova-compute',
+          {
+            :nova_compute_package => 'nova-compute',
             :nova_compute_service => 'nova-compute',
-            :mkisofs_package => 'genisoimage' }
+            :mkisofs_package      => 'genisoimage',
+            :mkisofs_cmd          => '<SERVICE DEFAULT>'
+          }
         end
       when 'RedHat'
         let (:platform_params) do
-          { :nova_compute_package => 'openstack-nova-compute',
-            :nova_compute_service => 'openstack-nova-compute' }
+          {
+            :nova_compute_package => 'openstack-nova-compute',
+            :nova_compute_service => 'openstack-nova-compute'
+          }
         end
         if facts[:operatingsystemmajrelease] > '8'
           before do
             platform_params.merge!({
-              :mkisofs_package => 'xorriso' })
+              :mkisofs_package => 'xorriso',
+              :mkisofs_cmd     => 'mkisofs'
+            })
           end
         else
           before do
             platform_params.merge!({
-              :mkisofs_package => 'genisoimage' })
+              :mkisofs_package => 'genisoimage',
+              :mkisofs_cmd     => '<SERVICE DEFAULT>'
+            })
           end
         end
       end
