@@ -27,6 +27,11 @@ class nova::deps {
   -> Nova_api_paste_ini<||>
   ~> Anchor['nova::config::end']
 
+  # rootwrap config should occur in the config block also.
+  Anchor['nova::config::begin']
+  -> Nova_rootwrap_config<||>
+  ~> Anchor['nova::config::end']
+
   # policy config should occur in the config block also.
   Anchor['nova::config::begin']
   -> Openstacklib::Policy<||>
