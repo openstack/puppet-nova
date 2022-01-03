@@ -1,0 +1,4 @@
+---
+features:
+  - |
+    The ``nova::ironic::common::api_endpoint`` parameter has been removed.

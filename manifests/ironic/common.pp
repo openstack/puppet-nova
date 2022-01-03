@@ -54,12 +54,6 @@
 #   (Optional) Timeout value for connecting to ironic in seconds.
 #   Defaults to $::os_service_default
 #
-# DEPRECATED PARAMETERS
-#
-# [*api_endpoint*]
-#   The url for Ironic api endpoint.
-#   Defaults to undef
-#
 class nova::ironic::common (
   $auth_plugin          = 'password',
   $auth_url             = 'http://127.0.0.1:5000/',
@@ -75,16 +69,9 @@ class nova::ironic::common (
   $service_type         = $::os_service_default,
   $valid_interfaces     = $::os_service_default,
   $timeout              = $::os_service_default,
-  # DEPRECATED PARAMETERS
-  $api_endpoint         = undef,
 ) {
 
   include nova::deps
-
-  if $api_endpoint != undef {
-    warning('nova::ironic::common::api_endpoint is deprecated and has no effect. \
-Use nova::ironic::common::endpoint_override instead.')
-  }
 
   nova_config {
     'ironic/auth_plugin':         value => $auth_plugin;
