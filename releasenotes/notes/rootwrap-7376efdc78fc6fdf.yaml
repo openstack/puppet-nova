@@ -1,0 +1,9 @@
+---
+features:
+  - |
+    The new ``nova_rootwrap_config`` resource has been added. This resource
+    can be used to manage contents of ``rootwrap.conf``
+
+  - |
+    The new ``nova::config::nova_rootwrap_config`` parameter has been added.
+    This parameter accepts arbitrary configuration of ``rootwrap.conf``.
