@@ -1,0 +1,8 @@
+---
+features:
+  - |
+    The following parameter and class have been added, to support usage of
+    the service token feature with the Barbican key manager.
+
+    - The ``nova::key_manager::barbican::send_service_user_token`` parameter
+    - The ``nova::key_manager::barbican::service_user`` class
