@@ -33,14 +33,19 @@
 #   (Optional) Specifies the region of the chosen endpoint.
 #   Defaults to $::os_service_default
 #
+# [*send_service_user_token*]
+#   (Optional) The service uses service token feature when this is set as true.
+#   Defaults to $::os_service_default
+#
 class nova::key_manager::barbican (
-  $barbican_endpoint      = $::os_service_default,
-  $barbican_api_version   = $::os_service_default,
-  $auth_endpoint          = $::os_service_default,
-  $retry_delay            = $::os_service_default,
-  $number_of_retries      = $::os_service_default,
-  $barbican_endpoint_type = $::os_service_default,
-  $barbican_region_name   = $::os_service_default,
+  $barbican_endpoint       = $::os_service_default,
+  $barbican_api_version    = $::os_service_default,
+  $auth_endpoint           = $::os_service_default,
+  $retry_delay             = $::os_service_default,
+  $number_of_retries       = $::os_service_default,
+  $barbican_endpoint_type  = $::os_service_default,
+  $barbican_region_name    = $::os_service_default,
+  $send_service_user_token = $::os_service_default,
 ) {
 
   include nova::deps
@@ -56,12 +61,13 @@ class nova::key_manager::barbican (
   })
 
   oslo::key_manager::barbican { 'nova_config':
-    barbican_endpoint      => $barbican_endpoint_real,
-    barbican_api_version   => $barbican_api_version_real,
-    auth_endpoint          => $auth_endpoint_real,
-    retry_delay            => $retry_delay,
-    number_of_retries      => $number_of_retries,
-    barbican_endpoint_type => $barbican_endpoint_type,
-    barbican_region_name   => $barbican_region_name,
+    barbican_endpoint       => $barbican_endpoint_real,
+    barbican_api_version    => $barbican_api_version_real,
+    auth_endpoint           => $auth_endpoint_real,
+    retry_delay             => $retry_delay,
+    number_of_retries       => $number_of_retries,
+    barbican_endpoint_type  => $barbican_endpoint_type,
+    barbican_region_name    => $barbican_region_name,
+    send_service_user_token => $send_service_user_token,
   }
 }
