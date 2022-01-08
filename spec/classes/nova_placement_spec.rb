@@ -25,6 +25,7 @@ describe 'nova::placement' do
         is_expected.to contain_nova_config('placement/auth_type').with_value(default_params[:auth_type])
         is_expected.to contain_nova_config('placement/project_name').with_value(default_params[:project_name])
         is_expected.to contain_nova_config('placement/project_domain_name').with_value(default_params[:project_domain_name])
+        is_expected.to contain_nova_config('placement/system_scope').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('placement/region_name').with_value(default_params[:region_name])
         is_expected.to contain_nova_config('placement/valid_interfaces').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('placement/username').with_value(default_params[:username])
@@ -52,6 +53,7 @@ describe 'nova::placement' do
         is_expected.to contain_nova_config('placement/auth_type').with_value(params[:auth_type])
         is_expected.to contain_nova_config('placement/project_name').with_value(params[:project_name])
         is_expected.to contain_nova_config('placement/project_domain_name').with_value(params[:project_domain_name])
+        is_expected.to contain_nova_config('placement/system_scope').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('placement/region_name').with_value(params[:region_name])
         is_expected.to contain_nova_config('placement/valid_interfaces').with_value(params[:valid_interfaces])
         is_expected.to contain_nova_config('placement/username').with_value(params[:username])
@@ -69,6 +71,20 @@ describe 'nova::placement' do
 
       it 'configures the valid_interfaces parameter with a commma-separated string' do
         is_expected.to contain_nova_config('placement/valid_interfaces').with_value('internal,public')
+      end
+    end
+
+    context 'when system_scope is set' do
+      before do
+        params.merge!(
+          :system_scope => 'all'
+        )
+      end
+
+      it 'configures system-scoped credential' do
+        is_expected.to contain_nova_config('placement/project_name').with_value('<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('placement/project_domain_name').with_value('<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('placement/system_scope').with_value(params[:system_scope])
       end
     end
   end
