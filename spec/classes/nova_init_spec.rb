@@ -91,7 +91,6 @@ describe 'nova' do
         is_expected.to contain_nova_config('DEFAULT/report_interval').with_value('10')
         is_expected.to contain_nova_config('vif_plug_ovs/ovsdb_connection').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('DEFAULT/long_rpc_timeout').with_value('<SERVICE DEFAULT>')
-        is_expected.to contain_nova_config('cinder/cross_az_attach').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('DEFAULT/cpu_allocation_ratio').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('DEFAULT/ram_allocation_ratio').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('DEFAULT/disk_allocation_ratio').with_value('<SERVICE DEFAULT>')
@@ -149,7 +148,6 @@ describe 'nova' do
           :notification_topics                     => 'openstack',
           :notification_format                     => 'unversioned',
           :report_interval                         => '60',
-          :cross_az_attach                         => true,
           :ovsdb_connection                        => 'tcp:127.0.0.1:6640',
           :upgrade_level_cells                     => '1.0.0',
           :upgrade_level_cert                      => '1.0.0',
@@ -258,7 +256,6 @@ describe 'nova' do
         is_expected.to contain_nova_config('DEFAULT/report_interval').with_value('60')
         is_expected.to contain_nova_config('vif_plug_ovs/ovsdb_connection').with_value('tcp:127.0.0.1:6640')
         is_expected.to contain_nova_config('DEFAULT/long_rpc_timeout').with_value('1800')
-        is_expected.to contain_nova_config('cinder/cross_az_attach').with_value(true)
         is_expected.to contain_nova_config('DEFAULT/ssl_only').with_value(true)
         is_expected.to contain_nova_config('DEFAULT/cert').with_value('/etc/ssl/private/snakeoil.pem')
         is_expected.to contain_nova_config('DEFAULT/key').with_value('/etc/ssl/certs/snakeoil.pem')

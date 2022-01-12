@@ -62,6 +62,10 @@
 #   call.
 #   Defaults to $::os_service_default
 #
+# [*cross_az_attach*]
+#   (optional) Allow attach between instance and volume in different availability zones.
+#   Defaults to $::os_service_default
+#
 # DEPRECATED PARAMETERS
 #
 # [*region_name*]
@@ -81,6 +85,7 @@ class nova::cinder (
   $os_region_name      = $::os_service_default,
   $catalog_info        = $::os_service_default,
   $http_retries        = $::os_service_default,
+  $cross_az_attach     = $::os_service_default,
   # DEPRECATED PARAMETERS
   $region_name         = undef,
 ) {
@@ -89,6 +94,7 @@ class nova::cinder (
 
   $os_region_name_real = pick($::nova::os_region_name, $os_region_name)
   $catalog_info_real = pick($::nova::cinder_catalog_info, $catalog_info)
+  $cross_az_attach_real = pick($::nova::cross_az_attach, $cross_az_attach)
 
   if $region_name != undef {
     warning('The nova::cinder::region_name parameter is deprecated and has no effect. \
@@ -126,5 +132,6 @@ Use the nova::cinder::os_region_name parameter')
     'cinder/os_region_name':      value => $os_region_name_real;
     'cinder/catalog_info':        value => $catalog_info_real;
     'cinder/http_retries':        value => $http_retries;
+    'cinder/cross_az_attach':     value => $cross_az_attach_real;
   }
 }

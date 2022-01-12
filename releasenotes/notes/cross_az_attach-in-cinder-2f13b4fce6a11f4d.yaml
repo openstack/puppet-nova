@@ -1,0 +1,5 @@
+---
+deprecations:
+  - |
+    The ``nova::cross_az_attach`` parameter has been deprecated. Use
+    the ``nova::cinder::cross_az_attach`` parmaeter instead.
