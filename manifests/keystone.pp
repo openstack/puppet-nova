@@ -49,6 +49,10 @@
 #   admin context through the OpenStack Identity service.
 #   Defaults to 'Default'
 #
+# [*system_scope*]
+#   (Optional) Scope for system operations
+#   Defaults to $::os_service_default
+#
 # [*username*]
 #   (optional) Username for connecting to Keystone services in admin context
 #   through the OpenStack Identity service.
@@ -72,11 +76,20 @@ class nova::keystone (
   $region_name         = $::os_service_default,
   $project_name        = 'services',
   $project_domain_name = 'Default',
+  $system_scope        = $::os_service_default,
   $username            = 'nova',
   $user_domain_name    = 'Default',
 ) {
 
   include nova::deps
+
+  if is_service_default($system_scope) {
+    $project_name_real = $project_name
+    $project_domain_name_real = $project_domain_name
+  } else {
+    $project_name_real = $::os_service_default
+    $project_domain_name_real = $::os_service_default
+  }
 
   nova_config {
     'keystone/password':            value => $password, secret => true;
@@ -87,8 +100,9 @@ class nova::keystone (
     'keystone/endpoint_override':   value => $endpoint_override;
     'keystone/region_name':         value => $region_name;
     'keystone/timeout':             value => $timeout;
-    'keystone/project_name':        value => $project_name;
-    'keystone/project_domain_name': value => $project_domain_name;
+    'keystone/project_name':        value => $project_name_real;
+    'keystone/project_domain_name': value => $project_domain_name_real;
+    'keystone/system_scope':        value => $system_scope;
     'keystone/username':            value => $username;
     'keystone/user_domain_name':    value => $user_domain_name;
   }

@@ -54,12 +54,28 @@ describe 'nova::keystone' do
         should contain_nova_config('keystone/valid_interfaces').with_value('internal,public')
         should contain_nova_config('keystone/endpoint_override').with_value('http://10.0.0.11:5000/')
         should contain_nova_config('keystone/region_name').with_value('RegionOne')
+        should contain_nova_config('keystone/system_scope').with_value('<SERVICE DEFAULT>')
         should contain_nova_config('keystone/project_name').with_value('alt_service')
         should contain_nova_config('keystone/project_domain_name').with_value('DomainX')
         should contain_nova_config('keystone/username').with_value('alt_nova')
         should contain_nova_config('keystone/user_domain_name').with_value('DomainY')
       end
+    end
 
+    context 'when specified parameters' do
+      before do
+        params.merge!({
+          :system_scope        => 'all',
+          :project_name        => 'alt_service',
+          :project_domain_name => 'DomainX',
+        })
+      end
+
+      it 'configures system_scope' do
+        should contain_nova_config('keystone/system_scope').with_value('all')
+        should contain_nova_config('keystone/project_name').with_value('<SERVICE DEFAULT>')
+        should contain_nova_config('keystone/project_domain_name').with_value('<SERVICE DEFAULT>')
+      end
     end
   end
 
