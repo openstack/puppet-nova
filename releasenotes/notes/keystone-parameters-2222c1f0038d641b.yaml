@@ -1,0 +1,5 @@
+---
+features:
+  - |
+    The new ``nova::keystone`` class has been added. This class manages
+    the parameters in the ``[keystone]`` section.
