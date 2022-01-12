@@ -1,0 +1,6 @@
+---
+deprecations:
+  - |
+    The ``nova::cinder::region_name`` parameter has been deprecated and it has
+    no effect. Use the ``nova::cinder::os_region_name`` which is actually used
+    by nova.

@@ -23,11 +23,6 @@
 #   (optional) Timeout value for connecting to cinder in seconds.
 #   Defaults to $::os_service_default
 #
-# [*region_name*]
-#   (optional) Region name for connecting to cinder in admin context
-#   through the OpenStack Identity service.
-#   Defaults to $::os_service_default
-#
 # [*project_name*]
 #   (optional) Project name for connecting to Cinder services in
 #   admin context through the OpenStack Identity service.
@@ -67,12 +62,18 @@
 #   call.
 #   Defaults to $::os_service_default
 #
+# DEPRECATED PARAMETERS
+#
+# [*region_name*]
+#   (optional) Region name for connecting to cinder in admin context
+#   through the OpenStack Identity service.
+#   Defaults to undef
+#
 class nova::cinder (
   $password            = $::os_service_default,
   $auth_type           = undef,
   $auth_url            = undef,
   $timeout             = $::os_service_default,
-  $region_name         = $::os_service_default,
   $project_name        = undef,
   $project_domain_name = undef,
   $username            = undef,
@@ -80,12 +81,22 @@ class nova::cinder (
   $os_region_name      = $::os_service_default,
   $catalog_info        = $::os_service_default,
   $http_retries        = $::os_service_default,
+  # DEPRECATED PARAMETERS
+  $region_name         = undef,
 ) {
 
   include nova::deps
 
   $os_region_name_real = pick($::nova::os_region_name, $os_region_name)
   $catalog_info_real = pick($::nova::cinder_catalog_info, $catalog_info)
+
+  if $region_name != undef {
+    warning('The nova::cinder::region_name parameter is deprecated and has no effect. \
+Use the nova::cinder::os_region_name parameter')
+  }
+  nova_config {
+    'cinder/region_name': ensure => absent;
+  }
 
   if is_service_default($password) {
     $auth_type_real           = pick($auth_type, $::os_service_default)
@@ -107,7 +118,6 @@ class nova::cinder (
     'cinder/password':            value => $password, secret => true;
     'cinder/auth_type':           value => $auth_type_real;
     'cinder/auth_url':            value => $auth_url_real;
-    'cinder/region_name':         value => $region_name;
     'cinder/timeout':             value => $timeout;
     'cinder/project_name':        value => $project_name_real;
     'cinder/project_domain_name': value => $project_domain_name_real;
