@@ -5,15 +5,21 @@
 # === Parameters:
 #
 # [*never_download_image_if_on_rbd*]
-#  (optional) refuse to boot an instance if it would require downloading from
+#  (Optional) refuse to boot an instance if it would require downloading from
 #  glance and uploading to ceph instead of a COW clone
 #  Defaults to $::os_service_default
 #
 # [*ensure_libvirt_rbd_instance_dir_cleanup*]
-#  (optional) Ensure the instance directory is removed during clean up when using
+#  (Optional) Ensure the instance directory is removed during clean up when using
 #  rbd. When enabled this workaround will ensure that the instance directory is
 #  always removed during cleanup on hosts using ``[libvirt]/images_type=rbd``
 #  Defaults to $::os_service_default
+#
+# [*enable_qemu_monitor_announce_self*]
+#   (Optional) If it is set to True the libvirt driver will try as a best effort to
+#   send the announce-self command to the QEMU monitor so that it generates RARP frames
+#   to update network switches in the post live migration phase on the destination.
+#   Defaults to $::os_service_default
 #
 # DEPRECATED
 #
@@ -22,10 +28,11 @@
 #   Defaults to undef
 #
 class nova::workarounds (
-  $never_download_image_if_on_rbd = $::os_service_default,
+  $never_download_image_if_on_rbd          = $::os_service_default,
   $ensure_libvirt_rbd_instance_dir_cleanup = $::os_service_default,
+  $enable_qemu_monitor_announce_self       = $::os_service_default,
   # DEPRECATED PARAMETER
-  $enable_numa_live_migration     = undef,
+  $enable_numa_live_migration              = undef,
 ) {
 
   if $enable_numa_live_migration != undef {
@@ -40,6 +47,8 @@ class nova::workarounds (
       value => $never_download_image_if_on_rbd;
     'workarounds/ensure_libvirt_rbd_instance_dir_cleanup':
       value => $ensure_libvirt_rbd_instance_dir_cleanup;
+    'workarounds/enable_qemu_monitor_announce_self':
+      value => $enable_qemu_monitor_announce_self;
   }
 
 }
