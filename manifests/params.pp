@@ -87,7 +87,7 @@ class nova::params {
       }
       $scheduler_package_name            = 'nova-scheduler'
       $tgt_package_name                  = 'tgt'
-      $ceph_client_package_name          = 'ceph'
+      $ceph_client_package_name          = 'ceph-common'
       $genisoimage_package_name          = 'genisoimage'
       # service names
       $api_service_name                  = 'nova-api'

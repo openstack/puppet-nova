@@ -103,7 +103,7 @@ class nova::compute::rbd (
     package { 'ceph-client-package':
       ensure => $ceph_client_ensure,
       name   => $nova::params::ceph_client_package_name,
-      tag    => ['openstack'],
+      tag    => ['openstack', 'nova-support-package'],
     }
   }
 
