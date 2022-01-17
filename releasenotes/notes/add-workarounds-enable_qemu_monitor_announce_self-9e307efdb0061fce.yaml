@@ -1,0 +1,6 @@
+---
+features:
+  - |
+    Added ``enable_qemu_monitor_announce_self`` paramter to
+    ``nova::workarounds`` to configure the configuration option with the same
+    name.
