@@ -86,7 +86,7 @@ class nova::params {
       $libvirt_package_name              = 'libvirt-daemon-system'
       $scheduler_package_name            = 'nova-scheduler'
       $tgt_package_name                  = 'tgt'
-      $ceph_client_package_name          = 'ceph'
+      $ceph_client_package_name          = 'ceph-common'
       $mkisofs_package_name              = 'genisoimage'
       $mkisofs_cmd                       = false
       # service names
