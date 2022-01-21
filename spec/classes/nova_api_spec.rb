@@ -157,21 +157,6 @@ describe 'nova::api' do
       it { is_expected.to contain_service('nova-api').without_ensure }
     end
 
-    context 'with default database parameters' do
-      let :pre_condition do
-        "include nova::db
-         class { 'nova::keystone::authtoken':
-           password => 'a_big_secret',
-         }"
-      end
-
-      it { is_expected.to_not contain_nova_config('database/connection') }
-      it { is_expected.to_not contain_nova_config('database/slave_connection') }
-      it { is_expected.to_not contain_nova_config('api_database/connection') }
-      it { is_expected.to_not contain_nova_config('api_database/slave_connection') }
-      it { is_expected.to_not contain_nova_config('database/connection_recycle_time').with_value('<SERVICE DEFAULT>') }
-    end
-
     context 'with overridden database parameters' do
       let :pre_condition do
         "class { 'nova::db':
@@ -187,8 +172,11 @@ describe 'nova::api' do
         "
       end
 
-      it { is_expected.to contain_nova_config('api_database/connection').with_value('mysql://user:pass@db/db2').with_secret(true) }
-      it { is_expected.to contain_nova_config('api_database/slave_connection').with_value('mysql://user:pass@slave/db2').with_secret(true) }
+      it { is_expected.to contain_oslo__db('api_database').with(
+        :config           => 'nova_config',
+        :connection       => 'mysql://user:pass@db/db2',
+        :slave_connection => 'mysql://user:pass@slave/db2',
+      ) }
       it { is_expected.to contain_oslo__db('nova_config').with(
         :connection              => 'mysql://user:pass@db/db1',
         :slave_connection        => 'mysql://user:pass@slave/db1',
