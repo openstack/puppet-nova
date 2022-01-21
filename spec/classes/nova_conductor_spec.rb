@@ -60,23 +60,6 @@ describe 'nova::conductor' do
       it { is_expected.to contain_nova_config('DEFAULT/enable_new_services').with_value(false) }
     end
 
-    context 'with overridden database parameters' do
-      let :pre_condition do
-        "class { 'nova::db':
-           database_connection              => 'mysql://user:pass@db/db',
-           slave_connection                 => 'mysql://user:pass@slave/db',
-           database_connection_recycle_time => '30',
-         }
-        "
-      end
-
-      it { is_expected.to contain_oslo__db('nova_config').with(
-        :connection              => 'mysql://user:pass@db/db',
-        :slave_connection        => 'mysql://user:pass@slave/db',
-        :connection_recycle_time => '30',
-      )}
-    end
-
   end
 
   on_supported_os({
