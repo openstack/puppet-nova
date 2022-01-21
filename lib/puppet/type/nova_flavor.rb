@@ -55,10 +55,6 @@ Puppet::Type.newtype(:nova_flavor) do
 
   ensurable
 
-  autorequire(:nova_config) do
-    ['auth_url', 'project_name', 'username', 'password']
-  end
-
   # Require the nova-api service to be running
   autorequire(:anchor) do
     ['nova::service::end']
