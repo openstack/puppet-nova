@@ -130,16 +130,6 @@ describe 'nova::scheduler' do
       it { is_expected.to contain_nova_config('scheduler/query_placement_for_routed_network_aggregates').with_value(true) }
     end
 
-    context 'with default database parameters' do
-      let :pre_condition do
-        "include nova::db"
-      end
-
-      it { is_expected.to_not contain_nova_config('database/connection') }
-      it { is_expected.to_not contain_nova_config('database/slave_connection') }
-      it { is_expected.to_not contain_nova_config('database/connection_recycle_time').with_value('<SERVICE DEFAULT>') }
-    end
-
     context 'with overridden database parameters' do
       let :pre_condition do
         "class { 'nova::db':

@@ -60,16 +60,6 @@ describe 'nova::conductor' do
       it { is_expected.to contain_nova_config('DEFAULT/enable_new_services').with_value(false) }
     end
 
-    context 'with default database parameters' do
-      let :pre_condition do
-        "include nova::db"
-      end
-
-      it { is_expected.to_not contain_nova_config('database/connection') }
-      it { is_expected.to_not contain_nova_config('database/slave_connection') }
-      it { is_expected.to_not contain_nova_config('database/connection_recycle_time').with_value('<SERVICE DEFAULT>') }
-    end
-
     context 'with overridden database parameters' do
       let :pre_condition do
         "class { 'nova::db':
