@@ -50,33 +50,6 @@ describe 'nova::metadata' do
       end
     end
 
-    context 'with overridden database parameters' do
-      let :pre_condition do
-        "class { 'nova::db':
-           database_connection              => 'mysql://user:pass@db/db1',
-           slave_connection                 => 'mysql://user:pass@slave/db1',
-           api_database_connection          => 'mysql://user:pass@db/db2',
-           api_slave_connection             => 'mysql://user:pass@slave/db2',
-           database_connection_recycle_time => '30',
-         }
-         class { 'nova::keystone::authtoken':
-           password => 'passw0rd',
-         }
-        "
-      end
-
-      it { is_expected.to contain_oslo__db('api_database').with(
-        :config           => 'nova_config',
-        :connection       => 'mysql://user:pass@db/db2',
-        :slave_connection => 'mysql://user:pass@slave/db2',
-      ) }
-      it { is_expected.to contain_oslo__db('nova_config').with(
-        :connection              => 'mysql://user:pass@db/db1',
-        :slave_connection        => 'mysql://user:pass@slave/db1',
-        :connection_recycle_time => '30',
-      )}
-    end
-
   end
 
   on_supported_os({
