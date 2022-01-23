@@ -1,0 +1,19 @@
+---
+upgrade:
+  - |
+    The following parameters of the ``nova`` class have been removed.
+
+    - ``database_min_pool_size``
+    - ``database_connection``
+    - ``slave_connection``
+    - ``api_database_connection``
+    - ``api_slave_connection``
+    - ``database_idle_timeout``
+    - ``database_max_overflow``
+    - ``database_max_pool_size``
+    - ``database_max_retries``
+    - ``database_retry_interval``
+
+  - |
+    The ``database_min_pool_size`` parameter of the ``nova::db`` class has been
+    removed.

@@ -97,12 +97,6 @@
 #   (Optional) If set, use this value for pool_timeout with SQLAlchemy.
 #   Defaults to $::os_service_default
 #
-# DEPRECATED PARAMETERS
-#
-# [*database_min_pool_size*]
-#   Minimum number of SQL connections to keep open in a pool.
-#   (Optional) Defaults to undef
-#
 class nova::db (
   $database_connection                  = $::os_service_default,
   $slave_connection                     = $::os_service_default,
@@ -122,49 +116,31 @@ class nova::db (
   $api_database_retry_interval          = $::os_service_default,
   $api_database_max_overflow            = $::os_service_default,
   $api_database_pool_timeout            = $::os_service_default,
-  # DEPRECATED PARAMETERS
-  $database_min_pool_size               = undef,
 ) {
 
   include nova::deps
 
-  if $::nova::database_min_pool_size or $database_min_pool_size {
-    warning('The database_min_pool_size parameter is deprecated, and will be removed in a future release.')
-  }
-
-  # NOTE(spredzy): In order to keep backward compatibility we rely on the pick function
-  # to use nova::<myparam> first the nova::db::<myparam>
-  $database_connection_real = pick($::nova::database_connection, $database_connection)
-  $slave_connection_real = pick($::nova::slave_connection, $slave_connection)
-  $api_database_connection_real = pick($::nova::api_database_connection, $api_database_connection)
-  $api_slave_connection_real = pick($::nova::api_slave_connection, $api_slave_connection)
-  $database_connection_recycle_time_real = pick($::nova::database_idle_timeout, $database_connection_recycle_time)
-  $database_max_pool_size_real = pick($::nova::database_max_pool_size, $database_max_pool_size)
-  $database_max_retries_real = pick($::nova::database_max_retries, $database_max_retries)
-  $database_retry_interval_real = pick($::nova::database_retry_interval, $database_retry_interval)
-  $database_max_overflow_real = pick($::nova::database_max_overflow, $database_max_overflow)
-
-  if !is_service_default($database_connection_real) {
+  if !is_service_default($database_connection) {
     oslo::db { 'nova_config':
       db_max_retries          => $database_db_max_retries,
-      connection              => $database_connection_real,
-      connection_recycle_time => $database_connection_recycle_time_real,
-      max_pool_size           => $database_max_pool_size_real,
-      max_retries             => $database_max_retries_real,
-      retry_interval          => $database_retry_interval_real,
-      max_overflow            => $database_max_overflow_real,
+      connection              => $database_connection,
+      connection_recycle_time => $database_connection_recycle_time,
+      max_pool_size           => $database_max_pool_size,
+      max_retries             => $database_max_retries,
+      retry_interval          => $database_retry_interval,
+      max_overflow            => $database_max_overflow,
       pool_timeout            => $database_pool_timeout,
       mysql_enable_ndb        => $mysql_enable_ndb,
-      slave_connection        => $slave_connection_real,
+      slave_connection        => $slave_connection,
     }
   }
 
-  if !is_service_default($api_database_connection_real) {
+  if !is_service_default($api_database_connection) {
     oslo::db { 'api_database':
       config                  => 'nova_config',
       config_group            => 'api_database',
-      connection              => $api_database_connection_real,
-      slave_connection        => $api_slave_connection_real,
+      connection              => $api_database_connection,
+      slave_connection        => $api_slave_connection,
       connection_recycle_time => $api_database_connection_recycle_time,
       max_pool_size           => $api_database_max_pool_size,
       max_retries             => $api_database_max_retries,
