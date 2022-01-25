@@ -1,0 +1,13 @@
+---
+features:
+  - |
+    The ``system_scope`` parameter has been added to
+    the ``nova::metadata::novajoin::authtoken`` class.
+
+  - |
+    The ``nova::metadata::novajoin::auth`` class now supports customizing roles
+    assigned to the novajoin service user.
+
+  - |
+    The ``nova::metadata::novajoinkeystone::auth`` class now supports defining
+    assignmet of system-scoped roles to the novajoin service user.

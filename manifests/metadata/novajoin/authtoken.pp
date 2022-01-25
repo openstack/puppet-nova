@@ -28,6 +28,10 @@
 #   (Optional) Name of domain for $project_domain_name
 #   Defaults to 'Default'
 #
+# [*system_scope*]
+#   (Optional) Scope for system operations
+#   Defaults to $::os_service_default
+#
 # [*insecure*]
 #   (Optional) If true, explicitly allow TLS without checking server cert
 #   against any certificate authorities.  WARNING: not recommended.  Use with
@@ -198,6 +202,7 @@ class nova::metadata::novajoin::authtoken(
   $project_name                   = 'services',
   $user_domain_name               = 'Default',
   $project_domain_name            = 'Default',
+  $system_scope                   = $::os_service_default,
   $insecure                       = $::os_service_default,
   $auth_section                   = $::os_service_default,
   $auth_type                      = 'password',
@@ -251,6 +256,7 @@ class nova::metadata::novajoin::authtoken(
       auth_section                   => $auth_section,
       user_domain_name               => $user_domain_name,
       project_domain_name            => $project_domain_name,
+      system_scope                   => $system_scope,
       insecure                       => $insecure,
       cache                          => $cache,
       cafile                         => $cafile,
