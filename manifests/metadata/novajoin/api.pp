@@ -101,20 +101,6 @@
 #   take the domain and upcase it.
 #   Defaults to undef
 #
-# DEPRECATED PARAMETERS
-#
-# [*service_password*]
-#   (optional) Password for the novajoin service user.
-#   Defaults to undef
-#
-# [*service_user*]
-#   (optional) User that the novajoin services run as.
-#   Defaults to undef
-#
-# [*user_domain_id*]
-#   (optional) Domain for novajoin user.
-#   Defaults to undef
-#
 class nova::metadata::novajoin::api (
   $transport_url,
   $bind_address              = '127.0.0.1',
@@ -140,36 +126,16 @@ class nova::metadata::novajoin::api (
   $project_name              = 'services',
   $configure_kerberos        = false,
   $ipa_realm                 = undef,
-  # DEPRECATED PARAMETERS
-  $service_password          = undef,
-  $service_user              = undef,
-  $user_domain_id            = undef,
 ) {
   include nova::params
   include nova::metadata::novajoin::authtoken
   include nova::metadata::novajoin::policy
 
-  if $service_user != undef {
-    warning('nova::metadata::novajoin::api::service_user is deprecated. \
-Use username parameter instead')
-    $username_real = $service_user
-  } else {
-    $username_real = $username
-  }
-
-  if $service_password != undef {
-    warning('nova::metadata::novajoin::api::service_password is deprecated. \
-Use password parameter instead')
-    $password_real = $service_password
-  } else {
-    $password_real = $password
-  }
-
-  if ! $username_real {
+  if ! $username {
     fail('username is missing')
   }
 
-  if ! $password_real {
+  if ! $password {
     fail('password is missing')
   }
 
@@ -196,8 +162,8 @@ Use password parameter instead')
 
   file { '/var/log/novajoin':
     ensure  => directory,
-    owner   => $username_real,
-    group   => $username_real,
+    owner   => $username,
+    group   => $username,
     recurse => true,
   }
 
@@ -219,8 +185,8 @@ Use password parameter instead')
 
     file { '/etc/novajoin/krb5.conf':
       content => template('nova/krb5.conf.erb'),
-      owner   => $username_real,
-      group   => $username_real,
+      owner   => $username,
+      group   => $username,
     }
   }
 
@@ -237,23 +203,11 @@ Use password parameter instead')
     'DEFAULT/transport_url':                   value => $transport_url;
     'service_credentials/auth_type':           value => $auth_type;
     'service_credentials/auth_url':            value => $keystone_auth_url;
-    'service_credentials/password':            value => $password_real;
-    'service_credentials/username':            value => $username_real;
+    'service_credentials/password':            value => $password;
+    'service_credentials/username':            value => $username;
+    'service_credentials/user_domain_name':    value => $user_domain_name;
     'service_credentials/project_name':        value => $project_name;
-    'service_credentials/project_domain_name':
-      value => $project_domain_name;
-  }
-
-  if $user_domain_id != undef {
-    warning('nova::metadata::novajoin::api::user_domain_id is deprecated. \
-Use user_domain_name instead')
-    novajoin_config {
-      'service_credentials/user_domain_id': value => $user_domain_id;
-    }
-  } else {
-    novajoin_config {
-      'service_credentials/user_domain_name': value => $user_domain_name;
-    }
+    'service_credentials/project_domain_name': value => $project_domain_name;
   }
 
   if $manage_service {
@@ -288,7 +242,7 @@ Use user_domain_name instead')
     creates => $keytab,
   }
 
-  ensure_resource('file', $keytab, { owner => $username_real, require => Exec['get-service-user-keytab'] })
+  ensure_resource('file', $keytab, { owner => $username, require => Exec['get-service-user-keytab'] })
 
   Package<| tag == 'novajoin-package' |> -> Exec['get-service-user-keytab']
   Novajoin_config<||> ~> Service<| title == 'novajoin-server'|>

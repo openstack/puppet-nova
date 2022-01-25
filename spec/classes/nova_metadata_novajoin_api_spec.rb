@@ -142,17 +142,6 @@ describe 'nova::metadata::novajoin::api' do
       end
     end
 
-    context 'with deprecated user_domain_id' do
-      let :params do
-        default_params.merge({ :user_domain_id => 'default' })
-      end
-
-      it {
-          should contain_novajoin_config('service_credentials/user_domain_id').with_value('default')
-          should_not contain_novajoin_config('service_credentials/user_domain_name')
-      }
-    end
-
     context 'with disabled service managing' do
       let :params do
         {

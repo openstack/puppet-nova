@@ -1,0 +1,9 @@
+---
+upgrade:
+  - |
+    The following deprecated parameters of
+    the ``nova::metadata::novajoin::api`` class have been removed.
+
+    - ``service_password``
+    - ``service_user``
+    - ``user_domain_id``
