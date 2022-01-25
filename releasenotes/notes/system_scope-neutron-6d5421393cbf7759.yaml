@@ -1,0 +1,5 @@
+---
+features:
+  - |
+    The new ``system_scope`` parameter has been added to
+    the ``nova::network::neutron`` class.
