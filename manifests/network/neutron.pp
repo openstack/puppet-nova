@@ -22,6 +22,10 @@
 #   admin context through the OpenStack Identity service.
 #   Defaults to 'Default'
 #
+# [*system_scope*]
+#   (Optional) Scope for system operations
+#   Defaults to $::os_service_default
+#
 # [*username*]
 #   (optional) Username for connecting to Neutron network services in admin context
 #   through the OpenStack Identity service.
@@ -93,6 +97,7 @@ class nova::network::neutron (
   $auth_type               = 'v3password',
   $project_name            = 'services',
   $project_domain_name     = 'Default',
+  $system_scope            = $::os_service_default,
   $username                = 'neutron',
   $user_domain_name        = 'Default',
   $auth_url                = 'http://127.0.0.1:5000/v3',
@@ -111,13 +116,22 @@ class nova::network::neutron (
 
   include nova::deps
 
+  if is_service_default($system_scope) {
+    $project_name_real = $project_name
+    $project_domain_name_real = $project_domain_name
+  } else {
+    $project_name_real = $::os_service_default
+    $project_domain_name_real = $::os_service_default
+  }
+
   nova_config {
     'DEFAULT/vif_plugging_is_fatal':   value => $vif_plugging_is_fatal;
     'DEFAULT/vif_plugging_timeout':    value => $vif_plugging_timeout;
     'neutron/default_floating_pool':   value => $default_floating_pool;
     'neutron/timeout':                 value => $timeout;
-    'neutron/project_name':            value => $project_name;
-    'neutron/project_domain_name':     value => $project_domain_name;
+    'neutron/project_name':            value => $project_name_real;
+    'neutron/project_domain_name':     value => $project_domain_name_real;
+    'neutron/system_scope':            value => $system_scope;
     'neutron/region_name':             value => $region_name;
     'neutron/username':                value => $username;
     'neutron/user_domain_name':        value => $user_domain_name;

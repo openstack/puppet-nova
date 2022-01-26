@@ -7,6 +7,7 @@ describe 'nova::network::neutron' do
       :timeout                 => '30',
       :project_name            => 'services',
       :project_domain_name     => 'Default',
+      :system_scope            => '<SERVICE DEFAULT>',
       :region_name             => 'RegionOne',
       :username                => 'neutron',
       :user_domain_name        => 'Default',
@@ -38,6 +39,7 @@ describe 'nova::network::neutron' do
         should contain_nova_config('neutron/timeout').with_value(default_params[:timeout])
         should contain_nova_config('neutron/project_name').with_value(default_params[:project_name])
         should contain_nova_config('neutron/project_domain_name').with_value(default_params[:project_domain_name])
+        should contain_nova_config('neutron/system_scope').with_value(default_params[:system_scope])
         should contain_nova_config('neutron/region_name').with_value(default_params[:region_name])
         should contain_nova_config('neutron/username').with_value(default_params[:username])
         should contain_nova_config('neutron/user_domain_name').with_value(default_params[:user_domain_name])
@@ -84,6 +86,7 @@ describe 'nova::network::neutron' do
         should contain_nova_config('neutron/timeout').with_value(params[:timeout])
         should contain_nova_config('neutron/project_name').with_value(params[:project_name])
         should contain_nova_config('neutron/project_domain_name').with_value(params[:project_domain_name])
+        should contain_nova_config('neutron/system_scope').with_value(default_params[:system_scope])
         should contain_nova_config('neutron/region_name').with_value(params[:region_name])
         should contain_nova_config('neutron/username').with_value(params[:username])
         should contain_nova_config('neutron/user_domain_name').with_value(params[:user_domain_name])
@@ -110,6 +113,19 @@ describe 'nova::network::neutron' do
       end
       it 'configures the valid_interfaces parameter with a commma-separated string' do
         is_expected.to contain_nova_config('neutron/valid_interfaces').with_value('internal,public')
+      end
+    end
+
+    context 'when system_scope is set' do
+      before do
+        params.merge!(
+          :system_scope => 'all'
+        )
+      end
+      it 'configures system-scoped credential' do
+        should contain_nova_config('neutron/project_name').with_value('<SERVICE DEFAULT>')
+        should contain_nova_config('neutron/project_domain_name').with_value('<SERVICE DEFAULT>')
+        should contain_nova_config('neutron/system_scope').with_value('all')
       end
     end
   end
