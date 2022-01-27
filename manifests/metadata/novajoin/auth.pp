@@ -43,6 +43,18 @@
 #   (optional) The tenant to use for the novajoin service user
 #   Defaults to 'services'
 #
+# [*roles*]
+#   (Optional) List of roles assigned to the nova service user
+#   Defaults to ['admin']
+#
+# [*system_scope*]
+#   Scope for system operations
+#   string; optional: default to 'all'
+#
+# [*system_roles*]
+#   List of system roles;
+#   string; optional: default to []
+#
 # [*email*]
 #   (optional) The email address for the novajoin service user
 #   Defaults to 'novajoin@localhost'
@@ -67,6 +79,9 @@ class nova::metadata::novajoin::auth(
   $service_description     = 'Novajoin vendordata plugin',
   $region                  = 'RegionOne',
   $tenant                  = 'services',
+  $roles                   = ['admin'],
+  $system_scope            = 'all',
+  $system_roles            = [],
   $email                   = 'novajoin@localhost',
   $public_url              = 'http://127.0.0.1:9090',
   $internal_url            = 'http://127.0.0.1:9090',
@@ -93,6 +108,9 @@ class nova::metadata::novajoin::auth(
     password            => $password,
     email               => $email,
     tenant              => $tenant,
+    roles               => $roles,
+    system_scope        => $system_scope,
+    system_roles        => $system_roles,
     public_url          => $public_url,
     admin_url           => $admin_url,
     internal_url        => $internal_url,
