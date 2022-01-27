@@ -82,7 +82,7 @@
 #   Defaults to $::os_service_default
 #
 # [*manage_backend_package*]
-#   (Optional) (Optional) Whether to install the backend package for the cache.
+#   (Optional) Whether to install the backend package for the cache.
 #   Defaults to true
 #
 # [*tls_enabled*]
