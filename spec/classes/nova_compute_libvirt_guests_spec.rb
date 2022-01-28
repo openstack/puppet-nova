@@ -39,9 +39,26 @@ describe 'nova::compute::libvirt_guests' do
         }
       end
 
-      it { is_expected.to contain_file_line('/etc/sysconfig/libvirt-guests ON_BOOT').with(:line => 'ON_BOOT=ignore') }
-      it { is_expected.to contain_file_line('/etc/sysconfig/libvirt-guests ON_SHUTDOWN').with(:line => "ON_SHUTDOWN=shutdown") }
-      it { is_expected.to contain_file_line('/etc/sysconfig/libvirt-guests SHUTDOWN_TIMEOUT').with(:line => "SHUTDOWN_TIMEOUT=300") }
+      it { is_expected.to contain_file('/etc/sysconfig/libvirt-guests').with(
+        :ensure => 'present',
+        :path   => '/etc/sysconfig/libvirt-guests',
+        :tag    => 'libvirt-guests-file',
+      ) }
+      it { is_expected.to contain_file_line('/etc/sysconfig/libvirt-guests ON_BOOT').with(
+        :path => '/etc/sysconfig/libvirt-guests',
+        :line => 'ON_BOOT=ignore',
+        :tag  => 'libvirt-guests-file_line'
+      ) }
+      it { is_expected.to contain_file_line('/etc/sysconfig/libvirt-guests ON_SHUTDOWN').with(
+        :path => '/etc/sysconfig/libvirt-guests',
+        :line => "ON_SHUTDOWN=shutdown",
+        :tag  => 'libvirt-guests-file_line'
+      ) }
+      it { is_expected.to contain_file_line('/etc/sysconfig/libvirt-guests SHUTDOWN_TIMEOUT').with(
+        :path => '/etc/sysconfig/libvirt-guests',
+        :line => "SHUTDOWN_TIMEOUT=300",
+        :tag  => 'libvirt-guests-file_line'
+      ) }
 
       it { is_expected.to contain_package('libvirt-guests').with(
         :name   => 'libvirt-client',
