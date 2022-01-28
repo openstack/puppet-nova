@@ -482,6 +482,11 @@ describe 'nova::migration::libvirt' do
           :libvirt_version => '4.5' }
       end
 
+      it { is_expected.to contain_file('/etc/sysconfig/libvirtd').with(
+        :ensure => 'present',
+        :path   => '/etc/sysconfig/libvirtd',
+        :tag    => 'libvirt-file',
+      )}
       it { is_expected.to contain_file_line('/etc/sysconfig/libvirtd libvirtd args').with(
         :path  => '/etc/sysconfig/libvirtd',
         :line  => 'LIBVIRTD_ARGS="--listen"',
@@ -500,6 +505,11 @@ describe 'nova::migration::libvirt' do
             :libvirt_version => '5.6' }
         end
 
+        it { is_expected.to contain_file('/etc/sysconfig/libvirtd').with(
+          :ensure => 'present',
+          :path   => '/etc/sysconfig/libvirtd',
+          :tag    => 'libvirt-file',
+        )}
         it { is_expected.to contain_file_line('/etc/sysconfig/libvirtd libvirtd args').with(
           :path  => '/etc/sysconfig/libvirtd',
           :line  => 'LIBVIRTD_ARGS=',
@@ -519,6 +529,11 @@ describe 'nova::migration::libvirt' do
             :libvirt_version => '5.6' }
         end
 
+        it { is_expected.to contain_file('/etc/sysconfig/libvirtd').with(
+          :ensure => 'present',
+          :path   => '/etc/sysconfig/libvirtd',
+          :tag    => 'libvirt-file',
+        )}
         it { is_expected.to contain_file_line('/etc/sysconfig/libvirtd libvirtd args').with(
           :path  => '/etc/sysconfig/libvirtd',
           :line  => 'LIBVIRTD_ARGS=',
