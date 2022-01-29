@@ -270,14 +270,6 @@
 #   pinned and unpinned instances on the same host.
 #   Defaults to undef
 #
-# [*pci_passthrough*]
-#   DEPRECATED. Use nova::compute::pci::passthrough instead.
-#   (optional) Pci passthrough list of hash.
-#   Defaults to undef
-#   Example of format:
-#   [ { "vendor_id" => "1234","product_id" => "5678" },
-#     { "vendor_id" => "4321","product_id" => "8765", "physical_network" => "default" } ]
-#
 # [*keymgr_backend*]
 #   (optional) Key Manager service class.
 #   Example of valid value: castellan.key_manager.barbican_key_manager.BarbicanKeyManager
@@ -349,7 +341,6 @@ class nova::compute (
   $block_device_allocate_retries_interval      = $::os_service_default,
   # DEPRECATED PARAMETERS
   $vcpu_pin_set                                = undef,
-  $pci_passthrough                             = undef,
   $keymgr_backend                              = undef,
   $barbican_auth_endpoint                      = undef,
   $barbican_endpoint                           = undef,
@@ -365,10 +356,6 @@ class nova::compute (
   $image_type_exclude_list_real = pick(join(any2array($image_type_exclude_list), ','), $::os_service_default)
 
   include nova::pci
-  if $pci_passthrough {
-    # Note: also remove the pick from nova::compute::pci
-    warning('The pci_passthrough parameter is deprecated and will be removed in X. Please use nova::compute::pci::passthrough instead.')
-  }
   include nova::compute::pci
 
   # TODO(tkajinam): Replace this by nova::compute::mdev when we remove

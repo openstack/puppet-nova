@@ -16,12 +16,10 @@ class nova::compute::pci(
 ) {
   include nova::deps
 
-  $picked_passthrough = pick_default($::nova::compute::pci_passthrough,$passthrough)
-
-  if $picked_passthrough and
-      !is_service_default($picked_passthrough) and
-      !empty($picked_passthrough) {
-    $passthrough_real = to_array_of_json_strings($picked_passthrough)
+  if $passthrough and
+      !is_service_default($passthrough) and
+      !empty($passthrough) {
+    $passthrough_real = to_array_of_json_strings($passthrough)
   } else {
     $passthrough_real = $::os_service_default
   }
