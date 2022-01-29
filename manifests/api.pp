@@ -49,8 +49,10 @@
 #   Defaults to $::os_workers
 #
 # [*instance_name_template*]
-#   (optional) Template string to be used to generate instance names
-#   Defaults to $::os_service_default
+#   (optional) Template string to be used to generate instance names. Using
+#   this parameter might cause incomplete settings in case nova services are
+#   distributed among multiple nodes.
+#   Defaults to undef
 #
 # [*sync_db*]
 #   (optional) Run nova-manage db sync on api nodes after installing the package.
@@ -191,7 +193,7 @@ class nova::api(
   $sync_db                                     = true,
   $sync_db_api                                 = true,
   $db_online_data_migrations                   = false,
-  $instance_name_template                      = $::os_service_default,
+  $instance_name_template                      = undef,
   $service_name                                = $::nova::params::api_service_name,
   $metadata_service_name                       = $::nova::params::api_metadata_service_name,
   $enable_proxy_headers_parsing                = $::os_service_default,
@@ -238,8 +240,20 @@ class nova::api(
     warning('The use_forwarded_for parameter has been deprecated.')
   }
 
-  nova_config {
-    'DEFAULT/instance_name_template': value => $instance_name_template;
+  if $instance_name_template != undef {
+    warning("The nova::api::instance_name_template parameter may result \
+in incomplete settings in case nova services are distributed among multiple \
+nodes. Use the nova::instance_name_template parameter instead.")
+    nova_config {
+      'DEFAULT/instance_name_template': value => $instance_name_template;
+    }
+  } else {
+    # Try best to clean up the parameter
+    if defined(Class['nova']) and $::nova::instance_name_template == undef {
+      nova_config {
+        'DEFAULT/instance_name_template': value => $::os_service_default;
+      }
+    }
   }
 
   # enable metadata in eventlet if we do not run metadata via wsgi (nova::metadata)

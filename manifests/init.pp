@@ -356,6 +356,10 @@
 #   (optional) domain to use for building the hostnames
 #   Defaults to $::os_service_default
 #
+# [*instance_name_template*]
+#   (optional) Template string to be used to generate instance names
+#   Defaults to undef
+#
 # DEPRECATED PARAMETERS
 #
 # [*auth_strategy*]
@@ -459,6 +463,7 @@ class nova(
   $purge_config                           = false,
   $my_ip                                  = $::os_service_default,
   $dhcp_domain                            = $::os_service_default,
+  $instance_name_template                 = undef,
   # DEPRECATED PARAMETERS
   $auth_strategy                          = undef,
   $os_region_name                         = undef,
@@ -592,6 +597,14 @@ but should be one of: ssh-rsa, ssh-dsa, ssh-ecdsa.")
     'DEFAULT/initial_ram_allocation_ratio':  value => $initial_ram_allocation_ratio;
     'DEFAULT/initial_disk_allocation_ratio': value => $initial_disk_allocation_ratio;
     'DEFAULT/dhcp_domain':                   value => $dhcp_domain;
+  }
+
+  # TODO(tkajinam): Change the default value to $::os_service_default when we
+  #                 remove nova::api::instance_name_template after Antelope.
+  if $instance_name_template != undef {
+    nova_config {
+      'DEFAULT/instance_name_template': value => $instance_name_template;
+    }
   }
 
   oslo::messaging::rabbit {'nova_config':

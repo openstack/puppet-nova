@@ -1,0 +1,9 @@
+---
+features:
+  - |
+    The new ``nova::instance_name_template`` parameter has been added so that
+    the ``[DEFAULT] instance_name_template`` option can be configured for
+    not only nova-api but also the other nova services.
+    The ``nova::api::instance_name_template`` parameter is still supported but
+    is no loger recomemnded because it can cause incomplete configurations in
+    case nova services are deployed in different nodes.
