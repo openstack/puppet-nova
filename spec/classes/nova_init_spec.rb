@@ -101,6 +101,9 @@ describe 'nova' do
         is_expected.to contain_nova_config('console/ssl_ciphers').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('console/ssl_minimum_version').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('DEFAULT/dhcp_domain').with_value('<SERVICE DEFAULT>')
+        # TODO(tkajinam): Uncomment this when we change default value of
+        #                 nova::instance_name_template
+        # is_expected.to contain_nova_config('DEFAULT/instance_name_template').with_value('<SERVICE DEFAULT>')
       end
 
     end
@@ -160,7 +163,7 @@ describe 'nova' do
           :console_ssl_ciphers                     => 'kEECDH+aECDSA+AES:kEECDH+AES+aRSA:kEDH+aRSA+AES',
           :console_ssl_minimum_version             => 'tlsv1_2',
           :dhcp_domain                             => 'foo',
-
+          :instance_name_template                  => 'instance-%08x',
         }
       end
 
@@ -253,6 +256,7 @@ describe 'nova' do
         is_expected.to contain_nova_config('console/ssl_ciphers').with_value('kEECDH+aECDSA+AES:kEECDH+AES+aRSA:kEDH+aRSA+AES')
         is_expected.to contain_nova_config('console/ssl_minimum_version').with_value('tlsv1_2')
         is_expected.to contain_nova_config('DEFAULT/dhcp_domain').with_value('foo')
+        is_expected.to contain_nova_config('DEFAULT/instance_name_template').with_value('instance-%08x');
       end
 
       context 'with multiple notification_driver' do
