@@ -1,0 +1,5 @@
+---
+upgrade:
+  - |
+    The ``nova::compute::allow_resize_to_same_host`` parameter has been
+    removed. Use the same parameter of the ``nova::api`` class.

@@ -270,12 +270,6 @@
 #   pinned and unpinned instances on the same host.
 #   Defaults to undef
 #
-# [*allow_resize_to_same_host*]
-#   (optional) Allow destination machine to match source for resize.
-#   Useful when testing in single-host environments. Note that generally
-#   this should be set in the api.pp class instead.
-#   Defaults to undef
-#
 # [*pci_passthrough*]
 #   DEPRECATED. Use nova::compute::pci::passthrough instead.
 #   (optional) Pci passthrough list of hash.
@@ -359,7 +353,6 @@ class nova::compute (
   $block_device_allocate_retries_interval      = $::os_service_default,
   # DEPRECATED PARAMETERS
   $vcpu_pin_set                                = undef,
-  $allow_resize_to_same_host                   = undef,
   $pci_passthrough                             = undef,
   $verify_glance_signatures                    = undef,
   $keymgr_backend                              = undef,
@@ -393,11 +386,6 @@ class nova::compute (
 
   if $vcpu_pin_set {
     warning('vcpu_pin_set is deprecated, instead use cpu_dedicated_set or cpu_shared_set.')
-  }
-
-  if $allow_resize_to_same_host != undef {
-    warning('allow_resize_to_same_host is deprecated, and has no effect. \
-Use the same parameter in nova::api class.')
   }
 
   if $verify_glance_signatures != undef {
