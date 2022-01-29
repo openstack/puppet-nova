@@ -1,0 +1,10 @@
+---
+features:
+  - |
+    The following parameters were removed. Use the ``nova::glance`` class
+    instead.
+
+    - ``nova::compute::verify_glance_signatures``
+    - ``nova::glance_endpoint_override``
+    - ``nova::glance_endpoint_override``
+    - ``nova::glance_num_retries``

@@ -57,15 +57,11 @@ class nova::glance (
 
   include nova::deps
 
-  $endpoint_override_real = pick($::nova::glance_endpoint_override, $endpoint_override)
-  $num_retries_real = pick($::nova::glance_num_retries, $num_retries)
-  $verify_glance_signatures_real = pick($::nova::compute::verify_glance_signatures, $verify_glance_signatures)
-
   nova_config {
-    'glance/endpoint_override':        value => $endpoint_override_real;
+    'glance/endpoint_override':        value => $endpoint_override;
     'glance/valid_interfaces':         value => join(any2array($valid_interfaces), ',');
-    'glance/num_retries':              value => $num_retries_real;
-    'glance/verify_glance_signatures': value => $verify_glance_signatures_real;
+    'glance/num_retries':              value => $num_retries;
+    'glance/verify_glance_signatures': value => $verify_glance_signatures;
     'glance/enable_rbd_download':      value => $enable_rbd_download;
     'glance/rbd_user':                 value => $rbd_user;
     'glance/rbd_connect_timeout':      value => $rbd_connect_timeout;

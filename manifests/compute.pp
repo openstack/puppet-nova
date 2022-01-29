@@ -278,10 +278,6 @@
 #   [ { "vendor_id" => "1234","product_id" => "5678" },
 #     { "vendor_id" => "4321","product_id" => "8765", "physical_network" => "default" } ]
 #
-# [*verify_glance_signatures*]
-#   (optional) Whether to verify image signatures. (boolean value)
-#   Defaults to undef
-#
 # [*keymgr_backend*]
 #   (optional) Key Manager service class.
 #   Example of valid value: castellan.key_manager.barbican_key_manager.BarbicanKeyManager
@@ -354,7 +350,6 @@ class nova::compute (
   # DEPRECATED PARAMETERS
   $vcpu_pin_set                                = undef,
   $pci_passthrough                             = undef,
-  $verify_glance_signatures                    = undef,
   $keymgr_backend                              = undef,
   $barbican_auth_endpoint                      = undef,
   $barbican_endpoint                           = undef,
@@ -387,14 +382,6 @@ class nova::compute (
   if $vcpu_pin_set {
     warning('vcpu_pin_set is deprecated, instead use cpu_dedicated_set or cpu_shared_set.')
   }
-
-  if $verify_glance_signatures != undef {
-    # NOTE(tkajinam): If nova::glance is defined first and the deployment doesn't use hieradata
-    #                 it doesn't pick up this value correctly and unset the parameter.
-    #                 However we'd avoid hard failure here and just leave warning.
-    warning('verify_glance_signatures is deprecated. Use the same parameter in nova::glance')
-  }
-  include nova::glance
 
   if empty($vcpu_pin_set) {
     $vcpu_pin_set_real = undef
