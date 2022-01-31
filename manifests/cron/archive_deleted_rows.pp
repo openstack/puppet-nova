@@ -154,8 +154,9 @@ class nova::cron::archive_deleted_rows (
   $cron_cmd = 'nova-manage db archive_deleted_rows'
 
   cron { 'nova-manage db archive_deleted_rows':
-    command     => "${delay_cmd}${cron_cmd}${purge_real} --max_rows ${max_rows}${age_real}${until_complete_real}${all_cells_real}${task_log_real}${sleep_real} \
->>${destination} 2>&1",
+    # lint:ignore:140chars
+    command     => "${delay_cmd}${cron_cmd}${purge_real} --max_rows ${max_rows}${age_real}${until_complete_real}${all_cells_real}${task_log_real}${sleep_real} >>${destination} 2>&1",
+    # lint:endignore
     environment => 'PATH=/bin:/usr/bin:/usr/sbin SHELL=/bin/sh',
     user        => pick($user, $::nova::params::nova_user),
     minute      => $minute,
