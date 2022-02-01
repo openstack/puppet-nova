@@ -392,14 +392,6 @@
 #   (Optional) Accept clients using either SSL or plain TCP
 #   Defaults to undef.
 #
-# [*glance_endpoint_override*]
-#   (optional) Override the endpoint to use to talk to Glance.
-#   Defaults to undef.
-#
-# [*glance_num_retries*]
-#   (optional) Number of retries in glance operation
-#   Defaults to undef.
-#
 # [*block_device_allocate_retries*]
 #   (optional) Number of times to retry block device allocation on failures
 #   Defaults to undef.
@@ -492,8 +484,6 @@ class nova(
   $cinder_catalog_info                    = undef,
   $upgrade_level_console                  = undef,
   $amqp_allow_insecure_clients            = undef,
-  $glance_endpoint_override               = undef,
-  $glance_num_retries                     = undef,
   $block_device_allocate_retries          = undef,
   $block_device_allocate_retries_interval = undef,
 ) inherits nova::params {
@@ -524,16 +514,6 @@ in a future release. Use nova::cinder::catalog_info instead')
   if $upgrade_level_console != undef {
     warning('The upgrade_level_console parameter is deprecated, and has \
 no effect.')
-  }
-
-  if $glance_endpoint_override != undef {
-    warning('The glance_endpoint_override parameter is deprecated. \
-Use nova::glance::endpoint_override instead.')
-  }
-
-  if $glance_num_retries != undef {
-    warning('The glance_num_retries parameter is deprecated. \
-Use nova::glance::num_retries instead.')
   }
 
   if $block_device_allocate_retries != undef {
@@ -764,7 +744,4 @@ but should be one of: ssh-rsa, ssh-dsa, ssh-ecdsa.")
     'upgrade_levels/network':     value => $upgrade_level_network;
     'upgrade_levels/scheduler':   value => $upgrade_level_scheduler;
   }
-
-  # TODO(tkajinam): Remove this when we remove the deprecated glance_* options
-  include nova::glance
 }
