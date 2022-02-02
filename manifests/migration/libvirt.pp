@@ -222,6 +222,7 @@ class nova::migration::libvirt(
   if $configure_libvirt {
     Anchor['nova::config::begin']
     -> Libvirtd_config<||>
+    -> File<| tag == 'libvirt-file'|>
     -> File_line<| tag == 'libvirt-file_line'|>
     -> Anchor['nova::config::end']
 
@@ -346,6 +347,14 @@ class nova::migration::libvirt(
             $libvirtd_args = '"--listen"'
           } else {
             $libvirtd_args = ''
+          }
+
+          # NOTE(tkajinam): Since libvirt 8.1.0, the sysconfig files are
+          #                 no longer provided by packages.
+          file { '/etc/sysconfig/libvirtd':
+            ensure => present,
+            path   => '/etc/sysconfig/libvirtd',
+            tag    => 'libvirt-file',
           }
 
           file_line { '/etc/sysconfig/libvirtd libvirtd args':

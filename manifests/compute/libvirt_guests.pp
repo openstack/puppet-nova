@@ -58,11 +58,20 @@ class nova::compute::libvirt_guests (
   include nova::deps
 
   Anchor['nova::config::begin']
+  -> File<| tag =='libvirt-guests-file' |>
   -> File_line<| tag == 'libvirt-guests-file_line'|>
   -> Anchor['nova::config::end']
 
   case $::osfamily {
     'RedHat': {
+      # NOTE(tkajinam): Since libvirt 8.1.0, the sysconfig files are
+      #                 no longer provided by packages.
+      file { '/etc/sysconfig/libvirt-guests':
+        ensure => present,
+        path   => '/etc/sysconfig/libvirt-guests',
+        tag    => 'libvirt-guests-file',
+      }
+
       file_line { '/etc/sysconfig/libvirt-guests ON_BOOT':
         path  => '/etc/sysconfig/libvirt-guests',
         line  => "ON_BOOT=${on_boot}",
