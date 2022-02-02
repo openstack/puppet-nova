@@ -62,6 +62,10 @@ class nova::compute::libvirt::qemu(
   include nova::deps
   require nova::compute::libvirt
 
+  if versioncmp($libvirt_version, '4.5') < 0 {
+    fail('libvirt verson < 4.5 is no longer supported')
+  }
+
   Anchor['nova::config::begin']
   -> Augeas<| tag == 'qemu-conf-augeas'|>
   -> Anchor['nova::config::end']
@@ -107,11 +111,7 @@ class nova::compute::libvirt::qemu(
     } else {
       $augues_memory_backing_dir_changes = []
     }
-    if versioncmp($libvirt_version, '4.5') >= 0 {
-      $augues_nbd_tls_changes = ["set nbd_tls ${nbd_tls_value}"]
-    } else {
-      $augues_nbd_tls_changes = []
-    }
+    $augues_nbd_tls_changes = ["set nbd_tls ${nbd_tls_value}"]
 
     $augues_changes = concat($augues_changes_default, $augues_group_changes, $augues_memory_backing_dir_changes, $augues_nbd_tls_changes)
 
@@ -122,7 +122,7 @@ class nova::compute::libvirt::qemu(
     }
   } else {
 
-    $augues_changes_default = [
+    $augues_changes = [
       'rm max_files',
       'rm max_processes',
       'rm group',
@@ -130,14 +130,8 @@ class nova::compute::libvirt::qemu(
       'rm vnc_tls_x509_verify',
       'rm default_tls_x509_verify',
       'rm memory_backing_dir',
+      'rm nbd_tls',
     ]
-    if versioncmp($libvirt_version, '4.5') >= 0 {
-      $augues_nbd_tls_changes = ['rm nbd_tls']
-    } else {
-      $augues_nbd_tls_changes = []
-    }
-
-    $augues_changes = concat($augues_changes_default, $augues_nbd_tls_changes)
 
     augeas { 'qemu-conf-limits':
       context => '/files/etc/libvirt/qemu.conf',

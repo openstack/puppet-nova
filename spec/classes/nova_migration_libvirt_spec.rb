@@ -418,68 +418,47 @@ describe 'nova::migration::libvirt' do
   end
 
   shared_examples_for 'nova migration with libvirt in Debian' do
-    context 'with libvirt < 5.6' do
+    context 'with tls transport' do
       let :params do
-        { :transport       => 'tls',
-          :libvirt_version => '4.0' }
+        { :transport => 'tls' }
       end
 
       it { is_expected.to contain_file_line('/etc/default/libvirtd libvirtd opts').with(
         :path  => '/etc/default/libvirtd',
-        :line  => 'libvirtd_opts="-l"',
+        :line  => 'libvirtd_opts=',
         :match => 'libvirtd_opts=',
         :tag   => 'libvirt-file_line',
       ) }
-      it { is_expected.to_not contain_service('libvirtd-tls') }
-      it { is_expected.to_not contain_service('libvirtd-tcp') }
+      it { is_expected.to contain_service('libvirtd-tls').with(
+        :name   => 'libvirtd-tls.socket',
+        :ensure => 'running',
+        :enable => true,
+        )}
     end
 
-    context 'with libvirt >= 5.6' do
-      context 'with tls transport' do
-        let :params do
-          { :transport       => 'tls',
-            :libvirt_version => '6.0' }
-        end
-
-        it { is_expected.to contain_file_line('/etc/default/libvirtd libvirtd opts').with(
-          :path  => '/etc/default/libvirtd',
-          :line  => 'libvirtd_opts=',
-          :match => 'libvirtd_opts=',
-          :tag   => 'libvirt-file_line',
-        ) }
-        it { is_expected.to contain_service('libvirtd-tls').with(
-          :name   => 'libvirtd-tls.socket',
-          :ensure => 'running',
-          :enable => true,
-          )}
+    context 'with tcp transport' do
+      let :params do
+        { :transport => 'tcp' }
       end
 
-      context 'with tcp transport' do
-        let :params do
-          { :transport       => 'tcp',
-            :libvirt_version => '6.0' }
-        end
-
-        it { is_expected.to contain_file_line('/etc/default/libvirtd libvirtd opts').with(
-          :path  => '/etc/default/libvirtd',
-          :line  => 'libvirtd_opts=',
-          :match => 'libvirtd_opts=',
-          :tag   => 'libvirt-file_line',
-        ) }
-        it { is_expected.to contain_service('libvirtd-tcp').with(
-          :name   => 'libvirtd-tcp.socket',
-          :ensure => 'running',
-          :enable => true,
-          )}
-      end
+      it { is_expected.to contain_file_line('/etc/default/libvirtd libvirtd opts').with(
+        :path  => '/etc/default/libvirtd',
+        :line  => 'libvirtd_opts=',
+        :match => 'libvirtd_opts=',
+        :tag   => 'libvirt-file_line',
+      ) }
+      it { is_expected.to contain_service('libvirtd-tcp').with(
+        :name   => 'libvirtd-tcp.socket',
+        :ensure => 'running',
+        :enable => true,
+        )}
     end
   end
 
   shared_examples_for 'nova migration with libvirt in RedHat' do
-    context 'with libvirt < 5.6' do
+    context 'with tls transport' do
       let :params do
-        { :transport       => 'tls',
-          :libvirt_version => '4.5' }
+        { :transport => 'tls' }
       end
 
       it { is_expected.to contain_file('/etc/sysconfig/libvirtd').with(
@@ -489,63 +468,38 @@ describe 'nova::migration::libvirt' do
       )}
       it { is_expected.to contain_file_line('/etc/sysconfig/libvirtd libvirtd args').with(
         :path  => '/etc/sysconfig/libvirtd',
-        :line  => 'LIBVIRTD_ARGS="--listen"',
+        :line  => 'LIBVIRTD_ARGS=',
         :match => '^LIBVIRTD_ARGS=',
         :tag   => 'libvirt-file_line',
       )}
-      it { is_expected.to_not contain_service('libvirtd-tls') }
-      it { is_expected.to_not contain_service('libvirtd-tcp') }
+      it { is_expected.to contain_service('libvirtd-tls').with(
+        :name   => 'libvirtd-tls.socket',
+        :ensure => 'running',
+        :enable => true,
+      )}
     end
 
-    context 'with libvirt >= 5.6' do
-
-      context 'with tls transport' do
-        let :params do
-          { :transport       => 'tls',
-            :libvirt_version => '5.6' }
-        end
-
-        it { is_expected.to contain_file('/etc/sysconfig/libvirtd').with(
-          :ensure => 'present',
-          :path   => '/etc/sysconfig/libvirtd',
-          :tag    => 'libvirt-file',
-        )}
-        it { is_expected.to contain_file_line('/etc/sysconfig/libvirtd libvirtd args').with(
-          :path  => '/etc/sysconfig/libvirtd',
-          :line  => 'LIBVIRTD_ARGS=',
-          :match => '^LIBVIRTD_ARGS=',
-          :tag   => 'libvirt-file_line',
-        )}
-        it { is_expected.to contain_service('libvirtd-tls').with(
-          :name   => 'libvirtd-tls.socket',
-          :ensure => 'running',
-          :enable => true,
-        )}
+    context 'with tcp transport' do
+      let :params do
+        { :transport => 'tcp' }
       end
 
-      context 'with tcp transport' do
-        let :params do
-          { :transport       => 'tcp',
-            :libvirt_version => '5.6' }
-        end
-
-        it { is_expected.to contain_file('/etc/sysconfig/libvirtd').with(
-          :ensure => 'present',
-          :path   => '/etc/sysconfig/libvirtd',
-          :tag    => 'libvirt-file',
-        )}
-        it { is_expected.to contain_file_line('/etc/sysconfig/libvirtd libvirtd args').with(
-          :path  => '/etc/sysconfig/libvirtd',
-          :line  => 'LIBVIRTD_ARGS=',
-          :match => '^LIBVIRTD_ARGS=',
-          :tag   => 'libvirt-file_line',
-        )}
-        it { is_expected.to contain_service('libvirtd-tcp').with(
-          :name   => 'libvirtd-tcp.socket',
-          :ensure => 'running',
-          :enable => true,
-        )}
-      end
+      it { is_expected.to contain_file('/etc/sysconfig/libvirtd').with(
+        :ensure => 'present',
+        :path   => '/etc/sysconfig/libvirtd',
+        :tag    => 'libvirt-file',
+      )}
+      it { is_expected.to contain_file_line('/etc/sysconfig/libvirtd libvirtd args').with(
+        :path  => '/etc/sysconfig/libvirtd',
+        :line  => 'LIBVIRTD_ARGS=',
+        :match => '^LIBVIRTD_ARGS=',
+        :tag   => 'libvirt-file_line',
+      )}
+      it { is_expected.to contain_service('libvirtd-tcp').with(
+        :name   => 'libvirtd-tcp.socket',
+        :ensure => 'running',
+        :enable => true,
+      )}
     end
   end
 

@@ -1,0 +1,4 @@
+---
+upgrade:
+  - |
+    Now puppet-nova requires libvirt 5.6 or later.

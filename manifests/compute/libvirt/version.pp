@@ -8,20 +8,14 @@
 class nova::compute::libvirt::version {
   case $facts['os']['family'] {
     'RedHat': {
-      if versioncmp($facts['os']['release']['full'], '8') >= 0 {
-        $default = '5.6'
-      } elsif versioncmp($facts['os']['release']['full'], '7.6') >= 0 {
-        $default = '4.5'
+      if versioncmp($facts['os']['release']['full'], '9') >= 0 {
+        $default = '7.0'
       } else {
-        $default = '3.9'
+        $default = '5.6'
       }
     }
     'Debian': {
-      if versioncmp($facts['os']['release']['full'], '18.04') >= 0 {
-        $default = '6.0'
-      } else {
-        $default = '4.0'
-      }
+      $default = '6.0'
     }
     default: {
       fail("Class['nova::compute::libvirt::version']: Unsupported osfamily: ${::osfamily}")

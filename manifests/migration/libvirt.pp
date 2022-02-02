@@ -308,79 +308,61 @@ class nova::migration::libvirt(
     })
 
     if $transport_real == 'tls' or $transport_real == 'tcp' {
-      if versioncmp($libvirt_version, '5.6') >= 0 {
-        # Since libvirt >= 5.6 and libvirtd is managed by systemd,
-        # system socket should be activated by systemd, not by --listen option
-        $manage_services = pick($::nova::compute::libvirt::manage_libvirt_services, true)
-
-        if $manage_services and !$modular_libvirt_real {
-          # libvirtd.service should be stopped before socket service is started.
-          # Otherwise, socket service fails to start.
-          exec { 'stop libvirtd.service':
-            path    => ['/sbin', '/usr/sbin', '/bin', '/usr/bin'],
-            command => 'systemctl -q stop libvirtd.service',
-            unless  => "systemctl -q is-active libvirtd-${transport_real}.socket",
-            require => Anchor['nova::install::end']
-          }
-
-          service { "libvirtd-${transport_real}":
-            ensure  => 'running',
-            name    => "libvirtd-${transport_real}.socket",
-            enable  => true,
-            require => Anchor['nova::config::end']
-          }
-
-          Exec['stop libvirtd.service'] -> Service["libvirtd-${transport_real}"] -> Service<| title == 'libvirt' |>
-        }
-
-        # --listen option should be disabled in newer libvirt
-        $libvirtd_service_listen = false
-
-      } else {
-        # For older libvirt --listen option should be used.
-        $libvirtd_service_listen = true
+      if versioncmp($libvirt_version, '5.6') < 0 {
+        fail('libvirt verson < 5.6 is no longer supported')
       }
+      # Since libvirt >= 5.6, system socket of libvirt should be activated
+      # by systemd, not by --listen option
+      $manage_services = pick($::nova::compute::libvirt::manage_libvirt_services, true)
 
-      case $::osfamily {
-        'RedHat': {
-          if $libvirtd_service_listen {
-            $libvirtd_args = '"--listen"'
-          } else {
-            $libvirtd_args = ''
-          }
-
-          # NOTE(tkajinam): Since libvirt 8.1.0, the sysconfig files are
-          #                 no longer provided by packages.
-          file { '/etc/sysconfig/libvirtd':
-            ensure => present,
-            path   => '/etc/sysconfig/libvirtd',
-            tag    => 'libvirt-file',
-          }
-
-          file_line { '/etc/sysconfig/libvirtd libvirtd args':
-            path  => '/etc/sysconfig/libvirtd',
-            line  => "LIBVIRTD_ARGS=${libvirtd_args}",
-            match => '^LIBVIRTD_ARGS=',
-            tag   => 'libvirt-file_line',
-          }
+      if $manage_services and !$modular_libvirt_real {
+        # libvirtd.service should be stopped before socket service is started.
+        # Otherwise, socket service fails to start.
+        exec { 'stop libvirtd.service':
+          path    => ['/sbin', '/usr/sbin', '/bin', '/usr/bin'],
+          command => 'systemctl -q stop libvirtd.service',
+          unless  => "systemctl -q is-active libvirtd-${transport_real}.socket",
+          require => Anchor['nova::install::end']
         }
-        'Debian': {
-          if $libvirtd_service_listen {
-            $libvirtd_opts = '"-l"'
-          } else {
-            $libvirtd_opts = ''
-          }
 
-          file_line { '/etc/default/libvirtd libvirtd opts':
-            path  => '/etc/default/libvirtd',
-            line  => "libvirtd_opts=${libvirtd_opts}",
-            match => 'libvirtd_opts=',
-            tag   => 'libvirt-file_line',
-          }
+        service { "libvirtd-${transport_real}":
+          ensure  => 'running',
+          name    => "libvirtd-${transport_real}.socket",
+          enable  => true,
+          require => Anchor['nova::config::end']
         }
-        default: {
-          warning("Unsupported osfamily: ${::osfamily}, make sure you are configuring this yourself")
+
+        Exec['stop libvirtd.service'] -> Service["libvirtd-${transport_real}"] -> Service<| title == 'libvirt' |>
+      }
+    }
+
+    case $::osfamily {
+      'RedHat': {
+        # NOTE(tkajinam): Since libvirt 8.1.0, the sysconfig files are
+        #                 no longer provided by packages.
+        file { '/etc/sysconfig/libvirtd':
+          ensure => present,
+          path   => '/etc/sysconfig/libvirtd',
+          tag    => 'libvirt-file',
         }
+
+        file_line { '/etc/sysconfig/libvirtd libvirtd args':
+          path  => '/etc/sysconfig/libvirtd',
+          line  => 'LIBVIRTD_ARGS=',
+          match => '^LIBVIRTD_ARGS=',
+          tag   => 'libvirt-file_line',
+        }
+      }
+      'Debian': {
+        file_line { '/etc/default/libvirtd libvirtd opts':
+          path  => '/etc/default/libvirtd',
+          line  => 'libvirtd_opts=',
+          match => 'libvirtd_opts=',
+          tag   => 'libvirt-file_line',
+        }
+      }
+      default: {
+        warning("Unsupported osfamily: ${::osfamily}, make sure you are configuring this yourself")
       }
     }
   }
