@@ -356,10 +356,6 @@
 #   If unable to do so, will use "127.0.0.1".
 #   Defaults to $::os_service_default.
 #
-# [*cross_az_attach*]
-#   (optional) Allow attach between instance and volume in different availability zones.
-#   Defaults to $::os_service_default
-#
 # [*dhcp_domain*]
 #   (optional) domain to use for building the hostnames
 #   Defaults to $::os_service_default
@@ -400,6 +396,10 @@
 #   (optional) Waiting time interval (seconds) between block device allocation
 #   retries on failures
 #   Defaults to undef.
+#
+# [*cross_az_attach*]
+#   (optional) Allow attach between instance and volume in different availability zones.
+#   Defaults to undef
 #
 class nova(
   $ensure_package                         = 'present',
@@ -476,7 +476,6 @@ class nova(
   $initial_disk_allocation_ratio          = $::os_service_default,
   $purge_config                           = false,
   $my_ip                                  = $::os_service_default,
-  $cross_az_attach                        = $::os_service_default,
   $dhcp_domain                            = $::os_service_default,
   # DEPRECATED PARAMETERS
   $auth_strategy                          = undef,
@@ -486,6 +485,7 @@ class nova(
   $amqp_allow_insecure_clients            = undef,
   $block_device_allocate_retries          = undef,
   $block_device_allocate_retries_interval = undef,
+  $cross_az_attach                        = undef,
 ) inherits nova::params {
 
   include nova::deps
@@ -524,6 +524,11 @@ Use nova::compute::block_device_allocate_retries instead')
   if $block_device_allocate_retries_interval != undef {
     warning('The block_device_allocate_retries_interval parameter is deprecated. \
 Use nova::compute::block_device_allocate_retries_interval instead')
+  }
+
+  if $cross_az_attach != unef {
+    warning('The cross_az_attach parameter is deprecated. \
+Use nova::cinder::cross_az_attach instead.')
   }
 
   if $use_ssl {
@@ -735,7 +740,6 @@ but should be one of: ssh-rsa, ssh-dsa, ssh-ecdsa.")
   }
 
   nova_config {
-    'cinder/cross_az_attach':     value => $cross_az_attach;
     'upgrade_levels/cells':       value => $upgrade_level_cells;
     'upgrade_levels/cert':        value => $upgrade_level_cert;
     'upgrade_levels/compute':     value => $upgrade_level_compute;
