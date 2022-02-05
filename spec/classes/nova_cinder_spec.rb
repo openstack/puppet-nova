@@ -17,6 +17,7 @@ describe 'nova::cinder' do
         should contain_nova_config('cinder/catalog_info').with_value('<SERVICE DEFAULT>')
         should contain_nova_config('cinder/http_retries').with_value('<SERVICE DEFAULT>')
         should contain_nova_config('cinder/cross_az_attach').with_value('<SERVICE DEFAULT>')
+        should contain_nova_config('cinder/debug').with_value('<SERVICE DEFAULT>')
       end
     end
 
@@ -40,6 +41,7 @@ describe 'nova::cinder' do
         should contain_nova_config('cinder/catalog_info').with_value('<SERVICE DEFAULT>')
         should contain_nova_config('cinder/http_retries').with_value('<SERVICE DEFAULT>')
         should contain_nova_config('cinder/cross_az_attach').with_value('<SERVICE DEFAULT>')
+        should contain_nova_config('cinder/debug').with_value('<SERVICE DEFAULT>')
       end
 
     end
@@ -54,6 +56,7 @@ describe 'nova::cinder' do
           :catalog_info    => 'volumev3:cinderv3:publicURL',
           :http_retries    => 3,
           :cross_az_attach => true,
+          :debug           => true,
         }
       end
 
@@ -70,6 +73,7 @@ describe 'nova::cinder' do
         should contain_nova_config('cinder/catalog_info').with_value('volumev3:cinderv3:publicURL')
         should contain_nova_config('cinder/http_retries').with_value(3)
         should contain_nova_config('cinder/cross_az_attach').with_value(true)
+        should contain_nova_config('cinder/debug').with_value(true)
       end
 
     end

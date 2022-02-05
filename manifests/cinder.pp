@@ -66,6 +66,11 @@
 #   (optional) Allow attach between instance and volume in different availability zones.
 #   Defaults to $::os_service_default
 #
+# [*debug*]
+#   (optional) Enable DEBUG logging with cinderclient and os_brick
+#   independently of the rest of Nova.
+#   Defaults to $::os_service_default
+#
 # DEPRECATED PARAMETERS
 #
 # [*region_name*]
@@ -86,6 +91,7 @@ class nova::cinder (
   $catalog_info        = $::os_service_default,
   $http_retries        = $::os_service_default,
   $cross_az_attach     = $::os_service_default,
+  $debug               = $::os_service_default,
   # DEPRECATED PARAMETERS
   $region_name         = undef,
 ) {
@@ -133,5 +139,6 @@ Use the nova::cinder::os_region_name parameter')
     'cinder/catalog_info':        value => $catalog_info_real;
     'cinder/http_retries':        value => $http_retries;
     'cinder/cross_az_attach':     value => $cross_az_attach_real;
+    'cinder/debug':               value => $debug;
   }
 }
