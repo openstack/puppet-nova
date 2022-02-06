@@ -91,10 +91,7 @@ class nova::metadata::novajoin::auth(
   $configure_user_role     = true,
 ) {
 
-  if $configure_endpoint {
-    Keystone_endpoint["${region}/${service_name}::${service_type}"] ~> Service <| name == 'novajoin-server' |>
-    Keystone_endpoint["${region}/${service_name}::${service_type}"] ~> Service <| name == 'novajoin-notify' |>
-  }
+  Keystone::Resource::Service_identity['novajoin'] -> Service <| name == 'novajoin-server' |>
 
   keystone::resource::service_identity { 'novajoin':
     configure_user      => $configure_user,
