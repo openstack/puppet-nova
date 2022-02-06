@@ -526,7 +526,7 @@ Use nova::compute::block_device_allocate_retries instead')
 Use nova::compute::block_device_allocate_retries_interval instead')
   }
 
-  if $cross_az_attach != unef {
+  if $cross_az_attach != undef {
     warning('The cross_az_attach parameter is deprecated. \
 Use nova::cinder::cross_az_attach instead.')
   }
