@@ -93,12 +93,7 @@ class nova::keystone::auth(
 
   include nova::deps
 
-  Keystone_user_role<| name == "${auth_name}@${tenant}" |> -> Anchor['nova::service::end']
-  Keystone_user_role<| name == "${auth_name}@::::${system_scope}" |> -> Anchor['nova::service::end']
-
-  if $configure_endpoint {
-    Keystone_endpoint["${region}/${service_name}::${service_type}"] -> Anchor['nova::service::end']
-  }
+  Keystone::Resource::Service_identity['nova'] -> Anchor['nova::service::end']
 
   keystone::resource::service_identity { 'nova':
     configure_user      => $configure_user,
