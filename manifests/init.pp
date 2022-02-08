@@ -384,10 +384,6 @@
 #  (optional) Sets a version cap for messages sent to console services
 #  Defaults to undef
 #
-# [*amqp_allow_insecure_clients*]
-#   (Optional) Accept clients using either SSL or plain TCP
-#   Defaults to undef.
-#
 # [*block_device_allocate_retries*]
 #   (optional) Number of times to retry block device allocation on failures
 #   Defaults to undef.
@@ -482,7 +478,6 @@ class nova(
   $os_region_name                         = undef,
   $cinder_catalog_info                    = undef,
   $upgrade_level_console                  = undef,
-  $amqp_allow_insecure_clients            = undef,
   $block_device_allocate_retries          = undef,
   $block_device_allocate_retries_interval = undef,
   $cross_az_attach                        = undef,
@@ -494,11 +489,6 @@ class nova(
   validate_legacy(Array, 'validate_array', $enabled_ssl_apis)
   if empty($enabled_ssl_apis) and $use_ssl {
       warning('enabled_ssl_apis is empty but use_ssl is set to true')
-  }
-
-  if $amqp_allow_insecure_clients != undef {
-    warning('The amqp_allow_insecure_clients parameter is deprecated and \
-will be removed in a future release.')
   }
 
   if $os_region_name != undef {
