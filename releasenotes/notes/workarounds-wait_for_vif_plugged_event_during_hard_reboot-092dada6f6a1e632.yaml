@@ -1,0 +1,5 @@
+---
+features:
+  - |
+    Added parameter ``wait_for_vif_plugged_event_during_hard_reboot`` to
+    ``nova::workarounds`` to configure the config option with the same name.
