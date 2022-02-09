@@ -21,6 +21,11 @@
 #   to update network switches in the post live migration phase on the destination.
 #   Defaults to $::os_service_default
 #
+# [*wait_for_vif_plugged_event_during_hard_reboot*]
+#   (Optional) If set Nova will wait for the Neutron ML2 backend to sent vif
+#   plugged events when performing hard reboot.
+#   Defaults to $::os_service_default
+#
 # DEPRECATED
 #
 #  [*enable_numa_live_migration*]
@@ -28,9 +33,10 @@
 #   Defaults to undef
 #
 class nova::workarounds (
-  $never_download_image_if_on_rbd          = $::os_service_default,
-  $ensure_libvirt_rbd_instance_dir_cleanup = $::os_service_default,
-  $enable_qemu_monitor_announce_self       = $::os_service_default,
+  $never_download_image_if_on_rbd                = $::os_service_default,
+  $ensure_libvirt_rbd_instance_dir_cleanup       = $::os_service_default,
+  $enable_qemu_monitor_announce_self             = $::os_service_default,
+  $wait_for_vif_plugged_event_during_hard_reboot = $::os_service_default,
   # DEPRECATED PARAMETER
   $enable_numa_live_migration              = undef,
 ) {
@@ -49,6 +55,8 @@ class nova::workarounds (
       value => $ensure_libvirt_rbd_instance_dir_cleanup;
     'workarounds/enable_qemu_monitor_announce_self':
       value => $enable_qemu_monitor_announce_self;
+    'workarounds/wait_for_vif_plugged_event_during_hard_reboot':
+      value => join(any2array($wait_for_vif_plugged_event_during_hard_reboot), ',');
   }
 
 }
