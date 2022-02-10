@@ -216,24 +216,28 @@ class nova::metadata::novajoin::api (
     } else {
       $service_ensure = 'stopped'
     }
-  }
 
-  service { 'novajoin-server':
-    ensure     => $service_ensure,
-    name       => $nova::params::novajoin_service_name,
-    enable     => $enabled,
-    hasstatus  => true,
-    hasrestart => true,
-    tag        => 'openstack',
-  }
+    service { 'novajoin-server':
+      ensure     => $service_ensure,
+      name       => $nova::params::novajoin_service_name,
+      enable     => $enabled,
+      hasstatus  => true,
+      hasrestart => true,
+      tag        => 'openstack',
+    }
 
-  service { 'novajoin-notify':
-    ensure     => $service_ensure,
-    name       => $nova::params::notify_service_name,
-    enable     => $enabled,
-    hasstatus  => true,
-    hasrestart => true,
-    tag        => 'openstack',
+    service { 'novajoin-notify':
+      ensure     => $service_ensure,
+      name       => $nova::params::notify_service_name,
+      enable     => $enabled,
+      hasstatus  => true,
+      hasrestart => true,
+      tag        => 'openstack',
+    }
+    Novajoin_config<||> ~> Service['novajoin-server']
+    Novajoin_config<||> ~> Service['novajoin-notify']
+    Exec['get-service-user-keytab'] ~> Service['novajoin-server']
+    Exec['get-service-user-keytab'] ~> Service['novajoin-notify']
   }
 
   exec { 'get-service-user-keytab':
@@ -245,9 +249,5 @@ class nova::metadata::novajoin::api (
   ensure_resource('file', $keytab, { owner => $username, require => Exec['get-service-user-keytab'] })
 
   Package<| tag == 'novajoin-package' |> -> Exec['get-service-user-keytab']
-  Novajoin_config<||> ~> Service<| title == 'novajoin-server'|>
-  Novajoin_config<||> ~> Service<| title == 'novajoin-notify'|>
-  Exec['get-service-user-keytab'] ~> Service['novajoin-server']
-  Exec['get-service-user-keytab'] ~> Service['novajoin-notify']
   Exec['get-service-user-keytab'] ~> Service<| title == 'nova-api'|>
 }

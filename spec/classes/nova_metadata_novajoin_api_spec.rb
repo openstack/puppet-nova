@@ -16,7 +16,6 @@ describe 'nova::metadata::novajoin::api' do
       :join_listen_port          => '<SERVICE DEFAULT>',
       :keytab                    => '/etc/novajoin/krb5.keytab',
       :log_dir                   => '/var/log/novajoin',
-      :manage_service            => true,
       :username                  => 'novajoin',
       :project_domain_name       => 'Default',
       :project_name              => 'services',
@@ -51,7 +50,6 @@ describe 'nova::metadata::novajoin::api' do
        :join_listen_port          => '9921',
        :keytab                    => '/etc/krb5.conf',
        :log_dir                   => '/var/log/novajoin',
-       :manage_service            => true,
        :username                  => 'novajoin1',
        :project_domain_name       => 'Default',
        :project_name              => 'services',
@@ -74,7 +72,7 @@ describe 'nova::metadata::novajoin::api' do
         it { should contain_class('nova::metadata::novajoin::authtoken') }
 
         it { should contain_service('novajoin-server').with(
-          'ensure'     => (param_hash[:manage_service] && param_hash[:enabled]) ? 'running': 'stopped',
+          'ensure'     => param_hash[:enabled] ? 'running': 'stopped',
           'enable'     => param_hash[:enabled],
           'hasstatus'  => true,
           'hasrestart' => true,
@@ -82,7 +80,7 @@ describe 'nova::metadata::novajoin::api' do
         )}
 
         it { should contain_service('novajoin-notify').with(
-          'ensure'     => (param_hash[:manage_service] && param_hash[:enabled]) ? 'running': 'stopped',
+          'ensure'     => param_hash[:enabled] ? 'running': 'stopped',
           'enable'     => param_hash[:enabled],
           'hasstatus'  => true,
           'hasrestart' => true,
@@ -146,28 +144,15 @@ describe 'nova::metadata::novajoin::api' do
       let :params do
         {
           :manage_service => false,
-          :enabled        => false,
           :ipa_domain     => 'EXAMPLE.COM',
           :password       => 'my_secret_password',
           :transport_url  => 'rabbit:rabbit_pass@rabbit_host',
         }
       end
 
-      it { should contain_service('novajoin-server').with(
-        'ensure'     => nil,
-        'enable'     => false,
-        'hasstatus'  => true,
-        'hasrestart' => true,
-        'tag'        => 'openstack',
-      )}
+      it { should_not contain_service('novajoin-server') }
 
-      it { should contain_service('novajoin-notify').with(
-        'ensure'     => nil,
-        'enable'     => false,
-        'hasstatus'  => true,
-        'hasrestart' => true,
-        'tag'        => 'openstack',
-      )}
+      it { should_not contain_service('novajoin-notify') }
     end
   end
 

@@ -408,12 +408,12 @@ describe 'nova::compute' do
 
     context 'while not managing service state' do
       let :params do
-        { :enabled           => false,
+        {
           :manage_service    => false,
         }
       end
 
-      it { is_expected.to contain_service('nova-compute').without_ensure }
+      it { is_expected.to_not contain_service('nova-compute') }
     end
 
     context 'with instance_usage_audit parameter set to false' do

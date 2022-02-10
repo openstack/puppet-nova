@@ -30,11 +30,11 @@ describe 'nova::serialproxy' do
 
     context 'with manage_service as false' do
       let :params do
-        { :enabled        => true,
+        {
           :manage_service => false
         }
       end
-      it { is_expected.to contain_service('nova-serialproxy').without_ensure }
+      it { is_expected.to_not contain_service('nova-serialproxy') }
     end
 
     context 'with package version' do
