@@ -14,7 +14,7 @@ Puppet::Type.type(:nova_service).provide(
 
   def self.instances
     hosts = {}
-    request('compute service', 'list').collect do |host_svc|
+    system_request('compute service', 'list').collect do |host_svc|
       hname = host_svc[:host]
       if hosts[hname].nil?
         hosts[hname] = Hash.new {|h,k| h[k]=[]}
@@ -53,7 +53,7 @@ Puppet::Type.type(:nova_service).provide(
     svcname_id_map.each do |service_name, id|
       if (@resource[:service_name].empty? ||
           (@resource[:service_name].include? service_name))
-        self.class.request('compute service', 'delete', id)
+        self.class.system_request('compute service', 'delete', id)
       end
     end
     @property_hash.clear

@@ -1,0 +1,22 @@
+---
+upgrade:
+  - |
+    Now the following resource types uses system scope credentail instead of
+    project scope credential when sending requests to Nova API.
+
+    - ``nova_aggregate``
+    - ``nova_flavor``
+    - ``nova_service``
+
+deprecations:
+  - |
+    The following resource types have been using the credential written in
+    the ``[keystone_authtoken]`` section of ``nova.conf``. However this
+    behavior has been deprecated and now these resource types first look for
+    the yaml files in ``/etc/openstack/puppet``. Make sure one of
+    ``clouds.yaml`` or ``admin-clouds.yaml`` (which is created by
+    puppet-keystone) is created in that directory.
+
+    - ``nova_aggregate``
+    - ``nova_flavor``
+    - ``nova_service``
