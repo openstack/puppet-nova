@@ -32,7 +32,7 @@ describe provider_class do
                       .with('flavor', 'list', ['--long', '--all'])
                       .returns('"ID", "Name", "RAM", "Disk", "Ephemeral", "VCPUs", "Is Public", "Swap", "RXTX Factor", "Properties"')
         provider.class.stubs(:openstack)
-            .with('flavor', 'create', 'shell', ['example', '--public', '--id', '1', '--ram', '512', '--disk', '1', '--vcpus', '1'])
+            .with('flavor', 'create', '--format', 'shell', ['example', '--public', '--id', '1', '--ram', '512', '--disk', '1', '--vcpus', '1'])
                 .returns('os-flv-disabled:disabled="False"
 os-flv-ext-data:ephemeral="0"
 disk="1"
@@ -43,6 +43,8 @@ ram="512"
 rxtx_factor="1.0"
 swap=""
 vcpus="1"')
+        provider.create
+        expect(provider.exists?).to be_truthy
       end
     end
 

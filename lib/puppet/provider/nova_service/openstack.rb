@@ -26,9 +26,9 @@ Puppet::Type.type(:nova_service).provide(
     end
     hosts.collect do |hname, host|
       new(
-        :ensure => :present,
-        :name => hname,
-        :ids => host[:ids],
+        :ensure       => :present,
+        :name         => hname,
+        :ids          => host[:ids],
         :service_name => host[:service_name]
       )
     end
@@ -56,7 +56,7 @@ Puppet::Type.type(:nova_service).provide(
         self.class.request('compute service', 'delete', id)
       end
     end
-    @property_hash[:ensure] = :absent
+    @property_hash.clear
   end
 
   def create
