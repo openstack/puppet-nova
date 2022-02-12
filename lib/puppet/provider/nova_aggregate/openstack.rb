@@ -56,6 +56,7 @@ Puppet::Type.type(:nova_aggregate).provide(
       self.class.request('aggregate', 'remove host', properties)
     end
     self.class.request('aggregate', 'delete', @property_hash[:name])
+    @property_hash.clear
   end
 
   def create
@@ -79,6 +80,7 @@ Puppet::Type.type(:nova_aggregate).provide(
         self.class.request('aggregate', 'add host', properties)
       end
     end
+    @property_hash[:ensure] = :present
   end
 
   def availability_zone=(value)
