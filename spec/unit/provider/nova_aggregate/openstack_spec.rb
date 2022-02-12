@@ -78,9 +78,8 @@ availability_zone="simple"
 properties="{u\'nice\': u\'cookie\'}"
 hosts="[u\'example\']"
 ')
-          provider.exists?
           provider.create
-          expect(provider.exists?).to be_falsey
+          expect(provider.exists?).to be_truthy
         end
       end
 
