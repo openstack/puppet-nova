@@ -124,14 +124,4 @@ class Puppet::Provider::Nova < Puppet::Provider::Openstack
     @nova_conf = nil
     @nova_credentials = nil
   end
-
-  def self.str2hash(s)
-    #parse string
-    if s.include? "="
-      k, v = s.split("=", 2)
-      return {k.gsub(/'/, "") => v.gsub(/'/, "")}
-    else
-      return s.gsub(/'/, "")
-    end
-  end
 end

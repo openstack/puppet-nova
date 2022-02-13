@@ -64,31 +64,4 @@ describe Puppet::Provider::Nova do
     end
 
   end
-
-  describe 'when parse a string line' do
-    it 'should return the same string' do
-      res = klass.str2hash("zone1")
-      expect(res).to eq("zone1")
-    end
-
-    it 'should return the string without quotes' do
-      res = klass.str2hash("'zone1'")
-      expect(res).to eq("zone1")
-    end
-
-    it 'should return the same string' do
-      res = klass.str2hash("z o n e1")
-      expect(res).to eq("z o n e1")
-    end
-
-    it 'should return a hash' do
-      res = klass.str2hash("a=b")
-      expect(res).to eq({"a"=>"b"})
-    end
-
-    it 'should return a hash with containing spaces' do
-      res = klass.str2hash("a b = c d")
-      expect(res).to eq({"a b "=>" c d"})
-    end
-  end
 end
