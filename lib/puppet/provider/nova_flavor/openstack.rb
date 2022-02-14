@@ -27,12 +27,12 @@ Puppet::Type.type(:nova_flavor).provide(
     (opts << '--swap' << @resource[:swap]) if @resource[:swap]
     (opts << '--rxtx-factor' << @resource[:rxtx_factor]) if @resource[:rxtx_factor]
     @property_hash = self.class.request('flavor', 'create', opts)
-    if @resource[:properties]
+    if @resource[:properties] and !(@resources[:properties].empty?)
       prop_opts = [@resource[:name]]
       prop_opts << props_to_s(@resource[:properties])
       self.class.request('flavor', 'set', prop_opts)
     end
-    if @resource[:project]
+    if @resource[:project] and @resource[:project] != ''
       proj_opts = [@resource[:name]]
       proj_opts << '--project' << @resource[:project]
       self.class.request('flavor', 'set', proj_opts)
@@ -46,6 +46,7 @@ Puppet::Type.type(:nova_flavor).provide(
 
   def destroy
     self.class.request('flavor', 'delete', @property_hash[:id])
+    @property_hash.clear
   end
 
   mk_resource_methods
@@ -138,7 +139,7 @@ Puppet::Type.type(:nova_flavor).provide(
     end
     unless @project_flush.empty?
       opts = [@resource[:name]]
-      unless @project_flush[:project]
+      unless @project_flush[:project] == ''
         opts << '--project' << @project_flush[:project]
         self.class.request('flavor', 'set', opts)
       else

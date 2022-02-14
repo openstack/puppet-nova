@@ -30,11 +30,11 @@ Puppet::Type.type(:nova_cell_v2).provide(
         $database_connection = 'default'
       end
       new(
-        :name => $name,
-        :uuid => $uuid,
-        :transport_url => $transport_url,
+        :name                => $name,
+        :uuid                => $uuid,
+        :transport_url       => $transport_url,
         :database_connection => $database_connection,
-        :ensure => :present
+        :ensure              => :present
       )
     end
   end
@@ -59,12 +59,12 @@ Puppet::Type.type(:nova_cell_v2).provide(
       database_uri = URI.parse(conf['database']['connection'].strip)
       database_uri.path += '_cell0'
       {
-        :transport_url => 'none:///',
+        :transport_url       => 'none:///',
         :database_connection => database_uri.to_s
       }
     else
       {
-        :transport_url => conf['DEFAULT']['transport_url'].strip,
+        :transport_url       => conf['DEFAULT']['transport_url'].strip,
         :database_connection => conf['database']['connection'].strip,
       }
     end
@@ -95,9 +95,9 @@ Puppet::Type.type(:nova_cell_v2).provide(
       optional_opts, "--verbose"
     )
     @property_hash = {
-      :uuid => cell_uuid.strip(),
-      :ensure => :present,
-      :transport_url => resource[:transport_url],
+      :uuid                => cell_uuid.strip(),
+      :ensure              => :present,
+      :transport_url       => resource[:transport_url],
       :database_connection => resource[:database_connection]
     }
   end
@@ -111,7 +111,7 @@ Puppet::Type.type(:nova_cell_v2).provide(
   end
 
   def destroy
-    @property_flush[:ensure] = :absent
+    @property_hash.clear
   end
 
   def flush
