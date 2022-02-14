@@ -120,6 +120,7 @@ class Puppet::Provider::Nova < Puppet::Provider::Openstack
   end
 
   def self.reset
+    @auth_endpoint = nil
     @nova_conf = nil
     @nova_credentials = nil
   end
