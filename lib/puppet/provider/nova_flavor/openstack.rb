@@ -51,32 +51,18 @@ Puppet::Type.type(:nova_flavor).provide(
 
   mk_resource_methods
 
-  def is_public=(value)
-    fail('is_public is read only')
-  end
-
-  def id=(value)
-    fail('id is read only')
-  end
-
-  def ram=(value)
-    fail('ram is read only')
-  end
-
-  def disk=(value)
-    fail('disk is read only')
-  end
-
-  def vcpus=(value)
-    fail('vcpus is read only')
-  end
-
-  def swap=(value)
-    fail('swap is read only')
-  end
-
-  def rxtx_factor=(value)
-    fail('rxtx_factor is read only')
+  [
+    :is_public,
+    :id,
+    :ram,
+    :disk,
+    :vcpus,
+    :swap,
+    :rtxt_factor,
+  ].each do |attr|
+    define_method(attr.to_s + "=") do |value|
+      fail("{#attr.to_s} is read only")
+    end
   end
 
   def properties=(value)
