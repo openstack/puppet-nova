@@ -88,6 +88,7 @@ Puppet::Type.type(:nova_flavor).provide(
       else
         project_value = access_project_ids
       end
+      project_value = project_value.gsub('\'', '')
       properties = Hash[attrs[:properties].scan(/(\S+)='([^']*)'/)] rescue nil
       new(
           :ensure      => :present,
