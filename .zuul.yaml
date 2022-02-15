@@ -14,7 +14,7 @@
 
 - job:
     name: puppet-nova-tripleo-standalone
-    parent: tripleo-puppet-ci-centos-8-standalone
+    parent: tripleo-puppet-ci-centos-9-standalone
     description: |
       TripleO standalone Job running Nova specific Tempest tests.
     vars:
