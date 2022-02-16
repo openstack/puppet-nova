@@ -32,11 +32,26 @@ Puppet::Type.type(:nova_flavor).provide(
       prop_opts << props_to_s(@resource[:properties])
       self.class.request('flavor', 'set', prop_opts)
     end
+
     if @resource[:project] and @resource[:project] != ''
       proj_opts = [@resource[:name]]
       proj_opts << '--project' << @resource[:project]
       self.class.request('flavor', 'set', proj_opts)
+
+      project = self.class.request('project', 'show', @resource[:project])
+      @property_hash[:project_name] = project[:name]
+      @property_hash[:project] = project[:id]
+
+    elsif @resource[:project_name] and @resource[:project_name] != ''
+      proj_opts = [@resource[:name]]
+      proj_opts << '--project' << @resource[:project_name]
+      self.class.request('flavor', 'set', proj_opts)
+
+      project = self.class.request('project', 'show', @resource[:project_name])
+      @property_hash[:project_name] = project[:name]
+      @property_hash[:project] = project[:id]
     end
+
     @property_hash[:ensure] = :present
   end
 
@@ -87,6 +102,10 @@ Puppet::Type.type(:nova_flavor).provide(
     @project_flush[:project] = value
   end
 
+  def project_name=(value)
+    @project_flush[:project_name] = value
+  end
+
   def self.instances
     request('flavor', 'list', ['--long', '--all']).collect do |attrs|
       project = request('flavor', 'show', [attrs[:id], '-c', 'access_project_ids'])
@@ -103,20 +122,31 @@ Puppet::Type.type(:nova_flavor).provide(
         project_value = access_project_ids
       end
       project_value = project_value.gsub('\'', '')
+
+      if project_value != ''
+        project = request('project', 'show', project_value)
+        project_id = project[:id]
+        project_name = project[:name]
+      else
+        project_id = ''
+        project_name = ''
+      end
+
       properties = Hash[attrs[:properties].scan(/(\S+)='([^']*)'/)] rescue nil
       new(
-          :ensure      => :present,
-          :name        => attrs[:name],
-          :id          => attrs[:id],
-          :ram         => attrs[:ram],
-          :disk        => attrs[:disk],
-          :ephemeral   => attrs[:ephemeral],
-          :vcpus       => attrs[:vcpus],
-          :is_public   => attrs[:is_public].downcase.chomp == 'true'? true : false,
-          :swap        => attrs[:swap],
-          :rxtx_factor => attrs[:rxtx_factor],
-          :properties  => properties,
-          :project     => project_value
+        :ensure       => :present,
+        :name         => attrs[:name],
+        :id           => attrs[:id],
+        :ram          => attrs[:ram],
+        :disk         => attrs[:disk],
+        :ephemeral    => attrs[:ephemeral],
+        :vcpus        => attrs[:vcpus],
+        :is_public    => attrs[:is_public].downcase.chomp == 'true'? true : false,
+        :swap         => attrs[:swap],
+        :rxtx_factor  => attrs[:rxtx_factor],
+        :properties   => properties,
+        :project      => project_id,
+        :project_name => project_name,
       )
     end
   end
@@ -138,14 +168,26 @@ Puppet::Type.type(:nova_flavor).provide(
       self.class.request('flavor', 'set', opts)
       @property_flush.clear
     end
+
     unless @project_flush.empty?
-      opts = [@resource[:name]]
-      unless @project_flush[:project] == ''
-        opts << '--project' << @project_flush[:project]
-        self.class.request('flavor', 'set', opts)
-      else
-        opts << '--project' << @property_hash[:project]
-        self.class.request('flavor', 'unset', opts)
+      if @project_flush[:project]
+        if @property_hash[:project] and @property_hash[:project] != ''
+          opts = [@resource[:name], '--project', @property_hash[:project]]
+          self.class.request('flavor', 'unset', opts)
+        end
+        if @project_flush[:project] != ''
+          opts = [@resource[:name], '--project', @project_flush[:project]]
+          self.class.request('flavor', 'set', opts)
+        end
+      elsif @project_flush[:project_name]
+        if @property_hash[:project_name] and @property_hash[:project_name] != ''
+          opts = [@resource[:name], '--project', @property_hash[:project_name]]
+          self.class.request('flavor', 'unset', opts)
+        end
+        if @project_flush[:project_name] != ''
+          opts = [@resource[:name], '--project', @project_flush[:project_name]]
+          self.class.request('flavor', 'set', opts)
+        end
       end
       @project_flush.clear
     end
