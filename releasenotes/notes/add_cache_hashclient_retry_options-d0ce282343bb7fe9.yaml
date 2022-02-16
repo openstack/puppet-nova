@@ -1,0 +1,5 @@
+---
+features:
+  - |
+    Add options to configure pymemcache's HashClient retrying mechanisms
+    (dogpile.cache) backend.
