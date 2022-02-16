@@ -149,12 +149,11 @@ describe 'nova::api' do
     context 'while not managing service state' do
       before do
         params.merge!({
-          :enabled        => false,
           :manage_service => false,
         })
       end
 
-      it { is_expected.to contain_service('nova-api').without_ensure }
+      it { is_expected.to_not contain_service('nova-api') }
     end
 
     context 'with custom instance_name_template' do

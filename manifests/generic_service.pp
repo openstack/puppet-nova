@@ -62,14 +62,14 @@ define nova::generic_service(
       } else {
         $service_ensure = 'stopped'
       }
-    }
 
-    service { $nova_title:
-      ensure    => $service_ensure,
-      name      => $service_name,
-      enable    => $enabled,
-      hasstatus => true,
-      tag       => 'nova-service',
+      service { $nova_title:
+        ensure    => $service_ensure,
+        name      => $service_name,
+        enable    => $enabled,
+        hasstatus => true,
+        tag       => 'nova-service',
+      }
     }
   }
 }
