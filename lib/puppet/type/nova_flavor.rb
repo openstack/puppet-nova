@@ -44,9 +44,15 @@
 #    Optional
 #
 #  [*project*]
-#    Set flavor access to project (name or ID).
+#    Set flavor access to project (ID).
 #    If you set this option, take care to set is_public to false.
 #    Optional
+#
+#  [*project_name*]
+#    Set flavor access to project (name).
+#    If you set this option, take care to set is_public to false.
+#    Optional
+#
 require 'puppet'
 
 Puppet::Type.newtype(:nova_flavor) do
@@ -58,6 +64,10 @@ Puppet::Type.newtype(:nova_flavor) do
   # Require the nova-api service to be running
   autorequire(:anchor) do
     ['nova::service::end']
+  end
+
+  autorequire(:keystone_tenant) do
+    [self[:project_name]] if (self[:project_name] and self[:project_name] != '')
   end
 
   newparam(:name, :namevar => true) do
@@ -116,8 +126,11 @@ Puppet::Type.newtype(:nova_flavor) do
   end
 
   newproperty(:project) do
-    desc 'Set flavor access to project (name or ID).'
-    defaultto('')
+    desc 'Set flavor access to project (ID).'
+  end
+
+  newproperty(:project_name) do
+    desc 'Set flavor access to project (Name).'
   end
 
   newproperty(:properties) do
@@ -143,6 +156,13 @@ Puppet::Type.newtype(:nova_flavor) do
   validate do
     unless self[:name]
       raise(ArgumentError, 'Name must be set')
+    end
+
+    if self[:project] && self[:project_name]
+      raise(Puppet::Error, <<-EOT
+Please provide a value for only one of project_name and project.
+EOT
+      )
     end
   end
 
