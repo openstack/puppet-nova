@@ -1,0 +1,4 @@
+---
+upgrade:
+  - |
+    The ``nova::compute::pci_passthrough`` parameter has been removed.
