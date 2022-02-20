@@ -36,8 +36,7 @@
 #
 #  [*user*]
 #    (optional) User with access to nova files.
-#    nova::params::nova_user will be used if this is undef.
-#    Defaults to undef.
+#    Defaults to $::nova::params::user.
 #
 #  [*destination*]
 #    (optional) Path to file to which rows should be archived
@@ -68,13 +67,13 @@ class nova::cron::purge_shadow_tables (
   $monthday     = '*',
   $month        = '*',
   $weekday      = '*',
-  $user         = undef,
+  $user         = $::nova::params::user,
   $destination  = '/var/log/nova/nova-rowspurge.log',
   $age          = 14,
   $all_cells    = false,
   $verbose      = false,
   $maxdelay     = 0,
-) {
+) inherits nova::params {
 
   include nova::deps
   include nova::params
@@ -106,7 +105,7 @@ class nova::cron::purge_shadow_tables (
     command     => "${delay_cmd}${cron_cmd} --before `date --date='today - ${age} days' +\\%D`${verbose_real}${all_cells_real} >>${destination} 2>&1",
     # lint:endignore
     environment => 'PATH=/bin:/usr/bin:/usr/sbin SHELL=/bin/sh',
-    user        => pick($user, $::nova::params::nova_user),
+    user        => $user,
     minute      => $minute,
     hour        => $hour,
     monthday    => $monthday,
