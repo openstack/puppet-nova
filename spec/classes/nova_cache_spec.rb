@@ -36,6 +36,9 @@ describe 'nova::cache' do
           :enable_retry_client                  => '<SERVICE DEFAULT>',
           :retry_attempts                       => '<SERVICE DEFAULT>',
           :retry_delay                          => '<SERVICE DEFAULT>',
+          :hashclient_retry_delay               => '<SERVICE DEFAULT>',
+          :dead_timeout                         => '<SERVICE DEFAULT>',
+          :manage_backend_package               => true,
           :manage_backend_package               => true,
         )
       end
@@ -64,6 +67,9 @@ describe 'nova::cache' do
           :enable_retry_client                  => false,
           :retry_attempts                       => 2,
           :retry_delay                          => 0,
+          :hashclient_retry_attempts            => 2,
+          :hashclient_retry_delay               => 1,
+          :dead_timeout                         => 60,
           :manage_backend_package               => false,
         }
       end
@@ -95,6 +101,9 @@ describe 'nova::cache' do
           :enable_retry_client                  => false,
           :retry_attempts                       => 2,
           :retry_delay                          => 0,
+          :hashclient_retry_attempts            => 2,
+          :hashclient_retry_delay               => 1,
+          :dead_timeout                         => 60,
           :manage_backend_package               => false,
         )
       end
