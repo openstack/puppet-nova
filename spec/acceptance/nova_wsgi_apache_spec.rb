@@ -23,14 +23,23 @@ describe 'basic nova' do
         require           => Class['nova::api'],
       }
 
-      nova_flavor { 'test_flavor':
-        ensure  => present,
-        name    => 'test_flavor',
-        id      => '9999',
-        ram     => '512',
-        disk    => '1',
-        vcpus   => '1',
-        require => [ Class['nova::api'], Class['nova::keystone::auth'] ],
+      nova_flavor { 'public_flavor':
+        ensure => present,
+        name   => 'public_flavor',
+        id     => '42',
+        ram    => '512',
+        disk   => '1',
+        vcpus  => '1',
+      }
+      nova_flavor { 'private_flavor':
+        ensure       => present,
+        name         => 'private_flavor',
+        id           => '43',
+        ram          => '512',
+        disk         => '1',
+        vcpus        => '1',
+        is_public    => 'False',
+        project_name => 'services'
       }
       EOS
 
@@ -66,7 +75,8 @@ describe 'basic nova' do
     describe 'nova flavor' do
       it 'should create new flavor' do
         command('openstack --os-identity-api-version 3 --os-username nova --os-password a_big_secret --os-tenant-name services --os-user-domain-name Default --os-project-domain-name Default --os-auth-url http://127.0.0.1:5000/v3 flavor list') do |r|
-          expect(r.stdout).to match(/test_flavor/)
+          expect(r.stdout).to match(/public_flavor/)
+          expect(r.stdout).to match(/private_flavor/)
         end
       end
     end

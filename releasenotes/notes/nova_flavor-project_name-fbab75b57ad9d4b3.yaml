@@ -1,0 +1,6 @@
+---
+features:
+  - |
+    The ``nova_flavor`` resource now supports the ``project_name`` property.
+    This property should be used instead of the ``project`` property when
+    project name is used instead of project id.
