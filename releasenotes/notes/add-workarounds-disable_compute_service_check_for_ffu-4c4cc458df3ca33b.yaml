@@ -1,0 +1,6 @@
+---
+features:
+  - |
+    Added ``disable_compute_service_check_for_ffu`` paramter to
+    ``nova::workarounds`` to configure the configuration option with the same
+    name.
