@@ -1,0 +1,8 @@
+---
+features:
+  - |
+    The new ``nova::limit`` class has been added. This class manages parameters
+    of the ``oslo.limit`` library.
+
+  - |
+    The new ``nova::quota::driver`` parameter has been added.

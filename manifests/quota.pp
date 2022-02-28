@@ -4,6 +4,10 @@
 #
 # === Parameters:
 #
+# [*driver*]
+#   (optional) Driver to use for quota checks.
+#   Defaults to $::os_service_default
+#
 # [*instances*]
 #   (optional) Number of instances
 #   Defaults to $::os_service_default
@@ -75,6 +79,7 @@
 #   Defaults to undef
 #
 class nova::quota(
+  $driver                            = $::os_service_default,
   $instances                         = $::os_service_default,
   $cores                             = $::os_service_default,
   $ram                               = $::os_service_default,
@@ -112,6 +117,7 @@ class nova::quota(
   }
 
   nova_config {
+    'quota/driver':                      value => $driver;
     'quota/instances':                   value => $instances;
     'quota/cores':                       value => $cores;
     'quota/ram':                         value => $ram;
