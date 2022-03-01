@@ -79,7 +79,7 @@ class nova::compute::vmware(
     'DEFAULT/compute_driver':    value => $compute_driver;
     'vmware/host_ip':            value => $host_ip;
     'vmware/host_username':      value => $host_username;
-    'vmware/host_password':      value => $host_password;
+    'vmware/host_password':      value => $host_password, secret => true;
     'vmware/cluster_name':       value => $cluster_name;
     'vmware/api_retry_count':    value => $api_retry_count;
     'vmware/maximum_objects':    value => $maximum_objects;
