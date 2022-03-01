@@ -1,0 +1,12 @@
+---
+upgrade:
+  - |
+    Default values of the ``nova::compute::vmware`` class parameters have been
+    updated to use service defaults more globally. Because of this change,
+    the following parameters use effectively different default values.
+
+    - ``api_retry_count`` is changed from ``5`` to the service
+      default value (``10``)
+
+    - ``task_poll_interval`` is changed from ``5.0`` to the service default
+      value (``0.5``)

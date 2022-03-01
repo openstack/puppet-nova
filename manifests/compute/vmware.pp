@@ -19,7 +19,7 @@
 # [*api_retry_count*]
 #   (optional) The number of times we retry on failures,
 #   e.g., socket error, etc.
-#   Defaults to 5.
+#   Defaults to $::os_service_default.
 #
 # [*maximum_objects*]
 #   (optional) The maximum number of ObjectContent data objects that should
@@ -28,15 +28,15 @@
 #   objects reaches the specified maximum. The server may still
 #   limit the count to something less than the configured value.
 #   Any remaining objects may be retrieved with additional requests.
-#   Defaults to 100.
+#   Defaults to $::os_service_default.
 #
 # [*task_poll_interval*]
 #   (optional) The interval in seconds used for polling of remote tasks.
-#   Defaults to 5.0
+#   Defaults to $::os_service_default.
 #
 # [*use_linked_clone*]
 #   (optional) Whether to use linked clone strategy while creating VM's.
-#   Defaults to true.
+#   Defaults to $::os_service_default.
 #
 # [*compute_driver*]
 #   (optional) Compute driver.
@@ -63,10 +63,10 @@ class nova::compute::vmware(
   $host_username,
   $host_password,
   $cluster_name,
-  $api_retry_count    = 5,
-  $maximum_objects    = 100,
-  $task_poll_interval = 5.0,
-  $use_linked_clone   = true,
+  $api_retry_count    = $::os_service_default,
+  $maximum_objects    = $::os_service_default,
+  $task_poll_interval = $::os_service_default,
+  $use_linked_clone   = $::os_service_default,
   $compute_driver     = 'vmwareapi.VMwareVCDriver',
   $insecure           = $::os_service_default,
   $ca_file            = $::os_service_default,
