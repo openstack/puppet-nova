@@ -26,6 +26,13 @@
 #   plugged events when performing hard reboot.
 #   Defaults to $::os_service_default
 #
+# [*disable_compute_service_check_for_ffu*]
+#   (Optional) If this is set, the normal safety check for old compute services will
+#   be treated as a warning instead of an error. This is only to be enabled to
+#   facilitate a Fast-Forward upgrade where new control services are being started
+#   before compute nodes have been able to update their service record.
+#   Defaults to $::os_service_default
+#
 # DEPRECATED
 #
 #  [*enable_numa_live_migration*]
@@ -37,6 +44,7 @@ class nova::workarounds (
   $ensure_libvirt_rbd_instance_dir_cleanup       = $::os_service_default,
   $enable_qemu_monitor_announce_self             = $::os_service_default,
   $wait_for_vif_plugged_event_during_hard_reboot = $::os_service_default,
+  $disable_compute_service_check_for_ffu         = $::os_service_default,
   # DEPRECATED PARAMETER
   $enable_numa_live_migration              = undef,
 ) {
@@ -57,6 +65,8 @@ class nova::workarounds (
       value => $enable_qemu_monitor_announce_self;
     'workarounds/wait_for_vif_plugged_event_during_hard_reboot':
       value => join(any2array($wait_for_vif_plugged_event_during_hard_reboot), ',');
+    'workarounds/disable_compute_service_check_for_ffu':
+      value => $disable_compute_service_check_for_ffu;
   }
 
 }
