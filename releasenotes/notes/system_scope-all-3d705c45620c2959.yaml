@@ -1,0 +1,12 @@
+---
+features:
+  - |
+    The new ``system_scope`` parameter has been added to the following classes.
+
+    - ``nova::cinder``
+    - ``nova::ironic::common``
+    - ``nova::metadata::novajoin::api``
+
+  - |
+    The new ``nova::vendordata::vendordata_dynamic_auth_system_scope``
+    parameter has been added.

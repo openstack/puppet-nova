@@ -11,10 +11,11 @@ describe 'nova::ironic::common' do
         is_expected.to contain_nova_config('ironic/password').with_value('ironic').with_secret(true)
         is_expected.to contain_nova_config('ironic/auth_url').with_value('http://127.0.0.1:5000/')
         is_expected.to contain_nova_config('ironic/project_name').with_value('services')
+        is_expected.to contain_nova_config('ironic/system_scope').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('ironic/endpoint_override').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('ironic/region_name').with_value('<SERVICE DEFAULT>')
-        is_expected.to contain_nova_config('ironic/api_max_retries').with('value' => '<SERVICE DEFAULT>')
-        is_expected.to contain_nova_config('ironic/api_retry_interval').with('value' => '<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('ironic/api_max_retries').with_value('<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('ironic/api_retry_interval').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('ironic/user_domain_name').with_value('Default')
         is_expected.to contain_nova_config('ironic/project_domain_name').with_value('Default')
         is_expected.to contain_nova_config('ironic/service_type').with_value('<SERVICE DEFAULT>')
@@ -48,15 +49,29 @@ describe 'nova::ironic::common' do
         is_expected.to contain_nova_config('ironic/password').with_value('s3cr3t').with_secret(true)
         is_expected.to contain_nova_config('ironic/auth_url').with_value('http://10.0.0.10:5000/')
         is_expected.to contain_nova_config('ironic/project_name').with_value('services2')
+        is_expected.to contain_nova_config('ironic/system_scope').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('ironic/endpoint_override').with_value('http://10.0.0.10:6385/v1')
         is_expected.to contain_nova_config('ironic/region_name').with_value('regionTwo')
-        is_expected.to contain_nova_config('ironic/api_max_retries').with('value' => '60')
-        is_expected.to contain_nova_config('ironic/api_retry_interval').with('value' => '2')
-        is_expected.to contain_nova_config('ironic/user_domain_name').with('value' => 'custom_domain')
-        is_expected.to contain_nova_config('ironic/project_domain_name').with('value' => 'custom_domain')
+        is_expected.to contain_nova_config('ironic/api_max_retries').with_value('60')
+        is_expected.to contain_nova_config('ironic/api_retry_interval').with_value('2')
+        is_expected.to contain_nova_config('ironic/user_domain_name').with_value('custom_domain')
+        is_expected.to contain_nova_config('ironic/project_domain_name').with_value('custom_domain')
         is_expected.to contain_nova_config('ironic/service_type').with_value('baremetal')
         is_expected.to contain_nova_config('ironic/timeout').with_value(30)
         is_expected.to contain_nova_config('ironic/valid_interfaces').with_value('internal')
+      end
+    end
+
+    context 'when system_scope is set' do
+      let :params do
+        {
+          :system_scope => 'all'
+        }
+      end
+      it 'configures system-scoped credential' do
+        is_expected.to contain_nova_config('ironic/project_domain_name').with_value('<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('ironic/project_name').with_value('<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('ironic/system_scope').with_value('all')
       end
     end
   end

@@ -92,6 +92,10 @@
 #   (optional) Project name (for novajoin auth).
 #   Defaults to 'services'
 #
+# [*system_scope*]
+#   (optional) Scope for system operations.
+#   Defaults to $::os_service_default
+#
 # [*configure_kerberos*]
 #   (optional) Whether or not to create a kerberos configuration file.
 #   Defaults to false
@@ -124,6 +128,7 @@ class nova::metadata::novajoin::api (
   $username                  = 'novajoin',
   $project_domain_name       = 'Default',
   $project_name              = 'services',
+  $system_scope              = $::os_service_default,
   $configure_kerberos        = false,
   $ipa_realm                 = undef,
 ) {
@@ -137,6 +142,14 @@ class nova::metadata::novajoin::api (
 
   if ! $password {
     fail('password is missing')
+  }
+
+  if is_service_default($system_scope) {
+    $project_name_real = $project_name
+    $project_domain_name_real = $project_domain_name
+  } else {
+    $project_name_real = $::os_service_default
+    $project_domain_name_real = $::os_service_default
   }
 
   if $nova::params::novajoin_package_name == undef {
@@ -206,8 +219,9 @@ class nova::metadata::novajoin::api (
     'service_credentials/password':            value => $password;
     'service_credentials/username':            value => $username;
     'service_credentials/user_domain_name':    value => $user_domain_name;
-    'service_credentials/project_name':        value => $project_name;
-    'service_credentials/project_domain_name': value => $project_domain_name;
+    'service_credentials/project_name':        value => $project_name_real;
+    'service_credentials/project_domain_name': value => $project_domain_name_real;
+    'service_credentials/system_scope':        value => $system_scope;
   }
 
   if $manage_service {

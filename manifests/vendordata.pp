@@ -62,6 +62,10 @@
 #   (optional) Project name for the vendordata dynamic plugin credentials.
 #   Defaults to $::os_service_default
 #
+# [*vendordata_dynamic_auth_system_scope*]
+#   (optional) Scope for system operations.
+#   Defaults to $::os_service_default
+#
 #  [*vendordata_dynamic_auth_user_domain_name*]
 #   (optional) User domain name for the vendordata dynamic plugin credentials.
 #   Defaults to 'Default'
@@ -83,6 +87,7 @@ class nova::vendordata(
   $vendordata_dynamic_auth_password            = $::os_service_default,
   $vendordata_dynamic_auth_project_domain_name = 'Default',
   $vendordata_dynamic_auth_project_name        = $::os_service_default,
+  $vendordata_dynamic_auth_system_scope        = $::os_service_default,
   $vendordata_dynamic_auth_user_domain_name    = 'Default',
   $vendordata_dynamic_auth_username            = $::os_service_default,
 ) inherits nova::params {
@@ -102,6 +107,14 @@ class nova::vendordata(
     $vendordata_dynamic_targets_real = $::os_service_default
   }
 
+  if is_service_default($vendordata_dynamic_auth_system_scope) {
+    $vendordata_dynamic_auth_project_name_real = $vendordata_dynamic_auth_project_name
+    $vendordata_dynamic_auth_project_domain_name_real = $vendordata_dynamic_auth_project_domain_name
+  } else {
+    $vendordata_dynamic_auth_project_name_real = $::os_service_default
+    $vendordata_dynamic_auth_project_domain_name_real = $::os_service_default
+  }
+
   nova_config {
     'api/vendordata_jsonfile_path':                value => $vendordata_jsonfile_path;
     'api/vendordata_providers':                    value => $vendordata_providers_real;
@@ -113,8 +126,9 @@ class nova::vendordata(
     'vendordata_dynamic_auth/auth_url':            value => $vendordata_dynamic_auth_auth_url;
     'vendordata_dynamic_auth/os_region_name':      value => $vendordata_dynamic_auth_os_region_name;
     'vendordata_dynamic_auth/password':            value => $vendordata_dynamic_auth_password, secret => true;
-    'vendordata_dynamic_auth/project_domain_name': value => $vendordata_dynamic_auth_project_domain_name;
-    'vendordata_dynamic_auth/project_name':        value => $vendordata_dynamic_auth_project_name;
+    'vendordata_dynamic_auth/project_domain_name': value => $vendordata_dynamic_auth_project_domain_name_real;
+    'vendordata_dynamic_auth/project_name':        value => $vendordata_dynamic_auth_project_name_real;
+    'vendordata_dynamic_auth/system_scope':        value => $vendordata_dynamic_auth_system_scope;
     'vendordata_dynamic_auth/user_domain_name':    value => $vendordata_dynamic_auth_user_domain_name;
     'vendordata_dynamic_auth/username':            value => $vendordata_dynamic_auth_username;
   }

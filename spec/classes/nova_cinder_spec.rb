@@ -11,6 +11,7 @@ describe 'nova::cinder' do
         should contain_nova_config('cinder/timeout').with_value('<SERVICE DEFAULT>')
         should contain_nova_config('cinder/project_name').with_value('<SERVICE DEFAULT>')
         should contain_nova_config('cinder/project_domain_name').with_value('<SERVICE DEFAULT>')
+        should contain_nova_config('cinder/system_scope').with_value('<SERVICE DEFAULT>')
         should contain_nova_config('cinder/username').with_value('<SERVICE DEFAULT>')
         should contain_nova_config('cinder/user_domain_name').with_value('<SERVICE DEFAULT>')
         should contain_nova_config('cinder/os_region_name').with_value('<SERVICE DEFAULT>')
@@ -35,6 +36,7 @@ describe 'nova::cinder' do
         should contain_nova_config('cinder/timeout').with_value('<SERVICE DEFAULT>')
         should contain_nova_config('cinder/project_name').with_value('services')
         should contain_nova_config('cinder/project_domain_name').with_value('Default')
+        should contain_nova_config('cinder/system_scope').with_value('<SERVICE DEFAULT>')
         should contain_nova_config('cinder/username').with_value('cinder')
         should contain_nova_config('cinder/user_domain_name').with_value('Default')
         should contain_nova_config('cinder/os_region_name').with_value('<SERVICE DEFAULT>')
@@ -45,6 +47,7 @@ describe 'nova::cinder' do
       end
 
     end
+
     context 'when specified parameters' do
       let :params do
         {
@@ -67,6 +70,7 @@ describe 'nova::cinder' do
         should contain_nova_config('cinder/timeout').with_value('60')
         should contain_nova_config('cinder/project_name').with_value('services')
         should contain_nova_config('cinder/project_domain_name').with_value('Default')
+        should contain_nova_config('cinder/system_scope').with_value('<SERVICE DEFAULT>')
         should contain_nova_config('cinder/username').with_value('cinder')
         should contain_nova_config('cinder/user_domain_name').with_value('Default')
         should contain_nova_config('cinder/os_region_name').with_value('RegionOne')
@@ -75,7 +79,20 @@ describe 'nova::cinder' do
         should contain_nova_config('cinder/cross_az_attach').with_value(true)
         should contain_nova_config('cinder/debug').with_value(true)
       end
+    end
 
+    context 'when system_scope is set' do
+      let :params do
+        {
+          :password     => 's3cr3t',
+          :system_scope => 'all'
+        }
+      end
+      it 'configures system-scoped credential' do
+        is_expected.to contain_nova_config('cinder/project_domain_name').with_value('<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('cinder/project_name').with_value('<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('cinder/system_scope').with_value('all')
+      end
     end
   end
 
