@@ -6,7 +6,12 @@ class nova::params {
   include openstacklib::defaults
 
   $client_package = 'python3-novaclient'
+  $user           = 'nova'
   $group          = 'nova'
+
+  # NOTE(tkajinam) These are kept for backword compatibility
+  $nova_user      = $user
+  $nova_group     = $group
 
   case $::osfamily {
     'RedHat': {
@@ -57,8 +62,6 @@ class nova::params {
       $nova_api_wsgi_script_source       = '/usr/bin/nova-api-wsgi'
       $nova_metadata_wsgi_script_source  = '/usr/bin/nova-metadata-wsgi'
       $messagebus_service_name           = 'dbus'
-      $nova_user                         = 'nova'
-      $nova_group                        = 'nova'
       if $::operatingsystemmajrelease >= '9' {
         $mkisofs_package_name            = 'xorriso'
         $mkisofs_cmd                     = 'mkisofs'
@@ -133,8 +136,6 @@ class nova::params {
         }
       }
       $libvirt_service_name            = 'libvirtd'
-      $nova_user                       = 'nova'
-      $nova_group                      = 'nova'
     }
     default: {
       fail("Unsupported osfamily: ${::osfamily} operatingsystem: ${::operatingsystem}, \

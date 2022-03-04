@@ -83,8 +83,8 @@ class nova::compute::provider (
   file { "${config_location}":
     ensure  => directory,
     mode    => '0750',
-    owner   => $::nova::params::nova_user,
-    group   => $::nova::params::nova_group,
+    owner   => $::nova::params::user,
+    group   => $::nova::params::group,
     require => Anchor['nova::config::begin'],
     before  => Anchor['nova::config::end'],
   }
@@ -93,8 +93,8 @@ class nova::compute::provider (
     file { "${config_location}/${config_file}":
       ensure  => file,
       mode    => '0640',
-      owner   => $::nova::params::nova_user,
-      group   => $::nova::params::nova_group,
+      owner   => $::nova::params::user,
+      group   => $::nova::params::group,
       content => template('nova/provider.yaml.erb'),
       require => Anchor['nova::config::begin'],
     }

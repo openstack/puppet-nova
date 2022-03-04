@@ -143,7 +143,7 @@ class nova::wsgi::apache_api (
   ::openstacklib::wsgi::apache { 'nova_api_wsgi':
     bind_host                   => $bind_host,
     bind_port                   => $api_port,
-    group                       => 'nova',
+    group                       => $::nova::params::group,
     path                        => $path,
     priority                    => $priority,
     servername                  => $servername,
@@ -156,7 +156,7 @@ class nova::wsgi::apache_api (
     ssl_crl_path                => $ssl_crl_path,
     ssl_key                     => $ssl_key,
     threads                     => $threads,
-    user                        => 'nova',
+    user                        => $::nova::params::user,
     vhost_custom_fragment       => $vhost_custom_fragment,
     workers                     => $workers,
     wsgi_daemon_process         => 'nova-api',

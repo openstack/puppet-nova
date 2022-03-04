@@ -534,8 +534,8 @@ Use nova::cinder::cross_az_attach instead.')
     file { '/var/lib/nova/.ssh':
       ensure  => directory,
       mode    => '0700',
-      owner   => $::nova::params::nova_user,
-      group   => $::nova::params::nova_group,
+      owner   => $::nova::params::user,
+      group   => $::nova::params::group,
       require => Anchor['nova::config::begin'],
       before  => Anchor['nova::config::end'],
     }
@@ -549,7 +549,7 @@ Use nova::cinder::cross_az_attach instead.')
         ensure  => present,
         key     => $nova_public_key['key'],
         type    => $nova_public_key['type'],
-        user    => 'nova',
+        user    => $::nova::params::user,
         require => File['/var/lib/nova/.ssh'],
       }
     }
@@ -574,8 +574,8 @@ but should be one of: ssh-rsa, ssh-dsa, ssh-ecdsa.")
       file { $nova_private_key_file:
         content => $nova_private_key[key],
         mode    => '0600',
-        owner   => $::nova::params::nova_user,
-        group   => $::nova::params::nova_group,
+        owner   => $::nova::params::user,
+        group   => $::nova::params::group,
         require => File['/var/lib/nova/.ssh'],
       }
     }

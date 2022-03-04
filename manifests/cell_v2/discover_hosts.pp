@@ -18,7 +18,7 @@ class nova::cell_v2::discover_hosts (
   exec { 'nova-cell_v2-discover_hosts':
     path        => ['/bin', '/usr/bin'],
     command     => "nova-manage ${extra_params} cell_v2 discover_hosts",
-    user        => $::nova::params::nova_user,
+    user        => $::nova::params::user,
     refreshonly => true,
     subscribe   => Anchor['nova::service::end']
   }
