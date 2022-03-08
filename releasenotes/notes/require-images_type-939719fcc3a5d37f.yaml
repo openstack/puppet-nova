@@ -1,0 +1,5 @@
+---
+upgrade:
+  - |
+    Now ``nova::compute::libvirt::images_type`` should be set to ``rbd`` when
+    rbd is used for ephemeral storage backend.

@@ -355,29 +355,9 @@ class nova::compute::libvirt (
     }
   }
 
-  # TODO(tkajinam): Remove this implementation in X
-  if defined('$::nova::compute::rbd::ephemeral_storage') {
-    if $::nova::compute::rbd::ephemeral_storage {
-      # When nova::compute::rbd is evaluated before nova::compute::libvirt, we
-      # need to fail setting images_type because it would have been handled in
-      # nova::compute::rbd
-      if is_service_default($images_type) {
-        warning('nova::compute::libvirt::images_type will be required if rbd ephemeral storage is used.')
-      } elsif $images_type != 'rbd' {
-        fail('nova::compute::libvirt::images_type should be rbd if rbd ephemeral storage is used.')
-      }
-    } else {
-      nova_config {
-        'libvirt/images_type': value => $images_type;
-      }
-    }
-  } else {
-    # This is when only nova::compute::libvirt is used,
-    # or when nova::compute::libvirt is evaluated before nova::compute::rbd
-    if !is_service_default($images_type) {
-      nova_config {
-        'libvirt/images_type': value => $images_type;
-      }
+  if defined('Class[nova::compute::rbd]') {
+    if $::nova::compute::rbd::ephemeral_storage and $images_type != 'rbd' {
+      fail('nova::compute::libvirt::images_type should be rbd if rbd ephemeral storage is used.')
     }
   }
 
@@ -400,6 +380,7 @@ class nova::compute::libvirt (
     'libvirt/rx_queue_size':               value => $rx_queue_size;
     'libvirt/tx_queue_size':               value => $tx_queue_size;
     'libvirt/file_backed_memory':          value => $file_backed_memory;
+    'libvirt/images_type':                 value => $images_type;
     'libvirt/volume_use_multipath':        value => $volume_use_multipath;
     'libvirt/nfs_mount_options':           value => $nfs_mount_options;
     'libvirt/num_pcie_ports':              value => $num_pcie_ports;
