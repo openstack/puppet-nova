@@ -2,19 +2,24 @@ require 'puppet'
 require 'spec_helper'
 require 'puppet/provider/nova_flavor/openstack'
 
-provider_class = Puppet::Type.type(:nova_flavor).provider(:openstack)
+describe Puppet::Type.type(:nova_flavor).provider(:openstack) do
 
-describe provider_class do
+  let(:set_env) do
+    ENV['OS_USERNAME']     = 'test'
+    ENV['OS_PASSWORD']     = 'abc123'
+    ENV['OS_SYSTEM_SCOPE'] = 'all'
+    ENV['OS_AUTH_URL']     = 'http://127.0.0.1:5000/v3'
+  end
 
   describe 'managing flavors' do
     let(:flavor_attrs) do
       {
-        :name     => 'example',
-        :id       => '1',
-        :ram      => '512',
-        :disk     => '1',
-        :vcpus    => '1',
-        :ensure   => 'present',
+        :name   => 'example',
+        :id     => '1',
+        :ram    => '512',
+        :disk   => '1',
+        :vcpus  => '1',
+        :ensure => 'present',
       }
     end
 
@@ -23,7 +28,11 @@ describe provider_class do
     end
 
     let(:provider) do
-      provider_class.new(resource)
+      described_class.new(resource)
+    end
+
+    before(:each) do
+      set_env
     end
 
     describe '#create' do
@@ -121,7 +130,7 @@ domain_id="domain_one_id"
 
     describe '#destroy' do
       it 'removes flavor' do
-        provider_class.expects(:openstack)
+        described_class.expects(:openstack)
           .with('flavor', 'delete', '1')
         provider.instance_variable_set(:@property_hash, flavor_attrs)
         provider.destroy
