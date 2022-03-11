@@ -26,7 +26,7 @@ describe 'nova::compute::vmware' do
         is_expected.to contain_nova_config('DEFAULT/compute_driver').with_value('vmwareapi.VMwareVCDriver')
         is_expected.to contain_nova_config('vmware/host_ip').with_value(params[:host_ip])
         is_expected.to contain_nova_config('vmware/host_username').with_value(params[:host_username])
-        is_expected.to contain_nova_config('vmware/host_password').with_value(params[:host_password])
+        is_expected.to contain_nova_config('vmware/host_password').with_value(params[:host_password]).with_secret(true)
         is_expected.to contain_nova_config('vmware/cluster_name').with_value(params[:cluster_name])
         is_expected.to contain_nova_config('vmware/api_retry_count').with_value(5)
         is_expected.to contain_nova_config('vmware/maximum_objects').with_value(100)
