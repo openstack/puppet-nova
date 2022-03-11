@@ -33,6 +33,10 @@
 #   admin context through the OpenStack Identity service.
 #   Defaults to 'Default' if password is set
 #
+# [*system_scope*]
+#   (optional) Scope for system operations.
+#   Defaults to $::os_service_default
+#
 # [*username*]
 #   (optional) Username for connecting to Cinder services in admin context
 #   through the OpenStack Identity service.
@@ -85,6 +89,7 @@ class nova::cinder (
   $timeout             = $::os_service_default,
   $project_name        = undef,
   $project_domain_name = undef,
+  $system_scope        = undef,
   $username            = undef,
   $user_domain_name    = undef,
   $os_region_name      = $::os_service_default,
@@ -110,18 +115,26 @@ Use the nova::cinder::os_region_name parameter')
     'cinder/region_name': ensure => absent;
   }
 
+
   if is_service_default($password) {
     $auth_type_real           = pick($auth_type, $::os_service_default)
     $auth_url_real            = pick($auth_url, $::os_service_default)
     $project_name_real        = pick($project_name, $::os_service_default)
     $project_domain_name_real = pick($project_domain_name, $::os_service_default)
+    $system_scope_real        = pick($system_scope, $::os_service_default)
     $username_real            = pick($username, $::os_service_default)
     $user_domain_name_real    = pick($user_domain_name, $::os_service_default)
   } else {
+    $system_scope_real = pick($system_scope, $::os_service_default)
+    if is_service_default($system_scope_real) {
+      $project_name_real = pick($project_name, 'services')
+      $project_domain_name_real = pick($project_domain_name, 'Default')
+    } else {
+      $project_name_real = $::os_service_default
+      $project_domain_name_real = $::os_service_default
+    }
     $auth_type_real           = pick($auth_type, 'password')
     $auth_url_real            = pick($auth_url, 'http://127.0.0.1:5000/')
-    $project_name_real        = pick($project_name, 'services')
-    $project_domain_name_real = pick($project_domain_name, 'Default')
     $username_real            = pick($username, 'cinder')
     $user_domain_name_real    = pick($user_domain_name, 'Default')
   }
@@ -133,6 +146,7 @@ Use the nova::cinder::os_region_name parameter')
     'cinder/timeout':             value => $timeout;
     'cinder/project_name':        value => $project_name_real;
     'cinder/project_domain_name': value => $project_domain_name_real;
+    'cinder/system_scope':        value => $system_scope_real;
     'cinder/username':            value => $username_real;
     'cinder/user_domain_name':    value => $user_domain_name_real;
     'cinder/os_region_name':      value => $os_region_name_real;

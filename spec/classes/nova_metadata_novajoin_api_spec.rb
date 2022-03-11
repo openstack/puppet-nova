@@ -106,7 +106,7 @@ describe 'nova::metadata::novajoin::api' do
           should contain_novajoin_config('service_credentials/auth_url').with_value(param_hash[:keystone_auth_url])
           should contain_novajoin_config('service_credentials/password').with_value(param_hash[:password])
           should contain_novajoin_config('service_credentials/project_name').with_value(param_hash[:project_name])
-          should_not contain_novajoin_config('service_credentials/user_domain_id')
+          should contain_novajoin_config('service_credentials/system_scope').with_value('<SERVICE DEFAULT>')
           should contain_novajoin_config('service_credentials/user_domain_name').with_value(param_hash[:user_domain_name])
           should contain_novajoin_config('service_credentials/project_domain_name').with_value(param_hash[:project_domain_name])
           should contain_novajoin_config('service_credentials/username').with_value(param_hash[:username])

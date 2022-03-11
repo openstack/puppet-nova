@@ -14,20 +14,21 @@ describe 'nova::vendordata' do
 
     context 'with default parameters' do
       it 'configures various stuff' do
-        is_expected.to contain_nova_config('api/vendordata_jsonfile_path').with('value' => '<SERVICE DEFAULT>')
-        is_expected.to contain_nova_config('api/vendordata_providers').with('value' => '<SERVICE DEFAULT>')
-        is_expected.to contain_nova_config('api/vendordata_dynamic_targets').with('value' => '<SERVICE DEFAULT>')
-        is_expected.to contain_nova_config('api/vendordata_dynamic_connect_timeout').with('value' => '<SERVICE DEFAULT>')
-        is_expected.to contain_nova_config('api/vendordata_dynamic_read_timeout').with('value' => '<SERVICE DEFAULT>')
-        is_expected.to contain_nova_config('api/vendordata_dynamic_failure_fatal').with('value' => '<SERVICE DEFAULT>')
-        is_expected.to contain_nova_config('vendordata_dynamic_auth/auth_type').with('value' => '<SERVICE DEFAULT>')
-        is_expected.to contain_nova_config('vendordata_dynamic_auth/auth_url').with('value' => '<SERVICE DEFAULT>')
-        is_expected.to contain_nova_config('vendordata_dynamic_auth/os_region_name').with('value' => '<SERVICE DEFAULT>')
-        is_expected.to contain_nova_config('vendordata_dynamic_auth/password').with('value' => '<SERVICE DEFAULT>')
-        is_expected.to contain_nova_config('vendordata_dynamic_auth/project_domain_name').with('value' => 'Default')
-        is_expected.to contain_nova_config('vendordata_dynamic_auth/project_name').with('value' => '<SERVICE DEFAULT>')
-        is_expected.to contain_nova_config('vendordata_dynamic_auth/user_domain_name').with('value' => 'Default')
-        is_expected.to contain_nova_config('vendordata_dynamic_auth/username').with('value' => '<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('api/vendordata_jsonfile_path').with_value('<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('api/vendordata_providers').with_value('<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('api/vendordata_dynamic_targets').with_value('<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('api/vendordata_dynamic_connect_timeout').with_value('<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('api/vendordata_dynamic_read_timeout').with_value('<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('api/vendordata_dynamic_failure_fatal').with_value('<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('vendordata_dynamic_auth/auth_type').with_value('<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('vendordata_dynamic_auth/auth_url').with_value('<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('vendordata_dynamic_auth/os_region_name').with_value('<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('vendordata_dynamic_auth/password').with_value('<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('vendordata_dynamic_auth/project_domain_name').with_value('Default')
+        is_expected.to contain_nova_config('vendordata_dynamic_auth/project_name').with_value('<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('vendordata_dynamic_auth/system_scope').with_value('<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('vendordata_dynamic_auth/user_domain_name').with_value('Default')
+        is_expected.to contain_nova_config('vendordata_dynamic_auth/username').with_value('<SERVICE DEFAULT>')
       end
     end
 
@@ -52,20 +53,35 @@ describe 'nova::vendordata' do
       end
 
       it 'configures various stuff' do
-        is_expected.to contain_nova_config('api/vendordata_jsonfile_path').with('value' => '/tmp')
-        is_expected.to contain_nova_config('api/vendordata_providers').with('value' => 'StaticJSON,DynamicJSON')
-        is_expected.to contain_nova_config('api/vendordata_dynamic_targets').with('value' => 'join@http://127.0.0.1:9999/v1/')
-        is_expected.to contain_nova_config('api/vendordata_dynamic_connect_timeout').with('value' => '30')
-        is_expected.to contain_nova_config('api/vendordata_dynamic_read_timeout').with('value' => '30')
-        is_expected.to contain_nova_config('api/vendordata_dynamic_failure_fatal').with('value' => false)
-        is_expected.to contain_nova_config('vendordata_dynamic_auth/auth_type').with('value' => 'password')
-        is_expected.to contain_nova_config('vendordata_dynamic_auth/auth_url').with('value' => 'http://127.0.0.1:5000')
-        is_expected.to contain_nova_config('vendordata_dynamic_auth/os_region_name').with('value' => 'RegionOne')
-        is_expected.to contain_nova_config('vendordata_dynamic_auth/password').with('value' => 'secrete').with_secret(true)
-        is_expected.to contain_nova_config('vendordata_dynamic_auth/project_domain_name').with('value' => 'Default')
-        is_expected.to contain_nova_config('vendordata_dynamic_auth/project_name').with('value' => 'project')
-        is_expected.to contain_nova_config('vendordata_dynamic_auth/user_domain_name').with('value' => 'Default')
-        is_expected.to contain_nova_config('vendordata_dynamic_auth/username').with('value' => 'user')
+        is_expected.to contain_nova_config('api/vendordata_jsonfile_path').with_value('/tmp')
+        is_expected.to contain_nova_config('api/vendordata_providers').with_value('StaticJSON,DynamicJSON')
+        is_expected.to contain_nova_config('api/vendordata_dynamic_targets').with_value('join@http://127.0.0.1:9999/v1/')
+        is_expected.to contain_nova_config('api/vendordata_dynamic_connect_timeout').with_value('30')
+        is_expected.to contain_nova_config('api/vendordata_dynamic_read_timeout').with_value('30')
+        is_expected.to contain_nova_config('api/vendordata_dynamic_failure_fatal').with_value(false)
+        is_expected.to contain_nova_config('vendordata_dynamic_auth/auth_type').with_value('password')
+        is_expected.to contain_nova_config('vendordata_dynamic_auth/auth_url').with_value('http://127.0.0.1:5000')
+        is_expected.to contain_nova_config('vendordata_dynamic_auth/os_region_name').with_value('RegionOne')
+        is_expected.to contain_nova_config('vendordata_dynamic_auth/password').with_value('secrete').with_secret(true)
+        is_expected.to contain_nova_config('vendordata_dynamic_auth/project_domain_name').with_value('Default')
+        is_expected.to contain_nova_config('vendordata_dynamic_auth/project_name').with_value('project')
+        is_expected.to contain_nova_config('vendordata_dynamic_auth/system_scope').with_value('<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('vendordata_dynamic_auth/user_domain_name').with_value('Default')
+        is_expected.to contain_nova_config('vendordata_dynamic_auth/username').with_value('user')
+      end
+    end
+
+    context 'when system_scope is set' do
+      before do
+        params.merge!({
+          :vendordata_dynamic_auth_project_name => 'services',
+          :vendordata_dynamic_auth_system_scope => 'all'
+        })
+      end
+      it 'configures system-scoped credential' do
+        is_expected.to contain_nova_config('vendordata_dynamic_auth/project_domain_name').with_value('<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('vendordata_dynamic_auth/project_name').with_value('<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('vendordata_dynamic_auth/system_scope').with_value('all')
       end
     end
   end

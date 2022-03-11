@@ -12,6 +12,10 @@
 #   The Ironic Keystone project name.
 #   Defaults to 'services'
 #
+# [*system_scope*]
+#   (optional) Scope for system operations.
+#   Defaults to $::os_service_default
+#
 # [*password*]
 #   The admin password for Ironic to connect to Nova.
 #   Defaults to 'ironic'
@@ -59,6 +63,7 @@ class nova::ironic::common (
   $auth_url             = 'http://127.0.0.1:5000/',
   $password             = 'ironic',
   $project_name         = 'services',
+  $system_scope         = $::os_service_default,
   $username             = 'admin',
   $endpoint_override    = $::os_service_default,
   $region_name          = $::os_service_default,
@@ -73,18 +78,27 @@ class nova::ironic::common (
 
   include nova::deps
 
+  if is_service_default($system_scope) {
+    $project_name_real = $project_name
+    $project_domain_name_real = $project_domain_name
+  } else {
+    $project_name_real = $::os_service_default
+    $project_domain_name_real = $::os_service_default
+  }
+
   nova_config {
     'ironic/auth_plugin':         value => $auth_plugin;
     'ironic/username':            value => $username;
     'ironic/password':            value => $password, secret => true;
     'ironic/auth_url':            value => $auth_url;
-    'ironic/project_name':        value => $project_name;
+    'ironic/project_name':        value => $project_name_real;
+    'ironic/system_scope':        value => $system_scope;
     'ironic/endpoint_override':   value => $endpoint_override;
     'ironic/region_name':         value => $region_name;
     'ironic/api_max_retries':     value => $api_max_retries;
     'ironic/api_retry_interval':  value => $api_retry_interval;
     'ironic/user_domain_name':    value => $user_domain_name;
-    'ironic/project_domain_name': value => $project_domain_name;
+    'ironic/project_domain_name': value => $project_domain_name_real;
     'ironic/service_type':        value => $service_type;
     'ironic/valid_interfaces':    value => join(any2array($valid_interfaces), ',');
     'ironic/timeout':             value => $timeout;
