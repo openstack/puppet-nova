@@ -305,23 +305,12 @@ class nova::compute::libvirt (
     include nova::migration::libvirt
   }
 
-  [
-    'log_outputs',
-    'log_filters',
-    'tls_priority',
-    'ovs_timeout',
-  ].each |String $libvirtd_opt| {
-    if getvar($libvirtd_opt) == undef {
-      warning("Usage of undef for ${libvirtd_opt} has been deprecated.")
-    }
-  }
-
   if !$modular_libvirt {
     libvirtd_config {
-      'log_outputs':  value => pick($log_outputs, $::os_service_default), quote => true;
-      'log_filters':  value => pick($log_filters, $::os_service_default), quote => true;
-      'tls_priority': value => pick($tls_priority, $::os_service_default), quote => true;
-      'ovs_timeout':  value => pick($ovs_timeout, $::os_service_default);
+      'log_outputs':  value => $log_outputs, quote => true;
+      'log_filters':  value => $log_filters, quote => true;
+      'tls_priority': value => $tls_priority, quote => true;
+      'ovs_timeout':  value => $ovs_timeout;
     }
   }
 
