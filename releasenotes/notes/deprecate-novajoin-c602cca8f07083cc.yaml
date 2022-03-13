@@ -1,0 +1,5 @@
+---
+deprecations:
+  - |
+    Support for novajoin service has been deprecated and will be removed in
+    a future release.

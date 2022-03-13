@@ -1,5 +1,6 @@
 # == Class: nova::metadata::novajoin::auth
 #
+# DEPRECATED !
 # Creates nova endpoints and service account in keystone
 #
 # === Parameters:
@@ -90,6 +91,7 @@ class nova::metadata::novajoin::auth(
   $configure_user          = true,
   $configure_user_role     = true,
 ) {
+  warning('Support for novajoin service is deprecated!')
 
   Keystone::Resource::Service_identity['novajoin'] -> Service <| name == 'novajoin-server' |>
 

@@ -1,5 +1,6 @@
 # == Class: nova::metadata::novajoin::policy
 #
+# DEPRECATED !
 # Configure the nova policies
 #
 # === Parameters
@@ -29,6 +30,7 @@ class nova::metadata::novajoin::policy (
   $policy_path  = '/etc/novajoin/policy.yaml',
   $purge_config = false,
 ) {
+  warning('Support for novajoin service is deprecated!')
 
   validate_legacy(Hash, 'validate_hash', $policies)
 
