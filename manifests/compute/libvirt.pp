@@ -385,7 +385,7 @@ class nova::compute::libvirt (
     'libvirt/nfs_mount_options':           value => $nfs_mount_options;
     'libvirt/num_pcie_ports':              value => $num_pcie_ports;
     'libvirt/mem_stats_period_seconds':    value => $mem_stats_period_seconds;
-    'libvirt/pmem_namespaces':             value => $pmem_namespaces;
+    'libvirt/pmem_namespaces':             value => join(any2array($pmem_namespaces), ',');
     'libvirt/swtpm_enabled':               value => $swtpm_enabled;
     'libvirt/swtpm_user'   :               value => $swtpm_user;
     'libvirt/swtpm_group':                 value => $swtpm_group;
