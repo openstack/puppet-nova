@@ -108,7 +108,7 @@ describe 'nova::compute::libvirt' do
           :nfs_mount_options                          => 'rw,intr,nolock',
           :num_pcie_ports                             => 16,
           :mem_stats_period_seconds                   => 20,
-          :pmem_namespaces                            => '128G:ns0|ns1|ns2|ns3',
+          :pmem_namespaces                            => ['128G:ns0|ns1|ns2|ns3', '262144MB:ns4|ns5', 'MEDIUM:ns6|ns7'],
           :swtpm_enabled                              => true,
           :swtpm_user                                 => 'libvirt',
           :swtpm_group                                => 'libvirt',
@@ -148,7 +148,7 @@ describe 'nova::compute::libvirt' do
       it { is_expected.to contain_nova_config('libvirt/nfs_mount_options').with_value('rw,intr,nolock')}
       it { is_expected.to contain_nova_config('libvirt/num_pcie_ports').with_value(16)}
       it { is_expected.to contain_nova_config('libvirt/mem_stats_period_seconds').with_value(20)}
-      it { is_expected.to contain_nova_config('libvirt/pmem_namespaces').with_value("128G:ns0|ns1|ns2|ns3")}
+      it { is_expected.to contain_nova_config('libvirt/pmem_namespaces').with_value('128G:ns0|ns1|ns2|ns3,262144MB:ns4|ns5,MEDIUM:ns6|ns7')}
       it { is_expected.to contain_nova_config('libvirt/swtpm_enabled').with_value(true)}
       it { is_expected.to contain_nova_config('libvirt/swtpm_user').with_value('libvirt')}
       it { is_expected.to contain_nova_config('libvirt/swtpm_group').with_value('libvirt')}
