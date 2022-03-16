@@ -50,7 +50,7 @@ describe 'nova::compute::libvirt' do
       it { is_expected.to contain_nova_config('libvirt/virt_type').with_value('kvm')}
       it { is_expected.to contain_nova_config('libvirt/cpu_mode').with_value('host-model')}
       it { is_expected.to contain_nova_config('libvirt/cpu_models').with_value('<SERVICE DEFAULT>')}
-      it { is_expected.to contain_nova_config('libvirt/cpu_model_extra_flags').with_ensure('absent')}
+      it { is_expected.to contain_nova_config('libvirt/cpu_model_extra_flags').with_value('<SERVICE DEFAULT>')}
       it { is_expected.to contain_nova_config('libvirt/snapshot_image_format').with_value('<SERVICE DEFAULT>')}
       it { is_expected.to contain_nova_config('libvirt/snapshots_directory').with_value('<SERVICE DEFAULT>')}
       it { is_expected.to contain_nova_config('libvirt/disk_cachemodes').with_ensure('absent')}

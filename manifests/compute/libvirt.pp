@@ -396,12 +396,8 @@ class nova::compute::libvirt (
   validate_legacy(Array, 'validate_array', $cpu_models)
   # cpu_model param is only valid if cpu_mode=custom
   # otherwise it should be commented out
-  if $cpu_mode_default == 'custom' {
-    if empty($cpu_models){
-      $cpu_models_real = $::os_service_default
-    } else {
-      $cpu_models_real = join($cpu_models, ',')
-    }
+  if $cpu_mode_default == 'custom' and !empty($cpu_models){
+    $cpu_models_real = join($cpu_models, ',')
   } else {
     if !empty($cpu_models) {
       warning('$cpu_models requires that $cpu_mode => "custom" and will be ignored')
@@ -409,21 +405,21 @@ class nova::compute::libvirt (
     $cpu_models_real = $::os_service_default
   }
   nova_config {
-    'libvirt/cpu_models': value  => $cpu_models_real;
+    'libvirt/cpu_models': value => $cpu_models_real;
   }
 
+  # cpu_model_extra_flags is only valid if cpu_mode!=none
+  # otherwise it should be commented out
   if $cpu_mode_default != 'none' and $cpu_model_extra_flags {
-    validate_legacy(String, 'validate_string', $cpu_model_extra_flags)
-    nova_config {
-      'libvirt/cpu_model_extra_flags': value => $cpu_model_extra_flags;
-    }
+    $cpu_model_extra_flags_real = join(any2array($cpu_model_extra_flags), ',')
   } else {
-    nova_config {
-      'libvirt/cpu_model_extra_flags': ensure => absent;
-    }
     if $cpu_model_extra_flags {
       warning('$cpu_model_extra_flags requires that $cpu_mode is not set to "none" and will be ignored')
     }
+    $cpu_model_extra_flags_real = $::os_service_default
+  }
+  nova_config {
+    'libvirt/cpu_model_extra_flags': value => $cpu_model_extra_flags_real;
   }
 
   if size($disk_cachemodes) > 0 {
