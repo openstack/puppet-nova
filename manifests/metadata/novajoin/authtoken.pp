@@ -1,5 +1,6 @@
 # class: nova::metadata::novajoin::authtoken
 #
+# DEPRECATED !
 # Configure the keystone_authtoken section in the configuration file
 #
 # === Parameters
@@ -235,6 +236,7 @@ class nova::metadata::novajoin::authtoken(
   $interface                      = $::os_service_default,
   $params                         = {},
 ) {
+  warning('Support for novajoin service is deprecated!')
 
   include nova::deps
 

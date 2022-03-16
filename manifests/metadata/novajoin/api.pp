@@ -1,5 +1,6 @@
 # == Class: nova::metadata::novajoin::api
 #
+# DEPRECATED !
 # The nova::metadata::novajoin::api class encapsulates an
 # IPA Nova Join API service.
 #
@@ -132,6 +133,8 @@ class nova::metadata::novajoin::api (
   $configure_kerberos        = false,
   $ipa_realm                 = undef,
 ) {
+  warning('Support for novajoin service is deprecated!')
+
   include nova::params
   include nova::metadata::novajoin::authtoken
   include nova::metadata::novajoin::policy
