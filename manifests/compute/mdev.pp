@@ -4,52 +4,55 @@
 #
 # === Parameters:
 #
-# [*mdev_types_device_addresses_mapping*]
-#   (optional) Map of mdev type(s) the instances can get as key and list of
-#   corresponding device addresses as value.
+# [*mdev_types*]
+#   (Optional) A hash to define the nova::compute::mdev_type resources.
 #   Defaults to {}
 #
+# [*mdev_types_device_addresses_mapping*]
+#   (Optional) Map of mdev type(s) the instances can get as key and list of
+#   corresponding device addresses as value.
+#   Defaults to undef
+#
 class nova::compute::mdev(
-  $mdev_types_device_addresses_mapping = {},
+  $mdev_types                          = {},
+  $mdev_types_device_addresses_mapping = undef,
 ) {
   include nova::deps
 
-  # TODO(tkajinam): Remove this when we remove nova::compute::vgpu
-  $mdev_types_device_addresses_mapping_real = pick(
+  validate_legacy(Hash, 'validate_hash', $mdev_types)
+  if $mdev_types_device_addresses_mapping != undef {
+    validate_legacy(Hash, 'validate_hash', $mdev_types_device_addresses_mapping)
+  }
+
+  # TODO(tkajinam): Remove vgpu parameter when we remove nova::compute::vgpu
+  $dev_addr_mapping_real = pick_default(
     $::nova::compute::vgpu::vgpu_types_device_addresses_mapping,
-    $mdev_types_device_addresses_mapping)
+    pick_default($mdev_types_device_addresses_mapping, {}))
 
-  if !empty($mdev_types_device_addresses_mapping_real) {
-    validate_legacy(Hash, 'validate_hash', $mdev_types_device_addresses_mapping_real)
-    $mdev_types_real = keys($mdev_types_device_addresses_mapping_real)
+  if !empty($dev_addr_mapping_real) {
     nova_config {
-      'devices/enabled_mdev_types': value  => join(any2array($mdev_types_real), ',');
+      'devices/enabled_mdev_types': value => join(keys($dev_addr_mapping_real), ',');
     }
 
-    # TODO(tkajinam): Remove this when we remove nova::compute::vgpu
-    nova_config {
-      'devices/enabled_vgpu_types': ensure => absent;
-    }
-
-    $mdev_types_device_addresses_mapping_real.each |$mdev_type, $device_addresses| {
-      if !empty($device_addresses) {
-        nova_config {
-          "mdev_${mdev_type}/device_addresses": value => join(any2array($device_addresses), ',');
-        }
-
-        # TODO(tkajinam): Remove this when we remove nova::compute::vgpu
-        nova_config {
-          "vgpu_${mdev_type}/device_addresses": ensure => absent;
-        }
-      } else {
-        nova_config {
-          "mdev_${mdev_type}/device_addresses": ensure => absent;
-        }
+    $dev_addr_mapping_real.each |$mdev_type, $device_addresses| {
+      nova::compute::mdev_type { $mdev_type :
+        device_addresses => $device_addresses;
       }
     }
+  } elsif !empty($mdev_types) {
+    nova_config {
+      'devices/enabled_mdev_types': value => join(keys($mdev_types), ',')
+    }
+    create_resources('nova::compute::mdev_type', $mdev_types)
   } else {
     nova_config {
       'devices/enabled_mdev_types': ensure => absent;
     }
   }
+
+  # TODO(tkajinam): Remove this when we remove nova::compute::vgpu
+  nova_config {
+    'devices/enabled_vgpu_types': ensure => absent;
+  }
+
 }

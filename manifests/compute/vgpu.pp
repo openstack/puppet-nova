@@ -15,6 +15,10 @@ class nova::compute::vgpu(
 ) {
   include nova::deps
 
+  if $vgpu_types_device_addresses_mapping != undef {
+    validate_legacy(Hash, 'validate_hash', $vgpu_types_device_addresses_mapping)
+  }
+
   if $vgpu_types_device_addresses_mapping != undef or ! defined(Class[nova::compute]) {
     # NOTE(tkajinam): If the nova::compute class is not yet included then it is
     #                 likely this class is included explicitly.

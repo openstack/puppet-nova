@@ -16,7 +16,7 @@ describe 'nova::compute::vgpu' do
         }
       end
       it { is_expected.to contain_nova_config('devices/enabled_mdev_types').with_value('nvidia-35') }
-      it { is_expected.to contain_nova_config('mdev_nvidia-35/device_addresses').with_ensure('absent') }
+      it { is_expected.to contain_nova_config('mdev_nvidia-35/device_addresses').with_value('<SERVICE DEFAULT>') }
     end
 
     context 'with multiple vgpu types and corresponding device addresses mapping' do

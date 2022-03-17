@@ -1,0 +1,7 @@
+---
+features:
+  - |
+    The new ``nova::compute::mdev_type`` resource type has been added.
+
+  - |
+    The new ``nova::compute::mdev::mdev_types`` parameter has been added.
