@@ -357,10 +357,7 @@ class nova::compute (
 
   include nova::pci
   include nova::compute::pci
-
-  # TODO(tkajinam): Replace this by nova::compute::mdev when we remove
-  #                 nova::compute::vgpu
-  include nova::compute::vgpu
+  include nova::compute::mdev
 
   if ($vnc_enabled and $spice_enabled) {
     fail('vnc_enabled and spice_enabled is mutually exclusive')

@@ -34,11 +34,6 @@ define nova::compute::mdev_type (
     }
   }
 
-  # TODO(tkajinam): Remove this when we remove nova::compute::vgpu
-  nova_config {
-    "vgpu_${mdev_type}/device_addresses": ensure => absent;
-  }
-
   nova_config {
     "mdev_${mdev_type}/mdev_class": value => $mdev_class;
   }

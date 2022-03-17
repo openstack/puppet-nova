@@ -24,10 +24,7 @@ class nova::compute::mdev(
     validate_legacy(Hash, 'validate_hash', $mdev_types_device_addresses_mapping)
   }
 
-  # TODO(tkajinam): Remove vgpu parameter when we remove nova::compute::vgpu
-  $dev_addr_mapping_real = pick_default(
-    $::nova::compute::vgpu::vgpu_types_device_addresses_mapping,
-    pick_default($mdev_types_device_addresses_mapping, {}))
+  $dev_addr_mapping_real = pick_default($mdev_types_device_addresses_mapping, {})
 
   if !empty($dev_addr_mapping_real) {
     nova_config {
@@ -49,10 +46,4 @@ class nova::compute::mdev(
       'devices/enabled_mdev_types': ensure => absent;
     }
   }
-
-  # TODO(tkajinam): Remove this when we remove nova::compute::vgpu
-  nova_config {
-    'devices/enabled_vgpu_types': ensure => absent;
-  }
-
 }

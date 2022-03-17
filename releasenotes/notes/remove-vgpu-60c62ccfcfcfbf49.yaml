@@ -1,0 +1,6 @@
+---
+upgrade:
+  - |
+    The ``nova::compute::vgpu`` resource type has been removed. Use
+    the ``nova::compute::mdev`` resource type instead.
+
