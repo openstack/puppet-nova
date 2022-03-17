@@ -1,0 +1,5 @@
+---
+deprecations:
+  - |
+    The ``nova::compute::mdev::mdev_types_device_addresses_mapping`` parameter
+    has been deprecate in favor of the new ``mdev_types`` parameter.

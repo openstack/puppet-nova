@@ -8,6 +8,8 @@
 #   (Optional) A hash to define the nova::compute::mdev_type resources.
 #   Defaults to {}
 #
+# DEPRECATED PARAMETERS
+#
 # [*mdev_types_device_addresses_mapping*]
 #   (Optional) Map of mdev type(s) the instances can get as key and list of
 #   corresponding device addresses as value.
@@ -15,12 +17,14 @@
 #
 class nova::compute::mdev(
   $mdev_types                          = {},
+  # DEPRECATED PARAMETERS
   $mdev_types_device_addresses_mapping = undef,
 ) {
   include nova::deps
 
   validate_legacy(Hash, 'validate_hash', $mdev_types)
   if $mdev_types_device_addresses_mapping != undef {
+    warning('mdev_types_device_addresses_mapping is deprecated. Use mdev_types.')
     validate_legacy(Hash, 'validate_hash', $mdev_types_device_addresses_mapping)
   }
 
