@@ -447,6 +447,9 @@ describe 'nova' do
       it { is_expected.to contain_nova_config('ssl/ca_file').with_ensure('absent') }
       it { is_expected.to contain_nova_config('ssl/cert_file').with_ensure('absent') }
       it { is_expected.to contain_nova_config('ssl/key_file').with_ensure('absent') }
+      it { is_expected.to contain_nova_config('wsgi/ssl_ca_file').with_ensure('absent') }
+      it { is_expected.to contain_nova_config('wsgi/ssl_cert_file').with_ensure('absent') }
+      it { is_expected.to contain_nova_config('wsgi/ssl_key_file').with_ensure('absent') }
     end
 
     context 'with allocation ratios set' do

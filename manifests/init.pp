@@ -665,30 +665,33 @@ but should be one of: ssh-rsa, ssh-dsa, ssh-ecdsa.")
   # SSL Options
   if $use_ssl {
     nova_config {
-      'DEFAULT/enabled_ssl_apis' : value => join($enabled_ssl_apis, ',');
-      'ssl/cert_file' :            value => $cert_file;
-      'ssl/key_file' :             value => $key_file;
-      'wsgi/ssl_cert_file' :       value => $cert_file;
-      'wsgi/ssl_key_file' :        value => $key_file;
+      'DEFAULT/enabled_ssl_apis': value => join($enabled_ssl_apis, ',');
+      'ssl/cert_file':            value => $cert_file;
+      'ssl/key_file':             value => $key_file;
+      'wsgi/ssl_cert_file':       value => $cert_file;
+      'wsgi/ssl_key_file':        value => $key_file;
     }
+
     if $ca_file {
-      nova_config { 'ssl/ca_file' :
-        value => $ca_file,
-      }
-      nova_config { 'wsgi/ssl_ca_file' :
-        value => $ca_file,
+      nova_config {
+        'ssl/ca_file':      value => $ca_file;
+        'wsgi/ssl_ca_file': value => $ca_file;
       }
     } else {
-      nova_config { 'ssl/ca_file' :
-        ensure => absent,
+      nova_config {
+        'ssl/ca_file':      ensure => absent;
+        'wsgi/ssl_ca_file': ensure => absent;
       }
     }
   } else {
     nova_config {
-      'DEFAULT/enabled_ssl_apis' : ensure => absent;
-      'ssl/cert_file' :            ensure => absent;
-      'ssl/key_file' :             ensure => absent;
-      'ssl/ca_file' :              ensure => absent;
+      'DEFAULT/enabled_ssl_apis': ensure => absent;
+      'ssl/cert_file':            ensure => absent;
+      'ssl/key_file':             ensure => absent;
+      'ssl/ca_file':              ensure => absent;
+      'wsgi/ssl_cert_file':       ensure => absent;
+      'wsgi/ssl_key_file':        ensure => absent;
+      'wsgi/ssl_ca_file':         ensure => absent;
     }
   }
 
