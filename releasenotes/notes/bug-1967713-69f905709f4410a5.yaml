@@ -1,0 +1,9 @@
+---
+fixes:
+  - |
+    The following parameters are no longer set by the ``nova`` class.
+    The existing settings are removed from ``nova.conf`` automatically.
+
+    - ``[ssl] ca_cert``
+    - ``[ssl] cert_file``
+    - ``[ssl] key_file``
