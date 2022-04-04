@@ -100,6 +100,12 @@ class nova::vncproxy(
       $auth_schemes = 'vencrypt'
     }
   } else {
+    nova_config {
+      'vnc/vencrypt_ca_certs':    ensure => absent;
+      'vnc/vencrypt_client_cert': ensure => absent;
+      'vnc/vencrypt_client_key':  ensure => absent;
+    }
+
     $auth_schemes = 'none'
   }
 

@@ -13,10 +13,12 @@ describe 'nova::vncproxy' do
     end
 
     context 'with default parameters' do
-
-      it { is_expected.to contain_nova_config('vnc/novncproxy_host').with(:value => '0.0.0.0') }
-      it { is_expected.to contain_nova_config('vnc/novncproxy_port').with(:value => '6080') }
-      it { is_expected.to contain_nova_config('vnc/auth_schemes').with(:value => 'none') }
+      it { is_expected.to contain_nova_config('vnc/novncproxy_host').with_value('0.0.0.0') }
+      it { is_expected.to contain_nova_config('vnc/novncproxy_port').with_value('6080') }
+      it { is_expected.to contain_nova_config('vnc/auth_schemes').with_value('none') }
+      it { is_expected.to contain_nova_config('vnc/vencrypt_client_key').with_ensure('absent')}
+      it { is_expected.to contain_nova_config('vnc/vencrypt_client_cert').with_ensure('absent')}
+      it { is_expected.to contain_nova_config('vnc/vencrypt_ca_certs').with_ensure('absent')}
 
       it { is_expected.to contain_package('nova-vncproxy').with(
         :name   => platform_params[:nova_vncproxy_package],
@@ -60,10 +62,10 @@ describe 'nova::vncproxy' do
           :vencrypt_ca    => '/baz.pem'
         }
       end
-      it { is_expected.to contain_nova_config('vnc/auth_schemes').with(:value => 'vencrypt,none') }
-      it { is_expected.to contain_nova_config('vnc/vencrypt_client_key').with(:value => '/foo.key')}
-      it { is_expected.to contain_nova_config('vnc/vencrypt_client_cert').with(:value => '/bar.pem')}
-      it { is_expected.to contain_nova_config('vnc/vencrypt_ca_certs').with(:value => '/baz.pem')}
+      it { is_expected.to contain_nova_config('vnc/auth_schemes').with_value('vencrypt,none') }
+      it { is_expected.to contain_nova_config('vnc/vencrypt_client_key').with_value('/foo.key')}
+      it { is_expected.to contain_nova_config('vnc/vencrypt_client_cert').with_value('/bar.pem')}
+      it { is_expected.to contain_nova_config('vnc/vencrypt_ca_certs').with_value('/baz.pem')}
     end
 
     context 'with vencrypt without noauth' do
@@ -76,10 +78,10 @@ describe 'nova::vncproxy' do
           :vencrypt_ca    => '/baz.pem'
         }
       end
-      it { is_expected.to contain_nova_config('vnc/auth_schemes').with(:value => 'vencrypt') }
-      it { is_expected.to contain_nova_config('vnc/vencrypt_client_key').with(:value => '/foo.key')}
-      it { is_expected.to contain_nova_config('vnc/vencrypt_client_cert').with(:value => '/bar.pem')}
-      it { is_expected.to contain_nova_config('vnc/vencrypt_ca_certs').with(:value => '/baz.pem')}
+      it { is_expected.to contain_nova_config('vnc/auth_schemes').with_value('vencrypt') }
+      it { is_expected.to contain_nova_config('vnc/vencrypt_client_key').with_value('/foo.key')}
+      it { is_expected.to contain_nova_config('vnc/vencrypt_client_cert').with_value('/bar.pem')}
+      it { is_expected.to contain_nova_config('vnc/vencrypt_ca_certs').with_value('/baz.pem')}
     end
 
     context 'with no auth method set' do
