@@ -17,6 +17,7 @@ describe 'nova::quota' do
       :key_pairs                   => '<SERVICE DEFAULT>',
       :server_groups               => '<SERVICE DEFAULT>',
       :server_group_members        => '<SERVICE DEFAULT>',
+      :recheck_quota               => '<SERVICE DEFAULT>',
     }
   end
 
@@ -50,6 +51,7 @@ describe 'nova::quota' do
           :key_pairs                   => 200,
           :server_groups               => 20,
           :server_group_members        => 20,
+          :recheck_quota               => true,
         })
       end
 

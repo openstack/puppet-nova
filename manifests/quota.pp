@@ -48,6 +48,11 @@
 #   (optional) Number of servers per server group
 #   Defaults to $::os_service_default
 #
+# [*recheck_quota*]
+#   (optional) Recheck quota after resource creation to prevent allowing
+#   quota to be exceeded.
+#   Defaults to $::os_service_default
+#
 # DEPRECATED PARAMETERS
 #
 # [*reservation_expire*]
@@ -90,6 +95,7 @@ class nova::quota(
   $key_pairs                         = $::os_service_default,
   $server_groups                     = $::os_service_default,
   $server_group_members              = $::os_service_default,
+  $recheck_quota                     = $::os_service_default,
   # DEPRECATED PARAMETERS
   $reservation_expire                = undef,
   $until_refresh                     = undef,
@@ -128,6 +134,7 @@ class nova::quota(
     'quota/key_pairs':                   value => $key_pairs;
     'quota/server_groups':               value => $server_groups;
     'quota/server_group_members':        value => $server_group_members;
+    'quota/recheck_quota':               value => $recheck_quota;
   }
 
   nova_config {

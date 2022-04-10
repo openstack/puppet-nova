@@ -1,0 +1,4 @@
+---
+features:
+  - |
+    The new ``nova::quota::recheck_quota`` parameter has been added.
