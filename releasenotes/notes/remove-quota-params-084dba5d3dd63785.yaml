@@ -1,0 +1,12 @@
+---
+upgrade:
+  - |
+    The following parameters of the ``nova::quota`` class have been removed.
+
+    - ``reservation_expire``
+    - ``until_refresh``
+    - ``max_age``
+    - ``floating_ips``
+    - ``fixed_ips``
+    - ``security_groups``
+    - ``security_group_rules``

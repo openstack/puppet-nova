@@ -53,36 +53,6 @@
 #   quota to be exceeded.
 #   Defaults to $::os_service_default
 #
-# DEPRECATED PARAMETERS
-#
-# [*reservation_expire*]
-#   (optional) Time until reservations expire in seconds
-#   Defaults to undef
-#
-# [*until_refresh*]
-#   (optional) Count of reservations until usage is refreshed
-#   Defaults to undef
-#
-# [*max_age*]
-#   (optional) Number of seconds between subsequent usage refreshes
-#   Defaults to undef
-#
-# [*floating_ips*]
-#   (optional) Number of floating IPs
-#   Defaults to undef
-#
-# [*fixed_ips*]
-#   (optional) Number of fixed IPs (this should be at least the number of instances allowed)
-#   Defaults to undef
-#
-# [*security_groups*]
-#   (optional) Number of security groups
-#   Defaults to undef
-#
-# [*security_group_rules*]
-#   (optional) Number of security group rules
-#   Defaults to undef
-#
 class nova::quota(
   $driver                            = $::os_service_default,
   $instances                         = $::os_service_default,
@@ -96,31 +66,9 @@ class nova::quota(
   $server_groups                     = $::os_service_default,
   $server_group_members              = $::os_service_default,
   $recheck_quota                     = $::os_service_default,
-  # DEPRECATED PARAMETERS
-  $reservation_expire                = undef,
-  $until_refresh                     = undef,
-  $max_age                           = undef,
-  $floating_ips                      = undef,
-  $fixed_ips                         = undef,
-  $security_groups                   = undef,
-  $security_group_rules              = undef,
 ) {
 
   include nova::deps
-
-  [
-    'reservation_expire',
-    'until_refresh',
-    'max_age',
-    'floating_ips',
-    'fixed_ips',
-    'security_groups',
-    'security_group_rules',
-  ].each |String $removed_opt| {
-    if getvar("${removed_opt}") != undef {
-      warning("The ${removed_opt} parameter is deprecated and has no effect")
-    }
-  }
 
   nova_config {
     'quota/driver':                      value => $driver;
@@ -135,15 +83,5 @@ class nova::quota(
     'quota/server_groups':               value => $server_groups;
     'quota/server_group_members':        value => $server_group_members;
     'quota/recheck_quota':               value => $recheck_quota;
-  }
-
-  nova_config {
-    'quota/reservation_expire':   ensure => absent;
-    'quota/until_refresh':        ensure => absent;
-    'quota/max_age':              ensure => absent;
-    'quota/floating_ips':         ensure => absent;
-    'quota/fixed_ips':            ensure => absent;
-    'quota/security_groups':      ensure => absent;
-    'quota/security_group_rules': ensure => absent;
   }
 }
