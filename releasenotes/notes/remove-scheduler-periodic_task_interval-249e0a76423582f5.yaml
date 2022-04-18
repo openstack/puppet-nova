@@ -1,0 +1,4 @@
+---
+upgrade:
+  - |
+    The ``nova::scheduler::periodic_task_interval`` parameter has been removed.

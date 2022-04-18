@@ -68,12 +68,6 @@
 #
 # DEPRECATED PARAMETERS
 #
-# [*periodic_task_interval*]
-#   (Optional) This value controls how often (in seconds) to run periodic tasks
-#   in the scheduler. The specific tasks that are run for each period are
-#   determined by the particular scheduler being used.
-#   Defaults to undef
-#
 # [*query_placement_for_availability_zone*]
 #   (Optional) This setting allows the scheduler to look up a host aggregate
 #   with metadata key of availability zone set to the value provided by
@@ -95,7 +89,6 @@ class nova::scheduler(
   $enable_isolated_aggregate_filtering           = $::os_service_default,
   $query_placement_for_routed_network_aggregates = $::os_service_default,
   # DEPRECATED PARAMETERS
-  $periodic_task_interval                        = undef,
   $query_placement_for_availability_zone         = undef,
 ) {
 
@@ -103,10 +96,6 @@ class nova::scheduler(
   include nova::db
   include nova::params
   include nova::availability_zone
-
-  if $periodic_task_interval != undef {
-    warning('The periodic_task_interval parameter is depreated and has no effect')
-  }
 
   if $query_placement_for_availability_zone != undef {
     warning('The query_placement_for_availability_zone parameter is deprecated.')
@@ -132,9 +121,5 @@ class nova::scheduler(
     'scheduler/enable_isolated_aggregate_filtering':           value => $enable_isolated_aggregate_filtering;
     'scheduler/query_placement_for_availability_zone':         value => $query_placement_for_availability_zone_real;
     'scheduler/query_placement_for_routed_network_aggregates': value => $query_placement_for_routed_network_aggregates;
-  }
-
-  nova_config {
-    'scheduler/periodic_task_interval': ensure => absent;
   }
 }
