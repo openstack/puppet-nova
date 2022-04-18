@@ -49,20 +49,6 @@ class nova::compute::libvirt::virtlogd (
   include nova::deps
   require nova::compute::libvirt
 
-  [
-    'log_level',
-    'log_filters',
-    'log_outputs',
-    'max_clients',
-    'admin_max_clients',
-    'max_size',
-    'max_backups',
-  ].each |String $virtlogd_opt| {
-    if getvar($virtlogd_opt) == undef {
-      warning("Usage of undef for ${virtlogd_opt} has been deprecated.")
-    }
-  }
-
   virtlogd_config {
     'log_level':         value => pick($log_level, $::os_service_default);
     'log_filters':       value => pick($log_filters, $::os_service_default), quote => true;
