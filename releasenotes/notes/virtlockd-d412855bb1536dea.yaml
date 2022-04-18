@@ -1,0 +1,4 @@
+---
+features:
+  - |
+    Now this module supports configuration of the ``virtlockd`` service.

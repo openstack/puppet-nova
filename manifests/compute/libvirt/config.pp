@@ -21,6 +21,10 @@
 #   (optional) Allow configuration of arbitrary virtlogd configurations.
 #   The value is an hash of virtlogd_config resources.
 #
+# [*virtlockd_config*]
+#   (optional) Allow configuration of arbitrary virtlockd configurations.
+#   The value is an hash of virtlockd_config resources.
+#
 # [*virtnodedevd_config*]
 #   (optional) Allow configuration of arbitrary virtnodedevd configurations.
 #   The value is an hash of virtnodedevd_config resources.
@@ -47,6 +51,7 @@
 class nova::compute::libvirt::config (
   $libvirtd_config     = {},
   $virtlogd_config     = {},
+  $virtlockd_config    = {},
   $virtnodedevd_config = {},
   $virtproxyd_config   = {},
   $virtqemud_config    = {},
@@ -58,6 +63,7 @@ class nova::compute::libvirt::config (
 
   validate_legacy(Hash, 'validate_hash', $libvirtd_config)
   validate_legacy(Hash, 'validate_hash', $virtlogd_config)
+  validate_legacy(Hash, 'validate_hash', $virtlockd_config)
   validate_legacy(Hash, 'validate_hash', $virtnodedevd_config)
   validate_legacy(Hash, 'validate_hash', $virtproxyd_config)
   validate_legacy(Hash, 'validate_hash', $virtqemud_config)
@@ -66,6 +72,7 @@ class nova::compute::libvirt::config (
 
   create_resources('libvirtd_config', $libvirtd_config)
   create_resources('virtlogd_config', $virtlogd_config)
+  create_resources('virtlockd_config', $virtlockd_config)
   create_resources('virtnodedevd_config', $virtnodedevd_config)
   create_resources('virtproxyd_config', $virtproxyd_config)
   create_resources('virtqemud_config', $virtqemud_config)
