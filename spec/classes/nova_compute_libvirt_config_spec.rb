@@ -13,6 +13,11 @@ describe 'nova::compute::libvirt::config' do
           'foo2' => { 'value'  => 'fooValue' },
           'bar2' => { 'value'  => 'barValue' },
           'baz2' => { 'ensure' => 'absent' }
+        },
+        :virtlockd_config => {
+          'foo3' => { 'value'  => 'fooValue' },
+          'bar3' => { 'value'  => 'barValue' },
+          'baz3' => { 'ensure' => 'absent' }
         }
       }
     end
@@ -30,6 +35,12 @@ describe 'nova::compute::libvirt::config' do
         should contain_virtlogd_config('foo2').with_value('fooValue')
         should contain_virtlogd_config('bar2').with_value('barValue')
         should contain_virtlogd_config('baz2').with_ensure('absent')
+      }
+
+      it {
+        should contain_virtlockd_config('foo3').with_value('fooValue')
+        should contain_virtlockd_config('bar3').with_value('barValue')
+        should contain_virtlockd_config('baz3').with_ensure('absent')
       }
     end
   end
