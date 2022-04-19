@@ -102,11 +102,12 @@ class nova::compute::libvirt::services (
     }
 
     service { 'libvirt':
-      ensure  => $libvirt_service_ensure,
-      enable  => $libvirt_service_enable,
-      name    => $libvirt_service_name,
-      require => Anchor['nova::install::end'],
+      ensure => $libvirt_service_ensure,
+      enable => $libvirt_service_enable,
+      name   => $libvirt_service_name,
+      tag    => 'libvirt-service',
     }
+    Libvirtd_config<||> ~> Service['libvirt']
 
     # messagebus
     if($::osfamily == 'RedHat') {
@@ -114,8 +115,8 @@ class nova::compute::libvirt::services (
         ensure => running,
         enable => true,
         name   => $::nova::params::messagebus_service_name,
+        tag    => 'libvirt-service',
       }
-      Package['libvirt'] -> Service['messagebus']
     }
   }
 
@@ -124,8 +125,8 @@ class nova::compute::libvirt::services (
       ensure => running,
       enable => true,
       name   => $virtlock_service_name,
+      tag    => 'libvirt-service',
     }
-    Package<| title == 'libvirt' |> -> Service['virtlockd']
   }
 
   if $virtlog_service_name {
@@ -133,8 +134,9 @@ class nova::compute::libvirt::services (
       ensure => running,
       enable => true,
       name   => $virtlog_service_name,
+      tag    => 'libvirt-service',
     }
-    Package<| title == 'libvirt' |> -> Service['virtlogd']
+    Virtlogd_config<||> ~> Service['libvirt']
   }
 
   if ! $modular_libvirt {
@@ -157,43 +159,46 @@ class nova::compute::libvirt::services (
     if $virtsecret_service_name {
       package { 'virtsecret':
         ensure => present,
-        name   => "${::nova::params::libvirt_daemon_package_prefix}driver-secret"
+        name   => "${::nova::params::libvirt_daemon_package_prefix}driver-secret",
+        tag    => ['openstack', 'nova-support-package'],
       }
       service { 'virtsecretd':
-        ensure  => running,
-        enable  => true,
-        name    => $virtsecret_service_name,
-        require => Package['virtsecret'],
-        tag     => 'libvirt-modular-service',
+        ensure => running,
+        enable => true,
+        name   => $virtsecret_service_name,
+        tag    => ['libvirt-service', 'libvirt-modular-service'],
       }
+      Virtsecretd_config<||> ~> Service['virtlogd']
     }
 
     if $virtnodedev_service_name {
       package { 'virtnodedev':
         ensure => present,
-        name   => "${::nova::params::libvirt_daemon_package_prefix}driver-nodedev"
+        name   => "${::nova::params::libvirt_daemon_package_prefix}driver-nodedev",
+        tag    => ['openstack', 'nova-support-package'],
       }
       service { 'virtnodedevd':
-        ensure  => running,
-        enable  => true,
-        name    => $virtnodedev_service_name,
-        require => Package['virtnodedev'],
-        tag     => 'libvirt-modular-service',
+        ensure => running,
+        enable => true,
+        name   => $virtnodedev_service_name,
+        tag    => ['libvirt-service', 'libvirt-modular-service'],
       }
+      Virtnodedevd_config<||> ~> Service['virtlogd']
     }
 
     if $virtqemu_service_name {
       package { 'virtqemu':
         ensure => present,
-        name   => "${::nova::params::libvirt_daemon_package_prefix}driver-qemu"
+        name   => "${::nova::params::libvirt_daemon_package_prefix}driver-qemu",
+        tag    => ['openstack', 'nova-support-package'],
       }
       service { 'virtqemud':
-        ensure  => running,
-        enable  => true,
-        name    => $virtqemu_service_name,
-        require => Package['virtqemu'],
-        tag     => 'libvirt-modular-service',
+        ensure => running,
+        enable => true,
+        name   => $virtqemu_service_name,
+        tag    => ['libvirt-service', 'libvirt-modular-service'],
       }
+      Virtqemud_config<||> ~> Service['virtlogd']
     }
 
     if $virtproxy_service_name {
@@ -201,23 +206,24 @@ class nova::compute::libvirt::services (
         ensure => running,
         enable => true,
         name   => $virtproxy_service_name,
-        tag    => 'libvirt-modular-service',
+        tag    => ['libvirt-service', 'libvirt-modular-service'],
       }
-      Package<| title == 'libvirt' |> -> Service['virtproxyd']
+      Virtproxyd_config<||> ~> Service['virtlogd']
     }
 
     if $virtstorage_service_name {
       package { 'virtstorage':
         ensure => present,
-        name   => "${::nova::params::libvirt_daemon_package_prefix}driver-storage"
+        name   => "${::nova::params::libvirt_daemon_package_prefix}driver-storage",
+        tag    => ['openstack', 'nova-support-package'],
       }
       service { 'virtstoraged':
-        ensure  => running,
-        enable  => true,
-        name    => $virtstorage_service_name,
-        require => Package['virtstorage'],
-        tag     => 'libvirt-modular-service',
+        ensure => running,
+        enable => true,
+        name   => $virtstorage_service_name,
+        tag    => ['libvirt-service', 'libvirt-modular-service'],
       }
+      Virtstoraged_config<||> ~> Service['virtlogd']
     }
   }
 }
