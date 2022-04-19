@@ -52,6 +52,20 @@ class nova::deps {
   -> Package<| tag == 'nova-support-package'|>
   -> Anchor['nova::install::end']
 
+  # Start libvirt services during the service phase
+  Anchor['nova::service::begin']
+  -> Service<| tag == 'libvirt-service'|>
+  -> Anchor['nova::service::end']
+
+  # Manage libvirt configurations during the config phase
+  Anchor['nova::config::begin'] -> Libvirtd_config<||> -> Anchor['nova::config::end']
+  Anchor['nova::config::begin'] -> Virtlogd_config<||> -> Anchor['nova::config::end']
+  Anchor['nova::config::begin'] -> Virtnodedevd_config<||> -> Anchor['nova::config::end']
+  Anchor['nova::config::begin'] -> Virtproxyd_config<||> -> Anchor['nova::config::end']
+  Anchor['nova::config::begin'] -> Virtqemud_config<||> -> Anchor['nova::config::end']
+  Anchor['nova::config::begin'] -> Virtsecretd_config<||> -> Anchor['nova::config::end']
+  Anchor['nova::config::begin'] -> Virtstoraged_config<||> -> Anchor['nova::config::end']
+
   # all cache settings should be applied and all packages should be installed
   # before service startup
   Oslo::Cache<||> -> Anchor['nova::service::begin']

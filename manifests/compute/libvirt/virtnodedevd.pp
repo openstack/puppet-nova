@@ -65,8 +65,4 @@ class nova::compute::libvirt::virtnodedevd (
     'admin_max_client_requests': value => $admin_max_client_requests;
     'ovs_timeout':               value => $ovs_timeout;
   }
-
-  Anchor['nova::config::begin']
-  -> Virtnodedevd_config<||>
-  -> Anchor['nova::config::end']
 }

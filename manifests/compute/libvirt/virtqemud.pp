@@ -66,8 +66,4 @@ class nova::compute::libvirt::virtqemud (
     'admin_max_client_requests': value => $admin_max_client_requests;
     'ovs_timeout':               value => $ovs_timeout;
   }
-
-  Anchor['nova::config::begin']
-  -> Virtqemud_config<||>
-  -> Anchor['nova::config::end']
 }

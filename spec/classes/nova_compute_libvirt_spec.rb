@@ -158,19 +158,19 @@ describe 'nova::compute::libvirt' do
       it { is_expected.to contain_nova_config('libvirt/num_memory_encrypted_guests').with_value(255)}
       it {
         is_expected.to contain_service('libvirt').with(
-          :name     => 'custom_service',
-          :enable   => true,
-          :ensure   => 'running',
-          :before   => ['Service[nova-compute]']
+          :name   => 'custom_service',
+          :enable => true,
+          :ensure => 'running',
+          :before => ['Anchor[nova::service::end]', 'Service[nova-compute]']
         )
         is_expected.to contain_service('virtlockd').with(
-          :name     => 'virtlock',
-          :enable   => true,
+          :name   => 'virtlock',
+          :enable => true,
           :ensure => 'running'
         )
         is_expected.to contain_service('virtlogd').with(
-          :name     => 'virtlog',
-          :enable   => true,
+          :name   => 'virtlog',
+          :enable => true,
           :ensure => 'running'
         )
 
@@ -265,12 +265,12 @@ describe 'nova::compute::libvirt' do
         :name   => 'libvirtd',
         :enable => true,
         :ensure => 'running',
-        :before => ['Service[nova-compute]'],
+        :before => ['Anchor[nova::service::end]', 'Service[nova-compute]'],
       )}
       it { is_expected.to contain_service('messagebus').with(
         :ensure => 'running',
         :enable => true,
-        :before => ['Service[libvirt]'],
+        :before => ['Anchor[nova::service::end]', 'Service[libvirt]'],
         :name   => 'dbus'
       ) }
 

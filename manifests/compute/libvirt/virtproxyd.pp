@@ -74,8 +74,4 @@ class nova::compute::libvirt::virtproxyd (
     'ovs_timeout':               value => $ovs_timeout;
     'tls_priority':              value => $tls_priority, quote => true;
   }
-
-  Anchor['nova::config::begin']
-  -> Virtproxyd_config<||>
-  -> Anchor['nova::config::end']
 }

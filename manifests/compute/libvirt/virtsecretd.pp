@@ -65,8 +65,4 @@ class nova::compute::libvirt::virtsecretd (
     'admin_max_client_requests': value => $admin_max_client_requests;
     'ovs_timeout':               value => $ovs_timeout;
   }
-
-  Anchor['nova::config::begin']
-  -> Virtsecretd_config<||>
-  -> Anchor['nova::config::end']
 }
