@@ -221,13 +221,9 @@ class nova::migration::libvirt(
 
   if $configure_libvirt {
     Anchor['nova::config::begin']
-    -> Libvirtd_config<||>
     -> File<| tag == 'libvirt-file'|>
     -> File_line<| tag == 'libvirt-file_line'|>
     -> Anchor['nova::config::end']
-
-    Libvirtd_config<||>
-    ~> Service['libvirt']
 
     File_line<| tag == 'libvirt-file_line' |>
     ~> Service['libvirt']

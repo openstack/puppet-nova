@@ -72,8 +72,4 @@ class nova::compute::libvirt::virtlogd (
     'max_size':          value => pick($max_size, $::os_service_default);
     'max_backups':       value => pick($max_backups, $::os_service_default);
   }
-
-  Anchor['nova::config::begin']
-  -> Virtlogd_config<||>
-  -> Anchor['nova::config::end']
 }
