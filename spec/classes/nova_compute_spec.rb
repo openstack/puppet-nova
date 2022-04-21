@@ -416,7 +416,7 @@ describe 'nova::compute' do
             :nova_compute_service => 'openstack-nova-compute'
           }
         end
-        if facts[:operatingsystemmajrelease] > '8'
+        if facts[:operatingsystemmajrelease].to_i >= 9
           before do
             platform_params.merge!({
               :mkisofs_package => 'xorriso',
