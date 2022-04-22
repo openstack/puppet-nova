@@ -47,10 +47,10 @@ describe 'nova::api' do
       it 'configures various stuff' do
         is_expected.to contain_nova_config('DEFAULT/instance_name_template').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('wsgi/api_paste_config').with_value('api-paste.ini')
-        is_expected.to contain_nova_config('DEFAULT/osapi_compute_listen').with_value('0.0.0.0')
-        is_expected.to contain_nova_config('DEFAULT/osapi_compute_listen_port').with_value('8774')
-        is_expected.to contain_nova_config('DEFAULT/metadata_listen').with_value('0.0.0.0')
-        is_expected.to contain_nova_config('DEFAULT/metadata_listen_port').with_value('8775')
+        is_expected.to contain_nova_config('DEFAULT/osapi_compute_listen').with_value('<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('DEFAULT/osapi_compute_listen_port').with_value('<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('DEFAULT/metadata_listen').with_value('<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('DEFAULT/metadata_listen_port').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('DEFAULT/osapi_compute_workers').with_value('5')
         is_expected.to contain_nova_config('DEFAULT/metadata_workers').with_value('5')
         is_expected.to contain_oslo__middleware('nova_config').with(

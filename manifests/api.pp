@@ -22,15 +22,15 @@
 #
 # [*api_bind_address*]
 #   (optional) IP address for nova-api server to listen
-#   Defaults to '0.0.0.0'
+#   Defaults to $::os_service_default
 #
 # [*metadata_listen*]
 #   (optional) IP address  for metadata server to listen
-#   Defaults to '0.0.0.0'
+#   Defaults to $::os_service_default
 #
 # [*metadata_listen_port*]
 #   (optional) The port on which the metadata API will listen.
-#   Defaults to 8775
+#   Defaults to $::os_service_default
 #
 # [*enabled_apis*]
 #   (optional) A list of apis to enable
@@ -47,7 +47,7 @@
 #
 # [*osapi_compute_listen_port*]
 #   (optional) The port on which the OpenStack API will listen.
-#   Defaults to port 8774
+#   Defaults to $::os_service_default
 #
 # [*metadata_workers*]
 #   (optional) Number of workers for metadata service
@@ -195,10 +195,10 @@ class nova::api(
   $manage_service                              = true,
   $api_paste_config                            = 'api-paste.ini',
   $ensure_package                              = 'present',
-  $api_bind_address                            = '0.0.0.0',
-  $osapi_compute_listen_port                   = 8774,
-  $metadata_listen                             = '0.0.0.0',
-  $metadata_listen_port                        = 8775,
+  $api_bind_address                            = $::os_service_default,
+  $osapi_compute_listen_port                   = $::os_service_default,
+  $metadata_listen                             = $::os_service_default,
+  $metadata_listen_port                        = $::os_service_default,
   $enabled_apis                                = ['osapi_compute', 'metadata'],
   $use_forwarded_for                           = false,
   $osapi_compute_workers                       = $::os_workers,
