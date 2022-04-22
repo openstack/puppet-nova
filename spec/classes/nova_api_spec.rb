@@ -49,6 +49,7 @@ describe 'nova::api' do
         is_expected.to contain_nova_config('wsgi/api_paste_config').with_value('api-paste.ini')
         is_expected.to contain_nova_config('DEFAULT/osapi_compute_listen').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('DEFAULT/osapi_compute_listen_port').with_value('<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('api/use_forwarded_for').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('DEFAULT/metadata_listen').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('DEFAULT/metadata_listen_port').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('DEFAULT/osapi_compute_workers').with_value('5')

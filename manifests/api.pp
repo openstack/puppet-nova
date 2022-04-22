@@ -39,7 +39,7 @@
 # [*use_forwarded_for*]
 #   (optional) Treat X-Forwarded-For as the canonical remote address. Only
 #   enable this if you have a sanitizing proxy.
-#   Defaults to false
+#   Defaults to $::os_service_default
 #
 # [*osapi_compute_workers*]
 #   (optional) Number of workers for OpenStack API service
@@ -200,7 +200,7 @@ class nova::api(
   $metadata_listen                             = $::os_service_default,
   $metadata_listen_port                        = $::os_service_default,
   $enabled_apis                                = ['osapi_compute', 'metadata'],
-  $use_forwarded_for                           = false,
+  $use_forwarded_for                           = $::os_service_default,
   $osapi_compute_workers                       = $::os_workers,
   $metadata_workers                            = $::os_workers,
   $sync_db                                     = true,
