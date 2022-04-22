@@ -328,9 +328,15 @@ as a standalone service, or httpd for being run by a httpd server")
 
   if !$nova_metadata_wsgi_enabled {
     nova_config {
-      'DEFAULT/metadata_workers':                    value => $metadata_workers;
-      'DEFAULT/metadata_listen':                     value => $metadata_listen;
-      'DEFAULT/metadata_listen_port':                value => $metadata_listen_port;
+      'DEFAULT/metadata_workers':     value => $metadata_workers;
+      'DEFAULT/metadata_listen':      value => $metadata_listen;
+      'DEFAULT/metadata_listen_port': value => $metadata_listen_port;
+    }
+  } else {
+    nova_config {
+      'DEFAULT/metadata_workers':     ensure => absent;
+      'DEFAULT/metadata_listen':      ensure => absent;
+      'DEFAULT/metadata_listen_port': ensure => absent;
     }
   }
 

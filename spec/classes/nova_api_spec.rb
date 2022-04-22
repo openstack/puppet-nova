@@ -221,8 +221,9 @@ describe 'nova::api' do
     context 'when running nova API in wsgi for compute, and metadata in wsgi' do
       before do
         params.merge!({
-          :service_name => 'httpd',
-          :nova_metadata_wsgi_enabled => true })
+          :service_name               => 'httpd',
+          :nova_metadata_wsgi_enabled => true
+        })
       end
 
       let :pre_condition do
@@ -234,12 +235,15 @@ describe 'nova::api' do
       end
 
       it 'disable nova API service' do
-          is_expected.to contain_service('nova-api').with(
+        is_expected.to contain_service('nova-api').with(
           :ensure => 'stopped',
           :name   => platform_params[:nova_api_service],
           :enable => false,
           :tag    => 'nova-service',
         )
+        is_expected.to contain_nova_config('DEFAULT/metadata_workers').with_ensure('absent')
+        is_expected.to contain_nova_config('DEFAULT/metadata_listen').with_ensure('absent')
+        is_expected.to contain_nova_config('DEFAULT/metadata_listen_port').with_ensure('absent')
       end
 
     end
