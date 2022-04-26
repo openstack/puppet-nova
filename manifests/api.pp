@@ -164,10 +164,6 @@
 #   metadata handling from api class.
 #   Defaults to false
 #
-# [*install_cinder_client*]
-#   (optional) Whether the cinder::client class should be used to install the cinder client.
-#   Defaults to undef
-#
 # [*ratelimits*]
 #   (optional) A string that is a semicolon-separated list of 5-tuples.
 #   See http://docs.openstack.org/trunk/config-reference/content/configuring-compute-API.html
@@ -226,7 +222,6 @@ class nova::api(
   $list_records_by_skipping_down_cells         = $::os_service_default,
   # DEPRECATED PARAMETER
   $nova_metadata_wsgi_enabled                  = false,
-  $install_cinder_client                       = undef,
   $ratelimits                                  = undef,
   $ratelimits_factory                          = undef,
   $validate                                    = undef,
@@ -242,10 +237,6 @@ class nova::api(
 
   if !$nova_metadata_wsgi_enabled {
     warning('Running nova metadata api via evenlet is deprecated and will be removed in Stein release.')
-  }
-
-  if $install_cinder_client != undef {
-    warning('The nova::api::install_cinder_client parameter is deprecated and has no effect')
   }
 
   if $ratelimits != undef {
