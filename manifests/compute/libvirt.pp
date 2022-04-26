@@ -60,6 +60,10 @@
 #   (optional) Option to specify a default machine type per host architecture.
 #   Defaults to $::os_service_default
 #
+# [*sysinfo_serial*]
+#   (optional) Option to specify a serial number entry generation method.
+#   Defaults to $::os_service_default
+#
 # [*libvirt_inject_password*]
 #   (optional) Inject the admin password at boot time, without an agent.
 #   Defaults to false
@@ -216,6 +220,7 @@ class nova::compute::libvirt (
   $libvirt_disk_cachemodes                    = [],
   $libvirt_hw_disk_discard                    = $::os_service_default,
   $libvirt_hw_machine_type                    = $::os_service_default,
+  $sysinfo_serial                             = $::os_service_default,
   $libvirt_inject_password                    = false,
   $libvirt_inject_key                         = false,
   $libvirt_inject_partition                   = -2,
@@ -331,6 +336,7 @@ class nova::compute::libvirt (
     'libvirt/inject_partition':         value => $libvirt_inject_partition;
     'libvirt/hw_disk_discard':          value => $libvirt_hw_disk_discard;
     'libvirt/hw_machine_type':          value => $libvirt_hw_machine_type;
+    'libvirt/sysinfo_serial':           value => $sysinfo_serial;
     'libvirt/enabled_perf_events':      value => join(any2array($libvirt_enabled_perf_events), ',');
     'libvirt/rx_queue_size':            value => $rx_queue_size;
     'libvirt/tx_queue_size':            value => $tx_queue_size;
