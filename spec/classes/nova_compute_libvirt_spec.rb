@@ -58,6 +58,7 @@ describe 'nova::compute::libvirt' do
       it { is_expected.to contain_nova_config('libvirt/inject_password').with_value(false)}
       it { is_expected.to contain_nova_config('libvirt/inject_key').with_value(false)}
       it { is_expected.to contain_nova_config('libvirt/inject_partition').with_value(-2)}
+      it { is_expected.to contain_nova_config('libvirt/sysinfo_serial').with_value('<SERVICE DEFAULT>')}
       it { is_expected.to contain_nova_config('vnc/server_listen').with_value('127.0.0.1')}
       it { is_expected.to contain_nova_config('libvirt/rx_queue_size').with_value('<SERVICE DEFAULT>')}
       it { is_expected.to contain_nova_config('libvirt/tx_queue_size').with_value('<SERVICE DEFAULT>')}
@@ -90,6 +91,7 @@ describe 'nova::compute::libvirt' do
           :disk_cachemodes                            => ['file=directsync','block=none'],
           :hw_disk_discard                            => 'unmap',
           :hw_machine_type                            => 'x86_64=machinetype1,armv7l=machinetype2',
+          :sysinfo_serial                             => 'auto',
           :enabled_perf_events                        => ['cmt', 'mbml', 'mbmt'],
           :libvirt_service_name                       => 'custom_service',
           :virtlock_service_name                      => 'virtlock',
@@ -133,6 +135,7 @@ describe 'nova::compute::libvirt' do
       it { is_expected.to contain_nova_config('libvirt/disk_cachemodes').with_value('file=directsync,block=none')}
       it { is_expected.to contain_nova_config('libvirt/hw_disk_discard').with_value('unmap')}
       it { is_expected.to contain_nova_config('libvirt/hw_machine_type').with_value('x86_64=machinetype1,armv7l=machinetype2')}
+      it { is_expected.to contain_nova_config('libvirt/sysinfo_serial').with_value('auto')}
       it { is_expected.to contain_nova_config('libvirt/enabled_perf_events').with_value('cmt,mbml,mbmt')}
       it { is_expected.to contain_nova_config('vnc/server_listen').with_value('0.0.0.0')}
       it { is_expected.to contain_nova_config('libvirt/rx_queue_size').with_value(512)}
