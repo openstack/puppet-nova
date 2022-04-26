@@ -56,6 +56,7 @@ describe 'nova::compute::libvirt' do
       it { is_expected.to contain_nova_config('libvirt/inject_password').with_value(false)}
       it { is_expected.to contain_nova_config('libvirt/inject_key').with_value(false)}
       it { is_expected.to contain_nova_config('libvirt/inject_partition').with_value(-2)}
+      it { is_expected.to contain_nova_config('libvirt/sysinfo_serial').with_value('<SERVICE DEFAULT>')}
       it { is_expected.to contain_nova_config('vnc/server_listen').with_value('127.0.0.1')}
       it { is_expected.to contain_nova_config('DEFAULT/remove_unused_base_images').with_ensure('absent')}
       it { is_expected.to contain_nova_config('DEFAULT/remove_unused_original_minimum_age_seconds').with_ensure('absent')}
@@ -85,6 +86,7 @@ describe 'nova::compute::libvirt' do
           :libvirt_disk_cachemodes                    => ['file=directsync','block=none'],
           :libvirt_hw_disk_discard                    => 'unmap',
           :libvirt_hw_machine_type                    => 'x86_64=machinetype1,armv7l=machinetype2',
+          :sysinfo_serial                             => 'auto',
           :libvirt_enabled_perf_events                => ['cmt', 'mbml', 'mbmt'],
           :remove_unused_base_images                  => true,
           :remove_unused_resized_minimum_age_seconds  => 3600,
@@ -122,6 +124,7 @@ describe 'nova::compute::libvirt' do
       it { is_expected.to contain_nova_config('libvirt/disk_cachemodes').with_value('file=directsync,block=none')}
       it { is_expected.to contain_nova_config('libvirt/hw_disk_discard').with_value('unmap')}
       it { is_expected.to contain_nova_config('libvirt/hw_machine_type').with_value('x86_64=machinetype1,armv7l=machinetype2')}
+      it { is_expected.to contain_nova_config('libvirt/sysinfo_serial').with_value('auto')}
       it { is_expected.to contain_nova_config('libvirt/enabled_perf_events').with_value('cmt,mbml,mbmt')}
       it { is_expected.to contain_nova_config('vnc/server_listen').with_value('0.0.0.0')}
       it { is_expected.to contain_nova_config('DEFAULT/remove_unused_base_images').with_value(true)}
