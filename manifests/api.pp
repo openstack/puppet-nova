@@ -36,11 +36,6 @@
 #   (optional) A list of apis to enable
 #   Defaults to ['osapi_compute', 'metadata']
 #
-# [*use_forwarded_for*]
-#   (optional) Treat X-Forwarded-For as the canonical remote address. Only
-#   enable this if you have a sanitizing proxy.
-#   Defaults to $::os_service_default
-#
 # [*osapi_compute_workers*]
 #   (optional) Number of workers for OpenStack API service
 #   Defaults to $::os_workers
@@ -190,6 +185,11 @@
 #   Require validate set at True.
 #   Defaults to undef
 #
+# [*use_forwarded_for*]
+#   (optional) Treat X-Forwarded-For as the canonical remote address. Only
+#   enable this if you have a sanitizing proxy.
+#   Defaults to undef
+#
 class nova::api(
   $enabled                                     = true,
   $manage_service                              = true,
@@ -200,7 +200,6 @@ class nova::api(
   $metadata_listen                             = $::os_service_default,
   $metadata_listen_port                        = $::os_service_default,
   $enabled_apis                                = ['osapi_compute', 'metadata'],
-  $use_forwarded_for                           = $::os_service_default,
   $osapi_compute_workers                       = $::os_workers,
   $metadata_workers                            = $::os_workers,
   $sync_db                                     = true,
@@ -231,6 +230,7 @@ class nova::api(
   $ratelimits_factory                          = undef,
   $validate                                    = undef,
   $validation_options                          = undef,
+  $use_forwarded_for                           = undef,
 ) inherits nova::params {
 
   include nova::deps
@@ -257,6 +257,10 @@ class nova::api(
   }
   if $validation_options != undef {
     warning('The nova::api::validation_options parameter has been deprecated and has no effect')
+  }
+
+  if $use_forwarded_for != undef {
+    warning('The use_forwarded_for parameter has been deprecated.')
   }
 
   if $instance_name_template {
@@ -353,7 +357,7 @@ as a standalone service, or httpd for being run by a httpd server")
     'DEFAULT/osapi_compute_workers':            value => $osapi_compute_workers;
     'DEFAULT/enable_network_quota':             value => $enable_network_quota;
     'DEFAULT/password_length':                  value => $password_length;
-    'api/use_forwarded_for':                    value => $use_forwarded_for;
+    'api/use_forwarded_for':                    value => pick($use_forwarded_for, $::os_service_default);
     'api/max_limit':                            value => $max_limit;
     'api/compute_link_prefix':                  value => $compute_link_prefix;
     'api/glance_link_prefix':                   value => $glance_link_prefix;
