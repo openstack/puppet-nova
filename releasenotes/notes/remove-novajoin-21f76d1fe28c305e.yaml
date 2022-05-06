@@ -1,0 +1,4 @@
+---
+upgrade:
+  - |
+    Support for the novajoin service has been removed.
