@@ -1,0 +1,6 @@
+---
+deprecations:
+  - |
+    The ``nova::api::use_forwarded_for`` parameter has been deprecated and will
+    be removed in a future release, because the corresponding
+    ``[api] use_forwarded_for`` parameter in nova has been deprecated.
