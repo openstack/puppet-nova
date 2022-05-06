@@ -1,0 +1,8 @@
+---
+upgrade:
+  - |
+    Default value of the following parameters has been changed from ``true`` to
+    ``false`` and now ssl is disabled by default.
+
+    - ``nova::wsgi::apache_api::ssl``
+    - ``nova::wsgi::apache_metadata::ssl``
