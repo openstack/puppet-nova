@@ -1,0 +1,5 @@
+---
+features:
+  - |
+    Add ``sysinfo_serial`` parameter to control a Serial number entry generation
+    method. Defaults to ``$::os_service_default``.
