@@ -1,0 +1,7 @@
+---
+upgrade:
+  - |
+    The following parameters of the ``nova`` class have been removed.
+
+    - ``nova::block_device_allocate_retries``
+    - ``nova::block_device_allocate_retries_interval``

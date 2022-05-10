@@ -380,15 +380,6 @@
 #   <service_type>:<service_name>:<endpoint_type>
 #   Defaults to undef
 #
-# [*block_device_allocate_retries*]
-#   (optional) Number of times to retry block device allocation on failures
-#   Defaults to undef.
-#
-# [*block_device_allocate_retries_interval*]
-#   (optional) Waiting time interval (seconds) between block device allocation
-#   retries on failures
-#   Defaults to undef.
-#
 # [*cross_az_attach*]
 #   (optional) Allow attach between instance and volume in different availability zones.
 #   Defaults to undef
@@ -473,8 +464,6 @@ class nova(
   $auth_strategy                          = undef,
   $os_region_name                         = undef,
   $cinder_catalog_info                    = undef,
-  $block_device_allocate_retries          = undef,
-  $block_device_allocate_retries_interval = undef,
   $cross_az_attach                        = undef,
 ) inherits nova::params {
 
@@ -494,16 +483,6 @@ in a future release. Use nova::cinder::os_region_name instead')
   if $cinder_catalog_info != undef {
     warning('The catalog_info parameter is deprecated and will be removed \
 in a future release. Use nova::cinder::catalog_info instead')
-  }
-
-  if $block_device_allocate_retries != undef {
-    warning('The block_device_allocate_retries parameter is deprecated. \
-Use nova::compute::block_device_allocate_retries instead')
-  }
-
-  if $block_device_allocate_retries_interval != undef {
-    warning('The block_device_allocate_retries_interval parameter is deprecated. \
-Use nova::compute::block_device_allocate_retries_interval instead')
   }
 
   if $cross_az_attach != undef {
