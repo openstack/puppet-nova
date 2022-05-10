@@ -1,0 +1,5 @@
+---
+upgrade:
+  - |
+    The ``nova::cinder::region_name`` parameter has been removed. Use
+    the ``os_region_name`` parameter instead.

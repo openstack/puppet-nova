@@ -75,13 +75,6 @@
 #   independently of the rest of Nova.
 #   Defaults to $::os_service_default
 #
-# DEPRECATED PARAMETERS
-#
-# [*region_name*]
-#   (optional) Region name for connecting to cinder in admin context
-#   through the OpenStack Identity service.
-#   Defaults to undef
-#
 class nova::cinder (
   $password            = $::os_service_default,
   $auth_type           = undef,
@@ -97,8 +90,6 @@ class nova::cinder (
   $http_retries        = $::os_service_default,
   $cross_az_attach     = $::os_service_default,
   $debug               = $::os_service_default,
-  # DEPRECATED PARAMETERS
-  $region_name         = undef,
 ) {
 
   include nova::deps
@@ -106,15 +97,6 @@ class nova::cinder (
   $os_region_name_real = pick($::nova::os_region_name, $os_region_name)
   $catalog_info_real = pick($::nova::cinder_catalog_info, $catalog_info)
   $cross_az_attach_real = pick($::nova::cross_az_attach, $cross_az_attach)
-
-  if $region_name != undef {
-    warning('The nova::cinder::region_name parameter is deprecated and has no effect. \
-Use the nova::cinder::os_region_name parameter')
-  }
-  nova_config {
-    'cinder/region_name': ensure => absent;
-  }
-
 
   if is_service_default($password) {
     $auth_type_real           = pick($auth_type, $::os_service_default)
