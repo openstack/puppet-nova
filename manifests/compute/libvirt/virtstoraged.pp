@@ -38,9 +38,5 @@ class nova::compute::libvirt::virtstoraged (
     'log_outputs':       value => $log_outputs, quote => true;
     'ovs_timeout':       value => $ovs_timeout;
   }
-
-  Anchor['nova::config::begin']
-  -> Virtstoraged_config<||>
-  -> Anchor['nova::config::end']
 }
 
