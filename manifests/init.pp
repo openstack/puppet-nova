@@ -380,10 +380,6 @@
 #   <service_type>:<service_name>:<endpoint_type>
 #   Defaults to undef
 #
-# [*upgrade_level_console*]
-#  (optional) Sets a version cap for messages sent to console services
-#  Defaults to undef
-#
 # [*block_device_allocate_retries*]
 #   (optional) Number of times to retry block device allocation on failures
 #   Defaults to undef.
@@ -477,7 +473,6 @@ class nova(
   $auth_strategy                          = undef,
   $os_region_name                         = undef,
   $cinder_catalog_info                    = undef,
-  $upgrade_level_console                  = undef,
   $block_device_allocate_retries          = undef,
   $block_device_allocate_retries_interval = undef,
   $cross_az_attach                        = undef,
@@ -499,11 +494,6 @@ in a future release. Use nova::cinder::os_region_name instead')
   if $cinder_catalog_info != undef {
     warning('The catalog_info parameter is deprecated and will be removed \
 in a future release. Use nova::cinder::catalog_info instead')
-  }
-
-  if $upgrade_level_console != undef {
-    warning('The upgrade_level_console parameter is deprecated, and has \
-no effect.')
   }
 
   if $block_device_allocate_retries != undef {
