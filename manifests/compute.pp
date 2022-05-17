@@ -389,13 +389,6 @@ class nova::compute (
 
   include nova::availability_zone
 
-  $block_device_allocate_retries_real = pick(
-    $::nova::block_device_allocate_retries,
-    $block_device_allocate_retries)
-  $block_device_allocate_retries_interval_real = pick(
-    $::nova::block_device_allocate_retries_interval,
-    $block_device_allocate_retries_interval)
-
   # NOTE(tkajinam): In some distros like CentOS9, the genisoimage command
   #                 is no longer available and we should override
   #                 the mkisofs_cmd parameter to use the available command
@@ -439,9 +432,9 @@ class nova::compute (
     'DEFAULT/compute_monitors':                  value => join(any2array($compute_monitors), ',');
     'DEFAULT/default_ephemeral_format':          value => $default_ephemeral_format;
     'compute/image_type_exclude_list':           value => $image_type_exclude_list_real;
-    'DEFAULT/block_device_allocate_retries':     value => $block_device_allocate_retries_real;
+    'DEFAULT/block_device_allocate_retries':     value => $block_device_allocate_retries;
     'DEFAULT/block_device_allocate_retries_interval':
-      value => $block_device_allocate_retries_interval_real;
+      value => $block_device_allocate_retries_interval;
   }
 
   if $keymgr_backend != undef {
