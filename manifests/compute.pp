@@ -145,9 +145,8 @@
 #   Defaults to $::os_service_default
 #
 # [*cpu_shared_set*]
-#   (optional) A list or range of host CPU cores to which emulator threads can be
-#   scheduled, if vcpu_pin_set is set, or to which both emulator threads and processes
-#   for unpinned instance CPUs (VCPUs) can be scheduled, if vcpu_pin_set is unset.
+#   (optional) Mask of host CPUs that can be used for ``VCPU`` resources and
+#   offloaded emulator threads.
 #   Defaults to $::os_service_default
 #
 # [*cpu_dedicated_set*]
@@ -260,16 +259,6 @@
 #
 # DEPRECATED PARAMETERS
 #
-# [*vcpu_pin_set*]
-#   (optional) A list or range of host CPU cores to which processes for
-#   unpinned instance CPUs (VCPUs) can be scheduled, if cpu_shared_set is set,
-#   or to which both emulator threads and processes for unpinned instance CPUs
-#   (VCPUs) can be scheduled, if cpu_shared_set is unset.
-#   This option has been superseded by the ``cpu_shared_set`` and
-#   ``cpu_dedicated_set`` options, which allows co-existence of
-#   pinned and unpinned instances on the same host.
-#   Defaults to undef
-#
 # [*keymgr_backend*]
 #   (optional) Key Manager service class.
 #   Example of valid value: castellan.key_manager.barbican_key_manager.BarbicanKeyManager
@@ -340,7 +329,6 @@ class nova::compute (
   $block_device_allocate_retries               = $::os_service_default,
   $block_device_allocate_retries_interval      = $::os_service_default,
   # DEPRECATED PARAMETERS
-  $vcpu_pin_set                                = undef,
   $keymgr_backend                              = undef,
   $barbican_auth_endpoint                      = undef,
   $barbican_endpoint                           = undef,
@@ -349,9 +337,6 @@ class nova::compute (
 
   include nova::deps
   include nova::params
-
-  $cpu_shared_set_real = join(any2array($cpu_shared_set), ',')
-  $cpu_dedicated_set_real = join(any2array($cpu_dedicated_set), ',')
 
   $image_type_exclude_list_real = pick(join(any2array($image_type_exclude_list), ','), $::os_service_default)
 
@@ -363,41 +348,9 @@ class nova::compute (
     fail('vnc_enabled and spice_enabled is mutually exclusive')
   }
 
-  if $vcpu_pin_set {
-    warning('vcpu_pin_set is deprecated, instead use cpu_dedicated_set or cpu_shared_set.')
-  }
-
-  if empty($vcpu_pin_set) {
-    $vcpu_pin_set_real = undef
-  } else {
-    $vcpu_pin_set_real = join(any2array($vcpu_pin_set), ',')
-  }
-
-  if $vcpu_pin_set_real  and !is_service_default($cpu_dedicated_set_real) {
-    fail('vcpu_pin_set is deprecated. vcpu_pin_set and cpu_dedicated_set are mutually exclusive.')
-  }
-
-  if $vcpu_pin_set_real != undef {
-    # handle the following conditions:
-    #
-    # 1. if vcpu_pin_set is set but cpu_shared_set is not set.
-    # 2. if cpu_shared_set and vcpu_pin_set both are set, but cpu_dedicated_set is not set.
-    nova_config {
-      'compute/cpu_shared_set':    value => $cpu_shared_set_real;
-      'compute/cpu_dedicated_set': value => $cpu_dedicated_set_real;
-      'DEFAULT/vcpu_pin_set':      value => $vcpu_pin_set_real;
-    }
-  } else {
-    # handle the following conditions:
-    #
-    # 3. if cpu_dedicated_set is set but cpu_shared_set is not set.
-    # 4. if cpu_shared_set is set but vcpu_pin_set and cpu_dedicated_set are not set.
-    # 5. if cpu_shared_set and cpu_dedicated_set both are set, then ignore vcpu_pin_set.
-    nova_config {
-      'compute/cpu_shared_set':    value  => $cpu_shared_set_real;
-      'compute/cpu_dedicated_set': value  => $cpu_dedicated_set_real;
-      'DEFAULT/vcpu_pin_set':      ensure => absent; # when undef, don't include in conf.
-    }
+  nova_config {
+    'compute/cpu_shared_set':    value  => join(any2array($cpu_shared_set), ',');
+    'compute/cpu_dedicated_set': value  => join(any2array($cpu_dedicated_set), ',');
   }
 
   if !empty($neutron_physnets_numa_nodes_mapping) {

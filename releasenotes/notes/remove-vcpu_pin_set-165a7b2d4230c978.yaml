@@ -1,0 +1,4 @@
+---
+upgrade:
+  - |
+    The ``nova::compute::vcpu_pin_set_parameter`` was removed.

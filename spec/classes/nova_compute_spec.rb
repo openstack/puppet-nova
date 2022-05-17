@@ -234,16 +234,7 @@ describe 'nova::compute' do
       end
     end
 
-    context 'should raise an error, when cpu_dedicated_set and vcpu_pin_set both are defined' do
-      let :params do
-        { :vcpu_pin_set      => ['4-12','^8','15'],
-          :cpu_dedicated_set => ['4-12','^8','15'], }
-      end
-
-      it { should raise_error(Puppet::Error, /vcpu_pin_set is deprecated. vcpu_pin_set and cpu_dedicated_set are mutually exclusive./) }
-    end
-
-    context 'when cpu_shared_set and cpu_dedicated_set both are set, but not vcpu_pin_set' do
+    context 'when cpu_shared_set and cpu_dedicated_set both are set' do
       let :params do
         { :cpu_shared_set    => ['4-12','^8','15'],
           :cpu_dedicated_set => ['2-10','^5','14'], }
@@ -251,7 +242,6 @@ describe 'nova::compute' do
 
       it { is_expected.to contain_nova_config('compute/cpu_shared_set').with_value('4-12,^8,15') }
       it { is_expected.to contain_nova_config('compute/cpu_dedicated_set').with_value('2-10,^5,14') }
-      it { is_expected.to contain_nova_config('DEFAULT/vcpu_pin_set').with_ensure('absent') }
     end
 
     context 'when cpu_dedicated_set is defined but cpu_shared_set is not' do
@@ -261,37 +251,14 @@ describe 'nova::compute' do
 
       it { is_expected.to contain_nova_config('compute/cpu_dedicated_set').with_value('4-12,^8,15') }
       it { is_expected.to contain_nova_config('compute/cpu_shared_set').with_value('<SERVICE DEFAULT>') }
-      it { is_expected.to contain_nova_config('DEFAULT/vcpu_pin_set').with_ensure('absent') }
     end
 
-    context 'when cpu_shared_set is defined, but cpu_dedicated_set and vcpu_pin_set are not' do
+    context 'when cpu_shared_set is defined, but cpu_dedicated_set is not' do
       let :params do
         { :cpu_shared_set => ['4-12', '^8', '15'] }
       end
 
       it { is_expected.to contain_nova_config('compute/cpu_shared_set').with_value('4-12,^8,15') }
-      it { is_expected.to contain_nova_config('compute/cpu_dedicated_set').with_value('<SERVICE DEFAULT>') }
-      it { is_expected.to contain_nova_config('DEFAULT/vcpu_pin_set').with_ensure('absent') }
-    end
-
-    context 'when cpu_shared_set and vcpu_pin_set are defined, but cpu_dedicated_set is not' do
-      let :params do
-        { :cpu_shared_set => ['4-12','^8','15'],
-          :vcpu_pin_set   => ['2-10','^5','14'], }
-      end
-
-      it { is_expected.to contain_nova_config('compute/cpu_shared_set').with_value('4-12,^8,15') }
-      it { is_expected.to contain_nova_config('DEFAULT/vcpu_pin_set').with_value('2-10,^5,14') }
-      it { is_expected.to contain_nova_config('compute/cpu_dedicated_set').with_value('<SERVICE DEFAULT>') }
-    end
-
-    context 'when vcpu_pin_set is set, but cpu_shared_set and cpu_dedicated_set are not' do
-      let :params do
-         { :vcpu_pin_set => ['4-12','^8','15'] }
-      end
-
-      it { is_expected.to contain_nova_config('DEFAULT/vcpu_pin_set').with_value('4-12,^8,15') }
-      it { is_expected.to contain_nova_config('compute/cpu_shared_set').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('compute/cpu_dedicated_set').with_value('<SERVICE DEFAULT>') }
     end
 
