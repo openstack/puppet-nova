@@ -291,10 +291,6 @@
 #  (optional) Sets a version cap for messages sent to local cells services
 #  Defaults to $::os_service_default
 #
-# [*upgrade_level_cert*]
-#  (optional) Sets a version cap for messages sent to cert services
-#  Defaults to $::os_service_default
-#
 # [*upgrade_level_compute*]
 #  (optional) Sets a version cap for messages sent to compute services
 #  Defaults to $::os_service_default
@@ -384,6 +380,10 @@
 #   (optional) Allow attach between instance and volume in different availability zones.
 #   Defaults to undef
 #
+# [*upgrade_level_cert*]
+#  (optional) Sets a version cap for messages sent to cert services
+#  Defaults to undef
+#
 class nova(
   $ensure_package                         = 'present',
   $default_transport_url                  = $::os_service_default,
@@ -445,7 +445,6 @@ class nova(
   $notify_on_state_change                 = undef,
   $ovsdb_connection                       = $::os_service_default,
   $upgrade_level_cells                    = $::os_service_default,
-  $upgrade_level_cert                     = $::os_service_default,
   $upgrade_level_compute                  = $::os_service_default,
   $upgrade_level_conductor                = $::os_service_default,
   $upgrade_level_intercell                = $::os_service_default,
@@ -465,6 +464,7 @@ class nova(
   $os_region_name                         = undef,
   $cinder_catalog_info                    = undef,
   $cross_az_attach                        = undef,
+  $upgrade_level_cert                     = undef,
 ) inherits nova::params {
 
   include nova::deps
@@ -488,6 +488,11 @@ in a future release. Use nova::cinder::catalog_info instead')
   if $cross_az_attach != undef {
     warning('The cross_az_attach parameter is deprecated. \
 Use nova::cinder::cross_az_attach instead.')
+  }
+
+  if $upgrade_level_cert != undef {
+    warning('The upgrade_level_cert parameter is deprecated and will be removed \
+in a future release.')
   }
 
   if $use_ssl {
@@ -703,7 +708,7 @@ but should be one of: ssh-rsa, ssh-dsa, ssh-ecdsa.")
 
   nova_config {
     'upgrade_levels/cells':       value => $upgrade_level_cells;
-    'upgrade_levels/cert':        value => $upgrade_level_cert;
+    'upgrade_levels/cert':        value => pick($upgrade_level_cert, $::os_service_default);
     'upgrade_levels/compute':     value => $upgrade_level_compute;
     'upgrade_levels/conductor':   value => $upgrade_level_conductor;
     'upgrade_levels/intercell':   value => $upgrade_level_intercell;
