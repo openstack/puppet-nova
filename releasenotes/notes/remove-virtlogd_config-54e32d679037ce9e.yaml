@@ -1,0 +1,4 @@
+---
+upgrade:
+  - |
+    The ``nova::compute::libvirt::virtlogd::config`` class has been removed.
