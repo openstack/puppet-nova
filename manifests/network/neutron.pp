@@ -70,27 +70,27 @@
 #
 # [*ovs_bridge*]
 #   (optional) Name of Integration Bridge used by Open vSwitch
-#   Defaults to 'br-int'
+#   Defaults to $::os_service_default
 #
 # [*extension_sync_interval*]
 #   (optional) Number of seconds before querying neutron for extensions
-#   Defaults to '600'
+#   Defaults to $::os_service_default
 #
 # [*vif_plugging_is_fatal*]
 #   (optional) Fail to boot instance if vif plugging fails.
 #   This prevents nova from booting an instance if vif plugging notification
 #   is not received from neutron.
-#   Defaults to 'True'
+#   Defaults to $::os_service_default
 #
 # [*vif_plugging_timeout*]
 #   (optional) Number of seconds to wait for neutron vif plugging events.
 #   Set to '0' and vif_plugging_is_fatal to 'False' if vif plugging
 #   notification is not being used.
-#   Defaults to '300'
+#   Defaults to $::os_service_default
 #
 # [*default_floating_pool*]
 #   (optional) Default pool for floating IPs
-#   Defaults to 'nova'
+#   Defaults to $::os_service_default
 #
 class nova::network::neutron (
   $password,
@@ -107,11 +107,11 @@ class nova::network::neutron (
   $region_name             = 'RegionOne',
   $http_retries            = $::os_service_default,
   $service_type            = $::os_service_default,
-  $ovs_bridge              = 'br-int',
-  $extension_sync_interval = '600',
-  $vif_plugging_is_fatal   = true,
-  $vif_plugging_timeout    = '300',
-  $default_floating_pool   = 'nova',
+  $ovs_bridge              = $::os_service_default,
+  $extension_sync_interval = $::os_service_default,
+  $vif_plugging_is_fatal   = $::os_service_default,
+  $vif_plugging_timeout    = $::os_service_default,
+  $default_floating_pool   = $::os_service_default,
 ) {
 
   include nova::deps

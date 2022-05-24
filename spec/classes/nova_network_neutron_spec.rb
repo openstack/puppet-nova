@@ -16,11 +16,11 @@ describe 'nova::network::neutron' do
       :endpoint_override       => '<SERVICE DEFAULT>',
       :http_retries            => '<SERVICE DEFAULT>',
       :service_type            => '<SERVICE DEFAULT>',
-      :ovs_bridge              => 'br-int',
-      :extension_sync_interval => '600',
-      :vif_plugging_is_fatal   => true,
-      :vif_plugging_timeout    => '300',
-      :default_floating_pool   => 'nova',
+      :ovs_bridge              => '<SERVICE DEFAULT>',
+      :extension_sync_interval => '<SERVICE DEFAULT>',
+      :vif_plugging_is_fatal   => '<SERVICE DEFAULT>',
+      :vif_plugging_timeout    => '<SERVICE DEFAULT>',
+      :default_floating_pool   => '<SERVICE DEFAULT>',
     }
   end
 
@@ -73,10 +73,10 @@ describe 'nova::network::neutron' do
           :http_retries            => 3,
           :service_type            => 'network',
           :ovs_bridge              => 'br-int',
-          :extension_sync_interval => '600',
-          :vif_plugging_is_fatal   => false,
-          :vif_plugging_timeout    => '0',
-          :default_floating_pool   => 'public'
+          :extension_sync_interval => 600,
+          :vif_plugging_is_fatal   => true,
+          :vif_plugging_timeout    => 300,
+          :default_floating_pool   => 'nova'
         )
       end
 
