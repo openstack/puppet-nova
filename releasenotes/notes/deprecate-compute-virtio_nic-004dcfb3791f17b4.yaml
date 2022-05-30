@@ -1,0 +1,5 @@
+---
+deprecations:
+  - |
+    The ``nova::compute::virtio_nic`` parameter has been deprecated and has no
+    effect now.

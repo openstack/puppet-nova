@@ -58,10 +58,6 @@
 #   (optional) Name or path of the tool used for ISO image creation.
 #   Defaults to $::os_service_default
 #
-# [*virtio_nic*]
-#   (optional) Whether to use virtio for the nic driver of VMs
-#   Defaults to false
-#
 # [*instance_usage_audit*]
 #   (optional) Generate periodic compute.instance.exists notifications.
 #   Defaults to false
@@ -277,6 +273,10 @@
 #   (optional) Barbican API version.
 #   Defaults to undef
 #
+# [*virtio_nic*]
+#   (optional) Whether to use virtio for the nic driver of VMs
+#   Defaults to undef
+#
 class nova::compute (
   $enabled                                     = true,
   $manage_service                              = true,
@@ -289,7 +289,6 @@ class nova::compute (
   $vncproxy_port                               = '6080',
   $vncproxy_path                               = '/vnc_auto.html',
   $force_config_drive                          = false,
-  $virtio_nic                                  = false,
   $instance_usage_audit                        = false,
   $instance_usage_audit_period                 = 'month',
   $mkisofs_cmd                                 = $::os_service_default,
@@ -333,6 +332,7 @@ class nova::compute (
   $barbican_auth_endpoint                      = undef,
   $barbican_endpoint                           = undef,
   $barbican_api_version                        = undef,
+  $virtio_nic                                  = undef,
 ) {
 
   include nova::deps
@@ -481,10 +481,10 @@ class nova::compute (
     nova_config { 'DEFAULT/force_config_drive': ensure => absent }
   }
 
-  if $virtio_nic {
-    # Enable the virtio network card for instances
-    nova_config { 'DEFAULT/libvirt_use_virtio_for_bridges': value => true }
+  if $virtio_nic != undef {
+    warning('The nova::compute::virtio_nic parameter has been deprecated and has no effect.')
   }
+  nova_config { 'DEFAULT/libvirt_use_virtio_for_bridges': ensure => absent }
 
   if $instance_usage_audit and $instance_usage_audit_period in ['hour', 'day', 'month', 'year'] {
     nova_config {
