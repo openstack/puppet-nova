@@ -1,0 +1,4 @@
+---
+upgrade:
+  - |
+    CentOS 8 Stream is no longer supported by this module.
