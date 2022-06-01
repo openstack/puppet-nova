@@ -7,37 +7,10 @@ describe 'nova::compute::libvirt_guests' do
   end
 
   shared_examples 'redhat-nova-compute-libvirt-guests' do
-    before do
-      facts.merge!({ :operatingsystem => 'RedHat', :osfamily => 'RedHat',
-        :operatingsystemrelease => 6.5,
-        :operatingsystemmajrelease => '6' })
-    end
 
-    describe 'with default parameters' do
+    context 'with default parameters' do
 
       it { is_expected.to contain_class('nova::params')}
-
-      it { is_expected.not_to contain_package('libvirt-client') }
-      it { is_expected.not_to contain_service('libvirt-guests') }
-
-      describe 'on rhel 7' do
-        before do
-          facts.merge!({
-            :operatingsystemrelease => 7.0,
-            :operatingsystemmajrelease => '7'
-          })
-        end
-
-        it { is_expected.to contain_service('libvirt-guests')}
-
-      end
-    end
-
-    describe 'with params' do
-      let :params do
-        { :enabled                   => true,
-        }
-      end
 
       it { is_expected.to contain_file('/etc/sysconfig/libvirt-guests').with(
         :ensure => 'present',
@@ -59,6 +32,19 @@ describe 'nova::compute::libvirt_guests' do
         :line => "SHUTDOWN_TIMEOUT=300",
         :tag  => 'libvirt-guests-file_line'
       ) }
+
+      it { is_expected.to contain_package('libvirt-guests').with(
+        :name   => 'libvirt-client',
+        :ensure => 'present'
+      ) }
+
+      it { is_expected.to_not contain_service('libvirt-guests')}
+    end
+
+    context 'with params' do
+      let :params do
+        { :enabled=> true }
+      end
 
       it { is_expected.to contain_package('libvirt-guests').with(
         :name   => 'libvirt-client',
