@@ -63,7 +63,7 @@ class nova::compute::libvirt::qemu(
   require nova::compute::libvirt
 
   if versioncmp($libvirt_version, '4.5') < 0 {
-    fail('libvirt verson < 4.5 is no longer supported')
+    fail('libvirt version < 4.5 is no longer supported')
   }
 
   Anchor['nova::config::begin']

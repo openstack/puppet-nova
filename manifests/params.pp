@@ -9,7 +9,7 @@ class nova::params {
   $user           = 'nova'
   $group          = 'nova'
 
-  # NOTE(tkajinam) These are kept for backword compatibility
+  # NOTE(tkajinam) These are kept for backward compatibility
   $nova_user      = $user
   $nova_group     = $group
 

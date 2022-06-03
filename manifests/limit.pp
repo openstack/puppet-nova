@@ -53,7 +53,7 @@
 #
 # [*endpoint_override*]
 #  (Optional) Always use this endpoint URL for requests for this client.
-#  Defualts to $::os_service_default.
+#  Defaults to $::os_service_default.
 #
 class nova::limit(
   $endpoint_id,

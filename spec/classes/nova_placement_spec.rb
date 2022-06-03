@@ -69,7 +69,7 @@ describe 'nova::placement' do
         )
       end
 
-      it 'configures the valid_interfaces parameter with a commma-separated string' do
+      it 'configures the valid_interfaces parameter with a comma-separated string' do
         is_expected.to contain_nova_config('placement/valid_interfaces').with_value('internal,public')
       end
     end

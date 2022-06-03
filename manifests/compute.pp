@@ -104,7 +104,7 @@
 #   Defaults to $::os_service_default
 #
 # [*reboot_timeout*]
-#   (optioanl) Time interval after which an instance is hard rebooted
+#   (optional) Time interval after which an instance is hard rebooted
 #   automatically. Setting this option to a time period in seconds will
 #   automatically hard reboot an instance if it has been stuck in a rebooting
 #   state longer than N seconds.
@@ -208,7 +208,7 @@
 #   Defaults to $::os_service_default
 #
 # [*default_access_ip_network_name*]
-#   (optioanal) Name of the network to be used to set access IPs for
+#   (optional) Name of the network to be used to set access IPs for
 #   instances. If there are multiple IPs to choose from, an arbitrary
 #   one will be chosen.
 #   Defaults to $::os_service_default

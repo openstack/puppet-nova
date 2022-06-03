@@ -85,7 +85,7 @@
 #
 # [*metadata_service_name*]
 #   (optional) Name of the service that will be providing the
-#   server functionality of nova-api-meatadata.
+#   server functionality of nova-api-metadata.
 #   If the value is undef, no management of the service will be
 #   done by puppet. If the value is defined, and manage_service
 #   is set to true, the service will be managed by Puppet.
@@ -142,7 +142,7 @@
 #   Defaults to $::os_service_default
 #
 # [*instance_list_cells_batch_fixed_size*]
-#   (optional) This controlls batch size of instances requested from each cell
+#   (optional) This controls batch size of instances requested from each cell
 #   database if ``instance_list_cells_batch_strategy``` is set to ``fixed``
 #   Defaults to $::os_service_default
 #

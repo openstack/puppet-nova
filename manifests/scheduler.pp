@@ -43,7 +43,7 @@
 #
 # [*placement_aggregate_required_for_tenants*]
 #   (Optional) This setting controls if a tenant with no aggregate affinity
-#   will be allowed to schedule to any availalbe node when
+#   will be allowed to schedule to any available node when
 #   ``limit_tenants_to_placement_aggregate`` is set to True.
 #   If aggregates are used to limit some tenants but not all, then this should
 #   be False.

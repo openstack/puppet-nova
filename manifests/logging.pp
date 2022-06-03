@@ -69,7 +69,7 @@
 #   See https://docs.python.org/2/howto/logging.html
 #
 # [*default_log_levels*]
-#   (0ptional) Hash of logger (keys) and level (values) pairs.
+#   (Optional) Hash of logger (keys) and level (values) pairs.
 #   Defaults to $::os_service_default
 #   Example:
 #     { 'amqp' => 'WARN', 'amqplib' => 'WARN', 'boto' => 'WARN',

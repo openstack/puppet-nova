@@ -47,7 +47,7 @@
 #   Defaults to $::os_service_default
 #
 # [*cpu_weight_multiplier*]
-#   (optional) CPU weight multilier ratio. This options determines how hosts
+#   (optional) CPU weight multiplier ratio. This options determines how hosts
 #   with more or less available CPU cores are weighed. Negative numbers mean
 #   to stack vs spread.
 #   Defaults to $::os_service_default

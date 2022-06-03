@@ -40,7 +40,7 @@
 #   TLS support built into QEMU.
 #   Prerequisite: TLS environment is configured correctly on all relevant
 #   Compute nodes.  This means, Certificate Authority (CA), server, client
-#   certificates, their corresponding keys, and their file permisssions are
+#   certificates, their corresponding keys, and their file permissions are
 #   in place, and are validated.
 #   Defaults to $::os_service_default
 #
@@ -305,7 +305,7 @@ class nova::migration::libvirt(
 
     if $transport_real == 'tls' or $transport_real == 'tcp' {
       if versioncmp($libvirt_version, '5.6') < 0 {
-        fail('libvirt verson < 5.6 is no longer supported')
+        fail('libvirt version < 5.6 is no longer supported')
       }
       # Since libvirt >= 5.6, system socket of libvirt should be activated
       # by systemd, not by --listen option

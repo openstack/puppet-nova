@@ -33,7 +33,7 @@
 #   Defaults to $::os_service_default
 #
 # [*max_backups*]
-#   Maximum nuber of backup files to keep.
+#   Maximum number of backup files to keep.
 #   Defaults to $::os_service_default
 #
 class nova::compute::libvirt::virtlogd (

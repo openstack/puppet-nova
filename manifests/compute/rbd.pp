@@ -67,7 +67,7 @@
 #   Default to 'client.nova'
 #
 # [*ephemeral_storage*]
-#   (optional) Wether or not to use the rbd driver for the nova
+#   (optional) Whether or not to use the rbd driver for the nova
 #   ephemeral storage or for the cinder volumes only.
 #   Defaults to true.
 #

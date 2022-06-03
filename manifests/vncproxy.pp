@@ -50,7 +50,7 @@
 #   Defaults to undef
 #
 # [*vencrypt_cert*]
-#   (optional) path to the certifiate to use when connecting to VNC servers
+#   (optional) path to the certificate to use when connecting to VNC servers
 #   supporting vencrypt
 #   Required when allow_vencrypt is true.
 #   Defaults to undef
