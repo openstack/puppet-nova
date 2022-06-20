@@ -143,6 +143,10 @@ class nova::compute::rbd (
       unless  => "/usr/bin/virsh secret-get-value ${libvirt_rbd_secret_uuid} | grep ${libvirt_key}",
       require => Exec['get-or-set virsh secret'],
     }
+  } else {
+    nova_config {
+      'libvirt/rbd_secret_uuid': ensure => absent;
+    }
   }
 
   if $ephemeral_storage {

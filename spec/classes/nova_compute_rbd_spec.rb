@@ -31,6 +31,7 @@ describe 'nova::compute::rbd' do
     it { is_expected.to contain_class('nova::params') }
 
     it 'configure nova.conf with default parameters' do
+        is_expected.to contain_nova_config('libvirt/rbd_secret_uuid').with_ensure('absent')
         is_expected.to contain_nova_config('libvirt/images_rbd_pool').with_value('rbd')
         is_expected.to contain_nova_config('libvirt/images_rbd_ceph_conf').with_value('/etc/ceph/ceph.conf')
         is_expected.to contain_nova_config('libvirt/rbd_user').with_value('nova')
