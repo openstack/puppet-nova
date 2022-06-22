@@ -1,0 +1,9 @@
+---
+upgrade:
+    The following resource types now use project scope credential instead of
+    system scope credential, following the change in Nova to retain legacy
+    project admin behavior.
+
+    - ``nova_aggregate``
+    - ``nova_flavor``
+    - ``nova_service``

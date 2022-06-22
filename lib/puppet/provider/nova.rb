@@ -7,23 +7,15 @@ class Puppet::Provider::Nova < Puppet::Provider::Openstack
 
   extend Puppet::Provider::Openstack::Auth
 
-  def self.project_request(service, action, properties=nil, options={})
-    self.request(service, action, properties, options, 'project')
-  end
-
-  def self.system_request(service, action, properties=nil, options={})
-    self.request(service, action, properties, options, 'system')
-  end
-
-  def self.request(service, action, properties=nil, options={}, scope='project')
+  def self.request(service, action, properties=nil)
     begin
       super
     rescue Puppet::Error::OpenstackAuthInputError => error
-      nova_request(service, action, error, properties, options)
+      nova_request(service, action, error, properties)
     end
   end
 
-  def self.nova_request(service, action, error, properties=nil, options={})
+  def self.nova_request(service, action, error, properties=nil)
     warning('Usage of keystone_authtoken parameters is deprecated.')
     properties ||= []
     @credentials.username = nova_credentials['username']
@@ -36,7 +28,7 @@ class Puppet::Provider::Nova < Puppet::Provider::Openstack
       @credentials.region_name = nova_credentials['region_name']
     end
     raise error unless @credentials.set?
-    Puppet::Provider::Openstack.request(service, action, properties, @credentials, options)
+    Puppet::Provider::Openstack.request(service, action, properties, @credentials)
   end
 
   def self.nova_manage_request(*args)

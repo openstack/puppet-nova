@@ -13,8 +13,8 @@ Puppet::Type.type(:nova_aggregate).provide(
   mk_resource_methods
 
   def self.instances
-    system_request('aggregate', 'list').collect do |el|
-      attrs = system_request('aggregate', 'show', el[:name])
+    request('aggregate', 'list').collect do |el|
+      attrs = request('aggregate', 'show', el[:name])
       properties = parsestring(attrs[:properties]) rescue nil
       new(
           :ensure            => :present,
@@ -43,7 +43,7 @@ Puppet::Type.type(:nova_aggregate).provide(
 
   def self.get_known_hosts
     # get list of hosts known to be active from openstack
-    return system_request('compute service', 'list', ['--service', 'nova-compute']).map{|el| el[:host]}
+    return request('compute service', 'list', ['--service', 'nova-compute']).map{|el| el[:host]}
   end
 
   def exists?
@@ -53,9 +53,9 @@ Puppet::Type.type(:nova_aggregate).provide(
   def destroy
     @property_hash[:hosts].each do |h|
       properties = [@property_hash[:name], h]
-      self.class.system_request('aggregate', 'remove host', properties)
+      self.class.request('aggregate', 'remove host', properties)
     end
-    self.class.system_request('aggregate', 'delete', @property_hash[:name])
+    self.class.request('aggregate', 'delete', @property_hash[:name])
     @property_hash.clear
   end
 
@@ -69,7 +69,7 @@ Puppet::Type.type(:nova_aggregate).provide(
         properties << "--property" << "#{key}=#{value}"
       end
     end
-    @property_hash = self.class.system_request('aggregate', 'create', properties)
+    @property_hash = self.class.request('aggregate', 'create', properties)
     if not @resource[:hosts].nil? and not @resource[:hosts].empty?
       # filter host list by known hosts if filter_hosts is set
       if @resource[:filter_hosts] == :true
@@ -77,14 +77,14 @@ Puppet::Type.type(:nova_aggregate).provide(
       end
       @resource[:hosts].each do |host|
         properties = [@property_hash[:name], host]
-        self.class.system_request('aggregate', 'add host', properties)
+        self.class.request('aggregate', 'add host', properties)
       end
     end
     @property_hash[:ensure] = :present
   end
 
   def availability_zone=(value)
-    self.class.system_request('aggregate', 'set', [ @resource[:name], '--zone', @resource[:availability_zone] ])
+    self.class.request('aggregate', 'set', [ @resource[:name], '--zone', @resource[:availability_zone] ])
   end
 
   def metadata=(value)
@@ -94,13 +94,13 @@ Puppet::Type.type(:nova_aggregate).provide(
       (@property_hash[:metadata].keys - @resource[:metadata].keys).each do |key|
         properties << "--property" << "#{key}"
       end
-      self.class.system_request('aggregate', 'unset', properties)
+      self.class.request('aggregate', 'unset', properties)
     end
     properties = [@resource[:name] ]
     @resource[:metadata].each do |key, value|
       properties << "--property" << "#{key}=#{value}"
     end
-    self.class.system_request('aggregate', 'set', properties)
+    self.class.request('aggregate', 'set', properties)
   end
 
   def hosts=(value)
@@ -111,11 +111,11 @@ Puppet::Type.type(:nova_aggregate).provide(
     if not @property_hash[:hosts].nil?
       # remove hosts that are not present in update
       (@property_hash[:hosts] - value).each do |host|
-        self.class.system_request('aggregate', 'remove host', [@property_hash[:id], host])
+        self.class.request('aggregate', 'remove host', [@property_hash[:id], host])
       end
       # add hosts that are not already present
       (value - @property_hash[:hosts]).each do |host|
-        self.class.system_request('aggregate', 'add host', [@property_hash[:id], host])
+        self.class.request('aggregate', 'add host', [@property_hash[:id], host])
       end
     end
   end
