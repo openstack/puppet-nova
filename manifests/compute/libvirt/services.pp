@@ -105,7 +105,7 @@ class nova::compute::libvirt::services (
       ensure => $libvirt_service_ensure,
       enable => $libvirt_service_enable,
       name   => $libvirt_service_name,
-      tag    => 'libvirt-service',
+      tag    => ['libvirt-service', 'libvirt-qemu-service'],
     }
     Libvirtd_config<||> ~> Service['libvirt']
 
@@ -196,7 +196,7 @@ class nova::compute::libvirt::services (
         ensure => running,
         enable => true,
         name   => $virtqemu_service_name,
-        tag    => ['libvirt-service', 'libvirt-modular-service'],
+        tag    => ['libvirt-service', 'libvirt-qemu-service', 'libvirt-modular-service'],
       }
       Virtqemud_config<||> ~> Service['virtlogd']
     }
