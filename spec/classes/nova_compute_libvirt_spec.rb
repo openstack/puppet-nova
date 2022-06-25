@@ -75,10 +75,6 @@ describe 'nova::compute::libvirt' do
       it { is_expected.to contain_nova_config('libvirt/swtpm_group').with_value('<SERVICE DEFAULT>')}
       it { is_expected.to contain_nova_config('libvirt/max_queues').with_value('<SERVICE DEFAULT>')}
       it { is_expected.to contain_nova_config('libvirt/num_memory_encrypted_guests').with_value('<SERVICE DEFAULT>')}
-      it { is_expected.to contain_libvirtd_config('log_outputs').with_value('<SERVICE DEFAULT>').with_quote(true)}
-      it { is_expected.to contain_libvirtd_config('log_filters').with_value('<SERVICE DEFAULT>').with_quote(true)}
-      it { is_expected.to contain_libvirtd_config('tls_priority').with_value('<SERVICE DEFAULT>').with_quote(true)}
-      it { is_expected.to contain_libvirtd_config('ovs_timeout').with_value('<SERVICE DEFAULT>')}
     end
 
     describe 'with params' do
