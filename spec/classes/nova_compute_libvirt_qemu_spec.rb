@@ -28,7 +28,7 @@ describe 'nova::compute::libvirt::qemu' do
             "rm memory_backing_dir",
             "rm nbd_tls",
         ],
-      }).that_notifies('Service[libvirt]') }
+      }) }
     end
 
     context 'when configuring qemu by default' do
@@ -48,7 +48,7 @@ describe 'nova::compute::libvirt::qemu' do
             "set nbd_tls 0",
         ],
         :tag     => 'qemu-conf-augeas',
-      }).that_notifies('Service[libvirt]') }
+      }) }
     end
 
     context 'when configuring qemu with overridden parameters' do
@@ -70,7 +70,7 @@ describe 'nova::compute::libvirt::qemu' do
             "set nbd_tls 0",
         ],
         :tag     => 'qemu-conf-augeas',
-      }).that_notifies('Service[libvirt]') }
+      }) }
     end
 
     context 'when configuring qemu with group parameter' do
@@ -96,7 +96,7 @@ describe 'nova::compute::libvirt::qemu' do
             "set nbd_tls 0",
         ],
         :tag     => 'qemu-conf-augeas',
-      }).that_notifies('Service[libvirt]') }
+      }) }
     end
 
     context 'when configuring qemu with vnc_tls' do
@@ -117,7 +117,7 @@ describe 'nova::compute::libvirt::qemu' do
             "set nbd_tls 0",
         ],
         :tag     => 'qemu-conf-augeas',
-      }).that_notifies('Service[libvirt]') }
+      }) }
     end
 
     context 'when configuring qemu with default_tls_verify enabled' do
@@ -138,7 +138,7 @@ describe 'nova::compute::libvirt::qemu' do
             "set nbd_tls 0",
         ],
         :tag     => 'qemu-conf-augeas',
-      }).that_notifies('Service[libvirt]') }
+      }) }
     end
 
     context 'when configuring qemu with vnc_tls_verify disabled' do
@@ -160,7 +160,7 @@ describe 'nova::compute::libvirt::qemu' do
             "set nbd_tls 0",
         ],
         :tag     => 'qemu-conf-augeas',
-      }).that_notifies('Service[libvirt]') }
+      }) }
     end
 
     context 'when configuring qemu with default_tls_verify disabled' do
@@ -181,7 +181,7 @@ describe 'nova::compute::libvirt::qemu' do
             "set nbd_tls 0",
         ],
         :tag     => 'qemu-conf-augeas',
-      }).that_notifies('Service[libvirt]') }
+      }) }
     end
 
     context 'when configuring qemu with nbd_tls and libvirt >= 4.5' do
@@ -202,7 +202,7 @@ describe 'nova::compute::libvirt::qemu' do
             "set nbd_tls 1",
         ],
         :tag     => 'qemu-conf-augeas',
-      }).that_notifies('Service[libvirt]') }
+      }) }
     end
 
   end
