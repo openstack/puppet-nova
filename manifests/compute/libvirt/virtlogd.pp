@@ -47,7 +47,6 @@ class nova::compute::libvirt::virtlogd (
 ) {
 
   include nova::deps
-  require nova::compute::libvirt
 
   [
     'log_level',

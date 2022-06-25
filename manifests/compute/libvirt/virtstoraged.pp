@@ -30,7 +30,6 @@ class nova::compute::libvirt::virtstoraged (
 ) {
 
   include nova::deps
-  require nova::compute::libvirt
 
   virtstoraged_config {
     'log_level':         value => $log_level;

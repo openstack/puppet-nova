@@ -60,7 +60,6 @@ class nova::compute::libvirt::qemu(
 ) inherits nova::compute::libvirt::version {
 
   include nova::deps
-  require nova::compute::libvirt
 
   if versioncmp($libvirt_version, '4.5') < 0 {
     fail('libvirt verson < 4.5 is no longer supported')

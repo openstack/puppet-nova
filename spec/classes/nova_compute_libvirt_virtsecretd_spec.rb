@@ -4,14 +4,6 @@ require 'spec_helper'
 
 describe 'nova::compute::libvirt::virtsecretd' do
 
-  let :pre_condition do
-    <<-eos
-    include nova
-    include nova::compute
-    include nova::compute::libvirt
-eos
-  end
-
   shared_examples_for 'nova-compute-libvirt-virtsecretd' do
 
     context 'with default parameters' do
@@ -20,7 +12,6 @@ eos
       end
 
       it { is_expected.to contain_class('nova::deps')}
-      it { is_expected.to contain_class('nova::compute::libvirt::virtsecretd')}
 
       it { is_expected.to contain_virtsecretd_config('log_level').with_value('<SERVICE DEFAULT>')}
       it { is_expected.to contain_virtsecretd_config('log_outputs').with_value('<SERVICE DEFAULT>').with_quote(true)}
@@ -42,7 +33,6 @@ eos
       end
 
       it { is_expected.to contain_class('nova::deps')}
-      it { is_expected.to contain_class('nova::compute::libvirt::virtsecretd')}
 
       it { is_expected.to contain_virtsecretd_config('log_level').with_value(params[:log_level])}
       it { is_expected.to contain_virtsecretd_config('log_outputs').with_value(params[:log_outputs]).with_quote(true)}
