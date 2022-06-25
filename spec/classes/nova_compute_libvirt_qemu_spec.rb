@@ -2,12 +2,6 @@ require 'spec_helper'
 
 describe 'nova::compute::libvirt::qemu' do
 
-  let :pre_condition do
-   'include nova
-    include nova::compute
-    include nova::compute::libvirt'
-  end
-
   shared_examples_for 'nova compute libvirt with qemu' do
 
     context 'when not configuring qemu' do

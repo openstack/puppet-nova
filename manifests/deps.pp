@@ -66,6 +66,7 @@ class nova::deps {
   # Manage libvirt configurations during the config phase
   Anchor['nova::config::begin'] -> Libvirtd_config<||> -> Anchor['nova::config::end']
   Anchor['nova::config::begin'] -> Virtlogd_config<||> -> Anchor['nova::config::end']
+  Anchor['nova::config::begin'] -> Virtlockd_config<||> -> Anchor['nova::config::end']
   Anchor['nova::config::begin'] -> Virtnodedevd_config<||> -> Anchor['nova::config::end']
   Anchor['nova::config::begin'] -> Virtproxyd_config<||> -> Anchor['nova::config::end']
   Anchor['nova::config::begin'] -> Virtqemud_config<||> -> Anchor['nova::config::end']

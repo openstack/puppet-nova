@@ -43,7 +43,6 @@ class nova::compute::libvirt::virtqemud (
 ) {
 
   include nova::deps
-  require nova::compute::libvirt
 
   virtqemud_config {
     'log_level':         value => $log_level;

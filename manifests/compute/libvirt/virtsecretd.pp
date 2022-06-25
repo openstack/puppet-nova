@@ -42,7 +42,6 @@ class nova::compute::libvirt::virtsecretd (
 ) {
 
   include nova::deps
-  require nova::compute::libvirt
 
   virtsecretd_config {
     'log_level':         value => $log_level;

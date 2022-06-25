@@ -47,7 +47,6 @@ class nova::compute::libvirt::virtlogd (
 ) {
 
   include nova::deps
-  require nova::compute::libvirt
 
   virtlogd_config {
     'log_level':         value => pick($log_level, $::os_service_default);
