@@ -4,8 +4,8 @@ describe 'nova::compute::spice' do
   shared_examples 'nova::compute::spice' do
     it { should contain_nova_config('spice/agent_enabled').with_value('true')}
     it { should contain_nova_config('spice/server_proxyclient_address').with_value('127.0.0.1')}
-    it { should_not contain_nova_config('spice/html5proxy_base_url')}
-    it { should contain_nova_config('spice/server_listen').with_value(nil)}
+    it { should contain_nova_config('spice/html5proxy_base_url').with_value('<SERVICE DEFAULT>')}
+    it { should contain_nova_config('spice/server_listen').with_value('<SERVICE DEFAULT>')}
 
     context 'when overriding params' do
       let :params do

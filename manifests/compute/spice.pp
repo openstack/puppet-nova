@@ -10,7 +10,7 @@
 #
 # [*server_listen*]
 #   (optional)  IP address on which instance spice servers should listen
-#   Defaults to undef
+#   Defaults to $::os_service_default
 #
 # [*server_proxyclient_address*]
 #   (optional) Management IP Address on which instance spiceservers will
@@ -34,13 +34,13 @@
 #   Defaults to '/spice_auto.html'
 #
 class nova::compute::spice(
-  $agent_enabled                    = true,
-  $server_listen                    = undef,
-  $server_proxyclient_address       = '127.0.0.1',
-  $proxy_host                       = false,
-  $proxy_protocol                   = 'http',
-  $proxy_port                       = '6082',
-  $proxy_path                       = '/spice_auto.html',
+  $agent_enabled              = true,
+  $server_listen              = $::os_service_default,
+  $server_proxyclient_address = '127.0.0.1',
+  $proxy_host                 = false,
+  $proxy_protocol             = 'http',
+  $proxy_port                 = '6082',
+  $proxy_path                 = '/spice_auto.html',
 ) {
 
   include nova::deps
@@ -49,6 +49,10 @@ class nova::compute::spice(
     $html5proxy_base_url = "${proxy_protocol}://${proxy_host}:${proxy_port}${proxy_path}"
     nova_config {
       'spice/html5proxy_base_url': value => $html5proxy_base_url;
+    }
+  } else {
+    nova_config {
+      'spice/html5proxy_base_url': value => $::os_service_default;
     }
   }
 
