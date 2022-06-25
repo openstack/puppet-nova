@@ -50,12 +50,12 @@ class nova::compute::libvirt::virtlogd (
   require nova::compute::libvirt
 
   virtlogd_config {
-    'log_level':         value => pick($log_level, $::os_service_default);
-    'log_filters':       value => pick($log_filters, $::os_service_default), quote => true;
-    'log_outputs':       value => pick($log_outputs, $::os_service_default), quote => true;
-    'max_clients':       value => pick($max_clients, $::os_service_default);
-    'admin_max_clients': value => pick($admin_max_clients, $::os_service_default);
-    'max_size':          value => pick($max_size, $::os_service_default);
-    'max_backups':       value => pick($max_backups, $::os_service_default);
+    'log_level':         value => $log_level;
+    'log_filters':       value => $log_filters, quote => true;
+    'log_outputs':       value => $log_outputs, quote => true;
+    'max_clients':       value => $max_clients;
+    'admin_max_clients': value => $admin_max_clients;
+    'max_size':          value => $max_size;
+    'max_backups':       value => $max_backups;
   }
 }
