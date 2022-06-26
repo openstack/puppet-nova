@@ -1,0 +1,6 @@
+---
+features:
+  - |
+    The new ``nova::compute::libvirt::networks`` class has been added. This
+    class can be used to disable the default libvirt network, which is not used
+    in OpenStack deployments.
