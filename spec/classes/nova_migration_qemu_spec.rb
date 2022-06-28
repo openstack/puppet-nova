@@ -19,7 +19,7 @@ describe 'nova::migration::qemu' do
       it { is_expected.to contain_augeas('qemu-conf-migration-ports').with({
         :context => '/files/etc/libvirt/qemu.conf',
         :changes => [ "rm migration_port_min", "rm migration_port_max" ],
-      }).that_notifies('Service[libvirt]') }
+      }) }
     end
 
     context 'when configuring qemu by default' do
@@ -32,7 +32,7 @@ describe 'nova::migration::qemu' do
         :context => '/files/etc/libvirt/qemu.conf',
         :changes => [ "set migration_port_min 49152", "set migration_port_max 49215" ],
         :tag     => 'qemu-conf-augeas',
-      }).that_notifies('Service[libvirt]') }
+      }) }
     end
 
     context 'when configuring qemu with overridden parameters' do
@@ -47,7 +47,7 @@ describe 'nova::migration::qemu' do
         :context => '/files/etc/libvirt/qemu.conf',
         :changes => [ "set migration_port_min 61138", "set migration_port_max 61200" ],
         :tag     => 'qemu-conf-augeas',
-      }).that_notifies('Service[libvirt]') }
+      }) }
     end
   end
 
