@@ -127,6 +127,7 @@ class nova::compute::libvirt::services (
       name   => $virtlock_service_name,
       tag    => 'libvirt-service',
     }
+    Virtlockd_config<||> ~> Service['virtlockd']
   }
 
   if $virtlog_service_name {
