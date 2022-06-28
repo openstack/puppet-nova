@@ -200,28 +200,6 @@
 #   Trusted Platform Module (TPM) functionality, runs as.
 #   Defaults to $::os_service_default
 #
-# [*log_outputs*]
-#   (optional) Defines log outputs, as specified in
-#   https://libvirt.org/logging.html
-#   Defaults to $::os_service_default
-#
-# [*log_filters*]
-#   (optional) Defines a filter to select a different logging level
-#   for a given category log outputs, as specified in
-#   https://libvirt.org/logging.html
-#   Defaults to $::os_service_default
-#
-# [*tls_priority*]
-#   (optional) Override the compile time default TLS priority string. The
-#   default is usually "NORMAL" unless overridden at build time.
-#   Only set this if it is desired for libvirt to deviate from
-#   the global default settings.
-#   Defaults to $::os_service_default
-#
-# [*ovs_timeout*]
-#   (optional) A timeout for openvswitch calls made by libvirt
-#   Defaults to $::os_service_default
-#
 # [*max_queues*]
 #   (optional) The maximum number of virtio queue pairs that can be enabled
 #   when creating a multiqueue guest. The number of virtio queues allocated
@@ -234,6 +212,28 @@
 #   (optional) The maximum number of guests with encrypted memory which can
 #   run concurrently on this compute host.
 #   Defaults to $::os_service_default
+#
+# [*log_outputs*]
+#   (optional) Defines log outputs, as specified in
+#   https://libvirt.org/logging.html
+#   Defaults to undef
+#
+# [*log_filters*]
+#   (optional) Defines a filter to select a different logging level
+#   for a given category log outputs, as specified in
+#   https://libvirt.org/logging.html
+#   Defaults to undef
+#
+# [*tls_priority*]
+#   (optional) Override the compile time default TLS priority string. The
+#   default is usually "NORMAL" unless overridden at build time.
+#   Only set this if it is desired for libvirt to deviate from
+#   the global default settings.
+#   Defaults to undef
+#
+# [*ovs_timeout*]
+#   (optional) A timeout for openvswitch calls made by libvirt
+#   Defaults to undef
 #
 class nova::compute::libvirt (
   $ensure_package                             = 'present',
@@ -274,12 +274,13 @@ class nova::compute::libvirt (
   $swtpm_enabled                              = $::os_service_default,
   $swtpm_user                                 = $::os_service_default,
   $swtpm_group                                = $::os_service_default,
-  $log_outputs                                = $::os_service_default,
-  $log_filters                                = $::os_service_default,
-  $tls_priority                               = $::os_service_default,
-  $ovs_timeout                                = $::os_service_default,
   $max_queues                                 = $::os_service_default,
   $num_memory_encrypted_guests                = $::os_service_default,
+  # DEPRECATED PARAMETERS
+  $log_outputs                                = undef,
+  $log_filters                                = undef,
+  $tls_priority                               = undef,
+  $ovs_timeout                                = undef,
 ) inherits nova::params {
 
   include nova::deps
@@ -311,11 +312,11 @@ class nova::compute::libvirt (
   }
 
   if !$modular_libvirt {
-    libvirtd_config {
-      'log_outputs':  value => $log_outputs, quote => true;
-      'log_filters':  value => $log_filters, quote => true;
-      'tls_priority': value => $tls_priority, quote => true;
-      'ovs_timeout':  value => $ovs_timeout;
+    ['log_outputs', 'log_filters', 'tls_priority', 'ovs_timeout'].each |String $libvirtd_opt| {
+      if getvar($libvirtd_opt) != undef {
+        warning("The ${libvirtd_opt} parameter is deprecated. Use the nova::compute::libvirt::libvirtd class.")
+        include nova::compute::libvirt::libvirtd
+      }
     }
   }
 

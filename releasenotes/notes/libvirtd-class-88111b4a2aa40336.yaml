@@ -1,0 +1,14 @@
+---
+deprecations:
+  - |
+    The following parameters of the ``nova::compute::libvirt`` class have been
+    deprecated. Use the ``nova::compute::libvirt::libvirtd`` class intead.
+
+    - ``log_output``
+    - ``log_filters``
+    - ``tls_priority``
+    - ``ovs_timeout``
+
+features:
+  - |
+    The new ``nova::compute::libvirt::libvirtd`` class has been added.
