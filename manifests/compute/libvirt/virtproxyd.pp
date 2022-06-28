@@ -50,7 +50,6 @@ class nova::compute::libvirt::virtproxyd (
 ) {
 
   include nova::deps
-  require nova::compute::libvirt
 
   virtproxyd_config {
     'log_level':         value => $log_level;

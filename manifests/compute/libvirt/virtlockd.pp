@@ -47,7 +47,6 @@ class nova::compute::libvirt::virtlockd (
 ) {
 
   include nova::deps
-  require nova::compute::libvirt
 
   virtlockd_config {
     'log_level':         value => pick($log_level, $::os_service_default);
@@ -58,8 +57,4 @@ class nova::compute::libvirt::virtlockd (
     'max_size':          value => pick($max_size, $::os_service_default);
     'max_backups':       value => pick($max_backups, $::os_service_default);
   }
-
-  Anchor['nova::config::begin']
-  -> Virtlockd_config<||>
-  -> Anchor['nova::config::end']
 }

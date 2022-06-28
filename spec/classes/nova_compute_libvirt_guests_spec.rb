@@ -2,10 +2,6 @@ require 'spec_helper'
 require 'puppet/util/package'
 describe 'nova::compute::libvirt_guests' do
 
-  let :pre_condition do
-    "include nova\ninclude nova::compute"
-  end
-
   shared_examples 'redhat-nova-compute-libvirt-guests' do
 
     context 'with default parameters' do
