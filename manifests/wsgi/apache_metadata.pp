@@ -76,6 +76,14 @@
 #     { python-path => '/my/python/virtualenv' }
 #     Defaults to {}
 #
+#   [*headers*]
+#     (optional) Headers for the vhost.
+#     Defaults to undef
+#
+#   [*request_headers*]
+#     (optional) Modifies collected request headers in various ways.
+#     Defaults to undef
+#
 #   [*vhost_custom_fragment*]
 #     (optional) Passes a string of custom configuration
 #     directives to be placed at the end of the vhost configuration.
@@ -113,6 +121,8 @@ class nova::wsgi::apache_metadata (
   $access_log_format           = false,
   $error_log_file              = undef,
   $custom_wsgi_process_options = {},
+  $headers                     = undef,
+  $request_headers             = undef,
   $vhost_custom_fragment       = undef,
 ) {
 
@@ -155,6 +165,8 @@ class nova::wsgi::apache_metadata (
     wsgi_script_dir             => $::nova::params::nova_wsgi_script_path,
     wsgi_script_file            => 'nova-metadata-api',
     wsgi_script_source          => $::nova::params::nova_metadata_wsgi_script_source,
+    headers                     => $headers,
+    request_headers             => $request_headers,
     custom_wsgi_process_options => $custom_wsgi_process_options,
     access_log_file             => $access_log_file,
     access_log_format           => $access_log_format,
