@@ -137,7 +137,7 @@ class nova::compute::libvirt::services (
       name   => $virtlog_service_name,
       tag    => 'libvirt-service',
     }
-    Virtlogd_config<||> ~> Service['libvirt']
+    Virtlogd_config<||> ~> Service['virtlogd']
   }
 
   if ! $modular_libvirt {
@@ -169,7 +169,7 @@ class nova::compute::libvirt::services (
         name   => $virtsecret_service_name,
         tag    => ['libvirt-service', 'libvirt-modular-service'],
       }
-      Virtsecretd_config<||> ~> Service['virtlogd']
+      Virtsecretd_config<||> ~> Service['virtsecretd']
     }
 
     if $virtnodedev_service_name {
@@ -184,7 +184,7 @@ class nova::compute::libvirt::services (
         name   => $virtnodedev_service_name,
         tag    => ['libvirt-service', 'libvirt-modular-service'],
       }
-      Virtnodedevd_config<||> ~> Service['virtlogd']
+      Virtnodedevd_config<||> ~> Service['virtnodedevd']
     }
 
     if $virtqemu_service_name {
@@ -199,7 +199,7 @@ class nova::compute::libvirt::services (
         name   => $virtqemu_service_name,
         tag    => ['libvirt-service', 'libvirt-qemu-service', 'libvirt-modular-service'],
       }
-      Virtqemud_config<||> ~> Service['virtlogd']
+      Virtqemud_config<||> ~> Service['virtqemud']
     }
 
     if $virtproxy_service_name {
@@ -209,7 +209,7 @@ class nova::compute::libvirt::services (
         name   => $virtproxy_service_name,
         tag    => ['libvirt-service', 'libvirt-modular-service'],
       }
-      Virtproxyd_config<||> ~> Service['virtlogd']
+      Virtproxyd_config<||> ~> Service['virtproxyd']
     }
 
     if $virtstorage_service_name {
@@ -224,7 +224,7 @@ class nova::compute::libvirt::services (
         name   => $virtstorage_service_name,
         tag    => ['libvirt-service', 'libvirt-modular-service'],
       }
-      Virtstoraged_config<||> ~> Service['virtlogd']
+      Virtstoraged_config<||> ~> Service['virtstoraged']
     }
   }
 }
