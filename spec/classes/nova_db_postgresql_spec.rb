@@ -50,15 +50,13 @@ describe 'nova::db::postgresql' do
     context "on #{os}" do
       let (:facts) do
         facts.merge(OSDefaults.get_facts({
-          :os_workers     => 8,
-          :concat_basedir => '/var/lib/puppet/concat'
+          # puppet-postgresql requires the service_provider fact provided by
+          # puppetlabs-postgresql.
+          :service_provider => 'systemd'
         }))
       end
 
-      # TODO(tkajinam): Remove this once puppet-postgresql supports CentOS 9
-      unless facts[:osfamily] == 'RedHat' and facts[:operatingsystemmajrelease].to_i >= 9
-        it_configures 'nova::db::postgresql'
-      end
+      it_configures 'nova::db::postgresql'
     end
   end
 
