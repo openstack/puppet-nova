@@ -159,16 +159,6 @@
 #   metadata handling from api class.
 #   Defaults to false
 #
-# [*ratelimits*]
-#   (optional) A string that is a semicolon-separated list of 5-tuples.
-#   See http://docs.openstack.org/trunk/config-reference/content/configuring-compute-API.html
-#   Example: '(POST, "*", .*, 10, MINUTE);(POST, "*/servers", ^/servers, 50, DAY);(PUT, "*", .*, 10, MINUTE)'
-#   Defaults to undef
-#
-# [*ratelimits_factory*]
-#   (optional) The rate limiting factory to use
-#   Defaults to undef
-#
 # [*validate*]
 #   (optional) Whether to validate the service is working after any service refreshes
 #   Defaults to undef
@@ -221,8 +211,6 @@ class nova::api(
   $list_records_by_skipping_down_cells         = $::os_service_default,
   # DEPRECATED PARAMETER
   $nova_metadata_wsgi_enabled                  = false,
-  $ratelimits                                  = undef,
-  $ratelimits_factory                          = undef,
   $validate                                    = undef,
   $validation_options                          = undef,
   $use_forwarded_for                           = undef,
@@ -237,10 +225,6 @@ class nova::api(
 
   if !$nova_metadata_wsgi_enabled {
     warning('Running nova metadata api via evenlet is deprecated and will be removed in Stein release.')
-  }
-
-  if $ratelimits != undef {
-    warning('The nova::api::ratelimits parameter has been deprecated and has no effect')
   }
 
   if $validate != undef {
