@@ -1,0 +1,6 @@
+---
+features:
+  - |
+    The ``nova::wsgi::apache_api`` class and
+    the ``nova::wsgi::apache_metadata`` class now support customizing
+    request/response headers added by apache.
