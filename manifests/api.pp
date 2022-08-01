@@ -254,14 +254,8 @@ class nova::api(
     warning('The use_forwarded_for parameter has been deprecated.')
   }
 
-  if $instance_name_template {
-    $instance_name_template_real = $instance_name_template
-  } else {
-    warning('Using a false value for instance_name_template is deprecated. Use $::os_service_default instead.')
-    $instance_name_template_real = $::os_service_default
-  }
   nova_config {
-    'DEFAULT/instance_name_template': value => $instance_name_template_real;
+    'DEFAULT/instance_name_template': value => $instance_name_template;
   }
 
   # enable metadata in eventlet if we do not run metadata via wsgi (nova::metadata)
