@@ -127,16 +127,6 @@ class nova::logging(
   include nova::deps
   include nova::params
 
-  if !is_service_default($log_dir) {
-    # This should force an update the selinux role if the logfile exists.
-    # It will be incorrect if the file was created by the dbsync exec resources.
-    file { "${log_dir}/nova-manage.log":
-      owner   => $::nova::params::user,
-      group   => $::nova::params::group,
-      require => Anchor['nova::service::end']
-    }
-  }
-
   oslo::log { 'nova_config':
     debug                         => $debug,
     use_stderr                    => $use_stderr,

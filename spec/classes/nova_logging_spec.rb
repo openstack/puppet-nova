@@ -69,9 +69,6 @@ describe 'nova::logging' do
         :watch_log_file => '<SERVICE DEFAULT>',
         :debug          => '<SERVICE DEFAULT>',
       )
-      is_expected.to contain_file('/var/log/nova/nova-manage.log').with(
-        :owner        => 'nova',
-      )
     end
   end
 
@@ -87,9 +84,6 @@ describe 'nova::logging' do
         :log_file            => '/var/log/foo/nova.log',
         :watch_log_file      => true,
         :debug               => true,
-      )
-      is_expected.to contain_file('/var/log/foo/nova-manage.log').with(
-        :owner        => 'nova',
       )
     end
   end
@@ -112,9 +106,6 @@ describe 'nova::logging' do
        :instance_format                => '[instance: %(uuid)s] ',
        :instance_uuid_format           => '[instance: %(uuid)s] ',
        :log_date_format                => '%Y-%m-%d %H:%M:%S',
-      )
-      is_expected.to contain_file('/var/log/foo/nova-manage.log').with(
-        :owner        => 'nova',
       )
     end
   end
