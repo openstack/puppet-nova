@@ -1,0 +1,7 @@
+---
+upgrade:
+  - |
+    The following parameters of the ``nova::api`` class have been removed.
+
+    - ``ratelimits``
+    - ``ratelimits_factory``
