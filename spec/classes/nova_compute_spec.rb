@@ -70,6 +70,7 @@ describe 'nova::compute' do
         :ensure => 'present',
       ) }
 
+      it { is_expected.to contain_class('nova::policy') }
       it { is_expected.to contain_class('nova::availability_zone') }
 
       it 'installs mkisofs package and sets config_drive_format' do
