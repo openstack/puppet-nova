@@ -18,6 +18,7 @@ describe 'nova::wsgi::apache_api' do
         :bind_port                   => 8774,
         :group                       => 'nova',
         :path                        => '/',
+        :priority                    => 10,
         :servername                  => facts[:fqdn],
         :ssl                         => false,
         :threads                     => 1,
@@ -31,8 +32,8 @@ describe 'nova::wsgi::apache_api' do
         :headers                     => nil,
         :request_headers             => nil,
         :custom_wsgi_process_options => {},
-        :access_log_file             => false,
-        :access_log_format           => false,
+        :access_log_file             => nil,
+        :access_log_format           => nil,
         :error_log_file              => nil,
       )}
     end
