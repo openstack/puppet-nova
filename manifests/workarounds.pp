@@ -33,6 +33,11 @@
 #   before compute nodes have been able to update their service record.
 #   Defaults to $::os_service_default
 #
+# [*skip_hypervisor_version_check_on_lm*]
+#   (Optional) When this is enabled, it will skip version-checking of
+#   hypervisors during live migration.
+#   Defaults to $::os_service_default
+#
 # DEPRECATED
 #
 #  [*enable_numa_live_migration*]
@@ -45,6 +50,7 @@ class nova::workarounds (
   $enable_qemu_monitor_announce_self             = $::os_service_default,
   $wait_for_vif_plugged_event_during_hard_reboot = $::os_service_default,
   $disable_compute_service_check_for_ffu         = $::os_service_default,
+  $skip_hypervisor_version_check_on_lm           = $::os_service_default,
   # DEPRECATED PARAMETER
   $enable_numa_live_migration              = undef,
 ) {
@@ -67,6 +73,8 @@ class nova::workarounds (
       value => join(any2array($wait_for_vif_plugged_event_during_hard_reboot), ',');
     'workarounds/disable_compute_service_check_for_ffu':
       value => $disable_compute_service_check_for_ffu;
+    'workarounds/skip_hypervisor_version_check_on_lm':
+      value => $skip_hypervisor_version_check_on_lm;
   }
 
 }
