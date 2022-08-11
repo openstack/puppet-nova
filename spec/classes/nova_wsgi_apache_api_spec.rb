@@ -125,13 +125,11 @@ describe 'nova::wsgi::apache_api' do
         case facts[:osfamily]
         when 'Debian'
           {
-            :httpd_service_name     => 'apache2',
             :wsgi_script_path       => '/usr/lib/cgi-bin/nova',
             :api_wsgi_script_source => '/usr/bin/nova-api-wsgi',
           }
         when 'RedHat'
           {
-            :httpd_service_name     => 'httpd',
             :wsgi_script_path       => '/var/www/cgi-bin/nova',
             :api_wsgi_script_source => '/usr/bin/nova-api-wsgi',
           }

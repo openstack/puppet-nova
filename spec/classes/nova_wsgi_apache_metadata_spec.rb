@@ -121,13 +121,11 @@ describe 'nova::wsgi::apache_metadata' do
         case facts[:osfamily]
         when 'Debian'
           {
-            :httpd_service_name          => 'apache2',
             :wsgi_script_path            => '/usr/lib/cgi-bin/nova',
             :metadata_wsgi_script_source => '/usr/bin/nova-metadata-wsgi',
           }
         when 'RedHat'
           {
-            :httpd_service_name          => 'httpd',
             :wsgi_script_path            => '/var/www/cgi-bin/nova',
             :metadata_wsgi_script_source => '/usr/bin/nova-metadata-wsgi',
           }
