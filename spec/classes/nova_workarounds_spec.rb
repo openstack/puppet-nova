@@ -15,6 +15,7 @@ describe 'nova::workarounds' do
       it { is_expected.to contain_nova_config('workarounds/enable_qemu_monitor_announce_self').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('workarounds/wait_for_vif_plugged_event_during_hard_reboot').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('workarounds/disable_compute_service_check_for_ffu').with_value('<SERVICE DEFAULT>') }
+      it { is_expected.to contain_nova_config('workarounds/skip_hypervisor_version_check_on_lm').with_value('<SERVICE DEFAULT>') }
     end
 
     context 'with overridden parameters' do
@@ -26,6 +27,7 @@ describe 'nova::workarounds' do
           :enable_qemu_monitor_announce_self             => true,
           :wait_for_vif_plugged_event_during_hard_reboot => ['normal', 'direct'],
           :disable_compute_service_check_for_ffu         => true,
+          :skip_hypervisor_version_check_on_lm           => true,
         }
       end
 
@@ -35,6 +37,7 @@ describe 'nova::workarounds' do
       it { is_expected.to contain_nova_config('workarounds/enable_qemu_monitor_announce_self').with_value(true) }
       it { is_expected.to contain_nova_config('workarounds/wait_for_vif_plugged_event_during_hard_reboot').with_value('normal,direct') }
       it { is_expected.to contain_nova_config('workarounds/disable_compute_service_check_for_ffu').with_value(true) }
+      it { is_expected.to contain_nova_config('workarounds/skip_hypervisor_version_check_on_lm').with_value(true) }
     end
 
   end

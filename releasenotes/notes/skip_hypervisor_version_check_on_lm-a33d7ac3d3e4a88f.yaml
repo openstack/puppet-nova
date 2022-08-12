@@ -1,0 +1,5 @@
+---
+features:
+  - |
+    The new ``nova::compute::skip_hypervisor_version_check_on_lm`` parameter
+    has been added.
