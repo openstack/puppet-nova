@@ -340,6 +340,8 @@ class nova::compute (
 
   $image_type_exclude_list_real = pick(join(any2array($image_type_exclude_list), ','), $::os_service_default)
 
+  include nova::policy
+
   include nova::pci
   include nova::compute::pci
   include nova::compute::mdev
