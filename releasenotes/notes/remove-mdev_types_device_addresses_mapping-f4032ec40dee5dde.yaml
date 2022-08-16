@@ -1,0 +1,5 @@
+---
+upgrade:
+  - |
+    The ``nova::compute::mdev::mdev_types_device_addresses_mapping`` parameter
+    has been removed.
