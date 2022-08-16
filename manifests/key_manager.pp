@@ -14,9 +14,7 @@ class nova::key_manager (
 
   include nova::deps
 
-  $backend_real = pick($nova::compute::keymgr_backend, $backend)
-
   oslo::key_manager { 'nova_config':
-    backend => $backend_real,
+    backend => $backend,
   }
 }

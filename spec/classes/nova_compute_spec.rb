@@ -103,10 +103,6 @@ describe 'nova::compute' do
           :resize_confirm_window              => '3',
           :shutdown_timeout                   => '100',
           :resume_guests_state_on_host_boot   => true,
-          :keymgr_backend                     => 'castellan.key_manager.barbican_key_manager.BarbicanKeyManager',
-          :barbican_endpoint                  => 'http://localhost',
-          :barbican_api_version               => 'v1',
-          :barbican_auth_endpoint             => 'http://127.0.0.1:5000/v3',
           :max_concurrent_builds              => 15,
           :max_concurrent_live_migrations     => '4',
           :sync_power_state_pool_size         => '10',
@@ -139,14 +135,6 @@ describe 'nova::compute' do
           :ensure => '2012.1-2',
           :tag    => ['openstack', 'nova-package']
         })
-      end
-
-      it 'configures barbican service' do
-        is_expected.to contain_nova_config('key_manager/backend').with_value('castellan.key_manager.barbican_key_manager.BarbicanKeyManager')
-        is_expected.to contain_nova_config('barbican/barbican_endpoint').with_value('http://localhost')
-        is_expected.to contain_nova_config('barbican/barbican_api_version').with_value('v1')
-        is_expected.to contain_nova_config('barbican/auth_endpoint').with_value('http://127.0.0.1:5000/v3')
-        is_expected.to contain_package('cryptsetup').with_ensure('installed')
       end
 
       it 'configures vnc in nova.conf' do

@@ -1,0 +1,9 @@
+---
+upgrade:
+  - |
+    The following parameters of the ``nova::compute`` class have been removed.
+
+    - ``keymgr_backend``
+    - ``barbican_auth_endpoint``
+    - ``barbican_endpoint``
+    - ``barbican_api_version``

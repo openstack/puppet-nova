@@ -50,10 +50,6 @@ class nova::key_manager::barbican (
 
   include nova::deps
 
-  $barbican_endpoint_real = pick($nova::compute::barbican_endpoint, $barbican_endpoint)
-  $auth_endpoint_real = pick($nova::compute::barbican_auth_endpoint, $auth_endpoint)
-  $barbican_api_version_real = pick($nova::compute::barbican_api_version, $barbican_api_version)
-
   # cryptsetup is required when Barbican is encrypting volumes
   ensure_packages('cryptsetup', {
     ensure => present,
@@ -61,9 +57,9 @@ class nova::key_manager::barbican (
   })
 
   oslo::key_manager::barbican { 'nova_config':
-    barbican_endpoint       => $barbican_endpoint_real,
-    barbican_api_version    => $barbican_api_version_real,
-    auth_endpoint           => $auth_endpoint_real,
+    barbican_endpoint       => $barbican_endpoint,
+    barbican_api_version    => $barbican_api_version,
+    auth_endpoint           => $auth_endpoint,
     retry_delay             => $retry_delay,
     number_of_retries       => $number_of_retries,
     barbican_endpoint_type  => $barbican_endpoint_type,

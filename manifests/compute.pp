@@ -255,24 +255,6 @@
 #
 # DEPRECATED PARAMETERS
 #
-# [*keymgr_backend*]
-#   (optional) Key Manager service class.
-#   Example of valid value: castellan.key_manager.barbican_key_manager.BarbicanKeyManager
-#   Defaults to undef
-#
-# [*barbican_auth_endpoint*]
-#   (optional) Keystone v3 API URL.
-#   Example: http://localhost:5000/v3
-#   Defaults to undef
-#
-# [*barbican_endpoint*]
-#   (optional) Barbican URL.
-#   Defaults to undef
-#
-# [*barbican_api_version*]
-#   (optional) Barbican API version.
-#   Defaults to undef
-#
 # [*virtio_nic*]
 #   (optional) Whether to use virtio for the nic driver of VMs
 #   Defaults to undef
@@ -328,10 +310,6 @@ class nova::compute (
   $block_device_allocate_retries               = $::os_service_default,
   $block_device_allocate_retries_interval      = $::os_service_default,
   # DEPRECATED PARAMETERS
-  $keymgr_backend                              = undef,
-  $barbican_auth_endpoint                      = undef,
-  $barbican_endpoint                           = undef,
-  $barbican_api_version                        = undef,
   $virtio_nic                                  = undef,
 ) {
 
@@ -437,18 +415,6 @@ class nova::compute (
     'DEFAULT/block_device_allocate_retries':     value => $block_device_allocate_retries;
     'DEFAULT/block_device_allocate_retries_interval':
       value => $block_device_allocate_retries_interval;
-  }
-
-  if $keymgr_backend != undef {
-    warning('The keymgr_backend parameter has been deprecated. Use the nova::key_manager class')
-    include nova::key_manager
-  }
-
-  ['barbican_auth_endpoint', 'barbican_endpoint', 'barbican_api_version'].each |String $barbican_opt| {
-    if getvar("${barbican_opt}") != undef {
-      warning("The ${barbican_opt} parameter is deprecated. Use the nova::key_manager::barbican class")
-    }
-    include nova::key_manager::barbican
   }
 
   if ($vnc_enabled) {
