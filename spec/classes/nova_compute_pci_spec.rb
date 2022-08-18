@@ -4,8 +4,8 @@ describe 'nova::compute::pci' do
 
   shared_examples_for 'nova-compute-pci' do
     context 'with default parameters' do
-      it 'clears pci_passthrough_whitelist configuration' do
-        is_expected.to contain_nova_config('pci/passthrough_whitelist').with(:value => '<SERVICE DEFAULT>')
+      it 'clears pci device_spec configuration' do
+        is_expected.to contain_nova_config('pci/device_spec').with(:value => '<SERVICE DEFAULT>')
       end
     end
 
@@ -25,8 +25,8 @@ describe 'nova::compute::pci' do
           ],
         }
       end
-      it 'configures nova pci_passthrough_whitelist entries' do
-        is_expected.to contain_nova_config('pci/passthrough_whitelist').with(
+      it 'configures nova pci device_spec entries' do
+        is_expected.to contain_nova_config('pci/device_spec').with(
           'value' => ['{"vendor_id":"8086","product_id":"0126"}','{"vendor_id":"9096","product_id":"1520","physical_network":"physnet1"}']
         )
       end
@@ -39,8 +39,8 @@ describe 'nova::compute::pci' do
         }
       end
 
-      it 'configures nova pci_passthrough_whitelist entries' do
-        is_expected.to contain_nova_config('pci/passthrough_whitelist').with(
+      it 'configures nova pci device_spec entries' do
+        is_expected.to contain_nova_config('pci/device_spec').with(
           'value' => ['{"vendor_id":"8086","product_id":"0126"}','{"vendor_id":"9096","product_id":"1520","physical_network":"physnet1"}']
         )
       end
@@ -53,8 +53,8 @@ describe 'nova::compute::pci' do
         }
       end
 
-      it 'clears pci_passthrough_whitelist configuration' do
-        is_expected.to contain_nova_config('pci/passthrough_whitelist').with(:value => '<SERVICE DEFAULT>')
+      it 'clears pci device_spec configuration' do
+        is_expected.to contain_nova_config('pci/device_spec').with(:value => '<SERVICE DEFAULT>')
       end
     end
 
@@ -65,8 +65,8 @@ describe 'nova::compute::pci' do
         }
       end
 
-      it 'clears pci_passthrough_whitelist configuration' do
-        is_expected.to contain_nova_config('pci/passthrough_whitelist').with(:value => '<SERVICE DEFAULT>')
+      it 'clears pci device_spec configuration' do
+        is_expected.to contain_nova_config('pci/device_spec').with(:value => '<SERVICE DEFAULT>')
       end
     end
   end
