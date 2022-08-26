@@ -74,12 +74,28 @@
 #     The log file name for the virtualhost.
 #     Optional. Defaults to undef.
 #
+#   [*access_log_pipe*]
+#     Specifies a pipe where Apache sends access logs for the virtualhost.
+#     Optional. Defaults to undef.
+#
+#   [*access_log_syslog*]
+#     Sends the virtualhost access log messages to syslog.
+#     Optional. Defaults to undef.
+#
 #   [*access_log_format*]
 #     The log format for the virtualhost.
 #     Optional. Defaults to undef.
 #
 #   [*error_log_file*]
 #     The error log file name for the virtualhost.
+#     Optional. Defaults to undef.
+#
+#   [*error_log_pipe*]
+#     Specifies a pipe where Apache sends error logs for the virtualhost.
+#     Optional. Defaults to undef.
+#
+#   [*error_log_syslog*]
+#     Sends the virtualhost error log messages to syslog.
 #     Optional. Defaults to undef.
 #
 #   [*custom_wsgi_process_options*]
@@ -131,8 +147,12 @@ class nova::wsgi::apache_api (
   $threads                     = 1,
   $priority                    = 10,
   $access_log_file             = undef,
+  $access_log_pipe             = undef,
+  $access_log_syslog           = undef,
   $access_log_format           = undef,
   $error_log_file              = undef,
+  $error_log_pipe              = undef,
+  $error_log_syslog            = undef,
   $custom_wsgi_process_options = {},
   $headers                     = undef,
   $request_headers             = undef,
@@ -174,8 +194,12 @@ class nova::wsgi::apache_api (
     request_headers             => $request_headers,
     custom_wsgi_process_options => $custom_wsgi_process_options,
     access_log_file             => $access_log_file,
+    access_log_pipe             => $access_log_pipe,
+    access_log_syslog           => $access_log_syslog,
     access_log_format           => $access_log_format,
     error_log_file              => $error_log_file,
+    error_log_pipe              => $error_log_pipe,
+    error_log_syslog            => $error_log_syslog,
   }
 
 }

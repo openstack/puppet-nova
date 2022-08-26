@@ -1,0 +1,6 @@
+---
+features:
+  - |
+    Added parameters for advanced configuration of httpd access and error log
+    destinations including piped logging and syslog (see `mod_syslog`). Note
+    that mod_syslog requires Apache2 >= 2.5.0.
