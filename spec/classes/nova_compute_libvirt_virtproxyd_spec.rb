@@ -27,19 +27,23 @@ eos
       it { is_expected.to contain_virtproxyd_config('log_filters').with_value('<SERVICE DEFAULT>').with_quote(true)}
       it { is_expected.to contain_virtproxyd_config('max_clients').with_value('<SERVICE DEFAULT>')}
       it { is_expected.to contain_virtproxyd_config('admin_max_clients').with_value('<SERVICE DEFAULT>')}
+      it { is_expected.to contain_virtproxyd_config('max_client_requests').with_value('<SERVICE DEFAULT>')}
+      it { is_expected.to contain_virtproxyd_config('admin_max_client_requests').with_value('<SERVICE DEFAULT>')}
       it { is_expected.to contain_virtproxyd_config('ovs_timeout').with_value('<SERVICE DEFAULT>')}
       it { is_expected.to contain_virtproxyd_config('tls_priority').with_value('<SERVICE DEFAULT>').with_quote(true)}
     end
 
     context 'with specified parameters' do
       let :params do
-        { :log_level         => 3,
-          :log_outputs       => '3:syslog',
-          :log_filters       => '1:logging 4:object 4:json 4:event 1:util',
-          :max_clients       => 1024,
-          :admin_max_clients => 5,
-          :ovs_timeout       => 10,
-          :tls_priority      => 'NORMAL:-VERS-SSL3.0',
+        { :log_level                 => 3,
+          :log_outputs               => '3:syslog',
+          :log_filters               => '1:logging 4:object 4:json 4:event 1:util',
+          :max_clients               => 1024,
+          :admin_max_clients         => 5,
+          :max_client_requests       => 42,
+          :admin_max_client_requests => 55,
+          :ovs_timeout               => 10,
+          :tls_priority              => 'NORMAL:-VERS-SSL3.0',
         }
       end
 
@@ -51,6 +55,8 @@ eos
       it { is_expected.to contain_virtproxyd_config('log_filters').with_value(params[:log_filters]).with_quote(true)}
       it { is_expected.to contain_virtproxyd_config('max_clients').with_value(params[:max_clients])}
       it { is_expected.to contain_virtproxyd_config('admin_max_clients').with_value(params[:admin_max_clients])}
+      it { is_expected.to contain_virtproxyd_config('max_client_requests').with_value(params[:max_client_requests])}
+      it { is_expected.to contain_virtproxyd_config('admin_max_client_requests').with_value(params[:admin_max_client_requests])}
       it { is_expected.to contain_virtproxyd_config('ovs_timeout').with_value(params[:ovs_timeout])}
       it { is_expected.to contain_virtproxyd_config('tls_priority').with_value(params[:tls_priority]).with_quote(true)}
     end
