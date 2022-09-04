@@ -54,9 +54,9 @@ describe 'nova::compute::libvirt' do
       it { is_expected.to contain_nova_config('libvirt/snapshot_image_format').with_value('<SERVICE DEFAULT>')}
       it { is_expected.to contain_nova_config('libvirt/snapshots_directory').with_value('<SERVICE DEFAULT>')}
       it { is_expected.to contain_nova_config('libvirt/disk_cachemodes').with_ensure('absent')}
-      it { is_expected.to contain_nova_config('libvirt/inject_password').with_value(false)}
-      it { is_expected.to contain_nova_config('libvirt/inject_key').with_value(false)}
-      it { is_expected.to contain_nova_config('libvirt/inject_partition').with_value(-2)}
+      it { is_expected.to contain_nova_config('libvirt/inject_password').with_value('<SERVICE DEFAULT>')}
+      it { is_expected.to contain_nova_config('libvirt/inject_key').with_value('<SERVICE DEFAULT>')}
+      it { is_expected.to contain_nova_config('libvirt/inject_partition').with_value('<SERVICE DEFAULT>')}
       it { is_expected.to contain_nova_config('libvirt/enabled_perf_events').with_value('<SERVICE DEFAULT>')}
       it { is_expected.to contain_nova_config('libvirt/sysinfo_serial').with_value('<SERVICE DEFAULT>')}
       it { is_expected.to contain_nova_config('libvirt/device_detach_attempts').with_value('<SERVICE DEFAULT>')}
@@ -273,9 +273,9 @@ describe 'nova::compute::libvirt' do
 
       it { is_expected.to contain_nova_config('DEFAULT/compute_driver').with_value('libvirt.LibvirtDriver')}
       it { is_expected.to contain_nova_config('libvirt/virt_type').with_value('kvm')}
-      it { is_expected.to contain_nova_config('libvirt/inject_password').with_value(false)}
-      it { is_expected.to contain_nova_config('libvirt/inject_key').with_value(false)}
-      it { is_expected.to contain_nova_config('libvirt/inject_partition').with_value(-2)}
+      it { is_expected.to contain_nova_config('libvirt/inject_password').with_value('<SERVICE DEFAULT>')}
+      it { is_expected.to contain_nova_config('libvirt/inject_key').with_value('<SERVICE DEFAULT>')}
+      it { is_expected.to contain_nova_config('libvirt/inject_partition').with_value('<SERVICE DEFAULT>')}
       it { is_expected.to contain_nova_config('vnc/server_listen').with_value('127.0.0.1')}
       it { is_expected.to contain_nova_config('libvirt/enabled_perf_events').with_value('<SERVICE DEFAULT>')}
       it { is_expected.to contain_nova_config('libvirt/device_detach_attempts').with_value('<SERVICE DEFAULT>')}
