@@ -213,6 +213,13 @@
 #   run concurrently on this compute host.
 #   Defaults to $::os_service_default
 #
+# [*wait_soft_reboot_seconds*]
+#   (optional) Number of seconds to wait for instance to shut down after soft
+#   reboot request is made.
+#   Defaults to $::os_service_default
+#
+# DEPRECATED PARAMETRS
+#
 # [*log_outputs*]
 #   (optional) Defines log outputs, as specified in
 #   https://libvirt.org/logging.html
@@ -276,6 +283,7 @@ class nova::compute::libvirt (
   $swtpm_group                                = $::os_service_default,
   $max_queues                                 = $::os_service_default,
   $num_memory_encrypted_guests                = $::os_service_default,
+  $wait_soft_reboot_seconds                   = $::os_service_default,
   # DEPRECATED PARAMETERS
   $log_outputs                                = undef,
   $log_filters                                = undef,
@@ -387,6 +395,7 @@ class nova::compute::libvirt (
     'libvirt/swtpm_group':                 value => $swtpm_group;
     'libvirt/max_queues':                  value => $max_queues;
     'libvirt/num_memory_encrypted_guests': value => $num_memory_encrypted_guests;
+    'libvirt/wait_soft_reboot_seconds':    value => $wait_soft_reboot_seconds;
   }
 
   validate_legacy(Array, 'validate_array', $cpu_models)
