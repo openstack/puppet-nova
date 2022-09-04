@@ -264,7 +264,7 @@ class nova::compute::libvirt (
   $manage_libvirt_services                    = true,
   $rx_queue_size                              = $::os_service_default,
   $tx_queue_size                              = $::os_service_default,
-  $file_backed_memory                         = undef,
+  $file_backed_memory                         = $::os_service_default,
   $images_type                                = $::os_service_default,
   $volume_use_multipath                       = $::os_service_default,
   $nfs_mount_options                          = $::os_service_default,

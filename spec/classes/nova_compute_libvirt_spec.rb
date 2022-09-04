@@ -64,6 +64,7 @@ describe 'nova::compute::libvirt' do
       it { is_expected.to contain_nova_config('vnc/server_listen').with_value('127.0.0.1')}
       it { is_expected.to contain_nova_config('libvirt/rx_queue_size').with_value('<SERVICE DEFAULT>')}
       it { is_expected.to contain_nova_config('libvirt/tx_queue_size').with_value('<SERVICE DEFAULT>')}
+      it { is_expected.to contain_nova_config('libvirt/file_backed_memory').with_value('<SERVICE DEFAULT>')}
       it { is_expected.to contain_nova_config('libvirt/images_type').with_value('<SERVICE DEFAULT>')}
       it { is_expected.to contain_nova_config('libvirt/volume_use_multipath').with_value('<SERVICE DEFAULT>')}
       it { is_expected.to contain_nova_config('libvirt/nfs_mount_options').with_value('<SERVICE DEFAULT>')}
@@ -101,6 +102,7 @@ describe 'nova::compute::libvirt' do
           :preallocate_images                         => 'space',
           :rx_queue_size                              => 512,
           :tx_queue_size                              => 1024,
+          :file_backed_memory                         => 2048,
           :images_type                                => 'raw',
           :volume_use_multipath                       => false,
           :nfs_mount_options                          => 'rw,intr,nolock',
@@ -142,6 +144,7 @@ describe 'nova::compute::libvirt' do
       it { is_expected.to contain_nova_config('vnc/server_listen').with_value('0.0.0.0')}
       it { is_expected.to contain_nova_config('libvirt/rx_queue_size').with_value(512)}
       it { is_expected.to contain_nova_config('libvirt/tx_queue_size').with_value(1024)}
+      it { is_expected.to contain_nova_config('libvirt/file_backed_memory').with_value(2048)}
       it { is_expected.to contain_nova_config('libvirt/images_type').with_value('raw')}
       it { is_expected.to contain_nova_config('libvirt/volume_use_multipath').with_value(false)}
       it { is_expected.to contain_nova_config('libvirt/nfs_mount_options').with_value('rw,intr,nolock')}
