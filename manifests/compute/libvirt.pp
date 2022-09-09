@@ -71,17 +71,17 @@
 #
 # [*inject_password*]
 #   (optional) Inject the admin password at boot time, without an agent.
-#   Defaults to false
+#   Defaults to $::os_service_default
 #
 # [*inject_key*]
 #   (optional) Inject the ssh public key at boot time.
-#   Defaults to false
+#   Defaults to $::os_service_default
 #
 # [*inject_partition*]
 #   (optional) The partition to inject to : -2 => disable, -1 => inspect
 #   (libguestfs only), 0 => not partitioned, >0 => partition
 #   number (integer value)
-#   Defaults to -2
+#   Defaults to $::os_service_default
 #
 # [*enabled_perf_events*]
 #   (optional) This is a performance event list which could be used as monitor.
@@ -256,9 +256,9 @@ class nova::compute::libvirt (
   $hw_disk_discard                            = $::os_service_default,
   $hw_machine_type                            = $::os_service_default,
   $sysinfo_serial                             = $::os_service_default,
-  $inject_password                            = false,
-  $inject_key                                 = false,
-  $inject_partition                           = -2,
+  $inject_password                            = $::os_service_default,
+  $inject_key                                 = $::os_service_default,
+  $inject_partition                           = $::os_service_default,
   $enabled_perf_events                        = $::os_service_default,
   $device_detach_attempts                     = $::os_service_default,
   $device_detach_timeout                      = $::os_service_default,
