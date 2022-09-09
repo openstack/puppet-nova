@@ -1,0 +1,5 @@
+---
+features:
+  - |
+    The new ``nova::compute::libvirt::wait_soft_reboot_seconds`` parameter has
+    been added.

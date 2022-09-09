@@ -76,6 +76,7 @@ describe 'nova::compute::libvirt' do
       it { is_expected.to contain_nova_config('libvirt/swtpm_group').with_value('<SERVICE DEFAULT>')}
       it { is_expected.to contain_nova_config('libvirt/max_queues').with_value('<SERVICE DEFAULT>')}
       it { is_expected.to contain_nova_config('libvirt/num_memory_encrypted_guests').with_value('<SERVICE DEFAULT>')}
+      it { is_expected.to contain_nova_config('libvirt/wait_soft_reboot_seconds').with_value('<SERVICE DEFAULT>')}
     end
 
     describe 'with params' do
@@ -119,6 +120,7 @@ describe 'nova::compute::libvirt' do
           :max_queues                                 => 4,
           :num_memory_encrypted_guests                => 255,
           :modular_libvirt                            => true,
+          :wait_soft_reboot_seconds                   => 120,
         }
       end
 
@@ -156,6 +158,8 @@ describe 'nova::compute::libvirt' do
       it { is_expected.to contain_nova_config('libvirt/swtpm_group').with_value('libvirt')}
       it { is_expected.to contain_nova_config('libvirt/max_queues').with_value(4)}
       it { is_expected.to contain_nova_config('libvirt/num_memory_encrypted_guests').with_value(255)}
+      it { is_expected.to contain_nova_config('libvirt/wait_soft_reboot_seconds').with_value(120)}
+
       it {
         is_expected.to contain_service('libvirt').with(
           :name   => 'custom_service',
