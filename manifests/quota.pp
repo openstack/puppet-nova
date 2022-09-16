@@ -53,6 +53,10 @@
 #   quota to be exceeded.
 #   Defaults to $::os_service_default
 #
+# [*count_usage_from_placement*]
+#   (optional Enable the counting of quota usage from the placement service.
+#   Defaults to $::os_service_default
+#
 class nova::quota(
   $driver                            = $::os_service_default,
   $instances                         = $::os_service_default,
@@ -66,6 +70,7 @@ class nova::quota(
   $server_groups                     = $::os_service_default,
   $server_group_members              = $::os_service_default,
   $recheck_quota                     = $::os_service_default,
+  $count_usage_from_placement        = $::os_service_default,
 ) {
 
   include nova::deps
@@ -83,5 +88,6 @@ class nova::quota(
     'quota/server_groups':               value => $server_groups;
     'quota/server_group_members':        value => $server_group_members;
     'quota/recheck_quota':               value => $recheck_quota;
+    'quota/count_usage_from_placement':  value => $count_usage_from_placement;
   }
 }

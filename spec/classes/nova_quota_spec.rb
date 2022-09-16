@@ -18,6 +18,7 @@ describe 'nova::quota' do
       :server_groups               => '<SERVICE DEFAULT>',
       :server_group_members        => '<SERVICE DEFAULT>',
       :recheck_quota               => '<SERVICE DEFAULT>',
+      :count_usage_from_placement  => '<SERVICE DEFAULT>',
     }
   end
 
@@ -52,6 +53,7 @@ describe 'nova::quota' do
           :server_groups               => 20,
           :server_group_members        => 20,
           :recheck_quota               => true,
+          :count_usage_from_placement  => false,
         })
       end
 

@@ -1,0 +1,5 @@
+---
+features:
+  - |
+    The new ``nova::quota::count_usage_from_placement`` parameter has been
+    added.
