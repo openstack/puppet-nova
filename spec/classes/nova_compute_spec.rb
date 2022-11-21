@@ -369,23 +369,10 @@ describe 'nova::compute' do
         let (:platform_params) do
           {
             :nova_compute_package => 'openstack-nova-compute',
-            :nova_compute_service => 'openstack-nova-compute'
+            :nova_compute_service => 'openstack-nova-compute',
+            :mkisofs_package      => 'xorriso',
+            :mkisofs_cmd          => 'mkisofs'
           }
-        end
-        if facts[:operatingsystemmajrelease].to_i >= 9
-          before do
-            platform_params.merge!({
-              :mkisofs_package => 'xorriso',
-              :mkisofs_cmd     => 'mkisofs'
-            })
-          end
-        else
-          before do
-            platform_params.merge!({
-              :mkisofs_package => 'genisoimage',
-              :mkisofs_cmd     => '<SERVICE DEFAULT>'
-            })
-          end
         end
       end
       it_behaves_like 'nova-compute'

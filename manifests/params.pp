@@ -59,13 +59,8 @@ class nova::params {
       $nova_api_wsgi_script_source       = '/usr/bin/nova-api-wsgi'
       $nova_metadata_wsgi_script_source  = '/usr/bin/nova-metadata-wsgi'
       $messagebus_service_name           = 'dbus'
-      if versioncmp($::operatingsystemmajrelease, '9') >= 0 {
-        $mkisofs_package_name            = 'xorriso'
-        $mkisofs_cmd                     = 'mkisofs'
-      } else {
-        $mkisofs_package_name            = 'genisoimage'
-        $mkisofs_cmd                     = false
-      }
+      $mkisofs_package_name              = 'xorriso'
+      $mkisofs_cmd                       = 'mkisofs'
     }
     'Debian': {
       # package names
