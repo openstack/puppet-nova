@@ -362,24 +362,6 @@
 #   (optional) The strategy to use for auth: noauth or keystone.
 #   Defaults to undef
 #
-# [*os_region_name*]
-#   (optional) Sets the os_region_name flag. For environments with
-#   more than one endpoint per service, this is required to make
-#   things such as cinder volume attach work. If you don't set this
-#   and you have multiple endpoints, you will get AmbiguousEndpoint
-#   exceptions in the nova API service.
-#   Defaults to undef
-#
-# [*cinder_catalog_info*]
-#   (optional) Info to match when looking for cinder in the service
-#   catalog. Format is: separated values of the form:
-#   <service_type>:<service_name>:<endpoint_type>
-#   Defaults to undef
-#
-# [*cross_az_attach*]
-#   (optional) Allow attach between instance and volume in different availability zones.
-#   Defaults to undef
-#
 # [*upgrade_level_cert*]
 #  (optional) Sets a version cap for messages sent to cert services
 #  Defaults to undef
@@ -461,9 +443,6 @@ class nova(
   $dhcp_domain                            = $::os_service_default,
   # DEPRECATED PARAMETERS
   $auth_strategy                          = undef,
-  $os_region_name                         = undef,
-  $cinder_catalog_info                    = undef,
-  $cross_az_attach                        = undef,
   $upgrade_level_cert                     = undef,
 ) inherits nova::params {
 
@@ -473,21 +452,6 @@ class nova(
   validate_legacy(Array, 'validate_array', $enabled_ssl_apis)
   if empty($enabled_ssl_apis) and $use_ssl {
       warning('enabled_ssl_apis is empty but use_ssl is set to true')
-  }
-
-  if $os_region_name != undef {
-    warning('The os_region_name parameter is deprecated and will be removed \
-in a future release. Use nova::cinder::os_region_name instead')
-  }
-
-  if $cinder_catalog_info != undef {
-    warning('The catalog_info parameter is deprecated and will be removed \
-in a future release. Use nova::cinder::catalog_info instead')
-  }
-
-  if $cross_az_attach != undef {
-    warning('The cross_az_attach parameter is deprecated. \
-Use nova::cinder::cross_az_attach instead.')
   }
 
   if $upgrade_level_cert != undef {
