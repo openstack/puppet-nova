@@ -303,10 +303,6 @@
 #  (optional) Sets a version cap for messages sent between cells services
 #  Defaults to $::os_service_default
 #
-# [*upgrade_level_network*]
-#  (optional) Sets a version cap for messages sent to network services
-#  Defaults to $::os_service_default
-#
 # [*upgrade_level_scheduler*]
 #  (optional) Sets a version cap for messages sent to scheduler services
 #  Defaults to $::os_service_default
@@ -384,6 +380,10 @@
 #  (optional) Sets a version cap for messages sent to cert services
 #  Defaults to undef
 #
+# [*upgrade_level_network*]
+#  (optional) Sets a version cap for messages sent to network services
+#  Defaults to $::os_service_default
+#
 class nova(
   $ensure_package                         = 'present',
   $default_transport_url                  = $::os_service_default,
@@ -448,7 +448,6 @@ class nova(
   $upgrade_level_compute                  = $::os_service_default,
   $upgrade_level_conductor                = $::os_service_default,
   $upgrade_level_intercell                = $::os_service_default,
-  $upgrade_level_network                  = $::os_service_default,
   $upgrade_level_scheduler                = $::os_service_default,
   $cpu_allocation_ratio                   = $::os_service_default,
   $ram_allocation_ratio                   = $::os_service_default,
@@ -465,6 +464,7 @@ class nova(
   $cinder_catalog_info                    = undef,
   $cross_az_attach                        = undef,
   $upgrade_level_cert                     = undef,
+  $upgrade_level_network                  = undef,
 ) inherits nova::params {
 
   include nova::deps
@@ -491,8 +491,13 @@ Use nova::cinder::cross_az_attach instead.')
   }
 
   if $upgrade_level_cert != undef {
-    warning('The upgrade_level_cert parameter is deprecated and will be removed \
-in a future release.')
+    warning("The upgrade_level_cert parameter is deprecated and will be removed \
+in a future release.")
+  }
+
+  if $upgrade_level_network != undef {
+    warning("The upgrade_level_network parameter is deprecated and will be removed \
+in a future release.")
   }
 
   if $use_ssl {
@@ -712,7 +717,7 @@ but should be one of: ssh-rsa, ssh-dsa, ssh-ecdsa.")
     'upgrade_levels/compute':     value => $upgrade_level_compute;
     'upgrade_levels/conductor':   value => $upgrade_level_conductor;
     'upgrade_levels/intercell':   value => $upgrade_level_intercell;
-    'upgrade_levels/network':     value => $upgrade_level_network;
+    'upgrade_levels/network':     value => pick($upgrade_level_network, $::os_service_default);
     'upgrade_levels/scheduler':   value => $upgrade_level_scheduler;
   }
 }
