@@ -176,7 +176,7 @@
 #
 # [*max_concurrent_builds*]
 #   (optional) Maximum number of instance builds to run concurrently
-#   Defaults to $::os_service_default
+#   Defaults to undef
 #
 # [*max_concurrent_live_migrations*]
 #   (optional) Maximum number of live migrations to run in parallel.
@@ -350,7 +350,7 @@ class nova::compute (
   $barbican_auth_endpoint                      = $::os_service_default,
   $barbican_endpoint                           = $::os_service_default,
   $barbican_api_version                        = $::os_service_default,
-  $max_concurrent_builds                       = $::os_service_default,
+  $max_concurrent_builds                       = undef,
   $max_concurrent_live_migrations              = $::os_service_default,
   $sync_power_state_pool_size                  = $::os_service_default,
   $sync_power_state_interval                   = $::os_service_default,
@@ -386,10 +386,6 @@ class nova::compute (
   $cpu_dedicated_set_real = pick(join(any2array($cpu_dedicated_set), ','), $::os_service_default)
 
   $image_type_exclude_list_real = pick(join(any2array($image_type_exclude_list), ','), $::os_service_default)
-
-  $max_concurrent_builds_real = pick(
-    $::nova::compute::ironic::max_concurrent_builds,
-    $max_concurrent_builds)
 
   include nova::pci
   if $pci_passthrough {
@@ -544,7 +540,6 @@ Use the same parameter in nova::api class.')
     'barbican/auth_endpoint':                    value => $barbican_auth_endpoint;
     'barbican/barbican_endpoint':                value => $barbican_endpoint;
     'barbican/barbican_api_version':             value => $barbican_api_version;
-    'DEFAULT/max_concurrent_builds':             value => $max_concurrent_builds_real;
     'DEFAULT/max_concurrent_live_migrations':    value => $max_concurrent_live_migrations;
     'DEFAULT/sync_power_state_pool_size':        value => $sync_power_state_pool_size;
     'DEFAULT/sync_power_state_interval':         value => $sync_power_state_interval;
@@ -563,6 +558,18 @@ Use the same parameter in nova::api class.')
     'DEFAULT/block_device_allocate_retries':     value => $block_device_allocate_retries_real;
     'DEFAULT/block_device_allocate_retries_interval':
       value => $block_device_allocate_retries_interval_real;
+  }
+
+  if $max_concurrent_builds != undef {
+    nova_config {
+      'DEFAULT/max_concurrent_builds': value => $max_concurrent_builds;
+    }
+  } else {
+    if defined(Class[nova::compute::ironic]) and $::nova::compute::ironic::max_concurrent_builds == undef {
+      nova_config {
+        'DEFAULT/max_concurrent_builds': value => $::os_service_default
+      }
+    }
   }
 
   if ($vnc_enabled) {
