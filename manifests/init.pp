@@ -588,7 +588,7 @@ but should be one of: ssh-rsa, ssh-dsa, ssh-ecdsa.")
     'DEFAULT/ssl_only':                      value => $ssl_only;
     'DEFAULT/cert':                          value => $cert;
     'DEFAULT/key':                           value => $key;
-    'console/ssl_ciphers':                   value => $console_ssl_ciphers;
+    'console/ssl_ciphers':                   value => join(any2array($console_ssl_ciphers), ':');
     'console/ssl_minimum_version':           value => $console_ssl_minimum_version;
     'DEFAULT/my_ip':                         value => $my_ip;
     'DEFAULT/host':                          value => $host;

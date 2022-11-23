@@ -466,6 +466,14 @@ describe 'nova' do
       it { is_expected.to contain_nova_config('DEFAULT/initial_disk_allocation_ratio').with_value(3.0) }
     end
 
+    context 'with array used for console_ssl_ciphers' do
+      let :params do
+        {
+          :console_ssl_ciphers => ['kEECDH+aECDSA+AES', 'kEECDH+AES+aRSA', 'kEDH+aRSA+AES']
+        }
+      end
+      it {is_expected.to contain_nova_config('console/ssl_ciphers').with_value('kEECDH+aECDSA+AES:kEECDH+AES+aRSA:kEDH+aRSA+AES') }
+    end
   end
 
 
