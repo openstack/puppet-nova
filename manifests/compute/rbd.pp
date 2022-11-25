@@ -78,8 +78,12 @@
 # [*ceph_client_ensure*]
 #  (optional) Ensure value for ceph client package.
 #  Defaults to 'present'.
-
-
+#
+# [*package_ensure*]
+#   (optional) The state of qemu-block-extra package. This parameter has effect
+#   only in Ubuntu/Debian.
+#   Defaults to 'present'
+#
 class nova::compute::rbd (
   $libvirt_rbd_user,
   $libvirt_rbd_secret_uuid                      = false,
@@ -93,6 +97,7 @@ class nova::compute::rbd (
   $ephemeral_storage                            = true,
   $manage_ceph_client                           = true,
   $ceph_client_ensure                           = 'present',
+  $package_ensure                               = 'present',
 ) {
 
   include nova::deps
@@ -103,6 +108,13 @@ class nova::compute::rbd (
     package { 'ceph-client-package':
       ensure => $ceph_client_ensure,
       name   => $nova::params::ceph_client_package_name,
+      tag    => ['openstack', 'nova-support-package'],
+    }
+  }
+
+  if $::osfamily == 'Debian' {
+    package { 'qemu-block-extra':
+      ensure => $package_ensure,
       tag    => ['openstack', 'nova-support-package'],
     }
   }

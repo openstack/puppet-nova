@@ -26,7 +26,7 @@ describe 'nova::compute::rbd' do
     { :libvirt_rbd_user => 'nova' }
   end
 
-  shared_examples_for 'nova compute rbd' do
+  shared_examples_for 'nova::compute::rbd' do
 
     it { is_expected.to contain_class('nova::params') }
 
@@ -168,6 +168,21 @@ describe 'nova::compute::rbd' do
     end
   end
 
+  shared_examples_for 'nova::compute::rbd in Debian' do
+    it 'should install the qemu-block-extra package' do
+      is_expected.to contain_package('qemu-block-extra').with(
+        :ensure => 'present',
+        :tag    => ['openstack', 'nova-support-package'],
+      )
+    end
+  end
+
+  shared_examples_for 'nova::compute::rbd in RedHat' do
+    it 'should not install the qemu-block-extra package' do
+      is_expected.to_not contain_package('qemu-block-extra')
+    end
+  end
+
   on_supported_os({
     :supported_os => OSDefaults.get_supported_os
   }).each do |os,facts|
@@ -184,7 +199,10 @@ describe 'nova::compute::rbd' do
           { :ceph_client_package => 'ceph-common' }
         end
       end
-      it_configures 'nova compute rbd'
+      it_configures 'nova::compute::rbd'
+      if facts[:osfamily] == 'Debian'
+        it_configures "nova::compute::rbd in #{facts[:osfamily]}"
+      end
     end
   end
 
