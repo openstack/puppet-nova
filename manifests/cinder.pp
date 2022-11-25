@@ -77,14 +77,14 @@
 #
 class nova::cinder (
   $password            = $::os_service_default,
-  $auth_type           = undef,
-  $auth_url            = undef,
+  $auth_type           = 'password',
+  $auth_url            = 'http://127.0.0.1:5000/',
   $timeout             = $::os_service_default,
-  $project_name        = undef,
-  $project_domain_name = undef,
-  $system_scope        = undef,
-  $username            = undef,
-  $user_domain_name    = undef,
+  $project_name        = 'services',
+  $project_domain_name = 'Default',
+  $system_scope        = $::os_service_default,
+  $username            = 'cinder',
+  $user_domain_name    = 'Default',
   $os_region_name      = $::os_service_default,
   $catalog_info        = $::os_service_default,
   $http_retries        = $::os_service_default,
@@ -94,31 +94,31 @@ class nova::cinder (
 
   include nova::deps
 
-  $os_region_name_real = pick($::nova::os_region_name, $os_region_name)
-  $catalog_info_real = pick($::nova::cinder_catalog_info, $catalog_info)
-  $cross_az_attach_real = pick($::nova::cross_az_attach, $cross_az_attach)
-
   if is_service_default($password) {
-    $auth_type_real           = pick($auth_type, $::os_service_default)
-    $auth_url_real            = pick($auth_url, $::os_service_default)
-    $project_name_real        = pick($project_name, $::os_service_default)
-    $project_domain_name_real = pick($project_domain_name, $::os_service_default)
-    $system_scope_real        = pick($system_scope, $::os_service_default)
-    $username_real            = pick($username, $::os_service_default)
-    $user_domain_name_real    = pick($user_domain_name, $::os_service_default)
+    # Controller nodes do not require the admin credential while controller
+    # nodes require it. We keep the credential optional here to avoid
+    # requiring unnecessary credential.
+    $auth_type_real           = $::os_service_default
+    $auth_url_real            = $::os_service_default
+    $project_name_real        = $::os_service_default
+    $project_domain_name_real = $::os_service_default
+    $system_scope_real        = $::os_service_default
+    $username_real            = $::os_service_default
+    $user_domain_name_real    = $::os_service_default
   } else {
-    $system_scope_real = pick($system_scope, $::os_service_default)
-    if is_service_default($system_scope_real) {
-      $project_name_real = pick($project_name, 'services')
-      $project_domain_name_real = pick($project_domain_name, 'Default')
+    $auth_type_real           = $auth_type
+    $auth_url_real            = $auth_url
+    $username_real            = $username
+    $user_domain_name_real    = $user_domain_name
+    $system_scope_real        = $system_scope
+
+    if is_service_default($system_scope) {
+      $project_name_real = $project_name
+      $project_domain_name_real = $project_domain_name
     } else {
       $project_name_real = $::os_service_default
       $project_domain_name_real = $::os_service_default
     }
-    $auth_type_real           = pick($auth_type, 'password')
-    $auth_url_real            = pick($auth_url, 'http://127.0.0.1:5000/')
-    $username_real            = pick($username, 'cinder')
-    $user_domain_name_real    = pick($user_domain_name, 'Default')
   }
 
   nova_config {
@@ -131,10 +131,10 @@ class nova::cinder (
     'cinder/system_scope':        value => $system_scope_real;
     'cinder/username':            value => $username_real;
     'cinder/user_domain_name':    value => $user_domain_name_real;
-    'cinder/os_region_name':      value => $os_region_name_real;
-    'cinder/catalog_info':        value => $catalog_info_real;
+    'cinder/os_region_name':      value => $os_region_name;
+    'cinder/catalog_info':        value => $catalog_info;
     'cinder/http_retries':        value => $http_retries;
-    'cinder/cross_az_attach':     value => $cross_az_attach_real;
+    'cinder/cross_az_attach':     value => $cross_az_attach;
     'cinder/debug':               value => $debug;
   }
 }

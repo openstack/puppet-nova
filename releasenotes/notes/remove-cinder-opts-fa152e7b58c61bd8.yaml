@@ -1,0 +1,9 @@
+---
+upgrade:
+  - |
+    The following parameters have been removed. Use the ``nova::cinder`` class
+    parameters instead.
+
+    - ``nova::os_region_name``
+    - ``nova::cinder_catalog_info``
+    - ``nova::cross_az_attach``
