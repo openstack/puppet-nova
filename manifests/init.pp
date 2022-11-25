@@ -545,7 +545,9 @@ but should be one of: ssh-rsa, ssh-dsa, ssh-ecdsa.")
 
   if $auth_strategy {
     warning('The auth_strategy parameter is deprecated, and will be removed in a future release.')
-    nova_config { 'api/auth_strategy': value => $auth_strategy }
+  }
+  nova_config {
+    'api/auth_strategy': value => pick($auth_strategy, $::os_service_default)
   }
 
   nova_config {

@@ -31,7 +31,7 @@ describe 'nova' do
       )}
 
       it 'does not configure auth_strategy' do
-        is_expected.not_to contain_nova_config('api/auth_strategy')
+        is_expected.to contain_nova_config('api/auth_strategy').with_value('<SERVICE DEFAULT>')
       end
 
       it 'configures rabbit' do
