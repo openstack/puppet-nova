@@ -1,0 +1,5 @@
+---
+features:
+  - |
+    The ``nova::compute::libvirt::services::ensure_package`` parmaeter has been
+    added. This allows defining state of the libvirt packages.

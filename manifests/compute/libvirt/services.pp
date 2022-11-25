@@ -4,6 +4,10 @@
 #
 # === Parameters:
 #
+# [*ensure_package*]
+#   (optional) The state of the libvirt packages.
+#   Defaults to 'present'
+#
 # [*libvirt_service_name*]
 #   (optional) libvirt service name.
 #   Defaults to $::nova::params::libvirt_service_name
@@ -46,6 +50,7 @@
 #   Defaults to $::nova::params::virtstorage_service_name
 #
 class nova::compute::libvirt::services (
+  $ensure_package           = 'present',
   $libvirt_service_name     = $::nova::params::libvirt_service_name,
   $virtlock_service_name    = $::nova::params::virtlock_service_name,
   $virtlog_service_name     = $::nova::params::virtlog_service_name,
@@ -65,7 +70,7 @@ class nova::compute::libvirt::services (
     # libvirt-nwfilter
     if $::osfamily == 'RedHat' {
       package { 'libvirt-nwfilter':
-        ensure => present,
+        ensure => $ensure_package,
         name   => $::nova::params::libvirt_nwfilter_package_name,
         before => Service['libvirt'],
         tag    => ['openstack', 'nova-support-package'],
@@ -87,7 +92,7 @@ class nova::compute::libvirt::services (
 
     # libvirt
     package { 'libvirt':
-      ensure => present,
+      ensure => $ensure_package,
       name   => $libvirt_package_name_real,
       tag    => ['openstack', 'nova-support-package'],
     }
@@ -159,7 +164,7 @@ class nova::compute::libvirt::services (
 
     if $virtsecret_service_name {
       package { 'virtsecret':
-        ensure => present,
+        ensure => $ensure_package,
         name   => "${::nova::params::libvirt_daemon_package_prefix}driver-secret",
         tag    => ['openstack', 'nova-support-package'],
       }
@@ -174,7 +179,7 @@ class nova::compute::libvirt::services (
 
     if $virtnodedev_service_name {
       package { 'virtnodedev':
-        ensure => present,
+        ensure => $ensure_package,
         name   => "${::nova::params::libvirt_daemon_package_prefix}driver-nodedev",
         tag    => ['openstack', 'nova-support-package'],
       }
@@ -189,7 +194,7 @@ class nova::compute::libvirt::services (
 
     if $virtqemu_service_name {
       package { 'virtqemu':
-        ensure => present,
+        ensure => $ensure_package,
         name   => "${::nova::params::libvirt_daemon_package_prefix}driver-qemu",
         tag    => ['openstack', 'nova-support-package'],
       }
@@ -214,7 +219,7 @@ class nova::compute::libvirt::services (
 
     if $virtstorage_service_name {
       package { 'virtstorage':
-        ensure => present,
+        ensure => $ensure_package,
         name   => "${::nova::params::libvirt_daemon_package_prefix}driver-storage",
         tag    => ['openstack', 'nova-support-package'],
       }
