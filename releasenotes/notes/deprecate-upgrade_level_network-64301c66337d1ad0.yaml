@@ -1,0 +1,5 @@
+---
+deprecations:
+  - |
+    The ``[upgrade_level] upgrade_level_network`` parameter has been deprecated
+    and will be removed in a future release.
