@@ -159,18 +159,6 @@
 #   metadata handling from api class.
 #   Defaults to false
 #
-# [*validate*]
-#   (optional) Whether to validate the service is working after any service refreshes
-#   Defaults to undef
-#
-# [*validation_options*]
-#   (optional) Service validation options
-#   Should be a hash of options defined in openstacklib::service_validation
-#   If empty, defaults values are taken from openstacklib function.
-#   Default command list nova flavors.
-#   Require validate set at True.
-#   Defaults to undef
-#
 # [*use_forwarded_for*]
 #   (optional) Treat X-Forwarded-For as the canonical remote address. Only
 #   enable this if you have a sanitizing proxy.
@@ -211,8 +199,6 @@ class nova::api(
   $list_records_by_skipping_down_cells         = $::os_service_default,
   # DEPRECATED PARAMETER
   $nova_metadata_wsgi_enabled                  = false,
-  $validate                                    = undef,
-  $validation_options                          = undef,
   $use_forwarded_for                           = undef,
 ) inherits nova::params {
 
@@ -225,13 +211,6 @@ class nova::api(
 
   if !$nova_metadata_wsgi_enabled {
     warning('Running nova metadata api via evenlet is deprecated and will be removed in Stein release.')
-  }
-
-  if $validate != undef {
-    warning('The nova::api::validate parameter has been deprecated and has no effect')
-  }
-  if $validation_options != undef {
-    warning('The nova::api::validation_options parameter has been deprecated and has no effect')
   }
 
   if $use_forwarded_for != undef {
