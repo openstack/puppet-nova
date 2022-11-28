@@ -1,0 +1,6 @@
+---
+deprecations:
+  - |
+    The ``nova::api::instance_name_template`` parameter has been deprecated.
+    Use the ``nova::instance_name_template`` parameter instead so that
+    the option is configured for all nova services.
