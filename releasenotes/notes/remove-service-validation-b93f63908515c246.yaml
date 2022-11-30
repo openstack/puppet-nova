@@ -1,0 +1,5 @@
+---
+upgrade:
+  - |
+    The ``validate`` parameter and the ``validation_options`` parameter of
+    the ``nova::api`` class have been removed.
