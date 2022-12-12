@@ -1,0 +1,5 @@
+---
+features:
+  - |
+    New parameters ``max_client_requests`` and ``admin_max_client_requests``
+    allow to configure corresponding settings for libvirt.
