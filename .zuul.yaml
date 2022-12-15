@@ -8,28 +8,17 @@
     check:
       jobs:
         - puppet-nova-tripleo-standalone
-        - puppet-nova-tripleo-centos-9-standalone
-    gate:
-      jobs:
-        - puppet-nova-tripleo-standalone
 
 - job:
     name: puppet-nova-tripleo-standalone
-    parent: tripleo-puppet-ci-centos-8-standalone
+    parent: tripleo-puppet-ci-centos-9-standalone
     description: |
       TripleO standalone Job running Nova specific Tempest tests.
-    vars: &standalone_vars
+    voting: false
+    vars:
       build_container_images: true
       featureset_override:
         run_tempest: false
         tempest_test_whitelist:
           - 'tempest.scenario.test_server_basic_ops'
         use_os_tempest: true
-
-- job:
-    name: puppet-nova-tripleo-centos-9-standalone
-    parent: tripleo-puppet-ci-centos-9-standalone
-    description: |
-      TripleO standalone Job running Nova specific Tempest tests.
-    voting: false
-    vars: *standalone_vars
