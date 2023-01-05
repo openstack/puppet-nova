@@ -542,13 +542,6 @@ but should be one of: ssh-rsa, ssh-dsa, ssh-ecdsa.")
     tag     => ['openstack', 'nova-package'],
   }
 
-  # used by debian/ubuntu in nova::network_bridge to refresh
-  # interfaces based on /etc/network/interfaces
-  exec { 'networking-refresh':
-    command     => '/sbin/ifdown -a ; /sbin/ifup -a',
-    refreshonly => true,
-  }
-
   resources { 'nova_config':
     purge => $purge_config,
   }

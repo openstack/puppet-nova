@@ -440,7 +440,6 @@ class nova::compute (
     package_name   => $::nova::params::compute_package_name,
     service_name   => $::nova::params::compute_service_name,
     ensure_package => $ensure_package,
-    before         => Exec['networking-refresh']
   }
 
   if $force_config_drive {

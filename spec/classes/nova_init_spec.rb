@@ -25,11 +25,6 @@ describe 'nova' do
         is_expected.to contain_nova_config('DEFAULT/rootwrap_config').with_value('/etc/nova/rootwrap.conf')
       end
 
-      it { is_expected.to contain_exec('networking-refresh').with(
-        :command     => '/sbin/ifdown -a ; /sbin/ifup -a',
-        :refreshonly => true
-      )}
-
       it 'does not configure auth_strategy' do
         is_expected.to contain_nova_config('api/auth_strategy').with_value('<SERVICE DEFAULT>')
       end
