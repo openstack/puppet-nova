@@ -263,15 +263,8 @@ class nova::migration::libvirt(
     if $transport_real == 'tls' {
       $auth_tls_real = $auth
       $auth_tcp_real = $::os_service_default
-      $ca_file_real  = pick($ca_file, $::os_service_default)
-      $crl_file_real = pick($crl_file, $::os_service_default)
-
-      if $ca_file == undef {
-        warning('Usage of undef for the ca_file parameter has been deprecated')
-      }
-      if $crl_file == undef {
-        warning('Usage of undef for the crl_file parameter has been deprecated')
-      }
+      $ca_file_real  = $ca_file
+      $crl_file_real = $crl_file
     } elsif $transport_real == 'tcp' {
       $auth_tls_real = $::os_service_default
       $auth_tcp_real = $auth
@@ -282,10 +275,6 @@ class nova::migration::libvirt(
       $auth_tcp_real = $::os_service_default
       $ca_file_real  = $::os_service_default
       $crl_file_real = $::os_service_default
-    }
-
-    if $listen_address == undef {
-      warning('Usage of undef for the listen_addrss parameter has been deprecated')
     }
 
     $libvirt_listen_config = $modular_libvirt_real ? {
@@ -300,7 +289,7 @@ class nova::migration::libvirt(
       'auth_tcp'   => { 'value' => $auth_tcp_real, 'quote' => true },
       'ca_file'    => { 'value' => $ca_file_real, 'quote'  => true },
       'crl_file'   => { 'value' => $crl_file_real, 'quote' => true },
-      'listen_addr' => { 'value' => pick($listen_address, $::os_service_default), 'quote' => true }
+      'listen_addr' => { 'value' => $listen_address, 'quote' => true }
     })
 
     if $transport_real == 'tls' or $transport_real == 'tcp' {
