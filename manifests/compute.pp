@@ -253,12 +253,6 @@
 #   retries on failures
 #   Defaults to $::os_service_default
 #
-# DEPRECATED PARAMETERS
-#
-# [*virtio_nic*]
-#   (optional) Whether to use virtio for the nic driver of VMs
-#   Defaults to undef
-#
 class nova::compute (
   $enabled                                     = true,
   $manage_service                              = true,
@@ -309,8 +303,6 @@ class nova::compute (
   $image_type_exclude_list                     = $::os_service_default,
   $block_device_allocate_retries               = $::os_service_default,
   $block_device_allocate_retries_interval      = $::os_service_default,
-  # DEPRECATED PARAMETERS
-  $virtio_nic                                  = undef,
 ) {
 
   include nova::deps
@@ -447,11 +439,6 @@ class nova::compute (
   } else {
     nova_config { 'DEFAULT/force_config_drive': ensure => absent }
   }
-
-  if $virtio_nic != undef {
-    warning('The nova::compute::virtio_nic parameter has been deprecated and has no effect.')
-  }
-  nova_config { 'DEFAULT/libvirt_use_virtio_for_bridges': ensure => absent }
 
   if $instance_usage_audit and $instance_usage_audit_period in ['hour', 'day', 'month', 'year'] {
     nova_config {

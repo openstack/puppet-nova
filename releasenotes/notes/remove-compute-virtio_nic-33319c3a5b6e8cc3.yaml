@@ -1,0 +1,4 @@
+---
+upgrade:
+  - |
+    The ``nova::compute::virtio_nic`` parameter has been removed.
