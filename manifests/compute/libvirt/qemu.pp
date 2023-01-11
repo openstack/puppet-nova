@@ -103,12 +103,12 @@ class nova::compute::libvirt::qemu(
     if $group and !empty($group) {
       $augues_group_changes = ["set group ${group}"]
     } else {
-      $augues_group_changes = []
+      $augues_group_changes = ['rm group']
     }
     if $memory_backing_dir and !empty($memory_backing_dir) {
       $augues_memory_backing_dir_changes = ["set memory_backing_dir ${memory_backing_dir}"]
     } else {
-      $augues_memory_backing_dir_changes = []
+      $augues_memory_backing_dir_changes = ['rm memory_backing_dir']
     }
     $augues_nbd_tls_changes = ["set nbd_tls ${nbd_tls_value}"]
 
@@ -124,10 +124,10 @@ class nova::compute::libvirt::qemu(
     $augues_changes = [
       'rm max_files',
       'rm max_processes',
-      'rm group',
       'rm vnc_tls',
       'rm vnc_tls_x509_verify',
       'rm default_tls_x509_verify',
+      'rm group',
       'rm memory_backing_dir',
       'rm nbd_tls',
     ]
