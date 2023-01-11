@@ -61,6 +61,11 @@ class nova::compute::libvirt::qemu(
 
   include nova::deps
 
+  validate_legacy(Boolean, 'validate_bool', $vnc_tls)
+  validate_legacy(Boolean, 'validate_bool', $vnc_tls_verify)
+  validate_legacy(Boolean, 'validate_bool', $default_tls_verify)
+  validate_legacy(Boolean, 'validate_bool', $nbd_tls)
+
   if versioncmp($libvirt_version, '4.5') < 0 {
     fail('libvirt version < 4.5 is no longer supported')
   }
@@ -81,17 +86,9 @@ class nova::compute::libvirt::qemu(
       $vnc_tls_value = 0
       $vnc_tls_verify_value = 0
     }
-    if $default_tls_verify {
-      $default_tls_verify_value = $default_tls_verify ? { true => 1, false => 0 }
-    } else {
-      $default_tls_verify_value = 0
-    }
 
-    if $nbd_tls {
-      $nbd_tls_value = 1
-    } else {
-      $nbd_tls_value = 0
-    }
+    $default_tls_verify_value = $default_tls_verify ? { true => 1, false => 0 }
+    $nbd_tls_value = $nbd_tls ? { true => 1, false => 0 }
 
     $augues_changes_default = [
       "set max_files ${max_files}",
