@@ -8,6 +8,10 @@
 #   (optional) Whether or not configure qemu bits.
 #   Defaults to false.
 #
+# [*user*]
+#   (optional) User for qemu processes run by the system instance.
+#   Defaults to undef.
+#
 # [*group*]
 #   (optional) Group under which the qemu should run.
 #   Defaults to undef.
@@ -48,6 +52,7 @@
 #
 class nova::compute::libvirt::qemu(
   $configure_qemu     = false,
+  $user               = undef,
   $group              = undef,
   $max_files          = 1024,
   $max_processes      = 4096,
@@ -100,11 +105,19 @@ class nova::compute::libvirt::qemu(
       "set vnc_tls_x509_verify ${vnc_tls_verify_value}",
       "set default_tls_x509_verify ${default_tls_verify_value}",
     ]
+
+    if $user and !empty($user) {
+      $augues_user_changes = ["set user ${user}"]
+    } else {
+      $augues_user_changes = ['rm user']
+    }
+
     if $group and !empty($group) {
       $augues_group_changes = ["set group ${group}"]
     } else {
       $augues_group_changes = ['rm group']
     }
+
     if $memory_backing_dir and !empty($memory_backing_dir) {
       $augues_memory_backing_dir_changes = ["set memory_backing_dir ${memory_backing_dir}"]
     } else {
@@ -112,7 +125,13 @@ class nova::compute::libvirt::qemu(
     }
     $augues_nbd_tls_changes = ["set nbd_tls ${nbd_tls_value}"]
 
-    $augues_changes = concat($augues_changes_default, $augues_group_changes, $augues_memory_backing_dir_changes, $augues_nbd_tls_changes)
+    $augues_changes = concat(
+      $augues_changes_default,
+      $augues_user_changes,
+      $augues_group_changes,
+      $augues_memory_backing_dir_changes,
+      $augues_nbd_tls_changes
+    )
 
     augeas { 'qemu-conf-limits':
       context => '/files/etc/libvirt/qemu.conf',
@@ -127,6 +146,7 @@ class nova::compute::libvirt::qemu(
       'rm vnc_tls',
       'rm vnc_tls_x509_verify',
       'rm default_tls_x509_verify',
+      'rm user',
       'rm group',
       'rm memory_backing_dir',
       'rm nbd_tls',

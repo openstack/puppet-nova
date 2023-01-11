@@ -1,0 +1,4 @@
+---
+features:
+  - |
+    The new ``nova::compute::libvirt::qemu::user`` parameter has been added.
