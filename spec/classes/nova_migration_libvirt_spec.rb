@@ -462,15 +462,9 @@ describe 'nova::migration::libvirt' do
       end
 
       it { is_expected.to contain_file('/etc/sysconfig/libvirtd').with(
-        :ensure => 'present',
+        :ensure => 'absent',
         :path   => '/etc/sysconfig/libvirtd',
         :tag    => 'libvirt-file',
-      )}
-      it { is_expected.to contain_file_line('/etc/sysconfig/libvirtd libvirtd args').with(
-        :path  => '/etc/sysconfig/libvirtd',
-        :line  => 'LIBVIRTD_ARGS=',
-        :match => '^LIBVIRTD_ARGS=',
-        :tag   => 'libvirt-file_line',
       )}
       it { is_expected.to contain_service('libvirtd-tls').with(
         :name   => 'libvirtd-tls.socket',
@@ -485,15 +479,9 @@ describe 'nova::migration::libvirt' do
       end
 
       it { is_expected.to contain_file('/etc/sysconfig/libvirtd').with(
-        :ensure => 'present',
+        :ensure => 'absent',
         :path   => '/etc/sysconfig/libvirtd',
         :tag    => 'libvirt-file',
-      )}
-      it { is_expected.to contain_file_line('/etc/sysconfig/libvirtd libvirtd args').with(
-        :path  => '/etc/sysconfig/libvirtd',
-        :line  => 'LIBVIRTD_ARGS=',
-        :match => '^LIBVIRTD_ARGS=',
-        :tag   => 'libvirt-file_line',
       )}
       it { is_expected.to contain_service('libvirtd-tcp').with(
         :name   => 'libvirtd-tcp.socket',
