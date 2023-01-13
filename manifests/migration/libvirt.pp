@@ -225,8 +225,8 @@ class nova::migration::libvirt(
     -> File_line<| tag == 'libvirt-file_line'|>
     -> Anchor['nova::config::end']
 
-    File_line<| tag == 'libvirt-file_line' |>
-    ~> Service['libvirt']
+    File<| tag == 'libvirt-file'|> ~> Service['libvirt']
+    File_line<| tag == 'libvirt-file_line' |> ~> Service['libvirt']
 
     if $override_uuid {
       if ! $::libvirt_uuid {
@@ -325,17 +325,11 @@ class nova::migration::libvirt(
       'RedHat': {
         # NOTE(tkajinam): Since libvirt 8.1.0, the sysconfig files are
         #                 no longer provided by packages.
+        # TODO(tkajinam): Remove this after A release.
         file { '/etc/sysconfig/libvirtd':
-          ensure => present,
+          ensure => absent,
           path   => '/etc/sysconfig/libvirtd',
           tag    => 'libvirt-file',
-        }
-
-        file_line { '/etc/sysconfig/libvirtd libvirtd args':
-          path  => '/etc/sysconfig/libvirtd',
-          line  => 'LIBVIRTD_ARGS=',
-          match => '^LIBVIRTD_ARGS=',
-          tag   => 'libvirt-file_line',
         }
       }
       'Debian': {
