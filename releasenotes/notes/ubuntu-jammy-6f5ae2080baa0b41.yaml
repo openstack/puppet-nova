@@ -1,0 +1,8 @@
+---
+features:
+  - |
+    This module now supports Ubuntu 22.04 (Jammy Jellyfish).
+
+upgrade:
+  - |
+    This module no longer supports Ubuntu 20.04 (Focal Fossa).
