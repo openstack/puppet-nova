@@ -18,6 +18,7 @@ describe 'nova::compute::libvirt::qemu' do
             "rm vnc_tls",
             "rm vnc_tls_x509_verify",
             "rm default_tls_x509_verify",
+            "rm user",
             "rm group",
             "rm memory_backing_dir",
             "rm nbd_tls",
@@ -39,6 +40,7 @@ describe 'nova::compute::libvirt::qemu' do
             "set vnc_tls 0",
             "set vnc_tls_x509_verify 0",
             "set default_tls_x509_verify 1",
+            "rm user",
             "rm group",
             "rm memory_backing_dir",
             "set nbd_tls 0",
@@ -63,6 +65,7 @@ describe 'nova::compute::libvirt::qemu' do
             "set vnc_tls 0",
             "set vnc_tls_x509_verify 0",
             "set default_tls_x509_verify 1",
+            "rm user",
             "rm group",
             "rm memory_backing_dir",
             "set nbd_tls 0",
@@ -71,11 +74,12 @@ describe 'nova::compute::libvirt::qemu' do
       }) }
     end
 
-    context 'when configuring qemu with group parameter' do
+    context 'when configuring qemu with user/group parameter' do
       let :params do
         {
           :configure_qemu     => true,
-          :group              => 'openvswitch',
+          :user               => 'qemu-user',
+          :group              => 'qemu-group',
           :max_files          => 32768,
           :max_processes      => 131072,
           :memory_backing_dir => '/tmp',
@@ -89,7 +93,8 @@ describe 'nova::compute::libvirt::qemu' do
             "set vnc_tls 0",
             "set vnc_tls_x509_verify 0",
             "set default_tls_x509_verify 1",
-            "set group openvswitch",
+            "set user qemu-user",
+            "set group qemu-group",
             "set memory_backing_dir /tmp",
             "set nbd_tls 0",
         ],
@@ -112,6 +117,7 @@ describe 'nova::compute::libvirt::qemu' do
             "set vnc_tls 1",
             "set vnc_tls_x509_verify 1",
             "set default_tls_x509_verify 1",
+            "rm user",
             "rm group",
             "rm memory_backing_dir",
             "set nbd_tls 0",
@@ -135,6 +141,7 @@ describe 'nova::compute::libvirt::qemu' do
             "set vnc_tls 0",
             "set vnc_tls_x509_verify 0",
             "set default_tls_x509_verify 1",
+            "rm user",
             "rm group",
             "rm memory_backing_dir",
             "set nbd_tls 0",
@@ -159,6 +166,7 @@ describe 'nova::compute::libvirt::qemu' do
             "set vnc_tls 1",
             "set vnc_tls_x509_verify 0",
             "set default_tls_x509_verify 1",
+            "rm user",
             "rm group",
             "rm memory_backing_dir",
             "set nbd_tls 0",
@@ -182,6 +190,7 @@ describe 'nova::compute::libvirt::qemu' do
             "set vnc_tls 0",
             "set vnc_tls_x509_verify 0",
             "set default_tls_x509_verify 0",
+            "rm user",
             "rm group",
             "rm memory_backing_dir",
             "set nbd_tls 0",
@@ -205,6 +214,7 @@ describe 'nova::compute::libvirt::qemu' do
             "set vnc_tls 0",
             "set vnc_tls_x509_verify 0",
             "set default_tls_x509_verify 1",
+            "rm user",
             "rm group",
             "rm memory_backing_dir",
             "set nbd_tls 1",
