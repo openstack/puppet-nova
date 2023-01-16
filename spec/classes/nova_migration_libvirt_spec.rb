@@ -424,10 +424,10 @@ describe 'nova::migration::libvirt' do
       end
 
       it { is_expected.to contain_file_line('/etc/default/libvirtd libvirtd opts').with(
-        :path  => '/etc/default/libvirtd',
-        :line  => 'libvirtd_opts=',
-        :match => 'libvirtd_opts=',
-        :tag   => 'libvirt-file_line',
+        :ensure            => 'absent',
+        :path              => '/etc/default/libvirtd',
+        :match             => '^libvirtd_opts=$',
+        :match_for_absence => true,
       ) }
       it { is_expected.to contain_service('libvirtd-tls').with(
         :name   => 'libvirtd-tls.socket',
@@ -442,10 +442,10 @@ describe 'nova::migration::libvirt' do
       end
 
       it { is_expected.to contain_file_line('/etc/default/libvirtd libvirtd opts').with(
-        :path  => '/etc/default/libvirtd',
-        :line  => 'libvirtd_opts=',
-        :match => 'libvirtd_opts=',
-        :tag   => 'libvirt-file_line',
+        :ensure            => 'absent',
+        :path              => '/etc/default/libvirtd',
+        :match             => '^libvirtd_opts=$',
+        :match_for_absence => true,
       ) }
       it { is_expected.to contain_service('libvirtd-tcp').with(
         :name   => 'libvirtd-tcp.socket',

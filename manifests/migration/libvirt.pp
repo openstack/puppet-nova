@@ -333,11 +333,13 @@ class nova::migration::libvirt(
         }
       }
       'Debian': {
+        # TODO(tkajinam): Remove this after A release.
         file_line { '/etc/default/libvirtd libvirtd opts':
-          path  => '/etc/default/libvirtd',
-          line  => 'libvirtd_opts=',
-          match => 'libvirtd_opts=',
-          tag   => 'libvirt-file_line',
+          ensure            => absent,
+          path              => '/etc/default/libvirtd',
+          match             => '^libvirtd_opts=$',
+          match_for_absence => true,
+          tag               => 'libvirt-file_line',
         }
       }
       default: {
