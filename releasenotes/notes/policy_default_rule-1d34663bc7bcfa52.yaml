@@ -1,0 +1,4 @@
+---
+features:
+  - |
+    The new ``nova::policy::policy_default_rule`` parameter has been added.
