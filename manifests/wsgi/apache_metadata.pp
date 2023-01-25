@@ -32,7 +32,7 @@
 #   resource.
 #   Defaults to 'present'
 #
-# [*api_port*]
+# [*port*]
 #   (Optional) The port for Nova API service.
 #   Defaults to 8775
 #
@@ -125,6 +125,12 @@
 #   directives to be placed at the end of the vhost configuration.
 #   Defaults to undef.
 #
+# DEPRECATED PARAMETERS
+#
+# [*api_port*]
+#   (Optional) The port for Nova API service.
+#   Defaults to 8775
+#
 # == Dependencies
 #
 #   requires Class['apache'] & Class['nova'] & Class['nova::metadata']
@@ -137,7 +143,7 @@
 #
 class nova::wsgi::apache_metadata (
   $servername                  = $::fqdn,
-  $api_port                    = 8775,
+  $port                        = 8775,
   $bind_host                   = undef,
   $path                        = '/',
   $ssl                         = false,
@@ -164,6 +170,8 @@ class nova::wsgi::apache_metadata (
   $headers                     = undef,
   $request_headers             = undef,
   $vhost_custom_fragment       = undef,
+  # DEPRECATED PARAMETERS
+  $api_port                    = undef,
 ) {
 
   include nova::params
@@ -180,9 +188,13 @@ class nova::wsgi::apache_metadata (
 
   Service <| title == 'httpd' |> { tag +> 'nova-service' }
 
+  if $api_port {
+    warning('The api_port parameter is deprecated. Use the port parameter')
+  }
+
   ::openstacklib::wsgi::apache { 'nova_metadata_wsgi':
     bind_host                   => $bind_host,
-    bind_port                   => $api_port,
+    bind_port                   => pick($api_port, $port),
     group                       => $::nova::params::group,
     path                        => $path,
     priority                    => $priority,

@@ -53,7 +53,7 @@ describe 'nova::wsgi::apache_metadata' do
         {
           :servername                  => 'dummy.host',
           :bind_host                   => '10.42.51.1',
-          :api_port                    => 12345,
+          :port                        => 12345,
           :ssl                         => true,
           :vhost_custom_fragment       => 'Timeout 99',
           :wsgi_process_display_name   => 'nova-metadata',

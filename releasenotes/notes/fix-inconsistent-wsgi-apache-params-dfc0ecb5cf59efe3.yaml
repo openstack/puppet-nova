@@ -1,0 +1,5 @@
+---
+deprecations:
+  - |
+    The ``nova::wsgi::apache::api_port`` parameter has been deprecated.
+    Use the ``port`` parameter instead.
