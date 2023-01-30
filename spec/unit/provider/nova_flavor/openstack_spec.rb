@@ -38,9 +38,9 @@ describe Puppet::Type.type(:nova_flavor).provider(:openstack) do
     describe '#create' do
       context 'with defaults' do
         it 'creates flavor' do
-          provider.class.expects(:openstack)
+          expect(provider.class).to receive(:openstack)
             .with('flavor', 'create', '--format', 'shell', ['example', '--public', '--id', '1', '--ram', '512', '--disk', '1', '--vcpus', '1'])
-            .returns('os-flv-disabled:disabled="False"
+            .and_return('os-flv-disabled:disabled="False"
 os-flv-ext-data:ephemeral="0"
 disk="1"
 id="1"
@@ -63,9 +63,9 @@ vcpus="1"')
         end
 
         it 'creates flavor' do
-          provider.class.expects(:openstack)
+          expect(provider.class).to receive(:openstack)
             .with('flavor', 'create', '--format', 'shell', ['example', '--public', '--id', '1', '--ram', '512', '--disk', '1', '--vcpus', '1'])
-            .returns('os-flv-disabled:disabled="False"
+            .and_return('os-flv-disabled:disabled="False"
 os-flv-ext-data:ephemeral="0"
 disk="1"
 id="1"
@@ -75,11 +75,11 @@ ram="512"
 rxtx_factor="1.0"
 swap=""
 vcpus="1"')
-          provider.class.expects(:openstack)
+          expect(provider.class).to receive(:openstack)
             .with('flavor', 'set', ['example', '--project', '3073e17b-fb7f-4524-bdcd-c54bc70e9da9'])
-          provider.class.expects(:openstack)
+          expect(provider.class).to receive(:openstack)
             .with('project', 'show', '--format', 'shell', '3073e17b-fb7f-4524-bdcd-c54bc70e9da9')
-            .returns('enabled="True"
+            .and_return('enabled="True"
 name="admin"
 id="3073e17b-fb7f-4524-bdcd-c54bc70e9da9"
 domain_id="domain_one_id"
@@ -99,9 +99,9 @@ domain_id="domain_one_id"
         end
 
         it 'creates flavor with project_name' do
-          provider.class.expects(:openstack)
+          expect(provider.class).to receive(:openstack)
             .with('flavor', 'create', '--format', 'shell', ['example', '--public', '--id', '1', '--ram', '512', '--disk', '1', '--vcpus', '1'])
-            .returns('os-flv-disabled:disabled="False"
+            .and_return('os-flv-disabled:disabled="False"
 os-flv-ext-data:ephemeral="0"
 disk="1"
 id="1"
@@ -111,11 +111,11 @@ ram="512"
 rxtx_factor="1.0"
 swap=""
 vcpus="1"')
-          provider.class.expects(:openstack)
+          expect(provider.class).to receive(:openstack)
             .with('flavor', 'set', ['example', '--project', 'admin'])
-          provider.class.expects(:openstack)
+          expect(provider.class).to receive(:openstack)
             .with('project', 'show', '--format', 'shell', 'admin')
-            .returns('enabled="True"
+            .and_return('enabled="True"
 name="admin"
 id="3073e17b-fb7f-4524-bdcd-c54bc70e9da9"
 domain_id="domain_one_id"
@@ -130,7 +130,7 @@ domain_id="domain_one_id"
 
     describe '#destroy' do
       it 'removes flavor' do
-        described_class.expects(:openstack)
+        expect(described_class).to receive(:openstack)
           .with('flavor', 'delete', '1')
         provider.instance_variable_set(:@property_hash, flavor_attrs)
         provider.destroy
@@ -141,7 +141,7 @@ domain_id="domain_one_id"
     describe '#flush' do
       context '.project' do
         it 'updates flavor' do
-          provider.class.expects(:openstack)
+          expect(provider.class).to receive(:openstack)
             .with('flavor', 'set', ['example', '--project', '3073e17b-fb7f-4524-bdcd-c54bc70e9da9'])
           provider.project = '3073e17b-fb7f-4524-bdcd-c54bc70e9da9'
           provider.flush
@@ -150,7 +150,7 @@ domain_id="domain_one_id"
 
       context '.project_name' do
         it 'updates flavor' do
-          provider.class.expects(:openstack)
+          expect(provider.class).to receive(:openstack)
             .with('flavor', 'set', ['example', '--project', 'admin'])
           provider.project_name = 'admin'
           provider.flush

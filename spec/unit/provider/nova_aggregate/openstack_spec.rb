@@ -37,14 +37,14 @@ describe Puppet::Type.type(:nova_aggregate).provider(:openstack) do
 
     describe '#instances' do
       it 'finds existing aggregates' do
-        described_class.expects(:openstack)
+        expect(described_class).to receive(:openstack)
           .with('aggregate', 'list', '--quiet', '--format', 'csv', [])
-          .returns('"ID","Name","Availability Zone"
+          .and_return('"ID","Name","Availability Zone"
 just,"simple","just"
 ')
-        described_class.expects(:openstack)
+        expect(described_class).to receive(:openstack)
           .with('aggregate', 'show', '--format', 'shell', 'simple')
-          .returns('"id="just"
+          .and_return('"id="just"
 name="simple"
 availability_zone=just"
 properties="key1=\'tomato\', key2=\'mushroom\'"
@@ -59,18 +59,18 @@ hosts="[]"
 
     describe '#create' do
       it 'creates aggregate' do
-        described_class.expects(:openstack)
+        expect(described_class).to receive(:openstack)
           .with('aggregate', 'create', '--format', 'shell',
                 ['just', '--zone', 'simple', '--property', 'nice=cookie' ])
-          .returns('name="just"
+          .and_return('name="just"
 id="just"
 availability_zone="simple"
 properties="{u\'nice\': u\'cookie\'}"
 hosts="[]"
 ')
-        described_class.expects(:openstack)
+        expect(described_class).to receive(:openstack)
           .with('aggregate', 'add host', ['just', 'example'])
-          .returns('name="just"
+          .and_return('name="just"
 id="just"
 availability_zone="simple"
 properties="{u\'nice\': u\'cookie\'}"
@@ -84,9 +84,9 @@ hosts="[u\'example\']"
 
     describe '#destroy' do
       it 'removes aggregate with hosts' do
-        described_class.expects(:openstack)
+        expect(described_class).to receive(:openstack)
           .with('aggregate', 'remove host', ['just', 'example'])
-        described_class.expects(:openstack)
+        expect(described_class).to receive(:openstack)
           .with('aggregate', 'delete', 'just')
         provider.instance_variable_set(:@property_hash, aggregate_attrs)
         provider.destroy
@@ -151,47 +151,47 @@ hosts="[u\'example\']"
 
       it 'creates aggregate with filter_hosts toggled' do
 
-        provider.class.stubs(:get_known_hosts)
-          .returns(['known', 'known_too'])
+        allow(provider.class).to receive(:get_known_hosts)
+          .and_return(['known', 'known_too'])
 
         # these expectations are the actual tests that check the provider's behaviour
         # and make sure only known hosts ('known' is the only known host) will be
         # aggregated.
 
-        described_class.expects(:openstack)
+        expect(described_class).to receive(:openstack)
           .with('aggregate', 'create', '--format', 'shell', ['just', '--zone', 'simple', "--property", "nice=cookie"])
           .once
-          .returns('name="just"
+          .and_return('name="just"
 id="just"
 availability_zone="simple"
 properties="{u\'nice\': u\'cookie\'}"
 hosts="[]"
 ')
 
-        described_class.expects(:openstack)
+        expect(described_class).to receive(:openstack)
           .with('aggregate', 'add host', ['just', 'known'])
           .once
-          .returns('name="just"
+          .and_return('name="just"
 id="just"
 availability_zone="simple"
 properties="{u\'nice\': u\'cookie\'}"
 hosts="[u\'known\']"
 ')
 
-        described_class.expects(:openstack)
+        expect(described_class).to receive(:openstack)
           .with('aggregate', 'add host', ['just', 'known_too'])
           .once
-          .returns('name="just"
+          .and_return('name="just"
 id="just"
 availability_zone="simple"
 properties="{u\'nice\': u\'cookie\'}"
 hosts="[u\'known\', u\'known_too\']"
 ')
 
-        described_class.expects(:openstack)
+        expect(described_class).to receive(:openstack)
           .with('aggregate', 'remove host', ['just', 'known'])
           .once
-          .returns('name="just"
+          .and_return('name="just"
 id="just"
 availability_zone="simple"
 properties="{u\'nice\': u\'cookie\'}"

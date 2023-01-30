@@ -42,9 +42,9 @@ describe provider_class do
     it_behaves_like 'authenticated with environment variables' do
       describe '#instances' do
         it 'finds existing services' do
-          provider_class.expects(:openstack)
+          expect(provider_class).to receive(:openstack)
             .with('compute service', 'list', '--quiet', '--format', 'csv', [])
-            .returns('"Id","Binary","Host","Zone","Status","State","Updated At"
+            .and_return('"Id","Binary","Host","Zone","Status","State","Updated At"
 "1","waffles","myhost","internal","enabled","down","2016-01-01T12:00:00.000000"')
 
           instances = provider_class.instances
@@ -55,8 +55,8 @@ describe provider_class do
       describe '#destroy' do
 
         it 'destroys a service' do
-          provider.class.stubs(:openstack)
-                        .with('compute service', 'delete', [])
+          allow(provider.class).to receive(:openstack)
+            .with('compute service', 'delete', [])
           provider.destroy
           expect(provider.exists?).to be_falsey
         end
