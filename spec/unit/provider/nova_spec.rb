@@ -35,7 +35,7 @@ describe Puppet::Provider::Nova do
 
     it 'should fail if config is empty' do
       conf = {}
-      klass.expects(:nova_conf).returns(conf)
+      expect(klass).to receive(:nova_conf).and_return(conf)
       expect do
         klass.nova_credentials
       end.to raise_error(Puppet::Error, credential_error)
@@ -43,7 +43,7 @@ describe Puppet::Provider::Nova do
 
     it 'should fail if config does not have keystone_authtoken section.' do
       conf = {'foo' => 'bar'}
-      klass.expects(:nova_conf).returns(conf)
+      expect(klass).to receive(:nova_conf).and_return(conf)
       expect do
         klass.nova_credentials
       end.to raise_error(Puppet::Error, credential_error)
@@ -51,7 +51,7 @@ describe Puppet::Provider::Nova do
 
     it 'should fail if config does not contain all auth params' do
       conf = {'keystone_authtoken' => {'invalid_value' => 'foo'}}
-      klass.expects(:nova_conf).returns(conf)
+      expect(klass).to receive(:nova_conf).and_return(conf)
       expect do
        klass.nova_credentials
       end.to raise_error(Puppet::Error, credential_error)
@@ -59,7 +59,7 @@ describe Puppet::Provider::Nova do
 
     it 'should use specified uri in the auth endpoint' do
       conf = {'keystone_authtoken' => credential_hash}
-      klass.expects(:nova_conf).returns(conf)
+      expect(klass).to receive(:nova_conf).and_return(conf)
       expect(klass.get_auth_endpoint).to eq(auth_endpoint)
     end
 
