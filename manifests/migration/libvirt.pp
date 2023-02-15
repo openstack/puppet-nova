@@ -44,6 +44,22 @@
 #   in place, and are validated.
 #   Defaults to $::os_service_default
 #
+# [*live_migration_downtime*]
+#   (optional) Target maximum period of time Nova will try to keep the instance paused
+#   during the last part of the memory copy, in miliseconds.
+#   Defaults to $::os_service_default
+#
+# [*live_migration_downtime_steps*]
+#   (optional) Number of incremental steps to reach max downtime value.
+#   Minimum number of steps is 3.
+#   Defaults to $::os_service_default
+#
+# [*live_migration_downtime_delay*]
+#   (optional) Time to wait, in seconds, between each step increase of the migration
+#   downtime. Value is per GiB of guest RAM + disk to be transferred, with lower bound
+#   of a minimum of 2 GiB per device. Minimum delay is 3 seconds.
+#   Defaults to $::os_service_default
+#
 # [*live_migration_completion_timeout*]
 #   (optional) Time to wait, in seconds, for migration to successfully complete
 #   transferring data before aborting the operation. Value is per GiB of guest
@@ -135,6 +151,9 @@ class nova::migration::libvirt(
   $live_migration_inbound_addr         = $::os_service_default,
   $live_migration_tunnelled            = $::os_service_default,
   $live_migration_with_native_tls      = $::os_service_default,
+  $live_migration_downtime             = $::os_service_default,
+  $live_migration_downtime_steps       = $::os_service_default,
+  $live_migration_downtime_delay       = $::os_service_default,
   $live_migration_completion_timeout   = $::os_service_default,
   $live_migration_timeout_action       = $::os_service_default,
   $live_migration_permit_post_copy     = $::os_service_default,
@@ -211,6 +230,9 @@ class nova::migration::libvirt(
       'libvirt/live_migration_uri':                  value => $live_migration_uri;
       'libvirt/live_migration_tunnelled':            value => $live_migration_tunnelled;
       'libvirt/live_migration_with_native_tls':      value => $live_migration_with_native_tls;
+      'libvirt/live_migration_downtime':             value => $live_migration_downtime;
+      'libvirt/live_migration_downtime_steps':       value => $live_migration_downtime_steps;
+      'libvirt/live_migration_downtime_delay':       value => $live_migration_downtime_delay;
       'libvirt/live_migration_completion_timeout':   value => $live_migration_completion_timeout;
       'libvirt/live_migration_timeout_action':       value => $live_migration_timeout_action;
       'libvirt/live_migration_inbound_addr':         value => $live_migration_inbound_addr;

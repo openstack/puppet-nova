@@ -41,6 +41,9 @@ describe 'nova::migration::libvirt' do
       it { is_expected.to contain_libvirtd_config('crl_file').with_value('<SERVICE DEFAULT>').with_quote(true) }
       it { is_expected.to contain_nova_config('libvirt/live_migration_tunnelled').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('libvirt/live_migration_with_native_tls').with_value('<SERVICE DEFAULT>') }
+      it { is_expected.to contain_nova_config('libvirt/live_migration_downtime').with_value('<SERVICE DEFAULT>') }
+      it { is_expected.to contain_nova_config('libvirt/live_migration_downtime_steps').with_value('<SERVICE DEFAULT>') }
+      it { is_expected.to contain_nova_config('libvirt/live_migration_downtime_delay').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('libvirt/live_migration_completion_timeout').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('libvirt/live_migration_timeout_action').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('libvirt/live_migration_uri').with_value('qemu+tcp://%s/system') }
@@ -165,11 +168,17 @@ describe 'nova::migration::libvirt' do
       let :params do
         {
           :live_migration_tunnelled          => true,
+          :live_migration_downtime           => 800,
+          :live_migration_downtime_steps     => 15,
+          :live_migration_downtime_delay     => 5,
           :live_migration_completion_timeout => '1500',
           :live_migration_timeout_action     => 'force_complete',
         }
       end
       it { is_expected.to contain_nova_config('libvirt/live_migration_tunnelled').with(:value => true) }
+      it { is_expected.to contain_nova_config('libvirt/live_migration_downtime').with_value(800) }
+      it { is_expected.to contain_nova_config('libvirt/live_migration_downtime_steps').with_value(15) }
+      it { is_expected.to contain_nova_config('libvirt/live_migration_downtime_delay').with_value(5) }
       it { is_expected.to contain_nova_config('libvirt/live_migration_completion_timeout').with_value('1500') }
       it { is_expected.to contain_nova_config('libvirt/live_migration_timeout_action').with_value('force_complete') }
     end

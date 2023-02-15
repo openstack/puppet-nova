@@ -1,0 +1,6 @@
+---
+features:
+  - |
+    Added ``live_migration_downtime``, ``live_migration_downtime_steps``,
+    and ``live_migration_downtime_delay`` parameters to the ``nova::migration::libvirt``
+    class.
