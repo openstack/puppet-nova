@@ -192,7 +192,7 @@ describe 'nova::compute::rbd' do
       end
 
       let (:platform_params) do
-        case facts[:osfamily]
+        case facts[:os]['family']
         when 'Debian'
           { :ceph_client_package => 'ceph-common' }
         when 'RedHat'
@@ -200,8 +200,8 @@ describe 'nova::compute::rbd' do
         end
       end
       it_configures 'nova::compute::rbd'
-      if facts[:osfamily] == 'Debian'
-        it_configures "nova::compute::rbd in #{facts[:osfamily]}"
+      if facts[:os]['family'] == 'Debian'
+        it_configures "nova::compute::rbd in #{facts[:os]['family']}"
       end
     end
   end

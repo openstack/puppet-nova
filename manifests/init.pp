@@ -13,30 +13,30 @@
 #    (optional) A URL representing the messaging driver to use and its full
 #    configuration. Transport URLs take the form:
 #      transport://user:pass@host1:port[,hostN:portN]/virtual_host
-#    Defaults to $::os_service_default
+#    Defaults to $facts['os_service_default']
 #
 # [*rpc_response_timeout*]
 #   (Optional) Seconds to wait for a response from a call. (integer value)
-#   Defaults to $::os_service_default.
+#   Defaults to $facts['os_service_default'].
 #
 # [*long_rpc_timeout*]
 #   (Optional) An alternative timeout value for RPC calls that have
 #   the potential to take a long time.
-#   Defaults to $::os_service_default.
+#   Defaults to $facts['os_service_default'].
 #
 # [*control_exchange*]
 #   (Optional) The default exchange under which topics are scoped. May be
 #   overridden by an exchange name specified in the transport_url
 #   option.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*rabbit_use_ssl*]
 #   (optional) Boolean. Connect over SSL for RabbitMQ. (boolean value)
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*rabbit_ha_queues*]
 #   (optional) Use HA queues in RabbitMQ. (boolean value)
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*rabbit_heartbeat_timeout_threshold*]
 #   (optional) Number of seconds after which the RabbitMQ broker is considered
@@ -44,14 +44,14 @@
 #   Heartbeating helps to ensure the TCP connection to RabbitMQ isn't silently
 #   closed, resulting in missed or lost messages from the queue.
 #   Requires kombu >= 3.0.7 and amqp >= 1.4.0. (integer value)
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*rabbit_heartbeat_rate*]
 #   (optional) How often during the rabbit_heartbeat_timeout_threshold period
 #   to check the heartbeat on RabbitMQ connection.
 #   i.e. rabbit_heartbeat_rate=2 when rabbit_heartbeat_timeout_threshold=60,
 #   the heartbeat will be checked every 30 seconds. (integer value)
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*rabbit_heartbeat_in_pthread*]
 #   (Optional) EXPERIMENTAL: Run the health check heartbeat thread
@@ -61,117 +61,117 @@
 #   example if the parent process have monkey patched the
 #   stdlib by using eventlet/greenlet then the heartbeat
 #   will be run through a green thread.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*rabbit_retry_interval*]
 #   (Optional) How frequently to retry connecting with RabbitMQ.
 #   (integer value)
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*kombu_ssl_ca_certs*]
 #   (optional) SSL certification authority file (valid only if SSL enabled).
 #   (string value)
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*kombu_ssl_certfile*]
 #   (optional) SSL cert file (valid only if SSL enabled). (string value)
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*kombu_ssl_keyfile*]
 #   (optional) SSL key file (valid only if SSL enabled). (string value)
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*kombu_ssl_version*]
 #   (optional) SSL version to use (valid only if SSL enabled).
 #   Valid values are TLSv1, SSLv23 and SSLv3. SSLv2 may be
 #   available on some distributions. (string value)
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*kombu_reconnect_delay*]
 #   (optional) How long to wait before reconnecting in response to an AMQP
 #   consumer cancel notification. (floating point value)
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*kombu_failover_strategy*]
 #   (Optional) Determines how the next RabbitMQ node is chosen in case the one
 #   we are currently connected to becomes unavailable. Takes effect only if
 #   more than one RabbitMQ node is provided in config. (string value)
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*kombu_compression*]
 #   (optional) Possible values are: gzip, bz2. If not set compression will not
 #   be used. This option may not be available in future versions. EXPERIMENTAL.
 #   (string value)
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*amqp_durable_queues*]
 #   (optional) Define queues as "durable" to rabbitmq. (boolean value)
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*amqp_server_request_prefix*]
 #   (Optional) Address prefix used when sending to a specific server
-#   Defaults to $::os_service_default.
+#   Defaults to $facts['os_service_default'].
 #
 # [*amqp_broadcast_prefix*]
 #   (Optional) address prefix used when broadcasting to all servers
-#   Defaults to $::os_service_default.
+#   Defaults to $facts['os_service_default'].
 #
 # [*amqp_group_request_prefix*]
 #   (Optional) address prefix when sending to any server in group
-#   Defaults to $::os_service_default.
+#   Defaults to $facts['os_service_default'].
 #
 # [*amqp_container_name*]
 #   (Optional) Name for the AMQP container
-#   Defaults to $::os_service_default.
+#   Defaults to $facts['os_service_default'].
 #
 # [*amqp_idle_timeout*]
 #   (Optional) Timeout for inactive connections
-#   Defaults to $::os_service_default.
+#   Defaults to $facts['os_service_default'].
 #
 # [*amqp_trace*]
 #   (Optional) Debug: dump AMQP frames to stdout
-#   Defaults to $::os_service_default.
+#   Defaults to $facts['os_service_default'].
 #
 # [*amqp_ssl_ca_file*]
 #   (Optional) CA certificate PEM file to verify server certificate
-#   Defaults to $::os_service_default.
+#   Defaults to $facts['os_service_default'].
 #
 # [*amqp_ssl_cert_file*]
 #   (Optional) Identifying certificate PEM file to present to clients
-#   Defaults to $::os_service_default.
+#   Defaults to $facts['os_service_default'].
 #
 # [*amqp_ssl_key_file*]
 #   (Optional) Private key PEM file used to sign cert_file certificate
-#   Defaults to $::os_service_default.
+#   Defaults to $facts['os_service_default'].
 #
 # [*amqp_ssl_key_password*]
 #   (Optional) Password for decrypting ssl_key_file (if encrypted)
-#   Defaults to $::os_service_default.
+#   Defaults to $facts['os_service_default'].
 #
 # [*amqp_sasl_mechanisms*]
 #   (Optional) Space separated list of acceptable SASL mechanisms
-#   Defaults to $::os_service_default.
+#   Defaults to $facts['os_service_default'].
 #
 # [*amqp_sasl_config_dir*]
 #   (Optional) Path to directory that contains the SASL configuration
-#   Defaults to $::os_service_default.
+#   Defaults to $facts['os_service_default'].
 #
 # [*amqp_sasl_config_name*]
 #   (Optional) Name of configuration file (without .conf suffix)
-#   Defaults to $::os_service_default.
+#   Defaults to $facts['os_service_default'].
 #
 # [*amqp_username*]
 #   (Optional) User name for message broker authentication
-#   Defaults to $::os_service_default.
+#   Defaults to $facts['os_service_default'].
 #
 # [*amqp_password*]
 #   (Optional) Password for message broker authentication
-#   Defaults to $::os_service_default.
+#   Defaults to $facts['os_service_default'].
 #
 # [*host*]
 #   (Optional) Name of this node. This is typically a hostname, FQDN, or
 #   IP address.
-#   Defaults to $::os_service_default.
+#   Defaults to $facts['os_service_default'].
 #
 # [*service_down_time*]
 #   (optional) Maximum time since last check-in for up service.
@@ -237,43 +237,43 @@
 #
 # [*cert*]
 #   (optional) Path to SSL certificate file.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*key*]
 #   (optional) SSL key file (if separate from cert).
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*console_ssl_ciphers*]
 #   (optional) OpenSSL cipher preference string that specifies what ciphers to
 #   allow for TLS connections from clients.  See the man page for the OpenSSL
 #   'ciphers' command for details of the cipher preference string format and
 #   allowed values.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*console_ssl_minimum_version*]
 #   (optional) Minimum allowed SSL/TLS protocol version.  Valid values are
 #   'default', 'tlsv1_1', 'tlsv1_2', and 'tlsv1_3'.  A value of 'default' will
 #   use the underlying system OpenSSL defaults.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*notification_transport_url*]
 #   (optional) A URL representing the messaging driver to use for notifications
 #   and its full configuration. Transport URLs take the form:
 #     transport://user:pass@host1:port[,hostN:portN]/virtual_host
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*notification_driver*]
 #   (optional) Driver or drivers to handle sending notifications.
 #   Value can be a string or a list.
-#   Defaults to $::os_service_default.
+#   Defaults to $facts['os_service_default'].
 #
 # [*notification_topics*]
 #   (optional) AMQP topic used for OpenStack notifications
-#   Defaults to ::os_service_default
+#   Defaults to facts['os_service_default']
 #
 # [*notification_format*]
 #   (optional) Format used for OpenStack notifications
-#   Defaults to ::os_service_default
+#   Defaults to facts['os_service_default']
 #
 # [*notify_on_state_change*]
 #   (optional) If set, send compute.instance.update notifications
@@ -285,27 +285,27 @@
 # [*ovsdb_connection*]
 #   (optional) Sets the ovsdb connection string. This is used by os-vif
 #   to interact with openvswitch on the host.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*upgrade_level_cells*]
 #  (optional) Sets a version cap for messages sent to local cells services
-#  Defaults to $::os_service_default
+#  Defaults to $facts['os_service_default']
 #
 # [*upgrade_level_compute*]
 #  (optional) Sets a version cap for messages sent to compute services
-#  Defaults to $::os_service_default
+#  Defaults to $facts['os_service_default']
 #
 # [*upgrade_level_conductor*]
 #  (optional) Sets a version cap for messages sent to conductor services
-#  Defaults to $::os_service_default
+#  Defaults to $facts['os_service_default']
 #
 # [*upgrade_level_intercell*]
 #  (optional) Sets a version cap for messages sent between cells services
-#  Defaults to $::os_service_default
+#  Defaults to $facts['os_service_default']
 #
 # [*upgrade_level_scheduler*]
 #  (optional) Sets a version cap for messages sent to scheduler services
-#  Defaults to $::os_service_default
+#  Defaults to $facts['os_service_default']
 #
 # [*purge_config*]
 #   (optional) Whether to set only the specified config options
@@ -316,41 +316,41 @@
 #   (optional) Virtual CPU to physical CPU allocation ratio which affects all
 #   CPU filters.  This can be set on the scheduler, or can be overridden
 #   per compute node.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*ram_allocation_ratio*]
 #   (optional) Virtual ram to physical ram allocation ratio which affects all
 #   ram filters. This can be set on the scheduler, or can be overridden
 #   per compute node.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*disk_allocation_ratio*]
 #   (optional) Virtual disk to physical disk allocation ratio which is used
 #   by the disk filter. This can be set on the scheduler, or can be overridden
 #   per compute node.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*initial_cpu_allocation_ratio*]
 #   (optional) Initial virtual CPU to physical CPU allocation ratio.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*initial_ram_allocation_ratio*]
 #   (optional) Initial virtual RAM to physical RAM allocation ratio.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*initial_disk_allocation_ratio*]
 #   (optional) Initial virtual disk to physical disk allocation ratio.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*my_ip*]
 #   (optional) IP address of this host on the management network.
 #   If unset, will determine the IP programmatically based on the default route.
 #   If unable to do so, will use "127.0.0.1".
-#   Defaults to $::os_service_default.
+#   Defaults to $facts['os_service_default'].
 #
 # [*dhcp_domain*]
 #   (optional) domain to use for building the hostnames
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*instance_name_template*]
 #   (optional) Template string to be used to generate instance names
@@ -368,44 +368,44 @@
 #
 # [*upgrade_level_network*]
 #  (optional) Sets a version cap for messages sent to network services
-#  Defaults to $::os_service_default
+#  Defaults to $facts['os_service_default']
 #
 class nova(
   $ensure_package                         = 'present',
-  $default_transport_url                  = $::os_service_default,
-  $rpc_response_timeout                   = $::os_service_default,
-  $long_rpc_timeout                       = $::os_service_default,
-  $control_exchange                       = $::os_service_default,
-  $rabbit_use_ssl                         = $::os_service_default,
-  $rabbit_heartbeat_timeout_threshold     = $::os_service_default,
-  $rabbit_heartbeat_rate                  = $::os_service_default,
-  $rabbit_heartbeat_in_pthread            = $::os_service_default,
-  $rabbit_ha_queues                       = $::os_service_default,
-  $rabbit_retry_interval                  = $::os_service_default,
-  $kombu_ssl_ca_certs                     = $::os_service_default,
-  $kombu_ssl_certfile                     = $::os_service_default,
-  $kombu_ssl_keyfile                      = $::os_service_default,
-  $kombu_ssl_version                      = $::os_service_default,
-  $kombu_reconnect_delay                  = $::os_service_default,
-  $kombu_failover_strategy                = $::os_service_default,
-  $kombu_compression                      = $::os_service_default,
-  $amqp_durable_queues                    = $::os_service_default,
-  $amqp_server_request_prefix             = $::os_service_default,
-  $amqp_broadcast_prefix                  = $::os_service_default,
-  $amqp_group_request_prefix              = $::os_service_default,
-  $amqp_container_name                    = $::os_service_default,
-  $amqp_idle_timeout                      = $::os_service_default,
-  $amqp_trace                             = $::os_service_default,
-  $amqp_ssl_ca_file                       = $::os_service_default,
-  $amqp_ssl_cert_file                     = $::os_service_default,
-  $amqp_ssl_key_file                      = $::os_service_default,
-  $amqp_ssl_key_password                  = $::os_service_default,
-  $amqp_sasl_mechanisms                   = $::os_service_default,
-  $amqp_sasl_config_dir                   = $::os_service_default,
-  $amqp_sasl_config_name                  = $::os_service_default,
-  $amqp_username                          = $::os_service_default,
-  $amqp_password                          = $::os_service_default,
-  $host                                   = $::os_service_default,
+  $default_transport_url                  = $facts['os_service_default'],
+  $rpc_response_timeout                   = $facts['os_service_default'],
+  $long_rpc_timeout                       = $facts['os_service_default'],
+  $control_exchange                       = $facts['os_service_default'],
+  $rabbit_use_ssl                         = $facts['os_service_default'],
+  $rabbit_heartbeat_timeout_threshold     = $facts['os_service_default'],
+  $rabbit_heartbeat_rate                  = $facts['os_service_default'],
+  $rabbit_heartbeat_in_pthread            = $facts['os_service_default'],
+  $rabbit_ha_queues                       = $facts['os_service_default'],
+  $rabbit_retry_interval                  = $facts['os_service_default'],
+  $kombu_ssl_ca_certs                     = $facts['os_service_default'],
+  $kombu_ssl_certfile                     = $facts['os_service_default'],
+  $kombu_ssl_keyfile                      = $facts['os_service_default'],
+  $kombu_ssl_version                      = $facts['os_service_default'],
+  $kombu_reconnect_delay                  = $facts['os_service_default'],
+  $kombu_failover_strategy                = $facts['os_service_default'],
+  $kombu_compression                      = $facts['os_service_default'],
+  $amqp_durable_queues                    = $facts['os_service_default'],
+  $amqp_server_request_prefix             = $facts['os_service_default'],
+  $amqp_broadcast_prefix                  = $facts['os_service_default'],
+  $amqp_group_request_prefix              = $facts['os_service_default'],
+  $amqp_container_name                    = $facts['os_service_default'],
+  $amqp_idle_timeout                      = $facts['os_service_default'],
+  $amqp_trace                             = $facts['os_service_default'],
+  $amqp_ssl_ca_file                       = $facts['os_service_default'],
+  $amqp_ssl_cert_file                     = $facts['os_service_default'],
+  $amqp_ssl_key_file                      = $facts['os_service_default'],
+  $amqp_ssl_key_password                  = $facts['os_service_default'],
+  $amqp_sasl_mechanisms                   = $facts['os_service_default'],
+  $amqp_sasl_config_dir                   = $facts['os_service_default'],
+  $amqp_sasl_config_name                  = $facts['os_service_default'],
+  $amqp_username                          = $facts['os_service_default'],
+  $amqp_password                          = $facts['os_service_default'],
+  $host                                   = $facts['os_service_default'],
   $service_down_time                      = 60,
   $state_path                             = '/var/lib/nova',
   $lock_path                              = $::nova::params::lock_path,
@@ -420,30 +420,30 @@ class nova(
   $nova_public_key                        = undef,
   $nova_private_key                       = undef,
   $ssl_only                               = false,
-  $cert                                   = $::os_service_default,
-  $key                                    = $::os_service_default,
-  $console_ssl_ciphers                    = $::os_service_default,
-  $console_ssl_minimum_version            = $::os_service_default,
-  $notification_transport_url             = $::os_service_default,
-  $notification_driver                    = $::os_service_default,
-  $notification_topics                    = $::os_service_default,
-  $notification_format                    = $::os_service_default,
+  $cert                                   = $facts['os_service_default'],
+  $key                                    = $facts['os_service_default'],
+  $console_ssl_ciphers                    = $facts['os_service_default'],
+  $console_ssl_minimum_version            = $facts['os_service_default'],
+  $notification_transport_url             = $facts['os_service_default'],
+  $notification_driver                    = $facts['os_service_default'],
+  $notification_topics                    = $facts['os_service_default'],
+  $notification_format                    = $facts['os_service_default'],
   $notify_on_state_change                 = undef,
-  $ovsdb_connection                       = $::os_service_default,
-  $upgrade_level_cells                    = $::os_service_default,
-  $upgrade_level_compute                  = $::os_service_default,
-  $upgrade_level_conductor                = $::os_service_default,
-  $upgrade_level_intercell                = $::os_service_default,
-  $upgrade_level_scheduler                = $::os_service_default,
-  $cpu_allocation_ratio                   = $::os_service_default,
-  $ram_allocation_ratio                   = $::os_service_default,
-  $disk_allocation_ratio                  = $::os_service_default,
-  $initial_cpu_allocation_ratio           = $::os_service_default,
-  $initial_ram_allocation_ratio           = $::os_service_default,
-  $initial_disk_allocation_ratio          = $::os_service_default,
+  $ovsdb_connection                       = $facts['os_service_default'],
+  $upgrade_level_cells                    = $facts['os_service_default'],
+  $upgrade_level_compute                  = $facts['os_service_default'],
+  $upgrade_level_conductor                = $facts['os_service_default'],
+  $upgrade_level_intercell                = $facts['os_service_default'],
+  $upgrade_level_scheduler                = $facts['os_service_default'],
+  $cpu_allocation_ratio                   = $facts['os_service_default'],
+  $ram_allocation_ratio                   = $facts['os_service_default'],
+  $disk_allocation_ratio                  = $facts['os_service_default'],
+  $initial_cpu_allocation_ratio           = $facts['os_service_default'],
+  $initial_ram_allocation_ratio           = $facts['os_service_default'],
+  $initial_disk_allocation_ratio          = $facts['os_service_default'],
   $purge_config                           = false,
-  $my_ip                                  = $::os_service_default,
-  $dhcp_domain                            = $::os_service_default,
+  $my_ip                                  = $facts['os_service_default'],
+  $dhcp_domain                            = $facts['os_service_default'],
   $instance_name_template                 = undef,
   # DEPRECATED PARAMETERS
   $auth_strategy                          = undef,
@@ -550,7 +550,7 @@ but should be one of: ssh-rsa, ssh-dsa, ssh-ecdsa.")
     warning('The auth_strategy parameter is deprecated, and will be removed in a future release.')
   }
   nova_config {
-    'api/auth_strategy': value => pick($auth_strategy, $::os_service_default)
+    'api/auth_strategy': value => pick($auth_strategy, $facts['os_service_default'])
   }
 
   nova_config {
@@ -570,7 +570,7 @@ but should be one of: ssh-rsa, ssh-dsa, ssh-ecdsa.")
     'DEFAULT/dhcp_domain':                   value => $dhcp_domain;
   }
 
-  # TODO(tkajinam): Change the default value to $::os_service_default when we
+  # TODO(tkajinam): Change the default value to $facts['os_service_default'] when we
   #                 remove nova::api::instance_name_template after Antelope.
   if $instance_name_template != undef {
     nova_config {
@@ -685,11 +685,11 @@ but should be one of: ssh-rsa, ssh-dsa, ssh-ecdsa.")
 
   nova_config {
     'upgrade_levels/cells':       value => $upgrade_level_cells;
-    'upgrade_levels/cert':        value => pick($upgrade_level_cert, $::os_service_default);
+    'upgrade_levels/cert':        value => pick($upgrade_level_cert, $facts['os_service_default']);
     'upgrade_levels/compute':     value => $upgrade_level_compute;
     'upgrade_levels/conductor':   value => $upgrade_level_conductor;
     'upgrade_levels/intercell':   value => $upgrade_level_intercell;
-    'upgrade_levels/network':     value => pick($upgrade_level_network, $::os_service_default);
+    'upgrade_levels/network':     value => pick($upgrade_level_network, $facts['os_service_default']);
     'upgrade_levels/scheduler':   value => $upgrade_level_scheduler;
   }
 }

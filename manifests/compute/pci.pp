@@ -6,13 +6,13 @@
 #
 #  [*passthrough*]
 #   (optional) Pci passthrough list of hash.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #   Example of format:
 #   [ { "vendor_id" => "1234","product_id" => "5678" },
 #     { "vendor_id" => "4321","product_id" => "8765", "physical_network" => "default" } ]
 
 class nova::compute::pci(
-  $passthrough = $::os_service_default
+  $passthrough = $facts['os_service_default']
 ) {
   include nova::deps
 
@@ -21,7 +21,7 @@ class nova::compute::pci(
       !empty($passthrough) {
     $passthrough_real = to_array_of_json_strings($passthrough)
   } else {
-    $passthrough_real = $::os_service_default
+    $passthrough_real = $facts['os_service_default']
   }
   nova_config {
     'pci/device_spec': value => $passthrough_real;

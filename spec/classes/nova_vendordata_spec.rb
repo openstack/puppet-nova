@@ -91,11 +91,11 @@ describe 'nova::vendordata' do
   }).each do |os,facts|
     context "on #{os}" do
       let (:facts) do
-        facts.merge!(OSDefaults.get_facts({ :os_workers => 5 }))
+        facts.merge!(OSDefaults.get_facts())
       end
 
       let (:platform_params) do
-        case facts[:osfamily]
+        case facts[:os]['family']
         when 'Debian'
           { :nova_api_package => 'nova-api',
             :nova_api_service => 'nova-api' }

@@ -32,7 +32,7 @@
 #
 # [*system_scope*]
 #   (Optional) Scope for system operations.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*auth_type*]
 #  (Optional) Authentication type to load
@@ -41,19 +41,19 @@
 # [*service_type*]
 #  (Optional) The name or type of the service as it appears in the service
 #  catalog. This is used to validate tokens that have restricted access rules.
-#  Defaults to $::os_service_default.
+#  Defaults to $facts['os_service_default'].
 #
 # [*valid_interfaces*]
 #  (Optional) List of interfaces, in order of preference, for endpoint URL.
-#  Defaults to $::os_service_default.
+#  Defaults to $facts['os_service_default'].
 #
 # [*region_name*]
 #  (Optional) The region in which the identity server can be found.
-#  Defaults to $::os_service_default.
+#  Defaults to $facts['os_service_default'].
 #
 # [*endpoint_override*]
 #  (Optional) Always use this endpoint URL for requests for this client.
-#  Defaults to $::os_service_default.
+#  Defaults to $facts['os_service_default'].
 #
 class nova::limit(
   $endpoint_id,
@@ -63,12 +63,12 @@ class nova::limit(
   $project_name        = 'services',
   $user_domain_name    = 'Default',
   $project_domain_name = 'Default',
-  $system_scope        = $::os_service_default,
+  $system_scope        = $facts['os_service_default'],
   $auth_type           = 'password',
-  $service_type        = $::os_service_default,
-  $valid_interfaces    = $::os_service_default,
-  $region_name         = $::os_service_default,
-  $endpoint_override   = $::os_service_default,
+  $service_type        = $facts['os_service_default'],
+  $valid_interfaces    = $facts['os_service_default'],
+  $region_name         = $facts['os_service_default'],
+  $endpoint_override   = $facts['os_service_default'],
 ) {
 
   include nova::deps

@@ -6,23 +6,23 @@
 #
 # [*scheduler_host_subset_size*]
 #   (optional) defines the subset size that a host is chosen from
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*max_io_ops_per_host*]
 #   (optional) Ignore hosts that have too many builds/resizes/snaps/migrations
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*max_instances_per_host*]
 #   (optional) Ignore hosts that have too many instances
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*isolated_images*]
 #   (optional) An array of images to run on isolated host
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*isolated_hosts*]
 #   (optional) An array of hosts reserved for specific images
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*scheduler_available_filters*]
 #   (optional) An array with filter classes available to the scheduler.
@@ -31,7 +31,7 @@
 #
 # [*scheduler_enabled_filters*]
 #   (optional) An array of filters to be used by default
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*scheduler_weight_classes*]
 #   (optional) Which weight class names to use for weighing hosts
@@ -39,91 +39,91 @@
 #
 # [*track_instance_changes*]
 #   (optional) Enable querying of individual hosts for instance information.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*ram_weight_multiplier*]
 #   (optional) Ram weight multiplier ratio. This option determines how hosts
 #   with more or less available RAM are weighed.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*cpu_weight_multiplier*]
 #   (optional) CPU weight multiplier ratio. This options determines how hosts
 #   with more or less available CPU cores are weighed. Negative numbers mean
 #   to stack vs spread.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*disk_weight_multiplier*]
 #   (optional) Disk weight multiplier ratio. Multiplier used for weighing free
 #   disk space. Negative numbers mean to stack vs spread.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*io_ops_weight_multiplier*]
 #   (optional) IO operations weight multiplier ratio. This option determines
 #   how hosts with differing workloads are weighed
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*soft_affinity_weight_multiplier*]
 #   (optional) Multiplier used for weighing hosts for group soft-affinity
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*soft_anti_affinity_weight_multiplier*]
 #   (optional) Multiplier used for weighing hosts for group soft-anti-affinity
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*build_failure_weight_multiplier*]
 #   (optional) Multiplier used for weighing hosts that have had recent build
 #   failures
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*cross_cell_move_weight_multiplier*]
 #   (optional) Multiplier used for weighing hosts during a cross-cell move
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*shuffle_best_same_weighed_hosts*]
 #   (Optional) Enabled spreading the instances between hosts with the same
 #   best weight
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*restrict_isolated_hosts_to_isolated_images*]
 #   (optional) Prevent non-isolated images from being built on isolated hosts.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*aggregate_image_properties_isolation_namespace*]
 #   (optional) Image property namespace for use in the host aggregate
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*aggregate_image_properties_isolation_separator*]
 #   (optional) Separator character(s) for image property namespace and name
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 class nova::scheduler::filter (
-  $scheduler_host_subset_size                     = $::os_service_default,
-  $max_io_ops_per_host                            = $::os_service_default,
-  $max_instances_per_host                         = $::os_service_default,
-  $isolated_images                                = $::os_service_default,
-  $isolated_hosts                                 = $::os_service_default,
+  $scheduler_host_subset_size                     = $facts['os_service_default'],
+  $max_io_ops_per_host                            = $facts['os_service_default'],
+  $max_instances_per_host                         = $facts['os_service_default'],
+  $isolated_images                                = $facts['os_service_default'],
+  $isolated_hosts                                 = $facts['os_service_default'],
   $scheduler_available_filters                    = ['nova.scheduler.filters.all_filters'],
-  $scheduler_enabled_filters                      = $::os_service_default,
+  $scheduler_enabled_filters                      = $facts['os_service_default'],
   $scheduler_weight_classes                       = 'nova.scheduler.weights.all_weighers',
-  $track_instance_changes                         = $::os_service_default,
-  $ram_weight_multiplier                          = $::os_service_default,
-  $cpu_weight_multiplier                          = $::os_service_default,
-  $disk_weight_multiplier                         = $::os_service_default,
-  $io_ops_weight_multiplier                       = $::os_service_default,
-  $soft_affinity_weight_multiplier                = $::os_service_default,
-  $soft_anti_affinity_weight_multiplier           = $::os_service_default,
-  $build_failure_weight_multiplier                = $::os_service_default,
-  $cross_cell_move_weight_multiplier              = $::os_service_default,
-  $shuffle_best_same_weighed_hosts                = $::os_service_default,
-  $restrict_isolated_hosts_to_isolated_images     = $::os_service_default,
-  $aggregate_image_properties_isolation_namespace = $::os_service_default,
-  $aggregate_image_properties_isolation_separator = $::os_service_default,
+  $track_instance_changes                         = $facts['os_service_default'],
+  $ram_weight_multiplier                          = $facts['os_service_default'],
+  $cpu_weight_multiplier                          = $facts['os_service_default'],
+  $disk_weight_multiplier                         = $facts['os_service_default'],
+  $io_ops_weight_multiplier                       = $facts['os_service_default'],
+  $soft_affinity_weight_multiplier                = $facts['os_service_default'],
+  $soft_anti_affinity_weight_multiplier           = $facts['os_service_default'],
+  $build_failure_weight_multiplier                = $facts['os_service_default'],
+  $cross_cell_move_weight_multiplier              = $facts['os_service_default'],
+  $shuffle_best_same_weighed_hosts                = $facts['os_service_default'],
+  $restrict_isolated_hosts_to_isolated_images     = $facts['os_service_default'],
+  $aggregate_image_properties_isolation_namespace = $facts['os_service_default'],
+  $aggregate_image_properties_isolation_separator = $facts['os_service_default'],
 ) {
 
   include nova::deps
 
   # The following values are following this rule:
-  # - default is $::os_service_default so Puppet won't try to configure it.
+  # - default is $facts['os_service_default'] so Puppet won't try to configure it.
   # - if set, we'll validate it's an array that is not empty and configure the parameter.
   # - Otherwise, fallback to default.
 
@@ -131,12 +131,12 @@ class nova::scheduler::filter (
     validate_legacy(Array, 'validate_array', $scheduler_enabled_filters)
     $scheduler_enabled_filters_real = join($scheduler_enabled_filters, ',')
   } else {
-    $scheduler_enabled_filters_real = $::os_service_default
+    $scheduler_enabled_filters_real = $facts['os_service_default']
   }
 
   if $scheduler_available_filters =~ Array {
     if empty($scheduler_available_filters) {
-      $scheduler_available_filters_real = $::os_service_default
+      $scheduler_available_filters_real = $facts['os_service_default']
     } else {
       $scheduler_available_filters_real = $scheduler_available_filters
     }
@@ -149,13 +149,13 @@ class nova::scheduler::filter (
     validate_legacy(Array, 'validate_array', $isolated_images)
     $isolated_images_real = join($isolated_images, ',')
   } else {
-    $isolated_images_real = $::os_service_default
+    $isolated_images_real = $facts['os_service_default']
   }
   if !is_service_default($isolated_hosts) and !empty($isolated_hosts){
     validate_legacy(Array, 'validate_array', $isolated_hosts)
     $isolated_hosts_real = join($isolated_hosts, ',')
   } else {
-    $isolated_hosts_real = $::os_service_default
+    $isolated_hosts_real = $facts['os_service_default']
   }
 
   nova_config {

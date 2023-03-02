@@ -68,7 +68,7 @@ class nova::compute::libvirt::services (
 
   if $libvirt_service_name {
     # libvirt-nwfilter
-    if $::osfamily == 'RedHat' {
+    if $facts['os']['family'] == 'RedHat' {
       package { 'libvirt-nwfilter':
         ensure => $ensure_package,
         name   => $::nova::params::libvirt_nwfilter_package_name,
@@ -115,7 +115,7 @@ class nova::compute::libvirt::services (
     Libvirtd_config<||> ~> Service['libvirt']
 
     # messagebus
-    if($::osfamily == 'RedHat') {
+    if( $facts['os']['family'] == 'RedHat') {
       service { 'messagebus':
         ensure => running,
         enable => true,

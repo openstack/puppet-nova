@@ -288,7 +288,7 @@ describe 'nova::api' do
       end
 
       let (:platform_params) do
-        case facts[:osfamily]
+        case facts[:os]['family']
         when 'Debian'
           { :nova_api_package => 'nova-api',
             :nova_api_service => 'nova-api' }
@@ -298,7 +298,7 @@ describe 'nova::api' do
         end
       end
       it_behaves_like 'nova-api'
-      if facts[:operatingsystem] == 'Debian'
+      if facts[:os]['name'] == 'Debian'
         it_behaves_like 'nova-api on Debian'
       end
     end

@@ -16,12 +16,12 @@
 #
 # [*listen_address*]
 #   (optional) Bind libvirtd tcp/tls socket to the given address.
-#   Defaults to $::os_service_default (bind to all addresses)
+#   Defaults to $facts['os_service_default'] (bind to all addresses)
 #
 # [*live_migration_inbound_addr*]
 #   (optional) The IP address or hostname to be used as the target for live
 #   migration traffic.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*live_migration_tunnelled*]
 #   (optional) Whether to use tunnelled migration, where migration data is
@@ -32,7 +32,7 @@
 #   If False, use the native transport.
 #   If not set, Nova will choose a sensible default based on, for example
 #   the availability of native encryption support in the hypervisor.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*live_migration_with_native_tls*]
 #   (optional) This option will allow both migration stream (guest RAM plus
@@ -42,30 +42,30 @@
 #   Compute nodes.  This means, Certificate Authority (CA), server, client
 #   certificates, their corresponding keys, and their file permissions are
 #   in place, and are validated.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*live_migration_downtime*]
 #   (optional) Target maximum period of time Nova will try to keep the instance paused
 #   during the last part of the memory copy, in miliseconds.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*live_migration_downtime_steps*]
 #   (optional) Number of incremental steps to reach max downtime value.
 #   Minimum number of steps is 3.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*live_migration_downtime_delay*]
 #   (optional) Time to wait, in seconds, between each step increase of the migration
 #   downtime. Value is per GiB of guest RAM + disk to be transferred, with lower bound
 #   of a minimum of 2 GiB per device. Minimum delay is 3 seconds.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*live_migration_completion_timeout*]
 #   (optional) Time to wait, in seconds, for migration to successfully complete
 #   transferring data before aborting the operation. Value is per GiB of guest
 #   RAM + disk to be transferred, with lower bound of a minimum of 2 GiB. Set
 #   to 0 to disable timeouts.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*live_migration_timeout_action*]
 #   (optional) This option will be used to determine what action will be taken
@@ -73,7 +73,7 @@
 #   the live migrate operation will be aborted after completion timeout.
 #   If it is set to force_complete, the compute service will either pause the
 #   VM or trigger post-copy depending on if post copy is enabled and available
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*live_migration_permit_post_copy*]
 #   (optional) This option allows nova to switch an on-going live migration
@@ -81,7 +81,7 @@
 #   node before the migration is complete, therefore ensuring an upper bound
 #   on the memory that needs to be transferred.
 #   Post-copy requires libvirt>=1.3.3 and QEMU>=2.5.0.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*live_migration_permit_auto_converge*]
 #   (optional) This option allows nova to start live migration with auto
@@ -89,7 +89,7 @@
 #   live migration is slow. Auto converge will only be used if this flag is
 #   set to True and post copy is not permitted or post copy is unavailable
 #   due to the version of libvirt and QEMU in use.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*override_uuid*]
 #   (optional) Set uuid not equal to output from dmidecode (boolean)
@@ -126,13 +126,13 @@
 #   (optional) Specifies the CA certificate that the TLS transport will use.
 #   Note that this is only used if the TLS transport is enabled via the
 #   "transport" option.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*crl_file*]
 #   (optional) Specifies the CRL file that the TLS transport will use.
 #   Note that this is only used if the TLS transport is enabled via the
 #   "transport" option.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*libvirt_version*]
 #   (optional) installed libvirt version. Default is automatic detected depending
@@ -147,17 +147,17 @@
 class nova::migration::libvirt(
   $transport                           = undef,
   $auth                                = 'none',
-  $listen_address                      = $::os_service_default,
-  $live_migration_inbound_addr         = $::os_service_default,
-  $live_migration_tunnelled            = $::os_service_default,
-  $live_migration_with_native_tls      = $::os_service_default,
-  $live_migration_downtime             = $::os_service_default,
-  $live_migration_downtime_steps       = $::os_service_default,
-  $live_migration_downtime_delay       = $::os_service_default,
-  $live_migration_completion_timeout   = $::os_service_default,
-  $live_migration_timeout_action       = $::os_service_default,
-  $live_migration_permit_post_copy     = $::os_service_default,
-  $live_migration_permit_auto_converge = $::os_service_default,
+  $listen_address                      = $facts['os_service_default'],
+  $live_migration_inbound_addr         = $facts['os_service_default'],
+  $live_migration_tunnelled            = $facts['os_service_default'],
+  $live_migration_with_native_tls      = $facts['os_service_default'],
+  $live_migration_downtime             = $facts['os_service_default'],
+  $live_migration_downtime_steps       = $facts['os_service_default'],
+  $live_migration_downtime_delay       = $facts['os_service_default'],
+  $live_migration_completion_timeout   = $facts['os_service_default'],
+  $live_migration_timeout_action       = $facts['os_service_default'],
+  $live_migration_permit_post_copy     = $facts['os_service_default'],
+  $live_migration_permit_auto_converge = $facts['os_service_default'],
   $override_uuid                       = false,
   $host_uuid                           = undef,
   $configure_libvirt                   = true,
@@ -165,8 +165,8 @@ class nova::migration::libvirt(
   $client_user                         = undef,
   $client_port                         = undef,
   $client_extraparams                  = {},
-  $ca_file                             = $::os_service_default,
-  $crl_file                            = $::os_service_default,
+  $ca_file                             = $facts['os_service_default'],
+  $crl_file                            = $facts['os_service_default'],
   $libvirt_version                     = $::nova::compute::libvirt::version::default,
   $modular_libvirt                     = undef,
 ) inherits nova::compute::libvirt::version {
@@ -251,7 +251,7 @@ class nova::migration::libvirt(
     File_line<| tag == 'libvirt-file_line' |> ~> Service['libvirt']
 
     if $override_uuid {
-      if ! $::libvirt_uuid {
+      if ! $facts['libvirt_uuid'] {
         $host_uuid_real = pick(
           $host_uuid,
           generate('/bin/cat', '/proc/sys/kernel/random/uuid'))
@@ -260,7 +260,7 @@ class nova::migration::libvirt(
           require => Package['libvirt'],
         }
       } else {
-        $host_uuid_real = $::libvirt_uuid
+        $host_uuid_real = $facts['libvirt_uuid']
       }
 
       if $modular_libvirt_real {
@@ -284,19 +284,19 @@ class nova::migration::libvirt(
 
     if $transport_real == 'tls' {
       $auth_tls_real = $auth
-      $auth_tcp_real = $::os_service_default
+      $auth_tcp_real = $facts['os_service_default']
       $ca_file_real  = $ca_file
       $crl_file_real = $crl_file
     } elsif $transport_real == 'tcp' {
-      $auth_tls_real = $::os_service_default
+      $auth_tls_real = $facts['os_service_default']
       $auth_tcp_real = $auth
-      $ca_file_real  = $::os_service_default
-      $crl_file_real = $::os_service_default
+      $ca_file_real  = $facts['os_service_default']
+      $crl_file_real = $facts['os_service_default']
     } else {
-      $auth_tls_real = $::os_service_default
-      $auth_tcp_real = $::os_service_default
-      $ca_file_real  = $::os_service_default
-      $crl_file_real = $::os_service_default
+      $auth_tls_real = $facts['os_service_default']
+      $auth_tcp_real = $facts['os_service_default']
+      $ca_file_real  = $facts['os_service_default']
+      $crl_file_real = $facts['os_service_default']
     }
 
     $libvirt_listen_config = $modular_libvirt_real ? {
@@ -343,7 +343,7 @@ class nova::migration::libvirt(
       }
     }
 
-    case $::osfamily {
+    case $facts['os']['family'] {
       'RedHat': {
         # NOTE(tkajinam): Since libvirt 8.1.0, the sysconfig files are
         #                 no longer provided by packages.
@@ -365,7 +365,7 @@ class nova::migration::libvirt(
         }
       }
       default: {
-        warning("Unsupported osfamily: ${::osfamily}, make sure you are configuring this yourself")
+        warning("Unsupported osfamily: ${facts['os']['family']}, make sure you are configuring this yourself")
       }
     }
   }

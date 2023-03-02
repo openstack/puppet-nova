@@ -10,7 +10,7 @@
 #
 # [*heal_instance_info_cache_interval*]
 #   (optional) Controls how often the instance info should be updated.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #   To disable you can set the value to zero.
 #
 # [*manage_service*]
@@ -56,7 +56,7 @@
 #
 # [*mkisofs_cmd*]
 #   (optional) Name or path of the tool used for ISO image creation.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*instance_usage_audit*]
 #   (optional) Generate periodic compute.instance.exists notifications.
@@ -69,26 +69,26 @@
 #
 # [*use_cow_images*]
 #   (optional) Enable use of copy-on-write (cow) images.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*force_raw_images*]
 #   (optional) Force backing images to raw format.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*virt_mkfs*]
 #   (optional) Name of the mkfs commands for ephemeral device.
 #   The format is <os_type>=<mkfs command>
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*reserved_host_memory*]
 #   Reserved host memory
 #   The amount of memory in MB reserved for the host.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*reserved_host_disk*]
 #   Reserved host disk
 #   The amount of disk in MB reserved for the host.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*config_drive_format*]
 #   (optional) Config drive format. One of iso9660 (default) or vfat
@@ -101,25 +101,25 @@
 #   Leaving this at the default of 0 will cause this to run at the default
 #   periodic interval. Setting it to any positive value will cause it to run
 #   at approximately that number of seconds.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*reboot_timeout*]
 #   (optional) Time interval after which an instance is hard rebooted
 #   automatically. Setting this option to a time period in seconds will
 #   automatically hard reboot an instance if it has been stuck in a rebooting
 #   state longer than N seconds.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*instance_build_timeout*]
 #   (optional) Maximum time in seconds that an instance can take to build.
 #   If this timer expires, instance status will be changed to ERROR.
 #   Enabling this option will make sure an instance will not be stuck
 #   in BUILD state for a longer period.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*rescue_timeout*]
 #   (optional) Interval to wait before un-rescuing an instance stuck in RESCUE.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*resize_confirm_window*]
 #   (optional) Automatically confirm resizes after N seconds.
@@ -130,7 +130,7 @@
 #   server status from resized to active. Setting this option to a time
 #   period (in seconds) will automatically confirm the resize if the
 #   server is in resized state longer than that time.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*shutdown_timeout*]
 #   (optional) Total time to wait in seconds for an instance to perform a clean
@@ -138,49 +138,49 @@
 #   perform a clean shutdown. While performing stop, rescue and shelve, rebuild
 #   operations, configuring this option gives the VM a chance to perform a
 #   controlled shutdown before the instance is powered off.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*cpu_shared_set*]
 #   (optional) Mask of host CPUs that can be used for ``VCPU`` resources and
 #   offloaded emulator threads.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*cpu_dedicated_set*]
 #   (optional) A list or range of host CPU cores to which processes for pinned
 #   instance CPUs (PCPUs) can be scheduled.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*resume_guests_state_on_host_boot*]
 #   (optional) This option specifies whether to start guests that were running before the
 #   host rebooted. It ensures that all of the instances on a Nova compute node
 #   resume their state each time the compute node boots or restarts.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*max_concurrent_builds*]
 #   (optional) Maximum number of instance builds to run concurrently
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*max_concurrent_live_migrations*]
 #   (optional) Maximum number of live migrations to run in parallel.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*sync_power_state_pool_size*]
 #   (optional) Maximum number of greenthreads to use when syncing power states.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*sync_power_state_interval*]
 #   (optional) Interval to sync power states between the database and the hypervisor. Set
 #   to -1 to disable. Setting this to 0 will run at the default rate.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*consecutive_build_service_disable_threshold*]
 #   (optional) Max number of consecutive build failures before the nova-compute
 #   will disable itself.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*reserved_huge_pages*]
 #   (optional) Number of huge memory pages to reserved per NUMA host cell.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #   Accepts a string e.g "node:0,size:1GB,count:4" or a list of strings e.g:
 #   ["node:0,size:1GB,count:4", "node:1,size:1GB,count:4"]
 #
@@ -195,7 +195,7 @@
 #
 # [*live_migration_wait_for_vif_plug*]
 #   (optional) whether to wait for ``network-vif-plugged`` events before starting guest transfer
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*max_disk_devices_to_attach*]
 #   (optional) specifies max number of devices that can be attached
@@ -205,40 +205,40 @@
 #   to 4 attached devices. The configured maximum is enforced
 #   during server create, rebuild, evacuate, unshelve, live migrate,
 #   and attach volume.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*default_access_ip_network_name*]
 #   (optional) Name of the network to be used to set access IPs for
 #   instances. If there are multiple IPs to choose from, an arbitrary
 #   one will be chosen.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*running_deleted_instance_action*]
 #   (optional) The compute service periodically checks for instances that
 #   have been deleted in the database but remain running on the compute node.
 #   This option enables action to be taken when such instances are identified
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*running_deleted_instance_poll_interval*]
 #   (optional) Time interval in seconds to wait between runs for the clean up
 #   action. If set to 0, deleted instances check will be disabled.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*running_deleted_instance_timeout*]
 #   (optional) Time interval in seconds to wait for the instances that have
 #   been marked as deleted in database to be eligible for cleanup.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*compute_monitors*]
 #   (optional) A comma-separated list of monitors that can be used for getting
 #   compute metrics. Only one monitor per namespace (For example: cpu) can be
 #   loaded at a time.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*default_ephemeral_format*]
 #   (optional) The default format an ephemeral_volume will be formatted with
 #   on creation.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*image_type_exclude_list*]
 #   (optional) List of image formats that should not be advertised as supported
@@ -246,12 +246,12 @@
 #
 # [*block_device_allocate_retries*]
 #   (optional) Number of times to retry block device allocation on failures
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*block_device_allocate_retries_interval*]
 #   (optional) Waiting time interval (seconds) between block device allocation
 #   retries on failures
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 class nova::compute (
   $enabled                                     = true,
@@ -267,48 +267,48 @@ class nova::compute (
   $force_config_drive                          = false,
   $instance_usage_audit                        = false,
   $instance_usage_audit_period                 = 'month',
-  $mkisofs_cmd                                 = $::os_service_default,
-  $use_cow_images                              = $::os_service_default,
-  $force_raw_images                            = $::os_service_default,
-  $virt_mkfs                                   = $::os_service_default,
-  $reserved_host_memory                        = $::os_service_default,
-  $reserved_host_disk                          = $::os_service_default,
-  $heal_instance_info_cache_interval           = $::os_service_default,
-  $config_drive_format                         = $::os_service_default,
-  $update_resources_interval                   = $::os_service_default,
-  $reboot_timeout                              = $::os_service_default,
-  $instance_build_timeout                      = $::os_service_default,
-  $rescue_timeout                              = $::os_service_default,
-  $resize_confirm_window                       = $::os_service_default,
-  $shutdown_timeout                            = $::os_service_default,
-  $cpu_shared_set                              = $::os_service_default,
-  $cpu_dedicated_set                           = $::os_service_default,
-  $resume_guests_state_on_host_boot            = $::os_service_default,
-  $max_concurrent_builds                       = $::os_service_default,
-  $max_concurrent_live_migrations              = $::os_service_default,
-  $sync_power_state_pool_size                  = $::os_service_default,
-  $sync_power_state_interval                   = $::os_service_default,
-  $consecutive_build_service_disable_threshold = $::os_service_default,
-  $reserved_huge_pages                         = $::os_service_default,
+  $mkisofs_cmd                                 = $facts['os_service_default'],
+  $use_cow_images                              = $facts['os_service_default'],
+  $force_raw_images                            = $facts['os_service_default'],
+  $virt_mkfs                                   = $facts['os_service_default'],
+  $reserved_host_memory                        = $facts['os_service_default'],
+  $reserved_host_disk                          = $facts['os_service_default'],
+  $heal_instance_info_cache_interval           = $facts['os_service_default'],
+  $config_drive_format                         = $facts['os_service_default'],
+  $update_resources_interval                   = $facts['os_service_default'],
+  $reboot_timeout                              = $facts['os_service_default'],
+  $instance_build_timeout                      = $facts['os_service_default'],
+  $rescue_timeout                              = $facts['os_service_default'],
+  $resize_confirm_window                       = $facts['os_service_default'],
+  $shutdown_timeout                            = $facts['os_service_default'],
+  $cpu_shared_set                              = $facts['os_service_default'],
+  $cpu_dedicated_set                           = $facts['os_service_default'],
+  $resume_guests_state_on_host_boot            = $facts['os_service_default'],
+  $max_concurrent_builds                       = $facts['os_service_default'],
+  $max_concurrent_live_migrations              = $facts['os_service_default'],
+  $sync_power_state_pool_size                  = $facts['os_service_default'],
+  $sync_power_state_interval                   = $facts['os_service_default'],
+  $consecutive_build_service_disable_threshold = $facts['os_service_default'],
+  $reserved_huge_pages                         = $facts['os_service_default'],
   $neutron_physnets_numa_nodes_mapping         = {},
   $neutron_tunnel_numa_nodes                   = [],
-  $live_migration_wait_for_vif_plug            = $::os_service_default,
-  $max_disk_devices_to_attach                  = $::os_service_default,
-  $default_access_ip_network_name              = $::os_service_default,
-  $running_deleted_instance_action             = $::os_service_default,
-  $running_deleted_instance_poll_interval      = $::os_service_default,
-  $running_deleted_instance_timeout            = $::os_service_default,
-  $compute_monitors                            = $::os_service_default,
-  $default_ephemeral_format                    = $::os_service_default,
-  $image_type_exclude_list                     = $::os_service_default,
-  $block_device_allocate_retries               = $::os_service_default,
-  $block_device_allocate_retries_interval      = $::os_service_default,
+  $live_migration_wait_for_vif_plug            = $facts['os_service_default'],
+  $max_disk_devices_to_attach                  = $facts['os_service_default'],
+  $default_access_ip_network_name              = $facts['os_service_default'],
+  $running_deleted_instance_action             = $facts['os_service_default'],
+  $running_deleted_instance_poll_interval      = $facts['os_service_default'],
+  $running_deleted_instance_timeout            = $facts['os_service_default'],
+  $compute_monitors                            = $facts['os_service_default'],
+  $default_ephemeral_format                    = $facts['os_service_default'],
+  $image_type_exclude_list                     = $facts['os_service_default'],
+  $block_device_allocate_retries               = $facts['os_service_default'],
+  $block_device_allocate_retries_interval      = $facts['os_service_default'],
 ) {
 
   include nova::deps
   include nova::params
 
-  $image_type_exclude_list_real = pick(join(any2array($image_type_exclude_list), ','), $::os_service_default)
+  $image_type_exclude_list_real = pick(join(any2array($image_type_exclude_list), ','), $facts['os_service_default'])
 
   include nova::policy
 

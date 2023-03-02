@@ -6,46 +6,46 @@
 #
 # [*barbican_endpoint*]
 #   (Optional) Use this endpoint to connect to Barbican.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*barbican_api_version*]
 #   (Optional) Version of the Barbican API.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*auth_endpoint*]
 #   (Optional) Use this endpoint to connect to Keystone.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*retry_delay*]
 #   (Optional) Number of seconds to wait before retrying poll for key creation
 #   completion.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*number_of_retries*]
 #   (Optional) Number of times to retry poll fo key creation completion.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*barbican_endpoint_type*]
 #   (Optional) Specifies the type of endpoint.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*barbican_region_name*]
 #   (Optional) Specifies the region of the chosen endpoint.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*send_service_user_token*]
 #   (Optional) The service uses service token feature when this is set as true.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 class nova::key_manager::barbican (
-  $barbican_endpoint       = $::os_service_default,
-  $barbican_api_version    = $::os_service_default,
-  $auth_endpoint           = $::os_service_default,
-  $retry_delay             = $::os_service_default,
-  $number_of_retries       = $::os_service_default,
-  $barbican_endpoint_type  = $::os_service_default,
-  $barbican_region_name    = $::os_service_default,
-  $send_service_user_token = $::os_service_default,
+  $barbican_endpoint       = $facts['os_service_default'],
+  $barbican_api_version    = $facts['os_service_default'],
+  $auth_endpoint           = $facts['os_service_default'],
+  $retry_delay             = $facts['os_service_default'],
+  $number_of_retries       = $facts['os_service_default'],
+  $barbican_endpoint_type  = $facts['os_service_default'],
+  $barbican_region_name    = $facts['os_service_default'],
+  $send_service_user_token = $facts['os_service_default'],
 ) {
 
   include nova::deps

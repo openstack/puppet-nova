@@ -6,53 +6,53 @@
 #
 # [*endpoint_override*]
 #   (optional) Override the endpoint to use to talk to Glance.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*valid_interfaces*]
 #   (optional) List of interfaces, in order of preference.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*num_retries*]
 #   (optional) Number of retries in glance operation
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*verify_glance_signatures*]
 #   (optional) Whether to verify image signatures. (boolean value)
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*enable_rbd_download*]
 #   (optional) Enable download of Glance images directly via RBD
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*rbd_user*]
 #   (optional) The RADOS client name for accessing Glance images stored as
 #   rbd volumes.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*rbd_connect_timeout*]
 #   (optional) THe RADOS client timeout in seconds when initially connecting
 #   to the cluster.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*rbd_pool*]
 #   (optional) The RADOS pool in which the Glance images are stored as rbd
 #   volumes.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*rbd_ceph_conf*]
 #   (optional) Path to the ceph configuration file to use.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 class nova::glance (
-  $endpoint_override        = $::os_service_default,
-  $valid_interfaces         = $::os_service_default,
-  $num_retries              = $::os_service_default,
-  $verify_glance_signatures = $::os_service_default,
-  $enable_rbd_download      = $::os_service_default,
-  $rbd_user                 = $::os_service_default,
-  $rbd_connect_timeout      = $::os_service_default,
-  $rbd_pool                 = $::os_service_default,
-  $rbd_ceph_conf            = $::os_service_default,
+  $endpoint_override        = $facts['os_service_default'],
+  $valid_interfaces         = $facts['os_service_default'],
+  $num_retries              = $facts['os_service_default'],
+  $verify_glance_signatures = $facts['os_service_default'],
+  $enable_rbd_download      = $facts['os_service_default'],
+  $rbd_user                 = $facts['os_service_default'],
+  $rbd_connect_timeout      = $facts['os_service_default'],
+  $rbd_pool                 = $facts['os_service_default'],
+  $rbd_ceph_conf            = $facts['os_service_default'],
 ) {
 
   include nova::deps

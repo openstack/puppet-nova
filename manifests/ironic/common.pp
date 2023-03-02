@@ -14,7 +14,7 @@
 #
 # [*system_scope*]
 #   (optional) Scope for system operations.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*password*]
 #   The admin password for Ironic to connect to Nova.
@@ -26,7 +26,7 @@
 #
 # [*endpoint_override*]
 #   (optional) Override the endpoint to use to talk to Ironic.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*region_name*]
 #   (optional) Region name for connecting to ironic in admin context
@@ -48,32 +48,32 @@
 #
 # [*service_type*]
 #   (optional) The default service_type for endpoint URL discovery.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*valid_interfaces*]
 #   (Optional) The endpoint type to lookup when talking to Ironic.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*timeout*]
 #   (Optional) Timeout value for connecting to ironic in seconds.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 class nova::ironic::common (
   $auth_plugin          = 'password',
   $auth_url             = 'http://127.0.0.1:5000/',
   $password             = 'ironic',
   $project_name         = 'services',
-  $system_scope         = $::os_service_default,
+  $system_scope         = $facts['os_service_default'],
   $username             = 'admin',
-  $endpoint_override    = $::os_service_default,
-  $region_name          = $::os_service_default,
-  $api_max_retries      = $::os_service_default,
-  $api_retry_interval   = $::os_service_default,
+  $endpoint_override    = $facts['os_service_default'],
+  $region_name          = $facts['os_service_default'],
+  $api_max_retries      = $facts['os_service_default'],
+  $api_retry_interval   = $facts['os_service_default'],
   $user_domain_name     = 'Default',
   $project_domain_name  = 'Default',
-  $service_type         = $::os_service_default,
-  $valid_interfaces     = $::os_service_default,
-  $timeout              = $::os_service_default,
+  $service_type         = $facts['os_service_default'],
+  $valid_interfaces     = $facts['os_service_default'],
+  $timeout              = $facts['os_service_default'],
 ) {
 
   include nova::deps
@@ -82,8 +82,8 @@ class nova::ironic::common (
     $project_name_real = $project_name
     $project_domain_name_real = $project_domain_name
   } else {
-    $project_name_real = $::os_service_default
-    $project_domain_name_real = $::os_service_default
+    $project_name_real = $facts['os_service_default']
+    $project_domain_name_real = $facts['os_service_default']
   }
 
   nova_config {

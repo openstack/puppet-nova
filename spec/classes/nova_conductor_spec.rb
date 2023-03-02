@@ -71,7 +71,7 @@ describe 'nova::conductor' do
       end
 
       let (:platform_params) do
-        case facts[:osfamily]
+        case facts[:os]['family']
         when 'Debian'
           { :conductor_package_name => 'nova-conductor',
             :conductor_service_name => 'nova-conductor' }

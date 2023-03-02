@@ -16,28 +16,28 @@
 #   (optional) Points to the OpenStack Identity server IP and port.
 #   This is the Identity (keystone) admin API server IP and port value,
 #   and not the Identity service API IP and port.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*timeout*]
 #   (optional) Timeout value for connecting to keystone in seconds.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*service_type*]
 #   (optional) The default service_type for endpoint URL discovery.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*valid_interfaces*]
 #   (optional) List of interfaces, in order of preference for endpoint URL.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*region_name*]
 #   (optional) Region name for connecting to keystone in admin context
 #   through the OpenStack Identity service.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*endpoint_override*]
 #   (optional) Always use this endpoint URL for requests for this client.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*project_name*]
 #   (optional) Project name for connecting to Keystone services in
@@ -51,7 +51,7 @@
 #
 # [*system_scope*]
 #   (Optional) Scope for system operations
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*username*]
 #   (optional) Username for connecting to Keystone services in admin context
@@ -69,14 +69,14 @@ class nova::keystone (
   $password,
   $auth_type           = 'password',
   $auth_url            = 'http://127.0.0.1:5000',
-  $timeout             = $::os_service_default,
-  $service_type        = $::os_service_default,
-  $valid_interfaces    = $::os_service_default,
-  $endpoint_override   = $::os_service_default,
-  $region_name         = $::os_service_default,
+  $timeout             = $facts['os_service_default'],
+  $service_type        = $facts['os_service_default'],
+  $valid_interfaces    = $facts['os_service_default'],
+  $endpoint_override   = $facts['os_service_default'],
+  $region_name         = $facts['os_service_default'],
   $project_name        = 'services',
   $project_domain_name = 'Default',
-  $system_scope        = $::os_service_default,
+  $system_scope        = $facts['os_service_default'],
   $username            = 'nova',
   $user_domain_name    = 'Default',
 ) {
@@ -87,8 +87,8 @@ class nova::keystone (
     $project_name_real = $project_name
     $project_domain_name_real = $project_domain_name
   } else {
-    $project_name_real = $::os_service_default
-    $project_domain_name_real = $::os_service_default
+    $project_name_real = $facts['os_service_default']
+    $project_domain_name_real = $facts['os_service_default']
   }
 
   nova_config {

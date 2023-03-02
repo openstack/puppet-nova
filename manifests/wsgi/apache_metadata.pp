@@ -25,7 +25,7 @@
 #
 # [*servername*]
 #   (Optional) The servername for the virtualhost.
-#   Defaults to $::fqdn
+#   Defaults to $facts['networking']['fqdn']
 #
 # [*ensure_package*]
 #   (Optional) Control the ensure parameter for the Nova Metadata API package
@@ -50,7 +50,7 @@
 #
 # [*workers*]
 #   (Optional) Number of WSGI workers to spawn.
-#   Defaults to $::os_workers
+#   Defaults to $facts['os_workers']
 #
 # [*priority*]
 #   (Optional) The priority for the vhost.
@@ -142,12 +142,12 @@
 #   class { 'nova::wsgi::apache_metadata': }
 #
 class nova::wsgi::apache_metadata (
-  $servername                  = $::fqdn,
+  $servername                  = $facts['networking']['fqdn'],
   $port                        = 8775,
   $bind_host                   = undef,
   $path                        = '/',
   $ssl                         = false,
-  $workers                     = $::os_workers,
+  $workers                     = $facts['os_workers'],
   $ssl_cert                    = undef,
   $ssl_key                     = undef,
   $ssl_chain                   = undef,

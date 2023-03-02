@@ -62,7 +62,7 @@ class nova::compute::libvirt_guests (
   -> File_line<| tag == 'libvirt-guests-file_line'|>
   -> Anchor['nova::config::end']
 
-  case $::osfamily {
+  case $facts['os']['family'] {
     'RedHat': {
       # NOTE(tkajinam): Since libvirt 8.1.0, the sysconfig files are
       #                 no longer provided by packages.
@@ -102,7 +102,7 @@ class nova::compute::libvirt_guests (
       }
     }
     default:  {
-      warning("Unsupported osfamily: ${::osfamily}, make sure you are configuring this yourself")
+      warning("Unsupported osfamily: ${facts['os']['family']}, make sure you are configuring this yourself")
     }
   }
 }

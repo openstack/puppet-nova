@@ -6,12 +6,12 @@
 #
 # [*enforce_scope*]
 #  (Optional) Whether or not to enforce scope when evaluating policies.
-#  Defaults to $::os_service_default.
+#  Defaults to $facts['os_service_default'].
 #
 # [*enforce_new_defaults*]
 #  (Optional) Whether or not to use old deprecated defaults when evaluating
 #  policies.
-#  Defaults to $::os_service_default.
+#  Defaults to $facts['os_service_default'].
 #
 # [*policies*]
 #   (Optional) Set of policies to configure for nova
@@ -34,11 +34,11 @@
 #
 # [*policy_default_rule*]
 #   (Optional) Default rule. Enforced when a requested rule is not found.
-#   Defaults to $::os_service_default.
+#   Defaults to $facts['os_service_default'].
 #
 # [*policy_dirs*]
 #   (Optional) Path to the nova policy folder
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*purge_config*]
 #   (optional) Whether to set only the specified policy rules in the policy
@@ -46,12 +46,12 @@
 #    Defaults to false.
 #
 class nova::policy (
-  $enforce_scope        = $::os_service_default,
-  $enforce_new_defaults = $::os_service_default,
+  $enforce_scope        = $facts['os_service_default'],
+  $enforce_new_defaults = $facts['os_service_default'],
   $policies             = {},
   $policy_path          = '/etc/nova/policy.yaml',
-  $policy_default_rule  = $::os_service_default,
-  $policy_dirs          = $::os_service_default,
+  $policy_default_rule  = $facts['os_service_default'],
+  $policy_dirs          = $facts['os_service_default'],
   $purge_config         = false,
 ) {
 

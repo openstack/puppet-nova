@@ -42,12 +42,12 @@
 # [*snapshot_image_format*]
 #   (optional) Format to save snapshots to. Some filesystems
 #   have a preference and only operate on raw or qcow2
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*snapshots_directory*]
 #   (optional) Location where libvirt driver will store snapshots before
 #   uploading them to image service
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*disk_cachemodes*]
 #   (optional) A list of cachemodes for different disk types, e.g.
@@ -59,29 +59,29 @@
 # [*hw_disk_discard*]
 #   (optional) Discard option for nova managed disks. Need Libvirt(1.0.6)
 #   Qemu1.5 (raw format) Qemu1.6(qcow2 format).
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*hw_machine_type*]
 #   (optional) Option to specify a default machine type per host architecture.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*sysinfo_serial*]
 #   (optional) Option to specify a serial number entry generation method.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*inject_password*]
 #   (optional) Inject the admin password at boot time, without an agent.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*inject_key*]
 #   (optional) Inject the ssh public key at boot time.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*inject_partition*]
 #   (optional) The partition to inject to : -2 => disable, -1 => inspect
 #   (libguestfs only), 0 => not partitioned, >0 => partition
 #   number (integer value)
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*enabled_perf_events*]
 #   (optional) This is a performance event list which could be used as monitor.
@@ -89,18 +89,18 @@
 #   The supported events list can be found in
 #   https://libvirt.org/html/libvirt-libvirt-domain.html ,
 #   which you may need to search key words ``VIR_PERF_PARAM_*``
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*device_detach_attempts*]
 #   (optional) Maximum number of attempts the driver tries to detach a device
 #   in libvirt.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*device_detach_timeout*]
 #   (optional) Maximum number of seconds the driver waits for the success or
 #   the failure event from libvirt for a given device detach attempt before
 #   it re-trigger the detach.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*libvirt_service_name*]
 #   (optional) libvirt service name.
@@ -126,7 +126,7 @@
 # [*preallocate_images*]
 #   (optional) The image preallocation mode to use.
 #   Valid values are 'none' or 'space'.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*manage_libvirt_services*]
 #   (optional) Whether or not deploy Libvirt services.
@@ -138,44 +138,44 @@
 # [*rx_queue_size*]
 #   (optional) virtio-net rx queue size
 #   Valid values are 256, 512, 1024
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*tx_queue_size*]
 #   (optional) virtio-net tx queue size
 #   Valid values are 256, 512, 1024
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*file_backed_memory*]
 #   (optional) Available capacity in MiB for file-backed memory.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*images_type*]
 #   (optional) VM Images format.
 #   Valid Values are raw, flat, qcow2, lvm, rbd, ploop, default
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*volume_use_multipath*]
 #   (optional) Use multipath connection of the
 #   iSCSI or FC volume. Volumes can be connected in the
 #   LibVirt as multipath devices.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*nfs_mount_options*]
 #   (optional) Mount options passed to the NFS client. See section of the
 #   nfs man page for details.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*num_pcie_ports*]
 #  (optional) The number of PCIe ports an instance will get.
 #  Libvirt allows a custom number of PCIe ports (pcie-root-port controllers) a
 #  target instance will get. Some will be used by default, rest will be available
 #  for hotplug use.
-#  Defaults to $::os_service_default
+#  Defaults to $facts['os_service_default']
 #
 # [*mem_stats_period_seconds*]
 #   (optional) A number of seconds to memory usage statistics period,
 #   zero or negative value mean to disable memory usage statistics.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*pmem_namespaces*]
 #   (optional) Configure persistent memory(pmem) namespaces. These namespaces
@@ -184,21 +184,21 @@
 #   $NSNAME is the name of the pmem namespace. $LABEL represents one resource
 #   class, this is used to generate the resource class name as
 #   CUSTOM_PMEM_NAMESPACE_$LABEL.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*swtpm_enabled*]
 #   (optional) Enable emulated Trusted Platform Module (TPM) for guests.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*swtpm_user*]
 #   (optional) Configure the user that the swtpm binary, used for emulated
 #   Trusted Platform Module (TPM) functionality, runs as.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*swtpm_group*]
 #   (optional) Configure the group that the swtpm binary, used for emulated
 #   Trusted Platform Module (TPM) functionality, runs as.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*max_queues*]
 #   (optional) The maximum number of virtio queue pairs that can be enabled
@@ -206,17 +206,17 @@
 #   will be the lesser of the CPUs requested by the guest and the max value
 #   defined. By default, this value is set to none meaning the legacy limits
 #   based on the reported kernel major version will be used.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*num_memory_encrypted_guests*]
 #   (optional) The maximum number of guests with encrypted memory which can
 #   run concurrently on this compute host.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*wait_soft_reboot_seconds*]
 #   (optional) Number of seconds to wait for instance to shut down after soft
 #   reboot request is made.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # DEPRECATED PARAMETRS
 #
@@ -250,40 +250,40 @@ class nova::compute::libvirt (
   $cpu_mode                                   = false,
   $cpu_models                                 = [],
   $cpu_model_extra_flags                      = undef,
-  $snapshot_image_format                      = $::os_service_default,
-  $snapshots_directory                        = $::os_service_default,
+  $snapshot_image_format                      = $facts['os_service_default'],
+  $snapshots_directory                        = $facts['os_service_default'],
   $disk_cachemodes                            = [],
-  $hw_disk_discard                            = $::os_service_default,
-  $hw_machine_type                            = $::os_service_default,
-  $sysinfo_serial                             = $::os_service_default,
-  $inject_password                            = $::os_service_default,
-  $inject_key                                 = $::os_service_default,
-  $inject_partition                           = $::os_service_default,
-  $enabled_perf_events                        = $::os_service_default,
-  $device_detach_attempts                     = $::os_service_default,
-  $device_detach_timeout                      = $::os_service_default,
+  $hw_disk_discard                            = $facts['os_service_default'],
+  $hw_machine_type                            = $facts['os_service_default'],
+  $sysinfo_serial                             = $facts['os_service_default'],
+  $inject_password                            = $facts['os_service_default'],
+  $inject_key                                 = $facts['os_service_default'],
+  $inject_partition                           = $facts['os_service_default'],
+  $enabled_perf_events                        = $facts['os_service_default'],
+  $device_detach_attempts                     = $facts['os_service_default'],
+  $device_detach_timeout                      = $facts['os_service_default'],
   $libvirt_service_name                       = $::nova::params::libvirt_service_name,
   $virtlock_service_name                      = $::nova::params::virtlock_service_name,
   $virtlog_service_name                       = $::nova::params::virtlog_service_name,
   $modular_libvirt                            = $::nova::params::modular_libvirt,
   $compute_driver                             = 'libvirt.LibvirtDriver',
-  $preallocate_images                         = $::os_service_default,
+  $preallocate_images                         = $facts['os_service_default'],
   $manage_libvirt_services                    = true,
-  $rx_queue_size                              = $::os_service_default,
-  $tx_queue_size                              = $::os_service_default,
-  $file_backed_memory                         = $::os_service_default,
-  $images_type                                = $::os_service_default,
-  $volume_use_multipath                       = $::os_service_default,
-  $nfs_mount_options                          = $::os_service_default,
-  $num_pcie_ports                             = $::os_service_default,
-  $mem_stats_period_seconds                   = $::os_service_default,
-  $pmem_namespaces                            = $::os_service_default,
-  $swtpm_enabled                              = $::os_service_default,
-  $swtpm_user                                 = $::os_service_default,
-  $swtpm_group                                = $::os_service_default,
-  $max_queues                                 = $::os_service_default,
-  $num_memory_encrypted_guests                = $::os_service_default,
-  $wait_soft_reboot_seconds                   = $::os_service_default,
+  $rx_queue_size                              = $facts['os_service_default'],
+  $tx_queue_size                              = $facts['os_service_default'],
+  $file_backed_memory                         = $facts['os_service_default'],
+  $images_type                                = $facts['os_service_default'],
+  $volume_use_multipath                       = $facts['os_service_default'],
+  $nfs_mount_options                          = $facts['os_service_default'],
+  $num_pcie_ports                             = $facts['os_service_default'],
+  $mem_stats_period_seconds                   = $facts['os_service_default'],
+  $pmem_namespaces                            = $facts['os_service_default'],
+  $swtpm_enabled                              = $facts['os_service_default'],
+  $swtpm_user                                 = $facts['os_service_default'],
+  $swtpm_group                                = $facts['os_service_default'],
+  $max_queues                                 = $facts['os_service_default'],
+  $num_memory_encrypted_guests                = $facts['os_service_default'],
+  $wait_soft_reboot_seconds                   = $facts['os_service_default'],
   # DEPRECATED PARAMETERS
   $log_outputs                                = undef,
   $log_filters                                = undef,
@@ -308,7 +308,7 @@ class nova::compute::libvirt (
     $cpu_mode_default = $cpu_mode
   }
 
-  if($::osfamily == 'Debian') {
+  if($facts['os']['family'] == 'Debian') {
     package { "nova-compute-${virt_type}":
       ensure => $ensure_package,
       tag    => ['openstack', 'nova-package'],
@@ -328,11 +328,11 @@ class nova::compute::libvirt (
     }
   }
 
-  unless $rx_queue_size == $::os_service_default or $rx_queue_size in [256, 512, 1024] {
+  unless $rx_queue_size == $facts['os_service_default'] or $rx_queue_size in [256, 512, 1024] {
     fail("Invalid rx_queue_size parameter: ${rx_queue_size}")
   }
 
-  unless $tx_queue_size == $::os_service_default or $tx_queue_size in [256, 512, 1024] {
+  unless $tx_queue_size == $facts['os_service_default'] or $tx_queue_size in [256, 512, 1024] {
     fail("Invalid_tx_queue_size parameter: ${tx_queue_size}")
   }
 
@@ -407,7 +407,7 @@ class nova::compute::libvirt (
     if !empty($cpu_models) {
       warning('$cpu_models requires that $cpu_mode => "custom" and will be ignored')
     }
-    $cpu_models_real = $::os_service_default
+    $cpu_models_real = $facts['os_service_default']
   }
   nova_config {
     'libvirt/cpu_models': value => $cpu_models_real;
@@ -421,7 +421,7 @@ class nova::compute::libvirt (
     if $cpu_model_extra_flags {
       warning('$cpu_model_extra_flags requires that $cpu_mode is not set to "none" and will be ignored')
     }
-    $cpu_model_extra_flags_real = $::os_service_default
+    $cpu_model_extra_flags_real = $facts['os_service_default']
   }
   nova_config {
     'libvirt/cpu_model_extra_flags': value => $cpu_model_extra_flags_real;

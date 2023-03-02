@@ -61,7 +61,7 @@ describe 'nova::metadata' do
       end
 
       let (:platform_params) do
-        case facts[:osfamily]
+        case facts[:os]['family']
         when 'Debian'
           { :nova_api_package => 'nova-api',
             :nova_api_service => 'nova-api' }

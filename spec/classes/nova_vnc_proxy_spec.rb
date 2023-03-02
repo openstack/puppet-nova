@@ -156,9 +156,9 @@ describe 'nova::vncproxy' do
       end
 
       let (:platform_params) do
-        case facts[:osfamily]
+        case facts[:os]['family']
         when 'Debian'
-          if facts[:operatingsystem] == 'Debian'
+          if facts[:os]['name'] == 'Debian'
             { :nova_vncproxy_package => 'nova-consoleproxy',
               :nova_vncproxy_service => 'nova-novncproxy' }
           else
@@ -173,7 +173,7 @@ describe 'nova::vncproxy' do
 
       it_behaves_like 'nova_vnc_proxy'
 
-      if facts[:operatingsystem] == 'Debian'
+      if facts[:os]['name'] == 'Debian'
         it_behaves_like 'nova_vnc_proxy debian package'
       end
 

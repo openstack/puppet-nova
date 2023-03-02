@@ -10,7 +10,7 @@
 #
 # [*metadata_cache_expiration*]
 #   (optional) This option is the time (in seconds) to cache metadata.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*local_metadata_per_cell*]
 #   (optional) Indicates that the nova-metadata API service has been deployed
@@ -22,17 +22,17 @@
 #   When running nova-metadata API service per cell, you should also configure
 #   each Neutron metadata-agent to point to the corresponding nova-metadata API
 #   service.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*dhcp_domain*]
 #   (optional) domain to use for building the hostnames
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 class nova::metadata(
   $neutron_metadata_proxy_shared_secret = undef,
-  $metadata_cache_expiration            = $::os_service_default,
-  $local_metadata_per_cell              = $::os_service_default,
-  $dhcp_domain                          = $::os_service_default,
+  $metadata_cache_expiration            = $facts['os_service_default'],
+  $local_metadata_per_cell              = $facts['os_service_default'],
+  $dhcp_domain                          = $facts['os_service_default'],
 ) inherits nova::params {
 
   include nova::deps

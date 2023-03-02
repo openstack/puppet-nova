@@ -140,7 +140,7 @@ describe 'nova::scheduler' do
       end
 
       let (:platform_params) do
-        case facts[:osfamily]
+        case facts[:os]['family']
         when 'Debian'
           { :scheduler_package_name => 'nova-scheduler',
             :scheduler_service_name => 'nova-scheduler' }

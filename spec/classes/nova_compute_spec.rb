@@ -355,7 +355,7 @@ describe 'nova::compute' do
       let (:facts) do
         facts.merge!(OSDefaults.get_facts())
       end
-      case facts[:osfamily]
+      case facts[:os]['family']
       when 'Debian'
         let (:platform_params) do
           {

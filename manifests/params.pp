@@ -13,7 +13,7 @@ class nova::params {
   $nova_user      = $user
   $nova_group     = $group
 
-  case $::osfamily {
+  case $facts['os']['family'] {
     'RedHat': {
       # package names
       $api_package_name                  = 'openstack-nova-api'
@@ -90,7 +90,7 @@ class nova::params {
       # debian specific nova config
       $root_helper                       = 'sudo nova-rootwrap'
       $lock_path                         = '/var/lock/nova'
-      case $::operatingsystem {
+      case $facts['os']['name'] {
         'Debian': {
           $api_metadata_service_name    = 'nova-api-metadata'
           $spicehtml5proxy_package_name = 'nova-consoleproxy'
@@ -127,8 +127,7 @@ class nova::params {
       $libvirt_service_name            = 'libvirtd'
     }
     default: {
-      fail("Unsupported osfamily: ${::osfamily} operatingsystem: ${::operatingsystem}, \
-module ${module_name} only support osfamily RedHat and Debian")
+      fail("Unsupported osfamily: ${facts['os']['family']}")
     }
   }
 

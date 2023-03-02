@@ -18,28 +18,28 @@
 #
 # [*workers*]
 #   (Optional) The amount of scheduler workers.
-#   Defaults to $::os_workers
+#   Defaults to $facts['os_workers']
 #
 # [*max_attempts*]
 #   (optional) Maximum number of attempts to schedule an instance
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*discover_hosts_in_cells_interval*]
 #   (Optional) This value controls how often (in seconds) the scheduler should
 #   attempt to discover new hosts that have been added to cells.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*query_placement_for_image_type_support*]
 #   (Optional) This setting causes the scheduler to ask placement only for
 #   compute hosts that support the ``disk_format`` of the image used in the
 #   request.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*limit_tenants_to_placement_aggregate*]
 #   (Optional) This setting allows to have tenant isolation with placement.
 #   It ensures hosts in tenant-isolated host aggregate and availability
 #   zones will only be available to specific set of tenants.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*placement_aggregate_required_for_tenants*]
 #   (Optional) This setting controls if a tenant with no aggregate affinity
@@ -48,23 +48,23 @@
 #   If aggregates are used to limit some tenants but not all, then this should
 #   be False.
 #   If all tenants should be confined via aggregate, then this should be True.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*max_placement_results*]
 #   (Optional) This setting determines the maximum limit on results received
 #   from the placement service during a scheduling operation.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*enable_isolated_aggregate_filtering*]
 #   (Optional) This setting allows the scheduler to restrict hosts in aggregates
 #   based on matching required traits in the aggregate metadata and the instance
 #   flavor/image.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*query_placement_for_routed_network_aggregates*]
 #   (Optional) This setting allows to enable the scheduler to filter
 #   compute hosts affined to routed network segment aggregates.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # DEPRECATED PARAMETERS
 #
@@ -79,15 +79,15 @@ class nova::scheduler(
   $enabled                                       = true,
   $manage_service                                = true,
   $ensure_package                                = 'present',
-  $workers                                       = $::os_workers,
-  $max_attempts                                  = $::os_service_default,
-  $discover_hosts_in_cells_interval              = $::os_service_default,
-  $query_placement_for_image_type_support        = $::os_service_default,
-  $limit_tenants_to_placement_aggregate          = $::os_service_default,
-  $placement_aggregate_required_for_tenants      = $::os_service_default,
-  $max_placement_results                         = $::os_service_default,
-  $enable_isolated_aggregate_filtering           = $::os_service_default,
-  $query_placement_for_routed_network_aggregates = $::os_service_default,
+  $workers                                       = $facts['os_workers'],
+  $max_attempts                                  = $facts['os_service_default'],
+  $discover_hosts_in_cells_interval              = $facts['os_service_default'],
+  $query_placement_for_image_type_support        = $facts['os_service_default'],
+  $limit_tenants_to_placement_aggregate          = $facts['os_service_default'],
+  $placement_aggregate_required_for_tenants      = $facts['os_service_default'],
+  $max_placement_results                         = $facts['os_service_default'],
+  $enable_isolated_aggregate_filtering           = $facts['os_service_default'],
+  $query_placement_for_routed_network_aggregates = $facts['os_service_default'],
   # DEPRECATED PARAMETERS
   $query_placement_for_availability_zone         = undef,
 ) {
@@ -100,7 +100,7 @@ class nova::scheduler(
   if $query_placement_for_availability_zone != undef {
     warning('The query_placement_for_availability_zone parameter is deprecated.')
   }
-  $query_placement_for_availability_zone_real = pick($query_placement_for_availability_zone, $::os_service_default)
+  $query_placement_for_availability_zone_real = pick($query_placement_for_availability_zone, $facts['os_service_default'])
 
   nova::generic_service { 'scheduler':
     enabled        => $enabled,

@@ -18,7 +18,7 @@ class nova::compute::libvirt::version {
       $default = '6.0'
     }
     default: {
-      fail("Class['nova::compute::libvirt::version']: Unsupported osfamily: ${::osfamily}")
+      fail("Unsupported osfamily: ${::facts['os']['family']}")
     }
   }
 }

@@ -505,11 +505,11 @@ describe 'nova::migration::libvirt' do
   }).each do |os,facts|
     context "on #{os}" do
       let (:facts) do
-        facts.merge!(OSDefaults.get_facts({ :os_workers => 5 }))
+        facts.merge!(OSDefaults.get_facts())
       end
 
       it_behaves_like 'nova migration with libvirt'
-      case facts[:osfamily]
+      case facts[:os]['family']
       when 'Debian'
         it_behaves_like 'nova migration with libvirt in Debian'
       when 'RedHat'

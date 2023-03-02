@@ -57,9 +57,9 @@ describe 'nova::serialproxy' do
       end
 
       let (:platform_params) do
-        case facts[:osfamily]
+        case facts[:os]['family']
         when 'Debian'
-          if facts[:operatingsystem] == 'Debian'
+          if facts[:os]['name'] == 'Debian'
             { :serialproxy_package_name => 'nova-consoleproxy',
               :serialproxy_service_name => 'nova-serialproxy' }
           else

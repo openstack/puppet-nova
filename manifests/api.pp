@@ -22,15 +22,15 @@
 #
 # [*api_bind_address*]
 #   (optional) IP address for nova-api server to listen
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*metadata_listen*]
 #   (optional) IP address  for metadata server to listen
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*metadata_listen_port*]
 #   (optional) The port on which the metadata API will listen.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*enabled_apis*]
 #   (optional) A list of apis to enable
@@ -38,15 +38,15 @@
 #
 # [*osapi_compute_workers*]
 #   (optional) Number of workers for OpenStack API service
-#   Defaults to $::os_workers
+#   Defaults to $facts['os_workers']
 #
 # [*osapi_compute_listen_port*]
 #   (optional) The port on which the OpenStack API will listen.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*metadata_workers*]
 #   (optional) Number of workers for metadata service
-#   Defaults to $::os_workers
+#   Defaults to $facts['os_workers']
 #
 # [*sync_db*]
 #   (optional) Run nova-manage db sync on api nodes after installing the package.
@@ -64,11 +64,11 @@
 # [*enable_proxy_headers_parsing*]
 #   (optional) This determines if the HTTPProxyToWSGI
 #   middleware should parse the proxy headers or not.(boolean value)
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*max_request_body_size*]
 #   (Optional) Set max request body size
-#   Defaults to $::os_service_default.
+#   Defaults to $facts['os_service_default'].
 #
 # [*service_name*]
 #   (optional) Name of the service that will be providing the
@@ -89,39 +89,39 @@
 #
 # [*max_limit*]
 #   (optional) This option is limit the maximum number of items in a single response.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*compute_link_prefix*]
 #   (optional) This string is prepended to the normal URL that is returned in links
 #   to the OpenStack Compute API.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*glance_link_prefix*]
 #   (optional) This string is prepended to the normal URL that is returned in links
 #   to Glance resources.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*hide_server_address_states*]
 #   (optional) This option is a list of all instance states for which network address
 #   information should not be returned from the API.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*allow_instance_snapshots*]
 #   (optional) Operators can turn off the ability for a user to take snapshots of their
 #   instances by setting this option to False
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*enable_network_quota*]
 #   (optional) This option is used to enable or disable quota checking for tenant networks
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*enable_instance_password*]
 #   (optional) Enables returning of the instance password by the relevant server API calls
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*password_length*]
 #   (optional) Length of generated instance admin passwords (integer value)
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*allow_resize_to_same_host*]
 #   (optional) Allow destination machine to match source for resize.
@@ -130,22 +130,22 @@
 # [*instance_list_per_project_cells*]
 #   (optional) Only query cell databases in which the tenant has mapped
 #   instances
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*instance_list_cells_batch_strategy*]
 #   (optional) The method by which the API queries cell databases in smaller
 #   batches during large instance list operations.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*instance_list_cells_batch_fixed_size*]
 #   (optional) This controls batch size of instances requested from each cell
 #   database if ``instance_list_cells_batch_strategy``` is set to ``fixed``
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*list_records_by_skipping_down_cells*]
 #   (optional) Whether to skip the down cells and return the results from
 #   the up cells.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # DEPRECATED
 #
@@ -169,33 +169,33 @@ class nova::api(
   $manage_service                              = true,
   $api_paste_config                            = 'api-paste.ini',
   $ensure_package                              = 'present',
-  $api_bind_address                            = $::os_service_default,
-  $osapi_compute_listen_port                   = $::os_service_default,
-  $metadata_listen                             = $::os_service_default,
-  $metadata_listen_port                        = $::os_service_default,
+  $api_bind_address                            = $facts['os_service_default'],
+  $osapi_compute_listen_port                   = $facts['os_service_default'],
+  $metadata_listen                             = $facts['os_service_default'],
+  $metadata_listen_port                        = $facts['os_service_default'],
   $enabled_apis                                = ['osapi_compute', 'metadata'],
-  $osapi_compute_workers                       = $::os_workers,
-  $metadata_workers                            = $::os_workers,
+  $osapi_compute_workers                       = $facts['os_workers'],
+  $metadata_workers                            = $facts['os_workers'],
   $sync_db                                     = true,
   $sync_db_api                                 = true,
   $db_online_data_migrations                   = false,
   $service_name                                = $::nova::params::api_service_name,
   $metadata_service_name                       = $::nova::params::api_metadata_service_name,
-  $enable_proxy_headers_parsing                = $::os_service_default,
-  $max_request_body_size                       = $::os_service_default,
-  $max_limit                                   = $::os_service_default,
-  $compute_link_prefix                         = $::os_service_default,
-  $glance_link_prefix                          = $::os_service_default,
-  $hide_server_address_states                  = $::os_service_default,
-  $allow_instance_snapshots                    = $::os_service_default,
-  $enable_network_quota                        = $::os_service_default,
-  $enable_instance_password                    = $::os_service_default,
-  $password_length                             = $::os_service_default,
+  $enable_proxy_headers_parsing                = $facts['os_service_default'],
+  $max_request_body_size                       = $facts['os_service_default'],
+  $max_limit                                   = $facts['os_service_default'],
+  $compute_link_prefix                         = $facts['os_service_default'],
+  $glance_link_prefix                          = $facts['os_service_default'],
+  $hide_server_address_states                  = $facts['os_service_default'],
+  $allow_instance_snapshots                    = $facts['os_service_default'],
+  $enable_network_quota                        = $facts['os_service_default'],
+  $enable_instance_password                    = $facts['os_service_default'],
+  $password_length                             = $facts['os_service_default'],
   $allow_resize_to_same_host                   = false,
-  $instance_list_per_project_cells             = $::os_service_default,
-  $instance_list_cells_batch_strategy          = $::os_service_default,
-  $instance_list_cells_batch_fixed_size        = $::os_service_default,
-  $list_records_by_skipping_down_cells         = $::os_service_default,
+  $instance_list_per_project_cells             = $facts['os_service_default'],
+  $instance_list_cells_batch_strategy          = $facts['os_service_default'],
+  $instance_list_cells_batch_fixed_size        = $facts['os_service_default'],
+  $list_records_by_skipping_down_cells         = $facts['os_service_default'],
   # DEPRECATED PARAMETER
   $nova_metadata_wsgi_enabled                  = false,
   $use_forwarded_for                           = undef,
@@ -227,7 +227,7 @@ Use the nova::instance_name_template parameter instead.")
     # Try best to clean up the parameter
     if defined(Class['nova']) and $::nova::instance_name_template == undef {
       nova_config {
-        'DEFAULT/instance_name_template': value => $::os_service_default;
+        'DEFAULT/instance_name_template': value => $facts['os_service_default'];
       }
     }
   }
@@ -319,7 +319,7 @@ as a standalone service, or httpd for being run by a httpd server")
     'DEFAULT/osapi_compute_workers':            value => $osapi_compute_workers;
     'DEFAULT/enable_network_quota':             value => $enable_network_quota;
     'DEFAULT/password_length':                  value => $password_length;
-    'api/use_forwarded_for':                    value => pick($use_forwarded_for, $::os_service_default);
+    'api/use_forwarded_for':                    value => pick($use_forwarded_for, $facts['os_service_default']);
     'api/max_limit':                            value => $max_limit;
     'api/compute_link_prefix':                  value => $compute_link_prefix;
     'api/glance_link_prefix':                   value => $glance_link_prefix;

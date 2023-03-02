@@ -24,7 +24,7 @@
 #
 # [*system_scope*]
 #   (Optional) Scope for system operations
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*username*]
 #   (optional) Username for connecting to Neutron network services in admin context
@@ -44,11 +44,11 @@
 #
 # [*valid_interfaces*]
 #   (optional) The endpoint type to lookup when talking to Neutron.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*endpoint_override*]
 #   (optional) Override the endpoint to use to talk to Neutron.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*timeout*]
 #   (optional) Timeout value for connecting to neutron in seconds.
@@ -62,56 +62,56 @@
 # [*http_retries*]
 #   (optional) Number of times neutronclient should retry on any failed http
 #   call.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*service_type*]
 #   (optional) The default service_type for endpoint URL discovery.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*ovs_bridge*]
 #   (optional) Name of Integration Bridge used by Open vSwitch
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*extension_sync_interval*]
 #   (optional) Number of seconds before querying neutron for extensions
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*vif_plugging_is_fatal*]
 #   (optional) Fail to boot instance if vif plugging fails.
 #   This prevents nova from booting an instance if vif plugging notification
 #   is not received from neutron.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*vif_plugging_timeout*]
 #   (optional) Number of seconds to wait for neutron vif plugging events.
 #   Set to '0' and vif_plugging_is_fatal to 'False' if vif plugging
 #   notification is not being used.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*default_floating_pool*]
 #   (optional) Default pool for floating IPs
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 class nova::network::neutron (
   $password,
   $auth_type               = 'v3password',
   $project_name            = 'services',
   $project_domain_name     = 'Default',
-  $system_scope            = $::os_service_default,
+  $system_scope            = $facts['os_service_default'],
   $username                = 'neutron',
   $user_domain_name        = 'Default',
   $auth_url                = 'http://127.0.0.1:5000/v3',
-  $valid_interfaces        = $::os_service_default,
-  $endpoint_override       = $::os_service_default,
+  $valid_interfaces        = $facts['os_service_default'],
+  $endpoint_override       = $facts['os_service_default'],
   $timeout                 = '30',
   $region_name             = 'RegionOne',
-  $http_retries            = $::os_service_default,
-  $service_type            = $::os_service_default,
-  $ovs_bridge              = $::os_service_default,
-  $extension_sync_interval = $::os_service_default,
-  $vif_plugging_is_fatal   = $::os_service_default,
-  $vif_plugging_timeout    = $::os_service_default,
-  $default_floating_pool   = $::os_service_default,
+  $http_retries            = $facts['os_service_default'],
+  $service_type            = $facts['os_service_default'],
+  $ovs_bridge              = $facts['os_service_default'],
+  $extension_sync_interval = $facts['os_service_default'],
+  $vif_plugging_is_fatal   = $facts['os_service_default'],
+  $vif_plugging_timeout    = $facts['os_service_default'],
+  $default_floating_pool   = $facts['os_service_default'],
 ) {
 
   include nova::deps
@@ -120,8 +120,8 @@ class nova::network::neutron (
     $project_name_real = $project_name
     $project_domain_name_real = $project_domain_name
   } else {
-    $project_name_real = $::os_service_default
-    $project_domain_name_real = $::os_service_default
+    $project_name_real = $facts['os_service_default']
+    $project_domain_name_real = $facts['os_service_default']
   }
 
   nova_config {

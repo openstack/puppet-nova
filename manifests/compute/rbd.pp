@@ -35,17 +35,17 @@
 #   If set, this will allow Nova to request that Glance copy an image from
 #   an existing non-local store into the one named by this option before
 #   booting so that proper Copy-on-Write behavior is maintained.
-#   Defaults to $::os_service_default.
+#   Defaults to $facts['os_service_default'].
 #
 # [*libvirt_images_rbd_glance_copy_poll_interval*]
 #   (optional) The interval in seconds with which to poll Glance after asking
 #   for it to copy an image to the local rbd store.
-#   Defaults to $::os_service_default.
+#   Defaults to $facts['os_service_default'].
 #
 # [*libvirt_images_rbd_glance_copy_timeout*]
 #   (optional) The overall maximum time we will wait for Glance to complete
 #   an image copy to our local rbd store.
-#   Defaults to $::os_service_default.
+#   Defaults to $facts['os_service_default'].
 #
 # [*libvirt_rbd_user*]
 #   (Required) The RADOS client name for accessing rbd volumes.
@@ -90,9 +90,9 @@ class nova::compute::rbd (
   $libvirt_rbd_secret_key                       = undef,
   $libvirt_images_rbd_pool                      = 'rbd',
   $libvirt_images_rbd_ceph_conf                 = '/etc/ceph/ceph.conf',
-  $libvirt_images_rbd_glance_store_name         = $::os_service_default,
-  $libvirt_images_rbd_glance_copy_poll_interval = $::os_service_default,
-  $libvirt_images_rbd_glance_copy_timeout       = $::os_service_default,
+  $libvirt_images_rbd_glance_store_name         = $facts['os_service_default'],
+  $libvirt_images_rbd_glance_copy_poll_interval = $facts['os_service_default'],
+  $libvirt_images_rbd_glance_copy_timeout       = $facts['os_service_default'],
   $rbd_keyring                                  = 'client.nova',
   $ephemeral_storage                            = true,
   $manage_ceph_client                           = true,
@@ -112,7 +112,7 @@ class nova::compute::rbd (
     }
   }
 
-  if $::osfamily == 'Debian' {
+  if $facts['os']['family'] == 'Debian' {
     package { 'qemu-block-extra':
       ensure => $package_ensure,
       tag    => ['openstack', 'nova-support-package'],

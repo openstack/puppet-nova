@@ -364,7 +364,7 @@ describe 'nova::compute::libvirt' do
         facts.merge!(OSDefaults.get_facts())
       end
 
-      case facts[:osfamily]
+      case facts[:os]['family']
       when 'Debian'
         it_behaves_like 'debian-nova-compute-libvirt'
       when 'RedHat'

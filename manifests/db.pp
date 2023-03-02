@@ -23,99 +23,99 @@
 #
 # [*database_connection*]
 #   (optional) Connection url to connect to nova database.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*slave_connection*]
 #   (optional) Connection url to connect to nova slave database (read-only).
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*database_connection_recycle_time*]
 #   Timeout when db connections should be reaped.
-#   (Optional) Defaults to $::os_service_default
+#   (Optional) Defaults to $facts['os_service_default']
 #
 # [*database_max_pool_size*]
 #   Maximum number of SQL connections to keep open in a pool.
-#   (Optional) Defaults to $::os_service_default
+#   (Optional) Defaults to $facts['os_service_default']
 #
 # [*database_max_retries*]
 #   Maximum db connection retries during startup.
 #   Setting -1 implies an infinite retry count.
-#   (Optional) Defaults to $::os_service_default
+#   (Optional) Defaults to $facts['os_service_default']
 #
 # [*database_retry_interval*]
 #   Interval between retries of opening a sql connection.
-#   (Optional) Defaults to $::os_service_default
+#   (Optional) Defaults to $facts['os_service_default']
 #
 # [*database_max_overflow*]
 #   If set, use this value for max_overflow with sqlalchemy.
-#   (Optional) Defaults to $::os_service_default
+#   (Optional) Defaults to $facts['os_service_default']
 #
 # [*database_pool_timeout*]
 #   (Optional) If set, use this value for pool_timeout with SQLAlchemy.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*database_db_max_retries*]
 #   (optional) Maximum retries in case of connection error or deadlock error
 #   before error is raised. Set to -1 to specify an infinite retry count.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*mysql_enable_ndb*]
 #   (Optional) If True, transparently enables support for handling MySQL
 #   Cluster (NDB).
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*api_database_connection*]
 #   (optional) Connection url to connect to nova api database.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*api_slave_connection*]
 #   (optional) Connection url to connect to nova api slave database (read-only).
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*api_database_connection_recycle_time*]
 #   Timeout when nova api db connections should be reaped.
-#   (Optional) Defaults to $::os_service_default
+#   (Optional) Defaults to $facts['os_service_default']
 #
 # [*api_database_max_pool_size*]
 #   Maximum number of SQL connections to keep open in a pool.
-#   (Optional) Defaults to $::os_service_default
+#   (Optional) Defaults to $facts['os_service_default']
 #
 # [*api_database_max_retries*]
 #   Maximum db connection retries during startup.
 #   Setting -1 implies an infinite retry count.
-#   (Optional) Defaults to $::os_service_default
+#   (Optional) Defaults to $facts['os_service_default']
 #
 # [*api_database_retry_interval*]
 #   Interval between retries of opening a sql connection.
-#   (Optional) Defaults to $::os_service_default
+#   (Optional) Defaults to $facts['os_service_default']
 #
 # [*api_database_max_overflow*]
 #   If set, use this value for max_overflow with sqlalchemy.
-#   (Optional) Defaults to $::os_service_default
+#   (Optional) Defaults to $facts['os_service_default']
 #
 # [*api_database_pool_timeout*]
 #   (Optional) If set, use this value for pool_timeout with SQLAlchemy.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 class nova::db (
-  $database_connection                  = $::os_service_default,
-  $slave_connection                     = $::os_service_default,
-  $database_connection_recycle_time     = $::os_service_default,
-  $database_max_pool_size               = $::os_service_default,
-  $database_max_retries                 = $::os_service_default,
-  $database_retry_interval              = $::os_service_default,
-  $database_max_overflow                = $::os_service_default,
-  $database_pool_timeout                = $::os_service_default,
-  $database_db_max_retries              = $::os_service_default,
-  $mysql_enable_ndb                     = $::os_service_default,
-  $api_database_connection              = $::os_service_default,
-  $api_slave_connection                 = $::os_service_default,
-  $api_database_connection_recycle_time = $::os_service_default,
-  $api_database_max_pool_size           = $::os_service_default,
-  $api_database_max_retries             = $::os_service_default,
-  $api_database_retry_interval          = $::os_service_default,
-  $api_database_max_overflow            = $::os_service_default,
-  $api_database_pool_timeout            = $::os_service_default,
+  $database_connection                  = $facts['os_service_default'],
+  $slave_connection                     = $facts['os_service_default'],
+  $database_connection_recycle_time     = $facts['os_service_default'],
+  $database_max_pool_size               = $facts['os_service_default'],
+  $database_max_retries                 = $facts['os_service_default'],
+  $database_retry_interval              = $facts['os_service_default'],
+  $database_max_overflow                = $facts['os_service_default'],
+  $database_pool_timeout                = $facts['os_service_default'],
+  $database_db_max_retries              = $facts['os_service_default'],
+  $mysql_enable_ndb                     = $facts['os_service_default'],
+  $api_database_connection              = $facts['os_service_default'],
+  $api_slave_connection                 = $facts['os_service_default'],
+  $api_database_connection_recycle_time = $facts['os_service_default'],
+  $api_database_max_pool_size           = $facts['os_service_default'],
+  $api_database_max_retries             = $facts['os_service_default'],
+  $api_database_retry_interval          = $facts['os_service_default'],
+  $api_database_max_overflow            = $facts['os_service_default'],
+  $api_database_pool_timeout            = $facts['os_service_default'],
 ) {
 
   include nova::deps

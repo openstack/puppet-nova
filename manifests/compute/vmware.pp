@@ -19,7 +19,7 @@
 # [*api_retry_count*]
 #   (optional) The number of times we retry on failures,
 #   e.g., socket error, etc.
-#   Defaults to $::os_service_default.
+#   Defaults to $facts['os_service_default'].
 #
 # [*maximum_objects*]
 #   (optional) The maximum number of ObjectContent data objects that should
@@ -28,15 +28,15 @@
 #   objects reaches the specified maximum. The server may still
 #   limit the count to something less than the configured value.
 #   Any remaining objects may be retrieved with additional requests.
-#   Defaults to $::os_service_default.
+#   Defaults to $facts['os_service_default'].
 #
 # [*task_poll_interval*]
 #   (optional) The interval in seconds used for polling of remote tasks.
-#   Defaults to $::os_service_default.
+#   Defaults to $facts['os_service_default'].
 #
 # [*use_linked_clone*]
 #   (optional) Whether to use linked clone strategy while creating VM's.
-#   Defaults to $::os_service_default.
+#   Defaults to $facts['os_service_default'].
 #
 # [*compute_driver*]
 #   (optional) Compute driver.
@@ -47,30 +47,30 @@
 #   If true, the vCenter server certificate is not verified. If
 #   false, then the default CA truststore is used for verification. This
 #   option is ignored if 'ca_file' is set.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*ca_file*]
 #   (optional) Specify a CA bundle file to use in verifying the vCenter server
 #   certificate.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*datastore_regex*]
 #   (optional) Regex to match the name of a datastore.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 class nova::compute::vmware(
   $host_ip,
   $host_username,
   $host_password,
   $cluster_name,
-  $api_retry_count    = $::os_service_default,
-  $maximum_objects    = $::os_service_default,
-  $task_poll_interval = $::os_service_default,
-  $use_linked_clone   = $::os_service_default,
+  $api_retry_count    = $facts['os_service_default'],
+  $maximum_objects    = $facts['os_service_default'],
+  $task_poll_interval = $facts['os_service_default'],
+  $use_linked_clone   = $facts['os_service_default'],
   $compute_driver     = 'vmwareapi.VMwareVCDriver',
-  $insecure           = $::os_service_default,
-  $ca_file            = $::os_service_default,
-  $datastore_regex    = $::os_service_default,
+  $insecure           = $facts['os_service_default'],
+  $ca_file            = $facts['os_service_default'],
+  $datastore_regex    = $facts['os_service_default'],
 ) {
 
   include nova::deps

@@ -24,7 +24,7 @@
 #
 # [*system_scope*]
 #   (Optional) Scope for system operations
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*user_domain_name*]
 #   (optional) User Domain name for connecting to Placement API service in
@@ -44,7 +44,7 @@
 # [*valid_interfaces*]
 #   (optional) Interface names used for getting the keystone endpoint for
 #   the placement API. Comma separated if multiple.
-#   Defaults to $::os_service_default
+#   Defaults to $facts['os_service_default']
 #
 # [*auth_url*]
 #   (optional) Points to the OpenStack Identity server IP and port.
@@ -57,10 +57,10 @@ class nova::placement(
   $auth_type           = 'password',
   $auth_url            = 'http://127.0.0.1:5000/v3',
   $region_name         = 'RegionOne',
-  $valid_interfaces    = $::os_service_default,
+  $valid_interfaces    = $facts['os_service_default'],
   $project_domain_name = 'Default',
   $project_name        = 'services',
-  $system_scope        = $::os_service_default,
+  $system_scope        = $facts['os_service_default'],
   $user_domain_name    = 'Default',
   $username            = 'placement',
 ) inherits nova::params {
@@ -71,8 +71,8 @@ class nova::placement(
     $project_name_real = $project_name
     $project_domain_name_real = $project_domain_name
   } else {
-    $project_name_real = $::os_service_default
-    $project_domain_name_real = $::os_service_default
+    $project_name_real = $facts['os_service_default']
+    $project_domain_name_real = $facts['os_service_default']
   }
 
   nova_config {

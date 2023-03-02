@@ -126,7 +126,7 @@ class nova::vncproxy(
   # 3/ Start the service
   # Other OS don't need this scheduling and can use
   # the standard nova::generic_service
-  if $::operatingsystem == 'Debian' {
+  if $facts['os']['name'] == 'Debian' {
     if $enabled {
       file_line { '/etc/default/nova-consoleproxy:NOVA_CONSOLE_PROXY_TYPE':
         path    => '/etc/default/nova-consoleproxy',
