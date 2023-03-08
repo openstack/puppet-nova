@@ -1,0 +1,8 @@
+---
+features:
+  - |
+    The ``nova::workarounds`` class now supports the following two new
+    parameters.
+
+    - ``qemu_monitor_announce_self_count``
+    - ``qemu_monitor_announce_self_interval``

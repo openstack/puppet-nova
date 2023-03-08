@@ -13,6 +13,8 @@ describe 'nova::workarounds' do
       it { is_expected.to contain_nova_config('workarounds/never_download_image_if_on_rbd').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('workarounds/ensure_libvirt_rbd_instance_dir_cleanup').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('workarounds/enable_qemu_monitor_announce_self').with_value('<SERVICE DEFAULT>') }
+      it { is_expected.to contain_nova_config('workarounds/qemu_monitor_announce_self_count').with_value('<SERVICE DEFAULT>') }
+      it { is_expected.to contain_nova_config('workarounds/qemu_monitor_announce_self_interval').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('workarounds/wait_for_vif_plugged_event_during_hard_reboot').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('workarounds/disable_compute_service_check_for_ffu').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('workarounds/skip_hypervisor_version_check_on_lm').with_value('<SERVICE DEFAULT>') }
@@ -25,6 +27,8 @@ describe 'nova::workarounds' do
           :never_download_image_if_on_rbd                => true,
           :ensure_libvirt_rbd_instance_dir_cleanup       => true,
           :enable_qemu_monitor_announce_self             => true,
+          :qemu_monitor_announce_self_count              => 3,
+          :qemu_monitor_announce_self_interval           => 1,
           :wait_for_vif_plugged_event_during_hard_reboot => ['normal', 'direct'],
           :disable_compute_service_check_for_ffu         => true,
           :skip_hypervisor_version_check_on_lm           => true,
@@ -35,6 +39,8 @@ describe 'nova::workarounds' do
       it { is_expected.to contain_nova_config('workarounds/never_download_image_if_on_rbd').with_value('true') }
       it { is_expected.to contain_nova_config('workarounds/ensure_libvirt_rbd_instance_dir_cleanup').with_value('true') }
       it { is_expected.to contain_nova_config('workarounds/enable_qemu_monitor_announce_self').with_value(true) }
+      it { is_expected.to contain_nova_config('workarounds/qemu_monitor_announce_self_count').with_value(3) }
+      it { is_expected.to contain_nova_config('workarounds/qemu_monitor_announce_self_interval').with_value(1) }
       it { is_expected.to contain_nova_config('workarounds/wait_for_vif_plugged_event_during_hard_reboot').with_value('normal,direct') }
       it { is_expected.to contain_nova_config('workarounds/disable_compute_service_check_for_ffu').with_value(true) }
       it { is_expected.to contain_nova_config('workarounds/skip_hypervisor_version_check_on_lm').with_value(true) }
