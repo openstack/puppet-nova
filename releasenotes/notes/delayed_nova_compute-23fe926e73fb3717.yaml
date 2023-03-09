@@ -1,0 +1,8 @@
+---
+fixes:
+  - |
+    The new parameters, ``nova::cron::archive_deleted_rows::ensure`` and
+    ``nova::cron::purge_shadow_tables::ensure``, have been added.
+    These parameters control the corresponding cron jobs existence. When either
+    of two classes included, they can be given ``ensure => absent`` to unwind
+    existing cron jobs.

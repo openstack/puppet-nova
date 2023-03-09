@@ -60,7 +60,11 @@
 #    Induces a random delay before running the cronjob to avoid running
 #    all cron jobs at the same time on all hosts this job is configured.
 #    Defaults to 0.
-
+#
+#  [*ensure*]
+#    (optional) Ensure cron jobs present or absent
+#    Defaults to present.
+#
 class nova::cron::purge_shadow_tables (
   $minute       = 0,
   $hour         = 5,
@@ -73,6 +77,7 @@ class nova::cron::purge_shadow_tables (
   $all_cells    = false,
   $verbose      = false,
   $maxdelay     = 0,
+  Enum['present', 'absent'] $ensure = 'present',
 ) inherits nova::params {
 
   include nova::deps
@@ -101,6 +106,7 @@ class nova::cron::purge_shadow_tables (
   $cron_cmd = 'nova-manage db purge'
 
   cron { 'nova-manage db purge':
+    ensure      => $ensure,
     # lint:ignore:140chars
     command     => "${delay_cmd}${cron_cmd} --before `date --date='today - ${age} days' +\\%D`${verbose_real}${all_cells_real} >>${destination} 2>&1",
     # lint:endignore
