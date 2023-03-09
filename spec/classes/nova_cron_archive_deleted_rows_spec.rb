@@ -21,9 +21,22 @@ describe 'nova::cron::archive_deleted_rows' do
         :destination    => '/var/log/nova/nova-rowsflush.log' }
     end
 
+    context 'ensure the cron job is absent' do
+      before :each do
+        params.merge!(
+          :ensure => :absent,
+        )
+      end
+
+      it 'removes the cron job' do
+        is_expected.to contain_cron('nova-manage db archive_deleted_rows').with_ensure(:absent)
+      end
+    end
+
     context 'until_complete and all_cells is false' do
       it 'configures a cron without until_complete and all_cells' do
         is_expected.to contain_cron('nova-manage db archive_deleted_rows').with(
+          :ensure      => :present,
           :command     => "nova-manage db archive_deleted_rows --max_rows #{params[:max_rows]} >>#{params[:destination]} 2>&1",
           :environment => 'PATH=/bin:/usr/bin:/usr/sbin SHELL=/bin/sh',
           :user        => params[:user],
@@ -46,6 +59,7 @@ describe 'nova::cron::archive_deleted_rows' do
 
       it 'configures a cron with until_complete' do
         is_expected.to contain_cron('nova-manage db archive_deleted_rows').with(
+          :ensure      => :present,
           :command     => "nova-manage db archive_deleted_rows --max_rows #{params[:max_rows]} --verbose >>#{params[:destination]} 2>&1",
           :environment => 'PATH=/bin:/usr/bin:/usr/sbin SHELL=/bin/sh',
           :user        => params[:user],
@@ -68,6 +82,7 @@ describe 'nova::cron::archive_deleted_rows' do
 
       it 'configures a cron with until_complete' do
         is_expected.to contain_cron('nova-manage db archive_deleted_rows').with(
+          :ensure      => :present,
           :command     => "nova-manage db archive_deleted_rows --max_rows #{params[:max_rows]} --until-complete >>#{params[:destination]} 2>&1",
           :environment => 'PATH=/bin:/usr/bin:/usr/sbin SHELL=/bin/sh',
           :user        => params[:user],
@@ -90,6 +105,7 @@ describe 'nova::cron::archive_deleted_rows' do
 
       it 'configures a cron with all_cells' do
         is_expected.to contain_cron('nova-manage db archive_deleted_rows').with(
+          :ensure      => :present,
           :command     => "nova-manage db archive_deleted_rows --max_rows #{params[:max_rows]} --all-cells >>#{params[:destination]} 2>&1",
           :environment => 'PATH=/bin:/usr/bin:/usr/sbin SHELL=/bin/sh',
           :user        => params[:user],
@@ -112,6 +128,7 @@ describe 'nova::cron::archive_deleted_rows' do
 
       it 'configures a cron with task_log' do
         is_expected.to contain_cron('nova-manage db archive_deleted_rows').with(
+          :ensure      => :present,
           :command     => "nova-manage db archive_deleted_rows --max_rows #{params[:max_rows]} --task-log >>#{params[:destination]} 2>&1",
           :environment => 'PATH=/bin:/usr/bin:/usr/sbin SHELL=/bin/sh',
           :user        => params[:user],
@@ -134,6 +151,7 @@ describe 'nova::cron::archive_deleted_rows' do
 
       it 'configures a cron with purge' do
         is_expected.to contain_cron('nova-manage db archive_deleted_rows').with(
+          :ensure      => :present,
           :command     => "nova-manage db archive_deleted_rows --purge --max_rows #{params[:max_rows]} >>#{params[:destination]} 2>&1",
           :environment => 'PATH=/bin:/usr/bin:/usr/sbin SHELL=/bin/sh',
           :user        => params[:user],
@@ -157,6 +175,7 @@ describe 'nova::cron::archive_deleted_rows' do
 
       it 'configures a cron with all purge params' do
         is_expected.to contain_cron('nova-manage db archive_deleted_rows').with(
+          :ensure      => :present,
           :command     => "nova-manage db archive_deleted_rows --purge --max_rows #{params[:max_rows]} --until-complete >>#{params[:destination]} 2>&1",
           :environment => 'PATH=/bin:/usr/bin:/usr/sbin SHELL=/bin/sh',
           :user        => params[:user],
@@ -179,6 +198,7 @@ describe 'nova::cron::archive_deleted_rows' do
 
       it 'configures a cron with maxdelay' do
         is_expected.to contain_cron('nova-manage db archive_deleted_rows').with(
+          :ensure      => :present,
           :command     => "sleep `expr ${RANDOM} \\% #{params[:maxdelay]}`; nova-manage db archive_deleted_rows --max_rows #{params[:max_rows]} >>#{params[:destination]} 2>&1",
           :environment => 'PATH=/bin:/usr/bin:/usr/sbin SHELL=/bin/sh',
           :user        => params[:user],
@@ -201,6 +221,7 @@ describe 'nova::cron::archive_deleted_rows' do
 
       it 'configures a cron with --before' do
         is_expected.to contain_cron('nova-manage db archive_deleted_rows').with(
+          :ensure      => :present,
           :command     => "nova-manage db archive_deleted_rows --max_rows #{params[:max_rows]} --before `date --date='today - #{params[:age]} days' +\\%F` >>#{params[:destination]} 2>&1",
           :environment => 'PATH=/bin:/usr/bin:/usr/sbin SHELL=/bin/sh',
           :user        => params[:user],
@@ -224,6 +245,7 @@ describe 'nova::cron::archive_deleted_rows' do
 
       it 'configures a cron with --before' do
         is_expected.to contain_cron('nova-manage db archive_deleted_rows').with(
+          :ensure      => :present,
           :command     => "nova-manage db archive_deleted_rows --max_rows #{params[:max_rows]} --until-complete --sleep #{params[:sleep]} >>#{params[:destination]} 2>&1",
           :environment => 'PATH=/bin:/usr/bin:/usr/sbin SHELL=/bin/sh',
           :user        => params[:user],

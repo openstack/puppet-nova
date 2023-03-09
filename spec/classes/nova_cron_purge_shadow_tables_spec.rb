@@ -17,6 +17,18 @@ describe 'nova::cron::purge_shadow_tables' do
         :age         => 10 }
     end
 
+    context 'ensure the cron job is absent' do
+      before :each do
+        params.merge!(
+          :ensure => :absent,
+        )
+      end
+
+      it 'removes the cron job' do
+        is_expected.to contain_cron('nova-manage db purge').with_ensure(:absent)
+      end
+    end
+
     context 'verbose is true' do
       before :each do
         params.merge!(
@@ -26,6 +38,7 @@ describe 'nova::cron::purge_shadow_tables' do
 
       it 'configures a nova purge cron with verbose output' do
         is_expected.to contain_cron('nova-manage db purge').with(
+          :ensure      => :present,
           :command     => "nova-manage db purge --before `date --date='today - #{params[:age]} days' +\\%D` --verbose >>#{params[:destination]} 2>&1",
           :environment => 'PATH=/bin:/usr/bin:/usr/sbin SHELL=/bin/sh',
           :user        => params[:user],
@@ -48,6 +61,7 @@ describe 'nova::cron::purge_shadow_tables' do
 
       it 'configures a nova purge cron without verbose output' do
         is_expected.to contain_cron('nova-manage db purge').with(
+          :ensure      => :present,
           :command     => "nova-manage db purge --before `date --date='today - #{params[:age]} days' +\\%D` >>#{params[:destination]} 2>&1",
           :environment => 'PATH=/bin:/usr/bin:/usr/sbin SHELL=/bin/sh',
           :user        => params[:user],
@@ -70,6 +84,7 @@ describe 'nova::cron::purge_shadow_tables' do
 
       it 'configures a nova purge cron with all cells enabled' do
         is_expected.to contain_cron('nova-manage db purge').with(
+          :ensure      => :present,
           :command     => "nova-manage db purge --before `date --date='today - #{params[:age]} days' +\\%D` --all-cells >>#{params[:destination]} 2>&1",
           :environment => 'PATH=/bin:/usr/bin:/usr/sbin SHELL=/bin/sh',
           :user        => params[:user],
@@ -92,6 +107,7 @@ describe 'nova::cron::purge_shadow_tables' do
 
       it 'configures a nova purge cron with maxdelay' do
         is_expected.to contain_cron('nova-manage db purge').with(
+          :ensure      => :present,
           :command     => "sleep `expr ${RANDOM} \\% #{params[:maxdelay]}`; nova-manage db purge --before `date --date='today - #{params[:age]} days' +\\%D` >>#{params[:destination]} 2>&1",
           :environment => 'PATH=/bin:/usr/bin:/usr/sbin SHELL=/bin/sh',
           :user        => params[:user],

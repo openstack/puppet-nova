@@ -88,6 +88,10 @@
 #    all cron jobs at the same time on all hosts this job is configured.
 #    Defaults to 0.
 #
+#  [*ensure*]
+#    (optional) Ensure cron jobs present or absent
+#    Defaults to present.
+#
 class nova::cron::archive_deleted_rows (
   $minute         = 1,
   $hour           = 0,
@@ -105,6 +109,7 @@ class nova::cron::archive_deleted_rows (
   $sleep          = undef,
   $verbose        = false,
   $maxdelay       = 0,
+  Enum['present', 'absent'] $ensure = 'present',
 ) inherits nova::params {
 
   include nova::deps
@@ -165,6 +170,7 @@ class nova::cron::archive_deleted_rows (
   $cron_cmd = 'nova-manage db archive_deleted_rows'
 
   cron { 'nova-manage db archive_deleted_rows':
+    ensure      => $ensure,
     # lint:ignore:140chars
     command     => "${delay_cmd}${cron_cmd}${purge_real} --max_rows ${max_rows}${verbose_real}${age_real}${until_complete_real}${all_cells_real}${task_log_real}${sleep_real} >>${destination} 2>&1",
     # lint:endignore
