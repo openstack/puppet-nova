@@ -31,9 +31,10 @@ describe 'nova' do
 
       it 'configures rabbit' do
         is_expected.to contain_oslo__messaging__default('nova_config').with(
-          :transport_url        => '<SERVICE DEFAULT>',
-          :rpc_response_timeout => '<SERVICE DEFAULT>',
-          :control_exchange     => '<SERVICE DEFAULT>',
+          :executor_thread_pool_size => '<SERVICE DEFAULT>',
+          :transport_url             => '<SERVICE DEFAULT>',
+          :rpc_response_timeout      => '<SERVICE DEFAULT>',
+          :control_exchange          => '<SERVICE DEFAULT>',
         )
         is_expected.to contain_oslo__messaging__rabbit('nova_config').with(
           :rabbit_use_ssl              => '<SERVICE DEFAULT>',
@@ -111,6 +112,7 @@ describe 'nova' do
           :rpc_response_timeout                    => '30',
           :long_rpc_timeout                        => '1800',
           :control_exchange                        => 'nova',
+          :executor_thread_pool_size               => 64,
           :rabbit_use_ssl                          => true,
           :rabbit_heartbeat_timeout_threshold      => '60',
           :rabbit_heartbeat_rate                   => '10',
@@ -182,9 +184,10 @@ describe 'nova' do
 
       it 'configures rabbit' do
         is_expected.to contain_oslo__messaging__default('nova_config').with(
-          :transport_url        => 'rabbit://rabbit_user:password@localhost:5673',
-          :rpc_response_timeout => '30',
-          :control_exchange     => 'nova',
+          :executor_thread_pool_size => 64,
+          :transport_url             => 'rabbit://rabbit_user:password@localhost:5673',
+          :rpc_response_timeout      => '30',
+          :control_exchange          => 'nova',
         )
         is_expected.to contain_oslo__messaging__rabbit('nova_config').with(
           :rabbit_use_ssl              => true,

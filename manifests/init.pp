@@ -30,6 +30,10 @@
 #   option.
 #   Defaults to $facts['os_service_default']
 #
+# [*executor_thread_pool_size*]
+#   (Optional) Size of executor thread pool when executor is threading or eventlet.
+#   Defaults to $facts['os_service_default'].
+#
 # [*rabbit_use_ssl*]
 #   (optional) Boolean. Connect over SSL for RabbitMQ. (boolean value)
 #   Defaults to $facts['os_service_default']
@@ -376,6 +380,7 @@ class nova(
   $rpc_response_timeout                   = $facts['os_service_default'],
   $long_rpc_timeout                       = $facts['os_service_default'],
   $control_exchange                       = $facts['os_service_default'],
+  $executor_thread_pool_size              = $facts['os_service_default'],
   $rabbit_use_ssl                         = $facts['os_service_default'],
   $rabbit_heartbeat_timeout_threshold     = $facts['os_service_default'],
   $rabbit_heartbeat_rate                  = $facts['os_service_default'],
@@ -647,9 +652,10 @@ but should be one of: ssh-rsa, ssh-dsa, ssh-ecdsa.")
   }
 
   oslo::messaging::default { 'nova_config':
-    transport_url        => $default_transport_url,
-    rpc_response_timeout => $rpc_response_timeout,
-    control_exchange     => $control_exchange,
+    executor_thread_pool_size => $executor_thread_pool_size,
+    transport_url             => $default_transport_url,
+    rpc_response_timeout      => $rpc_response_timeout,
+    control_exchange          => $control_exchange,
   }
 
   nova_config {
