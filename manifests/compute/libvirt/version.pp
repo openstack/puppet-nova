@@ -15,7 +15,21 @@ class nova::compute::libvirt::version {
       }
     }
     'Debian': {
-      $default = '6.0'
+      case $facts['os']['name'] {
+        'Ubuntu': {
+          $default = '6.0'
+        }
+        'Debian': {
+          if versioncmp($facts['os']['release']['major'], '12') >= 0 {
+            $default = '9.0'
+          } else {
+            $default = '7.0'
+          }
+        }
+        default: {
+          fail("Class['nova::compute::libvirt::version']: Unsupported osname: ${::facts['os']['name']}")
+        }
+      }
     }
     default: {
       fail("Unsupported osfamily: ${::facts['os']['family']}")
