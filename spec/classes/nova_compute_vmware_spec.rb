@@ -41,27 +41,29 @@ describe 'nova::compute::vmware' do
         is_expected.to contain_nova_config('vmware/datastore_regex').with_value('<SERVICE DEFAULT>')
       end
 
-      it 'installs suds python package' do
-        is_expected.to contain_package('python-suds').with(
-          :ensure => 'present'
+      it 'installs oslo.vmware python package' do
+        is_expected.to contain_package('python-oslo-vmware').with(
+          :ensure => 'present',
+          :name   => 'python3-oslo-vmware',
+          :tag    => ['openstack', 'nova-support-package'],
         )
       end
     end
-  end
 
-  context 'with optional parameters' do
-    before :each do
-      params.merge!(optional_params)
-    end
+    context 'with optional parameters' do
+      before :each do
+        params.merge!(optional_params)
+      end
 
-    it 'configures vmwareapi in nova.conf' do
-      is_expected.to contain_nova_config('DEFAULT/compute_driver').with_value(params[:compute_driver])
-      is_expected.to contain_nova_config('vmware/api_retry_count').with_value(params[:api_retry_count])
-      is_expected.to contain_nova_config('vmware/maximum_objects').with_value(params[:maximum_objects])
-      is_expected.to contain_nova_config('vmware/task_poll_interval').with_value(params[:task_poll_interval])
-      is_expected.to contain_nova_config('vmware/use_linked_clone').with_value(params[:use_linked_clone])
-      is_expected.to contain_nova_config('vmware/insecure').with_value(params[:insecure])
-      is_expected.to contain_nova_config('vmware/datastore_regex').with_value(params[:datastore_regex])
+      it 'configures vmwareapi in nova.conf' do
+        is_expected.to contain_nova_config('DEFAULT/compute_driver').with_value(params[:compute_driver])
+        is_expected.to contain_nova_config('vmware/api_retry_count').with_value(params[:api_retry_count])
+        is_expected.to contain_nova_config('vmware/maximum_objects').with_value(params[:maximum_objects])
+        is_expected.to contain_nova_config('vmware/task_poll_interval').with_value(params[:task_poll_interval])
+        is_expected.to contain_nova_config('vmware/use_linked_clone').with_value(params[:use_linked_clone])
+        is_expected.to contain_nova_config('vmware/insecure').with_value(params[:insecure])
+        is_expected.to contain_nova_config('vmware/datastore_regex').with_value(params[:datastore_regex])
+      end
     end
   end
 

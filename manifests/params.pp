@@ -32,6 +32,9 @@ class nova::params {
       $serialproxy_package_name          = 'openstack-nova-serialproxy'
       $spicehtml5proxy_package_name      = 'openstack-nova-console'
       $ceph_client_package_name          = 'ceph-common'
+      $oslo_vmware_package_name          = 'python3-oslo-vmware'
+      $mkisofs_package_name              = 'xorriso'
+      $mkisofs_cmd                       = 'mkisofs'
       # service names
       $api_service_name                  = 'openstack-nova-api'
       $api_metadata_service_name         = undef
@@ -59,8 +62,6 @@ class nova::params {
       $nova_api_wsgi_script_source       = '/usr/bin/nova-api-wsgi'
       $nova_metadata_wsgi_script_source  = '/usr/bin/nova-metadata-wsgi'
       $messagebus_service_name           = 'dbus'
-      $mkisofs_package_name              = 'xorriso'
-      $mkisofs_cmd                       = 'mkisofs'
     }
     'Debian': {
       # package names
@@ -74,6 +75,7 @@ class nova::params {
       $scheduler_package_name            = 'nova-scheduler'
       $tgt_package_name                  = 'tgt'
       $ceph_client_package_name          = 'ceph-common'
+      $oslo_vmware_package_name          = 'python3-oslo-vmware'
       $mkisofs_package_name              = 'genisoimage'
       $mkisofs_cmd                       = false
       # service names
