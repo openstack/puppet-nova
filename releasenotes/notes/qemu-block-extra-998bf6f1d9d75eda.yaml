@@ -1,0 +1,6 @@
+---
+features:
+  - |
+    The ``nova::compute::rbd`` class now installs the ``qemu-block-extra``
+    package in Ubuntu or Debian. The ``package_ensure`` parameter can be used
+    to customize state of the package.
