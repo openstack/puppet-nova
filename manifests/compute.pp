@@ -64,8 +64,8 @@
 #
 # [*instance_usage_audit_period*]
 #   (optional) Time period to generate instance usages for.
-#   Time period must be hour, day, month or year
-#   Defaults to 'month'
+#   Time period must be hour, day, month or year with/without offset.
+#   Defaults to $facts['os_service_default']
 #
 # [*use_cow_images*]
 #   (optional) Enable use of copy-on-write (cow) images.
@@ -266,7 +266,7 @@ class nova::compute (
   $vncproxy_path                               = '/vnc_auto.html',
   $force_config_drive                          = false,
   $instance_usage_audit                        = false,
-  $instance_usage_audit_period                 = 'month',
+  $instance_usage_audit_period                 = $facts['os_service_default'],
   $mkisofs_cmd                                 = $facts['os_service_default'],
   $use_cow_images                              = $facts['os_service_default'],
   $force_raw_images                            = $facts['os_service_default'],
@@ -447,7 +447,7 @@ class nova::compute (
     nova_config { 'DEFAULT/force_config_drive': ensure => absent }
   }
 
-  if $instance_usage_audit and $instance_usage_audit_period in ['hour', 'day', 'month', 'year'] {
+  if $instance_usage_audit {
     nova_config {
       'DEFAULT/instance_usage_audit':        value => $instance_usage_audit;
       'DEFAULT/instance_usage_audit_period': value => $instance_usage_audit_period;
