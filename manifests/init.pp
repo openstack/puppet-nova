@@ -459,6 +459,8 @@ class nova(
   include nova::deps
   include nova::workarounds
 
+  validate_legacy(Boolean, 'validate_bool', $use_ssl)
+
   validate_legacy(Array, 'validate_array', $enabled_ssl_apis)
   if empty($enabled_ssl_apis) and $use_ssl {
       warning('enabled_ssl_apis is empty but use_ssl is set to true')

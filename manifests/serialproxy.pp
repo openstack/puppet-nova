@@ -35,9 +35,12 @@ class nova::serialproxy(
   include nova::deps
   include nova::params
 
+  validate_legacy(Boolean, 'validate_bool', $manage_service)
+  validate_legacy(Boolean, 'validate_bool', $enabled)
+
   nova_config {
-    'serial_console/serialproxy_port':    value => $serialproxy_port;
-    'serial_console/serialproxy_host':    value => $serialproxy_host;
+    'serial_console/serialproxy_port': value => $serialproxy_port;
+    'serial_console/serialproxy_host': value => $serialproxy_host;
   }
 
   nova::generic_service { 'serialproxy':

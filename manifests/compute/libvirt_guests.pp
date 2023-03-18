@@ -57,6 +57,9 @@ class nova::compute::libvirt_guests (
   include nova::params
   include nova::deps
 
+  validate_legacy(Boolean, 'validate_bool', $manage_service)
+  validate_legacy(Boolean, 'validate_bool', $enabled)
+
   Anchor['nova::config::begin']
   -> File<| tag =='libvirt-guests-file' |>
   -> File_line<| tag == 'libvirt-guests-file_line'|>

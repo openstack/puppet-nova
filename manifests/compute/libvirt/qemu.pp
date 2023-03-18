@@ -66,6 +66,7 @@ class nova::compute::libvirt::qemu(
 
   include nova::deps
 
+  validate_legacy(Boolean, 'validate_bool', $configure_qemu)
   validate_legacy(Boolean, 'validate_bool', $vnc_tls)
   validate_legacy(Boolean, 'validate_bool', $vnc_tls_verify)
   validate_legacy(Boolean, 'validate_bool', $default_tls_verify)

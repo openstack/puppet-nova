@@ -40,6 +40,9 @@ class nova::conductor(
   include nova::params
   include nova::availability_zone
 
+  validate_legacy(Boolean, 'validate_bool', $enabled)
+  validate_legacy(Boolean, 'validate_bool', $manage_service)
+
   nova::generic_service { 'conductor':
     enabled        => $enabled,
     manage_service => $manage_service,

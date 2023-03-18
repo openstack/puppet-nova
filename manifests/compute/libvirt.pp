@@ -294,6 +294,9 @@ class nova::compute::libvirt (
   include nova::deps
   include nova::params
 
+  validate_legacy(Boolean, 'validate_bool', $migration_support)
+  validate_legacy(Boolean, 'validate_bool', $manage_libvirt_services)
+
   # cpu_mode has different defaults depending on hypervisor.
   if !$cpu_mode {
     case $virt_type {

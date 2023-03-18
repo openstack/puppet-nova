@@ -97,6 +97,9 @@ class nova::scheduler(
   include nova::params
   include nova::availability_zone
 
+  validate_legacy(Boolean, 'validate_bool', $enabled)
+  validate_legacy(Boolean, 'validate_bool', $manage_service)
+
   if $query_placement_for_availability_zone != undef {
     warning('The query_placement_for_availability_zone parameter is deprecated.')
   }

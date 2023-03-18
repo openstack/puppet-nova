@@ -41,6 +41,9 @@ define nova::generic_service(
   include nova::deps
   include nova::params
 
+  validate_legacy(Boolean, 'validate_bool', $enabled)
+  validate_legacy(Boolean, 'validate_bool', $manage_service)
+
   $nova_title = "nova-${name}"
 
   # I need to mark that ths package should be

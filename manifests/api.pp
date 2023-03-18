@@ -209,6 +209,12 @@ class nova::api(
   include nova::availability_zone
   include nova::pci
 
+  validate_legacy(Boolean, 'validate_bool', $enabled)
+  validate_legacy(Boolean, 'validate_bool', $manage_service)
+  validate_legacy(Boolean, 'validate_bool', $sync_db)
+  validate_legacy(Boolean, 'validate_bool', $sync_db_api)
+  validate_legacy(Boolean, 'validate_bool', $db_online_data_migrations)
+
   if !$nova_metadata_wsgi_enabled {
     warning('Running nova metadata api via evenlet is deprecated and will be removed in Stein release.')
   }

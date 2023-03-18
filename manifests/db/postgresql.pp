@@ -40,6 +40,8 @@ class nova::db::postgresql(
 
   include nova::deps
 
+  validate_legacy(Boolean, 'validate_bool', $setup_cell0)
+
   ::openstacklib::db::postgresql { 'nova':
     password   => $password,
     dbname     => $dbname,

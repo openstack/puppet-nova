@@ -174,6 +174,10 @@ class nova::migration::libvirt(
   include nova::deps
   include nova::params
 
+  validate_legacy(Boolean, 'validate_bool', $override_uuid)
+  validate_legacy(Boolean, 'validate_bool', $configure_libvirt)
+  validate_legacy(Boolean, 'validate_bool', $configure_nova)
+
   if $transport {
     $transport_real = $transport
   } else {

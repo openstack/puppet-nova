@@ -30,6 +30,8 @@ class nova::db::sync_api(
   include nova::deps
   include nova::params
 
+  validate_legacy(Boolean, 'validate_bool', $cellv2_setup)
+
   exec { 'nova-db-sync-api':
     command     => "/usr/bin/nova-manage ${extra_params} api_db sync",
     user        => $::nova::params::user,

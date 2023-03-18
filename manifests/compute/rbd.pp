@@ -103,6 +103,9 @@ class nova::compute::rbd (
   include nova::deps
   include nova::params
 
+  validate_legacy(Boolean, 'validate_bool', $ephemeral_storage)
+  validate_legacy(Boolean, 'validate_bool', $manage_ceph_client)
+
   if $manage_ceph_client {
     # Install ceph client libraries
     package { 'ceph-client-package':

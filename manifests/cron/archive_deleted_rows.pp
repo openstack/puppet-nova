@@ -114,6 +114,12 @@ class nova::cron::archive_deleted_rows (
 
   include nova::deps
 
+  validate_legacy(Boolean, 'validate_bool', $until_complete)
+  validate_legacy(Boolean, 'validate_bool', $purge)
+  validate_legacy(Boolean, 'validate_bool', $all_cells)
+  validate_legacy(Boolean, 'validate_bool', $task_log)
+  validate_legacy(Boolean, 'validate_bool', $verbose)
+
   if $until_complete {
     $until_complete_real = ' --until-complete'
   }
