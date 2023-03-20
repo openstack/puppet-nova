@@ -8,11 +8,7 @@
 class nova::compute::libvirt::version {
   case $facts['os']['family'] {
     'RedHat': {
-      if versioncmp($facts['os']['release']['full'], '9') >= 0 {
-        $default = '7.0'
-      } else {
-        $default = '5.6'
-      }
+      $default = '7.0'
     }
     'Debian': {
       $default = '6.0'
