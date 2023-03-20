@@ -17,7 +17,7 @@ class nova::compute::libvirt::version {
     'Debian': {
       case $facts['os']['name'] {
         'Ubuntu': {
-          $default = '6.0'
+          $default = '8.0'
         }
         'Debian': {
           if versioncmp($facts['os']['release']['major'], '12') >= 0 {
