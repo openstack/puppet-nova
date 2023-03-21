@@ -453,6 +453,36 @@ describe 'nova::migration::libvirt' do
         :enable => true,
         )}
     end
+
+    context 'with tls transport and modular daemons' do
+      let :params do
+        {
+          :transport       => 'tls',
+          :modular_libvirt => true,
+        }
+      end
+
+      it { is_expected.to contain_service('virtproxyd-tls').with(
+        :name   => 'virtproxyd-tls.socket',
+        :ensure => 'running',
+        :enable => true,
+      )}
+    end
+
+    context 'with tcp transport and modular daemons' do
+      let :params do
+        {
+          :transport       => 'tcp',
+          :modular_libvirt => true,
+        }
+      end
+
+      it { is_expected.to contain_service('virtproxyd-tcp').with(
+        :name   => 'virtproxyd-tcp.socket',
+        :ensure => 'running',
+        :enable => true,
+      )}
+    end
   end
 
   shared_examples_for 'nova migration with libvirt in RedHat' do
@@ -497,6 +527,36 @@ describe 'nova::migration::libvirt' do
       )}
       it { is_expected.to contain_service('libvirtd-tcp').with(
         :name   => 'libvirtd-tcp.socket',
+        :ensure => 'running',
+        :enable => true,
+      )}
+    end
+
+    context 'with tls transport and modular daemons' do
+      let :params do
+        {
+          :transport       => 'tls',
+          :modular_libvirt => true,
+        }
+      end
+
+      it { is_expected.to contain_service('virtproxyd-tls').with(
+        :name   => 'virtproxyd-tls.socket',
+        :ensure => 'running',
+        :enable => true,
+      )}
+    end
+
+    context 'with tcp transport and modular daemons' do
+      let :params do
+        {
+          :transport       => 'tcp',
+          :modular_libvirt => true,
+        }
+      end
+
+      it { is_expected.to contain_service('virtproxyd-tcp').with(
+        :name   => 'virtproxyd-tcp.socket',
         :ensure => 'running',
         :enable => true,
       )}
