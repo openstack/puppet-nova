@@ -311,24 +311,31 @@ class nova::migration::libvirt(
       # by systemd, not by --listen option
       $manage_services = pick($::nova::compute::libvirt::manage_libvirt_services, true)
 
-      if $manage_services and !$modular_libvirt_real {
+      if $manage_services {
+        $proxy_service = $modular_libvirt ? {
+          true    => 'virtproxyd',
+          default => 'libvirtd',
+        }
         # libvirtd.service should be stopped before socket service is started.
         # Otherwise, socket service fails to start.
-        exec { 'stop libvirtd.service':
+        exec { "stop ${proxy_service}.service":
           path    => ['/sbin', '/usr/sbin', '/bin', '/usr/bin'],
-          command => 'systemctl -q stop libvirtd.service',
-          unless  => "systemctl -q is-active libvirtd-${transport_real}.socket",
+          command => "systemctl -q stop ${proxy_service}.service",
+          unless  => "systemctl -q is-active ${proxy_service}-${transport_real}.socket",
           require => Anchor['nova::install::end']
         }
-
-        service { "libvirtd-${transport_real}":
+        -> service { "${proxy_service}-${transport_real}":
           ensure  => 'running',
-          name    => "libvirtd-${transport_real}.socket",
+          name    => "${proxy_service}-${transport_real}.socket",
           enable  => true,
           require => Anchor['nova::config::end']
         }
 
-        Exec['stop libvirtd.service'] -> Service["libvirtd-${transport_real}"] -> Service<| title == 'libvirt' |>
+        if $modular_libvirt {
+          Service["${proxy_service}-${transport_real}"] -> Service<| title == 'virtproxyd' |>
+        } else {
+          Service["${proxy_service}-${transport_real}"] -> Service<| title == 'libvirt' |>
+        }
       }
     }
 
