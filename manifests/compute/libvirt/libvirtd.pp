@@ -62,20 +62,15 @@ class nova::compute::libvirt::libvirtd (
 
   include nova::deps
 
-  $log_outputs_real = pick($::nova::compute::libvirt::log_outputs, $log_outputs)
-  $log_filters_real = pick($::nova::compute::libvirt::log_filters, $log_filters)
-  $tls_priority_real = pick($::nova::compute::libvirt::tls_prority, $tls_priority)
-  $ovs_timeout_real = pick($::nova::compute::libvirt::ovs_timeout, $ovs_timeout)
-
   libvirtd_config {
     'log_level':                 value => $log_level;
-    'log_filters':               value => $log_filters_real, quote  => true;
-    'log_outputs':               value => $log_outputs_real, quote  => true;
+    'log_filters':               value => $log_filters, quote => true;
+    'log_outputs':               value => $log_outputs, quote => true;
     'max_clients':               value => $max_clients;
     'admin_max_clients':         value => $admin_max_clients;
     'max_client_requests':       value => $max_client_requests;
     'admin_max_client_requests': value => $admin_max_client_requests;
-    'tls_priority':              value => $tls_priority_real, quote => true;
-    'ovs_timeout':               value => $ovs_timeout_real;
+    'tls_priority':              value => $tls_priority, quote => true;
+    'ovs_timeout':               value => $ovs_timeout;
   }
 }

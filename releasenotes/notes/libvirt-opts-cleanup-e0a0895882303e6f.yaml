@@ -1,0 +1,15 @@
+---
+upgrade:
+  - |
+    The following parameters of the ``nova::compute::libvirt`` class has been
+    removed. Use the ``nova::compute::libvirt::libvirtd`` class directly.
+
+    - ``log_outputs``
+    - ``log_filters``
+    - ``tls_priority``
+    - ``ovs_timeout``
+
+deprecations:
+  - |
+    The ``nova::compute::libvirt::modular_libvirt`` parameter has been
+    deprecated. This parameter has no effect now.
