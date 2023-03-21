@@ -45,6 +45,8 @@ class nova::compute::spice(
 
   include nova::deps
 
+  validate_legacy(Boolean, 'validate_bool', $agent_enabled)
+
   if $proxy_host {
     $html5proxy_base_url = "${proxy_protocol}://${proxy_host}:${proxy_port}${proxy_path}"
     nova_config {

@@ -39,6 +39,9 @@ class nova::spicehtml5proxy(
   include nova::deps
   include nova::params
 
+  validate_legacy(Boolean, 'validate_bool', $enabled)
+  validate_legacy(Boolean, 'validate_bool', $manage_service)
+
   # Nodes running spicehtml5proxy do *not* need (and in fact, don't care)
   # about [spice]/enable to be set. This setting is for compute nodes,
   # where we must select VNC or SPICE so that it can be passed on to

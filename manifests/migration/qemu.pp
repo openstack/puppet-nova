@@ -24,6 +24,8 @@ class nova::migration::qemu(
 
   include nova::deps
 
+  validate_legacy(Boolean, 'validate_bool', $configure_qemu)
+
   Anchor['nova::config::begin']
   -> Augeas<| tag == 'qemu-conf-augeas'|>
   -> Anchor['nova::config::end']
@@ -32,7 +34,6 @@ class nova::migration::qemu(
   ~> Service<| tag == 'libvirt-qemu-service' |>
 
   if $configure_qemu {
-
     augeas { 'qemu-conf-migration-ports':
       context => '/files/etc/libvirt/qemu.conf',
       changes => [

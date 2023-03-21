@@ -14,6 +14,8 @@ class nova::compute::libvirt::networks(
 
   include nova::deps
 
+  validate_legacy(Boolean, 'validate_bool', $disable_default_network)
+
   if $disable_default_network {
     exec { 'libvirt-default-net-disable-autostart':
       command => 'virsh net-autostart default --disable',

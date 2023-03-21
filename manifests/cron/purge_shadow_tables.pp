@@ -83,6 +83,9 @@ class nova::cron::purge_shadow_tables (
   include nova::deps
   include nova::params
 
+  validate_legacy(Boolean, 'validate_bool', $all_cells)
+  validate_legacy(Boolean, 'validate_bool', $verbose)
+
   if $verbose {
     $verbose_real = ' --verbose'
   }

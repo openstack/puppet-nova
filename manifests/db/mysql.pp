@@ -49,6 +49,8 @@ class nova::db::mysql(
 
   include nova::deps
 
+  validate_legacy(Boolean, 'validate_bool', $setup_cell0)
+
   ::openstacklib::db::mysql { 'nova':
     user          => $user,
     password      => $password,

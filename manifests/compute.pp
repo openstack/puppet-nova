@@ -308,6 +308,13 @@ class nova::compute (
   include nova::deps
   include nova::params
 
+  validate_legacy(Boolean, 'validate_bool', $manage_service)
+  validate_legacy(Boolean, 'validate_bool', $enabled)
+  validate_legacy(Boolean, 'validate_bool', $vnc_enabled)
+  validate_legacy(Boolean, 'validate_bool', $force_config_drive)
+  validate_legacy(Boolean, 'validate_bool', $instance_usage_audit)
+
+
   $image_type_exclude_list_real = pick(join(any2array($image_type_exclude_list), ','), $facts['os_service_default'])
 
   include nova::policy
