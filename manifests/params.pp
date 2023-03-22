@@ -42,11 +42,11 @@ class nova::params {
       $libvirt_guests_service_name       = 'libvirt-guests'
       $virtlock_service_name             = 'virtlockd'
       $virtlog_service_name              = 'virtlogd'
-      $virtsecret_service_name           = 'virtsecretd'
-      $virtnodedev_service_name          = 'virtnodedevd'
-      $virtqemu_service_name             = 'virtqemud'
-      $virtproxy_service_name            = 'virtproxyd'
-      $virtstorage_service_name          = 'virtstoraged'
+      $virtsecret_service_name           = 'virtsecretd.socket'
+      $virtnodedev_service_name          = 'virtnodedevd.socket'
+      $virtqemu_service_name             = 'virtqemud.socket'
+      $virtproxy_service_name            = 'virtproxyd.socket'
+      $virtstorage_service_name          = 'virtstoraged.socket'
       $scheduler_service_name            = 'openstack-nova-scheduler'
       $tgt_service_name                  = 'tgtd'
       $vncproxy_service_name             = 'openstack-nova-novncproxy'
@@ -106,11 +106,11 @@ class nova::params {
           # Use default provider on Debian
           $virtlock_service_name        = 'virtlockd'
           $virtlog_service_name         = 'virtlogd'
-          $virtsecret_service_name      = 'virtsecretd'
-          $virtnodedev_service_name     = 'virtnodedevd'
-          $virtqemu_service_name        = 'virtqemud'
-          $virtproxy_service_name       = 'virtproxyd'
-          $virtstorage_service_name     = 'virtstoraged'
+          $virtsecret_service_name      = 'virtsecretd.socket'
+          $virtnodedev_service_name     = 'virtnodedevd.socket'
+          $virtqemu_service_name        = 'virtqemud.socket'
+          $virtproxy_service_name       = 'virtproxyd.socket'
+          $virtstorage_service_name     = 'virtstoraged.socket'
           $modular_libvirt              = false
         }
         default: {
