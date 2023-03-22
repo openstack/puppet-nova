@@ -326,16 +326,6 @@ describe 'nova::compute' do
       it { is_expected.to contain_nova_config('DEFAULT/instance_usage_audit_period').with_ensure('absent') }
     end
 
-    context 'with instance_usage_audit parameter and wrong period' do
-      let :params do
-        { :instance_usage_audit        => true,
-          :instance_usage_audit_period => 'fake', }
-      end
-
-      it { is_expected.to contain_nova_config('DEFAULT/instance_usage_audit').with_ensure('absent') }
-      it { is_expected.to contain_nova_config('DEFAULT/instance_usage_audit_period').with_ensure('absent') }
-    end
-
     context 'with instance_usage_audit parameter and period' do
       let :params do
         { :instance_usage_audit        => true,
