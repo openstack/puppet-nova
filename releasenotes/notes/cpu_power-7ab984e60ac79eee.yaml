@@ -1,0 +1,10 @@
+---
+features:
+  - |
+    The following parameters have been added to the ``nova::compute::libvirt``
+    class.
+
+    - ``cpu_power_management``
+    - ``cpu_power_management_strategy``
+    - ``cpu_power_governor_low``
+    - ``cpu_power_governor_high``

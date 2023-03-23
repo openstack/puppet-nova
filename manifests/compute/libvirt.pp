@@ -39,6 +39,22 @@
 #   to 'none'.
 #   Defaults to undef
 #
+# [*cpu_power_management*]
+#   (optional) Use libvirt to manage CPU cores performance
+#   Defaults to $::os_service_default
+#
+# [*cpu_power_management_strategy*]
+#   (optional) Tuning strategy to reduce CPU power consumption when unused.
+#   Defaults to $::os_service_default
+#
+# [*cpu_power_governor_low*]
+#   (optional) Governor to use in order to reduce CPU power consumption.
+#   Defaults to $::os_service_default
+#
+# [*cpu_power_governor_high*]
+#   (optional) Goernor to use in order to have best CPU performance.
+#   Defaults to $::os_service_default
+#
 # [*snapshot_image_format*]
 #   (optional) Format to save snapshots to. Some filesystems
 #   have a preference and only operate on raw or qcow2
@@ -228,6 +244,10 @@ class nova::compute::libvirt (
   $cpu_mode                                   = false,
   $cpu_models                                 = [],
   $cpu_model_extra_flags                      = undef,
+  $cpu_power_management                       = $facts['os_service_default'],
+  $cpu_power_management_strategy              = $facts['os_service_default'],
+  $cpu_power_governor_low                     = $facts['os_service_default'],
+  $cpu_power_governor_high                    = $facts['os_service_default'],
   $snapshot_image_format                      = $facts['os_service_default'],
   $snapshots_directory                        = $facts['os_service_default'],
   $disk_cachemodes                            = [],
@@ -337,37 +357,41 @@ class nova::compute::libvirt (
   }
 
   nova_config {
-    'DEFAULT/compute_driver':              value => $compute_driver;
-    'DEFAULT/preallocate_images':          value => $preallocate_images;
-    'vnc/server_listen':                   value => $vncserver_listen;
-    'libvirt/virt_type':                   value => $virt_type;
-    'libvirt/cpu_mode':                    value => $cpu_mode_default;
-    'libvirt/snapshot_image_format':       value => $snapshot_image_format;
-    'libvirt/snapshots_directory':         value => $snapshots_directory;
-    'libvirt/inject_password':             value => $inject_password;
-    'libvirt/inject_key':                  value => $inject_key;
-    'libvirt/inject_partition':            value => $inject_partition;
-    'libvirt/hw_disk_discard':             value => $hw_disk_discard;
-    'libvirt/hw_machine_type':             value => $hw_machine_type;
-    'libvirt/sysinfo_serial':              value => $sysinfo_serial;
-    'libvirt/enabled_perf_events':         value => join(any2array($enabled_perf_events), ',');
-    'libvirt/device_detach_attempts':      value => $device_detach_attempts;
-    'libvirt/device_detach_timeout':       value => $device_detach_timeout;
-    'libvirt/rx_queue_size':               value => $rx_queue_size;
-    'libvirt/tx_queue_size':               value => $tx_queue_size;
-    'libvirt/file_backed_memory':          value => $file_backed_memory;
-    'libvirt/images_type':                 value => $images_type;
-    'libvirt/volume_use_multipath':        value => $volume_use_multipath;
-    'libvirt/nfs_mount_options':           value => $nfs_mount_options;
-    'libvirt/num_pcie_ports':              value => $num_pcie_ports;
-    'libvirt/mem_stats_period_seconds':    value => $mem_stats_period_seconds;
-    'libvirt/pmem_namespaces':             value => join(any2array($pmem_namespaces), ',');
-    'libvirt/swtpm_enabled':               value => $swtpm_enabled;
-    'libvirt/swtpm_user'   :               value => $swtpm_user;
-    'libvirt/swtpm_group':                 value => $swtpm_group;
-    'libvirt/max_queues':                  value => $max_queues;
-    'libvirt/num_memory_encrypted_guests': value => $num_memory_encrypted_guests;
-    'libvirt/wait_soft_reboot_seconds':    value => $wait_soft_reboot_seconds;
+    'DEFAULT/compute_driver':                value => $compute_driver;
+    'DEFAULT/preallocate_images':            value => $preallocate_images;
+    'vnc/server_listen':                     value => $vncserver_listen;
+    'libvirt/virt_type':                     value => $virt_type;
+    'libvirt/cpu_mode':                      value => $cpu_mode_default;
+    'libvirt/cpu_power_management':          value => $cpu_power_management;
+    'libvirt/cpu_power_management_strategy': value => $cpu_power_management_strategy;
+    'libvirt/cpu_power_governor_low':        value => $cpu_power_governor_low;
+    'libvirt/cpu_power_governor_high':       value => $cpu_power_governor_high;
+    'libvirt/snapshot_image_format':         value => $snapshot_image_format;
+    'libvirt/snapshots_directory':           value => $snapshots_directory;
+    'libvirt/inject_password':               value => $inject_password;
+    'libvirt/inject_key':                    value => $inject_key;
+    'libvirt/inject_partition':              value => $inject_partition;
+    'libvirt/hw_disk_discard':               value => $hw_disk_discard;
+    'libvirt/hw_machine_type':               value => $hw_machine_type;
+    'libvirt/sysinfo_serial':                value => $sysinfo_serial;
+    'libvirt/enabled_perf_events':           value => join(any2array($enabled_perf_events), ',');
+    'libvirt/device_detach_attempts':        value => $device_detach_attempts;
+    'libvirt/device_detach_timeout':         value => $device_detach_timeout;
+    'libvirt/rx_queue_size':                 value => $rx_queue_size;
+    'libvirt/tx_queue_size':                 value => $tx_queue_size;
+    'libvirt/file_backed_memory':            value => $file_backed_memory;
+    'libvirt/images_type':                   value => $images_type;
+    'libvirt/volume_use_multipath':          value => $volume_use_multipath;
+    'libvirt/nfs_mount_options':             value => $nfs_mount_options;
+    'libvirt/num_pcie_ports':                value => $num_pcie_ports;
+    'libvirt/mem_stats_period_seconds':      value => $mem_stats_period_seconds;
+    'libvirt/pmem_namespaces':               value => join(any2array($pmem_namespaces), ',');
+    'libvirt/swtpm_enabled':                 value => $swtpm_enabled;
+    'libvirt/swtpm_user'   :                 value => $swtpm_user;
+    'libvirt/swtpm_group':                   value => $swtpm_group;
+    'libvirt/max_queues':                    value => $max_queues;
+    'libvirt/num_memory_encrypted_guests':   value => $num_memory_encrypted_guests;
+    'libvirt/wait_soft_reboot_seconds':      value => $wait_soft_reboot_seconds;
   }
 
   validate_legacy(Array, 'validate_array', $cpu_models)
