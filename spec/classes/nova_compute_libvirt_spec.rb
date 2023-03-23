@@ -113,13 +113,8 @@ describe 'nova::compute::libvirt' do
           :swtpm_enabled                              => true,
           :swtpm_user                                 => 'libvirt',
           :swtpm_group                                => 'libvirt',
-          :log_outputs                                => '1:file:/var/log/libvirt/libvirtd.log',
-          :log_filters                                => '1:qemu',
-          :tls_priority                               => 'NORMAL:-VERS-SSL3.0',
-          :ovs_timeout                                => 10,
           :max_queues                                 => 4,
           :num_memory_encrypted_guests                => 255,
-          :modular_libvirt                            => true,
           :wait_soft_reboot_seconds                   => 120,
         }
       end

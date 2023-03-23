@@ -114,11 +114,6 @@
 #   (optional) virtlog service name.
 #   Defaults to $::nova::params::virtlog_service_name
 #
-# [*modular_libvirt*]
-#   (optional) Whether to enable modular libvirt daemons or use monolithic
-#   libvirt daemon.
-#   Defaults to $::nova::params::modular_libvirt
-#
 # [*compute_driver*]
 #   (optional) Compute driver.
 #   Defaults to 'libvirt.LibvirtDriver'
@@ -218,28 +213,11 @@
 #   reboot request is made.
 #   Defaults to $facts['os_service_default']
 #
-# DEPRECATED PARAMETRS
+# DEPRECATED PARAMETERS
 #
-# [*log_outputs*]
-#   (optional) Defines log outputs, as specified in
-#   https://libvirt.org/logging.html
-#   Defaults to undef
-#
-# [*log_filters*]
-#   (optional) Defines a filter to select a different logging level
-#   for a given category log outputs, as specified in
-#   https://libvirt.org/logging.html
-#   Defaults to undef
-#
-# [*tls_priority*]
-#   (optional) Override the compile time default TLS priority string. The
-#   default is usually "NORMAL" unless overridden at build time.
-#   Only set this if it is desired for libvirt to deviate from
-#   the global default settings.
-#   Defaults to undef
-#
-# [*ovs_timeout*]
-#   (optional) A timeout for openvswitch calls made by libvirt
+# [*modular_libvirt*]
+#   (optional) Whether to enable modular libvirt daemons or use monolithic
+#   libvirt daemon.
 #   Defaults to undef
 #
 class nova::compute::libvirt (
@@ -265,7 +243,6 @@ class nova::compute::libvirt (
   $libvirt_service_name                       = $::nova::params::libvirt_service_name,
   $virtlock_service_name                      = $::nova::params::virtlock_service_name,
   $virtlog_service_name                       = $::nova::params::virtlog_service_name,
-  $modular_libvirt                            = $::nova::params::modular_libvirt,
   $compute_driver                             = 'libvirt.LibvirtDriver',
   $preallocate_images                         = $facts['os_service_default'],
   $manage_libvirt_services                    = true,
@@ -285,10 +262,7 @@ class nova::compute::libvirt (
   $num_memory_encrypted_guests                = $facts['os_service_default'],
   $wait_soft_reboot_seconds                   = $facts['os_service_default'],
   # DEPRECATED PARAMETERS
-  $log_outputs                                = undef,
-  $log_filters                                = undef,
-  $tls_priority                               = undef,
-  $ovs_timeout                                = undef,
+  $modular_libvirt                            = undef,
 ) inherits nova::params {
 
   include nova::deps
@@ -296,6 +270,10 @@ class nova::compute::libvirt (
 
   validate_legacy(Boolean, 'validate_bool', $migration_support)
   validate_legacy(Boolean, 'validate_bool', $manage_libvirt_services)
+
+  if $modular_libvirt != undef {
+    warning('The modular_libvirt parameter has been deprecated and has no effect.')
+  }
 
   # cpu_mode has different defaults depending on hypervisor.
   if !$cpu_mode {
@@ -320,15 +298,6 @@ class nova::compute::libvirt (
 
   if $migration_support {
     include nova::migration::libvirt
-  }
-
-  if !$modular_libvirt {
-    ['log_outputs', 'log_filters', 'tls_priority', 'ovs_timeout'].each |String $libvirtd_opt| {
-      if getvar($libvirtd_opt) != undef {
-        warning("The ${libvirtd_opt} parameter is deprecated. Use the nova::compute::libvirt::libvirtd class.")
-        include nova::compute::libvirt::libvirtd
-      }
-    }
   }
 
   unless $rx_queue_size == $facts['os_service_default'] or $rx_queue_size in [256, 512, 1024] {
