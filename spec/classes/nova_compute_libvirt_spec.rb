@@ -51,6 +51,10 @@ describe 'nova::compute::libvirt' do
       it { is_expected.to contain_nova_config('libvirt/cpu_mode').with_value('host-model')}
       it { is_expected.to contain_nova_config('libvirt/cpu_models').with_value('<SERVICE DEFAULT>')}
       it { is_expected.to contain_nova_config('libvirt/cpu_model_extra_flags').with_value('<SERVICE DEFAULT>')}
+      it { is_expected.to contain_nova_config('libvirt/cpu_power_management').with_value('<SERVICE DEFAULT>')}
+      it { is_expected.to contain_nova_config('libvirt/cpu_power_management_strategy').with_value('<SERVICE DEFAULT>')}
+      it { is_expected.to contain_nova_config('libvirt/cpu_power_governor_low').with_value('<SERVICE DEFAULT>')}
+      it { is_expected.to contain_nova_config('libvirt/cpu_power_governor_high').with_value('<SERVICE DEFAULT>')}
       it { is_expected.to contain_nova_config('libvirt/snapshot_image_format').with_value('<SERVICE DEFAULT>')}
       it { is_expected.to contain_nova_config('libvirt/snapshots_directory').with_value('<SERVICE DEFAULT>')}
       it { is_expected.to contain_nova_config('libvirt/disk_cachemodes').with_ensure('absent')}
@@ -87,6 +91,10 @@ describe 'nova::compute::libvirt' do
           :cpu_mode                                   => 'host-passthrough',
           :cpu_models                                 => ['kvm64', 'qemu64'],
           :cpu_model_extra_flags                      => 'pcid',
+          :cpu_power_management                       => false,
+          :cpu_power_management_strategy              => 'cpu_state',
+          :cpu_power_governor_low                     => 'powersave',
+          :cpu_power_governor_high                    => 'performance',
           :snapshot_image_format                      => 'raw',
           :snapshots_directory                        => '/var/lib/nova/snapshots',
           :disk_cachemodes                            => ['file=directsync','block=none'],
@@ -134,6 +142,10 @@ describe 'nova::compute::libvirt' do
       it { is_expected.to contain_nova_config('libvirt/cpu_mode').with_value('host-passthrough')}
       it { is_expected.to contain_nova_config('libvirt/cpu_models').with_value('<SERVICE DEFAULT>')}
       it { is_expected.to contain_nova_config('libvirt/cpu_model_extra_flags').with_value('pcid')}
+      it { is_expected.to contain_nova_config('libvirt/cpu_power_management').with_value(false)}
+      it { is_expected.to contain_nova_config('libvirt/cpu_power_management_strategy').with_value('cpu_state')}
+      it { is_expected.to contain_nova_config('libvirt/cpu_power_governor_low').with_value('powersave')}
+      it { is_expected.to contain_nova_config('libvirt/cpu_power_governor_high').with_value('performance')}
       it { is_expected.to contain_nova_config('libvirt/snapshot_image_format').with_value('raw')}
       it { is_expected.to contain_nova_config('libvirt/snapshots_directory').with_value('/var/lib/nova/snapshots')}
       it { is_expected.to contain_nova_config('libvirt/disk_cachemodes').with_value('file=directsync,block=none')}
