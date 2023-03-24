@@ -1,0 +1,5 @@
+---
+features:
+  - |
+    Now ``nova::migration::libvirt`` ensures that tcp/tls socket listens on
+    a specific interface when the `listen_address` parameter is used.

@@ -331,20 +331,77 @@ class nova::migration::libvirt(
           true    => 'virtproxyd',
           default => 'libvirtd',
         }
-        # libvirtd.service should be stopped before socket service is started.
-        # Otherwise, socket service fails to start.
-        exec { "stop ${proxy_service}.service":
+        $socket_name = "${proxy_service}-${transport_real}"
+
+        # This is the dummy resource to trigger exec to stop libvirtd.service.
+        # libvirtd.service should be stopped before socket is started.
+        # Otherwise, socket fails to start.
+        exec { "check ${socket_name}.socket":
+          command => '/usr/bin/true',
           path    => ['/sbin', '/usr/sbin', '/bin', '/usr/bin'],
-          command => "systemctl -q stop ${proxy_service}.service",
-          unless  => "systemctl -q is-active ${proxy_service}-${transport_real}.socket",
-          require => Anchor['nova::install::end']
+          unless  => "systemctl -q is-active ${socket_name}.socket",
+          require => Anchor['nova::config::end']
         }
-        -> service { "${proxy_service}-${transport_real}":
+
+        exec { "stop ${proxy_service}.service":
+          command     => "systemctl -q stop ${proxy_service}.service",
+          path        => ['/sbin', '/usr/sbin', '/bin', '/usr/bin'],
+          refreshonly => true,
+          require     => Anchor['nova::install::end']
+        }
+
+        service { $socket_name:
           ensure  => 'running',
-          name    => "${proxy_service}-${transport_real}.socket",
+          name    => "${socket_name}.socket",
           enable  => true,
           require => Anchor['nova::config::end']
         }
+
+        Exec["check ${socket_name}.socket"]
+        ~> Exec["stop ${proxy_service}.service"]
+        -> Service[$socket_name]
+
+        if is_service_default($listen_address) {
+          file { "/etc/systemd/system/${socket_name}.socket":
+            ensure  => absent,
+            require => Anchor['nova::install::end']
+          } ~> exec { 'systemd-damon-reload':
+            command     => 'systemctl daemon-reload',
+            path        => ['/sbin', '/usr/sbin', '/bin', '/usr/bin'],
+            refreshonly => true,
+          } ~> Service[$socket_name]
+
+        } else {
+          $listen_address_real = normalize_ip_for_uri($listen_address)
+
+          $default_listen_port = $transport_real ? {
+            'tls'   => 16514,
+            default => 16509
+          }
+          $listen_port = pick($client_port, $default_listen_port)
+
+          # TODO(tkajinam): We have to completely override the socket file,
+          #                 because dropin does not allow us to remove
+          #                 ListenStream in the base file.
+          exec { "create ${socket_name}.socket":
+            command => "cp /usr/lib/systemd/system/${socket_name}.socket /etc/systemd/system/",
+            path    => ['/sbin', '/usr/sbin', '/bin', '/usr/bin'],
+            creates => "/etc/systemd/system/${socket_name}.socket",
+            require => Anchor['nova::install::end'],
+          } -> file_line { "${proxy_service}-${transport_real}.socket ListenStream":
+            path  => "/etc/systemd/system/${socket_name}.socket",
+            line  => "ListenStream=${listen_address_real}:${listen_port}",
+            match => '^ListenStream=.*',
+          } ~> exec { 'systemd-damon-reload':
+            command     => 'systemctl daemon-reload',
+            path        => ['/sbin', '/usr/sbin', '/bin', '/usr/bin'],
+            refreshonly => true,
+          } ~> Service[$socket_name]
+          Exec["create ${socket_name}.socket"] ~> Exec['systemd-damon-reload']
+        }
+
+        # We have to stop libvirtd.service to restart socket.
+        Exec['systemd-damon-reload'] ~> Exec["stop ${proxy_service}.service"]
 
         if $modular_libvirt {
           Service["${proxy_service}-${transport_real}"] -> Service<| title == 'virtproxyd' |>

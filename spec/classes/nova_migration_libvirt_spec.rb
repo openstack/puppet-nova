@@ -442,7 +442,10 @@ describe 'nova::migration::libvirt' do
         :name   => 'libvirtd-tls.socket',
         :ensure => 'running',
         :enable => true,
-        )}
+      )}
+      it { is_expected.to contain_file('/etc/systemd/system/libvirtd-tls.socket').with(
+        :ensure => 'absent',
+      )}
     end
 
     context 'with tcp transport' do
@@ -460,7 +463,10 @@ describe 'nova::migration::libvirt' do
         :name   => 'libvirtd-tcp.socket',
         :ensure => 'running',
         :enable => true,
-        )}
+      )}
+      it { is_expected.to contain_file('/etc/systemd/system/libvirtd-tcp.socket').with(
+        :ensure => 'absent',
+      )}
     end
 
     context 'with tls transport and modular daemons' do
@@ -476,6 +482,9 @@ describe 'nova::migration::libvirt' do
         :ensure => 'running',
         :enable => true,
       )}
+      it { is_expected.to contain_file('/etc/systemd/system/virtproxyd-tls.socket').with(
+        :ensure => 'absent',
+      )}
     end
 
     context 'with tcp transport and modular daemons' do
@@ -490,6 +499,9 @@ describe 'nova::migration::libvirt' do
         :name   => 'virtproxyd-tcp.socket',
         :ensure => 'running',
         :enable => true,
+      )}
+      it { is_expected.to contain_file('/etc/systemd/system/virtproxyd-tcp.socket').with(
+        :ensure => 'absent',
       )}
     end
   end
@@ -510,11 +522,17 @@ describe 'nova::migration::libvirt' do
         :ensure => 'running',
         :enable => true,
       )}
+      it { is_expected.to contain_file('/etc/systemd/system/libvirtd-tls.socket').with(
+        :ensure => 'absent',
+      )}
     end
 
     context 'with tcp transport' do
       let :params do
-        { :transport => 'tcp' }
+        {
+          :transport      => 'tcp',
+          :listen_address => '127.0.0.1'
+        }
       end
 
       it { is_expected.to contain_file('/etc/sysconfig/libvirtd').with(
@@ -527,6 +545,11 @@ describe 'nova::migration::libvirt' do
         :ensure => 'running',
         :enable => true,
       )}
+      it { is_expected.to contain_file_line('libvirtd-tcp.socket ListenStream').with(
+        :path  => '/etc/systemd/system/libvirtd-tcp.socket',
+        :line  => 'ListenStream=127.0.0.1:16509',
+        :match => '^ListenStream=.*',
+      )}
     end
 
     context 'with tls transport and modular daemons' do
@@ -534,6 +557,7 @@ describe 'nova::migration::libvirt' do
         {
           :transport       => 'tls',
           :modular_libvirt => true,
+          :listen_address  => '::1'
         }
       end
 
@@ -541,6 +565,11 @@ describe 'nova::migration::libvirt' do
         :name   => 'virtproxyd-tls.socket',
         :ensure => 'running',
         :enable => true,
+      )}
+      it { is_expected.to contain_file_line('virtproxyd-tls.socket ListenStream').with(
+        :path  => '/etc/systemd/system/virtproxyd-tls.socket',
+        :line  => 'ListenStream=[::1]:16514',
+        :match => '^ListenStream=.*',
       )}
     end
 
@@ -556,6 +585,9 @@ describe 'nova::migration::libvirt' do
         :name   => 'virtproxyd-tcp.socket',
         :ensure => 'running',
         :enable => true,
+      )}
+      it { is_expected.to contain_file('/etc/systemd/system/virtproxyd-tcp.socket').with(
+        :ensure => 'absent',
       )}
     end
   end
