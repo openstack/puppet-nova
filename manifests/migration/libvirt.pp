@@ -192,17 +192,6 @@ class nova::migration::libvirt(
   validate_legacy(Enum['sasl', 'none'], 'validate_re', $auth,
     [['^sasl$', '^none$'], 'Valid options for auth are none and sasl.'])
 
-  if $transport_real == 'tls' {
-    $listen_tls = '1'
-    $listen_tcp = '0'
-  } elsif $transport_real == 'tcp' {
-    $listen_tls = '0'
-    $listen_tcp = '1'
-  } else {
-    $listen_tls = '0'
-    $listen_tcp = '0'
-  }
-
   if $configure_nova {
     if $transport_real == 'ssh' {
       if $client_user {
@@ -309,13 +298,17 @@ class nova::migration::libvirt(
     }
 
     create_resources( $libvirt_listen_config , {
-      'listen_tls' => { 'value' => $listen_tls },
-      'listen_tcp' => { 'value' => $listen_tcp },
-      'auth_tls'   => { 'value' => $auth_tls_real, 'quote' => true },
-      'auth_tcp'   => { 'value' => $auth_tcp_real, 'quote' => true },
-      'ca_file'    => { 'value' => $ca_file_real, 'quote'  => true },
-      'crl_file'   => { 'value' => $crl_file_real, 'quote' => true },
-      'listen_addr' => { 'value' => $listen_address, 'quote' => true }
+      'auth_tls' => { 'value' => $auth_tls_real, 'quote' => true },
+      'auth_tcp' => { 'value' => $auth_tcp_real, 'quote' => true },
+      'ca_file'  => { 'value' => $ca_file_real, 'quote'  => true },
+      'crl_file' => { 'value' => $crl_file_real, 'quote' => true },
+    })
+
+    # TODO(tkajinam): Remove this after A release.
+    create_resources( $libvirt_listen_config , {
+      'listen_tls'  => { 'ensure' => absent },
+      'listen_tcp'  => { 'ensure' => absent },
+      'listen_addr' => { 'ensure' => absent },
     })
 
     if $transport_real == 'tls' or $transport_real == 'tcp' {
