@@ -74,6 +74,7 @@ class nova::compute::vmware(
 ) {
 
   include nova::deps
+  include nova::params
 
   nova_config {
     'DEFAULT/compute_driver':    value => $compute_driver;
@@ -90,8 +91,9 @@ class nova::compute::vmware(
     'vmware/datastore_regex':    value => $datastore_regex;
   }
 
-  package { 'python-suds':
+  package { 'python-oslo-vmware':
     ensure => present,
+    name   => $::nova::params::oslo_vmware_package_name,
     tag    => ['openstack', 'nova-support-package'],
   }
 }
