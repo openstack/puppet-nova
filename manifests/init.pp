@@ -237,7 +237,7 @@
 #
 # [*ssl_only*]
 #   (optional) Disallow non-encrypted connections.
-#   Defaults to false
+#   Defaults to $facts['os_service_default']
 #
 # [*cert*]
 #   (optional) Path to SSL certificate file.
@@ -424,7 +424,7 @@ class nova(
   $key_file                               = false,
   $nova_public_key                        = undef,
   $nova_private_key                       = undef,
-  $ssl_only                               = false,
+  $ssl_only                               = $facts['os_service_default'],
   $cert                                   = $facts['os_service_default'],
   $key                                    = $facts['os_service_default'],
   $console_ssl_ciphers                    = $facts['os_service_default'],

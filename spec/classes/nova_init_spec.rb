@@ -91,7 +91,7 @@ describe 'nova' do
         is_expected.to contain_nova_config('DEFAULT/initial_cpu_allocation_ratio').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('DEFAULT/initial_ram_allocation_ratio').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('DEFAULT/initial_disk_allocation_ratio').with_value('<SERVICE DEFAULT>')
-        is_expected.to contain_nova_config('DEFAULT/ssl_only').with_value(false)
+        is_expected.to contain_nova_config('DEFAULT/ssl_only').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('DEFAULT/cert').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('DEFAULT/key').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('console/ssl_ciphers').with_value('<SERVICE DEFAULT>')
