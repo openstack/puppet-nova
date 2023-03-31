@@ -376,10 +376,10 @@ class nova::migration::libvirt(
           # TODO(tkajinam): We have to completely override the socket file,
           #                 because dropin does not allow us to remove
           #                 ListenStream in the base file.
-          exec { "create ${socket_name}.socket":
-            command => "cp /usr/lib/systemd/system/${socket_name}.socket /etc/systemd/system/",
-            path    => ['/sbin', '/usr/sbin', '/bin', '/usr/bin'],
-            creates => "/etc/systemd/system/${socket_name}.socket",
+          file { "/etc/systemd/system/${socket_name}.socket":
+            mode    => '0644',
+            source  => "/usr/lib/systemd/system/${socket_name}.socket",
+            replace => false,
             require => Anchor['nova::install::end'],
           } -> file_line { "${proxy_service}-${transport_real}.socket ListenStream":
             path  => "/etc/systemd/system/${socket_name}.socket",
@@ -390,7 +390,7 @@ class nova::migration::libvirt(
             path        => ['/sbin', '/usr/sbin', '/bin', '/usr/bin'],
             refreshonly => true,
           } ~> Service[$socket_name]
-          Exec["create ${socket_name}.socket"] ~> Exec['systemd-damon-reload']
+          File["/etc/systemd/system/${socket_name}.socket"] ~> Exec['systemd-damon-reload']
         }
 
         # We have to stop libvirtd.service to restart socket.
