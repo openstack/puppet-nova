@@ -1,9 +1,9 @@
-Puppet::Type.newtype(:virtstoraged_config) do
+Puppet::Type.newtype(:qemu_config) do
 
   ensurable
 
   newparam(:name, :namevar => true) do
-    desc 'setting name to manage from virtstoraged.conf'
+    desc 'setting name to manage from qemu.conf'
     newvalues(/\S+/)
   end
 
@@ -61,4 +61,3 @@ Puppet::Type.newtype(:virtstoraged_config) do
   end
 
 end
-

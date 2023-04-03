@@ -11,6 +11,16 @@ describe 'Puppet::Type.type(:virtlockd_config)' do
     expect(@virtlockd_config[:value]).to eq('bar')
   end
 
+  it 'should convert a boolean value (true)' do
+    @virtlockd_config[:value] = true
+    expect(@virtlockd_config[:value]).to eq('1')
+  end
+
+  it 'should convert a boolean value (false)' do
+    @virtlockd_config[:value] = false
+    expect(@virtlockd_config[:value]).to eq('0')
+  end
+
   it 'should autorequire the package that install the file' do
     catalog = Puppet::Resource::Catalog.new
     anchor = Puppet::Type.type(:anchor).new(:name => 'nova::install::end')

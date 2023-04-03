@@ -10,46 +10,33 @@
 #
 # [*migration_port_min*]
 #   (optional) Lower limit of port range used for migration.
-#   Defaults to 49152.
+#   Defaults to $facts['os_service_default'].
 #
 # [*migration_port_max*]
 #   (optional) Higher limit of port range used for migration.
-#   Defaults to 49215.
+#   Defaults to $facts['os_service_default'].
 #
 class nova::migration::qemu(
   $configure_qemu     = false,
-  $migration_port_min = 49152,
-  $migration_port_max = 49215,
+  $migration_port_min = $facts['os_service_default'],
+  $migration_port_max = $facts['os_service_default'],
 ){
 
   include nova::deps
 
   validate_legacy(Boolean, 'validate_bool', $configure_qemu)
 
-  Anchor['nova::config::begin']
-  -> Augeas<| tag == 'qemu-conf-augeas'|>
-  -> Anchor['nova::config::end']
-
-  Augeas<| tag == 'qemu-conf-augeas'|>
-  ~> Service<| tag == 'libvirt-qemu-service' |>
+  Qemu_config<||> ~> Service<| tag == 'libvirt-qemu-service' |>
 
   if $configure_qemu {
-    augeas { 'qemu-conf-migration-ports':
-      context => '/files/etc/libvirt/qemu.conf',
-      changes => [
-        "set migration_port_min ${migration_port_min}",
-        "set migration_port_max ${migration_port_max}",
-      ],
-      tag     => 'qemu-conf-augeas',
+    qemu_config {
+      'migration_port_min': value => $migration_port_min;
+      'migration_port_max': value => $migration_port_max;
     }
   } else {
-    augeas { 'qemu-conf-migration-ports':
-      context => '/files/etc/libvirt/qemu.conf',
-      changes => [
-        'rm migration_port_min',
-        'rm migration_port_max',
-      ],
-      tag     => 'qemu-conf-augeas',
+    qemu_config {
+      'migration_port_min': ensure => absent;
+      'migration_port_max': ensure => absent;
     }
   }
 }

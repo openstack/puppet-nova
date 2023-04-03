@@ -10,7 +10,13 @@ Puppet::Type.newtype(:virtnodedevd_config) do
   newproperty(:value) do
     desc 'The value of the setting to be defined.'
     munge do |value|
-      value = value.to_s.strip
+      if [true, false].include?(value)
+        # NOTE(tkajinam): libvirt config file does not accept boolean values
+        #                 and the value should be converted to 1/0.
+        value = value ? '1' : '0'
+      else
+        value = value.to_s.strip
+      end
       value
     end
 
