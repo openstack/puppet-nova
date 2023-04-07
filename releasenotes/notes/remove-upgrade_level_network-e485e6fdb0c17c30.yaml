@@ -1,0 +1,4 @@
+---
+upgrade:
+  - |
+    The ``nova::upgrade_level_network`` parameter has been removed.
