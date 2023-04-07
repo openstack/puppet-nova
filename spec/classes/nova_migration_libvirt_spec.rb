@@ -381,99 +381,11 @@ describe 'nova::migration::libvirt' do
       it { is_expected.to contain_nova_config('libvirt/live_migration_uri').with_value('qemu+ssh://%s/system?foo=%%25&bar=baz')}
     end
 
-  end
-
-  shared_examples_for 'nova migration with libvirt in Debian' do
     context 'with tls transport' do
       let :params do
         { :transport => 'tls' }
       end
 
-      it { is_expected.to contain_file_line('/etc/default/libvirtd libvirtd opts').with(
-        :ensure            => 'absent',
-        :path              => '/etc/default/libvirtd',
-        :match             => '^libvirtd_opts=$',
-        :match_for_absence => true,
-      ) }
-      it { is_expected.to contain_service('libvirtd-tls').with(
-        :name   => 'libvirtd-tls.socket',
-        :ensure => 'running',
-        :enable => true,
-      )}
-      it { is_expected.to contain_file('/etc/systemd/system/libvirtd-tls.socket').with(
-        :ensure => 'absent',
-      )}
-    end
-
-    context 'with tcp transport' do
-      let :params do
-        { :transport => 'tcp' }
-      end
-
-      it { is_expected.to contain_file_line('/etc/default/libvirtd libvirtd opts').with(
-        :ensure            => 'absent',
-        :path              => '/etc/default/libvirtd',
-        :match             => '^libvirtd_opts=$',
-        :match_for_absence => true,
-      ) }
-      it { is_expected.to contain_service('libvirtd-tcp').with(
-        :name   => 'libvirtd-tcp.socket',
-        :ensure => 'running',
-        :enable => true,
-      )}
-      it { is_expected.to contain_file('/etc/systemd/system/libvirtd-tcp.socket').with(
-        :ensure => 'absent',
-      )}
-    end
-
-    context 'with tls transport and modular daemons' do
-      let :params do
-        {
-          :transport       => 'tls',
-          :modular_libvirt => true,
-        }
-      end
-
-      it { is_expected.to contain_service('virtproxyd-tls').with(
-        :name   => 'virtproxyd-tls.socket',
-        :ensure => 'running',
-        :enable => true,
-      )}
-      it { is_expected.to contain_file('/etc/systemd/system/virtproxyd-tls.socket').with(
-        :ensure => 'absent',
-      )}
-    end
-
-    context 'with tcp transport and modular daemons' do
-      let :params do
-        {
-          :transport       => 'tcp',
-          :modular_libvirt => true,
-        }
-      end
-
-      it { is_expected.to contain_service('virtproxyd-tcp').with(
-        :name   => 'virtproxyd-tcp.socket',
-        :ensure => 'running',
-        :enable => true,
-      )}
-      it { is_expected.to contain_file('/etc/systemd/system/virtproxyd-tcp.socket').with(
-        :ensure => 'absent',
-      )}
-    end
-  end
-
-  shared_examples_for 'nova migration with libvirt in RedHat' do
-    context 'with tls transport' do
-      let :params do
-        { :transport => 'tls' }
-      end
-
-      it { is_expected.to contain_file('/etc/sysconfig/libvirtd').with(
-        :ensure => 'absent',
-        :path   => '/etc/sysconfig/libvirtd',
-        :tag    => 'libvirt-file',
-      )}
       it { is_expected.to contain_service('libvirtd-tls').with(
         :name   => 'libvirtd-tls.socket',
         :ensure => 'running',
@@ -492,11 +404,6 @@ describe 'nova::migration::libvirt' do
         }
       end
 
-      it { is_expected.to contain_file('/etc/sysconfig/libvirtd').with(
-        :ensure => 'absent',
-        :path   => '/etc/sysconfig/libvirtd',
-        :tag    => 'libvirt-file',
-      )}
       it { is_expected.to contain_service('libvirtd-tcp').with(
         :name   => 'libvirtd-tcp.socket',
         :ensure => 'running',
@@ -558,12 +465,6 @@ describe 'nova::migration::libvirt' do
       end
 
       it_behaves_like 'nova migration with libvirt'
-      case facts[:os]['family']
-      when 'Debian'
-        it_behaves_like 'nova migration with libvirt in Debian'
-      when 'RedHat'
-        it_behaves_like 'nova migration with libvirt in RedHat'
-      end
     end
   end
 end

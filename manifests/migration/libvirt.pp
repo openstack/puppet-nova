@@ -403,31 +403,5 @@ class nova::migration::libvirt(
         }
       }
     }
-
-    case $facts['os']['family'] {
-      'RedHat': {
-        # NOTE(tkajinam): Since libvirt 8.1.0, the sysconfig files are
-        #                 no longer provided by packages.
-        # TODO(tkajinam): Remove this after A release.
-        file { '/etc/sysconfig/libvirtd':
-          ensure => absent,
-          path   => '/etc/sysconfig/libvirtd',
-          tag    => 'libvirt-file',
-        }
-      }
-      'Debian': {
-        # TODO(tkajinam): Remove this after A release.
-        file_line { '/etc/default/libvirtd libvirtd opts':
-          ensure            => absent,
-          path              => '/etc/default/libvirtd',
-          match             => '^libvirtd_opts=$',
-          match_for_absence => true,
-          tag               => 'libvirt-file_line',
-        }
-      }
-      default: {
-        warning("Unsupported osfamily: ${facts['os']['family']}, make sure you are configuring this yourself")
-      }
-    }
   }
 }
