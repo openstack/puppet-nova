@@ -1,0 +1,4 @@
+---
+upgrade:
+  - |
+    The ``nova::api::instance_name_template`` parameter has been removed.
