@@ -150,7 +150,6 @@ describe 'nova' do
           :upgrade_level_compute                   => '1.0.0',
           :upgrade_level_conductor                 => '1.0.0',
           :upgrade_level_intercell                 => '1.0.0',
-          :upgrade_level_network                   => '1.0.0',
           :upgrade_level_scheduler                 => '1.0.0',
           :purge_config                            => false,
           :my_ip                                   => '192.0.2.1',
@@ -234,7 +233,6 @@ describe 'nova' do
         is_expected.to contain_nova_config('upgrade_levels/compute').with_value('1.0.0')
         is_expected.to contain_nova_config('upgrade_levels/conductor').with_value('1.0.0')
         is_expected.to contain_nova_config('upgrade_levels/intercell').with_value('1.0.0')
-        is_expected.to contain_nova_config('upgrade_levels/network').with_value('1.0.0')
         is_expected.to contain_nova_config('upgrade_levels/scheduler').with_value('1.0.0')
       end
 
