@@ -97,9 +97,7 @@ describe 'nova' do
         is_expected.to contain_nova_config('console/ssl_ciphers').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('console/ssl_minimum_version').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('DEFAULT/dhcp_domain').with_value('<SERVICE DEFAULT>')
-        # TODO(tkajinam): Uncomment this when we change default value of
-        #                 nova::instance_name_template
-        # is_expected.to contain_nova_config('DEFAULT/instance_name_template').with_value('<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('DEFAULT/instance_name_template').with_value('<SERVICE DEFAULT>')
       end
 
     end

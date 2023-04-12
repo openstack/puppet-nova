@@ -160,10 +160,6 @@
 #   enable this if you have a sanitizing proxy.
 #   Defaults to undef
 #
-# [*instance_name_template*]
-#   (optional) Template string to be used to generate instance names
-#   Defaults to undef
-#
 class nova::api(
   $enabled                                     = true,
   $manage_service                              = true,
@@ -199,7 +195,6 @@ class nova::api(
   # DEPRECATED PARAMETER
   $nova_metadata_wsgi_enabled                  = false,
   $use_forwarded_for                           = undef,
-  $instance_name_template                      = undef,
 ) inherits nova::params {
 
   include nova::deps
@@ -221,21 +216,6 @@ class nova::api(
 
   if $use_forwarded_for != undef {
     warning('The use_forwarded_for parameter has been deprecated.')
-  }
-
-  if $instance_name_template != undef {
-    warning("The nova::api::instance_name_template parameter is deprecated. \
-Use the nova::instance_name_template parameter instead.")
-    nova_config {
-      'DEFAULT/instance_name_template': value => $instance_name_template;
-    }
-  } else {
-    # Try best to clean up the parameter
-    if defined(Class['nova']) and $::nova::instance_name_template == undef {
-      nova_config {
-        'DEFAULT/instance_name_template': value => $facts['os_service_default'];
-      }
-    }
   }
 
   # enable metadata in eventlet if we do not run metadata via wsgi (nova::metadata)

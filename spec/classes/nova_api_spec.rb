@@ -45,7 +45,6 @@ describe 'nova::api' do
       it { is_expected.to contain_class('nova::availability_zone') }
 
       it 'configures various stuff' do
-        is_expected.to contain_nova_config('DEFAULT/instance_name_template').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('wsgi/api_paste_config').with_value('api-paste.ini')
         is_expected.to contain_nova_config('DEFAULT/osapi_compute_listen').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('DEFAULT/osapi_compute_listen_port').with_value('<SERVICE DEFAULT>')
@@ -155,17 +154,6 @@ describe 'nova::api' do
       end
 
       it { is_expected.to_not contain_service('nova-api') }
-    end
-
-    context 'with custom instance_name_template' do
-      before do
-        params.merge!({
-          :instance_name_template => 'instance-%08x',
-        })
-      end
-      it 'configures instance_name_template' do
-        is_expected.to contain_nova_config('DEFAULT/instance_name_template').with_value('instance-%08x');
-      end
     end
 
     context 'when running nova API in wsgi compute, and enabling metadata' do
