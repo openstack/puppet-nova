@@ -1,0 +1,9 @@
+---
+features:
+  - |
+    The new ``qemu_config`` resource type has been added. This resource type
+    allows configuring options in `/etc/libvirt/qemu.conf`.
+
+  - |
+    The new ``nova::compute::libvirt::config::qemu_config`` parameter has been
+    added.

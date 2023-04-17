@@ -45,6 +45,10 @@
 #   (optional) Allow configuration of arbitrary virtstoraged configurations.
 #   The value is an hash of virtstoraged_config resources.
 #
+# [*qemu_config*]
+#   (optional) Allow configuration of arbitrary qemu configurations.
+#   The value is an hash of qemu_config resources.
+#
 #   NOTE: The configuration MUST NOT be already handled by this module
 #   or Puppet catalog compilation will fail with duplicate resources.
 #
@@ -57,6 +61,7 @@ class nova::compute::libvirt::config (
   $virtqemud_config    = {},
   $virtsecretd_config  = {},
   $virtstoraged_config = {},
+  $qemu_config         = {},
 ) {
 
   include nova::deps
@@ -69,6 +74,7 @@ class nova::compute::libvirt::config (
   validate_legacy(Hash, 'validate_hash', $virtqemud_config)
   validate_legacy(Hash, 'validate_hash', $virtsecretd_config)
   validate_legacy(Hash, 'validate_hash', $virtstoraged_config)
+  validate_legacy(Hash, 'validate_hash', $qemu_config)
 
   create_resources('libvirtd_config', $libvirtd_config)
   create_resources('virtlogd_config', $virtlogd_config)
@@ -78,4 +84,5 @@ class nova::compute::libvirt::config (
   create_resources('virtqemud_config', $virtqemud_config)
   create_resources('virtsecretd_config', $virtsecretd_config)
   create_resources('virtstoraged_config', $virtstoraged_config)
+  create_resources('qemu_config', $qemu_config)
 }

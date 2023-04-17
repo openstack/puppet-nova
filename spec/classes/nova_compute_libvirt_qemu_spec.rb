@@ -5,101 +5,56 @@ describe 'nova::compute::libvirt::qemu' do
   shared_examples_for 'nova compute libvirt with qemu' do
 
     context 'when not configuring qemu' do
-      let :params do
-        {
-          :configure_qemu => false,
-        }
+      it 'should remove all configuations' do
+        is_expected.to contain_qemu_config('max_files').with_ensure('absent')
+        is_expected.to contain_qemu_config('max_processes').with_ensure('absent')
+        is_expected.to contain_qemu_config('vnc_tls').with_ensure('absent')
+        is_expected.to contain_qemu_config('vnc_tls_x509_verify').with_ensure('absent')
+        is_expected.to contain_qemu_config('default_tls_x509_verify').with_ensure('absent')
+        is_expected.to contain_qemu_config('user').with_ensure('absent')
+        is_expected.to contain_qemu_config('group').with_ensure('absent')
+        is_expected.to contain_qemu_config('memory_backing_dir').with_ensure('absent')
+        is_expected.to contain_qemu_config('nbd_tls').with_ensure('absent')
       end
-      it { is_expected.to contain_augeas('qemu-conf-limits').with({
-        :context => '/files/etc/libvirt/qemu.conf',
-        :changes => [
-            "rm max_files",
-            "rm max_processes",
-            "rm vnc_tls",
-            "rm vnc_tls_x509_verify",
-            "rm default_tls_x509_verify",
-            "rm user",
-            "rm group",
-            "rm memory_backing_dir",
-            "rm nbd_tls",
-        ],
-      }) }
     end
 
-    context 'when configuring qemu by default' do
+    context 'when configuring qemu with defaults' do
       let :params do
         {
           :configure_qemu => true,
         }
       end
-      it { is_expected.to contain_augeas('qemu-conf-limits').with({
-        :context => '/files/etc/libvirt/qemu.conf',
-        :changes => [
-            "set max_files 1024",
-            "set max_processes 4096",
-            "set vnc_tls 0",
-            "set vnc_tls_x509_verify 0",
-            "set default_tls_x509_verify 1",
-            "rm user",
-            "rm group",
-            "rm memory_backing_dir",
-            "set nbd_tls 0",
-        ],
-        :tag     => 'qemu-conf-augeas',
-      }) }
+      it 'should configure the default values' do
+        is_expected.to contain_qemu_config('max_files').with_value(1024)
+        is_expected.to contain_qemu_config('max_processes').with_value(4096)
+        is_expected.to contain_qemu_config('vnc_tls').with_value(false)
+        is_expected.to contain_qemu_config('vnc_tls_x509_verify').with_value(false)
+        is_expected.to contain_qemu_config('default_tls_x509_verify').with_value(true)
+        is_expected.to contain_qemu_config('user').with_ensure('absent')
+        is_expected.to contain_qemu_config('group').with_ensure('absent')
+        is_expected.to contain_qemu_config('memory_backing_dir').with_ensure('absent')
+        is_expected.to contain_qemu_config('nbd_tls').with_value(false)
+      end
     end
 
     context 'when configuring qemu with overridden parameters' do
       let :params do
         {
-          :configure_qemu => true,
-          :max_files      => 32768,
-          :max_processes  => 131072,
-        }
-      end
-      it { is_expected.to contain_augeas('qemu-conf-limits').with({
-        :context => '/files/etc/libvirt/qemu.conf',
-        :changes => [
-            "set max_files 32768",
-            "set max_processes 131072",
-            "set vnc_tls 0",
-            "set vnc_tls_x509_verify 0",
-            "set default_tls_x509_verify 1",
-            "rm user",
-            "rm group",
-            "rm memory_backing_dir",
-            "set nbd_tls 0",
-        ],
-        :tag     => 'qemu-conf-augeas',
-      }) }
-    end
-
-    context 'when configuring qemu with user/group parameter' do
-      let :params do
-        {
           :configure_qemu     => true,
-          :user               => 'qemu-user',
-          :group              => 'qemu-group',
           :max_files          => 32768,
           :max_processes      => 131072,
+          :user               => 'qemu-user',
+          :group              => 'qemu-group',
           :memory_backing_dir => '/tmp',
         }
       end
-      it { is_expected.to contain_augeas('qemu-conf-limits').with({
-        :context => '/files/etc/libvirt/qemu.conf',
-        :changes => [
-            "set max_files 32768",
-            "set max_processes 131072",
-            "set vnc_tls 0",
-            "set vnc_tls_x509_verify 0",
-            "set default_tls_x509_verify 1",
-            "set user qemu-user",
-            "set group qemu-group",
-            "set memory_backing_dir /tmp",
-            "set nbd_tls 0",
-        ],
-        :tag     => 'qemu-conf-augeas',
-      }) }
+      it 'should configure the given values' do
+        is_expected.to contain_qemu_config('max_files').with_value(32768)
+        is_expected.to contain_qemu_config('max_processes').with_value(131072)
+        is_expected.to contain_qemu_config('user').with_value('qemu-user').with_quote(true)
+        is_expected.to contain_qemu_config('group').with_value('qemu-group').with_quote(true)
+        is_expected.to contain_qemu_config('memory_backing_dir').with_value('/tmp').with_quote(true)
+      end
     end
 
     context 'when configuring qemu with vnc_tls' do
@@ -109,21 +64,10 @@ describe 'nova::compute::libvirt::qemu' do
           :vnc_tls        => true,
         }
       end
-      it { is_expected.to contain_augeas('qemu-conf-limits').with({
-        :context => '/files/etc/libvirt/qemu.conf',
-        :changes => [
-            "set max_files 1024",
-            "set max_processes 4096",
-            "set vnc_tls 1",
-            "set vnc_tls_x509_verify 1",
-            "set default_tls_x509_verify 1",
-            "rm user",
-            "rm group",
-            "rm memory_backing_dir",
-            "set nbd_tls 0",
-        ],
-        :tag     => 'qemu-conf-augeas',
-      }) }
+      it 'should configure vnc tls' do
+        is_expected.to contain_qemu_config('vnc_tls').with_value(true)
+        is_expected.to contain_qemu_config('vnc_tls_x509_verify').with_value(true)
+      end
     end
 
     context 'when configuring qemu with default_tls_verify enabled' do
@@ -133,21 +77,9 @@ describe 'nova::compute::libvirt::qemu' do
           :default_tls_verify => true,
         }
       end
-      it { is_expected.to contain_augeas('qemu-conf-limits').with({
-        :context => '/files/etc/libvirt/qemu.conf',
-        :changes => [
-            "set max_files 1024",
-            "set max_processes 4096",
-            "set vnc_tls 0",
-            "set vnc_tls_x509_verify 0",
-            "set default_tls_x509_verify 1",
-            "rm user",
-            "rm group",
-            "rm memory_backing_dir",
-            "set nbd_tls 0",
-        ],
-        :tag     => 'qemu-conf-augeas',
-      }) }
+      it 'should enable default_tls_x509_verify' do
+        is_expected.to contain_qemu_config('default_tls_x509_verify').with_value(true)
+      end
     end
 
     context 'when configuring qemu with vnc_tls_verify disabled' do
@@ -158,21 +90,10 @@ describe 'nova::compute::libvirt::qemu' do
           :vnc_tls_verify => false,
         }
       end
-      it { is_expected.to contain_augeas('qemu-conf-limits').with({
-        :context => '/files/etc/libvirt/qemu.conf',
-        :changes => [
-            "set max_files 1024",
-            "set max_processes 4096",
-            "set vnc_tls 1",
-            "set vnc_tls_x509_verify 0",
-            "set default_tls_x509_verify 1",
-            "rm user",
-            "rm group",
-            "rm memory_backing_dir",
-            "set nbd_tls 0",
-        ],
-        :tag     => 'qemu-conf-augeas',
-      }) }
+      it 'should disable vnc_tls_x509_veridy' do
+        is_expected.to contain_qemu_config('vnc_tls').with_value(true)
+        is_expected.to contain_qemu_config('vnc_tls_x509_verify').with_value(false)
+      end
     end
 
     context 'when configuring qemu with default_tls_verify disabled' do
@@ -182,45 +103,21 @@ describe 'nova::compute::libvirt::qemu' do
           :default_tls_verify => false,
         }
       end
-      it { is_expected.to contain_augeas('qemu-conf-limits').with({
-        :context => '/files/etc/libvirt/qemu.conf',
-        :changes => [
-            "set max_files 1024",
-            "set max_processes 4096",
-            "set vnc_tls 0",
-            "set vnc_tls_x509_verify 0",
-            "set default_tls_x509_verify 0",
-            "rm user",
-            "rm group",
-            "rm memory_backing_dir",
-            "set nbd_tls 0",
-        ],
-        :tag     => 'qemu-conf-augeas',
-      }) }
+      it 'should disable default_tls_x509_verify' do
+        is_expected.to contain_qemu_config('default_tls_x509_verify').with_value(false)
+      end
     end
 
-    context 'when configuring qemu with nbd_tls and libvirt >= 4.5' do
+    context 'when configuring qemu with nbd_tls' do
       let :params do
         {
           :configure_qemu => true,
           :nbd_tls        => true,
         }
       end
-      it { is_expected.to contain_augeas('qemu-conf-limits').with({
-        :context => '/files/etc/libvirt/qemu.conf',
-        :changes => [
-            "set max_files 1024",
-            "set max_processes 4096",
-            "set vnc_tls 0",
-            "set vnc_tls_x509_verify 0",
-            "set default_tls_x509_verify 1",
-            "rm user",
-            "rm group",
-            "rm memory_backing_dir",
-            "set nbd_tls 1",
-        ],
-        :tag     => 'qemu-conf-augeas',
-      }) }
+      it 'should enable nbd_tls' do
+        is_expected.to contain_qemu_config('nbd_tls').with_value(true)
+      end
     end
 
   end
@@ -236,5 +133,4 @@ describe 'nova::compute::libvirt::qemu' do
       it_configures 'nova compute libvirt with qemu'
      end
   end
-
 end

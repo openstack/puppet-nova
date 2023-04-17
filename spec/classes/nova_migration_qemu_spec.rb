@@ -11,43 +11,36 @@ describe 'nova::migration::qemu' do
   shared_examples_for 'nova migration with qemu' do
 
     context 'when not configuring qemu' do
-      let :params do
-        {
-          :configure_qemu => false
-        }
+      it 'should clear all configurations' do
+        is_expected.to contain_qemu_config('migration_port_min').with_ensure('absent')
+        is_expected.to contain_qemu_config('migration_port_max').with_ensure('absent')
       end
-      it { is_expected.to contain_augeas('qemu-conf-migration-ports').with({
-        :context => '/files/etc/libvirt/qemu.conf',
-        :changes => [ "rm migration_port_min", "rm migration_port_max" ],
-      }) }
     end
 
-    context 'when configuring qemu by default' do
+    context 'when configuring qemu with defaults' do
       let :params do
         {
           :configure_qemu => true
         }
       end
-      it { is_expected.to contain_augeas('qemu-conf-migration-ports').with({
-        :context => '/files/etc/libvirt/qemu.conf',
-        :changes => [ "set migration_port_min 49152", "set migration_port_max 49215" ],
-        :tag     => 'qemu-conf-augeas',
-      }) }
+      it 'should configure the default values' do
+        is_expected.to contain_qemu_config('migration_port_min').with_value('<SERVICE DEFAULT>')
+        is_expected.to contain_qemu_config('migration_port_max').with_value('<SERVICE DEFAULT>')
+      end
     end
 
     context 'when configuring qemu with overridden parameters' do
       let :params do
         {
-          :configure_qemu => true,
+          :configure_qemu     => true,
           :migration_port_min => 61138,
           :migration_port_max => 61200,
         }
       end
-      it { is_expected.to contain_augeas('qemu-conf-migration-ports').with({
-        :context => '/files/etc/libvirt/qemu.conf',
-        :changes => [ "set migration_port_min 61138", "set migration_port_max 61200" ],
-        :tag     => 'qemu-conf-augeas',
-      }) }
+      it 'should configure the given values' do
+        is_expected.to contain_qemu_config('migration_port_min').with_value(61138)
+        is_expected.to contain_qemu_config('migration_port_max').with_value(61200)
+      end
     end
   end
 

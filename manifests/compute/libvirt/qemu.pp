@@ -76,84 +76,55 @@ class nova::compute::libvirt::qemu(
     fail('libvirt version < 4.5 is no longer supported')
   }
 
-  Anchor['nova::config::begin']
-  -> Augeas<| tag == 'qemu-conf-augeas'|>
-  -> Anchor['nova::config::end']
-
-  Augeas<| tag == 'qemu-conf-augeas'|>
-  ~> Service<| tag == 'libvirt-qemu-service' |>
+  Qemu_config<||> ~> Service<| tag == 'libvirt-qemu-service' |>
 
   if $configure_qemu {
 
     if $vnc_tls {
-      $vnc_tls_value = 1
-      $vnc_tls_verify_value = $vnc_tls_verify ? { true => 1, false => 0 }
+      $vnc_tls_verify_real = $vnc_tls_verify
     } else {
-      $vnc_tls_value = 0
-      $vnc_tls_verify_value = 0
+      $vnc_tls_verify_real = false
     }
 
-    $default_tls_verify_value = $default_tls_verify ? { true => 1, false => 0 }
-    $nbd_tls_value = $nbd_tls ? { true => 1, false => 0 }
-
-    $augues_changes_default = [
-      "set max_files ${max_files}",
-      "set max_processes ${max_processes}",
-      "set vnc_tls ${vnc_tls_value}",
-      "set vnc_tls_x509_verify ${vnc_tls_verify_value}",
-      "set default_tls_x509_verify ${default_tls_verify_value}",
-    ]
+    qemu_config {
+      'max_files':               value => $max_files;
+      'max_processes':           value => $max_processes;
+      'vnc_tls':                 value => $vnc_tls;
+      'vnc_tls_x509_verify':     value => $vnc_tls_verify_real;
+      'default_tls_x509_verify': value => $default_tls_verify;
+    }
 
     if $user and !empty($user) {
-      $augues_user_changes = ["set user ${user}"]
+      qemu_config { 'user': value => $user, quote =>true }
     } else {
-      $augues_user_changes = ['rm user']
+      qemu_config { 'user': ensure => absent }
     }
 
     if $group and !empty($group) {
-      $augues_group_changes = ["set group ${group}"]
+      qemu_config { 'group': value => $group, quote =>true }
     } else {
-      $augues_group_changes = ['rm group']
+      qemu_config { 'group': ensure => absent }
     }
 
     if $memory_backing_dir and !empty($memory_backing_dir) {
-      $augues_memory_backing_dir_changes = ["set memory_backing_dir ${memory_backing_dir}"]
+      qemu_config { 'memory_backing_dir': value => $memory_backing_dir, quote =>true }
     } else {
-      $augues_memory_backing_dir_changes = ['rm memory_backing_dir']
+      qemu_config { 'memory_backing_dir': ensure => absent }
     }
-    $augues_nbd_tls_changes = ["set nbd_tls ${nbd_tls_value}"]
 
-    $augues_changes = concat(
-      $augues_changes_default,
-      $augues_user_changes,
-      $augues_group_changes,
-      $augues_memory_backing_dir_changes,
-      $augues_nbd_tls_changes
-    )
+    qemu_config { 'nbd_tls': value => $nbd_tls }
 
-    augeas { 'qemu-conf-limits':
-      context => '/files/etc/libvirt/qemu.conf',
-      changes => $augues_changes,
-      tag     => 'qemu-conf-augeas',
-    }
   } else {
-
-    $augues_changes = [
-      'rm max_files',
-      'rm max_processes',
-      'rm vnc_tls',
-      'rm vnc_tls_x509_verify',
-      'rm default_tls_x509_verify',
-      'rm user',
-      'rm group',
-      'rm memory_backing_dir',
-      'rm nbd_tls',
-    ]
-
-    augeas { 'qemu-conf-limits':
-      context => '/files/etc/libvirt/qemu.conf',
-      changes => $augues_changes,
-      tag     => 'qemu-conf-augeas',
+    qemu_config {
+      'max_files':               ensure => absent;
+      'max_processes':           ensure => absent;
+      'vnc_tls':                 ensure => absent;
+      'vnc_tls_x509_verify':     ensure => absent;
+      'default_tls_x509_verify': ensure => absent;
+      'user':                    ensure => absent;
+      'group':                   ensure => absent;
+      'memory_backing_dir':      ensure => absent;
+      'nbd_tls':                 ensure => absent;
     }
   }
 }

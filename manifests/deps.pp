@@ -72,6 +72,7 @@ class nova::deps {
   Anchor['nova::config::begin'] -> Virtqemud_config<||> -> Anchor['nova::config::end']
   Anchor['nova::config::begin'] -> Virtsecretd_config<||> -> Anchor['nova::config::end']
   Anchor['nova::config::begin'] -> Virtstoraged_config<||> -> Anchor['nova::config::end']
+  Anchor['nova::config::begin'] -> Qemu_config<||> -> Anchor['nova::config::end']
 
   # all cache settings should be applied and all packages should be installed
   # before service startup
