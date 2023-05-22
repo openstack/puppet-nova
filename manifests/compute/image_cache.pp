@@ -40,24 +40,12 @@ class nova::compute::image_cache (
 
   include nova::deps
 
-  $remove_unused_base_images_real = pick(
-    $::nova::compute::libvirt::remove_unused_base_images,
-    $remove_unused_base_images)
-
-  $remove_unused_original_minimum_age_seconds_real = pick(
-    $::nova::compute::libvirt::remove_unused_original_minimum_age_seconds,
-    $remove_unused_original_minimum_age_seconds)
-
-  $remove_unused_resized_minimum_age_seconds_real = pick(
-    $::nova::compute::libvirt::remove_unused_resized_minimum_age_seconds,
-    $remove_unused_resized_minimum_age_seconds)
-
   nova_config {
     'image_cache/manager_interval':                           value => $manager_interval;
     'image_cache/subdirectory_name':                          value => $subdirectory_name;
-    'image_cache/remove_unused_base_images':                  value => $remove_unused_base_images_real;
-    'image_cache/remove_unused_original_minimum_age_seconds': value => $remove_unused_original_minimum_age_seconds_real;
-    'image_cache/remove_unused_resized_minimum_age_seconds':  value => $remove_unused_resized_minimum_age_seconds_real;
+    'image_cache/remove_unused_base_images':                  value => $remove_unused_base_images;
+    'image_cache/remove_unused_original_minimum_age_seconds': value => $remove_unused_original_minimum_age_seconds;
+    'image_cache/remove_unused_resized_minimum_age_seconds':  value => $remove_unused_resized_minimum_age_seconds;
     'image_cache/precache_concurrency':                       value => $precache_concurrency;
   }
 }
