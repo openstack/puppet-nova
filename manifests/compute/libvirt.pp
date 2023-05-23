@@ -229,13 +229,6 @@
 #   reboot request is made.
 #   Defaults to $facts['os_service_default']
 #
-# DEPRECATED PARAMETERS
-#
-# [*modular_libvirt*]
-#   (optional) Whether to enable modular libvirt daemons or use monolithic
-#   libvirt daemon.
-#   Defaults to undef
-#
 class nova::compute::libvirt (
   $ensure_package                             = 'present',
   $virt_type                                  = 'kvm',
@@ -281,8 +274,6 @@ class nova::compute::libvirt (
   $max_queues                                 = $facts['os_service_default'],
   $num_memory_encrypted_guests                = $facts['os_service_default'],
   $wait_soft_reboot_seconds                   = $facts['os_service_default'],
-  # DEPRECATED PARAMETERS
-  $modular_libvirt                            = undef,
 ) inherits nova::params {
 
   include nova::deps
@@ -290,10 +281,6 @@ class nova::compute::libvirt (
 
   validate_legacy(Boolean, 'validate_bool', $migration_support)
   validate_legacy(Boolean, 'validate_bool', $manage_libvirt_services)
-
-  if $modular_libvirt != undef {
-    warning('The modular_libvirt parameter has been deprecated and has no effect.')
-  }
 
   # cpu_mode has different defaults depending on hypervisor.
   if !$cpu_mode {

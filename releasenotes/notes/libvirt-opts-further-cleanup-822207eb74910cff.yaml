@@ -1,0 +1,4 @@
+---
+upgrade:
+  - |
+    The ``nova::compute::libvirt::modular_libvirt`` parameter has been removed.
