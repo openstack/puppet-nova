@@ -56,6 +56,7 @@ class nova::params {
       $serialproxy_service_name          = 'openstack-nova-serialproxy'
       $spicehtml5proxy_service_name      = 'openstack-nova-spicehtml5proxy'
       $modular_libvirt                   = false
+      $modular_libvirt_support           = true
       # redhat specific config defaults
       $root_helper                       = 'sudo nova-rootwrap'
       $lock_path                         = '/var/lib/nova/tmp'
@@ -117,7 +118,6 @@ class nova::params {
           $virtqemu_service_name        = 'virtqemud.socket'
           $virtproxy_service_name       = 'virtproxyd.socket'
           $virtstorage_service_name     = 'virtstoraged.socket'
-          $modular_libvirt              = false
         }
         default: {
           $api_metadata_service_name    = undef
@@ -133,9 +133,10 @@ class nova::params {
           $virtqemu_service_name        = 'virtqemud'
           $virtproxy_service_name       = 'virtproxyd'
           $virtstorage_service_name     = 'virtstoraged'
-          $modular_libvirt              = false
         }
       }
+      $modular_libvirt                 = false
+      $modular_libvirt_support         = false
       $libvirt_service_name            = 'libvirtd'
     }
     default: {

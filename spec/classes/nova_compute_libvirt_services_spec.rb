@@ -24,8 +24,10 @@ describe 'nova::compute::libvirt::services' do
         is_expected.not_to contain_service('libvirt')
       end
     end
+  end
 
-    context 'with default parameters and modular-libvirt true' do
+  shared_examples_for 'nova compute libvirt services with modular libvirt' do
+    context 'with default parameters' do
       let :params do
         {
           :modular_libvirt => true
@@ -56,6 +58,9 @@ describe 'nova::compute::libvirt::services' do
         facts.merge!(OSDefaults.get_facts())
       end
       it_configures 'nova compute libvirt services'
+      if facts['osfamily'] == 'RedHat'
+        it_configures 'nova compute libvirt services with modular libvirt'
+      end
     end
   end
 end
