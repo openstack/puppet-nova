@@ -4,6 +4,10 @@
 #
 # === Parameters:
 #
+# [*manage_service*]
+#   (optional) Whether to start/stop the service
+#   Defaults to true
+#
 # [*transport*]
 #   (optional) Transport to use for live-migration.
 #   Valid options are 'tcp', 'tls', and 'ssh'.
@@ -145,6 +149,7 @@
 #   Defaults to undef
 #
 class nova::migration::libvirt(
+  $manage_service                      = true,
   $transport                           = undef,
   $auth                                = 'none',
   $listen_address                      = $facts['os_service_default'],
@@ -174,6 +179,7 @@ class nova::migration::libvirt(
   include nova::deps
   include nova::params
 
+  validate_legacy(Boolean, 'validate_bool', $manage_service)
   validate_legacy(Boolean, 'validate_bool', $override_uuid)
   validate_legacy(Boolean, 'validate_bool', $configure_libvirt)
   validate_legacy(Boolean, 'validate_bool', $configure_nova)
@@ -318,11 +324,8 @@ class nova::migration::libvirt(
       if versioncmp($libvirt_version, '5.6') < 0 {
         fail('libvirt version < 5.6 is no longer supported')
       }
-      # Since libvirt >= 5.6, system socket of libvirt should be activated
-      # by systemd, not by --listen option
-      $manage_services = pick($::nova::compute::libvirt::manage_libvirt_services, true)
 
-      if $manage_services {
+      if $manage_service {
         $proxy_service = $modular_libvirt ? {
           true    => 'virtproxyd',
           default => 'libvirtd',

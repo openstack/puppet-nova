@@ -1,0 +1,13 @@
+---
+features:
+  - |
+    The new ``nova::migration::libvirt::manage_service`` parameter has been
+    added.
+
+fixes:
+  - |
+    The ``nova::migration::libvirt`` class no longer reads
+    the ``nova::compute::libvirt::manage_libvirt_services`` parameter to
+    decide whether the class should/shouldn't manage services. The new
+    ``nova::migration::libvirt::manage_service`` parameter now controls that
+    behavior.
