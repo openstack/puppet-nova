@@ -24,6 +24,7 @@ class nova::params {
       $doc_package_name                  = 'openstack-nova-doc'
       $libvirt_package_name              = 'libvirt'
       $libvirt_guests_package_name       = 'libvirt-client'
+      $libvirt_daemon_package_name       = 'libvirt-daemon'
       $libvirt_daemon_package_prefix     = 'libvirt-daemon-'
       $libvirt_nwfilter_package_name     = 'libvirt-daemon-config-nwfilter'
       $scheduler_package_name            = 'openstack-nova-scheduler'
