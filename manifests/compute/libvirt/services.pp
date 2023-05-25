@@ -152,6 +152,13 @@ class nova::compute::libvirt::services (
     -> Service<| title == 'libvirt' |>
     -> Service<| title == 'nova-compute'|>
 
+    if $facts['os']['family'] == 'RedHat' {
+      package { 'libvirt-daemon':
+        ensure => $ensure_package,
+        name   => $::nova::params::libvirt_daemon_package_name,
+        tag    => ['openstack', 'nova-support-package'],
+      }
+    }
   } else {
     # NOTE(tkajinam): libvirt should be stopped before starting modular daemons
     Service<| title == 'libvirt' |> -> Service<| tag == 'libvirt-modular-service' |>
