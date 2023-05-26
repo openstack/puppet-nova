@@ -125,7 +125,7 @@
 #
 # [*allow_resize_to_same_host*]
 #   (optional) Allow destination machine to match source for resize.
-#   Defaults to false
+#   Defaults to $facts['os_service_default']
 #
 # [*instance_list_per_project_cells*]
 #   (optional) Only query cell databases in which the tenant has mapped
@@ -187,7 +187,7 @@ class nova::api(
   $enable_network_quota                        = $facts['os_service_default'],
   $enable_instance_password                    = $facts['os_service_default'],
   $password_length                             = $facts['os_service_default'],
-  $allow_resize_to_same_host                   = false,
+  $allow_resize_to_same_host                   = $facts['os_service_default'],
   $instance_list_per_project_cells             = $facts['os_service_default'],
   $instance_list_cells_batch_strategy          = $facts['os_service_default'],
   $instance_list_cells_batch_fixed_size        = $facts['os_service_default'],

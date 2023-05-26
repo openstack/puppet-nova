@@ -65,7 +65,7 @@ describe 'nova::api' do
         is_expected.to contain_nova_config('DEFAULT/enable_network_quota').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('api/enable_instance_password').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('DEFAULT/password_length').with_value('<SERVICE DEFAULT>')
-        is_expected.to contain_nova_config('DEFAULT/allow_resize_to_same_host').with_value(false)
+        is_expected.to contain_nova_config('DEFAULT/allow_resize_to_same_host').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('api/instance_list_per_project_cells').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('api/instance_list_cells_batch_strategy').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('api/instance_list_cells_batch_fixed_size').with_value('<SERVICE DEFAULT>')
