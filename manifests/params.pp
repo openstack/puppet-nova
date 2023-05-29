@@ -42,11 +42,16 @@ class nova::params {
       $libvirt_guests_service_name       = 'libvirt-guests'
       $virtlock_service_name             = 'virtlockd'
       $virtlog_service_name              = 'virtlogd'
-      $virtsecret_service_name           = 'virtsecretd.socket'
-      $virtnodedev_service_name          = 'virtnodedevd.socket'
-      $virtqemu_service_name             = 'virtqemud.socket'
-      $virtproxy_service_name            = 'virtproxyd.socket'
-      $virtstorage_service_name          = 'virtstoraged.socket'
+      $virtsecret_service_name           = 'virtsecretd'
+      $virtnodedev_service_name          = 'virtnodedevd'
+      $virtqemu_service_name             = 'virtqemud'
+      $virtproxy_service_name            = 'virtproxyd'
+      $virtstorage_service_name          = 'virtstoraged'
+      $virtsecret_socket_name            = 'virtsecretd.socket'
+      $virtnodedev_socket_name           = 'virtnodedevd.socket'
+      $virtqemu_socket_name              = 'virtqemud.socket'
+      $virtproxy_socket_name             = 'virtproxyd.socket'
+      $virtstorage_socket_name           = 'virtstoraged.socket'
       $scheduler_service_name            = 'openstack-nova-scheduler'
       $tgt_service_name                  = 'tgtd'
       $vncproxy_service_name             = 'openstack-nova-novncproxy'
@@ -112,6 +117,11 @@ class nova::params {
           $virtqemu_service_name        = undef
           $virtproxy_service_name       = undef
           $virtstorage_service_name     = undef
+          $virtsecret_socket_name       = undef
+          $virtnodedev_socket_name      = undef
+          $virtqemu_socket_name         = undef
+          $virtproxy_socket_name        = undef
+          $virtstorage_socket_name      = undef
         }
         default: {
           $api_metadata_service_name    = undef
@@ -127,6 +137,11 @@ class nova::params {
           $virtqemu_service_name        = undef
           $virtproxy_service_name       = undef
           $virtstorage_service_name     = undef
+          $virtsecret_socket_name       = undef
+          $virtnodedev_socket_name      = undef
+          $virtqemu_socket_name         = undef
+          $virtproxy_socket_name        = undef
+          $virtstorage_socket_name      = undef
         }
       }
       $modular_libvirt                 = false

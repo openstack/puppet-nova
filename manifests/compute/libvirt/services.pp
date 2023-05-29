@@ -27,23 +27,23 @@
 #
 # [*virtsecret_service_name*]
 #   (optional) virtsecret service name.
-#   Defaults to $::nova::params::virtsecret_service_name
+#   Defaults to $::nova::params::virtsecret_socket_name
 #
 # [*virtnodedev_service_name*]
 #   (optional) virtnodedev service name.
-#   Defaults to $::nova::params::virtnodedevd_service_name
+#   Defaults to $::nova::params::virtnodedevd_socket_name
 #
 # [*virtqemu_service_name*]
 #   (optional) virtqemu service name.
-#   Defaults to $::nova::params::virtqemu_service_name
+#   Defaults to $::nova::params::virtqemu_socket_name
 #
 # [*virtproxy_service_name*]
 #   (optional) virtproxy service name.
-#   Defaults to $::nova::params::virtproxy_service_name
+#   Defaults to $::nova::params::virtproxy_socket_name
 #
 # [*virtstorage_service_name*]
 #   (optional) virtstorage service name.
-#   Defaults to $::nova::params::virtstorage_service_name
+#   Defaults to $::nova::params::virtstorage_socket_name
 #
 class nova::compute::libvirt::services (
   $libvirt_service_name     = $::nova::params::libvirt_service_name,
@@ -51,11 +51,11 @@ class nova::compute::libvirt::services (
   $virtlog_service_name     = $::nova::params::virtlog_service_name,
   $libvirt_virt_type        = 'kvm',
   $modular_libvirt          = $::nova::params::modular_libvirt,
-  $virtsecret_service_name  = $::nova::params::virtsecret_service_name,
-  $virtnodedev_service_name = $::nova::params::virtnodedev_service_name,
-  $virtqemu_service_name    = $::nova::params::virtqemu_service_name,
-  $virtproxy_service_name   = $::nova::params::virtproxy_service_name,
-  $virtstorage_service_name = $::nova::params::virtstorage_service_name
+  $virtsecret_service_name  = $::nova::params::virtsecret_socket_name,
+  $virtnodedev_service_name = $::nova::params::virtnodedev_socket_name,
+  $virtqemu_service_name    = $::nova::params::virtqemu_socket_name,
+  $virtproxy_service_name   = $::nova::params::virtproxy_socket_name,
+  $virtstorage_service_name = $::nova::params::virtstorage_socket_name
 ) inherits nova::params {
 
   include nova::deps
@@ -180,7 +180,17 @@ class nova::compute::libvirt::services (
         name   => $virtsecret_service_name,
         tag    => ['libvirt-service', 'libvirt-modular-service'],
       }
-      Virtsecretd_config<||> ~> Service['virtsecretd']
+      Virtsecretd_config<||> -> Service['virtsecretd']
+
+      if $virtsecret_service_name =~ /.+\.socket$/ {
+        exec { 'restart-virtsecretd':
+          command     => "systemctl -q restart ${::nova::params::virtsecret_service_name}",
+          path        => ['/sbin', '/usr/sbin', '/bin', '/usr/bin'],
+          onlyif      => "systemctl -q is-active ${::nova::params::virtsecret_service_name}",
+          refreshonly => true,
+        }
+        Virtsecretd_config<||> ~> Exec['restart-virtsecretd']
+      }
     }
 
     if $virtnodedev_service_name {
@@ -195,7 +205,17 @@ class nova::compute::libvirt::services (
         name   => $virtnodedev_service_name,
         tag    => ['libvirt-service', 'libvirt-modular-service'],
       }
-      Virtnodedevd_config<||> ~> Service['virtnodedevd']
+      Virtnodedevd_config<||> -> Service['virtnodedevd']
+
+      if $virtnodedev_service_name =~ /.+\.socket$/ {
+        exec { 'restart-virtnodedevd':
+          command     => "systemctl -q restart ${::nova::params::virtnodedev_service_name}",
+          path        => ['/sbin', '/usr/sbin', '/bin', '/usr/bin'],
+          onlyif      => "systemctl -q is-active ${::nova::params::virtnodedev_service_name}",
+          refreshonly => true,
+        }
+        Virtnodedevd_config<||> ~> Exec['restart-virtnodedevd']
+      }
     }
 
     if $virtqemu_service_name {
@@ -210,7 +230,16 @@ class nova::compute::libvirt::services (
         name   => $virtqemu_service_name,
         tag    => ['libvirt-service', 'libvirt-qemu-service', 'libvirt-modular-service'],
       }
-      Virtqemud_config<||> ~> Service['virtqemud']
+      Virtqemud_config<||> -> Service['virtqemud']
+      if $virtqemu_service_name =~ /.+\.socket$/ {
+        exec { 'restart-virtqemud':
+          command     => "systemctl -q restart ${::nova::params::virtqemu_service_name}",
+          path        => ['/sbin', '/usr/sbin', '/bin', '/usr/bin'],
+          onlyif      => "systemctl -q is-active ${::nova::params::virtqemu_service_name}",
+          refreshonly => true,
+        }
+        Virtqemud_config<||> ~> Exec['restart-virtqemud']
+      }
     }
 
     if $virtproxy_service_name {
@@ -220,7 +249,16 @@ class nova::compute::libvirt::services (
         name   => $virtproxy_service_name,
         tag    => ['libvirt-service', 'libvirt-modular-service'],
       }
-      Virtproxyd_config<||> ~> Service['virtproxyd']
+      Virtproxyd_config<||> -> Service['virtproxyd']
+      if $virtproxy_service_name =~ /.+\.socket$/ {
+        exec { 'restart-virtproxyd':
+          command     => "systemctl -q restart ${::nova::params::virtproxy_service_name}",
+          path        => ['/sbin', '/usr/sbin', '/bin', '/usr/bin'],
+          onlyif      => "systemctl -q is-active ${::nova::params::virtproxy_service_name}",
+          refreshonly => true,
+        }
+        Virtproxyd_config<||> ~> Exec['restart-virtproxyd']
+      }
     }
 
     if $virtstorage_service_name {
@@ -235,7 +273,16 @@ class nova::compute::libvirt::services (
         name   => $virtstorage_service_name,
         tag    => ['libvirt-service', 'libvirt-modular-service'],
       }
-      Virtstoraged_config<||> ~> Service['virtstoraged']
+      Virtstoraged_config<||> -> Service['virtstoraged']
+      if $virtstorage_service_name =~ /.+\.socket$/ {
+        exec { 'restart-virtstoraged':
+          command     => "systemctl -q restart ${::nova::params::virtstorage_service_name}",
+          path        => ['/sbin', '/usr/sbin', '/bin', '/usr/bin'],
+          onlyif      => "systemctl -q is-active ${::nova::params::virtstorage_service_name}",
+          refreshonly => true,
+        }
+        Virtstoraged_config<||> ~> Exec['restart-storaged']
+      }
     }
   }
 }

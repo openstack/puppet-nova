@@ -60,6 +60,7 @@ class nova::deps {
 
   # Start libvirt services during the service phase
   Anchor['nova::service::begin']
+  -> Exec<| tag == 'libvirt-service'|>
   -> Service<| tag == 'libvirt-service'|>
   -> Anchor['nova::service::end']
 
