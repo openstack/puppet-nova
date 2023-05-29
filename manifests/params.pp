@@ -107,11 +107,11 @@ class nova::params {
           # Use default provider on Debian
           $virtlock_service_name        = 'virtlockd'
           $virtlog_service_name         = 'virtlogd'
-          $virtsecret_service_name      = 'virtsecretd.socket'
-          $virtnodedev_service_name     = 'virtnodedevd.socket'
-          $virtqemu_service_name        = 'virtqemud.socket'
-          $virtproxy_service_name       = 'virtproxyd.socket'
-          $virtstorage_service_name     = 'virtstoraged.socket'
+          $virtsecret_service_name      = undef
+          $virtnodedev_service_name     = undef
+          $virtqemu_service_name        = undef
+          $virtproxy_service_name       = undef
+          $virtstorage_service_name     = undef
         }
         default: {
           $api_metadata_service_name    = undef
@@ -122,11 +122,11 @@ class nova::params {
           # Use default provider on Debian
           $virtlock_service_name        = 'virtlockd'
           $virtlog_service_name         = 'virtlogd'
-          $virtsecret_service_name      = 'virtsecretd'
-          $virtnodedev_service_name     = 'virtnodedevd'
-          $virtqemu_service_name        = 'virtqemud'
-          $virtproxy_service_name       = 'virtproxyd'
-          $virtstorage_service_name     = 'virtstoraged'
+          $virtsecret_service_name      = undef
+          $virtnodedev_service_name     = undef
+          $virtqemu_service_name        = undef
+          $virtproxy_service_name       = undef
+          $virtstorage_service_name     = undef
         }
       }
       $modular_libvirt                 = false
