@@ -193,7 +193,7 @@ class nova::migration::libvirt(
   $modular_libvirt_real = pick($modular_libvirt, $::nova::params::modular_libvirt)
 
   if $modular_libvirt_real and !$::nova::params::modular_libvirt_support {
-    fail('Modular libvirt daemons are not support in this distribution')
+    fail('Modular libvirt daemons are not supported in this distribution')
   }
 
   validate_legacy(Enum['tcp', 'tls', 'ssh'], 'validate_re', $transport_real,
