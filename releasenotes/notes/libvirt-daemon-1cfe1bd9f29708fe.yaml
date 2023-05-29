@@ -1,0 +1,7 @@
+---
+features:
+  - |
+    The ``nova::compute::libvirt::services`` class now installs
+    the ``libvirt-damon`` package explicitly in CentOS and RHEL when modular
+    libvirt daemons are not used. This is required in recent CentOS Stream 9
+    to use legacy libvirtd service and socket.
