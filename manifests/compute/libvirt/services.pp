@@ -67,7 +67,7 @@ class nova::compute::libvirt::services (
   include nova::params
 
   if $modular_libvirt and !$::nova::params::modular_libvirt_support {
-    fail('Modular libvirt daemons are not support in this distribution')
+    fail('Modular libvirt daemons are not supported in this distribution')
   }
 
   if $libvirt_service_name {
