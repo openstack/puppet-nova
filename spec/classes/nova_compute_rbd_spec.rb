@@ -98,7 +98,8 @@ describe 'nova::compute::rbd' do
           :require => 'File[/etc/nova/secret.xml]',
         )
         is_expected.to contain_exec('set-secret-value virsh').with(
-          :command => "/usr/bin/virsh secret-set-value --secret UUID --base64 $(ceph auth get-key client.rbd_test)"
+          :command   => "/usr/bin/virsh secret-set-value --secret UUID --base64 $(ceph auth get-key client.rbd_test)",
+          :logoutput => false,
         )
       end
     end
@@ -113,7 +114,8 @@ describe 'nova::compute::rbd' do
 
       it 'set libvirt secret key from passed key' do
         is_expected.to contain_exec('set-secret-value virsh').with(
-          :command => "/usr/bin/virsh secret-set-value --secret #{params[:libvirt_rbd_secret_uuid]} --base64 #{params[:libvirt_rbd_secret_key]}"
+          :command   => "/usr/bin/virsh secret-set-value --secret #{params[:libvirt_rbd_secret_uuid]} --base64 #{params[:libvirt_rbd_secret_key]}",
+          :logoutput => false,
         )
       end
     end
@@ -152,7 +154,8 @@ describe 'nova::compute::rbd' do
           :require => 'File[/etc/nova/secret.xml]',
         )
         is_expected.to contain_exec('set-secret-value virsh').with(
-          :command => "/usr/bin/virsh secret-set-value --secret UUID --base64 $(ceph auth get-key client.rbd_test)"
+          :command   => "/usr/bin/virsh secret-set-value --secret UUID --base64 $(ceph auth get-key client.rbd_test)",
+          :logoutput => false,
         )
       end
     end

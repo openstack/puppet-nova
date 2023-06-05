@@ -151,9 +151,10 @@ class nova::compute::rbd (
       $libvirt_key = "$(ceph auth get-key ${rbd_keyring})"
     }
     exec { 'set-secret-value virsh':
-      command => "/usr/bin/virsh secret-set-value --secret ${libvirt_rbd_secret_uuid} --base64 ${libvirt_key}",
-      unless  => "/usr/bin/virsh secret-get-value ${libvirt_rbd_secret_uuid} | grep ${libvirt_key}",
-      require => Exec['get-or-set virsh secret'],
+      command   => "/usr/bin/virsh secret-set-value --secret ${libvirt_rbd_secret_uuid} --base64 ${libvirt_key}",
+      unless    => "/usr/bin/virsh secret-get-value ${libvirt_rbd_secret_uuid} | grep ${libvirt_key}",
+      logoutput => false,
+      require   => Exec['get-or-set virsh secret'],
     }
   } else {
     nova_config {
