@@ -121,12 +121,6 @@
 #   directives to be placed at the end of the vhost configuration.
 #   Defaults to undef.
 #
-# DEPRECATED PARAMETERS
-#
-# [*api_port*]
-#   (Optional) The port for Nova API service.
-#   Defaults to 8774
-#
 # == Dependencies
 #
 #   requires Class['apache'] & Class['nova'] & Class['nova::api']
@@ -165,8 +159,6 @@ class nova::wsgi::apache_api (
   $headers                     = undef,
   $request_headers             = undef,
   $vhost_custom_fragment       = undef,
-  # DEPRECATED PARAMETERS
-  $api_port                    = undef,
 ) {
 
   include nova::params
@@ -175,13 +167,9 @@ class nova::wsgi::apache_api (
     fail('::nova::api class must be declared in composition layer.')
   }
 
-  if $api_port {
-    warning('The api_port parameter is deprecated. Use the port parameter')
-  }
-
   ::openstacklib::wsgi::apache { 'nova_api_wsgi':
     bind_host                   => $bind_host,
-    bind_port                   => pick($api_port, $port),
+    bind_port                   => $port,
     group                       => $::nova::params::group,
     path                        => $path,
     priority                    => $priority,

@@ -1,0 +1,8 @@
+---
+upgrade:
+  - |
+    The following parameters were removed, in favor of the new ``port``
+    parameters.
+
+    - ``nova::wsgi::apache_api::api_port``
+    - ``nova::wsgi::apache_metadata::api_port``
