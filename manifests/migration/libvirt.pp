@@ -169,7 +169,7 @@ class nova::migration::libvirt(
   Boolean $configure_nova              = true,
   $client_user                         = undef,
   $client_port                         = undef,
-  $client_extraparams                  = {},
+  Hash $client_extraparams             = {},
   $ca_file                             = $facts['os_service_default'],
   $crl_file                            = $facts['os_service_default'],
   $libvirt_version                     = $::nova::compute::libvirt::version::default,
@@ -202,12 +202,12 @@ class nova::migration::libvirt(
       $postfix = ''
     }
 
-    if $client_extraparams != {} {
+    if empty($client_extraparams) {
+      $extra_params =''
+    } else {
       $extra_params_before_python_escape = join(uriescape(join_keys_to_values($client_extraparams, '=')), '&')
       # Must escape % as nova interprets it incorrectly.
       $extra_params = sprintf('?%s', regsubst($extra_params_before_python_escape, '%', '%%', 'G'))
-    } else {
-      $extra_params =''
     }
 
     $live_migration_uri = "qemu+${transport}://${prefix}%s${postfix}/system${extra_params}"
