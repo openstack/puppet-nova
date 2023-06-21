@@ -28,20 +28,17 @@
 #   Defaults to $facts['os_service_default']
 #
 class nova::conductor(
-  $enabled             = true,
-  $manage_service      = true,
-  $ensure_package      = 'present',
-  $workers             = $facts['os_workers'],
-  $enable_new_services = $facts['os_service_default'],
+  Boolean $enabled        = true,
+  Boolean $manage_service = true,
+  $ensure_package         = 'present',
+  $workers                = $facts['os_workers'],
+  $enable_new_services    = $facts['os_service_default'],
 ) {
 
   include nova::deps
   include nova::db
   include nova::params
   include nova::availability_zone
-
-  validate_legacy(Boolean, 'validate_bool', $enabled)
-  validate_legacy(Boolean, 'validate_bool', $manage_service)
 
   nova::generic_service { 'conductor':
     enabled        => $enabled,

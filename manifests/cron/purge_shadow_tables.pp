@@ -66,25 +66,22 @@
 #    Defaults to present.
 #
 class nova::cron::purge_shadow_tables (
-  $minute       = 0,
-  $hour         = 5,
-  $monthday     = '*',
-  $month        = '*',
-  $weekday      = '*',
-  $user         = $::nova::params::user,
-  $destination  = '/var/log/nova/nova-rowspurge.log',
-  $age          = 14,
-  $all_cells    = false,
-  $verbose      = false,
-  $maxdelay     = 0,
+  $minute                           = 0,
+  $hour                             = 5,
+  $monthday                         = '*',
+  $month                            = '*',
+  $weekday                          = '*',
+  $user                             = $::nova::params::user,
+  $destination                      = '/var/log/nova/nova-rowspurge.log',
+  $age                              = 14,
+  Boolean $all_cells                = false,
+  Boolean $verbose                  = false,
+  $maxdelay                         = 0,
   Enum['present', 'absent'] $ensure = 'present',
 ) inherits nova::params {
 
   include nova::deps
   include nova::params
-
-  validate_legacy(Boolean, 'validate_bool', $all_cells)
-  validate_legacy(Boolean, 'validate_bool', $verbose)
 
   if $verbose {
     $verbose_real = ' --verbose'

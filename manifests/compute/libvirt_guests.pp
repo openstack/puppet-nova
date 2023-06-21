@@ -47,18 +47,15 @@
 #   Defaults to false
 #
 class nova::compute::libvirt_guests (
-  $enabled                           = false,
-  $package_ensure                    = 'present',
-  $shutdown_timeout                  = '300',
-  $on_boot                           = 'ignore',
-  $on_shutdown                       = 'shutdown',
-  $manage_service                    = false,
+  Boolean $enabled        = false,
+  $package_ensure         = 'present',
+  $shutdown_timeout       = '300',
+  $on_boot                = 'ignore',
+  $on_shutdown            = 'shutdown',
+  Boolean $manage_service = false,
 ) {
   include nova::params
   include nova::deps
-
-  validate_legacy(Boolean, 'validate_bool', $manage_service)
-  validate_legacy(Boolean, 'validate_bool', $enabled)
 
   Anchor['nova::config::begin']
   -> File<| tag =='libvirt-guests-file' |>

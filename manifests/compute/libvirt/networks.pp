@@ -9,12 +9,10 @@
 #   Defaults to true.
 #
 class nova::compute::libvirt::networks(
-  $disable_default_network = true,
+  Boolean $disable_default_network = true,
 ) {
 
   include nova::deps
-
-  validate_legacy(Boolean, 'validate_bool', $disable_default_network)
 
   if $disable_default_network {
     exec { 'libvirt-default-net-disable-autostart':

@@ -29,18 +29,15 @@
 #   Defaults to 'present'
 #
 class nova::spicehtml5proxy(
-  $enabled        = true,
-  $manage_service = true,
-  $host           = '0.0.0.0',
-  $port           = '6082',
-  $ensure_package = 'present'
+  Boolean $enabled        = true,
+  Boolean $manage_service = true,
+  $host                   = '0.0.0.0',
+  $port                   = '6082',
+  $ensure_package         = 'present'
 ) {
 
   include nova::deps
   include nova::params
-
-  validate_legacy(Boolean, 'validate_bool', $enabled)
-  validate_legacy(Boolean, 'validate_bool', $manage_service)
 
   # Nodes running spicehtml5proxy do *not* need (and in fact, don't care)
   # about [spice]/enable to be set. This setting is for compute nodes,

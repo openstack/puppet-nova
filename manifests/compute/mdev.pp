@@ -9,11 +9,9 @@
 #   Defaults to {}
 #
 class nova::compute::mdev(
-  $mdev_types = {},
+  Hash $mdev_types = {},
 ) {
   include nova::deps
-
-  validate_legacy(Hash, 'validate_hash', $mdev_types)
 
   if !empty($mdev_types) {
     nova_config {

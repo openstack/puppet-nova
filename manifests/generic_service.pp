@@ -33,16 +33,13 @@
 define nova::generic_service(
   $package_name,
   $service_name,
-  $enabled        = true,
-  $manage_service = true,
-  $ensure_package = 'present'
+  Boolean $enabled        = true,
+  Boolean $manage_service = true,
+  $ensure_package         = 'present'
 ) {
 
   include nova::deps
   include nova::params
-
-  validate_legacy(Boolean, 'validate_bool', $enabled)
-  validate_legacy(Boolean, 'validate_bool', $manage_service)
 
   $nova_title = "nova-${name}"
 

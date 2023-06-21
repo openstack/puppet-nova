@@ -76,8 +76,8 @@
 #   Defaults to undef
 #
 class nova::scheduler(
-  $enabled                                       = true,
-  $manage_service                                = true,
+  Boolean $enabled                               = true,
+  Boolean $manage_service                        = true,
   $ensure_package                                = 'present',
   $workers                                       = $facts['os_workers'],
   $max_attempts                                  = $facts['os_service_default'],
@@ -96,9 +96,6 @@ class nova::scheduler(
   include nova::db
   include nova::params
   include nova::availability_zone
-
-  validate_legacy(Boolean, 'validate_bool', $enabled)
-  validate_legacy(Boolean, 'validate_bool', $manage_service)
 
   if $query_placement_for_availability_zone != undef {
     warning('The query_placement_for_availability_zone parameter is deprecated.')

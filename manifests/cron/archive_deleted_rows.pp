@@ -93,32 +93,26 @@
 #    Defaults to present.
 #
 class nova::cron::archive_deleted_rows (
-  $minute         = 1,
-  $hour           = 0,
-  $monthday       = '*',
-  $month          = '*',
-  $weekday        = '*',
-  $max_rows       = '100',
-  $user           = $::nova::params::user,
-  $destination    = '/var/log/nova/nova-rowsflush.log',
-  $until_complete = false,
-  $purge          = false,
-  $age            = undef,
-  $all_cells      = false,
-  $task_log       = false,
-  $sleep          = undef,
-  $verbose        = false,
-  $maxdelay       = 0,
+  $minute                           = 1,
+  $hour                             = 0,
+  $monthday                         = '*',
+  $month                            = '*',
+  $weekday                          = '*',
+  $max_rows                         = '100',
+  $user                             = $::nova::params::user,
+  $destination                      = '/var/log/nova/nova-rowsflush.log',
+  Boolean $until_complete           = false,
+  Boolean $purge                    = false,
+  $age                              = undef,
+  Boolean $all_cells                = false,
+  Boolean $task_log                 = false,
+  $sleep                            = undef,
+  Boolean $verbose                  = false,
+  $maxdelay                         = 0,
   Enum['present', 'absent'] $ensure = 'present',
 ) inherits nova::params {
 
   include nova::deps
-
-  validate_legacy(Boolean, 'validate_bool', $until_complete)
-  validate_legacy(Boolean, 'validate_bool', $purge)
-  validate_legacy(Boolean, 'validate_bool', $all_cells)
-  validate_legacy(Boolean, 'validate_bool', $task_log)
-  validate_legacy(Boolean, 'validate_bool', $verbose)
 
   if $until_complete {
     $until_complete_real = ' --until-complete'

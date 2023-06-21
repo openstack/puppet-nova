@@ -102,7 +102,7 @@ class nova::scheduler::filter (
   $max_instances_per_host                         = $facts['os_service_default'],
   $isolated_images                                = $facts['os_service_default'],
   $isolated_hosts                                 = $facts['os_service_default'],
-  $scheduler_available_filters                    = ['nova.scheduler.filters.all_filters'],
+  Array[String[1]] $scheduler_available_filters   = ['nova.scheduler.filters.all_filters'],
   $scheduler_enabled_filters                      = $facts['os_service_default'],
   $scheduler_weight_classes                       = 'nova.scheduler.weights.all_weighers',
   $track_instance_changes                         = $facts['os_service_default'],
@@ -122,27 +122,18 @@ class nova::scheduler::filter (
 
   include nova::deps
 
-  # The following values are following this rule:
-  # - default is $facts['os_service_default'] so Puppet won't try to configure it.
-  # - if set, we'll validate it's an array that is not empty and configure the parameter.
-  # - Otherwise, fallback to default.
-
-  if !is_service_default($scheduler_enabled_filters) and !empty($scheduler_enabled_filters){
-    validate_legacy(Array, 'validate_array', $scheduler_enabled_filters)
-    $scheduler_enabled_filters_real = join($scheduler_enabled_filters, ',')
-  } else {
+  if is_service_default($scheduler_enabled_filters) {
     $scheduler_enabled_filters_real = $facts['os_service_default']
+  } elsif empty($scheduler_enabled_filters){
+    $scheduler_enabled_filters_real = $facts['os_service_default']
+  } else {
+    $scheduler_enabled_filters_real = join(any2array($scheduler_enabled_filters), ',')
   }
 
-  if $scheduler_available_filters =~ Array {
-    if empty($scheduler_available_filters) {
-      $scheduler_available_filters_real = $facts['os_service_default']
-    } else {
-      $scheduler_available_filters_real = $scheduler_available_filters
-    }
+  if empty($scheduler_available_filters) {
+    $scheduler_available_filters_real = $facts['os_service_default']
   } else {
-    warning('scheduler_available_filters must be an array and will fail in the future')
-    $scheduler_available_filters_real = any2array($scheduler_available_filters)
+    $scheduler_available_filters_real = $scheduler_available_filters
   }
 
   nova_config {

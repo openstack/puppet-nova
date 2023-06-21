@@ -34,16 +34,12 @@
 #   or Puppet catalog compilation will fail with duplicate resources.
 #
 class nova::config (
-  $nova_config          = {},
-  $nova_api_paste_ini   = {},
-  $nova_rootwrap_config = {},
+  Hash $nova_config          = {},
+  Hash $nova_api_paste_ini   = {},
+  Hash $nova_rootwrap_config = {},
 ) {
 
   include nova::deps
-
-  validate_legacy(Hash, 'validate_hash', $nova_config)
-  validate_legacy(Hash, 'validate_hash', $nova_api_paste_ini)
-  validate_legacy(Hash, 'validate_hash', $nova_rootwrap_config)
 
   create_resources('nova_config', $nova_config)
   create_resources('nova_api_paste_ini', $nova_api_paste_ini)

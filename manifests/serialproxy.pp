@@ -25,18 +25,15 @@
 #   Defaults to 'present'
 #
 class nova::serialproxy(
-  $enabled              = true,
-  $manage_service       = true,
-  $serialproxy_host     = '0.0.0.0',
-  $serialproxy_port     = '6083',
-  $ensure_package       = 'present'
+  Boolean $enabled        = true,
+  Boolean $manage_service = true,
+  $serialproxy_host       = '0.0.0.0',
+  $serialproxy_port       = '6083',
+  $ensure_package         = 'present'
 ) {
 
   include nova::deps
   include nova::params
-
-  validate_legacy(Boolean, 'validate_bool', $manage_service)
-  validate_legacy(Boolean, 'validate_bool', $enabled)
 
   nova_config {
     'serial_console/serialproxy_port': value => $serialproxy_port;

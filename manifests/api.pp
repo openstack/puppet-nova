@@ -161,8 +161,8 @@
 #   Defaults to undef
 #
 class nova::api(
-  $enabled                                     = true,
-  $manage_service                              = true,
+  Boolean $enabled                             = true,
+  Boolean $manage_service                      = true,
   $api_paste_config                            = 'api-paste.ini',
   $ensure_package                              = 'present',
   $api_bind_address                            = $facts['os_service_default'],
@@ -172,9 +172,9 @@ class nova::api(
   $enabled_apis                                = ['osapi_compute', 'metadata'],
   $osapi_compute_workers                       = $facts['os_workers'],
   $metadata_workers                            = $facts['os_workers'],
-  $sync_db                                     = true,
-  $sync_db_api                                 = true,
-  $db_online_data_migrations                   = false,
+  Boolean $sync_db                             = true,
+  Boolean $sync_db_api                         = true,
+  Boolean $db_online_data_migrations           = false,
   $service_name                                = $::nova::params::api_service_name,
   $metadata_service_name                       = $::nova::params::api_metadata_service_name,
   $enable_proxy_headers_parsing                = $facts['os_service_default'],
@@ -193,7 +193,7 @@ class nova::api(
   $instance_list_cells_batch_fixed_size        = $facts['os_service_default'],
   $list_records_by_skipping_down_cells         = $facts['os_service_default'],
   # DEPRECATED PARAMETER
-  $nova_metadata_wsgi_enabled                  = false,
+  Boolean $nova_metadata_wsgi_enabled          = false,
   $use_forwarded_for                           = undef,
 ) inherits nova::params {
 
@@ -203,12 +203,6 @@ class nova::api(
   include nova::keystone::authtoken
   include nova::availability_zone
   include nova::pci
-
-  validate_legacy(Boolean, 'validate_bool', $enabled)
-  validate_legacy(Boolean, 'validate_bool', $manage_service)
-  validate_legacy(Boolean, 'validate_bool', $sync_db)
-  validate_legacy(Boolean, 'validate_bool', $sync_db_api)
-  validate_legacy(Boolean, 'validate_bool', $db_online_data_migrations)
 
   if !$nova_metadata_wsgi_enabled {
     warning('Running nova metadata api via evenlet is deprecated and will be removed in Stein release.')
