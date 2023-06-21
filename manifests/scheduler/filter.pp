@@ -145,19 +145,6 @@ class nova::scheduler::filter (
     $scheduler_available_filters_real = any2array($scheduler_available_filters)
   }
 
-  if !is_service_default($isolated_images) and !empty($isolated_images){
-    validate_legacy(Array, 'validate_array', $isolated_images)
-    $isolated_images_real = join($isolated_images, ',')
-  } else {
-    $isolated_images_real = $facts['os_service_default']
-  }
-  if !is_service_default($isolated_hosts) and !empty($isolated_hosts){
-    validate_legacy(Array, 'validate_array', $isolated_hosts)
-    $isolated_hosts_real = join($isolated_hosts, ',')
-  } else {
-    $isolated_hosts_real = $facts['os_service_default']
-  }
-
   nova_config {
     'filter_scheduler/host_subset_size':
       value => $scheduler_host_subset_size;
@@ -174,9 +161,9 @@ class nova::scheduler::filter (
     'filter_scheduler/enabled_filters':
       value => $scheduler_enabled_filters_real;
     'filter_scheduler/isolated_images':
-      value => $isolated_images_real;
+      value => join(any2array($isolated_images), ',');
     'filter_scheduler/isolated_hosts':
-      value => $isolated_hosts_real;
+      value => join(any2array($isolated_hosts), ',');
     'filter_scheduler/ram_weight_multiplier':
       value => $ram_weight_multiplier;
     'filter_scheduler/cpu_weight_multiplier':
