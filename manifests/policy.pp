@@ -62,6 +62,7 @@ class nova::policy (
     file_group   => $::nova::params::group,
     file_format  => 'yaml',
     purge_config => $purge_config,
+    tag          => 'nova',
   }
 
   create_resources('openstacklib::policy', { $policy_path => $policy_parameters })
