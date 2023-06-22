@@ -33,6 +33,7 @@ describe 'nova::policy' do
           :file_group   => 'nova',
           :file_format  => 'yaml',
           :purge_config => false,
+          :tag          => 'nova',
         )
         is_expected.to contain_oslo__policy('nova_config').with(
           :enforce_scope        => false,
@@ -63,6 +64,7 @@ describe 'nova::policy' do
           :file_group   => 'nova',
           :file_format  => 'yaml',
           :purge_config => true,
+          :tag          => 'nova',
         )
         is_expected.to contain_oslo__policy('nova_config').with(
           :enforce_scope        => false,
