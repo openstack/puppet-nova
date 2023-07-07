@@ -333,18 +333,28 @@ describe 'nova' do
       end
     end
 
-    context 'with ssh private key' do
-      let :params do
-        {
-          :nova_private_key => {'type' => 'ssh-rsa',
-                                'key'  => 'keydata'}
-        }
-      end
+    {
+      'ssh-rsa'     => 'id_rsa',
+      'ssh-dsa'     => 'id_dsa',
+      'ssh-ecdsa'   => 'id_ecdsa',
+      'ssh-ed25519' => 'id_ed25519'
+    }.each do |keytype, keyname|
+      context "with ssh private key(#{keytype})" do
+        let :params do
+          {
+            :nova_private_key => {'type' => keytype,
+                                  'key'  => 'keydata'}
+          }
+        end
 
-      it 'should install ssh private key' do
-        is_expected.to contain_file('/var/lib/nova/.ssh/id_rsa').with(
-          :content => 'keydata'
-        )
+        it 'should install ssh private key' do
+          is_expected.to contain_file("/var/lib/nova/.ssh/#{keyname}").with(
+            :content => 'keydata',
+            :mode    => '0600',
+            :owner   => 'nova',
+            :group   => 'nova',
+          )
+        end
       end
     end
 
