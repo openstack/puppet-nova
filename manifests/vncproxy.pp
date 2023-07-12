@@ -62,27 +62,22 @@
 #   Defaults to undef
 #
 class nova::vncproxy(
-  $enabled           = true,
-  $manage_service    = true,
-  $vncproxy_protocol = 'http',
-  $host              = '0.0.0.0',
-  $port              = '6080',
-  $vncproxy_path     = '/vnc_auto.html',
-  $ensure_package    = 'present',
-  $allow_noauth      = true,
-  $allow_vencrypt    = false,
-  $vencrypt_key      = undef,
-  $vencrypt_cert     = undef,
-  $vencrypt_ca       = undef,
+  Boolean $enabled         = true,
+  Boolean $manage_service  = true,
+  $vncproxy_protocol       = 'http',
+  $host                    = '0.0.0.0',
+  $port                    = '6080',
+  $vncproxy_path           = '/vnc_auto.html',
+  $ensure_package          = 'present',
+  Boolean $allow_noauth    = true,
+  Boolean $allow_vencrypt  = false,
+  $vencrypt_key            = undef,
+  $vencrypt_cert           = undef,
+  $vencrypt_ca             = undef,
 ) {
 
   include nova::deps
   include nova::params
-
-  validate_legacy(Boolean, 'validate_bool', $enabled)
-  validate_legacy(Boolean, 'validate_bool', $manage_service)
-  validate_legacy(Boolean, 'validate_bool', $allow_noauth)
-  validate_legacy(Boolean, 'validate_bool', $allow_vencrypt)
 
   if (!$allow_noauth and !$allow_vencrypt) {
     fail('Either allow_noauth or allow_vencrypt must be true')

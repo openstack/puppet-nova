@@ -94,15 +94,13 @@ class nova::vendordata(
   include nova::deps
 
   if !is_service_default($vendordata_providers) and !empty($vendordata_providers){
-    validate_legacy(Array, 'validate_array', $vendordata_providers)
-    $vendordata_providers_real = join($vendordata_providers, ',')
+    $vendordata_providers_real = join(any2array($vendordata_providers), ',')
   } else {
     $vendordata_providers_real = $facts['os_service_default']
   }
 
   if !is_service_default($vendordata_dynamic_targets) and !empty($vendordata_dynamic_targets){
-    validate_legacy(Array, 'validate_array', $vendordata_dynamic_targets)
-    $vendordata_dynamic_targets_real = join($vendordata_dynamic_targets, ',')
+    $vendordata_dynamic_targets_real = join(any2array($vendordata_dynamic_targets), ',')
   } else {
     $vendordata_dynamic_targets_real = $facts['os_service_default']
   }

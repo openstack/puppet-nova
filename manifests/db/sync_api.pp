@@ -22,15 +22,13 @@
 #   Defaults to 300.
 #
 class nova::db::sync_api(
-  $extra_params    = undef,
-  $cellv2_setup    = false,
-  $db_sync_timeout = 300,
+  $extra_params         = undef,
+  Boolean $cellv2_setup = false,
+  $db_sync_timeout      = 300,
 ) {
 
   include nova::deps
   include nova::params
-
-  validate_legacy(Boolean, 'validate_bool', $cellv2_setup)
 
   exec { 'nova-db-sync-api':
     command     => "/usr/bin/nova-manage ${extra_params} api_db sync",

@@ -233,9 +233,9 @@ class nova::compute::libvirt (
   $ensure_package                             = 'present',
   $virt_type                                  = 'kvm',
   $vncserver_listen                           = '127.0.0.1',
-  $migration_support                          = false,
+  Boolean $migration_support                  = false,
   $cpu_mode                                   = false,
-  $cpu_models                                 = [],
+  Array[String[1]] $cpu_models                = [],
   $cpu_model_extra_flags                      = undef,
   $cpu_power_management                       = $facts['os_service_default'],
   $cpu_power_management_strategy              = $facts['os_service_default'],
@@ -258,7 +258,7 @@ class nova::compute::libvirt (
   $virtlog_service_name                       = $::nova::params::virtlog_service_name,
   $compute_driver                             = 'libvirt.LibvirtDriver',
   $preallocate_images                         = $facts['os_service_default'],
-  $manage_libvirt_services                    = true,
+  Boolean $manage_libvirt_services            = true,
   $rx_queue_size                              = $facts['os_service_default'],
   $tx_queue_size                              = $facts['os_service_default'],
   $file_backed_memory                         = $facts['os_service_default'],
@@ -278,9 +278,6 @@ class nova::compute::libvirt (
 
   include nova::deps
   include nova::params
-
-  validate_legacy(Boolean, 'validate_bool', $migration_support)
-  validate_legacy(Boolean, 'validate_bool', $manage_libvirt_services)
 
   # cpu_mode has different defaults depending on hypervisor.
   if !$cpu_mode {
@@ -381,7 +378,6 @@ class nova::compute::libvirt (
     'libvirt/wait_soft_reboot_seconds':      value => $wait_soft_reboot_seconds;
   }
 
-  validate_legacy(Array, 'validate_array', $cpu_models)
   # cpu_model param is only valid if cpu_mode=custom
   # otherwise it should be commented out
   if $cpu_mode_default == 'custom' and !empty($cpu_models){

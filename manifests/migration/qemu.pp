@@ -17,14 +17,12 @@
 #   Defaults to $facts['os_service_default'].
 #
 class nova::migration::qemu(
-  $configure_qemu     = false,
-  $migration_port_min = $facts['os_service_default'],
-  $migration_port_max = $facts['os_service_default'],
+  Boolean $configure_qemu = false,
+  $migration_port_min     = $facts['os_service_default'],
+  $migration_port_max     = $facts['os_service_default'],
 ){
 
   include nova::deps
-
-  validate_legacy(Boolean, 'validate_bool', $configure_qemu)
 
   Qemu_config<||> ~> Service<| tag == 'libvirt-qemu-service' |>
 

@@ -48,7 +48,7 @@
 class nova::policy (
   $enforce_scope        = $facts['os_service_default'],
   $enforce_new_defaults = $facts['os_service_default'],
-  $policies             = {},
+  Hash $policies        = {},
   $policy_path          = '/etc/nova/policy.yaml',
   $policy_default_rule  = $facts['os_service_default'],
   $policy_dirs          = $facts['os_service_default'],
@@ -57,8 +57,6 @@ class nova::policy (
 
   include nova::deps
   include nova::params
-
-  validate_legacy(Hash, 'validate_hash', $policies)
 
   $policy_parameters = {
     policies     => $policies,

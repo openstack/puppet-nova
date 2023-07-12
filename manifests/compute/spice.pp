@@ -34,7 +34,7 @@
 #   Defaults to '/spice_auto.html'
 #
 class nova::compute::spice(
-  $agent_enabled              = true,
+  Boolean $agent_enabled      = true,
   $server_listen              = $facts['os_service_default'],
   $server_proxyclient_address = '127.0.0.1',
   $proxy_host                 = false,
@@ -44,8 +44,6 @@ class nova::compute::spice(
 ) {
 
   include nova::deps
-
-  validate_legacy(Boolean, 'validate_bool', $agent_enabled)
 
   if $proxy_host {
     $html5proxy_base_url = "${proxy_protocol}://${proxy_host}:${proxy_port}${proxy_path}"

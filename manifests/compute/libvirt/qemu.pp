@@ -51,26 +51,20 @@
 #   Defaults to ::nova::compute::libvirt::version::default
 #
 class nova::compute::libvirt::qemu(
-  $configure_qemu     = false,
-  $user               = undef,
-  $group              = undef,
-  $max_files          = 1024,
-  $max_processes      = 4096,
-  $vnc_tls            = false,
-  $vnc_tls_verify     = true,
-  $default_tls_verify = true,
-  $memory_backing_dir = undef,
-  $nbd_tls            = false,
-  $libvirt_version    = $::nova::compute::libvirt::version::default,
+  Boolean $configure_qemu     = false,
+  $user                       = undef,
+  $group                      = undef,
+  $max_files                  = 1024,
+  $max_processes              = 4096,
+  Boolean $vnc_tls            = false,
+  Boolean $vnc_tls_verify     = true,
+  Boolean $default_tls_verify = true,
+  $memory_backing_dir         = undef,
+  Boolean $nbd_tls            = false,
+  $libvirt_version            = $::nova::compute::libvirt::version::default,
 ) inherits nova::compute::libvirt::version {
 
   include nova::deps
-
-  validate_legacy(Boolean, 'validate_bool', $configure_qemu)
-  validate_legacy(Boolean, 'validate_bool', $vnc_tls)
-  validate_legacy(Boolean, 'validate_bool', $vnc_tls_verify)
-  validate_legacy(Boolean, 'validate_bool', $default_tls_verify)
-  validate_legacy(Boolean, 'validate_bool', $nbd_tls)
 
   if versioncmp($libvirt_version, '4.5') < 0 {
     fail('libvirt version < 4.5 is no longer supported')

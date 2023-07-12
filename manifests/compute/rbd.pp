@@ -94,17 +94,14 @@ class nova::compute::rbd (
   $libvirt_images_rbd_glance_copy_poll_interval = $facts['os_service_default'],
   $libvirt_images_rbd_glance_copy_timeout       = $facts['os_service_default'],
   $rbd_keyring                                  = 'client.nova',
-  $ephemeral_storage                            = true,
-  $manage_ceph_client                           = true,
+  Boolean $ephemeral_storage                    = true,
+  Boolean $manage_ceph_client                   = true,
   $ceph_client_ensure                           = 'present',
   $package_ensure                               = 'present',
 ) {
 
   include nova::deps
   include nova::params
-
-  validate_legacy(Boolean, 'validate_bool', $ephemeral_storage)
-  validate_legacy(Boolean, 'validate_bool', $manage_ceph_client)
 
   if $manage_ceph_client {
     # Install ceph client libraries

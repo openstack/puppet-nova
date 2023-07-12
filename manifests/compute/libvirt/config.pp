@@ -53,28 +53,18 @@
 #   or Puppet catalog compilation will fail with duplicate resources.
 #
 class nova::compute::libvirt::config (
-  $libvirtd_config     = {},
-  $virtlogd_config     = {},
-  $virtlockd_config    = {},
-  $virtnodedevd_config = {},
-  $virtproxyd_config   = {},
-  $virtqemud_config    = {},
-  $virtsecretd_config  = {},
-  $virtstoraged_config = {},
-  $qemu_config         = {},
+  Hash $libvirtd_config     = {},
+  Hash $virtlogd_config     = {},
+  Hash $virtlockd_config    = {},
+  Hash $virtnodedevd_config = {},
+  Hash $virtproxyd_config   = {},
+  Hash $virtqemud_config    = {},
+  Hash $virtsecretd_config  = {},
+  Hash $virtstoraged_config = {},
+  Hash $qemu_config         = {},
 ) {
 
   include nova::deps
-
-  validate_legacy(Hash, 'validate_hash', $libvirtd_config)
-  validate_legacy(Hash, 'validate_hash', $virtlogd_config)
-  validate_legacy(Hash, 'validate_hash', $virtlockd_config)
-  validate_legacy(Hash, 'validate_hash', $virtnodedevd_config)
-  validate_legacy(Hash, 'validate_hash', $virtproxyd_config)
-  validate_legacy(Hash, 'validate_hash', $virtqemud_config)
-  validate_legacy(Hash, 'validate_hash', $virtsecretd_config)
-  validate_legacy(Hash, 'validate_hash', $virtstoraged_config)
-  validate_legacy(Hash, 'validate_hash', $qemu_config)
 
   create_resources('libvirtd_config', $libvirtd_config)
   create_resources('virtlogd_config', $virtlogd_config)

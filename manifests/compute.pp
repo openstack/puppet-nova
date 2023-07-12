@@ -254,18 +254,18 @@
 #   Defaults to $facts['os_service_default']
 #
 class nova::compute (
-  $enabled                                     = true,
-  $manage_service                              = true,
+  Boolean $enabled                             = true,
+  Boolean $manage_service                      = true,
   $ensure_package                              = 'present',
-  $vnc_enabled                                 = true,
-  $spice_enabled                               = false,
+  Boolean $vnc_enabled                         = true,
+  Boolean $spice_enabled                       = false,
   $vncserver_proxyclient_address               = '127.0.0.1',
   $vncproxy_host                               = false,
   $vncproxy_protocol                           = 'http',
   $vncproxy_port                               = '6080',
   $vncproxy_path                               = '/vnc_auto.html',
-  $force_config_drive                          = false,
-  $instance_usage_audit                        = false,
+  Boolean $force_config_drive                  = false,
+  Boolean $instance_usage_audit                = false,
   $instance_usage_audit_period                 = $facts['os_service_default'],
   $mkisofs_cmd                                 = $facts['os_service_default'],
   $use_cow_images                              = $facts['os_service_default'],
@@ -290,7 +290,7 @@ class nova::compute (
   $sync_power_state_interval                   = $facts['os_service_default'],
   $consecutive_build_service_disable_threshold = $facts['os_service_default'],
   $reserved_huge_pages                         = $facts['os_service_default'],
-  $neutron_physnets_numa_nodes_mapping         = {},
+  Hash $neutron_physnets_numa_nodes_mapping    = {},
   $neutron_tunnel_numa_nodes                   = [],
   $live_migration_wait_for_vif_plug            = $facts['os_service_default'],
   $max_disk_devices_to_attach                  = $facts['os_service_default'],
@@ -307,13 +307,6 @@ class nova::compute (
 
   include nova::deps
   include nova::params
-
-  validate_legacy(Boolean, 'validate_bool', $manage_service)
-  validate_legacy(Boolean, 'validate_bool', $enabled)
-  validate_legacy(Boolean, 'validate_bool', $vnc_enabled)
-  validate_legacy(Boolean, 'validate_bool', $force_config_drive)
-  validate_legacy(Boolean, 'validate_bool', $instance_usage_audit)
-
 
   $image_type_exclude_list_real = pick(join(any2array($image_type_exclude_list), ','), $facts['os_service_default'])
 
@@ -333,7 +326,6 @@ class nova::compute (
   }
 
   if !empty($neutron_physnets_numa_nodes_mapping) {
-    validate_legacy(Hash, 'validate_hash', $neutron_physnets_numa_nodes_mapping)
     $neutron_physnets_real = keys($neutron_physnets_numa_nodes_mapping)
     nova_config {
       'neutron/physnets': value => join(any2array($neutron_physnets_real), ',');
