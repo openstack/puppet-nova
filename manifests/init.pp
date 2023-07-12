@@ -190,10 +190,6 @@
 #   On RHEL will be '/var/lib/nova/tmp' and on Debian '/var/lock/nova'
 #   Defaults to $::nova::params::lock_path
 #
-# [*periodic_interval*]
-#   (optional) Seconds between running periodic tasks.
-#   Defaults to '60'
-#
 # [*report_interval*]
 #   (optional) Interval at which nodes report to data store.
 #    Defaults to '10'
@@ -370,6 +366,10 @@
 #  (optional) Sets a version cap for messages sent between cells services
 #  Defaults to undef
 #
+# [*periodic_interval*]
+#  (optional) Seconds between running periodic tasks.
+#  Defaults to undef
+#
 class nova(
   $ensure_package                         = 'present',
   $default_transport_url                  = $facts['os_service_default'],
@@ -410,7 +410,6 @@ class nova(
   $service_down_time                      = 60,
   $state_path                             = '/var/lib/nova',
   $lock_path                              = $::nova::params::lock_path,
-  $periodic_interval                      = '60',
   $report_interval                        = '10',
   $rootwrap_config                        = '/etc/nova/rootwrap.conf',
   Boolean $use_ssl                        = false,
@@ -449,6 +448,7 @@ class nova(
   $upgrade_level_cert                     = undef,
   $upgrade_level_cells                    = undef,
   $upgrade_level_intercell                = undef,
+  $periodic_interval                      = undef,
 ) inherits nova::params {
 
   include nova::deps
@@ -467,6 +467,10 @@ in a future release.")
     if getvar($ug_cell_opt) != undef {
       warning("The ${ug_cell_opt} is deprecated and has no effect.")
     }
+  }
+
+  if $periodic_interval != undef {
+    warning('The periodic_interval parameter is deprecated and has no effect.')
   }
 
   if $use_ssl {
