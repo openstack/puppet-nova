@@ -179,7 +179,7 @@
 #
 # [*service_down_time*]
 #   (optional) Maximum time since last check-in for up service.
-#   Defaults to 60
+#   Defaults to $facts['os_service_default'].
 #
 # [*state_path*]
 #   (optional) Directory for storing state.
@@ -192,7 +192,7 @@
 #
 # [*report_interval*]
 #   (optional) Interval at which nodes report to data store.
-#    Defaults to '10'
+#   Defaults to $facts['os_service_default']
 #
 # [*rootwrap_config*]
 #   (optional) Path to the rootwrap configuration file to use for running commands as root
@@ -407,10 +407,10 @@ class nova(
   $amqp_username                          = $facts['os_service_default'],
   $amqp_password                          = $facts['os_service_default'],
   $host                                   = $facts['os_service_default'],
-  $service_down_time                      = 60,
+  $service_down_time                      = $facts['os_service_default'],
   $state_path                             = '/var/lib/nova',
   $lock_path                              = $::nova::params::lock_path,
-  $report_interval                        = '10',
+  $report_interval                        = $facts['os_service_default'],
   $rootwrap_config                        = '/etc/nova/rootwrap.conf',
   Boolean $use_ssl                        = false,
   Array[String[1]] $enabled_ssl_apis      = ['metadata', 'osapi_compute'],
