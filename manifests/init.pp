@@ -194,6 +194,11 @@
 #   (optional) Interval at which nodes report to data store.
 #   Defaults to $facts['os_service_default']
 #
+# [*periodic_fuzzy_delay*]
+#   (otional) Number of seconds to randomly delay when starting the periodic
+#   task scheduler to reduce stampeding.
+#   Defaults to $facts['os_service_default']
+#
 # [*rootwrap_config*]
 #   (optional) Path to the rootwrap configuration file to use for running commands as root
 #   Defaults to '/etc/nova/rootwrap.conf'
@@ -411,6 +416,7 @@ class nova(
   $state_path                             = '/var/lib/nova',
   $lock_path                              = $::nova::params::lock_path,
   $report_interval                        = $facts['os_service_default'],
+  $periodic_fuzzy_delay                   = $facts['os_service_default'],
   $rootwrap_config                        = '/etc/nova/rootwrap.conf',
   Boolean $use_ssl                        = false,
   Array[String[1]] $enabled_ssl_apis      = ['metadata', 'osapi_compute'],
@@ -669,6 +675,7 @@ but should be one of: ssh-rsa, ssh-dsa, ssh-ecdsa.")
     'DEFAULT/service_down_time':                      value => $service_down_time;
     'DEFAULT/rootwrap_config':                        value => $rootwrap_config;
     'DEFAULT/report_interval':                        value => $report_interval;
+    'DEFAULT/periodic_fuzzy_delay':                   value => $periodic_fuzzy_delay;
   }
 
   oslo::concurrency { 'nova_config': lock_path => $lock_path }
