@@ -1,0 +1,5 @@
+---
+deprecations:
+  - |
+    The ``upgrade_level_cells`` parameter and the ``upgrade_level_intercell``
+    parameter of the ``nova`` class have been deprecated and have no effect.

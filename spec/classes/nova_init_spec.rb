@@ -143,11 +143,9 @@ describe 'nova' do
           :notification_format                     => 'unversioned',
           :report_interval                         => '60',
           :ovsdb_connection                        => 'tcp:127.0.0.1:6640',
-          :upgrade_level_cells                     => '1.0.0',
           :upgrade_level_cert                      => '1.0.0',
           :upgrade_level_compute                   => '1.0.0',
           :upgrade_level_conductor                 => '1.0.0',
-          :upgrade_level_intercell                 => '1.0.0',
           :upgrade_level_scheduler                 => '1.0.0',
           :purge_config                            => false,
           :my_ip                                   => '192.0.2.1',
@@ -226,12 +224,13 @@ describe 'nova' do
       end
 
       it 'configures upgrade_levels' do
-        is_expected.to contain_nova_config('upgrade_levels/cells').with_value('1.0.0')
         is_expected.to contain_nova_config('upgrade_levels/cert').with_value('1.0.0')
         is_expected.to contain_nova_config('upgrade_levels/compute').with_value('1.0.0')
         is_expected.to contain_nova_config('upgrade_levels/conductor').with_value('1.0.0')
-        is_expected.to contain_nova_config('upgrade_levels/intercell').with_value('1.0.0')
         is_expected.to contain_nova_config('upgrade_levels/scheduler').with_value('1.0.0')
+
+        is_expected.to contain_nova_config('upgrade_levels/cells').with_ensure('absent')
+        is_expected.to contain_nova_config('upgrade_levels/intercell').with_ensure('absent')
       end
 
       it 'configures various things' do
