@@ -626,13 +626,6 @@ but should be one of: ssh-rsa, ssh-dsa, ssh-ecdsa.")
     }
   }
 
-  # NOTE(tkajinam): Remove this after Zed release. See lp bug 1967713 .
-  nova_config {
-    'ssl/cert_file': ensure => absent;
-    'ssl/key_file':  ensure => absent;
-    'ssl/ca_file':   ensure => absent;
-  }
-
   oslo::messaging::default { 'nova_config':
     executor_thread_pool_size => $executor_thread_pool_size,
     transport_url             => $default_transport_url,
