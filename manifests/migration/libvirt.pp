@@ -297,13 +297,6 @@ class nova::migration::libvirt(
       'crl_file' => { 'value' => $crl_file_real, 'quote' => true },
     })
 
-    # TODO(tkajinam): Remove this after A release.
-    create_resources( $libvirt_listen_config , {
-      'listen_tls'  => { 'ensure' => absent },
-      'listen_tcp'  => { 'ensure' => absent },
-      'listen_addr' => { 'ensure' => absent },
-    })
-
     if $transport == 'tls' or $transport == 'tcp' {
       if versioncmp($libvirt_version, '5.6') < 0 {
         fail('libvirt version < 5.6 is no longer supported')
