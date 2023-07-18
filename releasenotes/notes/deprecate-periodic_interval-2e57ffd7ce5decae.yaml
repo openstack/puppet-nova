@@ -1,0 +1,5 @@
+---
+deprecations:
+  - |
+    The ``nova::periodic_interval`` parameter has been deprecated, because this
+    parameter has had no effect.
