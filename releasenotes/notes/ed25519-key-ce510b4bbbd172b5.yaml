@@ -1,0 +1,5 @@
+---
+features:
+  - |
+    The ``nova::nova_private_key`` parameter now supports the ``ssh-ed25519``
+    type.

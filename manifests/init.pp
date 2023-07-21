@@ -222,14 +222,14 @@
 # [*nova_public_key*]
 #   (optional) Install public key in .ssh/authorized_keys for the 'nova' user.
 #   Expects a hash of the form { type => 'key-type', key => 'key-data' } where
-#   'key-type' is one of (ssh-rsa, ssh-dsa, ssh-ecdsa) and 'key-data' is the
-#   actual key data (e.g, 'AAAA...').
+#   'key-type' is one of (ssh-rsa, ssh-dsa, ssh-ecdsa, ssh-ed25519) and
+#   'key-data' is the actual key data (e.g, 'AAAA...').
 #
 # [*nova_private_key*]
 #   (optional) Install private key into .ssh/id_rsa (or appropriate equivalent
 #   for key type).  Expects a hash of the form { type => 'key-type', key =>
-#   'key-data' }, where 'key-type' is one of (ssh-rsa, ssh-dsa, ssh-ecdsa) and
-#   'key-data' is the contents of the private key file.
+#   'key-data' }, where 'key-type' is one of (ssh-rsa, ssh-dsa, ssh-ecdsa,
+#   ssh-ed25519) and 'key-data' is the contents of the private key file.
 #
 # [*ssl_only*]
 #   (optional) Disallow non-encrypted connections.
@@ -512,15 +512,16 @@ in a future release.")
       }
 
       $nova_private_key_file = $nova_private_key['type'] ? {
-        'ssh-rsa'   => '/var/lib/nova/.ssh/id_rsa',
-        'ssh-dsa'   => '/var/lib/nova/.ssh/id_dsa',
-        'ssh-ecdsa' => '/var/lib/nova/.ssh/id_ecdsa',
-        default     => undef
+        'ssh-rsa'     => '/var/lib/nova/.ssh/id_rsa',
+        'ssh-dsa'     => '/var/lib/nova/.ssh/id_dsa',
+        'ssh-ecdsa'   => '/var/lib/nova/.ssh/id_ecdsa',
+        'ssh-ed25519' => '/var/lib/nova/.ssh/id_ed25519',
+        default       => undef
       }
 
       if ! $nova_private_key_file {
         fail("Unable to determine name of private key file.  Type specified was '${nova_private_key['type']}' \
-but should be one of: ssh-rsa, ssh-dsa, ssh-ecdsa.")
+but should be one of: ssh-rsa, ssh-dsa, ssh-ecdsa, ssh-ed25519.")
       }
 
       file { $nova_private_key_file:
