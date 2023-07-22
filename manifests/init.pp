@@ -439,7 +439,7 @@ class nova(
   $initial_cpu_allocation_ratio           = $facts['os_service_default'],
   $initial_ram_allocation_ratio           = $facts['os_service_default'],
   $initial_disk_allocation_ratio          = $facts['os_service_default'],
-  $purge_config                           = false,
+  Boolean $purge_config                   = false,
   $my_ip                                  = $facts['os_service_default'],
   $dhcp_domain                            = $facts['os_service_default'],
   $instance_name_template                 = $facts['os_service_default'],
