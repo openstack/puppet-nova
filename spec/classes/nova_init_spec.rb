@@ -80,9 +80,9 @@ describe 'nova' do
         is_expected.to contain_oslo__concurrency('nova_config').with(
           :lock_path => platform_params[:lock_path]
         )
-        is_expected.to contain_nova_config('DEFAULT/service_down_time').with_value('60')
+        is_expected.to contain_nova_config('DEFAULT/service_down_time').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('DEFAULT/rootwrap_config').with_value('/etc/nova/rootwrap.conf')
-        is_expected.to contain_nova_config('DEFAULT/report_interval').with_value('10')
+        is_expected.to contain_nova_config('DEFAULT/report_interval').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('vif_plug_ovs/ovsdb_connection').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('DEFAULT/long_rpc_timeout').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('DEFAULT/cpu_allocation_ratio').with_value('<SERVICE DEFAULT>')
@@ -133,7 +133,7 @@ describe 'nova' do
           :amqp_password                           => 'password',
           :lock_path                               => '/var/locky/path',
           :state_path                              => '/var/lib/nova2',
-          :service_down_time                       => '120',
+          :service_down_time                       => '60',
           :auth_strategy                           => 'foo',
           :ensure_package                          => '2012.1.1-15.el6',
           :host                                    => 'test-001.example.org',
@@ -141,7 +141,7 @@ describe 'nova' do
           :notification_driver                     => 'ceilometer.compute.nova_notifier',
           :notification_topics                     => 'openstack',
           :notification_format                     => 'unversioned',
-          :report_interval                         => '60',
+          :report_interval                         => '10',
           :ovsdb_connection                        => 'tcp:127.0.0.1:6640',
           :upgrade_level_cert                      => '1.0.0',
           :upgrade_level_compute                   => '1.0.0',
@@ -238,9 +238,9 @@ describe 'nova' do
         is_expected.to contain_oslo__concurrency('nova_config').with(
           :lock_path => '/var/locky/path'
         )
-        is_expected.to contain_nova_config('DEFAULT/service_down_time').with_value('120')
+        is_expected.to contain_nova_config('DEFAULT/service_down_time').with_value('60')
         is_expected.to contain_nova_config('notifications/notification_format').with_value('unversioned')
-        is_expected.to contain_nova_config('DEFAULT/report_interval').with_value('60')
+        is_expected.to contain_nova_config('DEFAULT/report_interval').with_value('10')
         is_expected.to contain_nova_config('vif_plug_ovs/ovsdb_connection').with_value('tcp:127.0.0.1:6640')
         is_expected.to contain_nova_config('DEFAULT/long_rpc_timeout').with_value('1800')
         is_expected.to contain_nova_config('DEFAULT/ssl_only').with_value(true)
