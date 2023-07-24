@@ -81,6 +81,8 @@ describe 'nova' do
           :lock_path => platform_params[:lock_path]
         )
         is_expected.to contain_nova_config('DEFAULT/service_down_time').with_value('<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('notifications/notification_format').with_value('<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('notifications/notify_on_state_change').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('DEFAULT/rootwrap_config').with_value('/etc/nova/rootwrap.conf')
         is_expected.to contain_nova_config('DEFAULT/report_interval').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('DEFAULT/periodic_fuzzy_delay').with_value('<SERVICE DEFAULT>')
@@ -261,16 +263,6 @@ describe 'nova' do
         it { is_expected.to contain_oslo__messaging__notifications('nova_config').with(
           :driver => ['ceilometer.compute.nova_notifier', 'nova.openstack.common.notifier.rpc_notifier'],
         ) }
-      end
-    end
-
-    context 'with wrong notify_on_state_change parameter' do
-      let :params do
-        { :notify_on_state_change => 'vm_status' }
-      end
-
-      it 'configures database' do
-        is_expected.to contain_nova_config('notifications/notify_on_state_change').with_ensure('absent')
       end
     end
 

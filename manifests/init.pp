@@ -285,7 +285,7 @@
 #   on instance state changes. Valid values are None for no notifications,
 #   "vm_state" for notifications on VM state changes, or "vm_and_task_state"
 #   for notifications on VM and task state changes.
-#   Defaults to undef
+#   Defaults to facts['os_service_default']
 #
 # [*ovsdb_connection*]
 #   (optional) Sets the ovsdb connection string. This is used by os-vif
@@ -434,7 +434,7 @@ class nova(
   $notification_driver                    = $facts['os_service_default'],
   $notification_topics                    = $facts['os_service_default'],
   $notification_format                    = $facts['os_service_default'],
-  $notify_on_state_change                 = undef,
+  $notify_on_state_change                 = $facts['os_service_default'],
   $ovsdb_connection                       = $facts['os_service_default'],
   $upgrade_level_compute                  = $facts['os_service_default'],
   $upgrade_level_conductor                = $facts['os_service_default'],
@@ -661,26 +661,19 @@ but should be one of: ssh-rsa, ssh-dsa, ssh-ecdsa, ssh-ed25519.")
   }
 
   nova_config {
-    'DEFAULT/ovsdb_connection':                       ensure => 'absent';
-    'vif_plug_ovs/ovsdb_connection':                  value => $ovsdb_connection;
-    'notifications/notification_format':              value => $notification_format;
+    'DEFAULT/ovsdb_connection':             ensure => 'absent';
+    'vif_plug_ovs/ovsdb_connection':        value  => $ovsdb_connection;
+    'notifications/notification_format':    value  => $notification_format;
+    'notifications/notify_on_state_change': value  => $notify_on_state_change;
     # Following may need to be broken out to different nova services
-    'DEFAULT/state_path':                             value => $state_path;
-    'DEFAULT/service_down_time':                      value => $service_down_time;
-    'DEFAULT/rootwrap_config':                        value => $rootwrap_config;
-    'DEFAULT/report_interval':                        value => $report_interval;
-    'DEFAULT/periodic_fuzzy_delay':                   value => $periodic_fuzzy_delay;
+    'DEFAULT/state_path':                   value => $state_path;
+    'DEFAULT/service_down_time':            value => $service_down_time;
+    'DEFAULT/rootwrap_config':              value => $rootwrap_config;
+    'DEFAULT/report_interval':              value => $report_interval;
+    'DEFAULT/periodic_fuzzy_delay':         value => $periodic_fuzzy_delay;
   }
 
   oslo::concurrency { 'nova_config': lock_path => $lock_path }
-
-  if $notify_on_state_change and $notify_on_state_change in ['vm_state', 'vm_and_task_state'] {
-    nova_config {
-      'notifications/notify_on_state_change': value => $notify_on_state_change;
-    }
-  } else {
-    nova_config { 'notifications/notify_on_state_change': ensure => absent; }
-  }
 
   nova_config {
     'upgrade_levels/cert':        value => pick($upgrade_level_cert, $facts['os_service_default']);
