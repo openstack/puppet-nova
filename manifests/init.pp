@@ -661,7 +661,6 @@ but should be one of: ssh-rsa, ssh-dsa, ssh-ecdsa, ssh-ed25519.")
   }
 
   nova_config {
-    'DEFAULT/ovsdb_connection':             ensure => 'absent';
     'vif_plug_ovs/ovsdb_connection':        value  => $ovsdb_connection;
     'notifications/notification_format':    value  => $notification_format;
     'notifications/notify_on_state_change': value  => $notify_on_state_change;
