@@ -1,0 +1,4 @@
+---
+features:
+  - |
+    The new ``nova::periodic_fuzzy_delay`` parameter has been added.
