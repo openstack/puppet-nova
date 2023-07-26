@@ -7,20 +7,8 @@ describe 'nova::db' do
 
   shared_examples 'nova::db' do
     context 'with default parameters' do
-      it { should_not contain_oslo__db('nova_config') }
-      it { should_not contain_oslo__db('api_database') }
-    end
-
-    context 'with connection parameters' do
-      before :each do
-        params.merge!(
-          :database_connection     => 'mysql+pymysql://user:pass@db/db1',
-          :api_database_connection => 'mysql+pymysql://user:pass@db/db2'
-        )
-      end
-
       it { should contain_oslo__db('nova_config').with(
-        :connection              => 'mysql+pymysql://user:pass@db/db1',
+        :connection              => '<SERVICE DEFAULT>',
         :slave_connection        => '<SERVICE DEFAULT>',
         :db_max_retries          => '<SERVICE DEFAULT>',
         :connection_recycle_time => '<SERVICE DEFAULT>',
@@ -34,7 +22,7 @@ describe 'nova::db' do
       it { should contain_oslo__db('api_database').with(
         :config                  => 'nova_config',
         :config_group            => 'api_database',
-        :connection              => 'mysql+pymysql://user:pass@db/db2',
+        :connection              => '<SERVICE DEFAULT>',
         :slave_connection        => '<SERVICE DEFAULT>',
         :connection_recycle_time => '<SERVICE DEFAULT>',
         :max_pool_size           => '<SERVICE DEFAULT>',

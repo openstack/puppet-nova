@@ -120,34 +120,29 @@ class nova::db (
 
   include nova::deps
 
-  if !is_service_default($database_connection) {
-    oslo::db { 'nova_config':
-      db_max_retries          => $database_db_max_retries,
-      connection              => $database_connection,
-      connection_recycle_time => $database_connection_recycle_time,
-      max_pool_size           => $database_max_pool_size,
-      max_retries             => $database_max_retries,
-      retry_interval          => $database_retry_interval,
-      max_overflow            => $database_max_overflow,
-      pool_timeout            => $database_pool_timeout,
-      mysql_enable_ndb        => $mysql_enable_ndb,
-      slave_connection        => $slave_connection,
-    }
+  oslo::db { 'nova_config':
+    db_max_retries          => $database_db_max_retries,
+    connection              => $database_connection,
+    connection_recycle_time => $database_connection_recycle_time,
+    max_pool_size           => $database_max_pool_size,
+    max_retries             => $database_max_retries,
+    retry_interval          => $database_retry_interval,
+    max_overflow            => $database_max_overflow,
+    pool_timeout            => $database_pool_timeout,
+    mysql_enable_ndb        => $mysql_enable_ndb,
+    slave_connection        => $slave_connection,
   }
 
-  if !is_service_default($api_database_connection) {
-    oslo::db { 'api_database':
-      config                  => 'nova_config',
-      config_group            => 'api_database',
-      connection              => $api_database_connection,
-      slave_connection        => $api_slave_connection,
-      connection_recycle_time => $api_database_connection_recycle_time,
-      max_pool_size           => $api_database_max_pool_size,
-      max_retries             => $api_database_max_retries,
-      retry_interval          => $api_database_retry_interval,
-      max_overflow            => $api_database_max_overflow,
-      pool_timeout            => $api_database_pool_timeout,
-    }
+  oslo::db { 'api_database':
+    config                  => 'nova_config',
+    config_group            => 'api_database',
+    connection              => $api_database_connection,
+    slave_connection        => $api_slave_connection,
+    connection_recycle_time => $api_database_connection_recycle_time,
+    max_pool_size           => $api_database_max_pool_size,
+    max_retries             => $api_database_max_retries,
+    retry_interval          => $api_database_retry_interval,
+    max_overflow            => $api_database_max_overflow,
+    pool_timeout            => $api_database_pool_timeout,
   }
-
 }
