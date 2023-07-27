@@ -423,8 +423,8 @@ class nova(
   $ca_file                                = false,
   $cert_file                              = false,
   $key_file                               = false,
-  $nova_public_key                        = undef,
-  $nova_private_key                       = undef,
+  Optional[Hash] $nova_public_key         = undef,
+  Optional[Hash] $nova_private_key        = undef,
   $ssl_only                               = $facts['os_service_default'],
   $cert                                   = $facts['os_service_default'],
   $key                                    = $facts['os_service_default'],
@@ -513,7 +513,7 @@ in a future release.")
     }
 
     if $nova_private_key {
-      if ! $nova_private_key[key] or ! $nova_private_key['type'] {
+      if ! $nova_private_key['key'] or ! $nova_private_key['type'] {
         fail('You must provide both a key type and key data.')
       }
 
