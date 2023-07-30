@@ -147,8 +147,6 @@ class nova::db (
       retry_interval          => $api_database_retry_interval,
       max_overflow            => $api_database_max_overflow,
       pool_timeout            => $api_database_pool_timeout,
-      # Package management should be disabled here to avoid conflict.
-      manage_backend_package  => false
     }
   }
 
