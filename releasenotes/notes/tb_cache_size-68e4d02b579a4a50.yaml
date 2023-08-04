@@ -1,0 +1,4 @@
+---
+features:
+  - |
+    The new ``nova::compute::libvirt::tb_cache_size`` parameter has been added.

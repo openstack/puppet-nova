@@ -229,6 +229,10 @@
 #   reboot request is made.
 #   Defaults to $facts['os_service_default']
 #
+# [*tb_cache_size*]
+#   (optional) The tb-cache size (in MiB) of each guest VM.
+#   Defaults to $facts['os_service_default']
+#
 class nova::compute::libvirt (
   $ensure_package                             = 'present',
   $virt_type                                  = 'kvm',
@@ -274,6 +278,7 @@ class nova::compute::libvirt (
   $max_queues                                 = $facts['os_service_default'],
   $num_memory_encrypted_guests                = $facts['os_service_default'],
   $wait_soft_reboot_seconds                   = $facts['os_service_default'],
+  $tb_cache_size                              = $facts['os_service_default'],
 ) inherits nova::params {
 
   include nova::deps
@@ -376,6 +381,7 @@ class nova::compute::libvirt (
     'libvirt/max_queues':                    value => $max_queues;
     'libvirt/num_memory_encrypted_guests':   value => $num_memory_encrypted_guests;
     'libvirt/wait_soft_reboot_seconds':      value => $wait_soft_reboot_seconds;
+    'libvirt/tb_cache_size':                 value => $tb_cache_size;
   }
 
   # cpu_model param is only valid if cpu_mode=custom
