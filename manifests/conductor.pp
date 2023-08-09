@@ -48,13 +48,8 @@ class nova::conductor(
     ensure_package => $ensure_package,
   }
 
-  if $workers {
-    nova_config {
-      'conductor/workers': value => $workers;
-    }
-  }
-
   nova_config {
+    'conductor/workers':           value => $workers;
     'DEFAULT/enable_new_services': value => $enable_new_services
   }
 }

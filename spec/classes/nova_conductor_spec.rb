@@ -41,11 +41,15 @@ describe 'nova::conductor' do
       )}
     end
 
+    context 'with default workers parameter' do
+      it { is_expected.to contain_nova_config('conductor/workers').with_value(2) }
+    end
+
     context 'with overridden workers parameter' do
       let :params do
-        {:workers => '5' }
+        {:workers => 5 }
       end
-      it { is_expected.to contain_nova_config('conductor/workers').with_value('5') }
+      it { is_expected.to contain_nova_config('conductor/workers').with_value(5) }
     end
 
     context 'with default enable_new_services parameter' do
@@ -67,7 +71,7 @@ describe 'nova::conductor' do
   }).each do |os,facts|
     context "on #{os}" do
       let (:facts) do
-        facts.merge!(OSDefaults.get_facts())
+        facts.merge!(OSDefaults.get_facts({ :os_workers => 2 }))
       end
 
       let (:platform_params) do
