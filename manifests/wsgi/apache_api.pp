@@ -52,6 +52,10 @@
 #   (Optional) The priority for the vhost.
 #   Defaults to 10
 #
+# [*setenv*]
+#   (Optional) Set environment variables for the vhost.
+#   Defaults to []
+#
 # [*threads*]
 #   (Optional) The number of threads for the vhost.
 #   Defaults to 1
@@ -148,6 +152,7 @@ class nova::wsgi::apache_api (
   $wsgi_process_display_name   = undef,
   $threads                     = 1,
   $priority                    = 10,
+  $setenv                      = [],
   $access_log_file             = undef,
   $access_log_pipe             = undef,
   $access_log_syslog           = undef,
@@ -173,6 +178,7 @@ class nova::wsgi::apache_api (
     group                       => $::nova::params::group,
     path                        => $path,
     priority                    => $priority,
+    setenv                      => $setenv,
     servername                  => $servername,
     ssl                         => $ssl,
     ssl_ca                      => $ssl_ca,

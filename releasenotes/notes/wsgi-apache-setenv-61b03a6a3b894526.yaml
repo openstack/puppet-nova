@@ -1,0 +1,7 @@
+---
+features:
+  - |
+    The following classes now supports the new ``setenv`` parameter
+
+    - ``nova::wsgi::apache_api``
+    - ``nova::wsgi::apache_metadata``

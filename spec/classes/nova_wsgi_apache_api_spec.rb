@@ -19,6 +19,7 @@ describe 'nova::wsgi::apache_api' do
         :group                       => 'nova',
         :path                        => '/',
         :priority                    => 10,
+        :setenv                      => [],
         :servername                  => 'foo.example.com',
         :ssl                         => false,
         :threads                     => 1,
