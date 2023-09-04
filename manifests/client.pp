@@ -14,6 +14,9 @@ class nova::client(
   include nova::deps
   include nova::params
 
+  warning("The nova::client class has been deprecated and will be removed \
+in a future release.")
+
   package { 'python-novaclient':
     ensure => $ensure,
     name   => $::nova::params::client_package,

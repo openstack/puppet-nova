@@ -1,0 +1,7 @@
+---
+deprecations:
+  - |
+    The ``nova::client`` class has been deprecated. The ``nova`` CLI has
+    been deprecated and will be removed in the future. Use
+    the ``openstacklib::openstackclient`` class and the ``openstack`` CLI
+    instead.
