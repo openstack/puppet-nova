@@ -10,7 +10,7 @@
 #
 # [*auth_type*]
 #   Name of the auth type to load (string value)
-#   Defaults to 'v3password'
+#   Defaults to 'password'
 #
 # [*project_name*]
 #   (optional) Project name for connecting to Neutron network services in
@@ -94,7 +94,7 @@
 #
 class nova::network::neutron (
   $password,
-  $auth_type               = 'v3password',
+  $auth_type               = 'password',
   $project_name            = 'services',
   $project_domain_name     = 'Default',
   $system_scope            = $facts['os_service_default'],
