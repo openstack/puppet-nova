@@ -25,7 +25,6 @@ describe 'nova::scheduler' do
     it { is_expected.to contain_nova_config('scheduler/placement_aggregate_required_for_tenants').with_value('<SERVICE DEFAULT>') }
     it { is_expected.to contain_nova_config('scheduler/max_placement_results').with_value('<SERVICE DEFAULT>') }
     it { is_expected.to contain_nova_config('scheduler/enable_isolated_aggregate_filtering').with_value('<SERVICE DEFAULT>') }
-    it { is_expected.to contain_nova_config('scheduler/query_placement_for_availability_zone').with_value('<SERVICE DEFAULT>') }
     it { is_expected.to contain_nova_config('scheduler/query_placement_for_routed_network_aggregates').with_value('<SERVICE DEFAULT>') }
 
     it { is_expected.to contain_class('nova::availability_zone') }
@@ -111,14 +110,6 @@ describe 'nova::scheduler' do
       end
 
       it { is_expected.to contain_nova_config('scheduler/enable_isolated_aggregate_filtering').with_value(true) }
-    end
-
-    context 'with query_placement_for_availability_zone' do
-      let :params do
-        { :query_placement_for_availability_zone => true }
-      end
-
-      it { is_expected.to contain_nova_config('scheduler/query_placement_for_availability_zone').with_value(true) }
     end
 
     context 'with query_placement_for_routed_network_aggregates' do

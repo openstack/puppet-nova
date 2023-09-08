@@ -66,15 +66,6 @@
 #   compute hosts affined to routed network segment aggregates.
 #   Defaults to $facts['os_service_default']
 #
-# DEPRECATED PARAMETERS
-#
-# [*query_placement_for_availability_zone*]
-#   (Optional) This setting allows the scheduler to look up a host aggregate
-#   with metadata key of availability zone set to the value provided by
-#   incoming request, and request result from placement be limited to that
-#   aggregate.
-#   Defaults to undef
-#
 class nova::scheduler(
   Boolean $enabled                               = true,
   Boolean $manage_service                        = true,
@@ -88,19 +79,12 @@ class nova::scheduler(
   $max_placement_results                         = $facts['os_service_default'],
   $enable_isolated_aggregate_filtering           = $facts['os_service_default'],
   $query_placement_for_routed_network_aggregates = $facts['os_service_default'],
-  # DEPRECATED PARAMETERS
-  $query_placement_for_availability_zone         = undef,
 ) {
 
   include nova::deps
   include nova::db
   include nova::params
   include nova::availability_zone
-
-  if $query_placement_for_availability_zone != undef {
-    warning('The query_placement_for_availability_zone parameter is deprecated.')
-  }
-  $query_placement_for_availability_zone_real = pick($query_placement_for_availability_zone, $facts['os_service_default'])
 
   nova::generic_service { 'scheduler':
     enabled        => $enabled,
@@ -119,7 +103,6 @@ class nova::scheduler(
     'scheduler/placement_aggregate_required_for_tenants':      value => $placement_aggregate_required_for_tenants;
     'scheduler/max_placement_results':                         value => $max_placement_results;
     'scheduler/enable_isolated_aggregate_filtering':           value => $enable_isolated_aggregate_filtering;
-    'scheduler/query_placement_for_availability_zone':         value => $query_placement_for_availability_zone_real;
     'scheduler/query_placement_for_routed_network_aggregates': value => $query_placement_for_routed_network_aggregates;
   }
 }
