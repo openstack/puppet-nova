@@ -1,0 +1,5 @@
+---
+upgrade:
+  - |
+    The ``nova::scheduler::query_placement_for_availability_zone`` parameter
+    has been removed.
