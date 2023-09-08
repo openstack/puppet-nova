@@ -3,7 +3,7 @@ require 'spec_helper'
 describe 'nova::network::neutron' do
   let :default_params do
     {
-      :auth_type               => 'v3password',
+      :auth_type               => 'password',
       :timeout                 => '30',
       :project_name            => 'services',
       :project_domain_name     => 'Default',
