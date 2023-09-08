@@ -26,6 +26,8 @@ describe 'nova::scheduler::filter' do
       it { is_expected.to contain_nova_config('filter_scheduler/soft_anti_affinity_weight_multiplier').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('filter_scheduler/build_failure_weight_multiplier').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('filter_scheduler/cross_cell_move_weight_multiplier').with_value('<SERVICE DEFAULT>') }
+      it { is_expected.to contain_nova_config('filter_scheduler/hypervisor_version_weight_multiplier').with_value('<SERVICE DEFAULT>') }
+      it { is_expected.to contain_nova_config('filter_scheduler/num_instances_weight_multiplier').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('filter_scheduler/shuffle_best_same_weighed_hosts').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('filter_scheduler/restrict_isolated_hosts_to_isolated_images').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('filter_scheduler/aggregate_image_properties_isolation_namespace').with_value('<SERVICE DEFAULT>') }
@@ -56,6 +58,8 @@ describe 'nova::scheduler::filter' do
           :soft_anti_affinity_weight_multiplier => 60,
           :build_failure_weight_multiplier      => 100,
           :cross_cell_move_weight_multiplier    => 1000,
+          :hypervisor_version_weight_multiplier => 70,
+          :num_instances_weight_multiplier      => 0,
           :shuffle_best_same_weighed_hosts      => true,
         }
       end
@@ -72,6 +76,8 @@ describe 'nova::scheduler::filter' do
       it { is_expected.to contain_nova_config('filter_scheduler/soft_anti_affinity_weight_multiplier').with_value(60) }
       it { is_expected.to contain_nova_config('filter_scheduler/build_failure_weight_multiplier').with_value(100) }
       it { is_expected.to contain_nova_config('filter_scheduler/cross_cell_move_weight_multiplier').with_value(1000) }
+      it { is_expected.to contain_nova_config('filter_scheduler/hypervisor_version_weight_multiplier').with_value(70) }
+      it { is_expected.to contain_nova_config('filter_scheduler/num_instances_weight_multiplier').with_value(0) }
       it { is_expected.to contain_nova_config('filter_scheduler/shuffle_best_same_weighed_hosts').with_value(true) }
       it { is_expected.to contain_nova_config('filter_scheduler/isolated_images').with_value('ubuntu1,centos2') }
       it { is_expected.to contain_nova_config('filter_scheduler/isolated_hosts').with_value('192.168.1.2,192.168.1.3') }
