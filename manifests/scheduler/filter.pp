@@ -79,8 +79,16 @@
 #   (optional) Multiplier used for weighing hosts during a cross-cell move
 #   Defaults to $facts['os_service_default']
 #
+# [*num_instances_weight_multiplier*]
+#   (optional) Number of instances weight multiplier ratio.
+#   Defaults to $facts['os_service_default']
+#
+# [*hypervisor_version_weight_multiplier*]
+#   (optional) Hypervisor Version weight multiplier ratio.
+#   Defaults to $facts['os_service_default']
+#
 # [*shuffle_best_same_weighed_hosts*]
-#   (Optional) Enabled spreading the instances between hosts with the same
+#   (optional) Enabled spreading the instances between hosts with the same
 #   best weight
 #   Defaults to $facts['os_service_default']
 #
@@ -114,6 +122,8 @@ class nova::scheduler::filter (
   $soft_anti_affinity_weight_multiplier           = $facts['os_service_default'],
   $build_failure_weight_multiplier                = $facts['os_service_default'],
   $cross_cell_move_weight_multiplier              = $facts['os_service_default'],
+  $num_instances_weight_multiplier                = $facts['os_service_default'],
+  $hypervisor_version_weight_multiplier           = $facts['os_service_default'],
   $shuffle_best_same_weighed_hosts                = $facts['os_service_default'],
   $restrict_isolated_hosts_to_isolated_images     = $facts['os_service_default'],
   $aggregate_image_properties_isolation_namespace = $facts['os_service_default'],
@@ -171,6 +181,10 @@ class nova::scheduler::filter (
       value => $build_failure_weight_multiplier;
     'filter_scheduler/cross_cell_move_weight_multiplier':
       value => $cross_cell_move_weight_multiplier;
+    'filter_scheduler/num_instances_weight_multiplier':
+      value => $num_instances_weight_multiplier;
+    'filter_scheduler/hypervisor_version_weight_multiplier':
+      value => $hypervisor_version_weight_multiplier;
     'filter_scheduler/shuffle_best_same_weighed_hosts':
       value => $shuffle_best_same_weighed_hosts;
     'filter_scheduler/restrict_isolated_hosts_to_isolated_images':

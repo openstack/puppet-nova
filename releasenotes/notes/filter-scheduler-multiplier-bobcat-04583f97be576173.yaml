@@ -1,0 +1,8 @@
+---
+features:
+  - |
+    The ``nova::scheduler::filter`` class now supports the following two
+    new parameters.
+
+    - ``hypervisor_version_weight_multiplier``
+    - ``num_instances_weight_multiplier``
