@@ -377,10 +377,6 @@
 #   (optional) The strategy to use for auth: noauth or keystone.
 #   Defaults to undef
 #
-# [*upgrade_level_cert*]
-#  (optional) Sets a version cap for messages sent to cert services
-#  Defaults to undef
-#
 # [*upgrade_level_cells*]
 #  (optional) Sets a version cap for messages sent to local cells services
 #  Defaults to undef
@@ -473,7 +469,6 @@ class nova(
   $instance_name_template                 = $facts['os_service_default'],
   # DEPRECATED PARAMETERS
   $auth_strategy                          = undef,
-  $upgrade_level_cert                     = undef,
   $upgrade_level_cells                    = undef,
   $upgrade_level_intercell                = undef,
   $periodic_interval                      = undef,
@@ -484,11 +479,6 @@ class nova(
 
   if empty($enabled_ssl_apis) and $use_ssl {
       warning('enabled_ssl_apis is empty but use_ssl is set to true')
-  }
-
-  if $upgrade_level_cert != undef {
-    warning("The upgrade_level_cert parameter is deprecated and will be removed \
-in a future release.")
   }
 
   [ 'upgrade_level_cells', 'upgrade_level_intercell' ].each |String $ug_cell_opt| {
@@ -701,10 +691,9 @@ but should be one of: ssh-rsa, ssh-dsa, ssh-ecdsa, ssh-ed25519.")
   oslo::concurrency { 'nova_config': lock_path => $lock_path }
 
   nova_config {
-    'upgrade_levels/cert':        value => pick($upgrade_level_cert, $facts['os_service_default']);
-    'upgrade_levels/compute':     value => $upgrade_level_compute;
-    'upgrade_levels/conductor':   value => $upgrade_level_conductor;
-    'upgrade_levels/scheduler':   value => $upgrade_level_scheduler;
+    'upgrade_levels/compute':   value => $upgrade_level_compute;
+    'upgrade_levels/conductor': value => $upgrade_level_conductor;
+    'upgrade_levels/scheduler': value => $upgrade_level_scheduler;
   }
 
   nova_config {

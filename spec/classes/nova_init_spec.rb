@@ -155,7 +155,6 @@ describe 'nova' do
           :report_interval                         => '10',
           :periodic_fuzzy_delay                    => '61',
           :ovsdb_connection                        => 'tcp:127.0.0.1:6640',
-          :upgrade_level_cert                      => '1.0.0',
           :upgrade_level_compute                   => '1.0.0',
           :upgrade_level_conductor                 => '1.0.0',
           :upgrade_level_scheduler                 => '1.0.0',
@@ -240,7 +239,6 @@ describe 'nova' do
       end
 
       it 'configures upgrade_levels' do
-        is_expected.to contain_nova_config('upgrade_levels/cert').with_value('1.0.0')
         is_expected.to contain_nova_config('upgrade_levels/compute').with_value('1.0.0')
         is_expected.to contain_nova_config('upgrade_levels/conductor').with_value('1.0.0')
         is_expected.to contain_nova_config('upgrade_levels/scheduler').with_value('1.0.0')
