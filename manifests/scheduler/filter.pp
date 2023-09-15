@@ -4,7 +4,7 @@
 #
 # === Parameters:
 #
-# [*scheduler_host_subset_size*]
+# [*host_subset_size*]
 #   (optional) defines the subset size that a host is chosen from
 #   Defaults to $facts['os_service_default']
 #
@@ -24,16 +24,16 @@
 #   (optional) An array of hosts reserved for specific images
 #   Defaults to $facts['os_service_default']
 #
-# [*scheduler_available_filters*]
+# [*available_filters*]
 #   (optional) An array with filter classes available to the scheduler.
 #   Example: ['first.filter.class', 'second.filter.class']
 #   Defaults to ['nova.scheduler.filters.all_filters']
 #
-# [*scheduler_enabled_filters*]
+# [*enabled_filters*]
 #   (optional) An array of filters to be used by default
 #   Defaults to $facts['os_service_default']
 #
-# [*scheduler_weight_classes*]
+# [*weight_classes*]
 #   (optional) Which weight class names to use for weighing hosts
 #   Defaults to 'nova.scheduler.weights.all_weighers'
 #
@@ -104,15 +104,34 @@
 #   (optional) Separator character(s) for image property namespace and name
 #   Defaults to $facts['os_service_default']
 #
+# == DEPRECATED PARAMETERS ==
+#
+# [*scheduler_host_subset_size*]
+#   (optional) defines the subset size that a host is chosen from
+#   Defaults to undef
+#
+# [*scheduler_available_filters*]
+#   (optional) An array with filter classes available to the scheduler.
+#   Example: ['first.filter.class', 'second.filter.class']
+#   Defaults to undef
+#
+# [*scheduler_enabled_filters*]
+#   (optional) An array of filters to be used by default
+#   Defaults to undef
+#
+# [*scheduler_weight_classes*]
+#   (optional) Which weight class names to use for weighing hosts
+#   Defaults to undef
+#
 class nova::scheduler::filter (
-  $scheduler_host_subset_size                     = $facts['os_service_default'],
+  $host_subset_size                               = $facts['os_service_default'],
   $max_io_ops_per_host                            = $facts['os_service_default'],
   $max_instances_per_host                         = $facts['os_service_default'],
   $isolated_images                                = $facts['os_service_default'],
   $isolated_hosts                                 = $facts['os_service_default'],
-  Array[String[1]] $scheduler_available_filters   = ['nova.scheduler.filters.all_filters'],
-  $scheduler_enabled_filters                      = $facts['os_service_default'],
-  $scheduler_weight_classes                       = 'nova.scheduler.weights.all_weighers',
+  Array[String[1]] $available_filters             = ['nova.scheduler.filters.all_filters'],
+  $enabled_filters                                = $facts['os_service_default'],
+  $weight_classes                                 = 'nova.scheduler.weights.all_weighers',
   $track_instance_changes                         = $facts['os_service_default'],
   $ram_weight_multiplier                          = $facts['os_service_default'],
   $cpu_weight_multiplier                          = $facts['os_service_default'],
@@ -128,27 +147,39 @@ class nova::scheduler::filter (
   $restrict_isolated_hosts_to_isolated_images     = $facts['os_service_default'],
   $aggregate_image_properties_isolation_namespace = $facts['os_service_default'],
   $aggregate_image_properties_isolation_separator = $facts['os_service_default'],
+  # DEPRECATED PARAMETERS
+  $scheduler_host_subset_size                     = undef,
+  $scheduler_available_filters                    = undef,
+  $scheduler_enabled_filters                      = undef,
+  $scheduler_weight_classes                       = undef,
 ) {
 
   include nova::deps
 
-  if is_service_default($scheduler_enabled_filters) {
-    $scheduler_enabled_filters_real = $facts['os_service_default']
-  } elsif empty($scheduler_enabled_filters){
-    $scheduler_enabled_filters_real = $facts['os_service_default']
+  $host_subset_size_real = pick($scheduler_host_subset_size, $host_subset_size)
+  $weight_classes_real = pick($scheduler_weight_classes, $weight_classes)
+
+  $enabled_filters_pick = pick($scheduler_enabled_filters, $enabled_filters)
+
+  if is_service_default($enabled_filters_pick) {
+    $enabled_filters_real = $facts['os_service_default']
+  } elsif empty($enabled_filters_pick){
+    $enabled_filters_real = $facts['os_service_default']
   } else {
-    $scheduler_enabled_filters_real = join(any2array($scheduler_enabled_filters), ',')
+    $enabled_filters_real = join(any2array($enabled_filters_pick), ',')
   }
 
-  if empty($scheduler_available_filters) {
-    $scheduler_available_filters_real = $facts['os_service_default']
+  $available_filters_pick = pick($scheduler_available_filters, $available_filters)
+
+  if empty($available_filters_pick) {
+    $available_filters_real = $facts['os_service_default']
   } else {
-    $scheduler_available_filters_real = $scheduler_available_filters
+    $available_filters_real = $available_filters_pick
   }
 
   nova_config {
     'filter_scheduler/host_subset_size':
-      value => $scheduler_host_subset_size;
+      value => $host_subset_size_real;
     'filter_scheduler/max_io_ops_per_host':
       value => $max_io_ops_per_host;
     'filter_scheduler/max_instances_per_host':
@@ -156,11 +187,11 @@ class nova::scheduler::filter (
     'filter_scheduler/track_instance_changes':
       value => $track_instance_changes;
     'filter_scheduler/available_filters':
-      value => $scheduler_available_filters_real;
+      value => $available_filters_real;
     'filter_scheduler/weight_classes':
-      value => $scheduler_weight_classes;
+      value => $weight_classes_real;
     'filter_scheduler/enabled_filters':
-      value => $scheduler_enabled_filters_real;
+      value => $enabled_filters_real;
     'filter_scheduler/isolated_images':
       value => join(any2array($isolated_images), ',');
     'filter_scheduler/isolated_hosts':

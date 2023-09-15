@@ -41,14 +41,14 @@ describe 'nova::scheduler::filter' do
     context 'when overriding params' do
       let :params do
         {
-          :scheduler_host_subset_size           => '3',
+          :host_subset_size                     => '3',
           :max_io_ops_per_host                  => '16',
           :max_instances_per_host               => '100',
           :isolated_images                      => ['ubuntu1','centos2'],
           :isolated_hosts                       => ['192.168.1.2','192.168.1.3'],
-          :scheduler_enabled_filters            => ['RetryFilter','AvailabilityZoneFilter'],
-          :scheduler_available_filters          => ['nova_filter1','nova_filter2'],
-          :scheduler_weight_classes             => 'nova.scheduler.weights.compute.BuildFailureWeigher',
+          :enabled_filters                      => ['RetryFilter','AvailabilityZoneFilter'],
+          :available_filters                    => ['nova_filter1','nova_filter2'],
+          :weight_classes                       => 'nova.scheduler.weights.compute.BuildFailureWeigher',
           :track_instance_changes               => true,
           :ram_weight_multiplier                => 10,
           :cpu_weight_multiplier                => 20,
@@ -88,8 +88,8 @@ describe 'nova::scheduler::filter' do
     context 'when overriding params with empty arrays' do
       let :params do
         {
-          :scheduler_available_filters => [],
-          :scheduler_enabled_filters   => [],
+          :available_filters => [],
+          :enabled_filters   => [],
         }
       end
 

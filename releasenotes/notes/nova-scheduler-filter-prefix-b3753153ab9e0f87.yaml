@@ -1,0 +1,8 @@
+---
+deprecations:
+  - |
+    The ``scheduler_host_subset_size``, ``scheduler_available_filters``,
+    ``scheduler_enabled_filters`` and ``scheduler_weight_classes`` in the
+    nova::scheduler::filter class is deprecated in favor of the same parameters
+    without the ``scheduler_`` prefix, that is ``host_subset_size``,
+    ``available_filters``, ``enabled_filters`` and ``weight_classes``.
