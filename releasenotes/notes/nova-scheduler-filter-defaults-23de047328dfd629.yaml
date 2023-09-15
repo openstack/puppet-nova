@@ -1,0 +1,6 @@
+---
+upgrade:
+  - |
+    The default value for parameters ``available_filters`` and ``weight_classes``
+    in the ``nova::scheduler::filter`` class has been changed to the ``os_service_default``
+    fact as their defaults was redundant.
