@@ -76,6 +76,8 @@ class nova::compute::vmware(
   include nova::deps
   include nova::params
 
+  warning('Support for vmwareapi virt driver has been deprecated.')
+
   nova_config {
     'DEFAULT/compute_driver':    value => $compute_driver;
     'vmware/host_ip':            value => $host_ip;
