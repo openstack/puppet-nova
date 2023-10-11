@@ -1,0 +1,4 @@
+---
+features:
+  - |
+    The ``nova`` class now supports options for quorum queues in RabbitMQ.
