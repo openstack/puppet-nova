@@ -32,7 +32,6 @@ class nova::db::sync(
     subscribe   => [
       Anchor['nova::install::end'],
       Anchor['nova::config::end'],
-      Anchor['nova::db::end'],
       Anchor['nova::dbsync::begin']
     ],
     notify      => Anchor['nova::dbsync::end'],

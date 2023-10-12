@@ -32,7 +32,6 @@ class nova::db::online_data_migrations(
     subscribe   => [
       Anchor['nova::install::end'],
       Anchor['nova::config::end'],
-      Anchor['nova::dbsync_api::end'],
       Anchor['nova::db_online_data_migrations::begin']
     ],
     notify      => Anchor['nova::db_online_data_migrations::end'],
