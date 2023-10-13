@@ -18,6 +18,8 @@ class nova::deps {
   ~> anchor { 'nova::config::end': }
   -> anchor { 'nova::db::begin': }
   -> anchor { 'nova::db::end': }
+  ~> anchor { 'nova::dbsync::begin': }
+  -> anchor { 'nova::dbsync::end': }
   ~> anchor { 'nova::service::begin': }
   ~> Service<| tag == 'nova-service' |>
   ~> anchor { 'nova::service::end': }
@@ -95,46 +97,22 @@ class nova::deps {
   Anchor['nova::install::end'] ~> Anchor['nova::service::begin']
   Anchor['nova::config::end']  ~> Anchor['nova::service::begin']
 
-  #############################################################################
-  # NOTE(aschultz): these are defined here because this syntax allows us
-  # to override the subscribe/notify order using the spaceship operator.
-  # The ->/~> does not seem to be able to be updated after the fact. Since
-  # we have to flip cell v2 ordering for the N->O upgrade process, we need
-  # to not use the chaining arrows. ugh.
-  #############################################################################
-  # Wedge this in after the db creation and before the services
-  anchor { 'nova::dbsync_api::begin':
-    subscribe => Anchor['nova::db::end']
-  }
-  -> anchor { 'nova::dbsync_api::end':
-    notify => Anchor['nova::service::begin'],
-  }
+  # Nova requres separate sync operation for API db, and it should be executed
+  # before non-API db sync.
+  Anchor['nova::db::end']
+  ~> anchor { 'nova::dbsync_api::begin': }
+  -> anchor { 'nova::dbsync_api::end': }
+  ~> Anchor['nova::dbsync::begin']
 
-  # Wedge this after db creation and api sync but before the services
-  anchor { 'nova::dbsync::begin':
-    subscribe => [
-      Anchor['nova::db::end'],
-      Anchor['nova::dbsync_api::end']
-    ]
-  }
-  -> anchor { 'nova::dbsync::end':
-    notify => Anchor['nova::service::begin']
-  }
+  Anchor['nova::dbsync_api::end'] ~> Anchor['nova::service::begin']
 
-  # Between api sync and db sync by default but can be overridden
-  # using the spaceship operator to move it around when needed
-  anchor { 'nova::cell_v2::begin':
-    subscribe => Anchor['nova::dbsync_api::end']
-  }
-  ~> anchor { 'nova::cell_v2::end':
-    notify => Anchor['nova::dbsync::begin']
-  }
+  Anchor['nova::dbsync_api::end']
+  ~> anchor { 'nova::cell_v2::begin': }
+  ~> anchor { 'nova::cell_v2::end': }
+  ~> Anchor['nova::dbsync::begin']
 
-  # Wedge online data migrations after db/api_sync and before service
-  anchor { 'nova::db_online_data_migrations::begin':
-    subscribe => Anchor['nova::dbsync_api::end']
-  }
-  -> anchor { 'nova::db_online_data_migrations::end':
-    notify => Anchor['nova::service::begin']
-  }
+  Anchor['nova::dbsync_api::end']
+  ~> anchor { 'nova::db_online_data_migrations::begin': }
+  -> anchor { 'nova::db_online_data_migrations::end': }
+  ~> Anchor['nova::service::begin']
 }
