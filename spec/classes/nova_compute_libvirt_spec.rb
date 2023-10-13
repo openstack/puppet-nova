@@ -219,6 +219,23 @@ describe 'nova::compute::libvirt' do
       it { is_expected.to contain_nova_config('libvirt/cpu_mode').with_value('none')}
     end
 
+    describe 'with hw_machine_type set by array' do
+      let :params do
+        { :hw_machine_type => ['x86_64=machinetype1', 'armv7l=machinetype2'] }
+      end
+      it { is_expected.to contain_nova_config('libvirt/hw_machine_type').with_value('x86_64=machinetype1,armv7l=machinetype2')}
+    end
+
+    describe 'with hw_machine_type set by hash' do
+      let :params do
+        { :hw_machine_type => {
+          'x86_64' => 'machinetype1',
+          'armv7l' => 'machinetype2'
+        } }
+      end
+      it { is_expected.to contain_nova_config('libvirt/hw_machine_type').with_value('x86_64=machinetype1,armv7l=machinetype2')}
+    end
+
     describe 'with migration_support enabled' do
 
       context 'with vncserver_listen set to 0.0.0.0' do
