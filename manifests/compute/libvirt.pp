@@ -345,6 +345,11 @@ class nova::compute::libvirt (
     }
   }
 
+  $hw_machine_type_real = $hw_machine_type ? {
+    Hash    => join(join_keys_to_values($hw_machine_type, '='), ','),
+    default => join(any2array($hw_machine_type), ','),
+  }
+
   nova_config {
     'DEFAULT/compute_driver':                value => $compute_driver;
     'DEFAULT/preallocate_images':            value => $preallocate_images;
@@ -361,7 +366,7 @@ class nova::compute::libvirt (
     'libvirt/inject_key':                    value => $inject_key;
     'libvirt/inject_partition':              value => $inject_partition;
     'libvirt/hw_disk_discard':               value => $hw_disk_discard;
-    'libvirt/hw_machine_type':               value => $hw_machine_type;
+    'libvirt/hw_machine_type':               value => $hw_machine_type_real;
     'libvirt/sysinfo_serial':                value => $sysinfo_serial;
     'libvirt/enabled_perf_events':           value => join(any2array($enabled_perf_events), ',');
     'libvirt/device_detach_attempts':        value => $device_detach_attempts;
