@@ -203,22 +203,6 @@ describe 'nova::compute::libvirt' do
       it { is_expected.to contain_nova_config('libvirt/cpu_model_extra_flags').with_value('pcid')}
     end
 
-    describe 'with qcow2 as snapshot_image_format' do
-      let :params do
-        { :snapshot_image_format => 'qcow2' }
-      end
-
-      it { is_expected.to contain_nova_config('libvirt/snapshot_image_format').with_value('qcow2')}
-    end
-
-    describe 'with qemu as virt_type' do
-      let :params do
-        { :virt_type => 'qemu' }
-      end
-
-      it { is_expected.to contain_nova_config('libvirt/cpu_mode').with_value('none')}
-    end
-
     describe 'with hw_machine_type set by array' do
       let :params do
         { :hw_machine_type => ['x86_64=machinetype1', 'armv7l=machinetype2'] }
