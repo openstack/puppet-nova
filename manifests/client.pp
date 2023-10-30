@@ -20,7 +20,7 @@ in a future release.")
   package { 'python-novaclient':
     ensure => $ensure,
     name   => $::nova::params::client_package,
-    tag    => ['openstack', 'nova-support-package'],
+    tag    => 'openstack',
   }
 
 }

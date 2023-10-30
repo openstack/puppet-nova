@@ -70,8 +70,8 @@ class nova::deps {
   # will have clients available to create resources. This tag handles the
   # openstackclient but indirectly since the client is not available in
   # all catalogs that don't need the client class (like many spec tests)
-  Package<| tag == 'openstack'|>
-  ~> Anchor['nova::service::end']
+  Package<| tag == 'openstackclient'|>
+  -> Anchor['nova::service::end']
 
   # Manage libvirt configurations during the config phase
   Anchor['nova::config::begin'] -> Libvirtd_config<||> -> Anchor['nova::config::end']

@@ -11,7 +11,7 @@ describe 'nova::client' do
       is_expected.to contain_package('python-novaclient').with(
         :ensure => 'present',
         :name   => platform_params[:client_package_name],
-        :tag    => ['openstack', 'nova-support-package']
+        :tag    => 'openstack',
       )
     end
   end
