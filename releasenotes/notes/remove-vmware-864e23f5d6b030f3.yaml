@@ -1,0 +1,4 @@
+---
+upgrade:
+  - |
+    Suopport for vmwareapi virt driver has been removed.

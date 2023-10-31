@@ -33,7 +33,6 @@ class nova::params {
       $serialproxy_package_name          = 'openstack-nova-serialproxy'
       $spicehtml5proxy_package_name      = 'openstack-nova-console'
       $ceph_client_package_name          = 'ceph-common'
-      $oslo_vmware_package_name          = 'python3-oslo-vmware'
       $mkisofs_package_name              = 'xorriso'
       $mkisofs_cmd                       = 'mkisofs'
       # service names
@@ -82,7 +81,6 @@ class nova::params {
       $scheduler_package_name            = 'nova-scheduler'
       $tgt_package_name                  = 'tgt'
       $ceph_client_package_name          = 'ceph-common'
-      $oslo_vmware_package_name          = 'python3-oslo-vmware'
       $mkisofs_package_name              = 'genisoimage'
       $mkisofs_cmd                       = false
       # service names
