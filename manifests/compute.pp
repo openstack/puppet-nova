@@ -80,14 +80,16 @@
 #   The format is <os_type>=<mkfs command>
 #   Defaults to $facts['os_service_default']
 #
+# [*reserved_host_cpus*]
+#   (optional) Number of host CPUs reserved for the host.
+#   Defaults to $facts['os_service_default']
+#
 # [*reserved_host_memory*]
-#   Reserved host memory
-#   The amount of memory in MB reserved for the host.
+#   (optional) The amount of memory in MB reserved for the host.
 #   Defaults to $facts['os_service_default']
 #
 # [*reserved_host_disk*]
-#   Reserved host disk
-#   The amount of disk in MB reserved for the host.
+#   (optional) The amount of disk in MB reserved for the host.
 #   Defaults to $facts['os_service_default']
 #
 # [*config_drive_format*]
@@ -271,6 +273,7 @@ class nova::compute (
   $use_cow_images                              = $facts['os_service_default'],
   $force_raw_images                            = $facts['os_service_default'],
   $virt_mkfs                                   = $facts['os_service_default'],
+  $reserved_host_cpus                          = $facts['os_service_default'],
   $reserved_host_memory                        = $facts['os_service_default'],
   $reserved_host_disk                          = $facts['os_service_default'],
   $heal_instance_info_cache_interval           = $facts['os_service_default'],
@@ -376,6 +379,7 @@ class nova::compute (
     'DEFAULT/mkisofs_cmd':                       value => $mkisofs_cmd_real;
     'DEFAULT/force_raw_images':                  value => $force_raw_images;
     'DEFAULT/virt_mkfs':                         value => $virt_mkfs;
+    'DEFAULT/reserved_host_cpus':                value => $reserved_host_cpus;
     'DEFAULT/reserved_host_memory_mb':           value => $reserved_host_memory;
     'DEFAULT/reserved_host_disk_mb':             value => $reserved_host_disk;
     'DEFAULT/reserved_huge_pages':               value => $reserved_huge_pages_real;
