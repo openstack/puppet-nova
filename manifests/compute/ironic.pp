@@ -4,17 +4,29 @@
 #
 # === Parameters:
 #
+# [*ensure_package*]
+#   (optional) The state of nova packages
+#   Defaults to 'present'
+#
 # [*compute_driver*]
 #   (optional) Compute driver.
 #   Defaults to 'ironic.IronicDriver'
 #
 class nova::compute::ironic (
-  $compute_driver        = 'ironic.IronicDriver',
+  $ensure_package = 'present',
+  $compute_driver = 'ironic.IronicDriver',
 ) {
 
   include nova::deps
   require nova::ironic::common
   include ironic::client
+
+  if($facts['os']['family'] == 'Debian') {
+    package { 'nova-compute-ironic':
+      ensure => $ensure_package,
+      tag    => ['openstack', 'nova-package'],
+    }
+  }
 
   nova_config {
     'DEFAULT/compute_driver': value => $compute_driver;

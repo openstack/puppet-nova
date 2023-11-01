@@ -2,8 +2,7 @@ require 'spec_helper'
 
 describe 'nova::compute::ironic' do
 
-  shared_examples_for 'nova-compute-ironic' do
-
+  shared_examples_for 'nova::compute::ironic' do
     context 'with default parameters' do
       it 'configures ironic in nova.conf' do
         is_expected.to contain_nova_config('DEFAULT/compute_driver').with_value('ironic.IronicDriver')
@@ -30,6 +29,17 @@ describe 'nova::compute::ironic' do
     end
   end
 
+  shared_examples_for 'nova::compute::ironic in Debian' do
+    context 'with default parameters' do
+      it 'installs nova-compute-ironic' do
+        is_expected.to contain_package('nova-compute-ironic').with(
+          :ensure => 'present',
+          :tag    => ['openstack', 'nova-package'],
+        )
+      end
+    end
+  end
+
   on_supported_os({
     :supported_os   => OSDefaults.get_supported_os
   }).each do |os,facts|
@@ -38,15 +48,10 @@ describe 'nova::compute::ironic' do
         facts.merge!(OSDefaults.get_facts())
       end
 
-      let(:platform_params) do
-        case facts[:os]['family']
-        when 'Debian'
-            {}
-        when 'RedHat'
-            {}
-        end
+      it_configures 'nova::compute::ironic'
+      if facts[:os]['family'] == 'Debian'
+        it_configures 'nova::compute::ironic in Debian'
       end
-      it_configures 'nova-compute-ironic'
     end
   end
 end
