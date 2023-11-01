@@ -1,0 +1,5 @@
+---
+deprecations:
+  - |
+    The ``nova::compute::config_drive_format`` parameter has been deprecated,
+    because the ``config_drive_format`` option in nova has been deprecated.
