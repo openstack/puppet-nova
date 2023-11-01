@@ -49,6 +49,10 @@
 #   (optional) virtstorage service name.
 #   Defaults to $::nova::params::virtstorage_socket_name
 #
+# [*manage_ovmf*]
+#   (optional) install the OVMF package.
+#   Defaults to true
+#
 class nova::compute::libvirt::services (
   $ensure_package           = 'present',
   $libvirt_service_name     = $::nova::params::libvirt_service_name,
@@ -60,7 +64,8 @@ class nova::compute::libvirt::services (
   $virtnodedev_service_name = $::nova::params::virtnodedev_socket_name,
   $virtqemu_service_name    = $::nova::params::virtqemu_socket_name,
   $virtproxy_service_name   = $::nova::params::virtproxy_socket_name,
-  $virtstorage_service_name = $::nova::params::virtstorage_socket_name
+  $virtstorage_service_name = $::nova::params::virtstorage_socket_name,
+  Boolean $manage_ovmf      = true,
 ) inherits nova::params {
 
   include nova::deps
@@ -68,6 +73,16 @@ class nova::compute::libvirt::services (
 
   if $modular_libvirt and !$::nova::params::modular_libvirt_support {
     fail('Modular libvirt daemons are not supported in this distribution')
+  }
+
+  if $manage_ovmf {
+    package { 'ovmf':
+      ensure => $ensure_package,
+      name   => $::nova::params::ovmf_package_name,
+      tag    => ['openstack', 'nova-support-package'],
+    }
+    Package['ovmf'] ~> Service<| tag == 'libvirt-qemu-service' |>
+    Package['ovmf'] ~> Service<| title == 'nova-compute'|>
   }
 
   if $libvirt_service_name {

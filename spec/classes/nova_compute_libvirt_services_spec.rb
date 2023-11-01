@@ -6,6 +6,7 @@ describe 'nova::compute::libvirt::services' do
 
     context 'with default parameters' do
       it 'deploys libvirt packages and services' do
+        is_expected.to contain_package('ovmf')
         is_expected.to contain_package('libvirt')
         is_expected.to contain_service('libvirt')
       end
@@ -16,12 +17,17 @@ describe 'nova::compute::libvirt::services' do
         {
           :libvirt_service_name => false,
           :modular_libvirt      => false,
+          :manage_ovmf          => false,
         }
       end
 
       it 'disable libvirt service' do
         is_expected.not_to contain_package('libvirt')
         is_expected.not_to contain_service('libvirt')
+      end
+
+      it 'skips installing ovmf' do
+        is_expected.not_to contain_package('ovmf')
       end
     end
   end

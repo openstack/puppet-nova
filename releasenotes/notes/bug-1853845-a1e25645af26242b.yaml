@@ -1,0 +1,6 @@
+---
+features:
+  - |
+    The ``nova::compute::libvirt::services`` now installs the OVMF package to
+    allow UEFI boot of instances. The package installation can be disabled by
+    setting the ``manage_ovmf`` parameter.

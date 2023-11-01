@@ -36,6 +36,7 @@ class nova::params {
       $oslo_vmware_package_name          = 'python3-oslo-vmware'
       $mkisofs_package_name              = 'xorriso'
       $mkisofs_cmd                       = 'mkisofs'
+      $ovmf_package_name                 = 'edk2-ovmf'
       # service names
       $api_service_name                  = 'openstack-nova-api'
       $api_metadata_service_name         = undef
@@ -85,6 +86,7 @@ class nova::params {
       $oslo_vmware_package_name          = 'python3-oslo-vmware'
       $mkisofs_package_name              = 'genisoimage'
       $mkisofs_cmd                       = false
+      $ovmf_package_name                 = 'ovmf'
       # service names
       $api_service_name                  = 'nova-api'
       $compute_service_name              = 'nova-compute'
