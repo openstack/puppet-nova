@@ -1,0 +1,5 @@
+---
+fixes:
+  - |
+    Now the ``nova::compute::ironic`` class installs
+    the ``nova-compute-ironic`` package in Debian or Ubuntu.
