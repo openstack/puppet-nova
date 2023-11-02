@@ -24,7 +24,7 @@
 # [*cpu_mode*]
 #   (optional) The libvirt CPU mode to configure.  Possible values
 #   include custom, host-model, none, host-passthrough.
-#   Defaults to 'host-model' if virt_type is set to kvm,
+#   Defaults to 'host-model' if virt_type is set to qemu or kvm,
 #   otherwise defaults to 'none'.
 #
 # [*cpu_models*]
@@ -238,7 +238,7 @@ class nova::compute::libvirt (
   $virt_type                                  = 'kvm',
   $vncserver_listen                           = '127.0.0.1',
   Boolean $migration_support                  = false,
-  $cpu_mode                                   = false,
+  $cpu_mode                                   = undef,
   Array[String[1]] $cpu_models                = [],
   $cpu_model_extra_flags                      = undef,
   $cpu_power_management                       = $facts['os_service_default'],
@@ -287,15 +287,15 @@ class nova::compute::libvirt (
   # cpu_mode has different defaults depending on hypervisor.
   if !$cpu_mode {
     case $virt_type {
-      'kvm': {
-        $cpu_mode_default = 'host-model'
+      'qemu', 'kvm': {
+        $cpu_mode_real = 'host-model'
       }
       default: {
-        $cpu_mode_default = 'none'
+        $cpu_mode_real = 'none'
       }
     }
   } else {
-    $cpu_mode_default = $cpu_mode
+    $cpu_mode_real = $cpu_mode
   }
 
   if($facts['os']['family'] == 'Debian') {
@@ -355,7 +355,7 @@ class nova::compute::libvirt (
     'DEFAULT/preallocate_images':            value => $preallocate_images;
     'vnc/server_listen':                     value => $vncserver_listen;
     'libvirt/virt_type':                     value => $virt_type;
-    'libvirt/cpu_mode':                      value => $cpu_mode_default;
+    'libvirt/cpu_mode':                      value => $cpu_mode_real;
     'libvirt/cpu_power_management':          value => $cpu_power_management;
     'libvirt/cpu_power_management_strategy': value => $cpu_power_management_strategy;
     'libvirt/cpu_power_governor_low':        value => $cpu_power_governor_low;
@@ -391,7 +391,7 @@ class nova::compute::libvirt (
 
   # cpu_model param is only valid if cpu_mode=custom
   # otherwise it should be commented out
-  if $cpu_mode_default == 'custom' and !empty($cpu_models){
+  if $cpu_mode_real == 'custom' and !empty($cpu_models){
     $cpu_models_real = join($cpu_models, ',')
   } else {
     if !empty($cpu_models) {
@@ -405,7 +405,7 @@ class nova::compute::libvirt (
 
   # cpu_model_extra_flags is only valid if cpu_mode!=none
   # otherwise it should be commented out
-  if $cpu_mode_default != 'none' and $cpu_model_extra_flags {
+  if $cpu_mode_real != 'none' and $cpu_model_extra_flags {
     $cpu_model_extra_flags_real = join(any2array($cpu_model_extra_flags), ',')
   } else {
     if $cpu_model_extra_flags {

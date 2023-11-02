@@ -1,0 +1,7 @@
+---
+upgrade:
+  - |
+    The ``[libvirt] cpu_mode`` option is set to ``host-model`` by default when
+    qemu virt type is used, which is consistent with the default selected by
+    nova. Set the ``nova::compute::libvirt::cpu_mode`` parameter to use
+    a different mode such as the previous default (``none``).
