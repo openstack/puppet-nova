@@ -36,6 +36,7 @@ class nova::params {
       $mkisofs_package_name              = 'xorriso'
       $mkisofs_cmd                       = 'mkisofs'
       $ovmf_package_name                 = 'edk2-ovmf'
+      $swtpm_package_name                = 'swtpm'
       # service names
       $api_service_name                  = 'openstack-nova-api'
       $api_metadata_service_name         = undef
@@ -85,6 +86,7 @@ class nova::params {
       $mkisofs_package_name              = 'genisoimage'
       $mkisofs_cmd                       = false
       $ovmf_package_name                 = 'ovmf'
+      $swtpm_package_name                = 'swtpm'
       # service names
       $api_service_name                  = 'nova-api'
       $compute_service_name              = 'nova-compute'

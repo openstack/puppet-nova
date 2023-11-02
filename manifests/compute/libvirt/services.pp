@@ -53,6 +53,10 @@
 #   (optional) install the OVMF package.
 #   Defaults to true
 #
+# [*manage_swtpm*]
+#   (optional) install the swtpm package.
+#   Defaults to true
+#
 class nova::compute::libvirt::services (
   $ensure_package           = 'present',
   $libvirt_service_name     = $::nova::params::libvirt_service_name,
@@ -66,6 +70,7 @@ class nova::compute::libvirt::services (
   $virtproxy_service_name   = $::nova::params::virtproxy_socket_name,
   $virtstorage_service_name = $::nova::params::virtstorage_socket_name,
   Boolean $manage_ovmf      = true,
+  Boolean $manage_swtpm     = true,
 ) inherits nova::params {
 
   include nova::deps
@@ -83,6 +88,14 @@ class nova::compute::libvirt::services (
     }
     Package['ovmf'] ~> Service<| tag == 'libvirt-qemu-service' |>
     Package['ovmf'] ~> Service<| title == 'nova-compute'|>
+  }
+
+  if $manage_swtpm {
+    package { 'swtpm':
+      ensure => $ensure_package,
+      name   => $::nova::params::swtpm_package_name,
+      tag    => ['openstack', 'nova-support-package'],
+    }
   }
 
   if $libvirt_service_name {
