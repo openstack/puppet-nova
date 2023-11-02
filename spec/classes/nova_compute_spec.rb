@@ -38,6 +38,7 @@ describe 'nova::compute' do
       it { is_expected.to contain_nova_config('DEFAULT/mkisofs_cmd').with_value(platform_params[:mkisofs_cmd]) }
       it { is_expected.to contain_nova_config('DEFAULT/force_raw_images').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('DEFAULT/virt_mkfs').with_value('<SERVICE DEFAULT>') }
+      it { is_expected.to contain_nova_config('DEFAULT/reserved_host_cpus').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('DEFAULT/reserved_host_memory_mb').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('DEFAULT/reserved_host_disk_mb').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('DEFAULT/reserved_huge_pages').with_value('<SERVICE DEFAULT>') }
@@ -92,8 +93,9 @@ describe 'nova::compute' do
           :mkisofs_cmd                        => 'mkisofs',
           :force_raw_images                   => false,
           :virt_mkfs                          => 'windows=mkfs.ntfs --force --fast %(target)s',
-          :reserved_host_memory               => '0',
-          :reserved_host_disk                 => '20',
+          :reserved_host_cpus                 => 2,
+          :reserved_host_memory               => 0,
+          :reserved_host_disk                 => 20,
           :heal_instance_info_cache_interval  => '120',
           :config_drive_format                => 'vfat',
           :update_resources_interval          => '300',
@@ -153,8 +155,9 @@ describe 'nova::compute' do
       it { is_expected.to contain_nova_config('DEFAULT/mkisofs_cmd').with_value('mkisofs') }
       it { is_expected.to contain_nova_config('DEFAULT/force_raw_images').with_value(false) }
       it { is_expected.to contain_nova_config('DEFAULT/virt_mkfs').with_value('windows=mkfs.ntfs --force --fast %(target)s') }
-      it { is_expected.to contain_nova_config('DEFAULT/reserved_host_memory_mb').with_value('0') }
-      it { is_expected.to contain_nova_config('DEFAULT/reserved_host_disk_mb').with_value('20') }
+      it { is_expected.to contain_nova_config('DEFAULT/reserved_host_cpus').with_value(2) }
+      it { is_expected.to contain_nova_config('DEFAULT/reserved_host_memory_mb').with_value(0) }
+      it { is_expected.to contain_nova_config('DEFAULT/reserved_host_disk_mb').with_value(20) }
       it { is_expected.to contain_nova_config('DEFAULT/heal_instance_info_cache_interval').with_value('120') }
       it { is_expected.to contain_nova_config('DEFAULT/update_resources_interval').with_value('300') }
       it { is_expected.to contain_nova_config('DEFAULT/reboot_timeout').with_value('180') }

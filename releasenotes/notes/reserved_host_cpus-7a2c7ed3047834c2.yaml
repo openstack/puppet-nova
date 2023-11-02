@@ -1,0 +1,4 @@
+---
+features:
+  - |
+    The new ``nova::compute::reserved_host_cpus`` parameter has been added.
