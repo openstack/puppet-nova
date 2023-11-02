@@ -92,10 +92,6 @@
 #   (optional) The amount of disk in MB reserved for the host.
 #   Defaults to $facts['os_service_default']
 #
-# [*config_drive_format*]
-#   (optional) Config drive format. One of iso9660 (default) or vfat
-#   Defaults to undef
-#
 # [*update_resources_interval*]
 #   (optional) Interval for updating compute resources.
 #   This option specifies how often the update_available_resources periodic
@@ -255,6 +251,12 @@
 #   retries on failures
 #   Defaults to $facts['os_service_default']
 #
+# DEPRECATED PARAMETERS
+#
+# [*config_drive_format*]
+#   (optional) Config drive format. One of iso9660 (default) or vfat
+#   Defaults to undef
+#
 class nova::compute (
   Boolean $enabled                             = true,
   Boolean $manage_service                      = true,
@@ -277,7 +279,6 @@ class nova::compute (
   $reserved_host_memory                        = $facts['os_service_default'],
   $reserved_host_disk                          = $facts['os_service_default'],
   $heal_instance_info_cache_interval           = $facts['os_service_default'],
-  $config_drive_format                         = $facts['os_service_default'],
   $update_resources_interval                   = $facts['os_service_default'],
   $reboot_timeout                              = $facts['os_service_default'],
   $instance_build_timeout                      = $facts['os_service_default'],
@@ -306,10 +307,16 @@ class nova::compute (
   $image_type_exclude_list                     = $facts['os_service_default'],
   $block_device_allocate_retries               = $facts['os_service_default'],
   $block_device_allocate_retries_interval      = $facts['os_service_default'],
+  # DEPRECATED PARAMETERS
+  $config_drive_format                         = undef,
 ) {
 
   include nova::deps
   include nova::params
+
+  if $config_drive_format != undef {
+    warning('The config_drive_format parameter is deprecated.')
+  }
 
   $image_type_exclude_list_real = pick(join(any2array($image_type_exclude_list), ','), $facts['os_service_default'])
 
@@ -455,13 +462,14 @@ class nova::compute (
     }
   }
 
-  if is_service_default($config_drive_format) or $config_drive_format == 'iso9660' {
+  $config_drive_format_real = pick($config_drive_format, $facts['os_service_default'])
+  if is_service_default($config_drive_format_real) or $config_drive_format_real == 'iso9660' {
     ensure_packages($::nova::params::mkisofs_package_name, {
       tag => ['openstack', 'nova-support-package'],
     })
   }
   nova_config {
-    'DEFAULT/config_drive_format':     value => $config_drive_format;
+    'DEFAULT/config_drive_format': value => $config_drive_format_real;
   }
 
 }
