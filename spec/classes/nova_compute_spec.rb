@@ -66,6 +66,7 @@ describe 'nova::compute' do
       it { is_expected.to contain_nova_config('compute/image_type_exclude_list').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('DEFAULT/block_device_allocate_retries').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('DEFAULT/block_device_allocate_retries_interval').with_value('<SERVICE DEFAULT>') }
+      it { is_expected.to contain_nova_config('DEFAULT/config_drive_format').with_value('<SERVICE DEFAULT>') }
 
       it { is_expected.to_not contain_package('bridge-utils').with(
         :ensure => 'present',
@@ -73,15 +74,6 @@ describe 'nova::compute' do
 
       it { is_expected.to contain_class('nova::policy') }
       it { is_expected.to contain_class('nova::availability_zone') }
-
-      it 'installs mkisofs package and sets config_drive_format' do
-        is_expected.to contain_nova_config('DEFAULT/config_drive_format').with_value('<SERVICE DEFAULT>')
-        is_expected.to contain_package(platform_params[:mkisofs_package]).with(
-          :ensure => 'installed',
-        )
-        is_expected.to contain_package(platform_params[:mkisofs_package]).that_requires('Anchor[nova::install::begin]')
-        is_expected.to contain_package(platform_params[:mkisofs_package]).that_comes_before('Anchor[nova::install::end]')
-      end
     end
 
     context 'with overridden parameters' do
@@ -182,13 +174,7 @@ describe 'nova::compute' do
       it { is_expected.to contain_nova_config('compute/image_type_exclude_list').with_value('raw,ami') }
       it { is_expected.to contain_nova_config('DEFAULT/block_device_allocate_retries').with_value(60) }
       it { is_expected.to contain_nova_config('DEFAULT/block_device_allocate_retries_interval').with_value(3) }
-
-      it 'configures nova config_drive_format to vfat' do
-        is_expected.to contain_nova_config('DEFAULT/config_drive_format').with_value('vfat')
-        is_expected.to_not contain_package(platform_params[:mkisofs_package]).with(
-          :ensure => 'present',
-        )
-      end
+      it { is_expected.to contain_nova_config('DEFAULT/config_drive_format').with_value('vfat') }
     end
 
     context 'with image_type_exclude_list set to empty list' do
@@ -354,7 +340,6 @@ describe 'nova::compute' do
           {
             :nova_compute_package => 'nova-compute',
             :nova_compute_service => 'nova-compute',
-            :mkisofs_package      => 'genisoimage',
             :mkisofs_cmd          => '<SERVICE DEFAULT>'
           }
         end
@@ -363,7 +348,6 @@ describe 'nova::compute' do
           {
             :nova_compute_package => 'openstack-nova-compute',
             :nova_compute_service => 'openstack-nova-compute',
-            :mkisofs_package      => 'xorriso',
             :mkisofs_cmd          => 'mkisofs'
           }
         end

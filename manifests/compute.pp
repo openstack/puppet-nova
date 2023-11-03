@@ -462,14 +462,8 @@ class nova::compute (
     }
   }
 
-  $config_drive_format_real = pick($config_drive_format, $facts['os_service_default'])
-  if is_service_default($config_drive_format_real) or $config_drive_format_real == 'iso9660' {
-    ensure_packages($::nova::params::mkisofs_package_name, {
-      tag => ['openstack', 'nova-support-package'],
-    })
-  }
   nova_config {
-    'DEFAULT/config_drive_format': value => $config_drive_format_real;
+    'DEFAULT/config_drive_format': value => pick($config_drive_format, $facts['os_service_default']);
   }
 
 }
