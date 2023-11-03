@@ -18,14 +18,7 @@ Puppet::Functions.create_function(:to_array_of_json_strings) do
     list = args[0]
     if list.class == String
       begin
-        begin
-          list = JSON.load(list)
-        rescue JSON::ParserError
-          # If parsing failed it could be a legacy format that uses single quotes.
-          # NB This will corrupt valid JSON data, e.g {"foo": "\'"} => {"foo": "\""}
-          list = JSON.load(list.gsub("'","\""))
-          Puppet.warning("#{args[0]} is not valid JSON. Support for this format is deprecated and may be removed in future.")
-        end
+        list = JSON.load(list)
       rescue JSON::ParserError
         raise Puppet::ParseError, "Syntax error: #{args[0]} is not valid"
       end

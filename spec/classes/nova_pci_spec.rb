@@ -32,7 +32,7 @@ describe 'nova::pci' do
       end
     end
 
-    context 'with aliases JSON encoded string (deprecated)' do
+    context 'with aliases JSON encoded string' do
       let :params do
         {
           :aliases => "[{\"vendor_id\":\"8086\",\"product_id\":\"0126\",\"name\":\"graphic_card\"},{\"vendor_id\":\"9096\",\"product_id\":\"1520\",\"name\":\"network_card\"}]",

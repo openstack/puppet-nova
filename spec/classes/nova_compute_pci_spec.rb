@@ -45,7 +45,7 @@ describe 'nova::compute::pci' do
       end
     end
 
-    context 'with passthrough JSON encoded string (deprecated)' do
+    context 'with passthrough JSON encoded string' do
       let :params do
         {
           :passthrough => "[{\"vendor_id\":\"8086\",\"product_id\":\"0126\"},{\"vendor_id\":\"9096\",\"product_id\":\"1520\",\"physical_network\":\"physnet1\"}]",
