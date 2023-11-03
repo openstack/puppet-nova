@@ -4,8 +4,21 @@ describe 'nova::compute::pci' do
 
   shared_examples_for 'nova-compute-pci' do
     context 'with default parameters' do
-      it 'clears pci device_spec configuration' do
+      it 'configures default values' do
         is_expected.to contain_nova_config('pci/device_spec').with(:value => '<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('pci/report_in_placement').with(:value => '<SERVICE DEFAULT>')
+      end
+    end
+
+    context 'with parameters' do
+      let :params do
+        {
+          :report_in_placement => true
+        }
+      end
+
+      it 'configures given values' do
+        is_expected.to contain_nova_config('pci/report_in_placement').with(:value => true)
       end
     end
 

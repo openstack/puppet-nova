@@ -1,0 +1,5 @@
+---
+features:
+  - |
+    The new ``nova::compute::pci::report_in_placement`` parameter has been
+    added.
