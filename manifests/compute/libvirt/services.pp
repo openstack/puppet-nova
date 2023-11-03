@@ -107,6 +107,7 @@ class nova::compute::libvirt::services (
         before => Service['libvirt'],
         tag    => ['openstack', 'nova-support-package'],
       }
+
       case $libvirt_virt_type {
         'qemu': {
           $libvirt_package_name_real = "${::nova::params::libvirt_daemon_package_prefix}kvm"
@@ -128,6 +129,8 @@ class nova::compute::libvirt::services (
       name   => $libvirt_package_name_real,
       tag    => ['openstack', 'nova-support-package'],
     }
+    Package['libvirt'] ~> Service<| tag == 'libvirt-service' |>
+    Package['libvirt'] ~> Exec<| tag == 'libvirt-service-stop' |>
 
     # Stop and disable libvirt service when modular_libvirt is enabled
     if $modular_libvirt {
@@ -190,6 +193,7 @@ class nova::compute::libvirt::services (
         name   => $::nova::params::libvirt_daemon_package_name,
         tag    => ['openstack', 'nova-support-package'],
       }
+      Package['libvirt-daemon'] ~> Service<| title == 'libvirt' |>
     }
   } else {
     # NOTE(tkajinam): libvirt should be stopped before starting modular daemons
@@ -208,21 +212,26 @@ class nova::compute::libvirt::services (
         tag    => ['openstack', 'nova-support-package'],
       }
       service { 'virtsecretd':
-        ensure => running,
-        enable => true,
-        name   => $virtsecret_service_name,
-        tag    => ['libvirt-service', 'libvirt-modular-service'],
+        ensure    => running,
+        enable    => true,
+        name      => $virtsecret_service_name,
+        subscribe => Package['virtsecret'],
+        tag       => ['libvirt-service', 'libvirt-modular-service'],
       }
-      Virtsecretd_config<||> -> Service['virtsecretd']
+      Virtsecretd_config<||> ~> Service['virtsecretd']
 
       if $virtsecret_service_name =~ /.+\.socket$/ {
-        exec { 'restart-virtsecretd':
-          command     => "systemctl -q restart ${::nova::params::virtsecret_service_name}",
+        $virtsecret_service_name_real = regsubst($virtsecret_service_name, /\.socket$/, '.service')
+        exec { 'stop-virtsecretd':
+          command     => "systemctl -q stop ${virtsecret_service_name_real}",
           path        => ['/sbin', '/usr/sbin', '/bin', '/usr/bin'],
-          onlyif      => "systemctl -q is-active ${::nova::params::virtsecret_service_name}",
+          onlyif      => "systemctl -q is-active ${virtsecret_service_name_real}",
           refreshonly => true,
+          require     => Anchor['nova::service::begin'],
+          subscribe   => Package['virtsecret'],
+          tag         => 'libvirt-service-stop',
         }
-        Virtsecretd_config<||> ~> Exec['restart-virtsecretd']
+        Virtsecretd_config<||> ~> Exec['stop-virtsecretd'] -> Service['virtsecretd']
       }
     }
 
@@ -233,21 +242,27 @@ class nova::compute::libvirt::services (
         tag    => ['openstack', 'nova-support-package'],
       }
       service { 'virtnodedevd':
-        ensure => running,
-        enable => true,
-        name   => $virtnodedev_service_name,
-        tag    => ['libvirt-service', 'libvirt-modular-service'],
+        ensure    => running,
+        enable    => true,
+        name      => $virtnodedev_service_name,
+        subscribe => Package['virtnodedev'],
+        tag       => ['libvirt-service', 'libvirt-modular-service'],
       }
-      Virtnodedevd_config<||> -> Service['virtnodedevd']
+      Package['virtnodedev'] ~> Service['virtnodedevd']
+      Virtnodedevd_config<||> ~> Service['virtnodedevd']
 
       if $virtnodedev_service_name =~ /.+\.socket$/ {
-        exec { 'restart-virtnodedevd':
-          command     => "systemctl -q restart ${::nova::params::virtnodedev_service_name}",
+        $virtnodedev_service_name_real = regsubst($virtnodedev_service_name, /\.socket$/, '.service')
+        exec { 'stop-virtnodedevd':
+          command     => "systemctl -q stop ${virtnodedev_service_name_real}",
           path        => ['/sbin', '/usr/sbin', '/bin', '/usr/bin'],
-          onlyif      => "systemctl -q is-active ${::nova::params::virtnodedev_service_name}",
+          onlyif      => "systemctl -q is-active ${virtnodedev_service_name_real}",
           refreshonly => true,
+          require     => Anchor['nova::service::begin'],
+          subscribe   => Package['virtnodedev'],
+          tag         => 'libvirt-service-stop',
         }
-        Virtnodedevd_config<||> ~> Exec['restart-virtnodedevd']
+        Virtnodedevd_config<||> ~> Exec['stop-virtnodedevd'] -> Service['virtnodedevd']
       }
     }
 
@@ -258,20 +273,26 @@ class nova::compute::libvirt::services (
         tag    => ['openstack', 'nova-support-package'],
       }
       service { 'virtqemud':
-        ensure => running,
-        enable => true,
-        name   => $virtqemu_service_name,
-        tag    => ['libvirt-service', 'libvirt-qemu-service', 'libvirt-modular-service'],
+        ensure    => running,
+        enable    => true,
+        name      => $virtqemu_service_name,
+        subscribe => Package['virtqemu'],
+        tag       => ['libvirt-service', 'libvirt-qemu-service', 'libvirt-modular-service'],
       }
-      Virtqemud_config<||> -> Service['virtqemud']
+      Virtqemud_config<||> ~> Service['virtqemud']
+
       if $virtqemu_service_name =~ /.+\.socket$/ {
-        exec { 'restart-virtqemud':
-          command     => "systemctl -q restart ${::nova::params::virtqemu_service_name}",
+        $virtqemu_service_name_real = regsubst($virtqemu_service_name, /\.socket$/, '.service')
+        exec { 'stop-virtqemud':
+          command     => "systemctl -q stop ${virtqemu_service_name_real}",
           path        => ['/sbin', '/usr/sbin', '/bin', '/usr/bin'],
-          onlyif      => "systemctl -q is-active ${::nova::params::virtqemu_service_name}",
+          onlyif      => "systemctl -q is-active ${virtqemu_service_name_real}",
           refreshonly => true,
+          require     => Anchor['nova::service::begin'],
+          subscribe   => Package['virtqemu'],
+          tag         => 'libvirt-service-stop',
         }
-        Virtqemud_config<||> ~> Exec['restart-virtqemud']
+        Virtqemud_config<||> ~> Exec['stop-virtqemud'] -> Service['virtqemud']
       }
     }
 
@@ -282,15 +303,19 @@ class nova::compute::libvirt::services (
         name   => $virtproxy_service_name,
         tag    => ['libvirt-service', 'libvirt-modular-service'],
       }
-      Virtproxyd_config<||> -> Service['virtproxyd']
+      Virtproxyd_config<||> ~> Service['virtproxyd']
+
       if $virtproxy_service_name =~ /.+\.socket$/ {
-        exec { 'restart-virtproxyd':
-          command     => "systemctl -q restart ${::nova::params::virtproxy_service_name}",
+        $virtproxy_service_name_real = regsubst($virtproxy_service_name, /\.socket$/, '.service')
+        exec { 'stop-virtproxyd':
+          command     => "systemctl -q stop ${virtproxy_service_name_real}",
           path        => ['/sbin', '/usr/sbin', '/bin', '/usr/bin'],
-          onlyif      => "systemctl -q is-active ${::nova::params::virtproxy_service_name}",
+          onlyif      => "systemctl -q is-active ${virtproxy_service_name_real}",
           refreshonly => true,
+          require     => Anchor['nova::service::begin'],
+          tag         => 'libvirt-service-stop',
         }
-        Virtproxyd_config<||> ~> Exec['restart-virtproxyd']
+        Virtproxyd_config<||> ~> Exec['stop-virtproxyd'] -> Service['virtproxyd']
       }
     }
 
@@ -301,20 +326,26 @@ class nova::compute::libvirt::services (
         tag    => ['openstack', 'nova-support-package'],
       }
       service { 'virtstoraged':
-        ensure => running,
-        enable => true,
-        name   => $virtstorage_service_name,
-        tag    => ['libvirt-service', 'libvirt-modular-service'],
+        ensure    => running,
+        enable    => true,
+        name      => $virtstorage_service_name,
+        subscribe => Package['virtstorage'],
+        tag       => ['libvirt-service', 'libvirt-modular-service'],
       }
-      Virtstoraged_config<||> -> Service['virtstoraged']
+      Package['virtstorage'] ~> Service['virtstoraged']
+      Virtstoraged_config<||> ~> Service['virtstoraged']
       if $virtstorage_service_name =~ /.+\.socket$/ {
-        exec { 'restart-virtstoraged':
-          command     => "systemctl -q restart ${::nova::params::virtstorage_service_name}",
+        $virtstorage_service_name_real = regsubst($virtstorage_service_name, /\.socket$/, '.service')
+        exec { 'stop-virtstoraged':
+          command     => "systemctl -q stop ${virtstorage_service_name_real}",
           path        => ['/sbin', '/usr/sbin', '/bin', '/usr/bin'],
-          onlyif      => "systemctl -q is-active ${::nova::params::virtstorage_service_name}",
+          onlyif      => "systemctl -q is-active ${virtstorage_service_name_real}",
           refreshonly => true,
+          require     => Anchor['nova::service::begin'],
+          subscribe   => Package['virtstorage'],
+          tag         => 'libvirt-service-stop',
         }
-        Virtstoraged_config<||> ~> Exec['restart-storaged']
+        Virtstoraged_config<||> ~> Exec['stop-virtstoraged'] -> Service['virtstoraged']
       }
     }
   }

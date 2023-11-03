@@ -316,26 +316,29 @@ class nova::migration::libvirt(
           command => '/usr/bin/true',
           path    => ['/sbin', '/usr/sbin', '/bin', '/usr/bin'],
           unless  => "systemctl -q is-active ${socket_name}.socket",
-          require => Anchor['nova::config::end']
         }
 
         exec { "stop ${proxy_service}.service":
           command     => "systemctl -q stop ${proxy_service}.service",
           path        => ['/sbin', '/usr/sbin', '/bin', '/usr/bin'],
           refreshonly => true,
-          require     => Anchor['nova::install::end']
+        }
+
+        if $modular_libvirt {
+          Exec["stop ${proxy_service}.service"] -> Service<| title == 'virtproxyd' |>
         }
 
         service { $socket_name:
-          ensure  => 'running',
-          name    => "${socket_name}.socket",
-          enable  => true,
-          require => Anchor['nova::config::end']
+          ensure => 'running',
+          name   => "${socket_name}.socket",
+          enable => true,
         }
 
-        Exec["check ${socket_name}.socket"]
+        Anchor['nova::service::begin']
+        -> Exec["check ${socket_name}.socket"]
         ~> Exec["stop ${proxy_service}.service"]
         -> Service[$socket_name]
+        ~> Anchor['nova::service::end']
 
         if is_service_default($listen_address) {
           file { "/etc/systemd/system/${socket_name}.socket":
