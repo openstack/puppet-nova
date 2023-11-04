@@ -67,10 +67,10 @@
 #   Defaults to 'provider.yaml'
 #
 class nova::compute::provider (
-  $schema_version     = '1.0',
-  $custom_inventories = [],
-  $config_location    = '/etc/nova/provider_config',
-  $config_file        = 'provider.yaml',
+  $schema_version                                 = '1.0',
+  Array[Hash[String[1], Any]] $custom_inventories = [],
+  Stdlib::Absolutepath $config_location           = '/etc/nova/provider_config',
+  String[1] $config_file                          = 'provider.yaml',
 ) {
 
   include nova::deps
