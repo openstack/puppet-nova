@@ -91,6 +91,11 @@
 #   (Optional) The log format for the virtualhost.
 #   Defaults to undef.
 #
+# [*access_log_env_var*]
+#   (Optional) Specifies that only requests with particular
+#   environment variables be logged.
+#   Defaults to undef.
+#
 # [*error_log_file*]
 #   (Optional) The error log file name for the virtualhost.
 #   Defaults to undef.
@@ -157,6 +162,7 @@ class nova::wsgi::apache_metadata (
   $access_log_pipe             = undef,
   $access_log_syslog           = undef,
   $access_log_format           = undef,
+  $access_log_env_var          = undef,
   $error_log_file              = undef,
   $error_log_pipe              = undef,
   $error_log_syslog            = undef,
@@ -212,6 +218,7 @@ class nova::wsgi::apache_metadata (
     access_log_pipe             => $access_log_pipe,
     access_log_syslog           => $access_log_syslog,
     access_log_format           => $access_log_format,
+    access_log_env_var          => $access_log_env_var,
     error_log_file              => $error_log_file,
     error_log_pipe              => $error_log_pipe,
     error_log_syslog            => $error_log_syslog,
