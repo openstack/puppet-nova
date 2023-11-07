@@ -21,13 +21,12 @@ class nova::compute::pci(
 ) {
   include nova::deps
 
-  if $passthrough and
-      !is_service_default($passthrough) and
-      !empty($passthrough) {
+  if !is_service_default($passthrough) and !empty($passthrough) {
     $passthrough_real = to_array_of_json_strings($passthrough)
   } else {
     $passthrough_real = $facts['os_service_default']
   }
+
   nova_config {
     'pci/device_spec':         value => $passthrough_real;
     'pci/report_in_placement': value => $report_in_placement;

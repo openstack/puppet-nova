@@ -16,9 +16,7 @@ class nova::pci(
 ) {
   include nova::deps
 
-  if $aliases and
-      !is_service_default($aliases) and
-      !empty($aliases) {
+  if !is_service_default($aliases) and !empty($aliases) {
     $aliases_real = to_array_of_json_strings($aliases)
   } else {
     $aliases_real = $facts['os_service_default']
