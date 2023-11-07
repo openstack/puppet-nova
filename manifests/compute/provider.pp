@@ -97,6 +97,7 @@ class nova::compute::provider (
       group   => $::nova::params::group,
       content => template('nova/provider.yaml.erb'),
       require => Anchor['nova::config::begin'],
+      notify  => Anchor['nova::config::end'],
     }
   }
 }
