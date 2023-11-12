@@ -193,7 +193,7 @@ class nova::api(
   $instance_list_cells_batch_fixed_size        = $facts['os_service_default'],
   $list_records_by_skipping_down_cells         = $facts['os_service_default'],
   # DEPRECATED PARAMETER
-  Boolean $nova_metadata_wsgi_enabled          = false,
+  $nova_metadata_wsgi_enabled                  = undef,
   $use_forwarded_for                           = undef,
 ) inherits nova::params {
 
@@ -204,40 +204,26 @@ class nova::api(
   include nova::availability_zone
   include nova::pci
 
-  if !$nova_metadata_wsgi_enabled {
-    warning('Running nova metadata api via evenlet is deprecated and will be removed in Stein release.')
+  if $nova_metadata_wsgi_enabled != undef {
+    warning('The nova_metadata_wsgi_enabled parameter has been deprecated and has no effect')
   }
 
   if $use_forwarded_for != undef {
     warning('The use_forwarded_for parameter has been deprecated.')
   }
 
-  # enable metadata in eventlet if we do not run metadata via wsgi (nova::metadata)
-  if ('metadata' in $enabled_apis and $service_name == 'httpd' and !$nova_metadata_wsgi_enabled) {
-    $enable_metadata = true
-  } else {
-    $enable_metadata = false
-  }
-
   # sanitize service_name and prepare DEFAULT/enabled_apis parameter
   if $service_name == $::nova::params::api_service_name {
-    # if running evenlet, we use the original puppet parameter
-    # so people can enable custom service names and we keep backward compatibility.
-    $enabled_apis_real = $enabled_apis
-    $service_enabled   = $enabled
-  } elsif $service_name == 'httpd' {
-    # when running wsgi, we want to enable metadata in eventlet if part of enabled_apis
-    # but only if we do not run metadata via wsgi (nova::metadata)
-    if $enable_metadata {
-      $enabled_apis_real = ['metadata']
-      $service_enabled   = $enabled
-    } else {
-      # otherwise, set it to empty list
-      $enabled_apis_real = []
-      # if running wsgi for compute, and metadata disabled
-      # we don't need to enable nova-api service.
-      $service_enabled   = false
+    nova_config {
+      'DEFAULT/enabled_apis': value => join(any2array($enabled_apis), ',');
     }
+    $service_enabled = $enabled
+  } elsif $service_name == 'httpd' {
+    nova_config {
+      'DEFAULT/enabled_apis': ensure => absent;
+    }
+    $service_enabled = false
+
     policy_rcd { 'nova-api':
       ensure   => present,
       set_code => '101',
@@ -272,7 +258,7 @@ as a standalone service, or httpd for being run by a httpd server")
     }
   }
 
-  if !$nova_metadata_wsgi_enabled {
+  if $service_name != 'httpd' {
     nova_config {
       'DEFAULT/metadata_workers':     value => $metadata_workers;
       'DEFAULT/metadata_listen':      value => $metadata_listen;
@@ -292,7 +278,6 @@ as a standalone service, or httpd for being run by a httpd server")
   }
 
   nova_config {
-    'DEFAULT/enabled_apis':                     value => join($enabled_apis_real, ',');
     'wsgi/api_paste_config':                    value => $api_paste_config;
     'DEFAULT/osapi_compute_listen':             value => $api_bind_address;
     'DEFAULT/osapi_compute_listen_port':        value => $osapi_compute_listen_port;
