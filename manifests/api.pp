@@ -260,15 +260,21 @@ as a standalone service, or httpd for being run by a httpd server")
 
   if $service_name != 'httpd' {
     nova_config {
-      'DEFAULT/metadata_workers':     value => $metadata_workers;
-      'DEFAULT/metadata_listen':      value => $metadata_listen;
-      'DEFAULT/metadata_listen_port': value => $metadata_listen_port;
+      'DEFAULT/osapi_compute_listen':      value => $api_bind_address;
+      'DEFAULT/osapi_compute_listen_port': value => $osapi_compute_listen_port;
+      'DEFAULT/osapi_compute_workers':     value => $osapi_compute_workers;
+      'DEFAULT/metadata_workers':          value => $metadata_workers;
+      'DEFAULT/metadata_listen':           value => $metadata_listen;
+      'DEFAULT/metadata_listen_port':      value => $metadata_listen_port;
     }
   } else {
     nova_config {
-      'DEFAULT/metadata_workers':     ensure => absent;
-      'DEFAULT/metadata_listen':      ensure => absent;
-      'DEFAULT/metadata_listen_port': ensure => absent;
+      'DEFAULT/osapi_compute_listen':      ensure => absent;
+      'DEFAULT/osapi_compute_listen_port': ensure => absent;
+      'DEFAULT/osapi_compute_workers':     ensure => absent;
+      'DEFAULT/metadata_workers':          ensure => absent;
+      'DEFAULT/metadata_listen':           ensure => absent;
+      'DEFAULT/metadata_listen_port':      ensure => absent;
     }
   }
 
@@ -279,9 +285,6 @@ as a standalone service, or httpd for being run by a httpd server")
 
   nova_config {
     'wsgi/api_paste_config':                    value => $api_paste_config;
-    'DEFAULT/osapi_compute_listen':             value => $api_bind_address;
-    'DEFAULT/osapi_compute_listen_port':        value => $osapi_compute_listen_port;
-    'DEFAULT/osapi_compute_workers':            value => $osapi_compute_workers;
     'DEFAULT/enable_network_quota':             value => $enable_network_quota;
     'DEFAULT/password_length':                  value => $password_length;
     'api/use_forwarded_for':                    value => pick($use_forwarded_for, $facts['os_service_default']);
