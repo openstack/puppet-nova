@@ -1,0 +1,9 @@
+---
+deprecations:
+  - |
+    The following parameters of the ``nova::api`` class have been deprecated
+    and now have no effect.
+
+    - ``enable_network_quota``
+    - ``allow_instance_snapshots``
+    - ``hide_server_address_states``
