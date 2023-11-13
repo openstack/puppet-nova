@@ -246,8 +246,12 @@ class nova::api(
 
     if $manage_service {
       Service <| title == 'httpd' |> { tag +> 'nova-service' }
-      # make sure we start apache before nova-api to avoid binding issues
+      # make sure we start apache before nova-api and nova-metadata-api are
+      # stopped to avoid binding issues
       Service['nova-api'] -> Service[$service_name]
+      if $metadata_service_name {
+        Service['nova-api-metadata'] -> Service[$service_name]
+      }
     }
   } else {
     fail("Invalid service_name. Either nova-api/openstack-nova-api for running \
