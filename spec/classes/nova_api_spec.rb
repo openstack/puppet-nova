@@ -179,6 +179,9 @@ describe 'nova::api' do
           :tag    => 'nova-service',
         )
         is_expected.to contain_nova_config('DEFAULT/enabled_apis').with_ensure('absent')
+        is_expected.to contain_nova_config('DEFAULT/osapi_compute_workers').with_ensure('absent')
+        is_expected.to contain_nova_config('DEFAULT/osapi_compute_listen').with_ensure('absent')
+        is_expected.to contain_nova_config('DEFAULT/osapi_compute_listen_port').with_ensure('absent')
         is_expected.to contain_nova_config('DEFAULT/metadata_workers').with_ensure('absent')
         is_expected.to contain_nova_config('DEFAULT/metadata_listen').with_ensure('absent')
         is_expected.to contain_nova_config('DEFAULT/metadata_listen_port').with_ensure('absent')
