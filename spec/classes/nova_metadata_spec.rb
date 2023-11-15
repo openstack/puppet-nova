@@ -2,13 +2,6 @@ require 'spec_helper'
 
 describe 'nova::metadata' do
 
-  let :pre_condition do
-    "include nova
-     class { 'nova::keystone::authtoken':
-       password => 'passw0rd',
-     }"
-  end
-
   let :params do
     {}
   end
@@ -16,8 +9,6 @@ describe 'nova::metadata' do
   shared_examples 'nova-metadata' do
 
     context 'with default parameters' do
-
-      it { is_expected.to contain_class('nova::keystone::authtoken') }
 
       it 'configures various stuff' do
         is_expected.to contain_nova_config('api/metadata_cache_expiration').with('value' => '<SERVICE DEFAULT>')

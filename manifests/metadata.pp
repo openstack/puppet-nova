@@ -36,8 +36,6 @@ class nova::metadata(
 ) inherits nova::params {
 
   include nova::deps
-  include nova::db
-  include nova::keystone::authtoken
 
   nova_config {
     'api/dhcp_domain':               value => $dhcp_domain;
