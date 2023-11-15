@@ -156,62 +156,10 @@ describe 'nova::api' do
       it { is_expected.to_not contain_service('nova-api') }
     end
 
-    context 'when running nova API in wsgi compute, and enabling metadata' do
-      before do
-        params.merge!({ :service_name => 'httpd' })
-      end
-
-      let :pre_condition do
-        "include apache
-         include nova
-         class { 'nova::keystone::authtoken':
-           password => 'a_big_secret',
-         }"
-      end
-
-      it 'enable nova API service' do
-        is_expected.to contain_service('nova-api').with(
-          :ensure => 'running',
-          :name   => platform_params[:nova_api_service],
-          :enable => true,
-          :tag    => 'nova-service',
-        )
-      end
-      it 'enable metadata in evenlet configuration' do
-        is_expected.to contain_nova_config('DEFAULT/enabled_apis').with_value('metadata')
-      end
-    end
-
-    context 'when running nova API in wsgi for compute, and disabling metadata' do
+    context 'when running nova API in wsgi for compute' do
       before do
         params.merge!({
           :service_name => 'httpd',
-          :enabled_apis => ['osapi_compute'] })
-      end
-
-      let :pre_condition do
-        "include apache
-         include nova
-         class { 'nova::keystone::authtoken':
-           password => 'a_big_secret',
-         }"
-      end
-
-      it 'disable nova API service' do
-        is_expected.to contain_service('nova-api').with(
-          :ensure => 'stopped',
-          :name   => platform_params[:nova_api_service],
-          :enable => false,
-          :tag    => 'nova-service',
-        )
-      end
-    end
-
-    context 'when running nova API in wsgi for compute, and metadata in wsgi' do
-      before do
-        params.merge!({
-          :service_name               => 'httpd',
-          :nova_metadata_wsgi_enabled => true
         })
       end
 
@@ -230,6 +178,7 @@ describe 'nova::api' do
           :enable => false,
           :tag    => 'nova-service',
         )
+        is_expected.to contain_nova_config('DEFAULT/enabled_apis').with_ensure('absent')
         is_expected.to contain_nova_config('DEFAULT/metadata_workers').with_ensure('absent')
         is_expected.to contain_nova_config('DEFAULT/metadata_listen').with_ensure('absent')
         is_expected.to contain_nova_config('DEFAULT/metadata_listen_port').with_ensure('absent')

@@ -1,0 +1,6 @@
+---
+upgrade:
+  - |
+    The ``nova::api::nova_metadata_wsgi_enabled`` parameter has no effect now.
+    When nova API service is deployed using httpd and mod_wsgi, nova-api
+    service is no longer started. Use httpd + mod_wsgi to run metadata api.
