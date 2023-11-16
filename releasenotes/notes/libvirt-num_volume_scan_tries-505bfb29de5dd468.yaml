@@ -1,0 +1,5 @@
+---
+features:
+  - |
+    The new ``nova::compute::libvirt::num_volume_scan_tries`` parameter has
+    been added.

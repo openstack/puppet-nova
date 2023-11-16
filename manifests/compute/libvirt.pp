@@ -171,6 +171,10 @@
 #   LibVirt as multipath devices.
 #   Defaults to $facts['os_service_default']
 #
+# [*num_volume_scan_tries*]
+#   (optional) Number of times to scan given storage protocol to find volume.
+#   Defaults to $facts['os_service_default']
+#
 # [*nfs_mount_options*]
 #   (optional) Mount options passed to the NFS client. See section of the
 #   nfs man page for details.
@@ -268,6 +272,7 @@ class nova::compute::libvirt (
   $file_backed_memory                         = $facts['os_service_default'],
   $images_type                                = $facts['os_service_default'],
   $volume_use_multipath                       = $facts['os_service_default'],
+  $num_volume_scan_tries                      = $facts['os_service_default'],
   $nfs_mount_options                          = $facts['os_service_default'],
   $num_pcie_ports                             = $facts['os_service_default'],
   $mem_stats_period_seconds                   = $facts['os_service_default'],
@@ -376,6 +381,7 @@ class nova::compute::libvirt (
     'libvirt/file_backed_memory':            value => $file_backed_memory;
     'libvirt/images_type':                   value => $images_type;
     'libvirt/volume_use_multipath':          value => $volume_use_multipath;
+    'libvirt/num_volume_scan_tries':         value => $num_volume_scan_tries;
     'libvirt/nfs_mount_options':             value => $nfs_mount_options;
     'libvirt/num_pcie_ports':                value => $num_pcie_ports;
     'libvirt/mem_stats_period_seconds':      value => $mem_stats_period_seconds;
