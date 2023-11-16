@@ -57,7 +57,7 @@ describe 'nova::compute::libvirt' do
       it { is_expected.to contain_nova_config('libvirt/cpu_power_governor_high').with_value('<SERVICE DEFAULT>')}
       it { is_expected.to contain_nova_config('libvirt/snapshot_image_format').with_value('<SERVICE DEFAULT>')}
       it { is_expected.to contain_nova_config('libvirt/snapshots_directory').with_value('<SERVICE DEFAULT>')}
-      it { is_expected.to contain_nova_config('libvirt/disk_cachemodes').with_ensure('absent')}
+      it { is_expected.to contain_nova_config('libvirt/disk_cachemodes').with_value('<SERVICE DEFAULT>')}
       it { is_expected.to contain_nova_config('libvirt/inject_password').with_value('<SERVICE DEFAULT>')}
       it { is_expected.to contain_nova_config('libvirt/inject_key').with_value('<SERVICE DEFAULT>')}
       it { is_expected.to contain_nova_config('libvirt/inject_partition').with_value('<SERVICE DEFAULT>')}
