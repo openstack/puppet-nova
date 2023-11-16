@@ -1,0 +1,9 @@
+---
+upgrade:
+  - |
+    The following resource types no longer attempts to load user credentials
+    from the ``[keystone_authtoken]`` section in ``nova.conf``.
+
+    - ``nova_aggregate``
+    - ``nova_flavor``
+    - ``nova_service``
