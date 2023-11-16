@@ -266,6 +266,10 @@ class nova::migration::libvirt(
           require => Package['libvirt'],
         }
       }
+    } else {
+      if $host_uuid {
+        warning('host_uuid has no effect when override_uuid is false')
+      }
     }
 
     if $transport == 'tls' {
