@@ -61,17 +61,14 @@ describe 'nova::migration::libvirt' do
         :content => '0000-111-111',
       }).that_requires('Package[libvirt]') }
 
-      it { is_expected.to contain_augeas('libvirt-conf-uuid').with({
-        :context => '/files/etc/libvirt/libvirtd.conf',
-        :changes => [ "set host_uuid 0000-111-111" ],
-      }).that_requires('Package[libvirt]').that_notifies('Service[libvirt]') }
+      it { is_expected.to contain_libvirtd_config('host_uuid').with_value('0000-111-111').with_quote(true) }
     end
 
     context 'with override_uuid enabled and host_uuid set' do
       let :params do
         {
           :override_uuid => true,
-          :host_uuid => 'a8debd9d-e359-4bb2-8c77-edee431f94f2',
+          :host_uuid     => 'a8debd9d-e359-4bb2-8c77-edee431f94f2',
         }
       end
 
@@ -79,10 +76,7 @@ describe 'nova::migration::libvirt' do
         :content => 'a8debd9d-e359-4bb2-8c77-edee431f94f2',
       }).that_requires('Package[libvirt]') }
 
-      it { is_expected.to contain_augeas('libvirt-conf-uuid').with({
-        :context => '/files/etc/libvirt/libvirtd.conf',
-        :changes => [ "set host_uuid a8debd9d-e359-4bb2-8c77-edee431f94f2" ],
-      }).that_requires('Package[libvirt]').that_notifies('Service[libvirt]') }
+      it { is_expected.to contain_libvirtd_config('host_uuid').with_value('a8debd9d-e359-4bb2-8c77-edee431f94f2').with_quote(true) }
     end
 
     context 'with tls enabled' do
