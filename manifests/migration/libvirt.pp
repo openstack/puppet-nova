@@ -251,20 +251,20 @@ class nova::migration::libvirt(
 
       if $modular_libvirt_real {
         ['virtqemud', 'virtproxyd', 'virtsecretd', 'virtnodedevd', 'virtstoraged'].each |String $daemon| {
-          augeas { "${daemon}-conf-uuid":
-            context => "/files/etc/libvirt/${daemon}.conf",
-            changes => ["set host_uuid ${host_uuid_real}"],
-            notify  => Service[$daemon],
-            require => Package['libvirt'],
-          }
+          create_resources("${daemon}_config", {
+            'host_uuid' => {
+              'value' => $host_uuid_real,
+              'quote' => true,
+            },
+          })
         }
       } else {
-        augeas { 'libvirt-conf-uuid':
-          context => '/files/etc/libvirt/libvirtd.conf',
-          changes => ["set host_uuid ${host_uuid_real}"],
-          notify  => Service['libvirt'],
-          require => Package['libvirt'],
-        }
+        create_resources('libvirtd_config', {
+          'host_uuid' => {
+            'value' => $host_uuid_real,
+            'quote' => true,
+          },
+        })
       }
     }
 
