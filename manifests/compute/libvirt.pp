@@ -343,6 +343,10 @@ class nova::compute::libvirt (
     }
   }
 
+  $disk_cachemodes_real = $disk_cachemodes ? {
+    Hash    => join(join_keys_to_values($disk_cachemodes, '='), ','),
+    default => join(any2array($disk_cachemodes), ','),
+  }
   $hw_machine_type_real = $hw_machine_type ? {
     Hash    => join(join_keys_to_values($hw_machine_type, '='), ','),
     default => join(any2array($hw_machine_type), ','),
@@ -360,7 +364,7 @@ class nova::compute::libvirt (
     'libvirt/cpu_power_governor_high':       value => $cpu_power_governor_high;
     'libvirt/snapshot_image_format':         value => $snapshot_image_format;
     'libvirt/snapshots_directory':           value => $snapshots_directory;
-    'libvirt/disk_cachemodes':               value => join(any2array($disk_cachemodes), ',');
+    'libvirt/disk_cachemodes':               value => $disk_cachemodes_real;
     'libvirt/inject_password':               value => $inject_password;
     'libvirt/inject_key':                    value => $inject_key;
     'libvirt/inject_partition':              value => $inject_partition;
