@@ -101,20 +101,6 @@
 #   to Glance resources.
 #   Defaults to $facts['os_service_default']
 #
-# [*hide_server_address_states*]
-#   (optional) This option is a list of all instance states for which network address
-#   information should not be returned from the API.
-#   Defaults to $facts['os_service_default']
-#
-# [*allow_instance_snapshots*]
-#   (optional) Operators can turn off the ability for a user to take snapshots of their
-#   instances by setting this option to False
-#   Defaults to $facts['os_service_default']
-#
-# [*enable_network_quota*]
-#   (optional) This option is used to enable or disable quota checking for tenant networks
-#   Defaults to $facts['os_service_default']
-#
 # [*enable_instance_password*]
 #   (optional) Enables returning of the instance password by the relevant server API calls
 #   Defaults to $facts['os_service_default']
@@ -160,6 +146,20 @@
 #   enable this if you have a sanitizing proxy.
 #   Defaults to undef
 #
+# [*hide_server_address_states*]
+#   (optional) This option is a list of all instance states for which network address
+#   information should not be returned from the API.
+#   Defaults to undef
+#
+# [*allow_instance_snapshots*]
+#   (optional) Operators can turn off the ability for a user to take snapshots of their
+#   instances by setting this option to False
+#   Defaults to undef
+#
+# [*enable_network_quota*]
+#   (optional) This option is used to enable or disable quota checking for tenant networks
+#   Defaults to undef
+#
 class nova::api(
   Boolean $enabled                             = true,
   Boolean $manage_service                      = true,
@@ -182,9 +182,6 @@ class nova::api(
   $max_limit                                   = $facts['os_service_default'],
   $compute_link_prefix                         = $facts['os_service_default'],
   $glance_link_prefix                          = $facts['os_service_default'],
-  $hide_server_address_states                  = $facts['os_service_default'],
-  $allow_instance_snapshots                    = $facts['os_service_default'],
-  $enable_network_quota                        = $facts['os_service_default'],
   $enable_instance_password                    = $facts['os_service_default'],
   $password_length                             = $facts['os_service_default'],
   $allow_resize_to_same_host                   = $facts['os_service_default'],
@@ -195,6 +192,9 @@ class nova::api(
   # DEPRECATED PARAMETER
   $nova_metadata_wsgi_enabled                  = undef,
   $use_forwarded_for                           = undef,
+  $hide_server_address_states                  = undef,
+  $allow_instance_snapshots                    = undef,
+  $enable_network_quota                        = undef,
 ) inherits nova::params {
 
   include nova::deps
@@ -210,6 +210,16 @@ class nova::api(
 
   if $use_forwarded_for != undef {
     warning('The use_forwarded_for parameter has been deprecated.')
+  }
+
+  [
+    'hide_server_address_states',
+    'allow_instance_snapshots',
+    'enable_network_quota'
+  ].each |String $opt| {
+    if getvar($opt) != undef {
+      warning("The ${opt} parameter has been deprecated and has no effect.")
+    }
   }
 
   # sanitize service_name and prepare DEFAULT/enabled_apis parameter
@@ -289,20 +299,24 @@ as a standalone service, or httpd for being run by a httpd server")
 
   nova_config {
     'wsgi/api_paste_config':                    value => $api_paste_config;
-    'DEFAULT/enable_network_quota':             value => $enable_network_quota;
     'DEFAULT/password_length':                  value => $password_length;
     'api/use_forwarded_for':                    value => pick($use_forwarded_for, $facts['os_service_default']);
     'api/max_limit':                            value => $max_limit;
     'api/compute_link_prefix':                  value => $compute_link_prefix;
     'api/glance_link_prefix':                   value => $glance_link_prefix;
-    'api/hide_server_address_states':           value => $hide_server_address_states;
-    'api/allow_instance_snapshots':             value => $allow_instance_snapshots;
     'api/enable_instance_password':             value => $enable_instance_password;
     'DEFAULT/allow_resize_to_same_host':        value => $allow_resize_to_same_host;
     'api/instance_list_per_project_cells':      value => $instance_list_per_project_cells;
     'api/instance_list_cells_batch_strategy':   value => $instance_list_cells_batch_strategy;
     'api/instance_list_cells_batch_fixed_size': value => $instance_list_cells_batch_fixed_size;
     'api/list_records_by_skipping_down_cells':  value => $list_records_by_skipping_down_cells;
+  }
+
+  # TODO(tkajinam): Remove this after 2024.1 release
+  nova_config {
+    'api/hide_server_address_states': ensure => absent;
+    'api/allow_instance_snapshots':   ensure => absent;
+    'DEFAULT/enable_network_quota':   ensure => absent;
   }
 
   # Added arg and if statement prevents this from being run

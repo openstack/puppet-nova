@@ -60,9 +60,9 @@ describe 'nova::api' do
         is_expected.to contain_nova_config('api/max_limit').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('api/compute_link_prefix').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('api/glance_link_prefix').with_value('<SERVICE DEFAULT>')
-        is_expected.to contain_nova_config('api/hide_server_address_states').with_value('<SERVICE DEFAULT>')
-        is_expected.to contain_nova_config('api/allow_instance_snapshots').with_value('<SERVICE DEFAULT>')
-        is_expected.to contain_nova_config('DEFAULT/enable_network_quota').with_value('<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('api/hide_server_address_states').with_ensure('absent')
+        is_expected.to contain_nova_config('api/allow_instance_snapshots').with_ensure('absent')
+        is_expected.to contain_nova_config('DEFAULT/enable_network_quota').with_ensure('absent')
         is_expected.to contain_nova_config('api/enable_instance_password').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('DEFAULT/password_length').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('DEFAULT/allow_resize_to_same_host').with_value('<SERVICE DEFAULT>')
@@ -90,9 +90,6 @@ describe 'nova::api' do
           :max_limit                            => 1000,
           :compute_link_prefix                  => 'https://10.0.0.1:7777/',
           :glance_link_prefix                   => 'https://10.0.0.1:6666/',
-          :hide_server_address_states           => 'building',
-          :allow_instance_snapshots             => true,
-          :enable_network_quota                 => false,
           :enable_instance_password             => true,
           :password_length                      => 12,
           :allow_resize_to_same_host            => true,
@@ -133,9 +130,6 @@ describe 'nova::api' do
           :enable_proxy_headers_parsing => true,
           :max_request_body_size        => '102400',
         )
-        is_expected.to contain_nova_config('api/hide_server_address_states').with_value('building')
-        is_expected.to contain_nova_config('api/allow_instance_snapshots').with_value(true)
-        is_expected.to contain_nova_config('DEFAULT/enable_network_quota').with_value(false)
         is_expected.to contain_nova_config('api/enable_instance_password').with_value(true)
         is_expected.to contain_nova_config('DEFAULT/password_length').with_value('12')
         is_expected.to contain_nova_config('DEFAULT/allow_resize_to_same_host').with_value(true)
