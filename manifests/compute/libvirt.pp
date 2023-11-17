@@ -68,9 +68,7 @@
 # [*disk_cachemodes*]
 #   (optional) A list of cachemodes for different disk types, e.g.
 #   ["file=directsync", "block=none"]
-#   If an empty list is specified, the disk_cachemodes directive
-#   will be removed from nova.conf completely.
-#   Defaults to an empty list
+#   Defaults to $facts['os_service_default']
 #
 # [*hw_disk_discard*]
 #   (optional) Discard option for nova managed disks. Need Libvirt(1.0.6)
@@ -247,7 +245,7 @@ class nova::compute::libvirt (
   $cpu_power_governor_high                    = $facts['os_service_default'],
   $snapshot_image_format                      = $facts['os_service_default'],
   $snapshots_directory                        = $facts['os_service_default'],
-  $disk_cachemodes                            = [],
+  $disk_cachemodes                            = $facts['os_service_default'],
   $hw_disk_discard                            = $facts['os_service_default'],
   $hw_machine_type                            = $facts['os_service_default'],
   $sysinfo_serial                             = $facts['os_service_default'],
@@ -362,6 +360,7 @@ class nova::compute::libvirt (
     'libvirt/cpu_power_governor_high':       value => $cpu_power_governor_high;
     'libvirt/snapshot_image_format':         value => $snapshot_image_format;
     'libvirt/snapshots_directory':           value => $snapshots_directory;
+    'libvirt/disk_cachemodes':               value => join(any2array($disk_cachemodes), ',');
     'libvirt/inject_password':               value => $inject_password;
     'libvirt/inject_key':                    value => $inject_key;
     'libvirt/inject_partition':              value => $inject_partition;
@@ -415,15 +414,5 @@ class nova::compute::libvirt (
   }
   nova_config {
     'libvirt/cpu_model_extra_flags': value => $cpu_model_extra_flags_real;
-  }
-
-  if size($disk_cachemodes) > 0 {
-    nova_config {
-      'libvirt/disk_cachemodes': value => join($disk_cachemodes, ',');
-    }
-  } else {
-    nova_config {
-      'libvirt/disk_cachemodes': ensure => absent;
-    }
   }
 }
