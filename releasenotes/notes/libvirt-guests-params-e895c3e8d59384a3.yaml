@@ -1,0 +1,10 @@
+---
+features:
+  - |
+    The ``nova::compute::libvirt_guests`` class now supports the following
+    parameters.
+
+    - ``start_delay``
+    - ``parallel_shutdown``
+    - ``bypass_cache``
+    - ``sync_time``

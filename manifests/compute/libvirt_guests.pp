@@ -33,6 +33,18 @@
 #              value suitable for your guests.
 #   Defaults to 'shutdown'
 #
+# [*start_delay*]
+#   (optional) Number of seconds to wait between each guest start. Set 0 to
+#   allow parallel startup.
+#   Defaults to undef
+#
+# [*parallel_shutdown*]
+#   (optional) Number of guests will be shutdown concurrently, taking effect
+#   when "ON_SHUTDOWN" is set to "shutdown". If set to 0, guests will be
+#   shutdown one after another. Number of guests on shutdown at any time will
+#   not exceed number set in this variable.
+#   Defaults to undef
+#
 # [*shutdown_timeout*]
 #   (optional) Number of seconds we're willing to wait for a guest to shut
 #   down. If parallel shutdown is enabled, this timeout applies as a timeout
@@ -41,6 +53,16 @@
 #   not respond to a shutdown request).
 #   Defaults to undef
 #
+# [*bypass_cache*]
+#   (optional) Try to bypass the file system cache when saving and restoring
+#   guests, even though this may give slower operation for some file systems.
+#   Defaults to false
+#
+# [*sync_time*]
+#   (optional) Try to sync guest time on domain resume. Be aware, that this
+#   requires guest agent support for time synchronization running in the guest.
+#   Defaults to false
+#
 # [*manage_service*]
 #   (optional) Whether to start/stop the service
 #   Defaults to false
@@ -48,9 +70,13 @@
 class nova::compute::libvirt_guests (
   Boolean $enabled        = false,
   $package_ensure         = 'present',
-  $shutdown_timeout       = undef,
   $on_boot                = 'ignore',
   $on_shutdown            = 'shutdown',
+  $start_delay            = undef,
+  $parallel_shutdown      = undef,
+  $shutdown_timeout       = undef,
+  Boolean $bypass_cache   = false,
+  Boolean $sync_time      = false,
   Boolean $manage_service = false,
 ) {
   include nova::params
@@ -81,6 +107,40 @@ class nova::compute::libvirt_guests (
     tag   => 'libvirt-guests-file_line',
   }
 
+  if $start_delay {
+    file_line { 'libvirt-guests START_DELAY':
+      path  => $::nova::params::libvirt_guests_environment_file,
+      line  => "START_DELAY=${start_delay}",
+      match => '^START_DELAY=.*',
+      tag   => 'libvirt-guests-file_line',
+    }
+  } else {
+    file_line { 'libvirt-guests START_DELAY':
+      ensure            => absent,
+      path              => $::nova::params::libvirt_guests_environment_file,
+      match             => '^START_DELAY=.*',
+      match_for_absence => true,
+      tag               => 'libvirt-guests-file_line',
+    }
+  }
+
+  if $parallel_shutdown {
+    file_line { 'libvirt-guests PARALLEL_SHUTDOWN':
+      path  => $::nova::params::libvirt_guests_environment_file,
+      line  => "PARALLEL_SHUTDOWN=${parallel_shutdown}",
+      match => '^PARALLEL_SHUTDOWN=.*',
+      tag   => 'libvirt-guests-file_line',
+    }
+  } else {
+    file_line { 'libvirt-guests PARALLEL_SHUTDOWN':
+      ensure            => absent,
+      path              => $::nova::params::libvirt_guests_environment_file,
+      match             => '^PARALLEL_SHUTDOWN=.*',
+      match_for_absence => true,
+      tag               => 'libvirt-guests-file_line',
+    }
+  }
+
   if $shutdown_timeout {
     file_line { 'libvirt-guests SHUTDOWN_TIMEOUT':
       path  => $::nova::params::libvirt_guests_environment_file,
@@ -93,6 +153,40 @@ class nova::compute::libvirt_guests (
       ensure            => absent,
       path              => $::nova::params::libvirt_guests_environment_file,
       match             => '^SHUTDOWN_TIMEOUT=.*',
+      match_for_absence => true,
+      tag               => 'libvirt-guests-file_line',
+    }
+  }
+
+  if $bypass_cache {
+    file_line { 'libvirt-guests BYPASS_CACHE':
+      path  => $::nova::params::libvirt_guests_environment_file,
+      line  => 'BYPASS_CACHE=1',
+      match => '^BYPASS_CACHE=.*',
+      tag   => 'libvirt-guests-file_line',
+    }
+  } else {
+    file_line { 'libvirt-guests BYPASS_CACHE':
+      ensure            => absent,
+      path              => $::nova::params::libvirt_guests_environment_file,
+      match             => '^BYPASS_CACHE=.*',
+      match_for_absence => true,
+      tag               => 'libvirt-guests-file_line',
+    }
+  }
+
+  if $sync_time {
+    file_line { 'libvirt-guests SYNC_TIME':
+      path  => $::nova::params::libvirt_guests_environment_file,
+      line  => 'SYNC_TIME=1',
+      match => '^SYNC_TIME=.*',
+      tag   => 'libvirt-guests-file_line',
+    }
+  } else {
+    file_line { 'libvirt-guests SYNC_TIME':
+      ensure            => absent,
+      path              => $::nova::params::libvirt_guests_environment_file,
+      match             => '^SYNC_TIME=.*',
       match_for_absence => true,
       tag               => 'libvirt-guests-file_line',
     }

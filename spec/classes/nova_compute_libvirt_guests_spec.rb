@@ -20,10 +20,38 @@ describe 'nova::compute::libvirt_guests' do
         :match => '^ON_SHUTDOWN=.*',
         :tag   => 'libvirt-guests-file_line'
       ) }
+      it { is_expected.to contain_file_line('libvirt-guests START_DELAY').with(
+        :ensure            => 'absent',
+        :path              => platform_params[:libvirt_guests_environment_file],
+        :match             => '^START_DELAY=.*',
+        :match_for_absence => true,
+        :tag               => 'libvirt-guests-file_line'
+      ) }
       it { is_expected.to contain_file_line('libvirt-guests SHUTDOWN_TIMEOUT').with(
         :ensure            => 'absent',
         :path              => platform_params[:libvirt_guests_environment_file],
         :match             => '^SHUTDOWN_TIMEOUT=.*',
+        :match_for_absence => true,
+        :tag               => 'libvirt-guests-file_line'
+      ) }
+      it { is_expected.to contain_file_line('libvirt-guests PARALLEL_SHUTDOWN').with(
+        :ensure            => 'absent',
+        :path              => platform_params[:libvirt_guests_environment_file],
+        :match             => '^PARALLEL_SHUTDOWN=.*',
+        :match_for_absence => true,
+        :tag               => 'libvirt-guests-file_line'
+      ) }
+      it { is_expected.to contain_file_line('libvirt-guests BYPASS_CACHE').with(
+        :ensure            => 'absent',
+        :path              => platform_params[:libvirt_guests_environment_file],
+        :match             => '^BYPASS_CACHE=.*',
+        :match_for_absence => true,
+        :tag               => 'libvirt-guests-file_line'
+      ) }
+      it { is_expected.to contain_file_line('libvirt-guests SYNC_TIME').with(
+        :ensure            => 'absent',
+        :path              => platform_params[:libvirt_guests_environment_file],
+        :match             => '^SYNC_TIME=.*',
         :match_for_absence => true,
         :tag               => 'libvirt-guests-file_line'
       ) }
@@ -39,11 +67,15 @@ describe 'nova::compute::libvirt_guests' do
     context 'with params' do
       let :params do
         {
-          :enabled          => true,
-          :manage_service   => true,
-          :on_boot          => 'start',
-          :on_shutdown      => 'suspend',
-          :shutdown_timeout => 300,
+          :enabled           => true,
+          :manage_service    => true,
+          :on_boot           => 'start',
+          :on_shutdown       => 'suspend',
+          :start_delay       => 0,
+          :shutdown_timeout  => 300,
+          :parallel_shutdown => 0,
+          :bypass_cache      => true,
+          :sync_time         => true,
         }
       end
 
@@ -59,10 +91,34 @@ describe 'nova::compute::libvirt_guests' do
         :match => '^ON_SHUTDOWN=.*',
         :tag   => 'libvirt-guests-file_line'
       ) }
+      it { is_expected.to contain_file_line('libvirt-guests START_DELAY').with(
+        :path  => platform_params[:libvirt_guests_environment_file],
+        :line  => 'START_DELAY=0',
+        :match => '^START_DELAY=.*',
+        :tag   => 'libvirt-guests-file_line'
+      ) }
       it { is_expected.to contain_file_line('libvirt-guests SHUTDOWN_TIMEOUT').with(
         :path  => platform_params[:libvirt_guests_environment_file],
         :line  => "SHUTDOWN_TIMEOUT=300",
         :match => '^SHUTDOWN_TIMEOUT=.*',
+        :tag   => 'libvirt-guests-file_line'
+      ) }
+      it { is_expected.to contain_file_line('libvirt-guests PARALLEL_SHUTDOWN').with(
+        :path  => platform_params[:libvirt_guests_environment_file],
+        :line  => "PARALLEL_SHUTDOWN=0",
+        :match => '^PARALLEL_SHUTDOWN=.*',
+        :tag   => 'libvirt-guests-file_line'
+      ) }
+      it { is_expected.to contain_file_line('libvirt-guests BYPASS_CACHE').with(
+        :path  => platform_params[:libvirt_guests_environment_file],
+        :line  => "BYPASS_CACHE=1",
+        :match => '^BYPASS_CACHE=.*',
+        :tag   => 'libvirt-guests-file_line'
+      ) }
+      it { is_expected.to contain_file_line('libvirt-guests SYNC_TIME').with(
+        :path  => platform_params[:libvirt_guests_environment_file],
+        :line  => "SYNC_TIME=1",
+        :match => '^SYNC_TIME=.*',
         :tag   => 'libvirt-guests-file_line'
       ) }
 
