@@ -38,9 +38,8 @@
 #   down. If parallel shutdown is enabled, this timeout applies as a timeout
 #   for shutting down all guests on a single URI defined in the variable URIS.
 #   If this is 0, then there is no time out (use with caution, as guests might
-#   not respond to a shutdown request). The default value is 300 seconds
-#   (5 minutes).
-#   Defaults to 300.
+#   not respond to a shutdown request).
+#   Defaults to undef
 #
 # [*manage_service*]
 #   (optional) Whether to start/stop the service
@@ -49,7 +48,7 @@
 class nova::compute::libvirt_guests (
   Boolean $enabled        = false,
   $package_ensure         = 'present',
-  $shutdown_timeout       = '300',
+  $shutdown_timeout       = undef,
   $on_boot                = 'ignore',
   $on_shutdown            = 'shutdown',
   Boolean $manage_service = false,
@@ -72,22 +71,31 @@ class nova::compute::libvirt_guests (
   file_line { 'libvirt-guests ON_BOOT':
     path  => $::nova::params::libvirt_guests_environment_file,
     line  => "ON_BOOT=${on_boot}",
-    match => '^#?ON_BOOT=.*',
+    match => '^ON_BOOT=.*',
     tag   => 'libvirt-guests-file_line',
   }
-
   file_line { 'libvirt-guests ON_SHUTDOWN':
     path  => $::nova::params::libvirt_guests_environment_file,
     line  => "ON_SHUTDOWN=${on_shutdown}",
-    match => '^#?ON_SHUTDOWN=.*',
+    match => '^ON_SHUTDOWN=.*',
     tag   => 'libvirt-guests-file_line',
   }
 
-  file_line { 'libvirt-guests SHUTDOWN_TIMEOUT':
-    path  => $::nova::params::libvirt_guests_environment_file,
-    line  => "SHUTDOWN_TIMEOUT=${shutdown_timeout}",
-    match => '^#?SHUTDOWN_TIMEOUT=.*',
-    tag   => 'libvirt-guests-file_line',
+  if $shutdown_timeout {
+    file_line { 'libvirt-guests SHUTDOWN_TIMEOUT':
+      path  => $::nova::params::libvirt_guests_environment_file,
+      line  => "SHUTDOWN_TIMEOUT=${shutdown_timeout}",
+      match => '^SHUTDOWN_TIMEOUT=.*',
+      tag   => 'libvirt-guests-file_line',
+    }
+  } else {
+    file_line { 'libvirt-guests SHUTDOWN_TIMEOUT':
+      ensure            => absent,
+      path              => $::nova::params::libvirt_guests_environment_file,
+      match             => '^SHUTDOWN_TIMEOUT=.*',
+      match_for_absence => true,
+      tag               => 'libvirt-guests-file_line',
+    }
   }
 
   package { 'libvirt-client':

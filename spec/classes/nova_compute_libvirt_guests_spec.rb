@@ -8,25 +8,24 @@ describe 'nova::compute::libvirt_guests' do
 
       it { is_expected.to contain_class('nova::params')}
 
-      it { is_expected.to contain_file(platform_params[:libvirt_guests_environment_file]).with(
-        :ensure => 'present',
-        :path   => platform_params[:libvirt_guests_environment_file],
-        :tag    => 'libvirt-guests-file',
-      ) }
       it { is_expected.to contain_file_line('libvirt-guests ON_BOOT').with(
-        :path => platform_params[:libvirt_guests_environment_file],
-        :line => 'ON_BOOT=ignore',
-        :tag  => 'libvirt-guests-file_line'
+        :path  => platform_params[:libvirt_guests_environment_file],
+        :line  => 'ON_BOOT=ignore',
+        :match => '^ON_BOOT=.*',
+        :tag   => 'libvirt-guests-file_line'
       ) }
       it { is_expected.to contain_file_line('libvirt-guests ON_SHUTDOWN').with(
-        :path => platform_params[:libvirt_guests_environment_file],
-        :line => "ON_SHUTDOWN=shutdown",
-        :tag  => 'libvirt-guests-file_line'
+        :path  => platform_params[:libvirt_guests_environment_file],
+        :line  => 'ON_SHUTDOWN=shutdown',
+        :match => '^ON_SHUTDOWN=.*',
+        :tag   => 'libvirt-guests-file_line'
       ) }
       it { is_expected.to contain_file_line('libvirt-guests SHUTDOWN_TIMEOUT').with(
-        :path => platform_params[:libvirt_guests_environment_file],
-        :line => "SHUTDOWN_TIMEOUT=300",
-        :tag  => 'libvirt-guests-file_line'
+        :ensure            => 'absent',
+        :path              => platform_params[:libvirt_guests_environment_file],
+        :match             => '^SHUTDOWN_TIMEOUT=.*',
+        :match_for_absence => true,
+        :tag               => 'libvirt-guests-file_line'
       ) }
 
       it { is_expected.to contain_package('libvirt-client').with(
@@ -40,10 +39,32 @@ describe 'nova::compute::libvirt_guests' do
     context 'with params' do
       let :params do
         {
-          :enabled        => true,
-          :manage_service => true,
+          :enabled          => true,
+          :manage_service   => true,
+          :on_boot          => 'start',
+          :on_shutdown      => 'suspend',
+          :shutdown_timeout => 300,
         }
       end
+
+      it { is_expected.to contain_file_line('libvirt-guests ON_BOOT').with(
+        :path  => platform_params[:libvirt_guests_environment_file],
+        :line  => 'ON_BOOT=start',
+        :match => '^ON_BOOT=.*',
+        :tag   => 'libvirt-guests-file_line'
+      ) }
+      it { is_expected.to contain_file_line('libvirt-guests ON_SHUTDOWN').with(
+        :path  => platform_params[:libvirt_guests_environment_file],
+        :line  => "ON_SHUTDOWN=suspend",
+        :match => '^ON_SHUTDOWN=.*',
+        :tag   => 'libvirt-guests-file_line'
+      ) }
+      it { is_expected.to contain_file_line('libvirt-guests SHUTDOWN_TIMEOUT').with(
+        :path  => platform_params[:libvirt_guests_environment_file],
+        :line  => "SHUTDOWN_TIMEOUT=300",
+        :match => '^SHUTDOWN_TIMEOUT=.*',
+        :tag   => 'libvirt-guests-file_line'
+      ) }
 
       it { is_expected.to contain_package('libvirt-client').with(
         :name   => platform_params[:libvirt_client_package_name],
