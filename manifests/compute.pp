@@ -370,20 +370,9 @@ class nova::compute (
 
   include nova::availability_zone
 
-  # NOTE(tkajinam): In some distros like CentOS9, the genisoimage command
-  #                 is no longer available and we should override
-  #                 the mkisofs_cmd parameter to use the available command
-  #                 instead of genisoimage. This can be removed once default
-  #                 in nova is updated.
-  if $::nova::params::mkisofs_cmd and is_service_default($mkisofs_cmd) {
-    $mkisofs_cmd_real = $::nova::params::mkisofs_cmd
-  } else {
-    $mkisofs_cmd_real = $mkisofs_cmd
-  }
-
   nova_config {
     'DEFAULT/use_cow_images':                    value => $use_cow_images;
-    'DEFAULT/mkisofs_cmd':                       value => $mkisofs_cmd_real;
+    'DEFAULT/mkisofs_cmd':                       value => $mkisofs_cmd;
     'DEFAULT/force_raw_images':                  value => $force_raw_images;
     'DEFAULT/virt_mkfs':                         value => $virt_mkfs;
     'DEFAULT/reserved_host_cpus':                value => $reserved_host_cpus;

@@ -33,7 +33,6 @@ class nova::params {
       $serialproxy_package_name          = 'openstack-nova-serialproxy'
       $spicehtml5proxy_package_name      = 'openstack-nova-console'
       $ceph_client_package_name          = 'ceph-common'
-      $mkisofs_cmd                       = 'mkisofs'
       $ovmf_package_name                 = 'edk2-ovmf'
       $swtpm_package_name                = 'swtpm'
       # service names
@@ -82,7 +81,6 @@ class nova::params {
       $scheduler_package_name            = 'nova-scheduler'
       $tgt_package_name                  = 'tgt'
       $ceph_client_package_name          = 'ceph-common'
-      $mkisofs_cmd                       = undef
       $ovmf_package_name                 = 'ovmf'
       $swtpm_package_name                = 'swtpm'
       # service names
