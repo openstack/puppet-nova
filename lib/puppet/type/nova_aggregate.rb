@@ -106,9 +106,12 @@ Puppet::Type.newtype(:nova_aggregate) do
     validate do |value|
       if value.is_a?(Hash)
         return true
-      end
-      value.split(",").each do |kv|
-        raise ArgumentError, "Key/value pairs must be separated by an =" unless value.include?("=")
+      elsif value.is_a?(String)
+        value.split(",").each do |kv|
+          raise ArgumentError, "Key/value pairs must be separated by an =" unless value.include?("=")
+        end
+      else
+        raise ArgumentError, "Invalid metadata #{value}. Requires a String or a Hash, not a #{value.class}"
       end
     end
   end
@@ -119,8 +122,10 @@ Puppet::Type.newtype(:nova_aggregate) do
     munge do |value|
       if value.is_a?(Array)
         return value
-      else
+      elsif value.is_a?(String)
         return value.split(",").map{|el| el.strip()}.sort
+      else
+        raise ArgumentError, "Invalid hosts #{value}. Requires a String or an Array, not a #{value.class}"
       end
     end
   end
