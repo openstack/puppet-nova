@@ -62,47 +62,57 @@ class nova::compute::libvirt_guests (
   -> File_line<| tag == 'libvirt-guests-file_line'|>
   -> Anchor['nova::config::end']
 
-  case $facts['os']['family'] {
-    'RedHat': {
-      # NOTE(tkajinam): Since libvirt 8.1.0, the sysconfig files are
-      #                 no longer provided by packages.
-      file { '/etc/sysconfig/libvirt-guests':
-        ensure => present,
-        path   => '/etc/sysconfig/libvirt-guests',
-        tag    => 'libvirt-guests-file',
-      }
+  # NOTE(tkajinam): The environment file is not present in CentOS/RHEL
+  file { $::nova::params::libvirt_guests_environment_file:
+    ensure => present,
+    path   => $::nova::params::libvirt_guests_environment_file,
+    tag    => 'libvirt-guests-file',
+  }
 
-      file_line { '/etc/sysconfig/libvirt-guests ON_BOOT':
-        path  => '/etc/sysconfig/libvirt-guests',
-        line  => "ON_BOOT=${on_boot}",
-        match => '^#?ON_BOOT=.*',
-        tag   => 'libvirt-guests-file_line',
-      }
+  file_line { 'libvirt-guests ON_BOOT':
+    path  => $::nova::params::libvirt_guests_environment_file,
+    line  => "ON_BOOT=${on_boot}",
+    match => '^#?ON_BOOT=.*',
+    tag   => 'libvirt-guests-file_line',
+  }
 
-      file_line { '/etc/sysconfig/libvirt-guests ON_SHUTDOWN':
-        path  => '/etc/sysconfig/libvirt-guests',
-        line  => "ON_SHUTDOWN=${on_shutdown}",
-        match => '^#?ON_SHUTDOWN=.*',
-        tag   => 'libvirt-guests-file_line',
-      }
+  file_line { 'libvirt-guests ON_SHUTDOWN':
+    path  => $::nova::params::libvirt_guests_environment_file,
+    line  => "ON_SHUTDOWN=${on_shutdown}",
+    match => '^#?ON_SHUTDOWN=.*',
+    tag   => 'libvirt-guests-file_line',
+  }
 
-      file_line { '/etc/sysconfig/libvirt-guests SHUTDOWN_TIMEOUT':
-        path  => '/etc/sysconfig/libvirt-guests',
-        line  => "SHUTDOWN_TIMEOUT=${shutdown_timeout}",
-        match => '^#?SHUTDOWN_TIMEOUT=.*',
-        tag   => 'libvirt-guests-file_line',
-      }
+  file_line { 'libvirt-guests SHUTDOWN_TIMEOUT':
+    path  => $::nova::params::libvirt_guests_environment_file,
+    line  => "SHUTDOWN_TIMEOUT=${shutdown_timeout}",
+    match => '^#?SHUTDOWN_TIMEOUT=.*',
+    tag   => 'libvirt-guests-file_line',
+  }
 
-      nova::generic_service { 'libvirt-guests':
-        enabled        => $enabled,
-        manage_service => $manage_service,
-        package_name   => $::nova::params::libvirt_guests_package_name,
-        service_name   => $::nova::params::libvirt_guests_service_name,
-        ensure_package => $package_ensure
-      }
+  package { 'libvirt-client':
+    ensure => $package_ensure,
+    name   => $::nova::params::libvirt_client_package_name,
+    tag    => ['openstack', 'nova-support-package'],
+  }
+
+  if $manage_service {
+    if $enabled {
+      $service_ensure = 'running'
+    } else {
+      $service_ensure = 'stopped'
     }
-    default:  {
-      warning("Unsupported osfamily: ${facts['os']['family']}, make sure you are configuring this yourself")
+
+    # NOTE(tkajinam): libvirt-service tag should NOT be added here, because
+    #                 any update in libvirt config files does not require
+    #                 restarting the libvirt-service. All guests running in
+    #                 this node are shut off if the service is restarted.
+    service { 'libvirt-guests':
+      ensure  => $service_ensure,
+      name    => $::nova::params::libvirt_guests_service_name,
+      enable  => $enabled,
+      require => Anchor['nova::service::begin'],
+      notify  => Anchor['nova::service::end']
     }
   }
 }

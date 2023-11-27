@@ -23,7 +23,7 @@ class nova::params {
       $conductor_package_name            = 'openstack-nova-conductor'
       $doc_package_name                  = 'openstack-nova-doc'
       $libvirt_package_name              = 'libvirt'
-      $libvirt_guests_package_name       = 'libvirt-client'
+      $libvirt_client_package_name       = 'libvirt-client'
       $libvirt_daemon_package_name       = 'libvirt-daemon'
       $libvirt_daemon_package_prefix     = 'libvirt-daemon-'
       $libvirt_nwfilter_package_name     = 'libvirt-daemon-config-nwfilter'
@@ -61,6 +61,7 @@ class nova::params {
       $spicehtml5proxy_service_name      = 'openstack-nova-spicehtml5proxy'
       $modular_libvirt                   = false
       $modular_libvirt_support           = true
+      $libvirt_guests_environment_file   = '/etc/sysconfig/libvirt-guests'
       # redhat specific config defaults
       $root_helper                       = 'sudo nova-rootwrap'
       $lock_path                         = '/var/lib/nova/tmp'
@@ -78,6 +79,7 @@ class nova::params {
       $conductor_package_name            = 'nova-conductor'
       $doc_package_name                  = 'nova-doc'
       $libvirt_package_name              = 'libvirt-daemon-system'
+      $libvirt_client_package_name       = 'libvirt-clients'
       $scheduler_package_name            = 'nova-scheduler'
       $tgt_package_name                  = 'tgt'
       $ceph_client_package_name          = 'ceph-common'
@@ -87,6 +89,23 @@ class nova::params {
       $api_service_name                  = 'nova-api'
       $compute_service_name              = 'nova-compute'
       $conductor_service_name            = 'nova-conductor'
+      $libvirt_service_name              = 'libvirtd'
+      $libvirt_guests_service_name       = 'libvirt-guests'
+      $virtlock_service_name             = 'virtlockd'
+      $virtlog_service_name              = 'virtlogd'
+      $virtsecret_service_name           = undef
+      $virtnodedev_service_name          = undef
+      $virtqemu_service_name             = undef
+      $virtproxy_service_name            = undef
+      $virtstorage_service_name          = undef
+      $virtsecret_socket_name            = undef
+      $virtnodedev_socket_name           = undef
+      $virtqemu_socket_name              = undef
+      $virtproxy_socket_name             = undef
+      $virtstorage_socket_name           = undef
+      $modular_libvirt                   = false
+      $modular_libvirt_support           = false
+      $libvirt_guests_environment_file   = '/etc/default/libvirt-guests'
       $scheduler_service_name            = 'nova-scheduler'
       $vncproxy_service_name             = 'nova-novncproxy'
       $serialproxy_service_name          = 'nova-serialproxy'
@@ -105,18 +124,6 @@ class nova::params {
           $vncproxy_package_name        = 'nova-consoleproxy'
           $serialproxy_package_name     = 'nova-consoleproxy'
           # Use default provider on Debian
-          $virtlock_service_name        = 'virtlockd'
-          $virtlog_service_name         = 'virtlogd'
-          $virtsecret_service_name      = undef
-          $virtnodedev_service_name     = undef
-          $virtqemu_service_name        = undef
-          $virtproxy_service_name       = undef
-          $virtstorage_service_name     = undef
-          $virtsecret_socket_name       = undef
-          $virtnodedev_socket_name      = undef
-          $virtqemu_socket_name         = undef
-          $virtproxy_socket_name        = undef
-          $virtstorage_socket_name      = undef
         }
         default: {
           $api_metadata_service_name    = undef
@@ -124,24 +131,8 @@ class nova::params {
           $spicehtml5proxy_service_name = 'nova-spiceproxy'
           $vncproxy_package_name        = 'nova-novncproxy'
           $serialproxy_package_name     = 'nova-serialproxy'
-          # Use default provider on Debian
-          $virtlock_service_name        = 'virtlockd'
-          $virtlog_service_name         = 'virtlogd'
-          $virtsecret_service_name      = undef
-          $virtnodedev_service_name     = undef
-          $virtqemu_service_name        = undef
-          $virtproxy_service_name       = undef
-          $virtstorage_service_name     = undef
-          $virtsecret_socket_name       = undef
-          $virtnodedev_socket_name      = undef
-          $virtqemu_socket_name         = undef
-          $virtproxy_socket_name        = undef
-          $virtstorage_socket_name      = undef
         }
       }
-      $modular_libvirt                 = false
-      $modular_libvirt_support         = false
-      $libvirt_service_name            = 'libvirtd'
     }
     default: {
       fail("Unsupported osfamily: ${facts['os']['family']}")
