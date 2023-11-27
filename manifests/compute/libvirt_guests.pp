@@ -68,16 +68,16 @@
 #   Defaults to false
 #
 class nova::compute::libvirt_guests (
-  Boolean $enabled        = false,
-  $package_ensure         = 'present',
-  $on_boot                = 'ignore',
-  $on_shutdown            = 'shutdown',
-  $start_delay            = undef,
-  $parallel_shutdown      = undef,
-  $shutdown_timeout       = undef,
-  Boolean $bypass_cache   = false,
-  Boolean $sync_time      = false,
-  Boolean $manage_service = false,
+  Boolean $enabled                         = false,
+  $package_ensure                          = 'present',
+  Enum['start', 'ignore'] $on_boot         = 'ignore',
+  Enum['suspend', 'shutdown'] $on_shutdown = 'shutdown',
+  Optional[Integer[0]] $start_delay        = undef,
+  Optional[Integer[0]] $parallel_shutdown  = undef,
+  Optional[Integer[0]] $shutdown_timeout   = undef,
+  Boolean $bypass_cache                    = false,
+  Boolean $sync_time                       = false,
+  Boolean $manage_service                  = false,
 ) {
   include nova::params
   include nova::deps
