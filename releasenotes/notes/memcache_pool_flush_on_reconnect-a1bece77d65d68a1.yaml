@@ -1,0 +1,5 @@
+---
+features:
+  - |
+    The new ``nova::cache::memcache_pool_flush_on_reconnect`` parameter has
+    been added.
