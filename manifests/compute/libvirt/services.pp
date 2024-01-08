@@ -115,11 +115,14 @@ class nova::compute::libvirt::services (
 
     # messagebus
     if($::osfamily == 'RedHat') {
+      # NOTE(tkajinam): Do not use libvirt-service tag to avoid unnecessary
+      # restart.
       service { 'messagebus':
-        ensure => running,
-        enable => true,
-        name   => $::nova::params::messagebus_service_name,
-        tag    => 'libvirt-service',
+        ensure  => running,
+        enable  => true,
+        name    => $::nova::params::messagebus_service_name,
+        require => Anchor['nova::service::begin'],
+        before  => Anchor['nova::service::end'],
       }
     }
   }
