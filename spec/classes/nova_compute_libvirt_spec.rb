@@ -255,7 +255,6 @@ describe 'nova::compute::libvirt' do
         it { is_expected.not_to contain_package('libvirt') }
         it { is_expected.not_to contain_service('libvirt') }
         it { is_expected.not_to contain_package('libvirt-nwfilter') }
-        it { is_expected.not_to contain_service('messagebus') }
         it { is_expected.not_to contain_service('virtlockd') }
         it { is_expected.not_to contain_service('virtlogd') }
       end
@@ -285,12 +284,6 @@ describe 'nova::compute::libvirt' do
         :ensure => 'running',
         :before => ['Anchor[nova::service::end]', 'Service[nova-compute]'],
       )}
-      it { is_expected.to contain_service('messagebus').with(
-        :ensure => 'running',
-        :enable => true,
-        :before => ['Anchor[nova::service::end]', 'Service[libvirt]'],
-        :name   => 'dbus'
-      ) }
 
       it { is_expected.to contain_nova_config('DEFAULT/compute_driver').with_value('libvirt.LibvirtDriver')}
       it { is_expected.to contain_nova_config('libvirt/virt_type').with_value('kvm')}
@@ -362,7 +355,6 @@ describe 'nova::compute::libvirt' do
         it { is_expected.not_to contain_package('libvirt') }
         it { is_expected.not_to contain_service('libvirt') }
         it { is_expected.not_to contain_package('libvirt-nwfilter') }
-        it { is_expected.not_to contain_service('messagebus') }
         it { is_expected.not_to contain_service('virtlockd') }
         it { is_expected.not_to contain_service('virtlogd') }
       end

@@ -148,19 +148,6 @@ class nova::compute::libvirt::services (
       tag    => ['libvirt-service', 'libvirt-qemu-service'],
     }
     Libvirtd_config<||> ~> Service['libvirt']
-
-    # messagebus
-    if( $facts['os']['family'] == 'RedHat') {
-      # NOTE(tkajinam): Do not use libvirt-service tag to avoid unnecessary
-      # restart.
-      service { 'messagebus':
-        ensure  => running,
-        enable  => true,
-        name    => $::nova::params::messagebus_service_name,
-        require => Anchor['nova::service::begin'],
-        before  => Anchor['nova::service::end'],
-      }
-    }
   }
 
   if $virtlock_service_name {
@@ -184,8 +171,6 @@ class nova::compute::libvirt::services (
   }
 
   if ! $modular_libvirt {
-    Service<| title == 'messagebus' |> -> Service<| title == 'libvirt' |>
-
     Service<| title == 'virtlogd' |>
     -> Service<| title == 'libvirt' |>
     -> Service<| title == 'nova-compute'|>
@@ -201,8 +186,6 @@ class nova::compute::libvirt::services (
   } else {
     # NOTE(tkajinam): libvirt should be stopped before starting modular daemons
     Service<| title == 'libvirt' |> -> Service<| tag == 'libvirt-modular-service' |>
-
-    Service<| title == 'messagebus' |> -> Service<| tag == 'libvirt-modular-service' |>
 
     Service<| title == 'virtlogd' |>
     -> Service<| tag == 'libvirt-modular-service' |>

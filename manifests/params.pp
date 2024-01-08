@@ -68,7 +68,6 @@ class nova::params {
       $nova_wsgi_script_path             = '/var/www/cgi-bin/nova'
       $nova_api_wsgi_script_source       = '/usr/bin/nova-api-wsgi'
       $nova_metadata_wsgi_script_source  = '/usr/bin/nova-metadata-wsgi'
-      $messagebus_service_name           = 'dbus'
     }
     'Debian': {
       # package names
