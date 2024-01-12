@@ -22,6 +22,10 @@
 #   (optional) Bind libvirtd tcp/tls socket to the given address.
 #   Defaults to $facts['os_service_default'] (bind to all addresses)
 #
+# [*migration_inbound_addr*]
+#   (optional) The address used as the migration address for this host.
+#   Defaults to $facts['os_service_default']
+#
 # [*live_migration_inbound_addr*]
 #   (optional) The IP address or hostname to be used as the target for live
 #   migration traffic.
@@ -153,6 +157,7 @@ class nova::migration::libvirt(
   Enum['tcp', 'tls', 'ssh'] $transport = 'tcp',
   Enum['sasl', 'none'] $auth           = 'none',
   $listen_address                      = $facts['os_service_default'],
+  $migration_inbound_addr              = $facts['os_service_default'],
   $live_migration_inbound_addr         = $facts['os_service_default'],
   $live_migration_tunnelled            = $facts['os_service_default'],
   $live_migration_with_native_tls      = $facts['os_service_default'],
@@ -213,6 +218,7 @@ class nova::migration::libvirt(
     $live_migration_uri = "qemu+${transport}://${prefix}%s${postfix}/system${extra_params}"
 
     nova_config {
+      'libvirt/migration_inbound_addr':              value => $migration_inbound_addr;
       'libvirt/live_migration_uri':                  value => $live_migration_uri;
       'libvirt/live_migration_tunnelled':            value => $live_migration_tunnelled;
       'libvirt/live_migration_with_native_tls':      value => $live_migration_with_native_tls;
