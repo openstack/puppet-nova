@@ -37,6 +37,7 @@ describe 'nova::migration::libvirt' do
       it { is_expected.to contain_libvirtd_config('auth_tcp').with_value('none').with_quote(true) }
       it { is_expected.to contain_libvirtd_config('ca_file').with_value('<SERVICE DEFAULT>').with_quote(true) }
       it { is_expected.to contain_libvirtd_config('crl_file').with_value('<SERVICE DEFAULT>').with_quote(true) }
+      it { is_expected.to contain_nova_config('libvirt/migration_inbound_addr').with_value('<SERVICE DEFAULT>')}
       it { is_expected.to contain_nova_config('libvirt/live_migration_tunnelled').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('libvirt/live_migration_with_native_tls').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('libvirt/live_migration_downtime').with_value('<SERVICE DEFAULT>') }
@@ -96,6 +97,7 @@ describe 'nova::migration::libvirt' do
       let :params do
         {
           :transport                   => 'tls',
+          :migration_inbound_addr      => 'host2.example.com',
           :live_migration_inbound_addr => 'host1.example.com',
         }
       end
@@ -103,6 +105,7 @@ describe 'nova::migration::libvirt' do
       it { is_expected.to contain_libvirtd_config('auth_tcp').with_value('<SERVICE DEFAULT>').with_quote(true) }
       it { is_expected.to contain_libvirtd_config('ca_file').with_value('<SERVICE DEFAULT>').with_quote(true) }
       it { is_expected.to contain_libvirtd_config('crl_file').with_value('<SERVICE DEFAULT>').with_quote(true) }
+      it { is_expected.to contain_nova_config('libvirt/migration_inbound_addr').with_value('host2.example.com')}
       it { is_expected.to contain_nova_config('libvirt/live_migration_uri').with_value('qemu+tls://%s/system')}
       it { is_expected.to contain_nova_config('libvirt/live_migration_inbound_addr').with_value('host1.example.com')}
     end

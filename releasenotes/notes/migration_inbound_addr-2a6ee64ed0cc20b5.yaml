@@ -1,0 +1,5 @@
+---
+features:
+  - |
+    The new ``nova::migration::libvirt::migration_inbound_addr`` parameter has
+    been added.
