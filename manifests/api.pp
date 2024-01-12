@@ -141,11 +141,6 @@
 #   metadata handling from api class.
 #   Defaults to false
 #
-# [*use_forwarded_for*]
-#   (optional) Treat X-Forwarded-For as the canonical remote address. Only
-#   enable this if you have a sanitizing proxy.
-#   Defaults to undef
-#
 # [*hide_server_address_states*]
 #   (optional) This option is a list of all instance states for which network address
 #   information should not be returned from the API.
@@ -191,7 +186,6 @@ class nova::api(
   $list_records_by_skipping_down_cells         = $facts['os_service_default'],
   # DEPRECATED PARAMETER
   $nova_metadata_wsgi_enabled                  = undef,
-  $use_forwarded_for                           = undef,
   $hide_server_address_states                  = undef,
   $allow_instance_snapshots                    = undef,
   $enable_network_quota                        = undef,
@@ -206,10 +200,6 @@ class nova::api(
 
   if $nova_metadata_wsgi_enabled != undef {
     warning('The nova_metadata_wsgi_enabled parameter has been deprecated and has no effect')
-  }
-
-  if $use_forwarded_for != undef {
-    warning('The use_forwarded_for parameter has been deprecated.')
   }
 
   [
@@ -300,7 +290,6 @@ as a standalone service, or httpd for being run by a httpd server")
   nova_config {
     'wsgi/api_paste_config':                    value => $api_paste_config;
     'DEFAULT/password_length':                  value => $password_length;
-    'api/use_forwarded_for':                    value => pick($use_forwarded_for, $facts['os_service_default']);
     'api/max_limit':                            value => $max_limit;
     'api/compute_link_prefix':                  value => $compute_link_prefix;
     'api/glance_link_prefix':                   value => $glance_link_prefix;

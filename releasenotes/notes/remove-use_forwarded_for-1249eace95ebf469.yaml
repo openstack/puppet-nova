@@ -1,0 +1,4 @@
+---
+features:
+  - |
+    The ``nova::api::use_forwarded_for`` parameter has been removed.
