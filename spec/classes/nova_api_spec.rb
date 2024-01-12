@@ -48,7 +48,6 @@ describe 'nova::api' do
         is_expected.to contain_nova_config('wsgi/api_paste_config').with_value('api-paste.ini')
         is_expected.to contain_nova_config('DEFAULT/osapi_compute_listen').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('DEFAULT/osapi_compute_listen_port').with_value('<SERVICE DEFAULT>')
-        is_expected.to contain_nova_config('api/use_forwarded_for').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('DEFAULT/metadata_listen').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('DEFAULT/metadata_listen_port').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('DEFAULT/osapi_compute_workers').with_value('5')
@@ -82,7 +81,6 @@ describe 'nova::api' do
           :metadata_listen                      => '127.0.0.1',
           :metadata_listen_port                 => 8875,
           :osapi_compute_listen_port            => 8874,
-          :use_forwarded_for                    => false,
           :osapi_compute_workers                => 1,
           :metadata_workers                     => 2,
           :enable_proxy_headers_parsing         => true,
@@ -120,7 +118,6 @@ describe 'nova::api' do
         is_expected.to contain_nova_config('DEFAULT/osapi_compute_listen_port').with_value('8874')
         is_expected.to contain_nova_config('DEFAULT/metadata_listen').with_value('127.0.0.1')
         is_expected.to contain_nova_config('DEFAULT/metadata_listen_port').with_value('8875')
-        is_expected.to contain_nova_config('api/use_forwarded_for').with_value(false)
         is_expected.to contain_nova_config('DEFAULT/osapi_compute_workers').with_value('1')
         is_expected.to contain_nova_config('DEFAULT/metadata_workers').with_value('2')
         is_expected.to contain_nova_config('api/max_limit').with_value('1000')
