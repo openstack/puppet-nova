@@ -1,0 +1,6 @@
+---
+features:
+  - |
+    The ``live_migration_tunnelled`` parameter of
+    the ``nova::migration::libvirt`` class was deprecated, because the actual
+    parameter in nova was deprecated in 23.0.0 release.

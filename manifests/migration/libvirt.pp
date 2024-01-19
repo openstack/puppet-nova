@@ -31,17 +31,6 @@
 #   migration traffic.
 #   Defaults to $facts['os_service_default']
 #
-# [*live_migration_tunnelled*]
-#   (optional) Whether to use tunnelled migration, where migration data is
-#   transported over the libvirtd connection.
-#   If True, we use the VIR_MIGRATE_TUNNELLED migration flag, avoiding the
-#   need to configure the network to allow direct hypervisor to hypervisor
-#   communication.
-#   If False, use the native transport.
-#   If not set, Nova will choose a sensible default based on, for example
-#   the availability of native encryption support in the hypervisor.
-#   Defaults to $facts['os_service_default']
-#
 # [*live_migration_with_native_tls*]
 #   (optional) This option will allow both migration stream (guest RAM plus
 #   device state) *and* disk stream to be transported over native TLS, i.e.
@@ -152,6 +141,19 @@
 #   libvirt daemon.
 #   Defaults to undef
 #
+# DEPRECATED PARAMETERS
+#
+# [*live_migration_tunnelled*]
+#   (optional) Whether to use tunnelled migration, where migration data is
+#   transported over the libvirtd connection.
+#   If True, we use the VIR_MIGRATE_TUNNELLED migration flag, avoiding the
+#   need to configure the network to allow direct hypervisor to hypervisor
+#   communication.
+#   If False, use the native transport.
+#   If not set, Nova will choose a sensible default based on, for example
+#   the availability of native encryption support in the hypervisor.
+#   Defaults to undef
+#
 class nova::migration::libvirt(
   Boolean $manage_service              = true,
   Enum['tcp', 'tls', 'ssh'] $transport = 'tcp',
@@ -159,7 +161,6 @@ class nova::migration::libvirt(
   $listen_address                      = $facts['os_service_default'],
   $migration_inbound_addr              = $facts['os_service_default'],
   $live_migration_inbound_addr         = $facts['os_service_default'],
-  $live_migration_tunnelled            = $facts['os_service_default'],
   $live_migration_with_native_tls      = $facts['os_service_default'],
   $live_migration_downtime             = $facts['os_service_default'],
   $live_migration_downtime_steps       = $facts['os_service_default'],
@@ -179,10 +180,16 @@ class nova::migration::libvirt(
   $crl_file                            = $facts['os_service_default'],
   $libvirt_version                     = $::nova::compute::libvirt::version::default,
   Optional[Boolean] $modular_libvirt   = undef,
+  # DEPRECATED PARAMETERS
+  $live_migration_tunnelled            = undef,
 ) inherits nova::compute::libvirt::version {
 
   include nova::deps
   include nova::params
+
+  if $live_migration_tunnelled != undef {
+    warning('The live_migration_tunnelled parameter has been deprecated.')
+  }
 
   $modular_libvirt_real = pick($modular_libvirt, $::nova::params::modular_libvirt)
 
@@ -220,7 +227,7 @@ class nova::migration::libvirt(
     nova_config {
       'libvirt/migration_inbound_addr':              value => $migration_inbound_addr;
       'libvirt/live_migration_uri':                  value => $live_migration_uri;
-      'libvirt/live_migration_tunnelled':            value => $live_migration_tunnelled;
+      'libvirt/live_migration_tunnelled':            value => pick($live_migration_tunnelled, $facts['os_service_default']);
       'libvirt/live_migration_with_native_tls':      value => $live_migration_with_native_tls;
       'libvirt/live_migration_downtime':             value => $live_migration_downtime;
       'libvirt/live_migration_downtime_steps':       value => $live_migration_downtime_steps;
