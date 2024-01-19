@@ -40,6 +40,7 @@ describe 'nova::migration::libvirt' do
       it { is_expected.to contain_nova_config('libvirt/migration_inbound_addr').with_value('<SERVICE DEFAULT>')}
       it { is_expected.to contain_nova_config('libvirt/live_migration_tunnelled').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('libvirt/live_migration_with_native_tls').with_value('<SERVICE DEFAULT>') }
+      it { is_expected.to contain_nova_config('libvirt/live_migration_bandwidth').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('libvirt/live_migration_downtime').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('libvirt/live_migration_downtime_steps').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('libvirt/live_migration_downtime_delay').with_value('<SERVICE DEFAULT>') }
@@ -123,6 +124,7 @@ describe 'nova::migration::libvirt' do
       let :params do
         {
           :live_migration_tunnelled          => true,
+          :live_migration_bandwidth          => 1024,
           :live_migration_downtime           => 800,
           :live_migration_downtime_steps     => 15,
           :live_migration_downtime_delay     => 5,
@@ -131,6 +133,7 @@ describe 'nova::migration::libvirt' do
         }
       end
       it { is_expected.to contain_nova_config('libvirt/live_migration_tunnelled').with(:value => true) }
+      it { is_expected.to contain_nova_config('libvirt/live_migration_bandwidth').with_value(1024) }
       it { is_expected.to contain_nova_config('libvirt/live_migration_downtime').with_value(800) }
       it { is_expected.to contain_nova_config('libvirt/live_migration_downtime_steps').with_value(15) }
       it { is_expected.to contain_nova_config('libvirt/live_migration_downtime_delay').with_value(5) }

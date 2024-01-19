@@ -41,9 +41,13 @@
 #   in place, and are validated.
 #   Defaults to $facts['os_service_default']
 #
+# [*live_migration_bandwidth*]
+#   (optional) Maximum bandwidth(in MiB/s) to be used during migration.
+#   Defaults to $facts['os_service_default']
+#
 # [*live_migration_downtime*]
-#   (optional) Target maximum period of time Nova will try to keep the instance paused
-#   during the last part of the memory copy, in miliseconds.
+#   (optional) Target maximum period of time Nova will try to keep the instance
+#   paused during the last part of the memory copy, in miliseconds.
 #   Defaults to $facts['os_service_default']
 #
 # [*live_migration_downtime_steps*]
@@ -162,6 +166,7 @@ class nova::migration::libvirt(
   $migration_inbound_addr              = $facts['os_service_default'],
   $live_migration_inbound_addr         = $facts['os_service_default'],
   $live_migration_with_native_tls      = $facts['os_service_default'],
+  $live_migration_bandwidth            = $facts['os_service_default'],
   $live_migration_downtime             = $facts['os_service_default'],
   $live_migration_downtime_steps       = $facts['os_service_default'],
   $live_migration_downtime_delay       = $facts['os_service_default'],
@@ -229,6 +234,7 @@ class nova::migration::libvirt(
       'libvirt/live_migration_uri':                  value => $live_migration_uri;
       'libvirt/live_migration_tunnelled':            value => pick($live_migration_tunnelled, $facts['os_service_default']);
       'libvirt/live_migration_with_native_tls':      value => $live_migration_with_native_tls;
+      'libvirt/live_migration_bandwidth':            value => $live_migration_bandwidth;
       'libvirt/live_migration_downtime':             value => $live_migration_downtime;
       'libvirt/live_migration_downtime_steps':       value => $live_migration_downtime_steps;
       'libvirt/live_migration_downtime_delay':       value => $live_migration_downtime_delay;
