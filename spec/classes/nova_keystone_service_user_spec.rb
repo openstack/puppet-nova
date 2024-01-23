@@ -22,7 +22,7 @@ describe 'nova::keystone::service_user' do
           :project_domain_name     => 'Default',
           :system_scope            => '<SERVICE DEFAULT>',
           :insecure                => '<SERVICE DEFAULT>',
-          :send_service_user_token => false,
+          :send_service_user_token => '<SERVICE DEFAULT>',
           :auth_type               => 'password',
           :auth_version            => '<SERVICE DEFAULT>',
           :cafile                  => '<SERVICE DEFAULT>',

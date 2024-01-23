@@ -34,7 +34,7 @@
 #
 # [*send_service_user_token*]
 #   (Optional) The service uses service token feature when this is set as true
-#   Defaults to 'false'
+#   Defaults to $facts['os_service_default']
 #
 # [*insecure*]
 #   (Optional) If true, explicitly allow TLS without checking server cert
@@ -75,7 +75,7 @@ class nova::keystone::service_user(
   $user_domain_name        = 'Default',
   $project_domain_name     = 'Default',
   $system_scope            = $facts['os_service_default'],
-  $send_service_user_token = false,
+  $send_service_user_token = $facts['os_service_default'],
   $insecure                = $facts['os_service_default'],
   $auth_type               = 'password',
   $auth_version            = $facts['os_service_default'],
