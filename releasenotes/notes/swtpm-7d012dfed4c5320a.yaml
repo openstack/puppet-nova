@@ -1,6 +1,6 @@
 ---
 features:
   - |
-    The ``nova::compute::libvirt::services`` class now installs the ``swtpm``
-    package by default. To disable the package installation, use
-    the ``manage_swtpm`` parameter.
+    The new ``manage_swtpm`` parameter has been added to
+    the ``nova::compute::libvirt::services`` class. Set this parameter to
+    ``true`` to install swtpm package.

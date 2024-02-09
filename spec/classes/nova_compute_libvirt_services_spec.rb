@@ -5,11 +5,34 @@ describe 'nova::compute::libvirt::services' do
   shared_examples_for 'nova compute libvirt services' do
 
     context 'with default parameters' do
-      it 'deploys libvirt packages and services' do
-        is_expected.to contain_package('ovmf')
-        is_expected.to contain_package('swtpm')
-        is_expected.to contain_package('libvirt')
-        is_expected.to contain_service('libvirt')
+      it 'deploys libvirt service' do
+        is_expected.to contain_package('libvirt').with(
+          :ensure => 'present',
+          :name   => platform_params[:libvirt_package_name],
+          :tag    => ['openstack', 'nova-support-package'],
+        )
+        is_expected.to contain_service('libvirt').with(
+          :ensure => 'running',
+          :enable => true,
+          :name   => platform_params[:libvirt_service_name],
+          :tag    => ['libvirt-service', 'libvirt-qemu-service'],
+        )
+      end
+
+      it 'installs ovmf' do
+        is_expected.to contain_package('ovmf').with(
+          :ensure => 'present',
+          :name   => platform_params[:ovmf_package_name],
+          :tag    => ['openstack', 'nova-support-package'],
+        )
+      end
+
+      it 'installs swtpm' do
+        is_expected.to_not contain_package('swtpm').with(
+          :ensure => 'present',
+          :name   => platform_params[:swtpm_package_name],
+          :tag    => ['openstack', 'nova-support-package'],
+        )
       end
     end
 
@@ -17,13 +40,12 @@ describe 'nova::compute::libvirt::services' do
       let :params do
         {
           :libvirt_service_name => false,
-          :modular_libvirt      => false,
           :manage_ovmf          => false,
-          :manage_swtpm         => false,
+          :manage_swtpm         => true,
         }
       end
 
-      it 'disable libvirt service' do
+      it 'skips installing libvirt' do
         is_expected.not_to contain_package('libvirt')
         is_expected.not_to contain_service('libvirt')
       end
@@ -32,8 +54,8 @@ describe 'nova::compute::libvirt::services' do
         is_expected.not_to contain_package('ovmf')
       end
 
-      it 'skips installing swtpm' do
-        is_expected.not_to contain_package('swtpm')
+      it 'skips installs swtpm' do
+        is_expected.to contain_package('swtpm')
       end
     end
   end
@@ -66,9 +88,29 @@ describe 'nova::compute::libvirt::services' do
     :supported_os   => OSDefaults.get_supported_os
   }).each do |os,facts|
     context "on #{os}" do
-      let (:facts) do
+      let :facts do
         facts.merge!(OSDefaults.get_facts())
       end
+
+      let :platform_params do
+        case facts[:os]['family']
+        when 'Debian'
+          {
+            :libvirt_package_name => 'libvirt-daemon-system',
+            :libvirt_service_name => 'libvirtd',
+            :ovmf_package_name    => 'ovmf',
+            :swtpm_package_name   => 'swtpm'
+          }
+        when 'RedHat'
+          {
+            :libvirt_package_name => 'libvirt-daemon-kvm',
+            :libvirt_service_name => 'libvirtd',
+            :ovmf_package_name    => 'edk2-ovmf',
+            :swtpm_package_name   => 'swtpm'
+          }
+        end
+      end
+
       it_configures 'nova compute libvirt services'
       if facts['osfamily'] == 'RedHat'
         it_configures 'nova compute libvirt services with modular libvirt'

@@ -55,7 +55,7 @@
 #
 # [*manage_swtpm*]
 #   (optional) install the swtpm package.
-#   Defaults to true
+#   Defaults to false
 #
 class nova::compute::libvirt::services (
   $ensure_package           = 'present',
@@ -70,7 +70,7 @@ class nova::compute::libvirt::services (
   $virtproxy_service_name   = $::nova::params::virtproxy_socket_name,
   $virtstorage_service_name = $::nova::params::virtstorage_socket_name,
   Boolean $manage_ovmf      = true,
-  Boolean $manage_swtpm     = true,
+  Boolean $manage_swtpm     = false,
 ) inherits nova::params {
 
   include nova::deps
