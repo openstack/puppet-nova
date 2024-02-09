@@ -1,0 +1,8 @@
+---
+features:
+  - |
+    The following parameters have been added to the ``nova::migration::qemu``
+    class.
+
+    - ``migration_address``
+    - ``migration_host``
