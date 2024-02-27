@@ -123,6 +123,18 @@
 #   See https://libvirt.org/guide/html/Application_Development_Guide-Architecture-Remote_URIs.html
 #   Defaults to {}
 #
+# [*key_file*]
+#   (optional) Specifies the key file that the TLS transport will use.
+#   Note that this is only used if the TLS transport is enabled via the
+#   "transport" option.
+#   Defaults to $facts['os_service_default']
+#
+# [*cert_file*]
+#   (optional) Specifies the certificate file that the TLS transport will use.
+#   Note that this is only used if the TLS transport is enabled via the
+#   "transport" option.
+#   Defaults to $facts['os_service_default']
+#
 # [*ca_file*]
 #   (optional) Specifies the CA certificate that the TLS transport will use.
 #   Note that this is only used if the TLS transport is enabled via the
@@ -181,6 +193,8 @@ class nova::migration::libvirt(
   $client_user                         = undef,
   $client_port                         = undef,
   Hash $client_extraparams             = {},
+  $key_file                            = $facts['os_service_default'],
+  $cert_file                           = $facts['os_service_default'],
   $ca_file                             = $facts['os_service_default'],
   $crl_file                            = $facts['os_service_default'],
   $libvirt_version                     = $::nova::compute::libvirt::version::default,
@@ -292,20 +306,26 @@ class nova::migration::libvirt(
     }
 
     if $transport == 'tls' {
-      $auth_tls_real = $auth
-      $auth_tcp_real = $facts['os_service_default']
-      $ca_file_real  = $ca_file
-      $crl_file_real = $crl_file
+      $auth_tls_real  = $auth
+      $auth_tcp_real  = $facts['os_service_default']
+      $key_file_real  = $key_file
+      $cert_file_real = $cert_file
+      $ca_file_real   = $ca_file
+      $crl_file_real  = $crl_file
     } elsif $transport == 'tcp' {
-      $auth_tls_real = $facts['os_service_default']
-      $auth_tcp_real = $auth
-      $ca_file_real  = $facts['os_service_default']
-      $crl_file_real = $facts['os_service_default']
+      $auth_tls_real  = $facts['os_service_default']
+      $auth_tcp_real  = $auth
+      $key_file_real  = $facts['os_service_default']
+      $cert_file_real = $facts['os_service_default']
+      $ca_file_real   = $facts['os_service_default']
+      $crl_file_real  = $facts['os_service_default']
     } else {
-      $auth_tls_real = $facts['os_service_default']
-      $auth_tcp_real = $facts['os_service_default']
-      $ca_file_real  = $facts['os_service_default']
-      $crl_file_real = $facts['os_service_default']
+      $auth_tls_real  = $facts['os_service_default']
+      $auth_tcp_real  = $facts['os_service_default']
+      $key_file_real  = $facts['os_service_default']
+      $cert_file_real = $facts['os_service_default']
+      $ca_file_real   = $facts['os_service_default']
+      $crl_file_real  = $facts['os_service_default']
     }
 
     $libvirt_listen_config = $modular_libvirt_real ? {
@@ -314,10 +334,12 @@ class nova::migration::libvirt(
     }
 
     create_resources( $libvirt_listen_config , {
-      'auth_tls' => { 'value' => $auth_tls_real, 'quote' => true },
-      'auth_tcp' => { 'value' => $auth_tcp_real, 'quote' => true },
-      'ca_file'  => { 'value' => $ca_file_real, 'quote'  => true },
-      'crl_file' => { 'value' => $crl_file_real, 'quote' => true },
+      'auth_tls'  => { 'value' => $auth_tls_real,  'quote' => true },
+      'auth_tcp'  => { 'value' => $auth_tcp_real,  'quote' => true },
+      'key_file'  => { 'value' => $key_file_real,  'quote' => true },
+      'cert_file' => { 'value' => $cert_file_real, 'quote' => true },
+      'ca_file'   => { 'value' => $ca_file_real,   'quote' => true },
+      'crl_file'  => { 'value' => $crl_file_real,  'quote' => true },
     })
 
     if $transport == 'tls' or $transport == 'tcp' {
