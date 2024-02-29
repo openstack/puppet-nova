@@ -1,0 +1,5 @@
+---
+features:
+  - |
+    The ``nova::cache`` class now supports options to allow memcached with
+    SASL enabled.
