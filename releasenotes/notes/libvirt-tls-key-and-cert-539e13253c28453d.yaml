@@ -1,0 +1,8 @@
+---
+features:
+  - |
+    The ``nova::migration::libvirt`` class now supports the following two new
+    parameters.
+
+    - ``cert_file``
+    - ``key_file``

@@ -35,6 +35,8 @@ describe 'nova::migration::libvirt' do
     context 'with default params' do
       it { is_expected.to contain_libvirtd_config('auth_tls').with_value('<SERVICE DEFAULT>').with_quote(true) }
       it { is_expected.to contain_libvirtd_config('auth_tcp').with_value('none').with_quote(true) }
+      it { is_expected.to contain_libvirtd_config('key_file').with_value('<SERVICE DEFAULT>').with_quote(true) }
+      it { is_expected.to contain_libvirtd_config('cert_file').with_value('<SERVICE DEFAULT>').with_quote(true) }
       it { is_expected.to contain_libvirtd_config('ca_file').with_value('<SERVICE DEFAULT>').with_quote(true) }
       it { is_expected.to contain_libvirtd_config('crl_file').with_value('<SERVICE DEFAULT>').with_quote(true) }
       it { is_expected.to contain_nova_config('libvirt/migration_inbound_addr').with_value('<SERVICE DEFAULT>')}
@@ -89,6 +91,8 @@ describe 'nova::migration::libvirt' do
       end
       it { is_expected.to contain_libvirtd_config('auth_tls').with_value('none').with_quote(true) }
       it { is_expected.to contain_libvirtd_config('auth_tcp').with_value('<SERVICE DEFAULT>').with_quote(true) }
+      it { is_expected.to contain_libvirtd_config('key_file').with_value('<SERVICE DEFAULT>').with_quote(true) }
+      it { is_expected.to contain_libvirtd_config('cert_file').with_value('<SERVICE DEFAULT>').with_quote(true) }
       it { is_expected.to contain_libvirtd_config('ca_file').with_value('<SERVICE DEFAULT>').with_quote(true) }
       it { is_expected.to contain_libvirtd_config('crl_file').with_value('<SERVICE DEFAULT>').with_quote(true) }
       it { is_expected.to contain_nova_config('libvirt/live_migration_uri').with_value('qemu+tls://%s/system')}
@@ -160,6 +164,8 @@ describe 'nova::migration::libvirt' do
       end
       it { is_expected.to contain_libvirtd_config('auth_tls').with_value('<SERVICE DEFAULT>').with_quote(true) }
       it { is_expected.to contain_libvirtd_config('auth_tcp').with_value('sasl').with_quote(true) }
+      it { is_expected.to contain_libvirtd_config('key_file').with_value('<SERVICE DEFAULT>').with_quote(true) }
+      it { is_expected.to contain_libvirtd_config('cert_file').with_value('<SERVICE DEFAULT>').with_quote(true) }
       it { is_expected.to contain_libvirtd_config('ca_file').with_value('<SERVICE DEFAULT>').with_quote(true) }
       it { is_expected.to contain_libvirtd_config('crl_file').with_value('<SERVICE DEFAULT>').with_quote(true) }
     end
@@ -173,6 +179,8 @@ describe 'nova::migration::libvirt' do
       end
       it { is_expected.to contain_libvirtd_config('auth_tls').with_value('sasl').with_quote(true) }
       it { is_expected.to contain_libvirtd_config('auth_tcp').with_value('<SERVICE DEFAULT>').with_quote(true) }
+      it { is_expected.to contain_libvirtd_config('key_file').with_value('<SERVICE DEFAULT>').with_quote(true) }
+      it { is_expected.to contain_libvirtd_config('cert_file').with_value('<SERVICE DEFAULT>').with_quote(true) }
       it { is_expected.to contain_libvirtd_config('ca_file').with_value('<SERVICE DEFAULT>').with_quote(true) }
       it { is_expected.to contain_libvirtd_config('crl_file').with_value('<SERVICE DEFAULT>').with_quote(true) }
     end
@@ -181,14 +189,18 @@ describe 'nova::migration::libvirt' do
       let :params do
         {
           :transport => 'tls',
-          :ca_file   => '/ca',
-          :crl_file  => '/crl',
+          :key_file  => '/etc/pki/libvirt/private/serverkey.pem',
+          :cert_file => '/etc/pki/libvirt/servercert.pem',
+          :ca_file   => '/etc/pki/CA/cacert.pem',
+          :crl_file  => '/etc/pki/CA/crl.pem',
         }
       end
       it { is_expected.to contain_libvirtd_config('auth_tls').with_value('none').with_quote(true) }
       it { is_expected.to contain_libvirtd_config('auth_tcp').with_value('<SERVICE DEFAULT>').with_quote(true) }
-      it { is_expected.to contain_libvirtd_config('ca_file').with_value('/ca').with_quote(true) }
-      it { is_expected.to contain_libvirtd_config('crl_file').with_value('/crl').with_quote(true) }
+      it { is_expected.to contain_libvirtd_config('key_file').with_value('/etc/pki/libvirt/private/serverkey.pem').with_quote(true) }
+      it { is_expected.to contain_libvirtd_config('cert_file').with_value('/etc/pki/libvirt/servercert.pem').with_quote(true) }
+      it { is_expected.to contain_libvirtd_config('ca_file').with_value('/etc/pki/CA/cacert.pem').with_quote(true) }
+      it { is_expected.to contain_libvirtd_config('crl_file').with_value('/etc/pki/CA/crl.pem').with_quote(true) }
     end
 
     context 'with auth set to an invalid setting' do
