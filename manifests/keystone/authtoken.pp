@@ -279,4 +279,6 @@ class nova::keystone::authtoken(
       service_type                   => $service_type,
       interface                      => $interface;
   }
+
+  Keystone::Resource::Authtoken['nova_config'] -> Anchor['nova::config::end']
 }

@@ -145,4 +145,10 @@ class nova::db (
     max_overflow            => $api_database_max_overflow,
     pool_timeout            => $api_database_pool_timeout,
   }
+
+  # all db settings should be applied and all packages should be installed
+  # before dbsync starts
+  Oslo::Db['nova_config'] -> Anchor['nova::dbsync::begin']
+  Oslo::Db['api_database'] -> Anchor['nova::dbsync::begin']
+  Oslo::Db['api_database'] -> Anchor['nova::dbsync_api::begin']
 }
