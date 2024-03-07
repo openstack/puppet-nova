@@ -1,0 +1,12 @@
+---
+features:
+  - |
+    The ``nova::cache`` class now supports the following new options for
+    Redis backend and Redis Sentinel backend.
+
+    - ``redis_server``
+    - ``redis_username``
+    - ``redis_password``
+    - ``redis_sentinels``
+    - ``redis_socket_timeout``
+    - ``redis_sentinel_service_name``

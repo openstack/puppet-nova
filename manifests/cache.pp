@@ -120,6 +120,30 @@
 #   (Optional) The password for the memcached with SASL enabled
 #   Defaults to $facts['os_service_default']
 #
+# [*redis_server*]
+#   (Optional) Redis server in the format of "host:port".
+#   Defaults to $facts['os_service_default']
+#
+# [*redis_username*]
+#   (Optional) The user name for redis
+#   Defaults to $facts['os_service_default']
+#
+# [*redis_password*]
+#   (Optional) The password for redis
+#   Defaults to $facts['os_service_default']
+#
+# [*redis_sentinels*]
+#   (Optional) Redis sentinel servers in the format of host:port
+#   Defaults to $facts['os_service_default']
+#
+# [*redis_socket_timeout*]
+#   (Optional) Timeout in seconds for every call to a server
+#   Defaults to $facts['os_service_default']
+#
+# [*redis_sentinel_service_name*]
+#   (Optional) Service name of the redis sentinel cluster.
+#   Defaults to $facts['os_service_default']
+#
 # [*tls_enabled*]
 #   (Optional) Global toggle for TLS usage when communicating with
 #   the caching servers.
@@ -210,6 +234,12 @@ class nova::cache (
   $memcache_sasl_enabled                = $facts['os_service_default'],
   $memcache_username                    = $facts['os_service_default'],
   $memcache_password                    = $facts['os_service_default'],
+  $redis_server                         = $facts['os_service_default'],
+  $redis_username                       = $facts['os_service_default'],
+  $redis_password                       = $facts['os_service_default'],
+  $redis_sentinels                      = $facts['os_service_default'],
+  $redis_socket_timeout                 = $facts['os_service_default'],
+  $redis_sentinel_service_name          = $facts['os_service_default'],
   $tls_enabled                          = $facts['os_service_default'],
   $tls_cafile                           = $facts['os_service_default'],
   $tls_certfile                         = $facts['os_service_default'],
@@ -248,6 +278,12 @@ class nova::cache (
     memcache_sasl_enabled                => $memcache_sasl_enabled,
     memcache_username                    => $memcache_username,
     memcache_password                    => $memcache_password,
+    redis_server                         => $redis_server,
+    redis_username                       => $redis_username,
+    redis_password                       => $redis_password,
+    redis_sentinels                      => $redis_sentinels,
+    redis_socket_timeout                 => $redis_socket_timeout,
+    redis_sentinel_service_name          => $redis_sentinel_service_name,
     tls_enabled                          => $tls_enabled,
     tls_cafile                           => $tls_cafile,
     tls_certfile                         => $tls_certfile,
