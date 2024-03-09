@@ -218,6 +218,11 @@ class nova::api(
       'DEFAULT/enabled_apis': value => join(any2array($enabled_apis), ',');
     }
     $service_enabled = $enabled
+
+    if $manage_service {
+      Nova_api_paste_ini<||> ~> Service['nova-api']
+      Nova_api_uwsgi_config<||> ~> Service['nova-api']
+    }
   } elsif $service_name == 'httpd' {
     nova_config {
       'DEFAULT/enabled_apis': ensure => absent;
@@ -238,6 +243,8 @@ class nova::api(
       if $metadata_service_name {
         Service['nova-api-metadata'] -> Service[$service_name]
       }
+
+      Nova_api_paste_ini<||> ~> Service[$service_name]
     }
   } else {
     fail("Invalid service_name. Either nova-api/openstack-nova-api for running \
@@ -253,6 +260,9 @@ as a standalone service, or httpd for being run by a httpd server")
   }
 
   if $metadata_service_name {
+    if $manage_service {
+      Nova_api_metadata_uwsgi_config<||> ~> Service['nova-api-metadata']
+    }
     nova::generic_service { 'api-metadata':
       enabled        => $service_enabled,
       manage_service => $manage_service,

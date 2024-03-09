@@ -24,30 +24,21 @@ class nova::deps {
   ~> Service<| tag == 'nova-service' |>
   ~> anchor { 'nova::service::end': }
 
-  # paste-api.ini config should occur in the config block also.
   Anchor['nova::config::begin']
   -> Nova_api_paste_ini<||>
-  ~> Anchor['nova::config::end']
+  -> Anchor['nova::config::end']
 
-  # rootwrap config should occur in the config block also.
   Anchor['nova::config::begin']
   -> Nova_rootwrap_config<||>
   ~> Anchor['nova::config::end']
 
-  # policy config should occur in the config block also.
-  Anchor['nova::config::begin']
-  -> Openstacklib::Policy<| tag == 'nova' |>
-  -> Anchor['nova::config::end']
-
-  # On any uwsgi config change, we must restart Nova APIs.
   Anchor['nova::config::begin']
   -> Nova_api_uwsgi_config<||>
-  ~> Anchor['nova::config::end']
+  -> Anchor['nova::config::end']
 
   Anchor['nova::config::begin']
   -> Nova_api_metadata_uwsgi_config<||>
-  ~> Anchor['nova::config::end']
-
+  -> Anchor['nova::config::end']
 
   # Support packages need to be installed in the install phase, but we don't
   # put them in the chain above because we don't want any false dependencies
@@ -83,15 +74,6 @@ class nova::deps {
   Anchor['nova::config::begin'] -> Virtsecretd_config<||> -> Anchor['nova::config::end']
   Anchor['nova::config::begin'] -> Virtstoraged_config<||> -> Anchor['nova::config::end']
   Anchor['nova::config::begin'] -> Qemu_config<||> -> Anchor['nova::config::end']
-
-  # all cache settings should be applied and all packages should be installed
-  # before service startup
-  Oslo::Cache<||> -> Anchor['nova::service::begin']
-
-  # all db settings should be applied and all packages should be installed
-  # before dbsync starts
-  Oslo::Db<||> -> Anchor['nova::dbsync::begin']
-  Oslo::Db<||> -> Anchor['nova::dbsync_api::begin']
 
   # Installation or config changes will always restart services.
   Anchor['nova::install::end'] ~> Anchor['nova::service::begin']
