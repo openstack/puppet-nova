@@ -1,0 +1,4 @@
+---
+features:
+  - |
+    The new ``nova::rabbit_transient_quorum_queue`` parameter has been added.
