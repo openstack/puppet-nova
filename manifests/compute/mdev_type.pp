@@ -29,18 +29,9 @@ define nova::compute::mdev_type (
   $max_instances    = $facts['os_service_default'],
 ) {
 
-  if empty($device_addresses) {
-    nova_config {
-      "mdev_${mdev_type}/device_addresses": value => $facts['os_service_default']
-    }
-  } else {
-    nova_config {
-      "mdev_${mdev_type}/device_addresses": value => join(any2array($device_addresses), ',');
-    }
-  }
-
   nova_config {
-    "mdev_${mdev_type}/mdev_class":    value => $mdev_class;
-    "mdev_${mdev_type}/max_instances": value => $max_instances;
+    "mdev_${mdev_type}/device_addresses": value => join(any2array($device_addresses), ',');
+    "mdev_${mdev_type}/mdev_class":       value => $mdev_class;
+    "mdev_${mdev_type}/max_instances":    value => $max_instances;
   }
 }
