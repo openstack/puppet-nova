@@ -1,0 +1,5 @@
+---
+features:
+  - |
+    Now the ``nova::compute::mdev_type`` defined resource type supports
+    the new ``max_instances`` parameter.

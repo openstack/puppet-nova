@@ -18,10 +18,15 @@
 #  device type.
 #  Defaults to $facts['os_service_default']
 #
+# [*max_instances*]
+#  (Optional) Number of mediated devices that type can create.
+#  Defaults to $facts['os_service_default']
+#
 define nova::compute::mdev_type (
   $mdev_type        = $name,
   $device_addresses = $facts['os_service_default'],
   $mdev_class       = $facts['os_service_default'],
+  $max_instances    = $facts['os_service_default'],
 ) {
 
   if empty($device_addresses) {
@@ -35,6 +40,7 @@ define nova::compute::mdev_type (
   }
 
   nova_config {
-    "mdev_${mdev_type}/mdev_class": value => $mdev_class;
+    "mdev_${mdev_type}/mdev_class":    value => $mdev_class;
+    "mdev_${mdev_type}/max_instances": value => $max_instances;
   }
 }
