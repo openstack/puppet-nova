@@ -233,13 +233,7 @@ class nova::migration::libvirt(
       $postfix = ''
     }
 
-    if empty($client_extraparams) {
-      $extra_params =''
-    } else {
-      $extra_params_before_python_escape = join(uriescape(join_keys_to_values($client_extraparams, '=')), '&')
-      # Must escape % as nova interprets it incorrectly.
-      $extra_params = sprintf('?%s', regsubst($extra_params_before_python_escape, '%', '%%', 'G'))
-    }
+    $extra_params = encode_url_queries_for_python($client_extraparams)
 
     $live_migration_uri = "qemu+${transport}://${prefix}%s${postfix}/system${extra_params}"
 
