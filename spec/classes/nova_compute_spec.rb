@@ -66,6 +66,7 @@ describe 'nova::compute' do
       it { is_expected.to contain_nova_config('compute/image_type_exclude_list').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('DEFAULT/block_device_allocate_retries').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('DEFAULT/block_device_allocate_retries_interval').with_value('<SERVICE DEFAULT>') }
+      it { is_expected.to contain_nova_config('DEFAULT/flat_injected').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('DEFAULT/config_drive_format').with_value('<SERVICE DEFAULT>') }
 
       it { is_expected.to_not contain_package('bridge-utils').with(
@@ -294,6 +295,14 @@ describe 'nova::compute' do
       end
 
       it { is_expected.to contain_nova_config('DEFAULT/force_config_drive').with_value(true) }
+    end
+
+    context 'with flat_injected parameter set to true' do
+      let :params do
+        { :flat_injected => true }
+      end
+
+      it { is_expected.to contain_nova_config('DEFAULT/flat_injected').with_value(true) }
     end
 
     context 'while not managing service state' do

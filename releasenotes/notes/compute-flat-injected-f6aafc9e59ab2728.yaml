@@ -1,0 +1,5 @@
+---
+features:
+  - |
+    Added new ``nova::compute::flat_injected`` boolean parameter to configure the
+    configuration option in Nova with the same name.

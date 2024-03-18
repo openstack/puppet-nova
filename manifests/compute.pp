@@ -54,10 +54,6 @@
 #   (optional) Whether to force the config drive to be attached to all VMs
 #   Defaults to false
 #
-# [*mkisofs_cmd*]
-#   (optional) Name or path of the tool used for ISO image creation.
-#   Defaults to $facts['os_service_default']
-#
 # [*instance_usage_audit*]
 #   (optional) Generate periodic compute.instance.exists notifications.
 #   Defaults to false
@@ -65,6 +61,15 @@
 # [*instance_usage_audit_period*]
 #   (optional) Time period to generate instance usages for.
 #   Time period must be hour, day, month or year with/without offset.
+#   Defaults to $facts['os_service_default']
+#
+# [*flat_injected*]
+#   (optional) This option determines whether the network setup information is
+#   injected into the VM before it is booted.
+#   Defaults to $facts['os_service_default']
+#
+# [*mkisofs_cmd*]
+#   (optional) Name or path of the tool used for ISO image creation.
 #   Defaults to $facts['os_service_default']
 #
 # [*use_cow_images*]
@@ -271,6 +276,7 @@ class nova::compute (
   Boolean $force_config_drive                  = false,
   Boolean $instance_usage_audit                = false,
   $instance_usage_audit_period                 = $facts['os_service_default'],
+  $flat_injected                               = $facts['os_service_default'],
   $mkisofs_cmd                                 = $facts['os_service_default'],
   $use_cow_images                              = $facts['os_service_default'],
   $force_raw_images                            = $facts['os_service_default'],
@@ -450,6 +456,8 @@ class nova::compute (
       'DEFAULT/instance_usage_audit_period': ensure => absent;
     }
   }
+
+  nova_config { 'DEFAULT/flat_injected': value => $flat_injected }
 
   nova_config {
     'DEFAULT/config_drive_format': value => pick($config_drive_format, $facts['os_service_default']);
