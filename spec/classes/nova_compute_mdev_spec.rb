@@ -21,7 +21,8 @@ describe 'nova::compute::mdev' do
               'mdev_class'       => 'CUSTOM_MDEV1'
             },
             'nvidia-37' => {
-              'mdev_class' => 'VGPU'
+              'mdev_class'    => 'VGPU',
+              'max_instances' => 10
             }
           }
         }
@@ -31,10 +32,13 @@ describe 'nova::compute::mdev' do
         is_expected.to contain_nova_config('devices/enabled_mdev_types').with_value('nvidia-35,nvidia-36,nvidia-37')
         is_expected.to contain_nova_config('mdev_nvidia-35/device_addresses').with_value('0000:84:00.0,0000:85:00.0')
         is_expected.to contain_nova_config('mdev_nvidia-35/mdev_class').with_value('<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('mdev_nvidia-35/max_instances').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('mdev_nvidia-36/device_addresses').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('mdev_nvidia-36/mdev_class').with_value('CUSTOM_MDEV1')
+        is_expected.to contain_nova_config('mdev_nvidia-36/max_instances').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('mdev_nvidia-37/device_addresses').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('mdev_nvidia-37/mdev_class').with_value('VGPU')
+        is_expected.to contain_nova_config('mdev_nvidia-37/max_instances').with_value(10)
       end
     end
   end
