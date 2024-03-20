@@ -66,6 +66,8 @@ describe 'nova::compute' do
       it { is_expected.to contain_nova_config('compute/image_type_exclude_list').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('DEFAULT/block_device_allocate_retries').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('DEFAULT/block_device_allocate_retries_interval').with_value('<SERVICE DEFAULT>') }
+      it { is_expected.to contain_nova_config('DEFAULT/instance_usage_audit').with_value('<SERVICE DEFAULT>') }
+      it { is_expected.to contain_nova_config('DEFAULT/instance_usage_audit_period').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('DEFAULT/flat_injected').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('DEFAULT/config_drive_format').with_value('<SERVICE DEFAULT>') }
 
@@ -289,22 +291,6 @@ describe 'nova::compute' do
       it { should raise_error(Puppet::Error, /vnc_enabled and spice_enabled is mutually exclusive/) }
     end
 
-    context 'with force_config_drive parameter set to true' do
-      let :params do
-        { :force_config_drive => true }
-      end
-
-      it { is_expected.to contain_nova_config('DEFAULT/force_config_drive').with_value(true) }
-    end
-
-    context 'with flat_injected parameter set to true' do
-      let :params do
-        { :flat_injected => true }
-      end
-
-      it { is_expected.to contain_nova_config('DEFAULT/flat_injected').with_value(true) }
-    end
-
     context 'while not managing service state' do
       let :params do
         {
@@ -313,15 +299,6 @@ describe 'nova::compute' do
       end
 
       it { is_expected.to_not contain_service('nova-compute') }
-    end
-
-    context 'with instance_usage_audit parameter set to false' do
-      let :params do
-        { :instance_usage_audit => false, }
-      end
-
-      it { is_expected.to contain_nova_config('DEFAULT/instance_usage_audit').with_ensure('absent') }
-      it { is_expected.to contain_nova_config('DEFAULT/instance_usage_audit_period').with_ensure('absent') }
     end
 
     context 'with instance_usage_audit parameter and period' do
@@ -334,6 +311,21 @@ describe 'nova::compute' do
       it { is_expected.to contain_nova_config('DEFAULT/instance_usage_audit_period').with_value('year') }
     end
 
+    context 'with flat_injected parameter set to true' do
+      let :params do
+        { :flat_injected => true }
+      end
+
+      it { is_expected.to contain_nova_config('DEFAULT/flat_injected').with_value(true) }
+    end
+
+    context 'with force_config_drive parameter set to true' do
+      let :params do
+        { :force_config_drive => true }
+      end
+
+      it { is_expected.to contain_nova_config('DEFAULT/force_config_drive').with_value(true) }
+    end
   end
 
   on_supported_os({

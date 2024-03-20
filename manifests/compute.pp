@@ -52,11 +52,11 @@
 #
 # [*force_config_drive*]
 #   (optional) Whether to force the config drive to be attached to all VMs
-#   Defaults to false
+#   Defaults to $facts['os_service_default']
 #
 # [*instance_usage_audit*]
 #   (optional) Generate periodic compute.instance.exists notifications.
-#   Defaults to false
+#   Defaults to $facts['os_service_default']
 #
 # [*instance_usage_audit_period*]
 #   (optional) Time period to generate instance usages for.
@@ -273,8 +273,8 @@ class nova::compute (
   $vncproxy_protocol                           = 'http',
   $vncproxy_port                               = '6080',
   $vncproxy_path                               = '/vnc_auto.html',
-  Boolean $force_config_drive                  = false,
-  Boolean $instance_usage_audit                = false,
+  $force_config_drive                          = $facts['os_service_default'],
+  $instance_usage_audit                        = $facts['os_service_default'],
   $instance_usage_audit_period                 = $facts['os_service_default'],
   $flat_injected                               = $facts['os_service_default'],
   $mkisofs_cmd                                 = $facts['os_service_default'],
@@ -439,28 +439,11 @@ class nova::compute (
     ensure_package => $ensure_package,
   }
 
-  if $force_config_drive {
-    nova_config { 'DEFAULT/force_config_drive': value => true }
-  } else {
-    nova_config { 'DEFAULT/force_config_drive': ensure => absent }
-  }
-
-  if $instance_usage_audit {
-    nova_config {
-      'DEFAULT/instance_usage_audit':        value => $instance_usage_audit;
-      'DEFAULT/instance_usage_audit_period': value => $instance_usage_audit_period;
-    }
-  } else {
-    nova_config {
-      'DEFAULT/instance_usage_audit':        ensure => absent;
-      'DEFAULT/instance_usage_audit_period': ensure => absent;
-    }
-  }
-
-  nova_config { 'DEFAULT/flat_injected': value => $flat_injected }
-
   nova_config {
-    'DEFAULT/config_drive_format': value => pick($config_drive_format, $facts['os_service_default']);
+    'DEFAULT/force_config_drive':          value => $force_config_drive;
+    'DEFAULT/instance_usage_audit':        value => $instance_usage_audit;
+    'DEFAULT/instance_usage_audit_period': value => $instance_usage_audit_period;
+    'DEFAULT/flat_injected':               value => $flat_injected;
+    'DEFAULT/config_drive_format':         value => pick($config_drive_format, $facts['os_service_default']);
   }
-
 }
