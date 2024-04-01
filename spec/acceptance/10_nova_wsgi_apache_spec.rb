@@ -40,7 +40,8 @@ describe 'basic nova' do
         disk         => '1',
         vcpus        => '1',
         is_public    => 'False',
-        project_name => 'services'
+        project_name => 'services',
+        properties   => {'foo' => 'bar'}
       }
       EOS
 
