@@ -27,7 +27,7 @@ Puppet::Type.type(:nova_flavor).provide(
     (opts << '--swap' << @resource[:swap]) if @resource[:swap]
     (opts << '--rxtx-factor' << @resource[:rxtx_factor]) if @resource[:rxtx_factor]
     @property_hash = self.class.request('flavor', 'create', opts)
-    if @resource[:properties] and !(@resources[:properties].empty?)
+    if @resource[:properties] and !(@resource[:properties].empty?)
       prop_opts = [@resource[:name]]
       prop_opts << props_to_s(@resource[:properties])
       self.class.request('flavor', 'set', prop_opts)
@@ -118,7 +118,7 @@ Puppet::Type.type(:nova_flavor).provide(
         project_name = ''
       end
 
-      properties = Hash[attrs[:properties].scan(/(\S+)='([^']*)'/)] rescue nil
+      properties = JSON.parse(attrs[:properties].gsub(/'/, '"'))
       new(
         :ensure       => :present,
         :name         => attrs[:name],
