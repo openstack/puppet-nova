@@ -53,7 +53,7 @@
 #   Defaults to 'http://127.0.0.1:5000/v3'
 #
 class nova::placement(
-  $password            = false,
+  $password,
   $auth_type           = 'password',
   $auth_url            = 'http://127.0.0.1:5000/v3',
   $region_name         = 'RegionOne',
