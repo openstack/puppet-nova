@@ -1,0 +1,4 @@
+---
+features:
+  - |
+    The new ``nova::consoleauth`` class has been added.
