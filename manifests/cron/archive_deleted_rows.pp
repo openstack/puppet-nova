@@ -108,7 +108,7 @@ class nova::cron::archive_deleted_rows (
   Boolean $task_log                 = false,
   $sleep                            = undef,
   Boolean $verbose                  = false,
-  $maxdelay                         = 0,
+  Integer[0] $maxdelay              = 0,
   Enum['present', 'absent'] $ensure = 'present',
 ) inherits nova::params {
 

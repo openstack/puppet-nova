@@ -76,7 +76,7 @@ class nova::cron::purge_shadow_tables (
   $age                              = 14,
   Boolean $all_cells                = false,
   Boolean $verbose                  = false,
-  $maxdelay                         = 0,
+  Integer[0] $maxdelay              = 0,
   Enum['present', 'absent'] $ensure = 'present',
 ) inherits nova::params {
 
