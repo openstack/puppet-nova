@@ -355,10 +355,11 @@ describe 'nova' do
 
         it 'should install ssh private key' do
           is_expected.to contain_file("/var/lib/nova/.ssh/#{keyname}").with(
-            :content => 'keydata',
-            :mode    => '0600',
-            :owner   => 'nova',
-            :group   => 'nova',
+            :content   => 'keydata',
+            :mode      => '0600',
+            :owner     => 'nova',
+            :group     => 'nova',
+            :show_diff => false,
           )
         end
       end
@@ -374,7 +375,7 @@ describe 'nova' do
       it 'should raise an error' do
         expect {
           is_expected.to contain_file('/var/lib/nova/.ssh/id_rsa').with(
-            :content => 'keydata'
+            :content => 'keydata',
           )
         }.to raise_error Puppet::Error, /You must provide both a key type and key data./
       end
