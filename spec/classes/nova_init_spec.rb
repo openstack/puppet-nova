@@ -344,7 +344,8 @@ describe 'nova' do
 
       it 'should install ssh private key' do
         is_expected.to contain_file('/var/lib/nova/.ssh/id_rsa').with(
-          :content => 'keydata'
+          :content   => 'keydata',
+          :show_diff => false,
         )
       end
     end
