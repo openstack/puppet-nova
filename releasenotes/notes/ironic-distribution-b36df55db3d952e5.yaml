@@ -1,0 +1,5 @@
+---
+features:
+  - |
+    The ``conductor_group`` parameter and the ``shard`` parameter have been
+    added to the ``ironic::conductor`` class.

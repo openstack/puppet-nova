@@ -19,8 +19,10 @@ describe 'nova::ironic::common' do
         is_expected.to contain_nova_config('ironic/user_domain_name').with_value('Default')
         is_expected.to contain_nova_config('ironic/project_domain_name').with_value('Default')
         is_expected.to contain_nova_config('ironic/service_type').with_value('<SERVICE DEFAULT>')
-        is_expected.to contain_nova_config('ironic/timeout').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('ironic/valid_interfaces').with_value('<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('ironic/timeout').with_value('<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('ironic/conductor_group').with_value('<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('ironic/shard').with_value('<SERVICE DEFAULT>')
       end
     end
 
@@ -40,6 +42,8 @@ describe 'nova::ironic::common' do
           :service_type        => 'baremetal',
           :timeout             => 30,
           :valid_interfaces    => 'internal',
+          :conductor_group     => 'mygroup',
+          :shard               => 'myshard'
         }
       end
 
@@ -57,8 +61,10 @@ describe 'nova::ironic::common' do
         is_expected.to contain_nova_config('ironic/user_domain_name').with_value('custom_domain')
         is_expected.to contain_nova_config('ironic/project_domain_name').with_value('custom_domain')
         is_expected.to contain_nova_config('ironic/service_type').with_value('baremetal')
-        is_expected.to contain_nova_config('ironic/timeout').with_value(30)
         is_expected.to contain_nova_config('ironic/valid_interfaces').with_value('internal')
+        is_expected.to contain_nova_config('ironic/timeout').with_value(30)
+        is_expected.to contain_nova_config('ironic/conductor_group').with_value('mygroup')
+        is_expected.to contain_nova_config('ironic/shard').with_value('myshard')
       end
     end
 
