@@ -58,6 +58,16 @@
 #   (Optional) Timeout value for connecting to ironic in seconds.
 #   Defaults to $facts['os_service_default']
 #
+# [*conductor_group*]
+#   (Optional) Case-insensitive key to limit the set of the nodes that may be
+#   managed by this service to the set of nodes in Ironic which have a matching
+#   conductor_group property.
+#   Defaults to $facts['os_service_default']
+#
+# [*shard*]
+#   (Optional) Specify which ironic shared this nova-compute will manage.
+#   Defaults to $facts['os_service_default']
+#
 class nova::ironic::common (
   $auth_plugin          = 'password',
   $auth_url             = 'http://127.0.0.1:5000/',
@@ -74,6 +84,8 @@ class nova::ironic::common (
   $service_type         = $facts['os_service_default'],
   $valid_interfaces     = $facts['os_service_default'],
   $timeout              = $facts['os_service_default'],
+  $conductor_group      = $facts['os_service_default'],
+  $shard                = $facts['os_service_default'],
 ) {
 
   include nova::deps
@@ -102,6 +114,8 @@ class nova::ironic::common (
     'ironic/service_type':        value => $service_type;
     'ironic/valid_interfaces':    value => join(any2array($valid_interfaces), ',');
     'ironic/timeout':             value => $timeout;
+    'ironic/conductor_group':     value => $conductor_group;
+    'ironic/shard':               value => $shard;
   }
 
 }
