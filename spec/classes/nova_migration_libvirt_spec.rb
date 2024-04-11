@@ -48,8 +48,9 @@ describe 'nova::migration::libvirt' do
       it { is_expected.to contain_nova_config('libvirt/live_migration_downtime_delay').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('libvirt/live_migration_completion_timeout').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('libvirt/live_migration_timeout_action').with_value('<SERVICE DEFAULT>') }
-      it { is_expected.to contain_nova_config('libvirt/live_migration_uri').with_value('qemu+tcp://%s/system') }
+      it { is_expected.to contain_nova_config('libvirt/live_migration_uri').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('libvirt/live_migration_inbound_addr').with_value('<SERVICE DEFAULT>')}
+      it { is_expected.to contain_nova_config('libvirt/live_migration_scheme').with_value('tcp') }
       it { is_expected.to contain_nova_config('libvirt/live_migration_permit_post_copy').with_value('<SERVICE DEFAULT>')}
       it { is_expected.to contain_nova_config('libvirt/live_migration_permit_auto_converge').with_value('<SERVICE DEFAULT>')}
     end
@@ -95,7 +96,8 @@ describe 'nova::migration::libvirt' do
       it { is_expected.to contain_libvirtd_config('cert_file').with_value('<SERVICE DEFAULT>').with_quote(true) }
       it { is_expected.to contain_libvirtd_config('ca_file').with_value('<SERVICE DEFAULT>').with_quote(true) }
       it { is_expected.to contain_libvirtd_config('crl_file').with_value('<SERVICE DEFAULT>').with_quote(true) }
-      it { is_expected.to contain_nova_config('libvirt/live_migration_uri').with_value('qemu+tls://%s/system')}
+      it { is_expected.to contain_nova_config('libvirt/live_migration_uri').with_value('<SERVICE DEFAULT>') }
+      it { is_expected.to contain_nova_config('libvirt/live_migration_scheme').with_value('tls') }
     end
 
     context 'with tls enabled and inbound addr set' do
@@ -111,8 +113,9 @@ describe 'nova::migration::libvirt' do
       it { is_expected.to contain_libvirtd_config('ca_file').with_value('<SERVICE DEFAULT>').with_quote(true) }
       it { is_expected.to contain_libvirtd_config('crl_file').with_value('<SERVICE DEFAULT>').with_quote(true) }
       it { is_expected.to contain_nova_config('libvirt/migration_inbound_addr').with_value('host2.example.com')}
-      it { is_expected.to contain_nova_config('libvirt/live_migration_uri').with_value('qemu+tls://%s/system')}
+      it { is_expected.to contain_nova_config('libvirt/live_migration_uri').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('libvirt/live_migration_inbound_addr').with_value('host1.example.com')}
+      it { is_expected.to contain_nova_config('libvirt/live_migration_scheme').with_value('tls') }
     end
 
     context 'with live_migration_with_native_tls flags set' do
@@ -232,7 +235,9 @@ describe 'nova::migration::libvirt' do
           :transport      => 'tls',
         }
       end
-      it { is_expected.not_to contain_nova_config('libvirt/live_migration_uri').with_value('qemu+tls://%s/system') }
+      it { is_expected.not_to contain_nova_config('libvirt/live_migration_uri') }
+      it { is_expected.not_to contain_nova_config('libvirt/live_migration_inbound_addr') }
+      it { is_expected.not_to contain_nova_config('libvirt/live_migration_scheme') }
     end
 
     context 'with ssh transport' do
@@ -241,37 +246,41 @@ describe 'nova::migration::libvirt' do
           :transport => 'ssh',
         }
       end
-      it { is_expected.to contain_nova_config('libvirt/live_migration_uri').with_value('qemu+ssh://%s/system')}
+      it { is_expected.to contain_nova_config('libvirt/live_migration_uri').with_value('<SERVICE DEFAULT>') }
+      it { is_expected.to contain_nova_config('libvirt/live_migration_scheme').with_value('ssh') }
     end
 
     context 'with ssh transport with user' do
       let :params do
         {
-          :transport => 'ssh',
+          :transport   => 'ssh',
           :client_user => 'foobar'
         }
       end
       it { is_expected.to contain_nova_config('libvirt/live_migration_uri').with_value('qemu+ssh://foobar@%s/system')}
+      it { is_expected.to contain_nova_config('libvirt/live_migration_scheme').with_value('<SERVICE DEFAULT>') }
     end
 
     context 'with ssh transport with port' do
       let :params do
         {
-          :transport => 'ssh',
+          :transport   => 'ssh',
           :client_port => 1234
         }
       end
       it { is_expected.to contain_nova_config('libvirt/live_migration_uri').with_value('qemu+ssh://%s:1234/system')}
+      it { is_expected.to contain_nova_config('libvirt/live_migration_scheme').with_value('<SERVICE DEFAULT>') }
     end
 
     context 'with ssh transport with extraparams' do
       let :params do
         {
-          :transport => 'ssh',
+          :transport          => 'ssh',
           :client_extraparams => {'foo' => '%', 'bar' => 'baz'}
         }
       end
       it { is_expected.to contain_nova_config('libvirt/live_migration_uri').with_value('qemu+ssh://%s/system?foo=%%25&bar=baz')}
+      it { is_expected.to contain_nova_config('libvirt/live_migration_scheme').with_value('<SERVICE DEFAULT>') }
     end
 
     context 'with tls transport' do
@@ -322,8 +331,9 @@ describe 'nova::migration::libvirt' do
       it { is_expected.to contain_nova_config('libvirt/live_migration_with_native_tls').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('libvirt/live_migration_completion_timeout').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('libvirt/live_migration_timeout_action').with_value('<SERVICE DEFAULT>') }
-      it { is_expected.to contain_nova_config('libvirt/live_migration_uri').with_value('qemu+tcp://%s/system') }
+      it { is_expected.to contain_nova_config('libvirt/live_migration_uri').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('libvirt/live_migration_inbound_addr').with_value('<SERVICE DEFAULT>')}
+      it { is_expected.to contain_nova_config('libvirt/live_migration_scheme').with_value('tcp') }
       it { is_expected.to contain_nova_config('libvirt/live_migration_permit_post_copy').with_value('<SERVICE DEFAULT>')}
       it { is_expected.to contain_nova_config('libvirt/live_migration_permit_auto_converge').with_value('<SERVICE DEFAULT>')}
     end
@@ -339,7 +349,8 @@ describe 'nova::migration::libvirt' do
       it { is_expected.to contain_virtproxyd_config('auth_tcp').with_value('<SERVICE DEFAULT>').with_quote(true) }
       it { is_expected.to contain_virtproxyd_config('ca_file').with_value('<SERVICE DEFAULT>').with_quote(true) }
       it { is_expected.to contain_virtproxyd_config('crl_file').with_value('<SERVICE DEFAULT>').with_quote(true) }
-      it { is_expected.to contain_nova_config('libvirt/live_migration_uri').with_value('qemu+tls://%s/system')}
+      it { is_expected.to contain_nova_config('libvirt/live_migration_uri').with_value('<SERVICE DEFAULT>') }
+      it { is_expected.to contain_nova_config('libvirt/live_migration_scheme').with_value('tls') }
     end
 
     context 'with auth set to sasl' do
@@ -391,7 +402,8 @@ describe 'nova::migration::libvirt' do
           :modular_libvirt => true,
         }
       end
-      it { is_expected.to contain_nova_config('libvirt/live_migration_uri').with_value('qemu+ssh://%s/system')}
+      it { is_expected.to contain_nova_config('libvirt/live_migration_uri').with_value('<SERVICE DEFAULT>') }
+      it { is_expected.to contain_nova_config('libvirt/live_migration_scheme').with_value('ssh') }
     end
 
     context 'with ssh transport with user' do
@@ -403,6 +415,7 @@ describe 'nova::migration::libvirt' do
         }
       end
       it { is_expected.to contain_nova_config('libvirt/live_migration_uri').with_value('qemu+ssh://foobar@%s/system')}
+      it { is_expected.to contain_nova_config('libvirt/live_migration_scheme').with_value('<SERVICE DEFAULT>') }
     end
 
     context 'with ssh transport with port' do

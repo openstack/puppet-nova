@@ -217,25 +217,24 @@ class nova::migration::libvirt(
   }
 
   if $configure_nova {
-    if $transport == 'ssh' {
+    if $transport == 'ssh' and ($client_user or $client_port or !empty($client_extraparams)) {
       if $client_user {
-        $prefix =  "${client_user}@"
+        $prefix = "${client_user}@"
       } else {
         $prefix = ''
       }
+      if $client_port {
+        $suffix = ":${client_port}"
+      } else {
+        $suffix = ''
+      }
+      $extra_params = encode_url_queries_for_python($client_extraparams)
+      $live_migration_uri = "qemu+${transport}://${prefix}%s${suffix}/system${extra_params}"
+      $live_migration_scheme = $facts['os_service_default']
     } else {
-      $prefix = ''
+      $live_migration_uri = $facts['os_service_default']
+      $live_migration_scheme = $transport
     }
-
-    if $client_port {
-      $postfix = ":${client_port}"
-    } else {
-      $postfix = ''
-    }
-
-    $extra_params = encode_url_queries_for_python($client_extraparams)
-
-    $live_migration_uri = "qemu+${transport}://${prefix}%s${postfix}/system${extra_params}"
 
     nova_config {
       'libvirt/migration_inbound_addr':              value => $migration_inbound_addr;
@@ -249,6 +248,7 @@ class nova::migration::libvirt(
       'libvirt/live_migration_completion_timeout':   value => $live_migration_completion_timeout;
       'libvirt/live_migration_timeout_action':       value => $live_migration_timeout_action;
       'libvirt/live_migration_inbound_addr':         value => $live_migration_inbound_addr;
+      'libvirt/live_migration_scheme':               value => $live_migration_scheme;
       'libvirt/live_migration_permit_post_copy':     value => $live_migration_permit_post_copy;
       'libvirt/live_migration_permit_auto_converge': value => $live_migration_permit_auto_converge;
     }
