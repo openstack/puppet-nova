@@ -548,11 +548,12 @@ but should be one of: ssh-rsa, ssh-dsa, ssh-ecdsa, ssh-ed25519.")
       }
 
       file { $nova_private_key_file:
-        content => $nova_private_key[key],
-        mode    => '0600',
-        owner   => $::nova::params::user,
-        group   => $::nova::params::group,
-        require => File['/var/lib/nova/.ssh'],
+        content   => $nova_private_key[key],
+        mode      => '0600',
+        owner     => $::nova::params::user,
+        group     => $::nova::params::group,
+        show_diff => false,
+        require   => File['/var/lib/nova/.ssh'],
       }
     }
   }
