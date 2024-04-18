@@ -1,0 +1,19 @@
+---
+upgrade:
+  - |
+    The following ``nova::scheduler::filter`` class parameters have been
+    removed.
+
+    - ``scheduler_host_subset_size``
+    - ``scheduler_available_filters``
+    - ``scheduler_enabled_filters``
+    - ``scheduler_weight_classes``
+
+  - |
+    The following parameters of the ``nova::scheduler::filter`` class no longer
+    interpret empty value as the indicator of service defaults. In case
+    an empty value is passed, nova-scheduler may be deployed without available
+    or enabled scheduler filters.
+
+    - ``available_filters``
+    - ``enabled_filters``
