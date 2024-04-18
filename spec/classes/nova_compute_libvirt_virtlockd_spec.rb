@@ -18,6 +18,8 @@ describe 'nova::compute::libvirt::virtlockd' do
       it { is_expected.to contain_virtlockd_config('log_filters').with_value('<SERVICE DEFAULT>').with_quote(true)}
       it { is_expected.to contain_virtlockd_config('max_clients').with_value('<SERVICE DEFAULT>')}
       it { is_expected.to contain_virtlockd_config('admin_max_clients').with_value('<SERVICE DEFAULT>')}
+      it { is_expected.to contain_virtlockd_config('max_size').with_value('<SERVICE DEFAULT>')}
+      it { is_expected.to contain_virtlockd_config('max_backups').with_value('<SERVICE DEFAULT>')}
     end
 
     context 'with specified parameters' do
@@ -39,6 +41,8 @@ describe 'nova::compute::libvirt::virtlockd' do
       it { is_expected.to contain_virtlockd_config('log_filters').with_value(params[:log_filters]).with_quote(true)}
       it { is_expected.to contain_virtlockd_config('max_clients').with_value(params[:max_clients])}
       it { is_expected.to contain_virtlockd_config('admin_max_clients').with_value(params[:admin_max_clients])}
+      it { is_expected.to contain_virtlockd_config('max_size').with_value(params[:max_size])}
+      it { is_expected.to contain_virtlockd_config('max_backups').with_value(params[:max_backups])}
     end
   end
 
