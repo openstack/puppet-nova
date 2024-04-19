@@ -84,6 +84,10 @@
 #   only in Ubuntu/Debian.
 #   Defaults to 'present'
 #
+# [*manage_libvirt_secret*]
+#   (optional) Manage the libvirt secret
+#   Defaults to true
+#
 class nova::compute::rbd (
   $libvirt_rbd_user,
   $libvirt_rbd_secret_uuid                      = false,
@@ -98,6 +102,7 @@ class nova::compute::rbd (
   $manage_ceph_client                           = true,
   $ceph_client_ensure                           = 'present',
   $package_ensure                               = 'present',
+  Boolean $manage_libvirt_secret                = true,
 ) {
 
   include nova::deps
@@ -131,33 +136,38 @@ class nova::compute::rbd (
       'libvirt/rbd_secret_uuid': value => $libvirt_rbd_secret_uuid;
     }
 
-    file { '/etc/nova/secret.xml':
-      content => template('nova/secret.xml-compute.erb'),
-      require => Anchor['nova::config::begin'],
-    }
+    if $manage_libvirt_secret {
+      file { '/etc/nova/secret.xml':
+        content => epp('nova/libvirt-secret-ceph.xml.epp', {
+          'secret_name' => "${rbd_keyring} secret",
+          'uuid'        => $libvirt_rbd_secret_uuid,
+        }),
+        require => Anchor['nova::config::begin'],
+      }
 
-    #Variable name shrunk in favor of removing
-    #the more than 140 chars puppet-lint warning.
-    #variable used in the get-or-set virsh secret
-    #resource.
-    $cm = '/usr/bin/virsh secret-define --file /etc/nova/secret.xml | /usr/bin/awk \'{print $2}\' | sed \'/^$/d\' > /etc/nova/virsh.secret'
-    exec { 'get-or-set virsh secret':
-      command => $cm,
-      unless  => "/usr/bin/virsh secret-list | grep -i ${libvirt_rbd_secret_uuid}",
-      require => File['/etc/nova/secret.xml'],
-    }
-    Service<| tag == 'libvirt-service' |> -> Exec['get-or-set virsh secret']
+      #Variable name shrunk in favor of removing
+      #the more than 140 chars puppet-lint warning.
+      #variable used in the get-or-set virsh secret
+      #resource.
+      $cm = '/usr/bin/virsh secret-define --file /etc/nova/secret.xml | /usr/bin/awk \'{print $2}\' | sed \'/^$/d\' > /etc/nova/virsh.secret'
+      exec { 'get-or-set virsh secret':
+        command => $cm,
+        unless  => "/usr/bin/virsh secret-list | grep -i ${libvirt_rbd_secret_uuid}",
+        require => File['/etc/nova/secret.xml'],
+      }
+      Service<| tag == 'libvirt-service' |> -> Exec['get-or-set virsh secret']
 
-    if $libvirt_rbd_secret_key {
-      $libvirt_key = $libvirt_rbd_secret_key
-    } else {
-      $libvirt_key = "$(ceph auth get-key ${rbd_keyring})"
-    }
-    exec { 'set-secret-value virsh':
-      command   => "/usr/bin/virsh secret-set-value --secret ${libvirt_rbd_secret_uuid} --base64 ${libvirt_key}",
-      unless    => "/usr/bin/virsh secret-get-value ${libvirt_rbd_secret_uuid} | grep ${libvirt_key}",
-      logoutput => false,
-      require   => Exec['get-or-set virsh secret'],
+      if $libvirt_rbd_secret_key {
+        $libvirt_key = $libvirt_rbd_secret_key
+      } else {
+        $libvirt_key = "$(ceph auth get-key ${rbd_keyring})"
+      }
+      exec { 'set-secret-value virsh':
+        command   => "/usr/bin/virsh secret-set-value --secret ${libvirt_rbd_secret_uuid} --base64 ${libvirt_key}",
+        unless    => "/usr/bin/virsh secret-get-value ${libvirt_rbd_secret_uuid} | grep ${libvirt_key}",
+        logoutput => false,
+        require   => Exec['get-or-set virsh secret'],
+      }
     }
   } else {
     nova_config {
