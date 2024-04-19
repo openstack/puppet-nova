@@ -93,7 +93,7 @@ describe 'nova::compute::rbd' do
           "</secret>"
         ])
         is_expected.to contain_exec('get-or-set virsh secret').with(
-          :command =>  '/usr/bin/virsh secret-define --file /etc/nova/secret.xml | /usr/bin/awk \'{print $2}\' | sed \'/^$/d\' > /etc/nova/virsh.secret',
+          :command =>  '/usr/bin/virsh secret-define --file /etc/nova/secret.xml | /usr/bin/awk \'{print $2}\' | sed \'/^$/d\' >/etc/nova/virsh.secret',
           :unless  => '/usr/bin/virsh secret-list | grep -i UUID',
           :require => 'File[/etc/nova/secret.xml]',
         )
@@ -149,7 +149,7 @@ describe 'nova::compute::rbd' do
           "</secret>"
         ])
         is_expected.to contain_exec('get-or-set virsh secret').with(
-          :command =>  '/usr/bin/virsh secret-define --file /etc/nova/secret.xml | /usr/bin/awk \'{print $2}\' | sed \'/^$/d\' > /etc/nova/virsh.secret',
+          :command =>  '/usr/bin/virsh secret-define --file /etc/nova/secret.xml | /usr/bin/awk \'{print $2}\' | sed \'/^$/d\' >/etc/nova/virsh.secret',
           :unless  => '/usr/bin/virsh secret-list | grep -i UUID',
           :require => 'File[/etc/nova/secret.xml]',
         )
