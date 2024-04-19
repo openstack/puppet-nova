@@ -53,7 +53,7 @@
 # [*libvirt_rbd_secret_uuid*]
 #   (optional) The libvirt uuid of the secret for the rbd_user.
 #   Required to use cephx.
-#   Default to false.
+#   Default to undef.
 #
 # [*libvirt_rbd_secret_key*]
 #   (optional) The cephx key to use as key for the libvirt secret,
@@ -61,10 +61,6 @@
 #   requested to the ceph cluster, which assumes the node is
 #   provided of the client.admin keyring as well.
 #   Default to undef.
-#
-# [*rbd_keyring*]
-#   (optional) The keyring name to use when retrieving the RBD secret
-#   Default to 'client.nova'
 #
 # [*ephemeral_storage*]
 #   (optional) Whether or not to use the rbd driver for the nova
@@ -88,25 +84,36 @@
 #   (optional) Manage the libvirt secret
 #   Defaults to true
 #
+# == Deprecated parameters
+#
+# [*rbd_keyring*]
+#   (optional) The keyring name to use when retrieving the RBD secret
+#   Default to undef
+#
 class nova::compute::rbd (
   $libvirt_rbd_user,
-  $libvirt_rbd_secret_uuid                      = false,
+  $libvirt_rbd_secret_uuid                      = undef,
   $libvirt_rbd_secret_key                       = undef,
   $libvirt_images_rbd_pool                      = 'rbd',
   $libvirt_images_rbd_ceph_conf                 = '/etc/ceph/ceph.conf',
   $libvirt_images_rbd_glance_store_name         = $facts['os_service_default'],
   $libvirt_images_rbd_glance_copy_poll_interval = $facts['os_service_default'],
   $libvirt_images_rbd_glance_copy_timeout       = $facts['os_service_default'],
-  $rbd_keyring                                  = 'client.nova',
   Boolean $ephemeral_storage                    = true,
   Boolean $manage_ceph_client                   = true,
   $ceph_client_ensure                           = 'present',
   $package_ensure                               = 'present',
   Boolean $manage_libvirt_secret                = true,
+  ## DEPRECATED PARAMETERS
+  $rbd_keyring                                  = undef,
 ) {
 
   include nova::deps
   include nova::params
+
+  if $rbd_keyring != undef {
+    warning('The rbd_keyring parameter is deprecated and has no effect')
+  }
 
   if $manage_ceph_client {
     # Install ceph client libraries
@@ -128,42 +135,27 @@ class nova::compute::rbd (
     'libvirt/rbd_user': value => $libvirt_rbd_user;
   }
 
-  if $libvirt_rbd_secret_uuid {
+  if $libvirt_rbd_secret_uuid != undef {
     nova_config {
       'libvirt/rbd_secret_uuid': value => $libvirt_rbd_secret_uuid;
     }
 
+    # TODO(tobias-urdin): Remove these two when propagated
+    file { '/etc/nova/secret.xml':
+      ensure => 'absent',
+    }
+    file { '/etc/nova/virsh.secret':
+      ensure => 'absent',
+    }
+
     if $manage_libvirt_secret {
-      file { '/etc/nova/secret.xml':
-        content => epp('nova/libvirt-secret-ceph.xml.epp', {
-          'secret_name' => "${rbd_keyring} secret",
-          'uuid'        => $libvirt_rbd_secret_uuid,
-        }),
-        require => Anchor['nova::config::begin'],
+      if $libvirt_rbd_secret_key == undef {
+        fail('libvirt_rbd_secret_key is required when libvirt_rbd_secret_uuid is set')
       }
 
-      #Variable name shrunk in favor of removing
-      #the more than 140 chars puppet-lint warning.
-      #variable used in the get-or-set virsh secret
-      #resource.
-      $cm = '/usr/bin/virsh secret-define --file /etc/nova/secret.xml | /usr/bin/awk \'{print $2}\' | sed \'/^$/d\' > /etc/nova/virsh.secret'
-      exec { 'get-or-set virsh secret':
-        command => $cm,
-        unless  => "/usr/bin/virsh secret-list | grep -i ${libvirt_rbd_secret_uuid}",
-        require => File['/etc/nova/secret.xml'],
-      }
-      Service<| tag == 'libvirt-service' |> -> Exec['get-or-set virsh secret']
-
-      if $libvirt_rbd_secret_key {
-        $libvirt_key = $libvirt_rbd_secret_key
-      } else {
-        $libvirt_key = "$(ceph auth get-key ${rbd_keyring})"
-      }
-      exec { 'set-secret-value virsh':
-        command   => "/usr/bin/virsh secret-set-value --secret ${libvirt_rbd_secret_uuid} --base64 ${libvirt_key}",
-        unless    => "/usr/bin/virsh secret-get-value ${libvirt_rbd_secret_uuid} | grep ${libvirt_key}",
-        logoutput => false,
-        require   => Exec['get-or-set virsh secret'],
+      nova::compute::libvirt::secret_ceph { $libvirt_rbd_secret_uuid:
+        uuid  => $libvirt_rbd_secret_uuid,
+        value => $libvirt_rbd_secret_key,
       }
     }
   } else {
