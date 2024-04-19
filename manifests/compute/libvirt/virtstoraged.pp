@@ -33,8 +33,8 @@ class nova::compute::libvirt::virtstoraged (
 
   virtstoraged_config {
     'log_level':         value => $log_level;
-    'log_filters':       value => $log_filters, quote => true;
-    'log_outputs':       value => $log_outputs, quote => true;
+    'log_filters':       value => join(any2array($log_filters), ' '), quote => true;
+    'log_outputs':       value => join(any2array($log_outputs), ' '), quote => true;
     'ovs_timeout':       value => $ovs_timeout;
   }
 }

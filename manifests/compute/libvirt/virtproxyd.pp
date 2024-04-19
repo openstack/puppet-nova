@@ -64,8 +64,8 @@ class nova::compute::libvirt::virtproxyd (
 
   virtproxyd_config {
     'log_level':                 value => $log_level;
-    'log_filters':               value => $log_filters, quote => true;
-    'log_outputs':               value => $log_outputs, quote => true;
+    'log_filters':               value => join(any2array($log_filters), ' '), quote => true;
+    'log_outputs':               value => join(any2array($log_outputs), ' '), quote => true;
     'max_clients':               value => $max_clients;
     'admin_max_clients':         value => $admin_max_clients;
     'max_client_requests':       value => $max_client_requests;
