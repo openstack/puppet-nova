@@ -7,6 +7,7 @@ describe 'nova::quota' do
 
   let :default_params do
     {
+      :driver                      => '<SERVICE DEFAULT>',
       :instances                   => '<SERVICE DEFAULT>',
       :cores                       => '<SERVICE DEFAULT>',
       :ram                         => '<SERVICE DEFAULT>',
@@ -42,6 +43,7 @@ describe 'nova::quota' do
     context 'with provided parameters' do
       before do
         params.merge!({
+          :driver                      => 'nova.quota.DbQuotaDriver',
           :instances                   => 20,
           :cores                       => 40,
           :ram                         => 102400,
