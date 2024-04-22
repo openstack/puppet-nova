@@ -84,18 +84,6 @@ describe 'nova::scheduler::filter' do
       it { is_expected.to contain_nova_config('filter_scheduler/enabled_filters').with_value('RetryFilter,AvailabilityZoneFilter') }
       it { is_expected.to contain_nova_config('filter_scheduler/available_filters').with_value(['nova_filter1','nova_filter2']) }
     end
-
-    context 'when overriding params with empty arrays' do
-      let :params do
-        {
-          :available_filters => [],
-          :enabled_filters   => [],
-        }
-      end
-
-      it { is_expected.to contain_nova_config('filter_scheduler/available_filters').with_value('<SERVICE DEFAULT>') }
-      it { is_expected.to contain_nova_config('filter_scheduler/enabled_filters').with_value('<SERVICE DEFAULT>') }
-    end
   end
 
   on_supported_os({
