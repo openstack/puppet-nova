@@ -133,28 +133,6 @@
 #   the up cells.
 #   Defaults to $facts['os_service_default']
 #
-# DEPRECATED
-#
-# [*nova_metadata_wsgi_enabled*]
-#   Wether nova metadata api is run via wsgi. Since running metadata via eventlet is
-#   going to be removed in the Sein release we can deprecate this and plan to remove
-#   metadata handling from api class.
-#   Defaults to false
-#
-# [*hide_server_address_states*]
-#   (optional) This option is a list of all instance states for which network address
-#   information should not be returned from the API.
-#   Defaults to undef
-#
-# [*allow_instance_snapshots*]
-#   (optional) Operators can turn off the ability for a user to take snapshots of their
-#   instances by setting this option to False
-#   Defaults to undef
-#
-# [*enable_network_quota*]
-#   (optional) This option is used to enable or disable quota checking for tenant networks
-#   Defaults to undef
-#
 class nova::api(
   Boolean $enabled                             = true,
   Boolean $manage_service                      = true,
@@ -184,11 +162,6 @@ class nova::api(
   $instance_list_cells_batch_strategy          = $facts['os_service_default'],
   $instance_list_cells_batch_fixed_size        = $facts['os_service_default'],
   $list_records_by_skipping_down_cells         = $facts['os_service_default'],
-  # DEPRECATED PARAMETER
-  $nova_metadata_wsgi_enabled                  = undef,
-  $hide_server_address_states                  = undef,
-  $allow_instance_snapshots                    = undef,
-  $enable_network_quota                        = undef,
 ) inherits nova::params {
 
   include nova::deps
@@ -197,20 +170,6 @@ class nova::api(
   include nova::keystone::authtoken
   include nova::availability_zone
   include nova::pci
-
-  if $nova_metadata_wsgi_enabled != undef {
-    warning('The nova_metadata_wsgi_enabled parameter has been deprecated and has no effect')
-  }
-
-  [
-    'hide_server_address_states',
-    'allow_instance_snapshots',
-    'enable_network_quota'
-  ].each |String $opt| {
-    if getvar($opt) != undef {
-      warning("The ${opt} parameter has been deprecated and has no effect.")
-    }
-  }
 
   # sanitize service_name and prepare DEFAULT/enabled_apis parameter
   if $service_name == $::nova::params::api_service_name {
@@ -309,13 +268,6 @@ as a standalone service, or httpd for being run by a httpd server")
     'api/instance_list_cells_batch_strategy':   value => $instance_list_cells_batch_strategy;
     'api/instance_list_cells_batch_fixed_size': value => $instance_list_cells_batch_fixed_size;
     'api/list_records_by_skipping_down_cells':  value => $list_records_by_skipping_down_cells;
-  }
-
-  # TODO(tkajinam): Remove this after 2024.1 release
-  nova_config {
-    'api/hide_server_address_states': ensure => absent;
-    'api/allow_instance_snapshots':   ensure => absent;
-    'DEFAULT/enable_network_quota':   ensure => absent;
   }
 
   # Added arg and if statement prevents this from being run

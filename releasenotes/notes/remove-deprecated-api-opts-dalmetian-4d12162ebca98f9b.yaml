@@ -1,0 +1,10 @@
+---
+features:
+  - |
+    The following ``nova::api`` class parameters have been removed. These were
+    all deprecated and have had no effect.
+
+    - ``nova_metadata_wsgi_enabled``
+    - ``hide_server_address_states``
+    - ``allow_instance_snapshots``
+    - ``enable_network_quota``
