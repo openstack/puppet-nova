@@ -1,0 +1,4 @@
+---
+upgrade:
+  - |
+    The deprecated ``nova::periodic_interval`` parameter has been removed.
