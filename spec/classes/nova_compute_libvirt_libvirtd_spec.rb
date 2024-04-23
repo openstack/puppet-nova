@@ -60,6 +60,18 @@ eos
       it { is_expected.to contain_libvirtd_config('tls_priority').with_value(params[:tls_priority]).with_quote(true)}
       it { is_expected.to contain_libvirtd_config('ovs_timeout').with_value(params[:ovs_timeout])}
     end
+
+    context 'with array values' do
+      let :params do
+        {
+          :log_outputs => ['3:syslog', '3:stderr'],
+          :log_filters => ['1:logging', '4:object', '4:json', '4:event', '1:util'],
+        }
+      end
+
+      it { is_expected.to contain_libvirtd_config('log_outputs').with_value('3:syslog 3:stderr').with_quote(true)}
+      it { is_expected.to contain_libvirtd_config('log_filters').with_value('1:logging 4:object 4:json 4:event 1:util').with_quote(true)}
+    end
   end
 
   on_supported_os({

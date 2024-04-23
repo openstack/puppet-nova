@@ -44,6 +44,18 @@ describe 'nova::compute::libvirt::virtlogd' do
       it { is_expected.to contain_virtlogd_config('max_size').with_value(params[:max_size])}
       it { is_expected.to contain_virtlogd_config('max_backups').with_value(params[:max_backups])}
     end
+
+    context 'with array values' do
+      let :params do
+        {
+          :log_outputs => ['3:syslog', '3:stderr'],
+          :log_filters => ['1:logging', '4:object', '4:json', '4:event', '1:util'],
+        }
+      end
+
+      it { is_expected.to contain_virtlogd_config('log_outputs').with_value('3:syslog 3:stderr').with_quote(true)}
+      it { is_expected.to contain_virtlogd_config('log_filters').with_value('1:logging 4:object 4:json 4:event 1:util').with_quote(true)}
+    end
   end
 
   on_supported_os({
