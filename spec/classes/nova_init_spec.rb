@@ -245,9 +245,6 @@ describe 'nova' do
         is_expected.to contain_nova_config('upgrade_levels/compute').with_value('1.0.0')
         is_expected.to contain_nova_config('upgrade_levels/conductor').with_value('1.0.0')
         is_expected.to contain_nova_config('upgrade_levels/scheduler').with_value('1.0.0')
-
-        is_expected.to contain_nova_config('upgrade_levels/cells').with_ensure('absent')
-        is_expected.to contain_nova_config('upgrade_levels/intercell').with_ensure('absent')
       end
 
       it 'configures various things' do

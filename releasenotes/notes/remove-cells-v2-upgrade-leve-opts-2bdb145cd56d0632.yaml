@@ -1,0 +1,5 @@
+---
+features:
+  - |
+    The ``nova::upgrade_level_cells`` parameter and
+    the ``nova::upgrade_level_intercell`` parameter have been removed.
