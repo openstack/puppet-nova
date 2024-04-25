@@ -52,7 +52,6 @@ describe 'nova::compute::rbd' do
       before :each do
         params.merge!(
           :libvirt_rbd_user                             => 'joe',
-          :libvirt_rbd_secret_uuid                      => false,
           :libvirt_images_rbd_pool                      => 'AnotherPool',
           :libvirt_images_rbd_ceph_conf                 => '/tmp/ceph.conf',
           :libvirt_images_rbd_glance_store_name         => 'glance_rbd_store',
@@ -72,60 +71,25 @@ describe 'nova::compute::rbd' do
     end
 
     context 'when using cephx' do
-      before :each do
-        params.merge!(
-          :libvirt_rbd_secret_uuid => 'UUID',
-          :rbd_keyring             => 'client.rbd_test'
-        )
-      end
-
-      it 'configure nova.conf with RBD secret UUID' do
-          is_expected.to contain_nova_config('libvirt/rbd_secret_uuid').with_value('UUID')
-      end
-
-      it 'configure ceph on compute nodes' do
-        verify_contents(catalogue, '/etc/nova/secret.xml', [
-          "<secret ephemeral=\'no\' private=\'no\'>",
-          "  <usage type=\'ceph\'>",
-          "    <name>client.rbd_test secret</name>",
-          "  </usage>",
-          "  <uuid>UUID</uuid>",
-          "</secret>"
-        ])
-        is_expected.to contain_exec('get-or-set virsh secret').with(
-          :command =>  '/usr/bin/virsh secret-define --file /etc/nova/secret.xml | /usr/bin/awk \'{print $2}\' | sed \'/^$/d\' > /etc/nova/virsh.secret',
-          :unless  => '/usr/bin/virsh secret-list | grep -i UUID',
-          :require => 'File[/etc/nova/secret.xml]',
-        )
-        is_expected.to contain_exec('set-secret-value virsh').with(
-          :command   => "/usr/bin/virsh secret-set-value --secret UUID --base64 $(ceph auth get-key client.rbd_test)",
-          :logoutput => false,
-        )
-      end
-    end
-
-    context 'when using cephx and passing libvirt_rbd_secret_key' do
-      before :each do
+      before do
         params.merge!(
           :libvirt_rbd_secret_uuid => 'UUID',
           :libvirt_rbd_secret_key  => 'LIBVIRT/SECRET/KEY',
         )
       end
 
-      it 'set libvirt secret key from passed key' do
-        is_expected.to contain_exec('set-secret-value virsh').with(
-          :command   => "/usr/bin/virsh secret-set-value --secret #{params[:libvirt_rbd_secret_uuid]} --base64 #{params[:libvirt_rbd_secret_key]}",
-          :logoutput => false,
-        )
-      end
+      it { is_expected.to contain_nova__compute__libvirt__secret_ceph('UUID').with(
+        :uuid  => params[:libvirt_rbd_secret_uuid],
+        :value => params[:libvirt_rbd_secret_key],
+      )}
     end
 
     context 'when using cephx but disabling ephemeral storage' do
-      before :each do
+      before do
         params.merge!(
-          :libvirt_rbd_secret_uuid      => 'UUID',
-          :rbd_keyring                  => 'client.rbd_test',
-          :ephemeral_storage            => false
+          :libvirt_rbd_secret_uuid => 'UUID',
+          :libvirt_rbd_secret_key  => 'LIBVIRT/SECRET/KEY',
+          :ephemeral_storage       => false
         )
       end
 
@@ -139,25 +103,10 @@ describe 'nova::compute::rbd' do
           is_expected.to contain_nova_config('libvirt/rbd_secret_uuid').with_value('UUID')
       end
 
-      it 'configure ceph on compute nodes' do
-        verify_contents(catalogue, '/etc/nova/secret.xml', [
-          "<secret ephemeral=\'no\' private=\'no\'>",
-          "  <usage type=\'ceph\'>",
-          "    <name>client.rbd_test secret</name>",
-          "  </usage>",
-          "  <uuid>UUID</uuid>",
-          "</secret>"
-        ])
-        is_expected.to contain_exec('get-or-set virsh secret').with(
-          :command =>  '/usr/bin/virsh secret-define --file /etc/nova/secret.xml | /usr/bin/awk \'{print $2}\' | sed \'/^$/d\' > /etc/nova/virsh.secret',
-          :unless  => '/usr/bin/virsh secret-list | grep -i UUID',
-          :require => 'File[/etc/nova/secret.xml]',
-        )
-        is_expected.to contain_exec('set-secret-value virsh').with(
-          :command   => "/usr/bin/virsh secret-set-value --secret UUID --base64 $(ceph auth get-key client.rbd_test)",
-          :logoutput => false,
-        )
-      end
+      it { is_expected.to contain_nova__compute__libvirt__secret_ceph('UUID').with(
+        :uuid  => params[:libvirt_rbd_secret_uuid],
+        :value => params[:libvirt_rbd_secret_key],
+      )}
     end
 
     context 'when not managing ceph client' do
