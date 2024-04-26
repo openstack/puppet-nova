@@ -381,10 +381,6 @@
 #   (optional) The strategy to use for auth: noauth or keystone.
 #   Defaults to undef
 #
-# [*periodic_interval*]
-#  (optional) Seconds between running periodic tasks.
-#  Defaults to undef
-#
 class nova(
   $ensure_package                         = 'present',
   $default_transport_url                  = $facts['os_service_default'],
@@ -466,7 +462,6 @@ class nova(
   $instance_name_template                 = $facts['os_service_default'],
   # DEPRECATED PARAMETERS
   $auth_strategy                          = undef,
-  $periodic_interval                      = undef,
 ) inherits nova::params {
 
   include nova::deps
@@ -474,10 +469,6 @@ class nova(
 
   if empty($enabled_ssl_apis) and $use_ssl {
       warning('enabled_ssl_apis is empty but use_ssl is set to true')
-  }
-
-  if $periodic_interval != undef {
-    warning('The periodic_interval parameter is deprecated and has no effect.')
   }
 
   if $use_ssl {
