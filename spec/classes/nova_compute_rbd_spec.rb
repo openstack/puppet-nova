@@ -38,6 +38,9 @@ describe 'nova::compute::rbd' do
         is_expected.to contain_nova_config('libvirt/images_rbd_glance_store_name').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('libvirt/images_rbd_glance_copy_poll_interval').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('libvirt/images_rbd_glance_copy_timeout').with_value('<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('libvirt/rbd_connect_timeout').with_value('<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('libvirt/rbd_destroy_volume_retry_interval').with_value('<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('libvirt/rbd_destroy_volume_retries').with_value('<SERVICE DEFAULT>')
     end
 
     it 'installs client package' do
@@ -56,17 +59,23 @@ describe 'nova::compute::rbd' do
           :libvirt_images_rbd_ceph_conf                 => '/tmp/ceph.conf',
           :libvirt_images_rbd_glance_store_name         => 'glance_rbd_store',
           :libvirt_images_rbd_glance_copy_poll_interval => 30,
-          :libvirt_images_rbd_glance_copy_timeout       => 300
+          :libvirt_images_rbd_glance_copy_timeout       => 300,
+          :libvirt_rbd_connect_timeout                  => 5,
+          :libvirt_rbd_destroy_volume_retry_interval    => 5,
+          :libvirt_rbd_destroy_volume_retries           => 12,
         )
       end
 
       it 'configure nova.conf with overridden parameters' do
-          is_expected.to contain_nova_config('libvirt/images_rbd_pool').with_value('AnotherPool')
-          is_expected.to contain_nova_config('libvirt/images_rbd_ceph_conf').with_value('/tmp/ceph.conf')
-          is_expected.to contain_nova_config('libvirt/rbd_user').with_value('joe')
-          is_expected.to contain_nova_config('libvirt/images_rbd_glance_store_name').with_value('glance_rbd_store')
-          is_expected.to contain_nova_config('libvirt/images_rbd_glance_copy_poll_interval').with_value(30)
-          is_expected.to contain_nova_config('libvirt/images_rbd_glance_copy_timeout').with_value(300)
+        is_expected.to contain_nova_config('libvirt/images_rbd_pool').with_value('AnotherPool')
+        is_expected.to contain_nova_config('libvirt/images_rbd_ceph_conf').with_value('/tmp/ceph.conf')
+        is_expected.to contain_nova_config('libvirt/rbd_user').with_value('joe')
+        is_expected.to contain_nova_config('libvirt/images_rbd_glance_store_name').with_value('glance_rbd_store')
+        is_expected.to contain_nova_config('libvirt/images_rbd_glance_copy_poll_interval').with_value(30)
+        is_expected.to contain_nova_config('libvirt/images_rbd_glance_copy_timeout').with_value(300)
+        is_expected.to contain_nova_config('libvirt/rbd_connect_timeout').with_value(5)
+        is_expected.to contain_nova_config('libvirt/rbd_destroy_volume_retry_interval').with_value(5)
+        is_expected.to contain_nova_config('libvirt/rbd_destroy_volume_retries').with_value(12)
       end
     end
 
@@ -94,13 +103,16 @@ describe 'nova::compute::rbd' do
       end
 
       it 'should only set user and secret_uuid in nova.conf ' do
-          is_expected.to contain_nova_config('libvirt/images_rbd_pool').with_ensure('absent')
-          is_expected.to contain_nova_config('libvirt/images_rbd_ceph_conf').with_ensure('absent')
-          is_expected.to contain_nova_config('libvirt/images_rbd_glance_store_name').with_ensure('absent')
-          is_expected.to contain_nova_config('libvirt/images_rbd_glance_copy_poll_interval').with_ensure('absent')
-          is_expected.to contain_nova_config('libvirt/images_rbd_glance_copy_timeout').with_ensure('absent')
-          is_expected.to contain_nova_config('libvirt/rbd_user').with_value('nova')
-          is_expected.to contain_nova_config('libvirt/rbd_secret_uuid').with_value('UUID')
+        is_expected.to contain_nova_config('libvirt/images_rbd_pool').with_ensure('absent')
+        is_expected.to contain_nova_config('libvirt/images_rbd_ceph_conf').with_ensure('absent')
+        is_expected.to contain_nova_config('libvirt/images_rbd_glance_store_name').with_ensure('absent')
+        is_expected.to contain_nova_config('libvirt/images_rbd_glance_copy_poll_interval').with_ensure('absent')
+        is_expected.to contain_nova_config('libvirt/images_rbd_glance_copy_timeout').with_ensure('absent')
+        is_expected.to contain_nova_config('libvirt/rbd_connect_timeout').with_ensure('absent')
+        is_expected.to contain_nova_config('libvirt/rbd_destroy_volume_retry_interval').with_ensure('absent')
+        is_expected.to contain_nova_config('libvirt/rbd_destroy_volume_retries').with_ensure('absent')
+        is_expected.to contain_nova_config('libvirt/rbd_user').with_value('nova')
+        is_expected.to contain_nova_config('libvirt/rbd_secret_uuid').with_value('UUID')
       end
 
       it { is_expected.to contain_nova__compute__libvirt__secret_ceph('UUID').with(

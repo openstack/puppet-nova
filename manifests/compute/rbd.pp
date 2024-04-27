@@ -22,6 +22,21 @@
 #
 # === Parameters
 #
+# [*libvirt_rbd_user*]
+#   (Required) The RADOS client name for accessing rbd volumes.
+#
+# [*libvirt_rbd_secret_uuid*]
+#   (optional) The libvirt uuid of the secret for the rbd_user.
+#   Required to use cephx.
+#   Default to undef.
+#
+# [*libvirt_rbd_secret_key*]
+#   (optional) The cephx key to use as key for the libvirt secret,
+#   it must be base64 encoded; when not provided this key will be
+#   requested to the ceph cluster, which assumes the node is
+#   provided of the client.admin keyring as well.
+#   Default to undef.
+#
 # [*libvirt_images_rbd_pool*]
 #   (optional) The RADOS pool in which rbd volumes are stored.
 #   Defaults to 'rbd'.
@@ -47,20 +62,19 @@
 #   an image copy to our local rbd store.
 #   Defaults to $facts['os_service_default'].
 #
-# [*libvirt_rbd_user*]
-#   (Required) The RADOS client name for accessing rbd volumes.
+# [*libvirt_rbd_connect_timeout*]
+#   (optional) The RADOS client timeout in seconds when initially connecting
+#   to the cluster.
+#   Defaults to $facts['os_service_default'].
 #
-# [*libvirt_rbd_secret_uuid*]
-#   (optional) The libvirt uuid of the secret for the rbd_user.
-#   Required to use cephx.
-#   Default to undef.
+# [*libvirt_rbd_destroy_volume_retry_interval*]
+#   (optional) Number of seconds to wait between each consecutive retry to
+#   destroy a RBD volume.
+#   Defaults to $facts['os_service_default'].
 #
-# [*libvirt_rbd_secret_key*]
-#   (optional) The cephx key to use as key for the libvirt secret,
-#   it must be base64 encoded; when not provided this key will be
-#   requested to the ceph cluster, which assumes the node is
-#   provided of the client.admin keyring as well.
-#   Default to undef.
+# [*libvirt_rbd_destroy_volume_retries*]
+#   (optional) Number of retries to destory a RBD volume.
+#   Defaults to $facts['os_service_default'].
 #
 # [*ephemeral_storage*]
 #   (optional) Whether or not to use the rbd driver for the nova
@@ -99,6 +113,9 @@ class nova::compute::rbd (
   $libvirt_images_rbd_glance_store_name         = $facts['os_service_default'],
   $libvirt_images_rbd_glance_copy_poll_interval = $facts['os_service_default'],
   $libvirt_images_rbd_glance_copy_timeout       = $facts['os_service_default'],
+  $libvirt_rbd_connect_timeout                  = $facts['os_service_default'],
+  $libvirt_rbd_destroy_volume_retry_interval    = $facts['os_service_default'],
+  $libvirt_rbd_destroy_volume_retries           = $facts['os_service_default'],
   Boolean $ephemeral_storage                    = true,
   Boolean $manage_ceph_client                   = true,
   $ceph_client_ensure                           = 'present',
@@ -177,7 +194,9 @@ class nova::compute::rbd (
       'libvirt/images_rbd_glance_store_name':         value => $libvirt_images_rbd_glance_store_name;
       'libvirt/images_rbd_glance_copy_poll_interval': value => $libvirt_images_rbd_glance_copy_poll_interval;
       'libvirt/images_rbd_glance_copy_timeout':       value => $libvirt_images_rbd_glance_copy_timeout;
-
+      'libvirt/rbd_connect_timeout':                  value => $libvirt_rbd_connect_timeout;
+      'libvirt/rbd_destroy_volume_retry_interval':    value => $libvirt_rbd_destroy_volume_retry_interval;
+      'libvirt/rbd_destroy_volume_retries':           value => $libvirt_rbd_destroy_volume_retries;
     }
   } else {
     nova_config {
@@ -186,6 +205,9 @@ class nova::compute::rbd (
       'libvirt/images_rbd_glance_store_name':         ensure => absent;
       'libvirt/images_rbd_glance_copy_poll_interval': ensure => absent;
       'libvirt/images_rbd_glance_copy_timeout':       ensure => absent;
+      'libvirt/rbd_connect_timeout':                  ensure => absent;
+      'libvirt/rbd_destroy_volume_retry_interval':    ensure => absent;
+      'libvirt/rbd_destroy_volume_retries':           ensure => absent;
     }
   }
 

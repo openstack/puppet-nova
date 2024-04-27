@@ -1,0 +1,9 @@
+---
+features:
+  - |
+    The following parameters have been added to the ``nova::compute::rbd``
+    class.
+
+    - ``libvirt_rbd_connect_timeout``
+    - ``libvirt_rbd_destroy_volume_retry_interval``
+    - ``libvirt_rbd_destroy_volume_retries``
