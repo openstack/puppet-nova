@@ -1,0 +1,5 @@
+---
+features:
+  - |
+    The new ``nova::scheduler::filter::pci_in_placement`` parameter has been
+    added.
