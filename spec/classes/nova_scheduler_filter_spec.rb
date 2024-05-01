@@ -32,10 +32,7 @@ describe 'nova::scheduler::filter' do
       it { is_expected.to contain_nova_config('filter_scheduler/restrict_isolated_hosts_to_isolated_images').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('filter_scheduler/aggregate_image_properties_isolation_namespace').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('filter_scheduler/aggregate_image_properties_isolation_separator').with_value('<SERVICE DEFAULT>') }
-
-      it { is_expected.to_not contain_nova_config('filter_scheduler/use_baremetal_filters') }
-      it { is_expected.to_not contain_nova_config('filter_scheduler/baremetal_enabled_filters') }
-      it { is_expected.to_not contain_nova_config('scheduler/host_manager') }
+      it { is_expected.to contain_nova_config('filter_scheduler/pci_in_placement').with_value('<SERVICE DEFAULT>') }
     end
 
     context 'when overriding params' do
@@ -61,6 +58,7 @@ describe 'nova::scheduler::filter' do
           :hypervisor_version_weight_multiplier => 70,
           :num_instances_weight_multiplier      => 0,
           :shuffle_best_same_weighed_hosts      => true,
+          :pci_in_placement                     => false,
         }
       end
 
@@ -83,6 +81,7 @@ describe 'nova::scheduler::filter' do
       it { is_expected.to contain_nova_config('filter_scheduler/isolated_hosts').with_value('192.168.1.2,192.168.1.3') }
       it { is_expected.to contain_nova_config('filter_scheduler/enabled_filters').with_value('RetryFilter,AvailabilityZoneFilter') }
       it { is_expected.to contain_nova_config('filter_scheduler/available_filters').with_value(['nova_filter1','nova_filter2']) }
+      it { is_expected.to contain_nova_config('filter_scheduler/pci_in_placement').with_value(false) }
     end
   end
 

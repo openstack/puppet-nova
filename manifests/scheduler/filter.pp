@@ -104,6 +104,10 @@
 #   (optional) Separator character(s) for image property namespace and name
 #   Defaults to $facts['os_service_default']
 #
+# [*pci_in_placement*]
+#   (optional) Enable scheduling and claiming PCI devices in Placement.
+#   Defaults to $facts['os_service_default']
+#
 class nova::scheduler::filter (
   $host_subset_size                               = $facts['os_service_default'],
   $max_io_ops_per_host                            = $facts['os_service_default'],
@@ -128,6 +132,7 @@ class nova::scheduler::filter (
   $restrict_isolated_hosts_to_isolated_images     = $facts['os_service_default'],
   $aggregate_image_properties_isolation_namespace = $facts['os_service_default'],
   $aggregate_image_properties_isolation_separator = $facts['os_service_default'],
+  $pci_in_placement                               = $facts['os_service_default'],
 ) {
 
   include nova::deps
@@ -186,6 +191,8 @@ class nova::scheduler::filter (
       value => $aggregate_image_properties_isolation_namespace;
     'filter_scheduler/aggregate_image_properties_isolation_separator':
       value => $aggregate_image_properties_isolation_separator;
+    'filter_scheduler/pci_in_placement':
+      value => $pci_in_placement;
   }
 
 }
