@@ -20,7 +20,7 @@
 # (Required) The UUID of the libvirt secret.
 #
 # [*value*]
-# (Required) The value to store in the secret.
+# (Required) The value to store in the secret. It should be base64-encoded.
 #
 # [*secret_name*]
 # (Optional) The name of the libvirt secret.
@@ -31,8 +31,8 @@
 # Defaults to /etc/nova
 #
 define nova::compute::libvirt::secret_ceph(
-  String $uuid,
-  String $value,
+  Pattern[/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[0-9a-f]{4}-[0-9a-f]{12}$/] $uuid,
+  Stdlib::Base64 $value,
   String[1] $secret_name            = $name,
   Stdlib::Absolutepath $secret_path = '/etc/nova',
 ) {

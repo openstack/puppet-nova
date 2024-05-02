@@ -82,22 +82,22 @@ describe 'nova::compute::rbd' do
     context 'when using cephx' do
       before do
         params.merge!(
-          :libvirt_rbd_secret_uuid => 'UUID',
-          :libvirt_rbd_secret_key  => 'LIBVIRT/SECRET/KEY',
+          :libvirt_rbd_secret_uuid => '4f515eff-47e4-425c-b24d-9c6adc56401c',
+          :libvirt_rbd_secret_key  => 'AQBHCbtT6APDHhAA5W00cBchwkQjh3dkKsyPjw==',
         )
       end
 
-      it { is_expected.to contain_nova__compute__libvirt__secret_ceph('UUID').with(
-        :uuid  => params[:libvirt_rbd_secret_uuid],
-        :value => params[:libvirt_rbd_secret_key],
+      it { is_expected.to contain_nova__compute__libvirt__secret_ceph('4f515eff-47e4-425c-b24d-9c6adc56401c').with(
+        :uuid  => '4f515eff-47e4-425c-b24d-9c6adc56401c',
+        :value => 'AQBHCbtT6APDHhAA5W00cBchwkQjh3dkKsyPjw==',
       )}
     end
 
     context 'when using cephx but disabling ephemeral storage' do
       before do
         params.merge!(
-          :libvirt_rbd_secret_uuid => 'UUID',
-          :libvirt_rbd_secret_key  => 'LIBVIRT/SECRET/KEY',
+          :libvirt_rbd_secret_uuid => '4f515eff-47e4-425c-b24d-9c6adc56401c',
+          :libvirt_rbd_secret_key  => 'AQBHCbtT6APDHhAA5W00cBchwkQjh3dkKsyPjw==',
           :ephemeral_storage       => false
         )
       end
@@ -112,12 +112,12 @@ describe 'nova::compute::rbd' do
         is_expected.to contain_nova_config('libvirt/rbd_destroy_volume_retry_interval').with_ensure('absent')
         is_expected.to contain_nova_config('libvirt/rbd_destroy_volume_retries').with_ensure('absent')
         is_expected.to contain_nova_config('libvirt/rbd_user').with_value('nova')
-        is_expected.to contain_nova_config('libvirt/rbd_secret_uuid').with_value('UUID')
+        is_expected.to contain_nova_config('libvirt/rbd_secret_uuid').with_value('4f515eff-47e4-425c-b24d-9c6adc56401c')
       end
 
-      it { is_expected.to contain_nova__compute__libvirt__secret_ceph('UUID').with(
-        :uuid  => params[:libvirt_rbd_secret_uuid],
-        :value => params[:libvirt_rbd_secret_key],
+      it { is_expected.to contain_nova__compute__libvirt__secret_ceph('4f515eff-47e4-425c-b24d-9c6adc56401c').with(
+        :uuid  => '4f515eff-47e4-425c-b24d-9c6adc56401c',
+        :value => 'AQBHCbtT6APDHhAA5W00cBchwkQjh3dkKsyPjw==',
       )}
     end
 
