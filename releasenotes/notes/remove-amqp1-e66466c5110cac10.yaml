@@ -1,0 +1,4 @@
+---
+upgrade:
+  - |
+    Support for amqp1 messaging driver has been removed.
