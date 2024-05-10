@@ -134,66 +134,6 @@
 #   (optional) Define queues as "durable" to rabbitmq. (boolean value)
 #   Defaults to $facts['os_service_default']
 #
-# [*amqp_server_request_prefix*]
-#   (Optional) Address prefix used when sending to a specific server
-#   Defaults to $facts['os_service_default'].
-#
-# [*amqp_broadcast_prefix*]
-#   (Optional) address prefix used when broadcasting to all servers
-#   Defaults to $facts['os_service_default'].
-#
-# [*amqp_group_request_prefix*]
-#   (Optional) address prefix when sending to any server in group
-#   Defaults to $facts['os_service_default'].
-#
-# [*amqp_container_name*]
-#   (Optional) Name for the AMQP container
-#   Defaults to $facts['os_service_default'].
-#
-# [*amqp_idle_timeout*]
-#   (Optional) Timeout for inactive connections
-#   Defaults to $facts['os_service_default'].
-#
-# [*amqp_trace*]
-#   (Optional) Debug: dump AMQP frames to stdout
-#   Defaults to $facts['os_service_default'].
-#
-# [*amqp_ssl_ca_file*]
-#   (Optional) CA certificate PEM file to verify server certificate
-#   Defaults to $facts['os_service_default'].
-#
-# [*amqp_ssl_cert_file*]
-#   (Optional) Identifying certificate PEM file to present to clients
-#   Defaults to $facts['os_service_default'].
-#
-# [*amqp_ssl_key_file*]
-#   (Optional) Private key PEM file used to sign cert_file certificate
-#   Defaults to $facts['os_service_default'].
-#
-# [*amqp_ssl_key_password*]
-#   (Optional) Password for decrypting ssl_key_file (if encrypted)
-#   Defaults to $facts['os_service_default'].
-#
-# [*amqp_sasl_mechanisms*]
-#   (Optional) Space separated list of acceptable SASL mechanisms
-#   Defaults to $facts['os_service_default'].
-#
-# [*amqp_sasl_config_dir*]
-#   (Optional) Path to directory that contains the SASL configuration
-#   Defaults to $facts['os_service_default'].
-#
-# [*amqp_sasl_config_name*]
-#   (Optional) Name of configuration file (without .conf suffix)
-#   Defaults to $facts['os_service_default'].
-#
-# [*amqp_username*]
-#   (Optional) User name for message broker authentication
-#   Defaults to $facts['os_service_default'].
-#
-# [*amqp_password*]
-#   (Optional) Password for message broker authentication
-#   Defaults to $facts['os_service_default'].
-#
 # [*host*]
 #   (Optional) Name of this node. This is typically a hostname, FQDN, or
 #   IP address.
@@ -407,21 +347,6 @@ class nova(
   $kombu_failover_strategy                = $facts['os_service_default'],
   $kombu_compression                      = $facts['os_service_default'],
   $amqp_durable_queues                    = $facts['os_service_default'],
-  $amqp_server_request_prefix             = $facts['os_service_default'],
-  $amqp_broadcast_prefix                  = $facts['os_service_default'],
-  $amqp_group_request_prefix              = $facts['os_service_default'],
-  $amqp_container_name                    = $facts['os_service_default'],
-  $amqp_idle_timeout                      = $facts['os_service_default'],
-  $amqp_trace                             = $facts['os_service_default'],
-  $amqp_ssl_ca_file                       = $facts['os_service_default'],
-  $amqp_ssl_cert_file                     = $facts['os_service_default'],
-  $amqp_ssl_key_file                      = $facts['os_service_default'],
-  $amqp_ssl_key_password                  = $facts['os_service_default'],
-  $amqp_sasl_mechanisms                   = $facts['os_service_default'],
-  $amqp_sasl_config_dir                   = $facts['os_service_default'],
-  $amqp_sasl_config_name                  = $facts['os_service_default'],
-  $amqp_username                          = $facts['os_service_default'],
-  $amqp_password                          = $facts['os_service_default'],
   $host                                   = $facts['os_service_default'],
   $service_down_time                      = $facts['os_service_default'],
   $state_path                             = '/var/lib/nova',
@@ -595,24 +520,6 @@ but should be one of: ssh-rsa, ssh-dsa, ssh-ecdsa, ssh-ed25519.")
     rabbit_quorum_max_memory_length => $rabbit_quorum_max_memory_length,
     rabbit_quorum_max_memory_bytes  => $rabbit_quorum_max_memory_bytes,
     rabbit_retry_interval           => $rabbit_retry_interval,
-  }
-
-  oslo::messaging::amqp { 'nova_config':
-    server_request_prefix => $amqp_server_request_prefix,
-    broadcast_prefix      => $amqp_broadcast_prefix,
-    group_request_prefix  => $amqp_group_request_prefix,
-    container_name        => $amqp_container_name,
-    idle_timeout          => $amqp_idle_timeout,
-    trace                 => $amqp_trace,
-    ssl_ca_file           => $amqp_ssl_ca_file,
-    ssl_cert_file         => $amqp_ssl_cert_file,
-    ssl_key_file          => $amqp_ssl_key_file,
-    ssl_key_password      => $amqp_ssl_key_password,
-    sasl_mechanisms       => $amqp_sasl_mechanisms,
-    sasl_config_dir       => $amqp_sasl_config_dir,
-    sasl_config_name      => $amqp_sasl_config_name,
-    username              => $amqp_username,
-    password              => $amqp_password,
   }
 
   # SSL Options

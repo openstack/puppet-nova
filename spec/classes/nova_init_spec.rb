@@ -57,22 +57,6 @@ describe 'nova' do
           :rabbit_quorum_max_memory_bytes  => '<SERVICE DEFAULT>',
           :rabbit_retry_interval           => '<SERVICE DEFAULT>',
         )
-        is_expected.to contain_oslo__messaging__amqp('nova_config').with(
-          :server_request_prefix => '<SERVICE DEFAULT>',
-          :broadcast_prefix      => '<SERVICE DEFAULT>',
-          :group_request_prefix  => '<SERVICE DEFAULT>',
-          :container_name        => '<SERVICE DEFAULT>',
-          :idle_timeout          => '<SERVICE DEFAULT>',
-          :trace                 => '<SERVICE DEFAULT>',
-          :ssl_ca_file           => '<SERVICE DEFAULT>',
-          :ssl_cert_file         => '<SERVICE DEFAULT>',
-          :ssl_key_file          => '<SERVICE DEFAULT>',
-          :sasl_mechanisms       => '<SERVICE DEFAULT>',
-          :sasl_config_dir       => '<SERVICE DEFAULT>',
-          :sasl_config_name      => '<SERVICE DEFAULT>',
-          :username              => '<SERVICE DEFAULT>',
-          :password              => '<SERVICE DEFAULT>',
-        )
         is_expected.to contain_oslo__messaging__notifications('nova_config').with(
           :transport_url => '<SERVICE DEFAULT>',
           :driver        => '<SERVICE DEFAULT>',
@@ -137,13 +121,6 @@ describe 'nova' do
           :rabbit_quorum_max_memory_length         => 5,
           :rabbit_quorum_max_memory_bytes          => 1073741824,
           :rabbit_retry_interval                   => '1',
-          :amqp_idle_timeout                       => '60',
-          :amqp_trace                              => true,
-          :amqp_ssl_ca_file                        => '/etc/ca.cert',
-          :amqp_ssl_cert_file                      => '/etc/certfile',
-          :amqp_ssl_key_file                       => '/etc/key',
-          :amqp_username                           => 'amqp_user',
-          :amqp_password                           => 'password',
           :lock_path                               => '/var/locky/path',
           :state_path                              => '/var/lib/nova2',
           :service_down_time                       => '60',
@@ -216,15 +193,6 @@ describe 'nova' do
           :rabbit_quorum_max_memory_length => 5,
           :rabbit_quorum_max_memory_bytes  => 1073741824,
           :rabbit_retry_interval           => '1',
-        )
-        is_expected.to contain_oslo__messaging__amqp('nova_config').with(
-          :idle_timeout  => '60',
-          :trace         => true,
-          :ssl_ca_file   => '/etc/ca.cert',
-          :ssl_cert_file => '/etc/certfile',
-          :ssl_key_file  => '/etc/key',
-          :username      => 'amqp_user',
-          :password      => 'password',
         )
         is_expected.to contain_oslo__messaging__notifications('nova_config').with(
           :transport_url => 'rabbit://rabbit_user:password@localhost:5673',
