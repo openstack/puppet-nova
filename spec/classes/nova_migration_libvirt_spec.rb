@@ -30,7 +30,7 @@ describe 'nova::migration::libvirt' do
     include nova::compute::libvirt'
   end
 
-  shared_examples_for 'nova migration with libvirt' do
+  shared_examples_for 'nova migration with monolithic libvirt' do
 
     context 'with default params' do
       it { is_expected.to contain_libvirtd_config('auth_tls').with_value('<SERVICE DEFAULT>').with_quote(true) }
@@ -56,10 +56,10 @@ describe 'nova::migration::libvirt' do
     end
 
     context 'with override_uuid enabled' do
-      let :params do
-        {
+      before :each do
+        params.merge!({
           :override_uuid => true,
-        }
+        })
       end
 
       it { is_expected.to contain_file('/etc/libvirt/libvirt_uuid').with({
@@ -70,11 +70,11 @@ describe 'nova::migration::libvirt' do
     end
 
     context 'with override_uuid enabled and host_uuid set' do
-      let :params do
-        {
+      before :each do
+        params.merge!({
           :override_uuid => true,
           :host_uuid     => 'a8debd9d-e359-4bb2-8c77-edee431f94f2',
-        }
+        })
       end
 
       it { is_expected.to contain_file('/etc/libvirt/libvirt_uuid').with({
@@ -85,10 +85,10 @@ describe 'nova::migration::libvirt' do
     end
 
     context 'with tls enabled' do
-      let :params do
-        {
+      before :each do
+        params.merge!({
           :transport => 'tls',
-        }
+        })
       end
       it { is_expected.to contain_libvirtd_config('auth_tls').with_value('none').with_quote(true) }
       it { is_expected.to contain_libvirtd_config('auth_tcp').with_value('<SERVICE DEFAULT>').with_quote(true) }
@@ -101,12 +101,12 @@ describe 'nova::migration::libvirt' do
     end
 
     context 'with tls enabled and inbound addr set' do
-      let :params do
-        {
+      before :each do
+        params.merge!({
           :transport                   => 'tls',
           :migration_inbound_addr      => 'host2.example.com',
           :live_migration_inbound_addr => 'host1.example.com',
-        }
+        })
       end
       it { is_expected.to contain_libvirtd_config('auth_tls').with_value('none').with_quote(true) }
       it { is_expected.to contain_libvirtd_config('auth_tcp').with_value('<SERVICE DEFAULT>').with_quote(true) }
@@ -121,17 +121,17 @@ describe 'nova::migration::libvirt' do
     end
 
     context 'with live_migration_with_native_tls flags set' do
-      let :params do
-        {
+      before :each do
+        params.merge!({
           :live_migration_with_native_tls => true,
-        }
+        })
       end
       it { is_expected.to contain_nova_config('libvirt/live_migration_with_native_tls').with(:value => true) }
     end
 
     context 'with migration flags set' do
-      let :params do
-        {
+      before :each do
+        params.merge!({
           :live_migration_tunnelled          => true,
           :live_migration_bandwidth          => 1024,
           :live_migration_downtime           => 800,
@@ -139,7 +139,7 @@ describe 'nova::migration::libvirt' do
           :live_migration_downtime_delay     => 5,
           :live_migration_completion_timeout => '1500',
           :live_migration_timeout_action     => 'force_complete',
-        }
+        })
       end
       it { is_expected.to contain_nova_config('libvirt/live_migration_tunnelled').with(:value => true) }
       it { is_expected.to contain_nova_config('libvirt/live_migration_bandwidth').with_value(1024) }
@@ -151,21 +151,21 @@ describe 'nova::migration::libvirt' do
     end
 
     context 'with live migration auto converge on' do
-      let :params do
-        {
+      before :each do
+        params.merge!({
           :live_migration_permit_post_copy     => false,
           :live_migration_permit_auto_converge => true,
-        }
+        })
       end
       it { is_expected.to contain_nova_config('libvirt/live_migration_permit_post_copy').with(:value => false) }
       it { is_expected.to contain_nova_config('libvirt/live_migration_permit_auto_converge').with(:value => true) }
     end
 
     context 'with auth set to sasl' do
-      let :params do
-        {
+      before :each do
+        params.merge!({
           :auth => 'sasl',
-        }
+        })
       end
       it { is_expected.to contain_libvirtd_config('auth_tls').with_value('<SERVICE DEFAULT>').with_quote(true) }
       it { is_expected.to contain_libvirtd_config('auth_tcp').with_value('sasl').with_quote(true) }
@@ -176,11 +176,11 @@ describe 'nova::migration::libvirt' do
     end
 
     context 'with auth set to sasl and tls enabled' do
-      let :params do
-        {
+      before :each do
+        params.merge!({
           :auth      => 'sasl',
           :transport => 'tls'
-        }
+        })
       end
       it { is_expected.to contain_libvirtd_config('auth_tls').with_value('sasl').with_quote(true) }
       it { is_expected.to contain_libvirtd_config('auth_tcp').with_value('<SERVICE DEFAULT>').with_quote(true) }
@@ -191,14 +191,14 @@ describe 'nova::migration::libvirt' do
     end
 
     context 'with certificates set and tls enabled' do
-      let :params do
-        {
+      before :each do
+        params.merge!({
           :transport => 'tls',
           :key_file  => '/etc/pki/libvirt/private/serverkey.pem',
           :cert_file => '/etc/pki/libvirt/servercert.pem',
           :ca_file   => '/etc/pki/CA/cacert.pem',
           :crl_file  => '/etc/pki/CA/crl.pem',
-        }
+        })
       end
       it { is_expected.to contain_libvirtd_config('auth_tls').with_value('none').with_quote(true) }
       it { is_expected.to contain_libvirtd_config('auth_tcp').with_value('<SERVICE DEFAULT>').with_quote(true) }
@@ -209,20 +209,20 @@ describe 'nova::migration::libvirt' do
     end
 
     context 'with auth set to an invalid setting' do
-      let :params do
-        {
+      before :each do
+        params.merge!({
           :auth => 'inexistent_auth',
-        }
+        })
       end
       it { expect { is_expected.to contain_class('nova::compute::libvirt') }.to \
         raise_error(Puppet::Error) }
     end
 
     context 'when not configuring libvirt' do
-      let :params do
-        {
+      before :each do
+        params.merge!({
           :configure_libvirt => false
-        }
+        })
       end
       it { is_expected.to_not contain_libvirtd_config('auth_tls') }
       it { is_expected.to_not contain_libvirtd_config('auth_tcp') }
@@ -233,11 +233,11 @@ describe 'nova::migration::libvirt' do
     end
 
     context 'when not configuring nova and tls enabled' do
-      let :params do
-        {
+      before :each do
+        params.merge!({
           :configure_nova => false,
           :transport      => 'tls',
-        }
+        })
       end
       it { is_expected.not_to contain_nova_config('libvirt/live_migration_uri') }
       it { is_expected.not_to contain_nova_config('libvirt/live_migration_inbound_addr') }
@@ -245,51 +245,53 @@ describe 'nova::migration::libvirt' do
     end
 
     context 'with ssh transport' do
-      let :params do
-        {
+      before :each do
+        params.merge!({
           :transport => 'ssh',
-        }
+        })
       end
       it { is_expected.to contain_nova_config('libvirt/live_migration_uri').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('libvirt/live_migration_scheme').with_value('ssh') }
     end
 
     context 'with ssh transport with user' do
-      let :params do
-        {
+      before :each do
+        params.merge!({
           :transport   => 'ssh',
           :client_user => 'foobar'
-        }
+        })
       end
       it { is_expected.to contain_nova_config('libvirt/live_migration_uri').with_value('qemu+ssh://foobar@%s/system')}
       it { is_expected.to contain_nova_config('libvirt/live_migration_scheme').with_value('<SERVICE DEFAULT>') }
     end
 
     context 'with ssh transport with port' do
-      let :params do
-        {
+      before :each do
+        params.merge!({
           :transport   => 'ssh',
           :client_port => 1234
-        }
+        })
       end
       it { is_expected.to contain_nova_config('libvirt/live_migration_uri').with_value('qemu+ssh://%s:1234/system')}
       it { is_expected.to contain_nova_config('libvirt/live_migration_scheme').with_value('<SERVICE DEFAULT>') }
     end
 
     context 'with ssh transport with extraparams' do
-      let :params do
-        {
+      before :each do
+        params.merge!({
           :transport          => 'ssh',
           :client_extraparams => {'foo' => '%', 'bar' => 'baz'}
-        }
+        })
       end
       it { is_expected.to contain_nova_config('libvirt/live_migration_uri').with_value('qemu+ssh://%s/system?foo=%%25&bar=baz')}
       it { is_expected.to contain_nova_config('libvirt/live_migration_scheme').with_value('<SERVICE DEFAULT>') }
     end
 
     context 'with tls transport' do
-      let :params do
-        { :transport => 'tls' }
+      before :each do
+        params.merge!({
+          :transport => 'tls'
+        })
       end
 
       it { is_expected.to contain_service('libvirtd-tls').with(
@@ -306,11 +308,11 @@ describe 'nova::migration::libvirt' do
     end
 
     context 'with tls transport and listen_address' do
-      let :params do
-        {
-          :transport => 'tls',
+      before :each do
+        params.merge!({
+          :transport      => 'tls',
           :listen_address => '127.0.0.1'
-        }
+        })
       end
 
       it { is_expected.to contain_service('libvirtd-tls').with(
@@ -333,10 +335,10 @@ describe 'nova::migration::libvirt' do
     end
 
     context 'with tcp transport' do
-      let :params do
-        {
+      before :each do
+        params.merge!({
           :transport => 'tcp',
-        }
+        })
       end
 
       it { is_expected.to contain_service('libvirtd-tcp').with(
@@ -354,11 +356,11 @@ describe 'nova::migration::libvirt' do
     end
 
     context 'with tcp transport and listen_address' do
-      let :params do
-        {
+      before :each do
+        params.merge!({
           :transport      => 'tcp',
           :listen_address => '127.0.0.1'
-        }
+        })
       end
 
       it { is_expected.to contain_service('libvirtd-tcp').with(
@@ -382,9 +384,7 @@ describe 'nova::migration::libvirt' do
   end
 
   shared_examples_for 'nova migration with modular libvirt' do
-    context 'with modular_libvirt set to true' do
-      let(:params) { { :modular_libvirt => true} }
-
+    context 'with defaults' do
       it { is_expected.to contain_virtproxyd_config('auth_tls').with_value('<SERVICE DEFAULT>').with_quote(true) }
       it { is_expected.to contain_virtproxyd_config('auth_tcp').with_value('none').with_quote(true) }
       it { is_expected.to contain_virtproxyd_config('key_file').with_value('<SERVICE DEFAULT>').with_quote(true) }
@@ -403,11 +403,10 @@ describe 'nova::migration::libvirt' do
     end
 
     context 'with override_uuid enabled' do
-      let :params do
-        {
-          :modular_libvirt => true,
-          :override_uuid   => true,
-        }
+      before :each do
+        params.merge!({
+          :override_uuid => true,
+        })
       end
 
       it { is_expected.to contain_file('/etc/libvirt/libvirt_uuid').with({
@@ -422,12 +421,11 @@ describe 'nova::migration::libvirt' do
     end
 
     context 'with override_uuid enabled and host_uuid set' do
-      let :params do
-        {
-          :modular_libvirt => true,
-          :override_uuid   => true,
-          :host_uuid       => 'a8debd9d-e359-4bb2-8c77-edee431f94f2',
-        }
+      before :each do
+        params.merge!({
+          :override_uuid => true,
+          :host_uuid     => 'a8debd9d-e359-4bb2-8c77-edee431f94f2',
+        })
       end
 
       it { is_expected.to contain_file('/etc/libvirt/libvirt_uuid').with({
@@ -443,11 +441,10 @@ describe 'nova::migration::libvirt' do
 
 
     context 'with tls enabled' do
-      let :params do
-        {
+      before :each do
+        params.merge!({
           :transport => 'tls',
-          :modular_libvirt => true,
-        }
+        })
       end
       it { is_expected.to contain_virtproxyd_config('auth_tls').with_value('none').with_quote(true) }
       it { is_expected.to contain_virtproxyd_config('auth_tcp').with_value('<SERVICE DEFAULT>').with_quote(true) }
@@ -460,11 +457,10 @@ describe 'nova::migration::libvirt' do
     end
 
     context 'with auth set to sasl' do
-      let :params do
-        {
+      before :each do
+        params.merge!({
           :auth => 'sasl',
-          :modular_libvirt => true,
-        }
+        })
       end
       it { is_expected.to contain_virtproxyd_config('auth_tls').with_value('<SERVICE DEFAULT>').with_quote(true) }
       it { is_expected.to contain_virtproxyd_config('auth_tcp').with_value('sasl').with_quote(true) }
@@ -475,12 +471,11 @@ describe 'nova::migration::libvirt' do
     end
 
     context 'with auth set to sasl and tls enabled' do
-      let :params do
-        {
-          :auth            => 'sasl',
-          :transport       => 'tls',
-          :modular_libvirt => true,
-        }
+      before :each do
+        params.merge!({
+          :auth      => 'sasl',
+          :transport => 'tls',
+        })
       end
       it { is_expected.to contain_virtproxyd_config('auth_tls').with_value('sasl').with_quote(true) }
       it { is_expected.to contain_virtproxyd_config('auth_tcp').with_value('<SERVICE DEFAULT>').with_quote(true) }
@@ -491,15 +486,14 @@ describe 'nova::migration::libvirt' do
     end
 
     context 'with certificates set and tls enabled' do
-      let :params do
-        {
-          :transport       => 'tls',
-          :key_file        => '/etc/pki/libvirt/private/serverkey.pem',
-          :cert_file       => '/etc/pki/libvirt/servercert.pem',
-          :ca_file         => '/etc/pki/CA/cacert.pem',
-          :crl_file        => '/etc/pki/CA/crl.pem',
-          :modular_libvirt => true,
-        }
+      before :each do
+        params.merge!({
+          :transport  => 'tls',
+          :key_file   => '/etc/pki/libvirt/private/serverkey.pem',
+          :cert_file  => '/etc/pki/libvirt/servercert.pem',
+          :ca_file    => '/etc/pki/CA/cacert.pem',
+          :crl_file   => '/etc/pki/CA/crl.pem',
+        })
       end
       it { is_expected.to contain_virtproxyd_config('auth_tls').with_value('none').with_quote(true) }
       it { is_expected.to contain_virtproxyd_config('auth_tcp').with_value('<SERVICE DEFAULT>').with_quote(true) }
@@ -510,58 +504,53 @@ describe 'nova::migration::libvirt' do
     end
 
     context 'with ssh transport' do
-      let :params do
-        {
-          :transport       => 'ssh',
-          :modular_libvirt => true,
-        }
+      before :each do
+        params.merge!({
+          :transport => 'ssh',
+        })
       end
       it { is_expected.to contain_nova_config('libvirt/live_migration_uri').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('libvirt/live_migration_scheme').with_value('ssh') }
     end
 
     context 'with ssh transport with user' do
-      let :params do
-        {
-          :transport => 'ssh',
+      before :each do
+        params.merge!({
+          :transport   => 'ssh',
           :client_user => 'foobar',
-          :modular_libvirt => true,
-        }
+        })
       end
       it { is_expected.to contain_nova_config('libvirt/live_migration_uri').with_value('qemu+ssh://foobar@%s/system')}
       it { is_expected.to contain_nova_config('libvirt/live_migration_scheme').with_value('<SERVICE DEFAULT>') }
     end
 
     context 'with ssh transport with port' do
-      let :params do
-        {
-          :transport       => 'ssh',
-          :client_port     => 1234,
-          :modular_libvirt => true,
-        }
+      before :each do
+        params.merge!({
+          :transport   => 'ssh',
+          :client_port => 1234,
+        })
       end
       it { is_expected.to contain_nova_config('libvirt/live_migration_uri').with_value('qemu+ssh://%s:1234/system')}
       it { is_expected.to contain_nova_config('libvirt/live_migration_scheme').with_value('<SERVICE DEFAULT>') }
     end
 
     context 'with ssh transport with extraparams' do
-      let :params do
-        {
-          :transport => 'ssh',
+      before :each do
+        params.merge!({
+          :transport          => 'ssh',
           :client_extraparams => {'foo' => '%', 'bar' => 'baz'},
-          :modular_libvirt => true,
-        }
+        })
       end
       it { is_expected.to contain_nova_config('libvirt/live_migration_uri').with_value('qemu+ssh://%s/system?foo=%%25&bar=baz')}
       it { is_expected.to contain_nova_config('libvirt/live_migration_scheme').with_value('<SERVICE DEFAULT>') }
     end
 
     context 'with tls transport' do
-      let :params do
-        {
-          :transport       => 'tls',
-          :modular_libvirt => true,
-        }
+      before :each do
+        params.merge!({
+          :transport => 'tls',
+        })
       end
 
       it { is_expected.to contain_service('virtproxyd-tls').with(
@@ -578,12 +567,11 @@ describe 'nova::migration::libvirt' do
     end
 
     context 'with tls transport and listen_address' do
-      let :params do
-        {
-          :transport       => 'tls',
-          :listen_address  => '::1',
-          :modular_libvirt => true,
-        }
+      before :each do
+        params.merge!({
+          :transport      => 'tls',
+          :listen_address => '::1',
+        })
       end
 
       it { is_expected.to contain_service('virtproxyd-tls').with(
@@ -606,11 +594,10 @@ describe 'nova::migration::libvirt' do
     end
 
     context 'with tcp transport' do
-      let :params do
-        {
-          :transport       => 'tcp',
-          :modular_libvirt => true,
-        }
+      before :each do
+        params.merge!({
+          :transport => 'tcp',
+        })
       end
 
       it { is_expected.to contain_service('virtproxyd-tcp').with(
@@ -627,12 +614,11 @@ describe 'nova::migration::libvirt' do
     end
 
     context 'with tcp transport and listen_address' do
-      let :params do
-        {
-          :transport       => 'tcp',
-          :listen_address  => '::1',
-          :modular_libvirt => true,
-        }
+      before :each do
+        params.merge!({
+          :transport      => 'tcp',
+          :listen_address => '::1',
+        })
       end
 
       it { is_expected.to contain_service('virtproxyd-tcp').with(
@@ -663,9 +649,24 @@ describe 'nova::migration::libvirt' do
         facts.merge!(OSDefaults.get_facts())
       end
 
-      it_behaves_like 'nova migration with libvirt'
-      if facts[:os]['family'] == 'RedHat'
+      let :params do
+        {}
+      end
+
+      if facts[:os]['family'] == 'Debian'
+        # NOTE(tkajinam): Debian family uses monolithic libvirt by default, and
+        #                 does not support modular libvirt
+        it_behaves_like 'nova migration with monolithic libvirt'
+      else
+        # NOTE(tkajinam): RedHat family uses modular libvirt by default
         it_behaves_like 'nova migration with modular libvirt'
+
+        context 'with modular libvirt disabled' do
+          before :each do
+            params.merge!({ :modular_libvirt => false })
+          end
+          it_behaves_like 'nova migration with monolithic libvirt'
+        end
       end
     end
   end

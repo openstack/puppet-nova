@@ -155,7 +155,7 @@
 # [*modular_libvirt*]
 #   (optional) Whether to enable modular libvirt daemons or use monolithic
 #   libvirt daemon.
-#   Defaults to undef
+#   Defaults to $::nova::params::modular_libvirt
 #
 # DEPRECATED PARAMETERS
 #
@@ -197,24 +197,24 @@ class nova::migration::libvirt(
   $cert_file                           = $facts['os_service_default'],
   $ca_file                             = $facts['os_service_default'],
   $crl_file                            = $facts['os_service_default'],
-  $libvirt_version                     = $::nova::compute::libvirt::version::default,
-  Optional[Boolean] $modular_libvirt   = undef,
+  $libvirt_version                     = undef,
+  Boolean $modular_libvirt             = $::nova::params::modular_libvirt,
   # DEPRECATED PARAMETERS
   $live_migration_tunnelled            = undef,
-) inherits nova::compute::libvirt::version {
+) inherits nova::params {
 
   include nova::deps
-  include nova::params
 
   if $live_migration_tunnelled != undef {
     warning('The live_migration_tunnelled parameter has been deprecated.')
   }
 
-  $modular_libvirt_real = pick($modular_libvirt, $::nova::params::modular_libvirt)
-
-  if $modular_libvirt_real and !$::nova::params::modular_libvirt_support {
+  if $modular_libvirt and !$::nova::params::modular_libvirt_support {
     fail('Modular libvirt daemons are not supported in this distribution')
   }
+
+  include nova::compute::libvirt::version
+  $libvirt_version_real = pick($libvirt_version, $::nova::compute::libvirt::version::default)
 
   if $configure_nova {
     if $transport == 'ssh' and ($client_user or $client_port or !empty($client_extraparams)) {
@@ -276,7 +276,7 @@ class nova::migration::libvirt(
         $host_uuid_real = $facts['libvirt_uuid']
       }
 
-      if $modular_libvirt_real {
+      if $modular_libvirt {
         ['virtqemud', 'virtproxyd', 'virtsecretd', 'virtnodedevd', 'virtstoraged'].each |String $daemon| {
           create_resources("${daemon}_config", {
             'host_uuid' => {
@@ -322,7 +322,7 @@ class nova::migration::libvirt(
       $crl_file_real  = $facts['os_service_default']
     }
 
-    $libvirt_listen_config = $modular_libvirt_real ? {
+    $libvirt_listen_config = $modular_libvirt ? {
       true    => 'virtproxyd_config',
       default => 'libvirtd_config'
     }
@@ -337,7 +337,7 @@ class nova::migration::libvirt(
     })
 
     if $transport == 'tls' or $transport == 'tcp' {
-      if versioncmp($libvirt_version, '5.6') < 0 {
+      if versioncmp($libvirt_version_real, '5.6') < 0 {
         fail('libvirt version < 5.6 is no longer supported')
       }
 
