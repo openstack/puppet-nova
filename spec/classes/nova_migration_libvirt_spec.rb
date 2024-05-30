@@ -521,8 +521,8 @@ describe 'nova::migration::libvirt' do
 
       it_behaves_like 'nova migration with libvirt'
       it_behaves_like "nova migration with libvirt in #{facts[:os]['family']}"
-      if facts['osfamily'] == 'RedHat'
-        it_behaves_like 'nova migration with modulr libvirt'
+      if facts[:os]['family'] == 'RedHat'
+        it_behaves_like 'nova migration with modular libvirt'
       end
     end
   end

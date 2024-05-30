@@ -58,7 +58,7 @@ describe 'nova::compute::libvirt::services' do
         facts.merge!(OSDefaults.get_facts())
       end
       it_configures 'nova compute libvirt services'
-      if facts['osfamily'] == 'RedHat'
+      if facts[:os]['family'] == 'RedHat'
         it_configures 'nova compute libvirt services with modular libvirt'
       end
     end
