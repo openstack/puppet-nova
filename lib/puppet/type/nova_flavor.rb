@@ -115,10 +115,14 @@ Puppet::Type.newtype(:nova_flavor) do
     newvalues(/(y|Y)es/, /(n|N)o/, /(t|T)rue/, /(f|F)alse/, true, false)
     defaultto(true)
     munge do |v|
-      if v =~ /^(y|Y)es$/
-        :true
-      elsif v =~ /^(n|N)o$/
-        :false
+      if v.is_a?(String)
+        if v =~ /^(y|Y)es$/
+          :true
+        elsif v =~ /^(n|N)o$/
+          :false
+        else
+          v.to_s.downcase.to_sym
+        end
       else
         v.to_s.downcase.to_sym
       end
