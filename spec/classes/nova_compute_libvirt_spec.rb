@@ -29,19 +29,11 @@ describe 'nova::compute::libvirt' do
       }
 
       it {
-        is_expected.to contain_package('libvirt').with(
-          :name   => 'libvirt-daemon-system',
-          :ensure => 'present'
-        )
-        is_expected.to contain_package('libvirt').that_requires('Anchor[nova::install::begin]')
-        is_expected.to contain_package('libvirt').that_comes_before('Anchor[nova::install::end]')
-      }
-
-      it {
-        is_expected.to contain_service('libvirt').with(
-          :name   => 'libvirtd',
-          :enable => true,
-          :ensure => 'running',
+        is_expected.to contain_class('nova::compute::libvirt::services').with(
+          :libvirt_service_name  => 'libvirtd',
+          :virtlock_service_name => 'virtlockd',
+          :virtlog_service_name  => 'virtlogd',
+          :libvirt_virt_type     => 'kvm'
         )
       }
 
@@ -87,47 +79,47 @@ describe 'nova::compute::libvirt' do
 
     describe 'with params' do
       let :params do
-        { :ensure_package                             => 'latest',
-          :virt_type                                  => 'qemu',
-          :vncserver_listen                           => '0.0.0.0',
-          :cpu_mode                                   => 'host-passthrough',
-          :cpu_models                                 => ['kvm64', 'qemu64'],
-          :cpu_model_extra_flags                      => 'pcid',
-          :cpu_power_management                       => false,
-          :cpu_power_management_strategy              => 'cpu_state',
-          :cpu_power_governor_low                     => 'powersave',
-          :cpu_power_governor_high                    => 'performance',
-          :snapshot_image_format                      => 'raw',
-          :snapshots_directory                        => '/var/lib/nova/snapshots',
-          :disk_cachemodes                            => ['file=directsync','block=none'],
-          :hw_disk_discard                            => 'unmap',
-          :hw_machine_type                            => 'x86_64=machinetype1,armv7l=machinetype2',
-          :sysinfo_serial                             => 'auto',
-          :enabled_perf_events                        => ['cmt', 'mbml', 'mbmt'],
-          :device_detach_attempts                     => 8,
-          :device_detach_timeout                      => 20,
-          :libvirt_service_name                       => 'custom_service',
-          :virtlock_service_name                      => 'virtlock',
-          :virtlog_service_name                       => 'virtlog',
-          :compute_driver                             => 'libvirt.FoobarDriver',
-          :preallocate_images                         => 'space',
-          :rx_queue_size                              => 512,
-          :tx_queue_size                              => 1024,
-          :file_backed_memory                         => 2048,
-          :images_type                                => 'raw',
-          :volume_use_multipath                       => false,
-          :num_volume_scan_tries                      => 3,
-          :nfs_mount_options                          => 'rw,intr,nolock',
-          :num_pcie_ports                             => 16,
-          :mem_stats_period_seconds                   => 20,
-          :pmem_namespaces                            => ['128G:ns0|ns1|ns2|ns3', '262144MB:ns4|ns5', 'MEDIUM:ns6|ns7'],
-          :swtpm_enabled                              => true,
-          :swtpm_user                                 => 'libvirt',
-          :swtpm_group                                => 'libvirt',
-          :max_queues                                 => 4,
-          :num_memory_encrypted_guests                => 255,
-          :wait_soft_reboot_seconds                   => 120,
-          :tb_cache_size                              => 32,
+        { :ensure_package                => 'latest',
+          :virt_type                     => 'qemu',
+          :vncserver_listen              => '0.0.0.0',
+          :cpu_mode                      => 'host-passthrough',
+          :cpu_models                    => ['kvm64', 'qemu64'],
+          :cpu_model_extra_flags         => 'pcid',
+          :cpu_power_management          => false,
+          :cpu_power_management_strategy => 'cpu_state',
+          :cpu_power_governor_low        => 'powersave',
+          :cpu_power_governor_high       => 'performance',
+          :snapshot_image_format         => 'raw',
+          :snapshots_directory           => '/var/lib/nova/snapshots',
+          :disk_cachemodes               => ['file=directsync','block=none'],
+          :hw_disk_discard               => 'unmap',
+          :hw_machine_type               => 'x86_64=machinetype1,armv7l=machinetype2',
+          :sysinfo_serial                => 'auto',
+          :enabled_perf_events           => ['cmt', 'mbml', 'mbmt'],
+          :device_detach_attempts        => 8,
+          :device_detach_timeout         => 20,
+          :libvirt_service_name          => 'custom_libvirtd',
+          :virtlock_service_name         => 'custom_virtlockd',
+          :virtlog_service_name          => 'custom_virtlogd',
+          :compute_driver                => 'libvirt.FoobarDriver',
+          :preallocate_images            => 'space',
+          :rx_queue_size                 => 512,
+          :tx_queue_size                 => 1024,
+          :file_backed_memory            => 2048,
+          :images_type                   => 'raw',
+          :volume_use_multipath          => false,
+          :num_volume_scan_tries         => 3,
+          :nfs_mount_options             => 'rw,intr,nolock',
+          :num_pcie_ports                => 16,
+          :mem_stats_period_seconds      => 20,
+          :pmem_namespaces               => ['128G:ns0|ns1|ns2|ns3', '262144MB:ns4|ns5', 'MEDIUM:ns6|ns7'],
+          :swtpm_enabled                 => true,
+          :swtpm_user                    => 'libvirt',
+          :swtpm_group                   => 'libvirt',
+          :max_queues                    => 4,
+          :num_memory_encrypted_guests   => 255,
+          :wait_soft_reboot_seconds      => 120,
+          :tb_cache_size                 => 32,
         }
       end
 
@@ -174,23 +166,12 @@ describe 'nova::compute::libvirt' do
       it { is_expected.to contain_nova_config('libvirt/tb_cache_size').with_value(32)}
 
       it {
-        is_expected.to contain_service('libvirt').with(
-          :name   => 'custom_service',
-          :enable => true,
-          :ensure => 'running',
-          :before => ['Anchor[nova::service::end]', 'Service[nova-compute]']
+        is_expected.to contain_class('nova::compute::libvirt::services').with(
+          :libvirt_service_name  => 'custom_libvirtd',
+          :virtlock_service_name => 'custom_virtlockd',
+          :virtlog_service_name  => 'custom_virtlogd',
+          :libvirt_virt_type     => 'qemu'
         )
-        is_expected.to contain_service('virtlockd').with(
-          :name   => 'virtlock',
-          :enable => true,
-          :ensure => 'running'
-        )
-        is_expected.to contain_service('virtlogd').with(
-          :name   => 'virtlog',
-          :enable => true,
-          :ensure => 'running'
-        )
-
       }
     end
 
@@ -252,10 +233,7 @@ describe 'nova::compute::libvirt' do
           { :manage_libvirt_services => false }
         end
 
-        it { is_expected.not_to contain_package('libvirt') }
-        it { is_expected.not_to contain_service('libvirt') }
-        it { is_expected.not_to contain_service('virtlockd') }
-        it { is_expected.not_to contain_service('virtlogd') }
+        it { is_expected.not_to contain_class('nova::compute::libvirt::services') }
       end
     end
   end
@@ -266,17 +244,14 @@ describe 'nova::compute::libvirt' do
 
       it { is_expected.to contain_class('nova::params')}
 
-      it { is_expected.to contain_package('libvirt').with(
-        :name   => 'libvirt-daemon-kvm',
-        :ensure => 'present',
-      ) }
-
-      it { is_expected.to contain_service('libvirt').with(
-        :name   => 'libvirtd',
-        :enable => true,
-        :ensure => 'running',
-        :before => ['Anchor[nova::service::end]', 'Service[nova-compute]'],
-      )}
+      it {
+        is_expected.to contain_class('nova::compute::libvirt::services').with(
+          :libvirt_service_name  => 'libvirtd',
+          :virtlock_service_name => 'virtlockd',
+          :virtlog_service_name  => 'virtlogd',
+          :libvirt_virt_type     => 'kvm'
+        )
+      }
 
       it { is_expected.to contain_nova_config('DEFAULT/compute_driver').with_value('libvirt.LibvirtDriver')}
       it { is_expected.to contain_nova_config('libvirt/virt_type').with_value('kvm')}
@@ -292,15 +267,26 @@ describe 'nova::compute::libvirt' do
 
     describe 'with params' do
       let :params do
-        { :virt_type                                  => 'qemu',
-          :vncserver_listen                           => '0.0.0.0',
-          :enabled_perf_events                        => ['cmt', 'mbml', 'mbmt'],
-          :device_detach_attempts                     => 8,
-          :device_detach_timeout                      => 20,
-          :nfs_mount_options                          => 'rw,intr,nolock',
-          :mem_stats_period_seconds                   => 20,
+        { :virt_type                => 'qemu',
+          :vncserver_listen         => '0.0.0.0',
+          :enabled_perf_events      => ['cmt', 'mbml', 'mbmt'],
+          :device_detach_attempts   => 8,
+          :device_detach_timeout    => 20,
+          :nfs_mount_options        => 'rw,intr,nolock',
+          :mem_stats_period_seconds => 20,
         }
       end
+
+      it { is_expected.to contain_class('nova::params')}
+
+      it {
+        is_expected.to contain_class('nova::compute::libvirt::services').with(
+          :libvirt_service_name  => 'libvirtd',
+          :virtlock_service_name => 'virtlockd',
+          :virtlog_service_name  => 'virtlogd',
+          :libvirt_virt_type     => 'qemu'
+        )
+      }
 
       it { is_expected.to contain_nova_config('libvirt/virt_type').with_value('qemu')}
       it { is_expected.to contain_nova_config('vnc/server_listen').with_value('0.0.0.0')}
@@ -309,10 +295,6 @@ describe 'nova::compute::libvirt' do
       it { is_expected.to contain_nova_config('libvirt/device_detach_timeout').with_value(20)}
       it { is_expected.to contain_nova_config('libvirt/nfs_mount_options').with_value('rw,intr,nolock')}
       it { is_expected.to contain_nova_config('libvirt/mem_stats_period_seconds').with_value(20)}
-      it { is_expected.to contain_package('libvirt').with(
-        :name   => 'libvirt-daemon-kvm',
-        :ensure => 'present'
-      ) }
     end
 
     describe 'with migration_support enabled' do
@@ -345,10 +327,7 @@ describe 'nova::compute::libvirt' do
           { :manage_libvirt_services => false }
         end
 
-        it { is_expected.not_to contain_package('libvirt') }
-        it { is_expected.not_to contain_service('libvirt') }
-        it { is_expected.not_to contain_service('virtlockd') }
-        it { is_expected.not_to contain_service('virtlogd') }
+        it { is_expected.not_to contain_class('nova::compute::libvirt::services') }
       end
     end
 
