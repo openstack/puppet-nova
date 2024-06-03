@@ -47,6 +47,7 @@ describe 'nova::compute::libvirt::services' do
 
       it 'skips installing libvirt' do
         is_expected.not_to contain_package('libvirt')
+        is_expected.not_to contain_package('libvirt-daemon')
         is_expected.not_to contain_service('libvirt')
       end
 
