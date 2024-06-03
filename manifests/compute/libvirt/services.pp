@@ -131,6 +131,15 @@ class nova::compute::libvirt::services (
     } else {
       $libvirt_service_ensure = 'running'
       $libvirt_service_enable = true
+
+      if $facts['os']['family'] == 'RedHat' {
+        package { 'libvirt-daemon':
+          ensure => $ensure_package,
+          name   => $::nova::params::libvirt_daemon_package_name,
+          tag    => ['openstack', 'nova-support-package'],
+        }
+        Package['libvirt-daemon'] ~> Service<| title == 'libvirt' |>
+      }
     }
 
     service { 'libvirt':
@@ -166,15 +175,6 @@ class nova::compute::libvirt::services (
     Service<| title == 'virtlogd' |>
     -> Service<| title == 'libvirt' |>
     -> Service<| title == 'nova-compute'|>
-
-    if $facts['os']['family'] == 'RedHat' {
-      package { 'libvirt-daemon':
-        ensure => $ensure_package,
-        name   => $::nova::params::libvirt_daemon_package_name,
-        tag    => ['openstack', 'nova-support-package'],
-      }
-      Package['libvirt-daemon'] ~> Service<| title == 'libvirt' |>
-    }
   } else {
     # NOTE(tkajinam): libvirt should be stopped before starting modular daemons
     Service<| title == 'libvirt' |> -> Service<| tag == 'libvirt-modular-service' |>
