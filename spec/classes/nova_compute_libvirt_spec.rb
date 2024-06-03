@@ -254,7 +254,6 @@ describe 'nova::compute::libvirt' do
 
         it { is_expected.not_to contain_package('libvirt') }
         it { is_expected.not_to contain_service('libvirt') }
-        it { is_expected.not_to contain_package('libvirt-nwfilter') }
         it { is_expected.not_to contain_service('virtlockd') }
         it { is_expected.not_to contain_service('virtlogd') }
       end
@@ -270,12 +269,6 @@ describe 'nova::compute::libvirt' do
       it { is_expected.to contain_package('libvirt').with(
         :name   => 'libvirt-daemon-kvm',
         :ensure => 'present',
-      ) }
-
-      it { is_expected.to contain_package('libvirt-nwfilter').with(
-        :name   => 'libvirt-daemon-config-nwfilter',
-        :ensure => 'present',
-        :before  => ['Service[libvirt]', 'Anchor[nova::install::end]'],
       ) }
 
       it { is_expected.to contain_service('libvirt').with(
@@ -354,7 +347,6 @@ describe 'nova::compute::libvirt' do
 
         it { is_expected.not_to contain_package('libvirt') }
         it { is_expected.not_to contain_service('libvirt') }
-        it { is_expected.not_to contain_package('libvirt-nwfilter') }
         it { is_expected.not_to contain_service('virtlockd') }
         it { is_expected.not_to contain_service('virtlogd') }
       end
