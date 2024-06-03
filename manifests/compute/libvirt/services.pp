@@ -99,15 +99,7 @@ class nova::compute::libvirt::services (
   }
 
   if $libvirt_service_name {
-    # libvirt-nwfilter
     if $facts['os']['family'] == 'RedHat' {
-      package { 'libvirt-nwfilter':
-        ensure => $ensure_package,
-        name   => $::nova::params::libvirt_nwfilter_package_name,
-        before => Service['libvirt'],
-        tag    => ['openstack', 'nova-support-package'],
-      }
-
       case $libvirt_virt_type {
         'qemu': {
           $libvirt_package_name_real = "${::nova::params::libvirt_daemon_package_prefix}kvm"

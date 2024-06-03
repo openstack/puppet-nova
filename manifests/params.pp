@@ -26,7 +26,6 @@ class nova::params {
       $libvirt_client_package_name       = 'libvirt-client'
       $libvirt_daemon_package_name       = 'libvirt-daemon'
       $libvirt_daemon_package_prefix     = 'libvirt-daemon-'
-      $libvirt_nwfilter_package_name     = 'libvirt-daemon-config-nwfilter'
       $scheduler_package_name            = 'openstack-nova-scheduler'
       $tgt_package_name                  = 'scsi-target-utils'
       $vncproxy_package_name             = 'openstack-nova-novncproxy'

@@ -1,0 +1,5 @@
+---
+fixes:
+  - |
+    The ``libvirt-daemon-config-nwfilter`` package is no longer installed,
+    because the package is no longer reuquired by nova.
