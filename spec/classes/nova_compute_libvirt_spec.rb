@@ -6,27 +6,9 @@ describe 'nova::compute::libvirt' do
     "include nova\ninclude nova::compute"
   end
 
-  shared_examples 'debian-nova-compute-libvirt' do
-    let(:libvirt_options) do
-      'libvirtd_opts="-l"'
-    end
-
-    describe 'with default parameters' do
-
-      let :params do
-        {}
-      end
-
+  shared_examples 'nova::compute::libvirt' do
+    context 'with default parameters' do
       it { is_expected.to contain_class('nova::params')}
-
-      it {
-        is_expected.to contain_package('nova-compute-kvm').with(
-          :ensure => 'present',
-          :tag    => ['openstack', 'nova-package']
-        )
-        is_expected.to contain_package('nova-compute-kvm').that_requires('Anchor[nova::install::begin]')
-        is_expected.to contain_package('nova-compute-kvm').that_notifies('Anchor[nova::install::end]')
-      }
 
       it {
         is_expected.to contain_class('nova::compute::libvirt::services').with(
@@ -77,9 +59,9 @@ describe 'nova::compute::libvirt' do
       it { is_expected.to contain_nova_config('libvirt/tb_cache_size').with_value('<SERVICE DEFAULT>')}
     end
 
-    describe 'with params' do
+    context 'with parameters' do
       let :params do
-        { :ensure_package                => 'latest',
+        {
           :virt_type                     => 'qemu',
           :vncserver_listen              => '0.0.0.0',
           :cpu_mode                      => 'host-passthrough',
@@ -123,10 +105,15 @@ describe 'nova::compute::libvirt' do
         }
       end
 
-      it { is_expected.to contain_package('nova-compute-qemu').with(
-        :name   => 'nova-compute-qemu',
-        :ensure => 'latest'
-      ) }
+      it {
+        is_expected.to contain_class('nova::compute::libvirt::services').with(
+          :libvirt_service_name  => 'custom_libvirtd',
+          :virtlock_service_name => 'custom_virtlockd',
+          :virtlog_service_name  => 'custom_virtlogd',
+          :libvirt_virt_type     => 'qemu'
+        )
+      }
+
       it { is_expected.to contain_nova_config('DEFAULT/compute_driver').with_value('libvirt.FoobarDriver')}
       it { is_expected.to contain_nova_config('DEFAULT/preallocate_images').with_value('space')}
       it { is_expected.to contain_nova_config('libvirt/virt_type').with_value('qemu')}
@@ -164,18 +151,9 @@ describe 'nova::compute::libvirt' do
       it { is_expected.to contain_nova_config('libvirt/num_memory_encrypted_guests').with_value(255)}
       it { is_expected.to contain_nova_config('libvirt/wait_soft_reboot_seconds').with_value(120)}
       it { is_expected.to contain_nova_config('libvirt/tb_cache_size').with_value(32)}
-
-      it {
-        is_expected.to contain_class('nova::compute::libvirt::services').with(
-          :libvirt_service_name  => 'custom_libvirtd',
-          :virtlock_service_name => 'custom_virtlockd',
-          :virtlog_service_name  => 'custom_virtlogd',
-          :libvirt_virt_type     => 'qemu'
-        )
-      }
     end
 
-    describe 'with custom cpu_mode' do
+    context 'with custom cpu_mode' do
       let :params do
         { :cpu_mode              => 'custom',
           :cpu_models            => ['kvm64', 'qemu64'],
@@ -187,14 +165,14 @@ describe 'nova::compute::libvirt' do
       it { is_expected.to contain_nova_config('libvirt/cpu_model_extra_flags').with_value('pcid')}
     end
 
-    describe 'with hw_machine_type set by array' do
+    context 'with hw_machine_type set by array' do
       let :params do
         { :hw_machine_type => ['x86_64=machinetype1', 'armv7l=machinetype2'] }
       end
       it { is_expected.to contain_nova_config('libvirt/hw_machine_type').with_value('x86_64=machinetype1,armv7l=machinetype2')}
     end
 
-    describe 'with hw_machine_type set by hash' do
+    context 'with hw_machine_type set by hash' do
       let :params do
         { :hw_machine_type => {
           'x86_64' => 'machinetype1',
@@ -205,7 +183,6 @@ describe 'nova::compute::libvirt' do
     end
 
     describe 'with migration_support enabled' do
-
       context 'with vncserver_listen set to 0.0.0.0' do
         let :params do
           { :vncserver_listen  => '0.0.0.0',
@@ -227,110 +204,53 @@ describe 'nova::compute::libvirt' do
       end
     end
 
-    describe 'when manage_libvirt_services is set to false' do
-      context 'without libvirt packages & services' do
-        let :params do
-          { :manage_libvirt_services => false }
-        end
-
-        it { is_expected.not_to contain_class('nova::compute::libvirt::services') }
+    context 'without libvirt packages & services' do
+      let :params do
+        { :manage_libvirt_services => false }
       end
+
+      it { is_expected.not_to contain_class('nova::compute::libvirt::services') }
     end
   end
 
-
-  shared_examples 'redhat-nova-compute-libvirt' do
-    describe 'with default parameters' do
-
-      it { is_expected.to contain_class('nova::params')}
-
+  shared_examples 'nova::compute::libvirt on Debian' do
+    context 'with default parameters' do
       it {
-        is_expected.to contain_class('nova::compute::libvirt::services').with(
-          :libvirt_service_name  => 'libvirtd',
-          :virtlock_service_name => 'virtlockd',
-          :virtlog_service_name  => 'virtlogd',
-          :libvirt_virt_type     => 'kvm'
+        is_expected.to contain_package('nova-compute-kvm').with(
+          :ensure => 'present',
+          :tag    => ['openstack', 'nova-package']
         )
       }
-
-      it { is_expected.to contain_nova_config('DEFAULT/compute_driver').with_value('libvirt.LibvirtDriver')}
-      it { is_expected.to contain_nova_config('libvirt/virt_type').with_value('kvm')}
-      it { is_expected.to contain_nova_config('libvirt/inject_password').with_value('<SERVICE DEFAULT>')}
-      it { is_expected.to contain_nova_config('libvirt/inject_key').with_value('<SERVICE DEFAULT>')}
-      it { is_expected.to contain_nova_config('libvirt/inject_partition').with_value('<SERVICE DEFAULT>')}
-      it { is_expected.to contain_nova_config('vnc/server_listen').with_value('127.0.0.1')}
-      it { is_expected.to contain_nova_config('libvirt/enabled_perf_events').with_value('<SERVICE DEFAULT>')}
-      it { is_expected.to contain_nova_config('libvirt/device_detach_attempts').with_value('<SERVICE DEFAULT>')}
-      it { is_expected.to contain_nova_config('libvirt/device_detach_timeout').with_value('<SERVICE DEFAULT>')}
-      it { is_expected.to contain_nova_config('libvirt/nfs_mount_options').with_value('<SERVICE DEFAULT>')}
     end
 
     describe 'with params' do
       let :params do
-        { :virt_type                => 'qemu',
-          :vncserver_listen         => '0.0.0.0',
-          :enabled_perf_events      => ['cmt', 'mbml', 'mbmt'],
-          :device_detach_attempts   => 8,
-          :device_detach_timeout    => 20,
-          :nfs_mount_options        => 'rw,intr,nolock',
-          :mem_stats_period_seconds => 20,
+        { :ensure_package => 'latest',
+          :virt_type      => 'qemu',
         }
       end
 
-      it { is_expected.to contain_class('nova::params')}
+      it { is_expected.to contain_package('nova-compute-qemu').with(
+        :name   => 'nova-compute-qemu',
+        :ensure => 'latest'
+      ) }
+    end
+  end
 
-      it {
-        is_expected.to contain_class('nova::compute::libvirt::services').with(
-          :libvirt_service_name  => 'libvirtd',
-          :virtlock_service_name => 'virtlockd',
-          :virtlog_service_name  => 'virtlogd',
-          :libvirt_virt_type     => 'qemu'
-        )
-      }
-
-      it { is_expected.to contain_nova_config('libvirt/virt_type').with_value('qemu')}
-      it { is_expected.to contain_nova_config('vnc/server_listen').with_value('0.0.0.0')}
-      it { is_expected.to contain_nova_config('libvirt/enabled_perf_events').with_value('cmt,mbml,mbmt')}
-      it { is_expected.to contain_nova_config('libvirt/device_detach_attempts').with_value(8)}
-      it { is_expected.to contain_nova_config('libvirt/device_detach_timeout').with_value(20)}
-      it { is_expected.to contain_nova_config('libvirt/nfs_mount_options').with_value('rw,intr,nolock')}
-      it { is_expected.to contain_nova_config('libvirt/mem_stats_period_seconds').with_value(20)}
+  shared_examples 'nova::compute::libvirt on RedHat' do
+    context 'with default parameters' do
+      it { is_expected.to_not contain_package('nova-compute-kvm') }
     end
 
-    describe 'with migration_support enabled' do
-
-      context 'with vncserver_listen set to 0.0.0.0' do
-        let :params do
-          { :vncserver_listen  => '0.0.0.0',
-            :migration_support => true }
-        end
-
-        it { is_expected.to contain_class('nova::migration::libvirt')}
-        it { is_expected.to contain_nova_config('vnc/server_listen').with_value('0.0.0.0')}
+    describe 'with params' do
+      let :params do
+        { :ensure_package => 'latest',
+          :virt_type      => 'qemu',
+        }
       end
 
-      context 'with vncserver_listen set to ::0' do
-        let :params do
-          { :vncserver_listen  => '::0',
-            :migration_support => true }
-        end
-
-        it { is_expected.to contain_class('nova::migration::libvirt')}
-        it { is_expected.to contain_nova_config('vnc/server_listen').with_value('::0')}
-      end
-
+      it { is_expected.to_not contain_package('nova-compute-qemu') }
     end
-
-    describe 'when manage_libvirt_services is set to false' do
-      context 'without libvirt packages & services' do
-        let :params do
-          { :manage_libvirt_services => false }
-        end
-
-        it { is_expected.not_to contain_class('nova::compute::libvirt::services') }
-      end
-    end
-
   end
 
   on_supported_os({
@@ -341,12 +261,8 @@ describe 'nova::compute::libvirt' do
         facts.merge!(OSDefaults.get_facts())
       end
 
-      case facts[:os]['family']
-      when 'Debian'
-        it_behaves_like 'debian-nova-compute-libvirt'
-      when 'RedHat'
-        it_behaves_like 'redhat-nova-compute-libvirt'
-      end
+      it_behaves_like 'nova::compute::libvirt'
+      it_behaves_like "nova::compute::libvirt on #{facts[:os]['family']}"
     end
   end
 end
