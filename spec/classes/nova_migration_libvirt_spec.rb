@@ -110,6 +110,8 @@ describe 'nova::migration::libvirt' do
       end
       it { is_expected.to contain_libvirtd_config('auth_tls').with_value('none').with_quote(true) }
       it { is_expected.to contain_libvirtd_config('auth_tcp').with_value('<SERVICE DEFAULT>').with_quote(true) }
+      it { is_expected.to contain_libvirtd_config('key_file').with_value('<SERVICE DEFAULT>').with_quote(true) }
+      it { is_expected.to contain_libvirtd_config('cert_file').with_value('<SERVICE DEFAULT>').with_quote(true) }
       it { is_expected.to contain_libvirtd_config('ca_file').with_value('<SERVICE DEFAULT>').with_quote(true) }
       it { is_expected.to contain_libvirtd_config('crl_file').with_value('<SERVICE DEFAULT>').with_quote(true) }
       it { is_expected.to contain_nova_config('libvirt/migration_inbound_addr').with_value('host2.example.com')}
@@ -224,6 +226,8 @@ describe 'nova::migration::libvirt' do
       end
       it { is_expected.to_not contain_libvirtd_config('auth_tls') }
       it { is_expected.to_not contain_libvirtd_config('auth_tcp') }
+      it { is_expected.to_not contain_libvirtd_config('key_file') }
+      it { is_expected.to_not contain_libvirtd_config('cert_file') }
       it { is_expected.to_not contain_libvirtd_config('ca_file') }
       it { is_expected.to_not contain_libvirtd_config('crl_file') }
     end
@@ -296,9 +300,60 @@ describe 'nova::migration::libvirt' do
       it { is_expected.to contain_file('/etc/systemd/system/libvirtd-tls.socket').with(
         :ensure => 'absent',
       )}
+      it { is_expected.to_not contain_file_line('libvirtd-tls.socket ListenStream') }
+      it { is_expected.to contain_nova_config('libvirt/live_migration_uri').with_value('<SERVICE DEFAULT>')}
+      it { is_expected.to contain_nova_config('libvirt/live_migration_scheme').with_value('tls') }
+    end
+
+    context 'with tls transport and listen_address' do
+      let :params do
+        {
+          :transport => 'tls',
+          :listen_address => '127.0.0.1'
+        }
+      end
+
+      it { is_expected.to contain_service('libvirtd-tls').with(
+        :name   => 'libvirtd-tls.socket',
+        :ensure => 'running',
+        :enable => true,
+      )}
+      it { is_expected.to contain_file('/etc/systemd/system/libvirtd-tls.socket').with(
+        :mode    => '0644',
+        :source  => '/usr/lib/systemd/system/libvirtd-tls.socket',
+        :replace => false,
+      )}
+      it { is_expected.to contain_file_line('libvirtd-tls.socket ListenStream').with(
+        :path  => '/etc/systemd/system/libvirtd-tls.socket',
+        :line  => 'ListenStream=127.0.0.1:16514',
+        :match => '^ListenStream=.*',
+      )}
+      it { is_expected.to contain_nova_config('libvirt/live_migration_uri').with_value('<SERVICE DEFAULT>')}
+      it { is_expected.to contain_nova_config('libvirt/live_migration_scheme').with_value('tls') }
     end
 
     context 'with tcp transport' do
+      let :params do
+        {
+          :transport => 'tcp',
+        }
+      end
+
+      it { is_expected.to contain_service('libvirtd-tcp').with(
+        :name   => 'libvirtd-tcp.socket',
+        :ensure => 'running',
+        :enable => true,
+      )}
+      it { is_expected.to contain_file('/etc/systemd/system/libvirtd-tcp.socket').with(
+        :ensure => 'absent'
+      )}
+      it { is_expected.to_not contain_file_line('libvirtd-tls.socket ListenStream') }
+      it { is_expected.to_not contain_file_line('libvirtd-tcp.socket ListenStream') }
+      it { is_expected.to contain_nova_config('libvirt/live_migration_uri').with_value('<SERVICE DEFAULT>')}
+      it { is_expected.to contain_nova_config('libvirt/live_migration_scheme').with_value('tcp') }
+    end
+
+    context 'with tcp transport and listen_address' do
       let :params do
         {
           :transport      => 'tcp',
@@ -311,11 +366,18 @@ describe 'nova::migration::libvirt' do
         :ensure => 'running',
         :enable => true,
       )}
+      it { is_expected.to contain_file('/etc/systemd/system/libvirtd-tcp.socket').with(
+        :mode    => '0644',
+        :source  => '/usr/lib/systemd/system/libvirtd-tcp.socket',
+        :replace => false,
+      )}
       it { is_expected.to contain_file_line('libvirtd-tcp.socket ListenStream').with(
         :path  => '/etc/systemd/system/libvirtd-tcp.socket',
         :line  => 'ListenStream=127.0.0.1:16509',
         :match => '^ListenStream=.*',
       )}
+      it { is_expected.to contain_nova_config('libvirt/live_migration_uri').with_value('<SERVICE DEFAULT>')}
+      it { is_expected.to contain_nova_config('libvirt/live_migration_scheme').with_value('tcp') }
     end
   end
 
@@ -325,6 +387,8 @@ describe 'nova::migration::libvirt' do
 
       it { is_expected.to contain_virtproxyd_config('auth_tls').with_value('<SERVICE DEFAULT>').with_quote(true) }
       it { is_expected.to contain_virtproxyd_config('auth_tcp').with_value('none').with_quote(true) }
+      it { is_expected.to contain_virtproxyd_config('key_file').with_value('<SERVICE DEFAULT>').with_quote(true) }
+      it { is_expected.to contain_virtproxyd_config('cert_file').with_value('<SERVICE DEFAULT>').with_quote(true) }
       it { is_expected.to contain_virtproxyd_config('ca_file').with_value('<SERVICE DEFAULT>').with_quote(true) }
       it { is_expected.to contain_virtproxyd_config('crl_file').with_value('<SERVICE DEFAULT>').with_quote(true) }
       it { is_expected.to contain_nova_config('libvirt/live_migration_tunnelled').with_value('<SERVICE DEFAULT>') }
@@ -338,6 +402,46 @@ describe 'nova::migration::libvirt' do
       it { is_expected.to contain_nova_config('libvirt/live_migration_permit_auto_converge').with_value('<SERVICE DEFAULT>')}
     end
 
+    context 'with override_uuid enabled' do
+      let :params do
+        {
+          :modular_libvirt => true,
+          :override_uuid   => true,
+        }
+      end
+
+      it { is_expected.to contain_file('/etc/libvirt/libvirt_uuid').with({
+        :content => '0000-111-111',
+      }).that_requires('Package[libvirt]') }
+
+      it { is_expected.to contain_virtqemud_config('host_uuid').with_value('0000-111-111').with_quote(true) }
+      it { is_expected.to contain_virtproxyd_config('host_uuid').with_value('0000-111-111').with_quote(true) }
+      it { is_expected.to contain_virtsecretd_config('host_uuid').with_value('0000-111-111').with_quote(true) }
+      it { is_expected.to contain_virtnodedevd_config('host_uuid').with_value('0000-111-111').with_quote(true) }
+      it { is_expected.to contain_virtstoraged_config('host_uuid').with_value('0000-111-111').with_quote(true) }
+    end
+
+    context 'with override_uuid enabled and host_uuid set' do
+      let :params do
+        {
+          :modular_libvirt => true,
+          :override_uuid   => true,
+          :host_uuid       => 'a8debd9d-e359-4bb2-8c77-edee431f94f2',
+        }
+      end
+
+      it { is_expected.to contain_file('/etc/libvirt/libvirt_uuid').with({
+        :content => 'a8debd9d-e359-4bb2-8c77-edee431f94f2',
+      }).that_requires('Package[libvirt]') }
+
+      it { is_expected.to contain_virtqemud_config('host_uuid').with_value('a8debd9d-e359-4bb2-8c77-edee431f94f2').with_quote(true) }
+      it { is_expected.to contain_virtproxyd_config('host_uuid').with_value('a8debd9d-e359-4bb2-8c77-edee431f94f2').with_quote(true) }
+      it { is_expected.to contain_virtsecretd_config('host_uuid').with_value('a8debd9d-e359-4bb2-8c77-edee431f94f2').with_quote(true) }
+      it { is_expected.to contain_virtnodedevd_config('host_uuid').with_value('a8debd9d-e359-4bb2-8c77-edee431f94f2').with_quote(true) }
+      it { is_expected.to contain_virtstoraged_config('host_uuid').with_value('a8debd9d-e359-4bb2-8c77-edee431f94f2').with_quote(true) }
+    end
+
+
     context 'with tls enabled' do
       let :params do
         {
@@ -347,6 +451,8 @@ describe 'nova::migration::libvirt' do
       end
       it { is_expected.to contain_virtproxyd_config('auth_tls').with_value('none').with_quote(true) }
       it { is_expected.to contain_virtproxyd_config('auth_tcp').with_value('<SERVICE DEFAULT>').with_quote(true) }
+      it { is_expected.to contain_virtproxyd_config('key_file').with_value('<SERVICE DEFAULT>').with_quote(true) }
+      it { is_expected.to contain_virtproxyd_config('cert_file').with_value('<SERVICE DEFAULT>').with_quote(true) }
       it { is_expected.to contain_virtproxyd_config('ca_file').with_value('<SERVICE DEFAULT>').with_quote(true) }
       it { is_expected.to contain_virtproxyd_config('crl_file').with_value('<SERVICE DEFAULT>').with_quote(true) }
       it { is_expected.to contain_nova_config('libvirt/live_migration_uri').with_value('<SERVICE DEFAULT>') }
@@ -362,6 +468,8 @@ describe 'nova::migration::libvirt' do
       end
       it { is_expected.to contain_virtproxyd_config('auth_tls').with_value('<SERVICE DEFAULT>').with_quote(true) }
       it { is_expected.to contain_virtproxyd_config('auth_tcp').with_value('sasl').with_quote(true) }
+      it { is_expected.to contain_virtproxyd_config('key_file').with_value('<SERVICE DEFAULT>').with_quote(true) }
+      it { is_expected.to contain_virtproxyd_config('cert_file').with_value('<SERVICE DEFAULT>').with_quote(true) }
       it { is_expected.to contain_virtproxyd_config('ca_file').with_value('<SERVICE DEFAULT>').with_quote(true) }
       it { is_expected.to contain_virtproxyd_config('crl_file').with_value('<SERVICE DEFAULT>').with_quote(true) }
     end
@@ -376,6 +484,8 @@ describe 'nova::migration::libvirt' do
       end
       it { is_expected.to contain_virtproxyd_config('auth_tls').with_value('sasl').with_quote(true) }
       it { is_expected.to contain_virtproxyd_config('auth_tcp').with_value('<SERVICE DEFAULT>').with_quote(true) }
+      it { is_expected.to contain_virtproxyd_config('key_file').with_value('<SERVICE DEFAULT>').with_quote(true) }
+      it { is_expected.to contain_virtproxyd_config('cert_file').with_value('<SERVICE DEFAULT>').with_quote(true) }
       it { is_expected.to contain_virtproxyd_config('ca_file').with_value('<SERVICE DEFAULT>').with_quote(true) }
       it { is_expected.to contain_virtproxyd_config('crl_file').with_value('<SERVICE DEFAULT>').with_quote(true) }
     end
@@ -384,15 +494,19 @@ describe 'nova::migration::libvirt' do
       let :params do
         {
           :transport       => 'tls',
-          :ca_file         => '/ca',
-          :crl_file        => '/crl',
+          :key_file        => '/etc/pki/libvirt/private/serverkey.pem',
+          :cert_file       => '/etc/pki/libvirt/servercert.pem',
+          :ca_file         => '/etc/pki/CA/cacert.pem',
+          :crl_file        => '/etc/pki/CA/crl.pem',
           :modular_libvirt => true,
         }
       end
       it { is_expected.to contain_virtproxyd_config('auth_tls').with_value('none').with_quote(true) }
       it { is_expected.to contain_virtproxyd_config('auth_tcp').with_value('<SERVICE DEFAULT>').with_quote(true) }
-      it { is_expected.to contain_virtproxyd_config('ca_file').with_value('/ca').with_quote(true) }
-      it { is_expected.to contain_virtproxyd_config('crl_file').with_value('/crl').with_quote(true) }
+      it { is_expected.to contain_virtproxyd_config('key_file').with_value('/etc/pki/libvirt/private/serverkey.pem').with_quote(true) }
+      it { is_expected.to contain_virtproxyd_config('cert_file').with_value('/etc/pki/libvirt/servercert.pem').with_quote(true) }
+      it { is_expected.to contain_virtproxyd_config('ca_file').with_value('/etc/pki/CA/cacert.pem').with_quote(true) }
+      it { is_expected.to contain_virtproxyd_config('crl_file').with_value('/etc/pki/CA/crl.pem').with_quote(true) }
     end
 
     context 'with ssh transport' do
@@ -427,6 +541,7 @@ describe 'nova::migration::libvirt' do
         }
       end
       it { is_expected.to contain_nova_config('libvirt/live_migration_uri').with_value('qemu+ssh://%s:1234/system')}
+      it { is_expected.to contain_nova_config('libvirt/live_migration_scheme').with_value('<SERVICE DEFAULT>') }
     end
 
     context 'with ssh transport with extraparams' do
@@ -438,6 +553,7 @@ describe 'nova::migration::libvirt' do
         }
       end
       it { is_expected.to contain_nova_config('libvirt/live_migration_uri').with_value('qemu+ssh://%s/system?foo=%%25&bar=baz')}
+      it { is_expected.to contain_nova_config('libvirt/live_migration_scheme').with_value('<SERVICE DEFAULT>') }
     end
 
     context 'with tls transport' do
@@ -445,7 +561,6 @@ describe 'nova::migration::libvirt' do
         {
           :transport       => 'tls',
           :modular_libvirt => true,
-          :listen_address  => '::1'
         }
       end
 
@@ -454,11 +569,40 @@ describe 'nova::migration::libvirt' do
         :ensure => 'running',
         :enable => true,
       )}
+      it { is_expected.to contain_file('/etc/systemd/system/virtproxyd-tls.socket').with(
+        :ensure => 'absent'
+      )}
+      it { is_expected.to_not contain_file_line('virtproxyd-tls.socket ListenStream') }
+      it { is_expected.to contain_nova_config('libvirt/live_migration_uri').with_value('<SERVICE DEFAULT>')}
+      it { is_expected.to contain_nova_config('libvirt/live_migration_scheme').with_value('tls') }
+    end
+
+    context 'with tls transport and listen_address' do
+      let :params do
+        {
+          :transport       => 'tls',
+          :listen_address  => '::1',
+          :modular_libvirt => true,
+        }
+      end
+
+      it { is_expected.to contain_service('virtproxyd-tls').with(
+        :name   => 'virtproxyd-tls.socket',
+        :ensure => 'running',
+        :enable => true,
+      )}
+      it { is_expected.to contain_file('/etc/systemd/system/virtproxyd-tls.socket').with(
+        :mode    => '0644',
+        :source  => '/usr/lib/systemd/system/virtproxyd-tls.socket',
+        :replace => false,
+      )}
       it { is_expected.to contain_file_line('virtproxyd-tls.socket ListenStream').with(
         :path  => '/etc/systemd/system/virtproxyd-tls.socket',
         :line  => 'ListenStream=[::1]:16514',
         :match => '^ListenStream=.*',
       )}
+      it { is_expected.to contain_nova_config('libvirt/live_migration_uri').with_value('<SERVICE DEFAULT>')}
+      it { is_expected.to contain_nova_config('libvirt/live_migration_scheme').with_value('tls') }
     end
 
     context 'with tcp transport' do
@@ -477,6 +621,37 @@ describe 'nova::migration::libvirt' do
       it { is_expected.to contain_file('/etc/systemd/system/virtproxyd-tcp.socket').with(
         :ensure => 'absent',
       )}
+      it { is_expected.to_not contain_file_line('virtproxyd-tcp.socket ListenStream') }
+      it { is_expected.to contain_nova_config('libvirt/live_migration_uri').with_value('<SERVICE DEFAULT>')}
+      it { is_expected.to contain_nova_config('libvirt/live_migration_scheme').with_value('tcp') }
+    end
+
+    context 'with tcp transport and listen_address' do
+      let :params do
+        {
+          :transport       => 'tcp',
+          :listen_address  => '::1',
+          :modular_libvirt => true,
+        }
+      end
+
+      it { is_expected.to contain_service('virtproxyd-tcp').with(
+        :name   => 'virtproxyd-tcp.socket',
+        :ensure => 'running',
+        :enable => true,
+      )}
+      it { is_expected.to contain_file('/etc/systemd/system/virtproxyd-tcp.socket').with(
+        :mode    => '0644',
+        :source  => '/usr/lib/systemd/system/virtproxyd-tcp.socket',
+        :replace => false,
+      )}
+      it { is_expected.to contain_file_line('virtproxyd-tcp.socket ListenStream').with(
+        :path  => '/etc/systemd/system/virtproxyd-tcp.socket',
+        :line  => 'ListenStream=[::1]:16509',
+        :match => '^ListenStream=.*',
+      )}
+      it { is_expected.to contain_nova_config('libvirt/live_migration_uri').with_value('<SERVICE DEFAULT>')}
+      it { is_expected.to contain_nova_config('libvirt/live_migration_scheme').with_value('tcp') }
     end
   end
 
