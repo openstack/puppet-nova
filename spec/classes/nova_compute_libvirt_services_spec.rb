@@ -12,24 +12,15 @@ describe 'nova::compute::libvirt::services' do
         )
       end
 
-      it 'installs ovmf' do
-        is_expected.to contain_package('ovmf').with(
-          :ensure => 'present',
-          :name   => platform_params[:ovmf_package_name],
-          :tag    => ['openstack', 'nova-support-package'],
-        )
-      end
       it 'skips installs swtpm' do
         is_expected.to_not contain_package('swtpm')
       end
     end
 
-    context 'with overridden parameters' do
+    context 'when libvirt service is not managed' do
       let :params do
         {
           :libvirt_service_name => false,
-          :manage_ovmf          => false,
-          :manage_swtpm         => true,
         }
       end
 
@@ -38,12 +29,28 @@ describe 'nova::compute::libvirt::services' do
         is_expected.not_to contain_package('libvirt-daemon')
         is_expected.not_to contain_service('libvirt')
       end
+    end
+
+    context 'when ovmf package is not managed' do
+      let :params do
+        {
+          :manage_ovmf => false,
+        }
+      end
 
       it 'skips installing ovmf' do
         is_expected.not_to contain_package('ovmf')
       end
+    end
 
-      it 'skips installs swtpm' do
+    context 'when swtpm package is managed' do
+      let :params do
+        {
+          :manage_swtpm => true,
+        }
+      end
+
+      it 'installs swtpm' do
         is_expected.to contain_package('swtpm').with(
           :ensure => 'present',
           :name   => platform_params[:swtpm_package_name],
