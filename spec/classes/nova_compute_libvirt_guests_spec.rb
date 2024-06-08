@@ -8,6 +8,11 @@ describe 'nova::compute::libvirt_guests' do
 
       it { is_expected.to contain_class('nova::params')}
 
+      it { is_expected.to contain_file(platform_params[:libvirt_guests_environment_file]).with(
+        :ensure => 'present',
+        :path   => platform_params[:libvirt_guests_environment_file],
+        :tag    => 'libvirt-guests-file'
+      )}
       it { is_expected.to contain_file_line('libvirt-guests ON_BOOT').with(
         :path  => platform_params[:libvirt_guests_environment_file],
         :line  => 'ON_BOOT=ignore',
@@ -79,6 +84,11 @@ describe 'nova::compute::libvirt_guests' do
         }
       end
 
+      it { is_expected.to contain_file(platform_params[:libvirt_guests_environment_file]).with(
+        :ensure => 'present',
+        :path   => platform_params[:libvirt_guests_environment_file],
+        :tag    => 'libvirt-guests-file'
+      )}
       it { is_expected.to contain_file_line('libvirt-guests ON_BOOT').with(
         :path  => platform_params[:libvirt_guests_environment_file],
         :line  => 'ON_BOOT=start',
