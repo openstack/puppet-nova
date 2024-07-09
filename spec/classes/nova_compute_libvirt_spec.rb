@@ -65,7 +65,6 @@ describe 'nova::compute::libvirt' do
           :virt_type                     => 'qemu',
           :vncserver_listen              => '0.0.0.0',
           :cpu_mode                      => 'host-passthrough',
-          :cpu_models                    => ['kvm64', 'qemu64'],
           :cpu_model_extra_flags         => 'pcid',
           :cpu_power_management          => false,
           :cpu_power_management_strategy => 'cpu_state',
@@ -163,6 +162,22 @@ describe 'nova::compute::libvirt' do
       it { is_expected.to contain_nova_config('libvirt/cpu_mode').with_value('custom')}
       it { is_expected.to contain_nova_config('libvirt/cpu_models').with_value('kvm64,qemu64')}
       it { is_expected.to contain_nova_config('libvirt/cpu_model_extra_flags').with_value('pcid')}
+    end
+
+    context 'with non-custom cpu_node and cpu_models' do
+      let :params do
+        { :cpu_models => ['kvm64', 'qemu64'] }
+      end
+
+      it { should raise_error(Puppet::Error, /\$cpu_models requires that \$cpu_mode is "custom"/) }
+    end
+
+    context 'with custom cpu_node and no cpu_models' do
+      let :params do
+        { :cpu_mode => 'custom' }
+      end
+
+      it { should raise_error(Puppet::Error, /\$cpu_models is required when \$cpu_mode is "custom"/) }
     end
 
     context 'with hw_machine_type set by array' do
