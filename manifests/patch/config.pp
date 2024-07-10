@@ -1,23 +1,27 @@
 # == Class: nova:patch::config
 #
+# DEPRECATED !!!
 # This class is aim to configure nova.patch parameters
 #
 # === Parameters:
 #
 # [*monkey_patch*]
 #   (optional) Apply monkey patching or not
-#   Defaults to false
+#   Defaults to $facts['os_service_default']
 #
 # [*monkey_patch_modules*]
 #   (optional) List of modules/decorators to monkey patch
 #   Defaults to $facts['os_service_default']
 #
 class nova::patch::config (
-  $monkey_patch                        = false,
-  $monkey_patch_modules                = $facts['os_service_default'],
+  $monkey_patch         = $facts['os_service_default'],
+  $monkey_patch_modules = $facts['os_service_default'],
 ) {
 
   include nova::deps
+
+  warning("The nova::patch::config class has been deprecated \"
+and will be removed in the future release.")
 
   $monkey_patch_modules_real = pick(join(any2array($monkey_patch_modules), ','), $facts['os_service_default'])
 

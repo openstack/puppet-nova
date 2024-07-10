@@ -11,8 +11,8 @@ describe 'nova::patch::config' do
     it { is_expected.to contain_class('nova::deps') }
 
     context 'with default parameters' do
-      it { is_expected.to contain_nova_config('DEFAULT/monkey_patch').with_value('false') }
-      it { is_expected.to contain_nova_config('DEFAULT/monkey_patch_modules').with(:value => '<SERVICE DEFAULT>') }
+      it { is_expected.to contain_nova_config('DEFAULT/monkey_patch').with_value('<SERVICE DEFAULT>') }
+      it { is_expected.to contain_nova_config('DEFAULT/monkey_patch_modules').with_value('<SERVICE DEFAULT>') }
     end
 
     context 'when overriding parameters' do
@@ -24,17 +24,6 @@ describe 'nova::patch::config' do
 
       it { is_expected.to contain_nova_config('DEFAULT/monkey_patch').with_value('true') }
       it { is_expected.to contain_nova_config('DEFAULT/monkey_patch_modules').with_value('nova.compute.api:nova.notifications.notify_decorator') }
-    end
-
-    context 'when overriding parameters with reset values' do
-      let :params do
-        { :monkey_patch         => false,
-          :monkey_patch_modules => '<SERVICE DEFAULT>'
-        }
-      end
-
-      it { is_expected.to contain_nova_config('DEFAULT/monkey_patch').with_value('false') }
-      it { is_expected.to contain_nova_config('DEFAULT/monkey_patch_modules').with(:value => '<SERVICE DEFAULT>') }
     end
   end
 
