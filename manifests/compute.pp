@@ -36,7 +36,7 @@
 #
 # [*vncproxy_host*]
 #   (optional) The host of the VNC proxy server
-#   Defaults to false
+#   Defaults to undef
 #
 # [*vncproxy_protocol*]
 #   (optional) The protocol to communicate with the VNC proxy server
@@ -269,7 +269,7 @@ class nova::compute (
   Boolean $vnc_enabled                         = true,
   Boolean $spice_enabled                       = false,
   $vncserver_proxyclient_address               = '127.0.0.1',
-  $vncproxy_host                               = false,
+  $vncproxy_host                               = undef,
   $vncproxy_protocol                           = 'http',
   $vncproxy_port                               = '6080',
   $vncproxy_path                               = '/vnc_auto.html',

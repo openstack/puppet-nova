@@ -167,7 +167,7 @@
 #
 # [*use_ssl*]
 #   (optional) Enable SSL on the API server
-#   Defaults to false, not set
+#   Defaults to false
 #
 # [*enabled_ssl_apis*]
 #   (optional) List of APIs to SSL enable
@@ -175,15 +175,15 @@
 #
 # [*cert_file*]
 #   (optional) Certificate file to use when starting API server securely
-#   Defaults to false, not set
+#   Defaults to undef
 #
 # [*key_file*]
 #   (optional) Private key file to use when starting API server securely
-#   Defaults to false, not set
+#   Defaults to undef
 #
 # [*ca_file*]
 #   (optional) CA certificate file to use to verify connecting clients
-#   Defaults to false, not set
+#   Defaults to undef
 #
 # [*nova_public_key*]
 #   (optional) Install public key in .ssh/authorized_keys for the 'nova' user.
@@ -355,9 +355,9 @@ class nova(
   $rootwrap_config                        = '/etc/nova/rootwrap.conf',
   Boolean $use_ssl                        = false,
   Array[String[1]] $enabled_ssl_apis      = ['metadata', 'osapi_compute'],
-  $ca_file                                = false,
-  $cert_file                              = false,
-  $key_file                               = false,
+  $ca_file                                = undef,
+  $cert_file                              = undef,
+  $key_file                               = undef,
   Nova::SshKey $nova_public_key           = undef,
   Nova::SshKey $nova_private_key          = undef,
   $ssl_only                               = $facts['os_service_default'],

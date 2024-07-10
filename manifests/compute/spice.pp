@@ -19,7 +19,7 @@
 #
 # [*proxy_host*]
 #   (optional) Host for the html5 console proxy
-#   Defaults to false
+#   Defaults to undef
 #
 # [*proxy_port*]
 #   (optional) Port for the html5 console proxy
@@ -37,7 +37,7 @@ class nova::compute::spice(
   Boolean $agent_enabled      = true,
   $server_listen              = $facts['os_service_default'],
   $server_proxyclient_address = '127.0.0.1',
-  $proxy_host                 = false,
+  $proxy_host                 = undef,
   $proxy_protocol             = 'http',
   $proxy_port                 = '6082',
   $proxy_path                 = '/spice_auto.html',
