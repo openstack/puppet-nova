@@ -171,8 +171,7 @@
 #
 # [*enabled_ssl_apis*]
 #   (optional) List of APIs to SSL enable
-#   Defaults to []
-#   Possible values : 'osapi_compute', 'metadata'
+#   Defaults to ['osapi_compute', 'metadata']
 #
 # [*cert_file*]
 #   (optional) Certificate file to use when starting API server securely
