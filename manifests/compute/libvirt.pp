@@ -237,10 +237,10 @@
 #
 class nova::compute::libvirt (
   $ensure_package                             = 'present',
-  $virt_type                                  = 'kvm',
+  Nova::VirtType $virt_type                   = 'kvm',
   $vncserver_listen                           = '127.0.0.1',
   Boolean $migration_support                  = false,
-  $cpu_mode                                   = undef,
+  Optional[Nova::CpuMode] $cpu_mode           = undef,
   Array[String[1]] $cpu_models                = [],
   $cpu_model_extra_flags                      = undef,
   $cpu_power_management                       = $facts['os_service_default'],
