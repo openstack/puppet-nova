@@ -164,6 +164,17 @@ describe 'nova::compute::libvirt' do
       it { is_expected.to contain_nova_config('libvirt/cpu_model_extra_flags').with_value('pcid')}
     end
 
+    context 'with cpu_mode and non qemu/kvm virt_type' do
+      let :params do
+        {
+          :cpu_mode  => 'host-passthrough',
+          :virt_type => 'lxc',
+        }
+      end
+
+      it { should raise_error(Puppet::Error, /\$virt_type = "lxc" supports only \$cpu_mode = "none"/) }
+    end
+
     context 'with non-custom cpu_node and cpu_models' do
       let :params do
         { :cpu_models => ['kvm64', 'qemu64'] }

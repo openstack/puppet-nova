@@ -298,6 +298,9 @@ class nova::compute::libvirt (
       }
     }
   } else {
+    if $cpu_mode != 'none' and !($virt_type in ['qemu', 'kvm']) {
+      fail("\$virt_type = \"${virt_type}\" supports only \$cpu_mode = \"none\"")
+    }
     $cpu_mode_real = $cpu_mode
   }
 
