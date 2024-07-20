@@ -1,0 +1,6 @@
+---
+deprecations:
+  - |
+    The ``nova::patch::config`` class has been deprecated, because the options
+    supported by the class have already been removed from nova. The class
+    will be removed in a future release.
