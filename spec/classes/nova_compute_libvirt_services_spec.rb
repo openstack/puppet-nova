@@ -18,10 +18,10 @@ describe 'nova::compute::libvirt::services' do
     end
 
     context 'when libvirt service is not managed' do
-      let :params do
-        {
+      before :each do
+        params.merge!({
           :libvirt_service_name => false,
-        }
+        })
       end
 
       it 'skips installing libvirt' do
@@ -32,10 +32,10 @@ describe 'nova::compute::libvirt::services' do
     end
 
     context 'when ovmf package is not managed' do
-      let :params do
-        {
+      before :each do
+        params.merge!({
           :manage_ovmf => false,
-        }
+        })
       end
 
       it 'skips installing ovmf' do
@@ -44,10 +44,10 @@ describe 'nova::compute::libvirt::services' do
     end
 
     context 'when swtpm package is managed' do
-      let :params do
-        {
+      before :each do
+        params.merge!({
           :manage_swtpm => true,
-        }
+        })
       end
 
       it 'installs swtpm' do
@@ -113,10 +113,10 @@ describe 'nova::compute::libvirt::services' do
 
   shared_examples_for 'nova compute libvirt services with modular libvirt' do
     context 'with default parameters' do
-      let :params do
-        {
+      before :each do
+        params.merge!({
           :modular_libvirt => true
-        }
+        })
       end
 
       it 'deploys libvirt service' do
@@ -250,10 +250,25 @@ describe 'nova::compute::libvirt::services' do
         end
       end
 
+      let :params do
+        {}
+      end
+
       it_configures 'nova compute libvirt services'
-      it_configures 'nova compute libvirt services with monolithic libvirt'
-      if facts[:os]['family'] == 'RedHat'
+      if facts[:os]['family'] == 'Debian'
+        # NOTE(tkajinam): Debian family uses monolithic libvirt by default, and
+        #                 does not support modular libvirt
+        it_configures 'nova compute libvirt services with monolithic libvirt'
+      else
+        # NOTE(tkajinam): RedHat family uses modular libvirt by default
         it_configures 'nova compute libvirt services with modular libvirt'
+
+        context 'with modular libvirt disabled' do
+          before :each do
+            params.merge!({ :modular_libvirt => false })
+          end
+          it_configures 'nova compute libvirt services with monolithic libvirt'
+        end
       end
     end
   end

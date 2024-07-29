@@ -1,0 +1,8 @@
+---
+upgrade:
+  - |
+    The ``modular_libvirt`` parameter now defaults to true on Red Hat family
+    operating systems. As of RHEL9, it is recommended to use modular libvirt
+    daemons, while the monolithic daemon has been deprecated. Note that
+    the current manifests do not fully manage the transition from monolithic
+    daemon to modular libvirt daemons, and additional cleanup may be needed.

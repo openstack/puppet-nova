@@ -58,7 +58,7 @@ class nova::params {
       $vncproxy_service_name             = 'openstack-nova-novncproxy'
       $serialproxy_service_name          = 'openstack-nova-serialproxy'
       $spicehtml5proxy_service_name      = 'openstack-nova-spicehtml5proxy'
-      $modular_libvirt                   = false
+      $modular_libvirt                   = true
       $modular_libvirt_support           = true
       $libvirt_guests_environment_file   = '/etc/sysconfig/libvirt-guests'
       # redhat specific config defaults
