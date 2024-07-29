@@ -23,7 +23,7 @@ class nova::compute::libvirt::version {
           }
         }
         default: {
-          fail("Class['nova::compute::libvirt::version']: Unsupported osname: ${::facts['os']['name']}")
+          fail("Unsupported osname: ${::facts['os']['name']}")
         }
       }
     }
