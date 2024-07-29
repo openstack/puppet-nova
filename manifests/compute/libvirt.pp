@@ -29,7 +29,7 @@
 #
 # [*cpu_models*]
 #   (optional) The named libvirt CPU models (see names listed in
-#   /usr/share/libvirt/cpu_map.xml). Only has effect if
+#   /usr/share/libvirt/cpu_map.xml). This option requires
 #   cpu_mode="custom" and virt_type="kvm|qemu".
 #   Defaults to []
 #
@@ -398,16 +398,18 @@ class nova::compute::libvirt (
     'libvirt/tb_cache_size':                 value => $tb_cache_size;
   }
 
-  # cpu_model param is only valid if cpu_mode=custom
-  # otherwise it should be commented out
-  if $cpu_mode_real == 'custom' and !empty($cpu_models){
+  if !empty($cpu_models) {
+    if $cpu_mode_real != 'custom' {
+      fail('$cpu_models requires that $cpu_mode is "custom"')
+    }
     $cpu_models_real = join($cpu_models, ',')
   } else {
-    if !empty($cpu_models) {
-      warning('$cpu_models requires that $cpu_mode => "custom" and will be ignored')
+    if $cpu_mode_real == 'custom' {
+      fail('$cpu_models is required when $cpu_mode is "custom"')
     }
     $cpu_models_real = $facts['os_service_default']
   }
+
   nova_config {
     'libvirt/cpu_models': value => $cpu_models_real;
   }
