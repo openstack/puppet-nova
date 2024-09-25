@@ -1,0 +1,5 @@
+---
+features:
+  - |
+    The new ``nova::rabbit_enable_cancel_on_failover`` parameter has been
+    added.
