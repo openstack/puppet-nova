@@ -335,74 +335,74 @@
 #   Defaults to undef
 #
 class nova(
-  $ensure_package                     = 'present',
-  $default_transport_url              = $facts['os_service_default'],
-  $rpc_response_timeout               = $facts['os_service_default'],
-  $long_rpc_timeout                   = $facts['os_service_default'],
-  $control_exchange                   = $facts['os_service_default'],
-  $executor_thread_pool_size          = $facts['os_service_default'],
-  $rabbit_use_ssl                     = $facts['os_service_default'],
-  $rabbit_heartbeat_timeout_threshold = $facts['os_service_default'],
-  $rabbit_heartbeat_rate              = $facts['os_service_default'],
-  $rabbit_heartbeat_in_pthread        = $facts['os_service_default'],
-  $rabbit_qos_prefetch_count          = $facts['os_service_default'],
-  $rabbit_ha_queues                   = $facts['os_service_default'],
-  $rabbit_quorum_queue                = $facts['os_service_default'],
-  $rabbit_transient_quorum_queue      = $facts['os_service_default'],
-  $rabbit_quorum_delivery_limit       = $facts['os_service_default'],
-  $rabbit_quorum_max_memory_length    = $facts['os_service_default'],
-  $rabbit_quorum_max_memory_bytes     = $facts['os_service_default'],
-  $rabbit_enable_cancel_on_failover   = $facts['os_service_default'],
-  $rabbit_retry_interval              = $facts['os_service_default'],
-  $kombu_ssl_ca_certs                 = $facts['os_service_default'],
-  $kombu_ssl_certfile                 = $facts['os_service_default'],
-  $kombu_ssl_keyfile                  = $facts['os_service_default'],
-  $kombu_ssl_version                  = $facts['os_service_default'],
-  $kombu_reconnect_delay              = $facts['os_service_default'],
-  $kombu_failover_strategy            = $facts['os_service_default'],
-  $kombu_compression                  = $facts['os_service_default'],
-  $amqp_durable_queues                = $facts['os_service_default'],
-  $host                               = $facts['os_service_default'],
-  $service_down_time                  = $facts['os_service_default'],
-  $state_path                         = '/var/lib/nova',
-  $lock_path                          = $::nova::params::lock_path,
-  $report_interval                    = $facts['os_service_default'],
-  $periodic_fuzzy_delay               = $facts['os_service_default'],
-  $rootwrap_config                    = '/etc/nova/rootwrap.conf',
-  Boolean $use_ssl                    = false,
-  Array[String[1]] $enabled_ssl_apis  = ['metadata', 'osapi_compute'],
-  $ca_file                            = undef,
-  $cert_file                          = undef,
-  $key_file                           = undef,
-  Nova::SshKey $nova_public_key       = undef,
-  Nova::SshKey $nova_private_key      = undef,
-  $ssl_only                           = $facts['os_service_default'],
-  $cert                               = $facts['os_service_default'],
-  $key                                = $facts['os_service_default'],
-  $console_ssl_ciphers                = $facts['os_service_default'],
-  $console_ssl_minimum_version        = $facts['os_service_default'],
-  $notification_transport_url         = $facts['os_service_default'],
-  $notification_driver                = $facts['os_service_default'],
-  $notification_topics                = $facts['os_service_default'],
-  $notification_retry                 = $facts['os_service_default'],
-  $notification_format                = $facts['os_service_default'],
-  $notify_on_state_change             = $facts['os_service_default'],
-  $ovsdb_connection                   = $facts['os_service_default'],
-  $upgrade_level_compute              = $facts['os_service_default'],
-  $upgrade_level_conductor            = $facts['os_service_default'],
-  $upgrade_level_scheduler            = $facts['os_service_default'],
-  $cpu_allocation_ratio               = $facts['os_service_default'],
-  $ram_allocation_ratio               = $facts['os_service_default'],
-  $disk_allocation_ratio              = $facts['os_service_default'],
-  $initial_cpu_allocation_ratio       = $facts['os_service_default'],
-  $initial_ram_allocation_ratio       = $facts['os_service_default'],
-  $initial_disk_allocation_ratio      = $facts['os_service_default'],
-  Boolean $purge_config               = false,
-  $my_ip                              = $facts['os_service_default'],
-  $dhcp_domain                        = $facts['os_service_default'],
-  $instance_name_template             = $facts['os_service_default'],
+  $ensure_package                          = 'present',
+  $default_transport_url                   = $facts['os_service_default'],
+  $rpc_response_timeout                    = $facts['os_service_default'],
+  $long_rpc_timeout                        = $facts['os_service_default'],
+  $control_exchange                        = $facts['os_service_default'],
+  $executor_thread_pool_size               = $facts['os_service_default'],
+  $rabbit_use_ssl                          = $facts['os_service_default'],
+  $rabbit_heartbeat_timeout_threshold      = $facts['os_service_default'],
+  $rabbit_heartbeat_rate                   = $facts['os_service_default'],
+  $rabbit_heartbeat_in_pthread             = $facts['os_service_default'],
+  $rabbit_qos_prefetch_count               = $facts['os_service_default'],
+  $rabbit_ha_queues                        = $facts['os_service_default'],
+  $rabbit_quorum_queue                     = $facts['os_service_default'],
+  $rabbit_transient_quorum_queue           = $facts['os_service_default'],
+  $rabbit_quorum_delivery_limit            = $facts['os_service_default'],
+  $rabbit_quorum_max_memory_length         = $facts['os_service_default'],
+  $rabbit_quorum_max_memory_bytes          = $facts['os_service_default'],
+  $rabbit_enable_cancel_on_failover        = $facts['os_service_default'],
+  $rabbit_retry_interval                   = $facts['os_service_default'],
+  $kombu_ssl_ca_certs                      = $facts['os_service_default'],
+  $kombu_ssl_certfile                      = $facts['os_service_default'],
+  $kombu_ssl_keyfile                       = $facts['os_service_default'],
+  $kombu_ssl_version                       = $facts['os_service_default'],
+  $kombu_reconnect_delay                   = $facts['os_service_default'],
+  $kombu_failover_strategy                 = $facts['os_service_default'],
+  $kombu_compression                       = $facts['os_service_default'],
+  $amqp_durable_queues                     = $facts['os_service_default'],
+  $host                                    = $facts['os_service_default'],
+  $service_down_time                       = $facts['os_service_default'],
+  $state_path                              = '/var/lib/nova',
+  $lock_path                               = $::nova::params::lock_path,
+  $report_interval                         = $facts['os_service_default'],
+  $periodic_fuzzy_delay                    = $facts['os_service_default'],
+  $rootwrap_config                         = '/etc/nova/rootwrap.conf',
+  Boolean $use_ssl                         = false,
+  Array[String[1]] $enabled_ssl_apis       = ['metadata', 'osapi_compute'],
+  $ca_file                                 = undef,
+  $cert_file                               = undef,
+  $key_file                                = undef,
+  Optional[Nova::SshKey] $nova_public_key  = undef,
+  Optional[Nova::SshKey] $nova_private_key = undef,
+  $ssl_only                                = $facts['os_service_default'],
+  $cert                                    = $facts['os_service_default'],
+  $key                                     = $facts['os_service_default'],
+  $console_ssl_ciphers                     = $facts['os_service_default'],
+  $console_ssl_minimum_version             = $facts['os_service_default'],
+  $notification_transport_url              = $facts['os_service_default'],
+  $notification_driver                     = $facts['os_service_default'],
+  $notification_topics                     = $facts['os_service_default'],
+  $notification_retry                      = $facts['os_service_default'],
+  $notification_format                     = $facts['os_service_default'],
+  $notify_on_state_change                  = $facts['os_service_default'],
+  $ovsdb_connection                        = $facts['os_service_default'],
+  $upgrade_level_compute                   = $facts['os_service_default'],
+  $upgrade_level_conductor                 = $facts['os_service_default'],
+  $upgrade_level_scheduler                 = $facts['os_service_default'],
+  $cpu_allocation_ratio                    = $facts['os_service_default'],
+  $ram_allocation_ratio                    = $facts['os_service_default'],
+  $disk_allocation_ratio                   = $facts['os_service_default'],
+  $initial_cpu_allocation_ratio            = $facts['os_service_default'],
+  $initial_ram_allocation_ratio            = $facts['os_service_default'],
+  $initial_disk_allocation_ratio           = $facts['os_service_default'],
+  Boolean $purge_config                    = false,
+  $my_ip                                   = $facts['os_service_default'],
+  $dhcp_domain                             = $facts['os_service_default'],
+  $instance_name_template                  = $facts['os_service_default'],
   # DEPRECATED PARAMETERS
-  $auth_strategy                      = undef,
+  $auth_strategy                           = undef,
 ) inherits nova::params {
 
   include nova::deps
@@ -432,10 +432,6 @@ class nova(
     }
 
     if $nova_public_key {
-      if ! $nova_public_key['key'] or ! $nova_public_key['type'] {
-        fail('You must provide both a key type and key data.')
-      }
-
       ssh_authorized_key { 'nova-migration-public-key':
         ensure  => present,
         key     => $nova_public_key['key'],
@@ -446,25 +442,10 @@ class nova(
     }
 
     if $nova_private_key {
-      if ! $nova_private_key['key'] or ! $nova_private_key['type'] {
-        fail('You must provide both a key type and key data.')
-      }
+      $nova_private_key_file = regsubst($nova_private_key['type'], /^ssh-/, 'id_')
 
-      $nova_private_key_file = $nova_private_key['type'] ? {
-        'ssh-rsa'     => '/var/lib/nova/.ssh/id_rsa',
-        'ssh-dsa'     => '/var/lib/nova/.ssh/id_dsa',
-        'ssh-ecdsa'   => '/var/lib/nova/.ssh/id_ecdsa',
-        'ssh-ed25519' => '/var/lib/nova/.ssh/id_ed25519',
-        default       => undef
-      }
-
-      if ! $nova_private_key_file {
-        fail("Unable to determine name of private key file.  Type specified was '${nova_private_key['type']}' \
-but should be one of: ssh-rsa, ssh-dsa, ssh-ecdsa, ssh-ed25519.")
-      }
-
-      file { $nova_private_key_file:
-        content   => $nova_private_key[key],
+      file { "/var/lib/nova/.ssh/${nova_private_key_file}":
+        content   => $nova_private_key['key'],
         mode      => '0600',
         owner     => $::nova::params::user,
         group     => $::nova::params::group,
