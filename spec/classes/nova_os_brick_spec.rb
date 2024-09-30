@@ -7,7 +7,9 @@ describe 'nova::os_brick' do
     context 'with defaults' do
       it 'configures the default values' do
         is_expected.to contain_oslo__os_brick('nova_config').with(
-          :lock_path => '<SERVICE DEFAULT>',
+          :lock_path                  => '<SERVICE DEFAULT>',
+          :wait_mpath_device_attempts => '<SERVICE DEFAULT>',
+          :wait_mpath_device_interval => '<SERVICE DEFAULT>',
         )
       end
     end
@@ -15,13 +17,17 @@ describe 'nova::os_brick' do
     context 'with parameters overridden' do
       let :params do
         {
-          :lock_path => '/var/lib/openstack/lock'
+          :lock_path                  => '/var/lib/openstack/lock',
+          :wait_mpath_device_attempts => 4,
+          :wait_mpath_device_interval => 1,
         }
       end
 
       it 'configures the overridden values' do
         is_expected.to contain_oslo__os_brick('nova_config').with(
-          :lock_path => '/var/lib/openstack/lock',
+          :lock_path                  => '/var/lib/openstack/lock',
+          :wait_mpath_device_attempts => 4,
+          :wait_mpath_device_interval => 1,
         )
       end
     end
