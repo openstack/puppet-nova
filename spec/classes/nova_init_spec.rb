@@ -63,6 +63,7 @@ describe 'nova' do
           :transport_url => '<SERVICE DEFAULT>',
           :driver        => '<SERVICE DEFAULT>',
           :topics        => '<SERVICE DEFAULT>',
+          :retry         => '<SERVICE DEFAULT>',
         )
       end
 
@@ -134,6 +135,7 @@ describe 'nova' do
           :notification_transport_url         => 'rabbit://rabbit_user:password@localhost:5673',
           :notification_driver                => 'ceilometer.compute.nova_notifier',
           :notification_topics                => 'openstack',
+          :notification_retry                 => 10,
           :notification_format                => 'unversioned',
           :report_interval                    => '10',
           :periodic_fuzzy_delay               => '61',
@@ -204,6 +206,7 @@ describe 'nova' do
           :transport_url => 'rabbit://rabbit_user:password@localhost:5673',
           :driver        => 'ceilometer.compute.nova_notifier',
           :topics        => 'openstack',
+          :retry         => 10,
         )
       end
 
@@ -242,7 +245,12 @@ describe 'nova' do
       end
 
       context 'with multiple notification_driver' do
-        before { params.merge!( :notification_driver => ['ceilometer.compute.nova_notifier', 'nova.openstack.common.notifier.rpc_notifier']) }
+        before do
+          params.merge!( :notification_driver => [
+            'ceilometer.compute.nova_notifier',
+            'nova.openstack.common.notifier.rpc_notifier'
+          ])
+        end
 
         it { is_expected.to contain_oslo__messaging__notifications('nova_config').with(
           :driver => ['ceilometer.compute.nova_notifier', 'nova.openstack.common.notifier.rpc_notifier'],
