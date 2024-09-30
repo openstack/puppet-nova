@@ -246,6 +246,11 @@
 #   (optional) AMQP topic used for OpenStack notifications
 #   Defaults to facts['os_service_default']
 #
+# [*notification_retry*]
+#   (optional) The maximum number of attempts to re-sent a notification
+#   message, which failed to be delivered due to a recoverable error.
+#   Defaults to $facts['os_service_default'].
+#
 # [*notification_format*]
 #   (optional) Format used for OpenStack notifications
 #   Defaults to facts['os_service_default']
@@ -379,6 +384,7 @@ class nova(
   $notification_transport_url         = $facts['os_service_default'],
   $notification_driver                = $facts['os_service_default'],
   $notification_topics                = $facts['os_service_default'],
+  $notification_retry                 = $facts['os_service_default'],
   $notification_format                = $facts['os_service_default'],
   $notify_on_state_change             = $facts['os_service_default'],
   $ovsdb_connection                   = $facts['os_service_default'],
@@ -575,6 +581,7 @@ but should be one of: ssh-rsa, ssh-dsa, ssh-ecdsa, ssh-ed25519.")
     transport_url => $notification_transport_url,
     driver        => $notification_driver,
     topics        => $notification_topics,
+    retry         => $notification_retry,
   }
 
   nova_config {
