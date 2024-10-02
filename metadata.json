@@ -7,11 +7,11 @@
         },
         {
             "name": "openstack/ironic",
-            "version_requirement": ">=24.0.0 <25.0.0"
+            "version_requirement": ">=25.0.0 <26.0.0"
         },
         {
             "name": "openstack/keystone",
-            "version_requirement": ">=24.0.0 <25.0.0"
+            "version_requirement": ">=25.0.0 <26.0.0"
         },
         {
             "name": "puppetlabs/stdlib",
@@ -19,11 +19,11 @@
         },
         {
             "name": "openstack/openstacklib",
-            "version_requirement": ">=24.0.0 <25.0.0"
+            "version_requirement": ">=25.0.0 <26.0.0"
         },
         {
             "name": "openstack/oslo",
-            "version_requirement": ">=24.0.0 <25.0.0"
+            "version_requirement": ">=25.0.0 <26.0.0"
         }
     ],
     "description": "Installs and configures OpenStack Nova (Compute).",
@@ -65,5 +65,5 @@
     ],
     "source": "https://opendev.org/openstack/puppet-nova.git",
     "summary": "Puppet module for OpenStack Nova",
-    "version": "24.0.0"
+    "version": "25.0.0"
 }
