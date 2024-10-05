@@ -383,7 +383,7 @@ class nova::migration::libvirt(
           file { "/etc/systemd/system/${socket_name}.socket":
             ensure  => absent,
             require => Anchor['nova::install::end']
-          } ~> exec { 'systemd-damon-reload':
+          } ~> exec { 'libvirt-socket-daemon-reload':
             command     => 'systemctl daemon-reload',
             path        => ['/sbin', '/usr/sbin', '/bin', '/usr/bin'],
             refreshonly => true,
@@ -410,16 +410,16 @@ class nova::migration::libvirt(
             path  => "/etc/systemd/system/${socket_name}.socket",
             line  => "ListenStream=${listen_address_real}:${listen_port}",
             match => '^ListenStream=.*',
-          } ~> exec { 'systemd-damon-reload':
+          } ~> exec { 'libvirt-socket-daemon-reload':
             command     => 'systemctl daemon-reload',
             path        => ['/sbin', '/usr/sbin', '/bin', '/usr/bin'],
             refreshonly => true,
           } ~> Service[$socket_name]
-          File["/etc/systemd/system/${socket_name}.socket"] ~> Exec['systemd-damon-reload']
+          File["/etc/systemd/system/${socket_name}.socket"] ~> Exec['libvirt-socket-daemon-reload']
         }
 
         # We have to stop libvirtd.service to restart socket.
-        Exec['systemd-damon-reload'] ~> Exec["stop ${proxy_service}.service"]
+        Exec['libvirt-socket-daemon-reload'] ~> Exec["stop ${proxy_service}.service"]
 
         if $modular_libvirt {
           Service["${proxy_service}-${transport}"] -> Service<| title == 'virtproxyd' |>
