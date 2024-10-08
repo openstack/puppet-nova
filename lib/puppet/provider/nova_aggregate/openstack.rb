@@ -15,7 +15,7 @@ Puppet::Type.type(:nova_aggregate).provide(
   def self.instances
     request('aggregate', 'list').collect do |el|
       attrs = request('aggregate', 'show', el[:name])
-      properties = parsestring(attrs[:properties]) rescue nil
+      properties = pythondict2hash(attrs[:properties])
       new(
           :ensure            => :present,
           :name              => attrs[:name],
@@ -120,22 +120,8 @@ Puppet::Type.type(:nova_aggregate).provide(
     end
   end
 
-  def self.string2hash(input)
-    return Hash[input.scan(/(\S+)='([^']*)'/)]
-  end
-
   def self.pythondict2hash(input)
     return JSON.parse(input.gsub(/'/, '"'))
-  end
-
-  def self.parsestring(input)
-    if input[0] == '{'
-      # 4.0.0+ output, python dict
-      return self.pythondict2hash(input)
-    else
-      # Pre-4.0.0 output, key=value
-      return self.string2hash(input)
-    end
   end
 
 end

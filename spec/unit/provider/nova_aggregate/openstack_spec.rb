@@ -47,7 +47,7 @@ just,"simple","just"
           .and_return('"id="just"
 name="simple"
 availability_zone=just"
-properties="key1=\'tomato\', key2=\'mushroom\'"
+properties="{\'key1\': \'tomato\', \'key2\':\'mushroom\'}"
 hosts="[]"
 ')
         instances = described_class.instances
@@ -103,18 +103,6 @@ hosts="[\'example\']"
       it 'should return a hash with key-value when provided with a python dict' do
         s = "{'key': 'value', 'key2': 'value2'}"
         expect(described_class.pythondict2hash(s)).to eq({"key"=>"value", "key2"=>"value2"})
-      end
-    end
-
-    describe '#parsestring' do
-      it 'should call string2hash when provided with a string' do
-        s = "key='value', key2='value2'"
-        expect(described_class.parsestring(s)).to eq({"key"=>"value", "key2"=>"value2"})
-      end
-
-      it 'should call pythondict2hash when provided with a hash' do
-        s = "{'key': 'value', 'key2': 'value2'}"
-        expect(described_class.parsestring(s)).to eq({"key"=>"value", "key2"=>"value2"})
       end
     end
   end
