@@ -37,10 +37,9 @@
 #    Optional
 #
 #  [*hosts*]
-#    A comma separated list with hosts or a single host. ie "host1,host2"
+#    An array of hosts or a single host. ie "host1,host2"
 #    Optional
 #
-
 require 'puppet'
 
 Puppet::Type.newtype(:nova_aggregate) do
@@ -116,16 +115,32 @@ Puppet::Type.newtype(:nova_aggregate) do
     end
   end
 
-  newproperty(:hosts) do
-    desc 'Single host or comma separated list of hosts'
-    #convert DSL/string form to internal form
-    munge do |value|
-      if value.is_a?(Array)
-        return value
-      elsif value.is_a?(String)
+  newproperty(:hosts, :array_matching => :all) do
+    desc 'Single host or array of hosts'
+
+    def should
+      val = super
+      val.flatten
+    end
+
+    def should=(values)
+      super
+      @should = @should.flatten
+    end
+
+    def issync?(is)
+      return false unless is.is_a? Array
+      is.sort == should.sort
+    end
+
+    validate do |value|
+      if value.is_a?(String)
+        if value.include?(',')
+          warning('Using comma separated string for hosts is deprecated. Use an array instead.')
+        end
         return value.split(",").map{|el| el.strip()}.sort
       else
-        raise ArgumentError, "Invalid hosts #{value}. Requires a String or an Array, not a #{value.class}"
+        raise ArgumentError, "Invalid hosts #{value}. Requires a String, not a #{value.class}"
       end
     end
   end
@@ -133,5 +148,4 @@ Puppet::Type.newtype(:nova_aggregate) do
   validate do
     raise ArgumentError, 'Name type must be set' unless self[:name]
   end
-
 end

@@ -25,7 +25,7 @@ describe Puppet::Type.type(:nova_aggregate) do
 
   it 'should raise error if wrong type for availability zone' do
     incorrect_input = {
-      :name => 'new_aggr',
+      :name              => 'new_aggr',
       :availability_zone => {'zone'=>'23'},
     }
     expect { Puppet::Type.type(:nova_aggregate).new(incorrect_input) }.to raise_error(Puppet::ResourceError, /availability zone must be a String/)
@@ -33,7 +33,7 @@ describe Puppet::Type.type(:nova_aggregate) do
 
   it 'should raise error if non-boolean-y input for filter_hosts' do
     incorrect_input = {
-      :name => 'new_aggr',
+      :name         => 'new_aggr',
       :filter_hosts => 'some non boolean-y value',
     }
     expect { Puppet::Type.type(:nova_aggregate).new(incorrect_input) }.to raise_error(Puppet::ResourceError, /Valid values are true, false/)
