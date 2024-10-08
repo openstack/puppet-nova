@@ -20,7 +20,7 @@ describe 'basic nova' do
       nova_aggregate { 'test_aggregate':
         ensure            => present,
         availability_zone => 'zone1',
-        metadata          => 'test=property',
+        metadata          => {'test' => 'property'},
         require           => Class['nova::api'],
       }
 
