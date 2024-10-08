@@ -65,7 +65,7 @@ hosts="[]"
           .and_return('name="just"
 id="just"
 availability_zone="simple"
-properties="{u\'nice\': u\'cookie\'}"
+properties="{\'nice\': \'cookie\'}"
 hosts="[]"
 ')
         expect(described_class).to receive(:openstack)
@@ -73,8 +73,8 @@ hosts="[]"
           .and_return('name="just"
 id="just"
 availability_zone="simple"
-properties="{u\'nice\': u\'cookie\'}"
-hosts="[u\'example\']"
+properties="{\'nice\': \'cookie\'}"
+hosts="[\'example\']"
 ')
 
         provider.create
@@ -164,7 +164,7 @@ hosts="[u\'example\']"
           .and_return('name="just"
 id="just"
 availability_zone="simple"
-properties="{u\'nice\': u\'cookie\'}"
+properties="{\'nice\': \'cookie\'}"
 hosts="[]"
 ')
 
@@ -174,8 +174,8 @@ hosts="[]"
           .and_return('name="just"
 id="just"
 availability_zone="simple"
-properties="{u\'nice\': u\'cookie\'}"
-hosts="[u\'known\']"
+properties="{\'nice\': \'cookie\'}"
+hosts="[\'known\']"
 ')
 
         expect(described_class).to receive(:openstack)
@@ -184,8 +184,8 @@ hosts="[u\'known\']"
           .and_return('name="just"
 id="just"
 availability_zone="simple"
-properties="{u\'nice\': u\'cookie\'}"
-hosts="[u\'known\', u\'known_too\']"
+properties="{\'nice\': \'cookie\'}"
+hosts="[\'known\', \'known_too\']"
 ')
 
         expect(described_class).to receive(:openstack)
@@ -194,8 +194,8 @@ hosts="[u\'known\', u\'known_too\']"
           .and_return('name="just"
 id="just"
 availability_zone="simple"
-properties="{u\'nice\': u\'cookie\'}"
-hosts="[u\'known_too\']"
+properties="{\'nice\': \'cookie\'}"
+hosts="[\'known_too\']"
 ')
 
         # this creates a provider with the attributes defined above as 'aggregate_attrs'
