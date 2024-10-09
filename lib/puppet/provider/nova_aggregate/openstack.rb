@@ -17,19 +17,14 @@ Puppet::Type.type(:nova_aggregate).provide(
       attrs = request('aggregate', 'show', el[:name])
       properties = pythondict2hash(attrs[:properties])
       new(
-          :ensure            => :present,
-          :name              => attrs[:name],
-          :id                => attrs[:id],
-          :availability_zone => attrs[:availability_zone],
-          :metadata          => properties,
-          :hosts             => string2list(attrs[:hosts]).sort,
-          :filter_hosts      => attrs[:filter_hosts]
+        :ensure            => :present,
+        :name              => attrs[:name],
+        :id                => attrs[:id],
+        :availability_zone => attrs[:availability_zone],
+        :metadata          => properties,
+        :hosts             => string2list(attrs[:hosts]).sort,
       )
     end
-  end
-
-  def self.string2list(input)
-    return input[1..-2].split(",").map { |x| x.match(/'(.*?)'/)[1] }
   end
 
   def self.prefetch(resources)
@@ -69,7 +64,17 @@ Puppet::Type.type(:nova_aggregate).provide(
         properties << "--property" << "#{key}=#{value}"
       end
     end
-    @property_hash = self.class.request('aggregate', 'create', properties)
+
+    attrs = self.class.request('aggregate', 'create', properties)
+    properties = self.class.pythondict2hash(attrs[:properties])
+    @property_hash = {
+      :ensure            => :present,
+      :name              => attrs[:name],
+      :id                => attrs[:id],
+      :availability_zone => attrs[:availability_zone],
+      :metadata          => properties,
+    }
+
     if not @resource[:hosts].nil? and not @resource[:hosts].empty?
       # filter host list by known hosts if filter_hosts is set
       if @resource[:filter_hosts] == :true
@@ -79,8 +84,10 @@ Puppet::Type.type(:nova_aggregate).provide(
         properties = [@property_hash[:name], host]
         self.class.request('aggregate', 'add host', properties)
       end
+      @property_hash[:hosts] = @resource[:hosts].sort
+    else
+      @property_hash[:hosts] = @resource[:hosts]
     end
-    @property_hash[:ensure] = :present
   end
 
   def availability_zone=(value)
@@ -118,6 +125,10 @@ Puppet::Type.type(:nova_aggregate).provide(
         self.class.request('aggregate', 'add host', [@property_hash[:id], host])
       end
     end
+  end
+
+  def self.string2list(input)
+    return input[1..-2].split(",").map { |x| x.match(/'(.*?)'/)[1] }
   end
 
   def self.pythondict2hash(input)
