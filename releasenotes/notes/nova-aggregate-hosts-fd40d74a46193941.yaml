@@ -1,0 +1,10 @@
+---
+upgrade:
+  - |
+    The ``nova_aggregate`` resource now requires an array value for its
+    ``hosts`` property in case multiple hosts should belong to the aggregate.
+
+fixes:
+  - |
+    Fixed ``nova_aggregate`` resource so that the resource ensures all values
+    given for the ``hosts`` property present.
