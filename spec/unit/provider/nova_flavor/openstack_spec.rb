@@ -168,8 +168,8 @@ domain_id="domain_one_id"
         expect(instances[0].swap).to eq('0')
         expect(instances[0].rxtx_factor).to eq('1.0')
         expect(instances[0].properties).to eq({})
-        expect(instances[0].project).to eq('')
-        expect(instances[0].project_name).to eq('')
+        expect(instances[0].project).to eq(:absent)
+        expect(instances[0].project_name).to eq(:absent)
         expect(instances[1].name).to eq('m1.nano')
         expect(instances[1].id).to eq('42')
         expect(instances[1].ram).to eq('256')
@@ -180,8 +180,8 @@ domain_id="domain_one_id"
         expect(instances[1].swap).to eq('0')
         expect(instances[1].rxtx_factor).to eq('1.0')
         expect(instances[1].properties).to eq({'key1' => 'val1', 'key2' => 'val2'})
-        expect(instances[1].project).to eq('')
-        expect(instances[1].project_name).to eq('')
+        expect(instances[1].project).to eq(:absent)
+        expect(instances[1].project_name).to eq(:absent)
       end
     end
 

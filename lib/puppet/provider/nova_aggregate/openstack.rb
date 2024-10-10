@@ -22,7 +22,7 @@ Puppet::Type.type(:nova_aggregate).provide(
         :id                => attrs[:id],
         :availability_zone => attrs[:availability_zone],
         :metadata          => properties,
-        :hosts             => string2list(attrs[:hosts]).sort,
+        :hosts             => parse_python_list(attrs[:hosts]).sort,
       )
     end
   end
@@ -125,9 +125,5 @@ Puppet::Type.type(:nova_aggregate).provide(
         self.class.request('aggregate', 'add host', [@property_hash[:id], host])
       end
     end
-  end
-
-  def self.string2list(input)
-    return input[1..-2].split(",").map { |x| x.match(/'(.*?)'/)[1] }
   end
 end

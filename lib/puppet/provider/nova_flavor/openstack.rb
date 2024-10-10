@@ -99,23 +99,14 @@ Puppet::Type.type(:nova_flavor).provide(
       access_project_ids = project[:access_project_ids]
       # Client can return None and this should be considered as ''
       if access_project_ids.downcase.chomp == 'none'
-        project_value = ''
-      # If the ids are formatted as Array, surrounding [] should be removed
-      elsif access_project_ids.start_with?('[') and access_project_ids.end_with?(']')
-        # TODO(tkajinam): We'd need to consider multiple projects can be returned
-        project_value = access_project_ids[1..-2]
+        project_id = nil
+        project_name = nil
       else
-        project_value = access_project_ids
-      end
-      project_value = project_value.gsub('\'', '')
-
-      if project_value != ''
+        # TODO(tkajinam): We'd need to consider multiple projects can be returned
+        project_value = parse_python_list(access_project_ids)[0]
         project = request('project', 'show', project_value)
         project_id = project[:id]
         project_name = project[:name]
-      else
-        project_id = ''
-        project_name = ''
       end
 
       properties = parse_python_dict(attrs[:properties])
