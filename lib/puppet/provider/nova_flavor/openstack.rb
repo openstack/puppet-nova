@@ -118,7 +118,7 @@ Puppet::Type.type(:nova_flavor).provide(
         project_name = ''
       end
 
-      properties = JSON.parse(attrs[:properties].gsub(/'/, '"'))
+      properties = parse_python_dict(attrs[:properties])
       new(
         :ensure       => :present,
         :name         => attrs[:name],

@@ -93,18 +93,6 @@ hosts="[\'example\']"
         expect(provider.exists?).to be_falsey
       end
     end
-
-    describe '#pythondict2hash' do
-      it 'should return a hash with key-value when provided with a unicode python dict' do
-        s = "{'key': 'value', 'key2': 'value2'}"
-        expect(described_class.pythondict2hash(s)).to eq({"key"=>"value", "key2"=>"value2"})
-      end
-
-      it 'should return a hash with key-value when provided with a python dict' do
-        s = "{'key': 'value', 'key2': 'value2'}"
-        expect(described_class.pythondict2hash(s)).to eq({"key"=>"value", "key2"=>"value2"})
-      end
-    end
   end
 
 
