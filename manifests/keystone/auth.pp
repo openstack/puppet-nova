@@ -71,6 +71,10 @@
 #   (Optional) Whether to configure the admin role for the service user.
 #   Defaults to true
 #
+# [*configure_service*]
+#   (Optional) Should the service be configurd?
+#   Defaults to True
+#
 class nova::keystone::auth(
   String[1] $password,
   String[1] $auth_name                    = 'nova',
@@ -89,6 +93,7 @@ class nova::keystone::auth(
   Boolean $configure_endpoint             = true,
   Boolean $configure_user                 = true,
   Boolean $configure_user_role            = true,
+  Boolean $configure_service              = true,
 ) {
 
   include nova::deps
@@ -99,6 +104,7 @@ class nova::keystone::auth(
     configure_user      => $configure_user,
     configure_user_role => $configure_user_role,
     configure_endpoint  => $configure_endpoint,
+    configure_service   => $configure_service,
     service_type        => $service_type,
     service_description => $service_description,
     service_name        => $service_name,

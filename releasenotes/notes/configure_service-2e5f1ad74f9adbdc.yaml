@@ -1,0 +1,5 @@
+---
+features:
+  - |
+    The new ``nova::keystone::auth::configure_service`` parameter has been
+    added.
