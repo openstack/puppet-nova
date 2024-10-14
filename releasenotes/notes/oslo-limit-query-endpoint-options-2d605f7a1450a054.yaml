@@ -1,0 +1,9 @@
+---
+features:
+  - |
+    The following parameters have been added to the ``nova::limit`` class.
+
+    - ``endpoint_service_name``
+    - ``endpoint_service_type``
+    - ``endpoint_region_name``
+    - ``endpoint_interface``
