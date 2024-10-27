@@ -133,7 +133,7 @@ class nova::db (
     slave_connection        => $slave_connection,
   }
 
-  oslo::db { 'api_database':
+  oslo::db { 'nova_config_api':
     config                  => 'nova_config',
     config_group            => 'api_database',
     connection              => $api_database_connection,
@@ -149,6 +149,6 @@ class nova::db (
   # all db settings should be applied and all packages should be installed
   # before dbsync starts
   Oslo::Db['nova_config'] -> Anchor['nova::dbsync::begin']
-  Oslo::Db['api_database'] -> Anchor['nova::dbsync::begin']
-  Oslo::Db['api_database'] -> Anchor['nova::dbsync_api::begin']
+  Oslo::Db['nova_config_api'] -> Anchor['nova::dbsync::begin']
+  Oslo::Db['nova_config_api'] -> Anchor['nova::dbsync_api::begin']
 }

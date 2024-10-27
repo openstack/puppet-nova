@@ -19,7 +19,7 @@ describe 'nova::db' do
         :pool_timeout            => '<SERVICE DEFAULT>',
         :mysql_enable_ndb        => '<SERVICE DEFAULT>',
       )}
-      it { should contain_oslo__db('api_database').with(
+      it { should contain_oslo__db('nova_config_api').with(
         :config                  => 'nova_config',
         :config_group            => 'api_database',
         :connection              => '<SERVICE DEFAULT>',
@@ -70,7 +70,7 @@ describe 'nova::db' do
         :mysql_enable_ndb        => 'true',
       )}
 
-      it { should contain_oslo__db('api_database').with(
+      it { should contain_oslo__db('nova_config_api').with(
         :config                  => 'nova_config',
         :config_group            => 'api_database',
         :connection              => 'mysql+pymysql://user:pass@db/db2',
