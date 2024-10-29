@@ -19,7 +19,7 @@ describe Puppet::Type.type(:nova_aggregate).provider(:openstack) do
          :availability_zone => 'simple',
          :hosts             => ['example'],
          :ensure            => 'present',
-         :metadata          => 'nice=cookie',
+         :metadata          => {'nice' => 'cookie'},
       }
     end
 
@@ -105,7 +105,7 @@ hosts="[\'example\']"
          :availability_zone => 'simple',
          :hosts             => ['known'],
          :ensure            => 'present',
-         :metadata          => 'nice=cookie',
+         :metadata          => {'nice' => 'cookie'},
          :filter_hosts      => 'true'
       }
     end

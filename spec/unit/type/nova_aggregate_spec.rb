@@ -20,7 +20,7 @@ describe Puppet::Type.type(:nova_aggregate) do
       :name     => 'new_aggr',
       :metadata => 'some_id,sd'
     }
-    expect { Puppet::Type.type(:nova_aggregate).new(incorrect_input) }.to raise_error(Puppet::ResourceError, /Key\/value pairs must be separated by an =/)
+    expect { Puppet::Type.type(:nova_aggregate).new(incorrect_input) }.to raise_error(Puppet::ResourceError, /Invalid metadata/)
   end
 
   it 'should raise error if wrong type for availability zone' do

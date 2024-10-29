@@ -1,0 +1,6 @@
+---
+upgrade:
+  - |
+    The ``properties`` property of ``nova_flavor`` resource and
+    the ``metadata`` property of ``nova_aggregate`` resource now accept only
+    Hash values.

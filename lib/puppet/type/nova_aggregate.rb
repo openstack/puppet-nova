@@ -33,7 +33,7 @@
 #    Optional
 #
 #  [*metadata*]
-#    String with key/value pairs. ie "key=value,key=value"
+#    A key => value hash used to set the metadata for the aggregate.
 #    Optional
 #
 #  [*hosts*]
@@ -89,28 +89,12 @@ Puppet::Type.newtype(:nova_aggregate) do
 
   newproperty(:metadata) do
     desc 'The metadata of the aggregate'
-    #convert DSL/string form to internal form which is a single hash
-    munge do |value|
-      if value.is_a?(Hash)
-        return value
-      end
-      internal = Hash.new
-      value.split(",").map{|el| el.strip()}.each do |pair|
-        key, value = pair.split("=", 2)
-        internal[key.strip()] = value.strip()
-      end
-      return internal
-    end
 
     validate do |value|
       if value.is_a?(Hash)
         return true
-      elsif value.is_a?(String)
-        value.split(",").each do |kv|
-          raise ArgumentError, "Key/value pairs must be separated by an =" unless value.include?("=")
-        end
       else
-        raise ArgumentError, "Invalid metadata #{value}. Requires a String or a Hash, not a #{value.class}"
+        raise ArgumentError, "Invalid metadata #{value}. Requires a Hash, not a #{value.class}"
       end
     end
   end
