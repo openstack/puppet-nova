@@ -18,6 +18,11 @@
 #   (integer value)
 #   Defaults to $facts['os_service_default']
 #
+# [*backend_expiration_time*]
+#   (Optional) Expiration time in cache backend to purge expired records
+#   automatically.
+#   Defaults to $facts['os_service_default']
+#
 # [*backend*]
 #   (Optional) Dogpile.cache backend module. It is recommended that
 #   Memcache with pooling (oslo_cache.memcache_pool) or Redis
@@ -215,6 +220,7 @@
 class nova::cache (
   $config_prefix                        = $facts['os_service_default'],
   $expiration_time                      = $facts['os_service_default'],
+  $backend_expiration_time              = $facts['os_service_default'],
   $backend                              = $facts['os_service_default'],
   $backend_argument                     = $facts['os_service_default'],
   $proxies                              = $facts['os_service_default'],
@@ -259,6 +265,7 @@ class nova::cache (
   oslo::cache { 'nova_config':
     config_prefix                        => $config_prefix,
     expiration_time                      => $expiration_time,
+    backend_expiration_time              => $backend_expiration_time,
     backend                              => $backend,
     backend_argument                     => $backend_argument,
     proxies                              => $proxies,

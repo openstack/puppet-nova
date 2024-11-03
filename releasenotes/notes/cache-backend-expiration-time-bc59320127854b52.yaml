@@ -1,0 +1,4 @@
+---
+features:
+  - |
+    The new ``nova::cache::backend_expiration_time`` parameter has been added.
