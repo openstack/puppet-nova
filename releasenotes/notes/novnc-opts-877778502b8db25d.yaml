@@ -1,0 +1,7 @@
+---
+features:
+  - |
+    The following parameters have been added to the ``nova`` class.
+
+    - ``record``
+    - ``source_is_ipv6``
