@@ -206,8 +206,16 @@
 #   'key-data' }, where 'key-type' is one of (ssh-rsa, ssh-dsa, ssh-ecdsa,
 #   ssh-ed25519) and 'key-data' is the contents of the private key file.
 #
+# [*record*]
+#   (optional) Filename that will be used for storing websocket frames.
+#   Defaults to $facts['os_service_default']
+#
 # [*ssl_only*]
 #   (optional) Disallow non-encrypted connections.
+#   Defaults to $facts['os_service_default']
+#
+# [*source_is_ipv6*]
+#   (optional) Set to True if source host is addressed with IPv6.
 #   Defaults to $facts['os_service_default']
 #
 # [*cert*]
@@ -376,7 +384,9 @@ class nova(
   $key_file                                = undef,
   Optional[Nova::SshKey] $nova_public_key  = undef,
   Optional[Nova::SshKey] $nova_private_key = undef,
+  $record                                  = $facts['os_service_default'],
   $ssl_only                                = $facts['os_service_default'],
+  $source_is_ipv6                          = $facts['os_service_default'],
   $cert                                    = $facts['os_service_default'],
   $key                                     = $facts['os_service_default'],
   $console_ssl_ciphers                     = $facts['os_service_default'],
@@ -480,7 +490,9 @@ class nova(
   }
 
   nova_config {
+    'DEFAULT/record':                        value => $record;
     'DEFAULT/ssl_only':                      value => $ssl_only;
+    'DEFAULT/source_is_ipv6':                value => $source_is_ipv6;
     'DEFAULT/cert':                          value => $cert;
     'DEFAULT/key':                           value => $key;
     'console/ssl_ciphers':                   value => join(any2array($console_ssl_ciphers), ':');

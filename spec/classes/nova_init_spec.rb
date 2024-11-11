@@ -86,7 +86,9 @@ describe 'nova' do
         is_expected.to contain_nova_config('DEFAULT/initial_cpu_allocation_ratio').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('DEFAULT/initial_ram_allocation_ratio').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('DEFAULT/initial_disk_allocation_ratio').with_value('<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('DEFAULT/record').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('DEFAULT/ssl_only').with_value('<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('DEFAULT/source_is_ipv6').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('DEFAULT/cert').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('DEFAULT/key').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('console/ssl_ciphers').with_value('<SERVICE DEFAULT>')
@@ -145,7 +147,9 @@ describe 'nova' do
           :upgrade_level_scheduler            => '1.0.0',
           :purge_config                       => false,
           :my_ip                              => '192.0.2.1',
+          :record                             => '/var/lib/nova/novnc.log',
           :ssl_only                           => true,
+          :source_is_ipv6                     => false,
           :cert                               => '/etc/ssl/private/snakeoil.pem',
           :key                                => '/etc/ssl/certs/snakeoil.pem',
           :console_ssl_ciphers                => 'kEECDH+aECDSA+AES:kEECDH+AES+aRSA:kEDH+aRSA+AES',
@@ -235,7 +239,9 @@ describe 'nova' do
         is_expected.to contain_nova_config('DEFAULT/periodic_fuzzy_delay').with_value('61')
         is_expected.to contain_nova_config('vif_plug_ovs/ovsdb_connection').with_value('tcp:127.0.0.1:6640')
         is_expected.to contain_nova_config('DEFAULT/long_rpc_timeout').with_value('1800')
+        is_expected.to contain_nova_config('DEFAULT/record').with_value('/var/lib/nova/novnc.log')
         is_expected.to contain_nova_config('DEFAULT/ssl_only').with_value(true)
+        is_expected.to contain_nova_config('DEFAULT/source_is_ipv6').with_value(false)
         is_expected.to contain_nova_config('DEFAULT/cert').with_value('/etc/ssl/private/snakeoil.pem')
         is_expected.to contain_nova_config('DEFAULT/key').with_value('/etc/ssl/certs/snakeoil.pem')
         is_expected.to contain_nova_config('console/ssl_ciphers').with_value('kEECDH+aECDSA+AES:kEECDH+AES+aRSA:kEDH+aRSA+AES')
