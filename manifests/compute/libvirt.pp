@@ -238,7 +238,7 @@
 class nova::compute::libvirt (
   $ensure_package                             = 'present',
   Nova::VirtType $virt_type                   = 'kvm',
-  $vncserver_listen                           = '127.0.0.1',
+  String[1] $vncserver_listen                 = '127.0.0.1',
   Boolean $migration_support                  = false,
   Optional[Nova::CpuMode] $cpu_mode           = undef,
   Array[String[1]] $cpu_models                = [],
