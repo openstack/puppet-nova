@@ -1,0 +1,7 @@
+---
+features:
+  - |
+    The following parameters have been added to the ``nova::quota`` class.
+
+    - ``unified_limits_resource_strategy``
+    - ``unified_limits_resource_list``

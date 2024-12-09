@@ -7,19 +7,21 @@ describe 'nova::quota' do
 
   let :default_params do
     {
-      :driver                      => '<SERVICE DEFAULT>',
-      :instances                   => '<SERVICE DEFAULT>',
-      :cores                       => '<SERVICE DEFAULT>',
-      :ram                         => '<SERVICE DEFAULT>',
-      :metadata_items              => '<SERVICE DEFAULT>',
-      :injected_files              => '<SERVICE DEFAULT>',
-      :injected_file_content_bytes => '<SERVICE DEFAULT>',
-      :injected_file_path_length   => '<SERVICE DEFAULT>',
-      :key_pairs                   => '<SERVICE DEFAULT>',
-      :server_groups               => '<SERVICE DEFAULT>',
-      :server_group_members        => '<SERVICE DEFAULT>',
-      :recheck_quota               => '<SERVICE DEFAULT>',
-      :count_usage_from_placement  => '<SERVICE DEFAULT>',
+      :driver                           => '<SERVICE DEFAULT>',
+      :instances                        => '<SERVICE DEFAULT>',
+      :cores                            => '<SERVICE DEFAULT>',
+      :ram                              => '<SERVICE DEFAULT>',
+      :metadata_items                   => '<SERVICE DEFAULT>',
+      :injected_files                   => '<SERVICE DEFAULT>',
+      :injected_file_content_bytes      => '<SERVICE DEFAULT>',
+      :injected_file_path_length        => '<SERVICE DEFAULT>',
+      :key_pairs                        => '<SERVICE DEFAULT>',
+      :server_groups                    => '<SERVICE DEFAULT>',
+      :server_group_members             => '<SERVICE DEFAULT>',
+      :recheck_quota                    => '<SERVICE DEFAULT>',
+      :count_usage_from_placement       => '<SERVICE DEFAULT>',
+      :unified_limits_resource_strategy => '<SERVICE DEFAULT>',
+      :unified_limits_resource_list     => '<SERVICE DEFAULT>',
     }
   end
 
@@ -43,19 +45,21 @@ describe 'nova::quota' do
     context 'with provided parameters' do
       before do
         params.merge!({
-          :driver                      => 'nova.quota.DbQuotaDriver',
-          :instances                   => 20,
-          :cores                       => 40,
-          :ram                         => 102400,
-          :metadata_items              => 256,
-          :injected_files              => 10,
-          :injected_file_content_bytes => 20480,
-          :injected_file_path_length   => 254,
-          :key_pairs                   => 200,
-          :server_groups               => 20,
-          :server_group_members        => 20,
-          :recheck_quota               => true,
-          :count_usage_from_placement  => false,
+          :driver                           => 'nova.quota.DbQuotaDriver',
+          :instances                        => 20,
+          :cores                            => 40,
+          :ram                              => 102400,
+          :metadata_items                   => 256,
+          :injected_files                   => 10,
+          :injected_file_content_bytes      => 20480,
+          :injected_file_path_length        => 254,
+          :key_pairs                        => 200,
+          :server_groups                    => 20,
+          :server_group_members             => 20,
+          :recheck_quota                    => true,
+          :count_usage_from_placement       => false,
+          :unified_limits_resource_strategy => 'require',
+          :unified_limits_resource_list     => 'servers',
         })
       end
 
