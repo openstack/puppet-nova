@@ -13,11 +13,11 @@
 #
 # [*endpoint_service_name*]
 #   (Optional) Service name for endpoint discovery
-#   Defaults to undef
+#   Defaults to 'nova'
 #
 # [*endpoint_service_type*]
 #   (Optional) Service type for endpoint discovery
-#   Defaults to undef
+#   Defaults to 'compute'
 #
 # [*endpoint_region_name*]
 #   (Optional) Region to which the endpoint belongs.
@@ -74,30 +74,38 @@
 #
 class nova::limit(
   String[1] $password,
-  Optional[String[1]] $endpoint_id           = undef,
-  Optional[String[1]] $endpoint_service_name = undef,
-  Optional[String[1]] $endpoint_service_type = undef,
-  $endpoint_region_name                      = $facts['os_service_default'],
-  $endpoint_interface                        = $facts['os_service_default'],
-  $username                                  = 'nova',
-  $auth_url                                  = 'http://localhost:5000',
-  $project_name                              = 'services',
-  $user_domain_name                          = 'Default',
-  $project_domain_name                       = 'Default',
-  $system_scope                              = $facts['os_service_default'],
-  $auth_type                                 = 'password',
-  $service_type                              = $facts['os_service_default'],
-  $valid_interfaces                          = $facts['os_service_default'],
-  $region_name                               = $facts['os_service_default'],
-  $endpoint_override                         = $facts['os_service_default'],
+  Optional[String[1]] $endpoint_id = undef,
+  String[1] $endpoint_service_name = 'nova',
+  String[1] $endpoint_service_type = 'compute',
+  $endpoint_region_name            = $facts['os_service_default'],
+  $endpoint_interface              = $facts['os_service_default'],
+  $username                        = 'nova',
+  $auth_url                        = 'http://localhost:5000',
+  $project_name                    = 'services',
+  $user_domain_name                = 'Default',
+  $project_domain_name             = 'Default',
+  $system_scope                    = $facts['os_service_default'],
+  $auth_type                       = 'password',
+  $service_type                    = $facts['os_service_default'],
+  $valid_interfaces                = $facts['os_service_default'],
+  $region_name                     = $facts['os_service_default'],
+  $endpoint_override               = $facts['os_service_default'],
 ) {
 
   include nova::deps
 
+  if $endpoint_id != undef {
+    $endpoint_service_name_real = undef
+    $endpoint_service_type_real = undef
+  } else {
+    $endpoint_service_name_real = $endpoint_service_name
+    $endpoint_service_type_real = $endpoint_service_type
+  }
+
   oslo::limit { 'nova_config':
     endpoint_id           => $endpoint_id,
-    endpoint_service_name => $endpoint_service_name,
-    endpoint_service_type => $endpoint_service_type,
+    endpoint_service_name => $endpoint_service_name_real,
+    endpoint_service_type => $endpoint_service_type_real,
     endpoint_region_name  => $endpoint_region_name,
     endpoint_interface    => $endpoint_interface,
     username              => $username,
