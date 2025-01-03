@@ -27,7 +27,7 @@ describe 'nova::compute' do
       it 'does not configure vncproxy base url in nova.conf' do
         is_expected.to contain_nova_config('vnc/enabled').with_value(true)
         is_expected.to_not contain_nova_config('vnc/novncproxy_base_url')
-        is_expected.to contain_nova_config('vnc/server_proxyclient_address').with_value('127.0.0.1')
+        is_expected.to contain_nova_config('vnc/server_proxyclient_address').with_value('<SERVICE DEFAULT>')
       end
 
       it 'should have spice disabled' do
@@ -136,7 +136,7 @@ describe 'nova::compute' do
 
       it 'configures vnc in nova.conf' do
         is_expected.to contain_nova_config('vnc/enabled').with_value(true)
-        is_expected.to contain_nova_config('vnc/server_proxyclient_address').with_value('127.0.0.1')
+        is_expected.to contain_nova_config('vnc/server_proxyclient_address').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('vnc/novncproxy_base_url').with_value(
           'http://127.0.0.1:6080/vnc_auto.html'
         )

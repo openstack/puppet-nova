@@ -268,7 +268,7 @@ class nova::compute (
   $ensure_package                              = 'present',
   Boolean $vnc_enabled                         = true,
   Boolean $spice_enabled                       = false,
-  $vncserver_proxyclient_address               = '127.0.0.1',
+  $vncserver_proxyclient_address               = $facts['os_service_default'],
   $vncproxy_host                               = undef,
   $vncproxy_protocol                           = 'http',
   $vncproxy_port                               = '6080',
