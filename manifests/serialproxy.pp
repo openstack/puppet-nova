@@ -14,11 +14,11 @@
 #
 # [*serialproxy_host*]
 #   (optional) Host on which to listen for incoming requests
-#   Defaults to '0.0.0.0'
+#   Defaults to $facts['os_service_default']
 #
 # [*serialproxy_port*]
 #   (optional) Port on which to listen for incoming requests
-#   Defaults to '6083'
+#   Defaults to $facts['os_service_default']
 #
 # [*ensure_package*]
 #   (optional) The state of the nova-serialproxy package
@@ -27,8 +27,8 @@
 class nova::serialproxy(
   Boolean $enabled        = true,
   Boolean $manage_service = true,
-  $serialproxy_host       = '0.0.0.0',
-  $serialproxy_port       = '6083',
+  $serialproxy_host       = $facts['os_service_default'],
+  $serialproxy_port       = $facts['os_service_default'],
   $ensure_package         = 'present'
 ) {
 
