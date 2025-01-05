@@ -12,21 +12,36 @@ describe 'nova::serialproxy' do
 
   shared_examples 'nova-serialproxy' do
 
-    it 'configures nova.conf' do
-      is_expected.to contain_nova_config('serial_console/serialproxy_host').with(:value => '0.0.0.0')
-      is_expected.to contain_nova_config('serial_console/serialproxy_port').with(:value => '6083')
+    context 'with defaults' do
+      it 'configures nova.conf' do
+        is_expected.to contain_nova_config('serial_console/serialproxy_host').with_value('<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('serial_console/serialproxy_port').with_value('<SERVICE DEFAULT>')
+      end
+
+      it { is_expected.to contain_package('nova-serialproxy').with(
+        :name   => platform_params[:serialproxy_package_name],
+        :ensure => 'present'
+      )}
+
+      it { is_expected.to contain_service('nova-serialproxy').with(
+        :name      => platform_params[:serialproxy_service_name],
+        :hasstatus => 'true',
+        :ensure    => 'running'
+      )}
     end
 
-    it { is_expected.to contain_package('nova-serialproxy').with(
-      :name   => platform_params[:serialproxy_package_name],
-      :ensure => 'present'
-    ) }
-
-    it { is_expected.to contain_service('nova-serialproxy').with(
-      :name      => platform_params[:serialproxy_service_name],
-      :hasstatus => 'true',
-      :ensure    => 'running'
-    )}
+    context 'with parameters' do
+      let :params do
+        {
+          :serialproxy_host => '0.0.0.0',
+          :serialproxy_port => 6083
+        }
+      end
+      it 'configures nova.conf' do
+        is_expected.to contain_nova_config('serial_console/serialproxy_host').with_value('0.0.0.0')
+        is_expected.to contain_nova_config('serial_console/serialproxy_port').with_value(6083)
+      end
+    end
 
     context 'with manage_service as false' do
       let :params do
