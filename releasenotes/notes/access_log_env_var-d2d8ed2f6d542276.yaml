@@ -1,0 +1,6 @@
+---
+features:
+  - |
+    Add the ``access_log_env_var`` parameter to the ``nova::wsgi::apache_api``
+    and the ``nova::wsgi::apache_metadata`` classes
+    to allow filtering logs (eg. suppress healthecks)
