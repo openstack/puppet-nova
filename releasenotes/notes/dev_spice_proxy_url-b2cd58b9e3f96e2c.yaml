@@ -1,0 +1,5 @@
+---
+features:
+  - |
+    Allow setting custom url for spice proxy. This makes it possible
+    to specify an URL without explicit port setting.

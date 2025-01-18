@@ -17,6 +17,11 @@
 #   listen on the compute host.
 #   Defaults to $facts['os_service_default']
 #
+# [*html5proxy_base_url*]
+#   (optional) URL for the html5 console proxy
+#   only used if $proxy_host is not set explicitly
+#   Defaults to $facts['os_service_default']
+#
 # [*proxy_host*]
 #   (optional) Host for the html5 console proxy
 #   Defaults to undef
@@ -37,6 +42,7 @@ class nova::compute::spice(
   Boolean $agent_enabled                = true,
   $server_listen                        = $facts['os_service_default'],
   $server_proxyclient_address           = $facts['os_service_default'],
+  $html5proxy_base_url                  = $facts['os_service_default'],
   Optional[String[1]] $proxy_host       = undef,
   Enum['http', 'https'] $proxy_protocol = 'http',
   Stdlib::Port $proxy_port              = 6082,
@@ -46,19 +52,15 @@ class nova::compute::spice(
   include nova::deps
 
   if $proxy_host {
-    $html5proxy_base_url = "${proxy_protocol}://${proxy_host}:${proxy_port}${proxy_path}"
-    nova_config {
-      'spice/html5proxy_base_url': value => $html5proxy_base_url;
-    }
+    $html5proxy_base_url_real = "${proxy_protocol}://${proxy_host}:${proxy_port}${proxy_path}"
   } else {
-    nova_config {
-      'spice/html5proxy_base_url': value => $facts['os_service_default'];
-    }
+    $html5proxy_base_url_real = $html5proxy_base_url
   }
 
   nova_config {
     'spice/agent_enabled':              value => $agent_enabled;
     'spice/server_listen':              value => $server_listen;
     'spice/server_proxyclient_address': value => $server_proxyclient_address;
+    'spice/html5proxy_base_url':        value => $html5proxy_base_url_real;
   }
 }
