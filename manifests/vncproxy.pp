@@ -18,7 +18,7 @@
 #
 # [*port*]
 #   (optional) Port on which to listen for incoming requests
-#   Defaults to '6080'
+#   Defaults to 6080
 #
 # [*ensure_package*]
 #   (optional) The state of the nova-novncproxy package
@@ -66,7 +66,7 @@ class nova::vncproxy(
   Boolean $manage_service                  = true,
   Enum['http', 'https'] $vncproxy_protocol = 'http',
   String[1] $host                          = '0.0.0.0',
-  $port                                    = '6080',
+  Stdlib::Port $port                       = 6080,
   String $vncproxy_path                    = '/vnc_auto.html',
   $ensure_package                          = 'present',
   Boolean $allow_noauth                    = true,

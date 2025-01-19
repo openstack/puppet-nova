@@ -84,6 +84,7 @@ describe 'nova::compute' do
         { :enabled                            => false,
           :ensure_package                     => '2012.1-2',
           :vncproxy_host                      => '127.0.0.1',
+          :vncproxy_port                      => 16080,
           :use_cow_images                     => false,
           :mkisofs_cmd                        => 'mkisofs',
           :force_raw_images                   => false,
@@ -138,7 +139,7 @@ describe 'nova::compute' do
         is_expected.to contain_nova_config('vnc/enabled').with_value(true)
         is_expected.to contain_nova_config('vnc/server_proxyclient_address').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('vnc/novncproxy_base_url').with_value(
-          'http://127.0.0.1:6080/vnc_auto.html'
+          'http://127.0.0.1:16080/vnc_auto.html'
         )
       end
 

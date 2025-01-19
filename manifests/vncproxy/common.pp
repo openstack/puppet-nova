@@ -19,7 +19,7 @@
 class nova::vncproxy::common (
   Optional[String[1]] $vncproxy_host                 = undef,
   Optional[Enum['http', 'https']] $vncproxy_protocol = undef,
-  $vncproxy_port                                     = undef,
+  Optional[Stdlib::Port] $vncproxy_port              = undef,
   Optional[String] $vncproxy_path                    = undef,
 ) {
 

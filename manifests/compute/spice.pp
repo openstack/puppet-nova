@@ -23,7 +23,7 @@
 #
 # [*proxy_port*]
 #   (optional) Port for the html5 console proxy
-#   Defaults to '6082'
+#   Defaults to 6082
 #
 # [*proxy_protocol*]
 #   (optional) Protocol for the html5 console proxy
@@ -39,7 +39,7 @@ class nova::compute::spice(
   $server_proxyclient_address           = $facts['os_service_default'],
   Optional[String[1]] $proxy_host       = undef,
   Enum['http', 'https'] $proxy_protocol = 'http',
-  $proxy_port                           = '6082',
+  Stdlib::Port $proxy_port              = 6082,
   String $proxy_path                    = '/spice_auto.html',
 ) {
 

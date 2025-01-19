@@ -44,7 +44,7 @@
 #
 # [*vncproxy_port*]
 #   (optional) The port to communicate with the VNC proxy server
-#   Defaults to '6080'
+#   Defaults to 6080
 #
 # [*vncproxy_path*]
 #   (optional) The path at the end of the uri for communication with the VNC proxy server
@@ -271,7 +271,7 @@ class nova::compute (
   $vncserver_proxyclient_address               = $facts['os_service_default'],
   Optional[String[1]] $vncproxy_host           = undef,
   Enum['http', 'https'] $vncproxy_protocol     = 'http',
-  $vncproxy_port                               = '6080',
+  Stdlib::Port $vncproxy_port                  = 6080,
   String $vncproxy_path                        = '/vnc_auto.html',
   $force_config_drive                          = $facts['os_service_default'],
   $instance_usage_audit                        = $facts['os_service_default'],

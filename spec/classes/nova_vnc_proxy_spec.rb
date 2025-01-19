@@ -14,7 +14,7 @@ describe 'nova::vncproxy' do
 
     context 'with default parameters' do
       it { is_expected.to contain_nova_config('vnc/novncproxy_host').with_value('0.0.0.0') }
-      it { is_expected.to contain_nova_config('vnc/novncproxy_port').with_value('6080') }
+      it { is_expected.to contain_nova_config('vnc/novncproxy_port').with_value(6080) }
       it { is_expected.to contain_nova_config('vnc/auth_schemes').with_value('none') }
       it { is_expected.to contain_nova_config('vnc/vencrypt_client_key').with_ensure('absent')}
       it { is_expected.to contain_nova_config('vnc/vencrypt_client_cert').with_ensure('absent')}

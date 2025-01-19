@@ -1,0 +1,9 @@
+---
+upgrade:
+  - |
+    The following parameters now require integer values.
+
+    - ``nova::compute::vncproxy_port``
+    - ``nova::compute::spice::proxy_port``
+    - ``nova::vncproxy::port``
+    - ``nova::vncproxy::common:vncproxy_port``
