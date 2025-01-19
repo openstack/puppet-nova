@@ -62,18 +62,18 @@
 #   Defaults to undef
 #
 class nova::vncproxy(
-  Boolean $enabled         = true,
-  Boolean $manage_service  = true,
-  $vncproxy_protocol       = 'http',
-  $host                    = '0.0.0.0',
-  $port                    = '6080',
-  $vncproxy_path           = '/vnc_auto.html',
-  $ensure_package          = 'present',
-  Boolean $allow_noauth    = true,
-  Boolean $allow_vencrypt  = false,
-  $vencrypt_key            = undef,
-  $vencrypt_cert           = undef,
-  $vencrypt_ca             = undef,
+  Boolean $enabled                         = true,
+  Boolean $manage_service                  = true,
+  Enum['http', 'https'] $vncproxy_protocol = 'http',
+  String[1] $host                          = '0.0.0.0',
+  $port                                    = '6080',
+  String $vncproxy_path                    = '/vnc_auto.html',
+  $ensure_package                          = 'present',
+  Boolean $allow_noauth                    = true,
+  Boolean $allow_vencrypt                  = false,
+  $vencrypt_key                            = undef,
+  $vencrypt_cert                           = undef,
+  $vencrypt_ca                             = undef,
 ) {
 
   include nova::deps

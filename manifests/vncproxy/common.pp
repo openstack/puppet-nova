@@ -17,10 +17,10 @@
 #   Defaults to undef
 #
 class nova::vncproxy::common (
-  $vncproxy_host     = undef,
-  $vncproxy_protocol = undef,
-  $vncproxy_port     = undef,
-  $vncproxy_path     = undef,
+  Optional[String[1]] $vncproxy_host                 = undef,
+  Optional[Enum['http', 'https']] $vncproxy_protocol = undef,
+  $vncproxy_port                                     = undef,
+  Optional[String] $vncproxy_path                    = undef,
 ) {
 
   include nova::deps

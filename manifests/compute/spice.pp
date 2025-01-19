@@ -34,13 +34,13 @@
 #   Defaults to '/spice_auto.html'
 #
 class nova::compute::spice(
-  Boolean $agent_enabled      = true,
-  $server_listen              = $facts['os_service_default'],
-  $server_proxyclient_address = $facts['os_service_default'],
-  $proxy_host                 = undef,
-  $proxy_protocol             = 'http',
-  $proxy_port                 = '6082',
-  $proxy_path                 = '/spice_auto.html',
+  Boolean $agent_enabled                = true,
+  $server_listen                        = $facts['os_service_default'],
+  $server_proxyclient_address           = $facts['os_service_default'],
+  Optional[String[1]] $proxy_host       = undef,
+  Enum['http', 'https'] $proxy_protocol = 'http',
+  $proxy_port                           = '6082',
+  String $proxy_path                    = '/spice_auto.html',
 ) {
 
   include nova::deps
