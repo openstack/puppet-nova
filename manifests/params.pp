@@ -30,7 +30,7 @@ class nova::params {
       $vncproxy_package_name             = 'openstack-nova-novncproxy'
       $serialproxy_package_name          = 'openstack-nova-serialproxy'
       $spicehtml5proxy_package_name      = 'openstack-nova-console'
-      $ceph_client_package_name          = 'ceph-common'
+      $ceph_common_package_name          = 'ceph-common'
       $ovmf_package_name                 = 'edk2-ovmf'
       $swtpm_package_name                = 'swtpm'
       # service names
@@ -77,7 +77,7 @@ class nova::params {
       $libvirt_package_name              = 'libvirt-daemon-system'
       $libvirt_client_package_name       = 'libvirt-clients'
       $scheduler_package_name            = 'nova-scheduler'
-      $ceph_client_package_name          = 'ceph-common'
+      $ceph_common_package_name          = 'ceph-common'
       $ovmf_package_name                 = 'ovmf'
       $swtpm_package_name                = 'swtpm'
       # service names

@@ -134,11 +134,11 @@ class nova::compute::rbd (
 
   if $manage_ceph_client {
     # Install ceph client libraries
-    package { 'ceph-client-package':
+    ensure_packages( 'ceph-common', {
       ensure => $ceph_client_ensure,
-      name   => $nova::params::ceph_client_package_name,
-      tag    => ['openstack', 'nova-support-package'],
-    }
+      name   => $nova::params::ceph_common_package_name,
+    })
+    Package<| title == 'ceph-common' |> { tag +> 'nova-support-package' }
   }
 
   if $facts['os']['family'] == 'Debian' {

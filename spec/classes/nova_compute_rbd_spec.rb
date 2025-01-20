@@ -44,10 +44,9 @@ describe 'nova::compute::rbd' do
     end
 
     it 'installs client package' do
-      is_expected.to contain_package('ceph-client-package').with(
-        'name'   => platform_params[:ceph_client_package],
-        'ensure' => 'present',
-        'tag'    => ['openstack', 'nova-support-package']
+      is_expected.to contain_package('ceph-common').with(
+        'name'   => platform_params[:ceph_common_package],
+        'ensure' => 'installed',
       )
     end
 
@@ -128,7 +127,7 @@ describe 'nova::compute::rbd' do
         )
       end
 
-      it { is_expected.to_not contain_package('ceph-client-package') }
+      it { is_expected.to_not contain_package('ceph-common') }
     end
   end
 
@@ -158,9 +157,9 @@ describe 'nova::compute::rbd' do
       let (:platform_params) do
         case facts[:os]['family']
         when 'Debian'
-          { :ceph_client_package => 'ceph-common' }
+          { :ceph_common_package => 'ceph-common' }
         when 'RedHat'
-          { :ceph_client_package => 'ceph-common' }
+          { :ceph_common_package => 'ceph-common' }
         end
       end
       it_configures 'nova::compute::rbd'
