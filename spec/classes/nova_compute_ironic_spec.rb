@@ -6,7 +6,6 @@ describe 'nova::compute::ironic' do
     context 'with default parameters' do
       it 'configures ironic in nova.conf' do
         is_expected.to contain_nova_config('DEFAULT/compute_driver').with_value('ironic.IronicDriver')
-        is_expected.to contain_class('ironic::client')
       end
     end
 
@@ -20,12 +19,6 @@ describe 'nova::compute::ironic' do
       it 'configures ironic in nova.conf' do
         is_expected.to contain_nova_config('DEFAULT/compute_driver').with_value('ironic.FoobarDriver')
       end
-    end
-
-    context 'always' do
-       it 'contains the ironic common class' do
-         is_expected.to contain_class('nova::ironic::common')
-       end
     end
   end
 

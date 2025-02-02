@@ -19,7 +19,6 @@ class nova::compute::ironic (
 
   include nova::deps
   require nova::ironic::common
-  include ironic::client
 
   if($facts['os']['family'] == 'Debian') {
     package { 'nova-compute-ironic':

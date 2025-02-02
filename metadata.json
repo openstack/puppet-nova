@@ -6,10 +6,6 @@
             "version_requirement": ">=2.0.0 <7.0.0"
         },
         {
-            "name": "openstack/ironic",
-            "version_requirement": ">=25.0.0 <26.0.0"
-        },
-        {
             "name": "openstack/keystone",
             "version_requirement": ">=25.0.0 <26.0.0"
         },
