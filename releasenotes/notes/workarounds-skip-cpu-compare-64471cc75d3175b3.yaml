@@ -1,0 +1,5 @@
+---
+features:
+  - |
+    Added parameters ``skip_cpu_compare_on_dest`` and ``skip_cpu_compare_at_startup``
+    to the ``nova::workarounds`` class.
