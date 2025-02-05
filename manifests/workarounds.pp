@@ -48,6 +48,18 @@
 #   hypervisors during live migration.
 #   Defaults to $facts['os_service_default']
 #
+# [*skip_cpu_compare_on_dest*]
+#   (Optional) With the libvirt driver, during live migration, skip comparing guest CPU
+#   with the destination host. When using QEMU >= 2.9 and libvirt >=
+#   4.4.0, libvirt will do the correct thing with respect to checking CPU
+#   compatibility on the destination host during live migration.
+#   Defaults to $facts['os_service_default']
+#
+# [*skip_cpu_compare_at_startup*]
+#   (Optional) This will skip the CPU comparison call at the startup of Compute
+#   service and lets libvirt handle it.
+#   Defaults to $facts['os_service_default']
+#
 # DEPRECATED
 #
 #  [*enable_numa_live_migration*]
@@ -63,6 +75,8 @@ class nova::workarounds (
   $wait_for_vif_plugged_event_during_hard_reboot = $facts['os_service_default'],
   $disable_compute_service_check_for_ffu         = $facts['os_service_default'],
   $skip_hypervisor_version_check_on_lm           = $facts['os_service_default'],
+  $skip_cpu_compare_on_dest                      = $facts['os_service_default'],
+  $skip_cpu_compare_at_startup                   = $facts['os_service_default'],
   # DEPRECATED PARAMETER
   $enable_numa_live_migration              = undef,
 ) {
@@ -91,6 +105,10 @@ class nova::workarounds (
       value => $disable_compute_service_check_for_ffu;
     'workarounds/skip_hypervisor_version_check_on_lm':
       value => $skip_hypervisor_version_check_on_lm;
+    'workarounds/skip_cpu_compare_on_dest':
+      value => $skip_cpu_compare_on_dest;
+    'workarounds/skip_cpu_compare_at_startup':
+      value => $skip_cpu_compare_at_startup;
   }
 
 }
