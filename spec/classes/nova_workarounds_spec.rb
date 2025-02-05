@@ -18,6 +18,8 @@ describe 'nova::workarounds' do
       it { is_expected.to contain_nova_config('workarounds/wait_for_vif_plugged_event_during_hard_reboot').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('workarounds/disable_compute_service_check_for_ffu').with_value('<SERVICE DEFAULT>') }
       it { is_expected.to contain_nova_config('workarounds/skip_hypervisor_version_check_on_lm').with_value('<SERVICE DEFAULT>') }
+      it { is_expected.to contain_nova_config('workarounds/skip_cpu_compare_on_dest').with_value('<SERVICE DEFAULT>') }
+      it { is_expected.to contain_nova_config('workarounds/skip_cpu_compare_at_startup').with_value('<SERVICE DEFAULT>') }
     end
 
     context 'with overridden parameters' do
@@ -32,6 +34,8 @@ describe 'nova::workarounds' do
           :wait_for_vif_plugged_event_during_hard_reboot => ['normal', 'direct'],
           :disable_compute_service_check_for_ffu         => true,
           :skip_hypervisor_version_check_on_lm           => true,
+          :skip_cpu_compare_on_dest                      => true,
+          :skip_cpu_compare_at_startup                   => true,
         }
       end
 
@@ -44,6 +48,8 @@ describe 'nova::workarounds' do
       it { is_expected.to contain_nova_config('workarounds/wait_for_vif_plugged_event_during_hard_reboot').with_value('normal,direct') }
       it { is_expected.to contain_nova_config('workarounds/disable_compute_service_check_for_ffu').with_value(true) }
       it { is_expected.to contain_nova_config('workarounds/skip_hypervisor_version_check_on_lm').with_value(true) }
+      it { is_expected.to contain_nova_config('workarounds/skip_cpu_compare_on_dest').with_value(true) }
+      it { is_expected.to contain_nova_config('workarounds/skip_cpu_compare_at_startup').with_value(true) }
     end
 
   end
