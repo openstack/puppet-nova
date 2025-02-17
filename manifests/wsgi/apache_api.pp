@@ -173,7 +173,7 @@ class nova::wsgi::apache_api (
     fail('::nova::api class must be declared in composition layer.')
   }
 
-  ::openstacklib::wsgi::apache { 'nova_api_wsgi':
+  openstacklib::wsgi::apache { 'nova_api_wsgi':
     bind_host                   => $bind_host,
     bind_port                   => $port,
     group                       => $::nova::params::group,

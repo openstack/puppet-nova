@@ -47,8 +47,8 @@
 #
 # [*libvirt_version*]
 #   (optional) installed libvirt version. Default is automatic detected depending
-#   of the used OS installed via ::nova::compute::libvirt::version::default .
-#   Defaults to ::nova::compute::libvirt::version::default
+#   of the used OS installed via $::nova::compute::libvirt::version::default .
+#   Defaults to $::nova::compute::libvirt::version::default
 #
 class nova::compute::libvirt::qemu(
   Boolean $configure_qemu     = false,

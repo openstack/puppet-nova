@@ -49,7 +49,7 @@ class nova::db::mysql(
 
   include nova::deps
 
-  ::openstacklib::db::mysql { 'nova':
+  openstacklib::db::mysql { 'nova':
     user          => $user,
     password      => $password,
     dbname        => $dbname,
@@ -61,7 +61,7 @@ class nova::db::mysql(
 
   if $setup_cell0 {
     # need for cell_v2
-    ::openstacklib::db::mysql { 'nova_cell0':
+    openstacklib::db::mysql { 'nova_cell0':
       user          => $user,
       password      => $password,
       dbname        => "${dbname}_cell0",

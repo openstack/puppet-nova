@@ -43,7 +43,7 @@ class nova::db::mysql_api(
 
   include nova::deps
 
-  ::openstacklib::db::mysql { 'nova_api':
+  openstacklib::db::mysql { 'nova_api':
     user          => $user,
     password      => $password,
     dbname        => $dbname,

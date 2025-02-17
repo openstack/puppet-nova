@@ -330,12 +330,12 @@ class nova::compute::libvirt (
   #  - set nova::compute::libvirt::manage_libvirt_services to false
   #  - include nova::compute::libvirt::services in your composition layer
   #  - select which services you want to deploy with
-  #    ::nova::compute::libvirt::services:* parameters.
+  #    $::nova::compute::libvirt::services:* parameters.
   #
   # If you're not using hiera:
   #  - set nova::compute::libvirt::manage_libvirt_services to true (default).
   #  - select which services you want to deploy with
-  #    ::nova::compute::libvirt::*_service_name parameters.
+  #    $::nova::compute::libvirt::*_service_name parameters.
   if $manage_libvirt_services {
     class { 'nova::compute::libvirt::services':
       libvirt_service_name  => $libvirt_service_name,

@@ -186,7 +186,7 @@ class nova::wsgi::apache_metadata (
 
   Service <| title == 'httpd' |> { tag +> 'nova-service' }
 
-  ::openstacklib::wsgi::apache { 'nova_metadata_wsgi':
+  openstacklib::wsgi::apache { 'nova_metadata_wsgi':
     bind_host                   => $bind_host,
     bind_port                   => $port,
     group                       => $::nova::params::group,

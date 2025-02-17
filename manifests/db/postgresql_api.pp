@@ -34,7 +34,7 @@ class nova::db::postgresql_api(
 
   include nova::deps
 
-  ::openstacklib::db::postgresql { 'nova_api':
+  openstacklib::db::postgresql { 'nova_api':
     password   => $password,
     dbname     => $dbname,
     user       => $user,
