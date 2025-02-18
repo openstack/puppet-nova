@@ -57,16 +57,6 @@
 #   the heartbeat will be checked every 30 seconds. (integer value)
 #   Defaults to $facts['os_service_default']
 #
-# [*rabbit_heartbeat_in_pthread*]
-#   (Optional) EXPERIMENTAL: Run the health check heartbeat thread
-#   through a native python thread. By default if this
-#   option isn't provided the  health check heartbeat will
-#   inherit the execution model from the parent process. By
-#   example if the parent process have monkey patched the
-#   stdlib by using eventlet/greenlet then the heartbeat
-#   will be run through a green thread.
-#   Defaults to $facts['os_service_default']
-#
 # [*rabbit_qos_prefetch_count*]
 #   (Optional) Specifies the number of messages to prefetch.
 #   Defaults to $facts['os_service_default']
@@ -342,6 +332,16 @@
 #   (optional) The strategy to use for auth: noauth or keystone.
 #   Defaults to undef
 #
+# [*rabbit_heartbeat_in_pthread*]
+#   (Optional) EXPERIMENTAL: Run the health check heartbeat thread
+#   through a native python thread. By default if this
+#   option isn't provided the  health check heartbeat will
+#   inherit the execution model from the parent process. By
+#   example if the parent process have monkey patched the
+#   stdlib by using eventlet/greenlet then the heartbeat
+#   will be run through a green thread.
+#   Defaults to undef
+#
 class nova(
   $ensure_package                          = 'present',
   $default_transport_url                   = $facts['os_service_default'],
@@ -352,7 +352,6 @@ class nova(
   $rabbit_use_ssl                          = $facts['os_service_default'],
   $rabbit_heartbeat_timeout_threshold      = $facts['os_service_default'],
   $rabbit_heartbeat_rate                   = $facts['os_service_default'],
-  $rabbit_heartbeat_in_pthread             = $facts['os_service_default'],
   $rabbit_qos_prefetch_count               = $facts['os_service_default'],
   $rabbit_ha_queues                        = $facts['os_service_default'],
   $rabbit_quorum_queue                     = $facts['os_service_default'],
@@ -413,6 +412,7 @@ class nova(
   $instance_name_template                  = $facts['os_service_default'],
   # DEPRECATED PARAMETERS
   $auth_strategy                           = undef,
+  $rabbit_heartbeat_in_pthread             = undef,
 ) inherits nova::params {
 
   include nova::deps
