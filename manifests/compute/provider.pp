@@ -67,7 +67,7 @@
 #   Defaults to 'provider.yaml'
 #
 class nova::compute::provider (
-  $schema_version                                 = '1.0',
+  Enum['1.0'] $schema_version                     = '1.0',
   Array[Hash[String[1], Any]] $custom_inventories = [],
   Stdlib::Absolutepath $config_location           = '/etc/nova/provider_config',
   String[1] $config_file                          = 'provider.yaml',
