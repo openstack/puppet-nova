@@ -45,6 +45,7 @@ describe 'nova::compute::libvirt' do
       it { is_expected.to contain_nova_config('libvirt/file_backed_memory').with_value('<SERVICE DEFAULT>')}
       it { is_expected.to contain_nova_config('libvirt/images_type').with_value('<SERVICE DEFAULT>')}
       it { is_expected.to contain_nova_config('libvirt/volume_use_multipath').with_value('<SERVICE DEFAULT>')}
+      it { is_expected.to contain_nova_config('libvirt/volume_enforce_multipath').with_value('<SERVICE DEFAULT>')}
       it { is_expected.to contain_nova_config('libvirt/num_volume_scan_tries').with_value('<SERVICE DEFAULT>')}
       it { is_expected.to contain_nova_config('libvirt/nfs_mount_options').with_value('<SERVICE DEFAULT>')}
       it { is_expected.to contain_nova_config('libvirt/num_pcie_ports').with_value('<SERVICE DEFAULT>')}
@@ -89,6 +90,7 @@ describe 'nova::compute::libvirt' do
           :file_backed_memory            => 2048,
           :images_type                   => 'raw',
           :volume_use_multipath          => false,
+          :volume_enforce_multipath      => false,
           :num_volume_scan_tries         => 3,
           :nfs_mount_options             => 'rw,intr,nolock',
           :num_pcie_ports                => 16,
@@ -138,6 +140,7 @@ describe 'nova::compute::libvirt' do
       it { is_expected.to contain_nova_config('libvirt/file_backed_memory').with_value(2048)}
       it { is_expected.to contain_nova_config('libvirt/images_type').with_value('raw')}
       it { is_expected.to contain_nova_config('libvirt/volume_use_multipath').with_value(false)}
+      it { is_expected.to contain_nova_config('libvirt/volume_enforce_multipath').with_value(false)}
       it { is_expected.to contain_nova_config('libvirt/num_volume_scan_tries').with_value(3)}
       it { is_expected.to contain_nova_config('libvirt/nfs_mount_options').with_value('rw,intr,nolock')}
       it { is_expected.to contain_nova_config('libvirt/num_pcie_ports').with_value(16)}
