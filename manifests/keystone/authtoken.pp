@@ -239,7 +239,7 @@ class nova::keystone::authtoken(
 
   keystone::resource::authtoken {
     'nova_config':
-      *                              => $params;
+      * => $params;
     default:
       username                       => $username,
       password                       => $password,

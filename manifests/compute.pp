@@ -321,8 +321,8 @@ class nova::compute (
   }
 
   nova_config {
-    'compute/cpu_shared_set':    value  => join(any2array($cpu_shared_set), ',');
-    'compute/cpu_dedicated_set': value  => join(any2array($cpu_dedicated_set), ',');
+    'compute/cpu_shared_set':    value => join(any2array($cpu_shared_set), ',');
+    'compute/cpu_dedicated_set': value => join(any2array($cpu_dedicated_set), ',');
   }
 
   if !empty($neutron_physnets_numa_nodes_mapping) {
