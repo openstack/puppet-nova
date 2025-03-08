@@ -684,9 +684,9 @@ but should be one of: ssh-rsa, ssh-dsa, ssh-ecdsa, ssh-ed25519.")
   }
 
   nova_config {
-    'vif_plug_ovs/ovsdb_connection':        value  => $ovsdb_connection;
-    'notifications/notification_format':    value  => $notification_format;
-    'notifications/notify_on_state_change': value  => $notify_on_state_change;
+    'vif_plug_ovs/ovsdb_connection':        value => $ovsdb_connection;
+    'notifications/notification_format':    value => $notification_format;
+    'notifications/notify_on_state_change': value => $notify_on_state_change;
     # Following may need to be broken out to different nova services
     'DEFAULT/state_path':                   value => $state_path;
     'DEFAULT/service_down_time':            value => $service_down_time;
