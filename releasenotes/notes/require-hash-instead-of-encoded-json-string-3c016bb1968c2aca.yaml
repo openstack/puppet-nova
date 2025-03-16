@@ -1,0 +1,8 @@
+---
+upgrade:
+  - |
+    The following parameters no longer accept string values. Use arrays of
+    hashes instead.
+
+    - ``nova::compute::pci::passthrough``
+    - ``nova::pci::aliases``

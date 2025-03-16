@@ -32,35 +32,10 @@ describe 'nova::pci' do
       end
     end
 
-    context 'with aliases JSON encoded string' do
-      let :params do
-        {
-          :aliases => "[{\"vendor_id\":\"8086\",\"product_id\":\"0126\",\"name\":\"graphic_card\"},{\"vendor_id\":\"9096\",\"product_id\":\"1520\",\"name\":\"network_card\"}]",
-        }
-      end
-      it 'configures nova pci_alias entries' do
-        is_expected.to contain_nova_config('pci/alias').with(
-          'value' => ['{"vendor_id":"8086","product_id":"0126","name":"graphic_card"}','{"vendor_id":"9096","product_id":"1520","name":"network_card"}']
-        )
-      end
-    end
-
     context 'when aliases is empty' do
       let :params do
         {
           :aliases => []
-        }
-      end
-
-      it 'clears pci_alias configuration' do
-        is_expected.to contain_nova_config('pci/alias').with(:value => '<SERVICE DEFAULT>')
-      end
-    end
-
-    context 'when aliases is empty string' do
-      let :params do
-        {
-          :aliases => ""
         }
       end
 

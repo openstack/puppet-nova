@@ -13,33 +13,23 @@ describe 'to_array_of_json_strings' do
     is_expected.to run.with_params('arg1', 'arg2').and_raise_error(Puppet::ParseError)
   end
 
-  it 'fails with invalid json string' do
-    data = 'invalid json'
-    is_expected.to run.with_params(data).and_raise_error(Puppet::ParseError)
-  end
-
-  it 'fails with array of json string' do
-    data = ['{"valid": "json", "syntax": "here"}', '{"some": "data"}']
-    is_expected.to run.with_params(data).and_raise_error(Puppet::ParseError)
-  end
-
-  it 'works with valid json string' do
+  it 'fails with a formatted json string' do
     data = '{"valid": "json", "syntax": "here"}'
-    retval = ['{"valid":"json","syntax":"here"}']
-    is_expected.to run.with_params(data).and_return(retval)
+    is_expected.to run.with_params(data).and_raise_error(Puppet::ParseError)
   end
 
-  it 'fails unless its an array or string' do
-    is_expected.to run.with_params(1234).and_raise_error(Puppet::ParseError)
+  it 'fails with a hash' do
+    data = {:some => "entry"}
+    is_expected.to run.with_params(data).and_raise_error(Puppet::ParseError)
   end
 
-  it 'fails unless array doesnt have hashes' do
-    data = [12, 23]
+  it 'fails unless array does not have hashes' do
+    data = ['{"valid": "json", "syntax": "here"}']
     is_expected.to run.with_params(data).and_raise_error(Puppet::ParseError)
   end
 
   it 'fails if array but only some entries are valid' do
-    data = [{:some => "entry"}, 23]
+    data = [{:some => "entry"}, '{"valid": "json", "syntax": "here"}']
     is_expected.to run.with_params(data).and_raise_error(Puppet::ParseError)
   end
 
