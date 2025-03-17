@@ -1,0 +1,6 @@
+---
+features:
+  - |
+    A new parameter ``rabbit_transient_queues_ttl`` has been added to the
+    nova class to configure how long transtient queue should stay until
+    they are automatically deleted.

@@ -1,0 +1,5 @@
+---
+features:
+  - |
+    Add a new ``amqp_auto_delete`` parameter, so that transient queues are
+    automatically deleted.
