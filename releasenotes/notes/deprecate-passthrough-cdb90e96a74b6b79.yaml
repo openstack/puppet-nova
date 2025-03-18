@@ -1,0 +1,5 @@
+---
+deprecations:
+  - |
+    The ``nova::compute::pci::passthrough`` parameter has been deprecated in
+    favor of the new ``device_specs`` parameter.

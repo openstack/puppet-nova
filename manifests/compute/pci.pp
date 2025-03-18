@@ -4,8 +4,8 @@
 #
 # === Parameters:
 #
-#  [*passthrough*]
-#   (optional) Pci passthrough list of hash.
+#  [*device_specs*]
+#   (optional) Specify the PCI devices available to VMs.
 #   Defaults to $facts['os_service_default']
 #   Example of format:
 #   [ { "vendor_id" => "1234","product_id" => "5678" },
@@ -15,20 +15,37 @@
 #   (optional) Enable PCI resource inventory reporting to Placement.
 #   Defaults to $facts['os_service_default']
 #
+# DEPRECATED PARAMETERS
+#
+#  [*passthrough*]
+#   (optional) Pci passthrough list of hash.
+#   Defaults to undef
+#
 class nova::compute::pci(
-  $passthrough         = $facts['os_service_default'],
-  $report_in_placement = $facts['os_service_default'],
+  $device_specs         = $facts['os_service_default'],
+  $report_in_placement  = $facts['os_service_default'],
+  # DEPRECATED PARAMETERS
+  $passthrough          = undef,
 ) {
   include nova::deps
 
-  if !is_service_default($passthrough) and !empty($passthrough) {
-    $passthrough_real = to_array_of_json_strings($passthrough)
+  if $passthrough != undef {
+    warning('The passthrough parameter is deprecated. Use the device_specs parameter.')
+    if empty($passthrough) or is_service_default($passthrough) {
+      $device_specs_real = $facts['os_service_default']
+    } else {
+      $device_specs_real = to_array_of_json_strings($passthrough)
+    }
   } else {
-    $passthrough_real = $facts['os_service_default']
+    if empty($device_specs) or is_service_default($device_specs) {
+      $device_specs_real = $facts['os_service_default']
+    } else {
+      $device_specs_real = to_array_of_json_strings($device_specs)
+    }
   }
 
   nova_config {
-    'pci/device_spec':         value => $passthrough_real;
+    'pci/device_spec':         value => $device_specs_real;
     'pci/report_in_placement': value => $report_in_placement;
   }
 }

@@ -22,10 +22,10 @@ describe 'nova::compute::pci' do
       end
     end
 
-    context 'with passthrough array' do
+    context 'with device_specs array' do
       let :params do
         {
-            :passthrough => [
+          :device_specs => [
             {
               "vendor_id"  => "8086",
               "product_id" => "0126"
@@ -45,10 +45,10 @@ describe 'nova::compute::pci' do
       end
     end
 
-    context 'with passthrough JSON encoded string' do
+    context 'with device_specs JSON encoded string' do
       let :params do
         {
-          :passthrough => "[{\"vendor_id\":\"8086\",\"product_id\":\"0126\"},{\"vendor_id\":\"9096\",\"product_id\":\"1520\",\"physical_network\":\"physnet1\"}]",
+          :device_specs => "[{\"vendor_id\":\"8086\",\"product_id\":\"0126\"},{\"vendor_id\":\"9096\",\"product_id\":\"1520\",\"physical_network\":\"physnet1\"}]",
         }
       end
 
@@ -59,10 +59,10 @@ describe 'nova::compute::pci' do
       end
     end
 
-    context 'when passthrough is empty' do
+    context 'when device_specs is empty' do
       let :params do
         {
-          :passthrough => []
+          :device_specs => []
         }
       end
 
@@ -71,10 +71,10 @@ describe 'nova::compute::pci' do
       end
     end
 
-    context 'when passthrough is empty string' do
+    context 'when device_specs is empty string' do
       let :params do
         {
-          :passthrough => ""
+          :device_specs => ""
         }
       end
 
