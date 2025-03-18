@@ -10,20 +10,10 @@ Puppet::Functions.create_function(:to_array_of_json_strings) do
   end
 
   def to_array_of_json_strings(*args)
-    require 'json'
-
     if (args.size != 1) then
       raise Puppet::ParseError, 'to_array_of_json_strings(): Wrong number of arguments'
     end
     list = args[0]
-    if list.class == String
-      begin
-        list = JSON.load(list)
-      rescue JSON::ParserError
-        raise Puppet::ParseError, "Syntax error: #{args[0]} is not valid"
-      end
-      list = [list] unless list.class == Array
-    end
     unless _array_of_hash?(list)
       raise Puppet::ParseError, "Syntax error: #{args[0]} is not an Array or JSON encoded String"
     end
