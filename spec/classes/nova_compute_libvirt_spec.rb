@@ -47,6 +47,7 @@ describe 'nova::compute::libvirt' do
       it { is_expected.to contain_nova_config('libvirt/volume_use_multipath').with_value('<SERVICE DEFAULT>')}
       it { is_expected.to contain_nova_config('libvirt/volume_enforce_multipath').with_value('<SERVICE DEFAULT>')}
       it { is_expected.to contain_nova_config('libvirt/num_volume_scan_tries').with_value('<SERVICE DEFAULT>')}
+      it { is_expected.to contain_nova_config('libvirt/nfs_mount_point_base').with_value('<SERVICE DEFAULT>')}
       it { is_expected.to contain_nova_config('libvirt/nfs_mount_options').with_value('<SERVICE DEFAULT>')}
       it { is_expected.to contain_nova_config('libvirt/num_pcie_ports').with_value('<SERVICE DEFAULT>')}
       it { is_expected.to contain_nova_config('libvirt/mem_stats_period_seconds').with_value('<SERVICE DEFAULT>')}
@@ -92,6 +93,7 @@ describe 'nova::compute::libvirt' do
           :volume_use_multipath          => false,
           :volume_enforce_multipath      => false,
           :num_volume_scan_tries         => 3,
+          :nfs_mount_point_base          => '/var/lib/nova/mnt',
           :nfs_mount_options             => 'rw,intr,nolock',
           :num_pcie_ports                => 16,
           :mem_stats_period_seconds      => 20,
@@ -142,6 +144,7 @@ describe 'nova::compute::libvirt' do
       it { is_expected.to contain_nova_config('libvirt/volume_use_multipath').with_value(false)}
       it { is_expected.to contain_nova_config('libvirt/volume_enforce_multipath').with_value(false)}
       it { is_expected.to contain_nova_config('libvirt/num_volume_scan_tries').with_value(3)}
+      it { is_expected.to contain_nova_config('libvirt/nfs_mount_point_base').with_value('/var/lib/nova/mnt')}
       it { is_expected.to contain_nova_config('libvirt/nfs_mount_options').with_value('rw,intr,nolock')}
       it { is_expected.to contain_nova_config('libvirt/num_pcie_ports').with_value(16)}
       it { is_expected.to contain_nova_config('libvirt/mem_stats_period_seconds').with_value(20)}

@@ -175,6 +175,10 @@
 #   (optional) Number of times to scan given storage protocol to find volume.
 #   Defaults to $facts['os_service_default']
 #
+# [*nfs_mount_point_base*]
+#   (optional) Directory where the NFS volume is mounted on the compute node.
+#   Defaults to $facts['os_service_default']
+#
 # [*nfs_mount_options*]
 #   (optional) Mount options passed to the NFS client. See section of the
 #   nfs man page for details.
@@ -274,6 +278,7 @@ class nova::compute::libvirt (
   $volume_use_multipath                       = $facts['os_service_default'],
   $volume_enforce_multipath                   = $facts['os_service_default'],
   $num_volume_scan_tries                      = $facts['os_service_default'],
+  $nfs_mount_point_base                       = $facts['os_service_default'],
   $nfs_mount_options                          = $facts['os_service_default'],
   $num_pcie_ports                             = $facts['os_service_default'],
   $mem_stats_period_seconds                   = $facts['os_service_default'],
@@ -392,6 +397,7 @@ class nova::compute::libvirt (
     'libvirt/volume_use_multipath':          value => $volume_use_multipath;
     'libvirt/volume_enforce_multipath':      value => $volume_enforce_multipath;
     'libvirt/num_volume_scan_tries':         value => $num_volume_scan_tries;
+    'libvirt/nfs_mount_point_base':          value => $nfs_mount_point_base;
     'libvirt/nfs_mount_options':             value => $nfs_mount_options;
     'libvirt/num_pcie_ports':                value => $num_pcie_ports;
     'libvirt/mem_stats_period_seconds':      value => $mem_stats_period_seconds;

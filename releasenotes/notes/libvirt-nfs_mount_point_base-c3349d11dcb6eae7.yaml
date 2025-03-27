@@ -1,0 +1,5 @@
+---
+features:
+  - |
+    The new ``nova::compute::libvirt::nfs_mount_point_base`` parameter has been
+    added.
