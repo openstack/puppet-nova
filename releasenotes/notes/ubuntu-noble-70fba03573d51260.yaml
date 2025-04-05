@@ -1,0 +1,8 @@
+---
+features:
+  - |
+    Ubuntu 24.04 is now formally supported.
+
+upgrade:
+  - |
+    Ubuntu 22.04 is no longer supported.
