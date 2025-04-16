@@ -1,0 +1,4 @@
+---
+upgrade:
+  - |
+    The ``nova::logging::watch_log_file`` parameter has been removed.

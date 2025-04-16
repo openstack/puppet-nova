@@ -30,7 +30,6 @@ describe 'nova::logging' do
      :log_facility                   => 'LOG_FOO',
      :log_dir                        => '/var/log/foo',
      :log_file                       => '/var/log/foo/nova.log',
-     :watch_log_file                 => true,
      :debug                          => true,
     }
   end
@@ -81,7 +80,6 @@ describe 'nova::logging' do
         :syslog_log_facility => 'LOG_FOO',
         :log_dir             => '/var/log/foo',
         :log_file            => '/var/log/foo/nova.log',
-        :watch_log_file      => true,
         :debug               => true,
       )
     end
