@@ -1,0 +1,4 @@
+---
+upgrade:
+  - |
+    The ``nova::patch::config`` class has been removed.
