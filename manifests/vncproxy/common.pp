@@ -103,5 +103,9 @@ class nova::vncproxy::common (
     nova_config {
       'vnc/novncproxy_base_url': value => $vncproxy_base_url;
     }
+  } else {
+    nova_config {
+      'vnc/novncproxy_base_url': value => $facts['os_service_default'];
+    }
   }
 }
