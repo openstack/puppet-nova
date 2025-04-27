@@ -8,12 +8,12 @@
 class nova::compute::libvirt::version {
   case $facts['os']['family'] {
     'RedHat': {
-      $default = '7.0'
+      $default = '8.0'
     }
     'Debian': {
       case $facts['os']['name'] {
         'Ubuntu': {
-          $default = '8.0'
+          $default = '10.0'
         }
         'Debian': {
           if versioncmp($facts['os']['release']['major'], '12') >= 0 {
