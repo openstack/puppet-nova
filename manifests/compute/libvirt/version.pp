@@ -16,11 +16,7 @@ class nova::compute::libvirt::version {
           $default = '10.0'
         }
         'Debian': {
-          if versioncmp($facts['os']['release']['major'], '12') >= 0 {
-            $default = '9.0'
-          } else {
-            $default = '7.0'
-          }
+          $default = '9.0'
         }
         default: {
           fail("Unsupported osname: ${::facts['os']['name']}")
