@@ -2,14 +2,10 @@ require 'spec_helper'
 
 describe 'nova::vncproxy' do
 
-  shared_examples 'nova_vnc_proxy' do
+  shared_examples 'nova::vncproxy' do
 
     let :pre_condition do
       'include nova'
-    end
-
-    let :params do
-      { :enabled => true }
     end
 
     context 'with default parameters' do
@@ -72,7 +68,7 @@ describe 'nova::vncproxy' do
       let :params do
         {
           :allow_vencrypt => true,
-          :allow_noauth => false,
+          :allow_noauth   => false,
           :vencrypt_key   => '/foo.key',
           :vencrypt_cert  => '/bar.pem',
           :vencrypt_ca    => '/baz.pem'
@@ -98,41 +94,44 @@ describe 'nova::vncproxy' do
       let :params do
         {
           :allow_vencrypt => true,
-          :allow_noauth => false,
+          :allow_noauth   => false,
           :vencrypt_key   => '/foo.key',
           :vencrypt_cert  => '/bar.pem',
         }
       end
-      it_raises 'a Puppet::Error', /vencrypt_ca\/cert\/key params are required when allow_vencrypt is true/
+      it { is_expected.to contain_nova_config('vnc/auth_schemes').with_value('vencrypt') }
+      it { is_expected.to contain_nova_config('vnc/vencrypt_client_key').with_value('/foo.key')}
+      it { is_expected.to contain_nova_config('vnc/vencrypt_client_cert').with_value('/bar.pem')}
+      it { is_expected.to contain_nova_config('vnc/vencrypt_ca_certs').with_value('<SERVICE DEFAULT>')}
     end
 
     context 'with vencrypt missing key' do
       let :params do
         {
           :allow_vencrypt => true,
-          :allow_noauth => false,
+          :allow_noauth   => false,
           :vencrypt_cert  => '/bar.pem',
           :vencrypt_ca    => '/baz.pem'
         }
       end
-      it_raises 'a Puppet::Error', /vencrypt_ca\/cert\/key params are required when allow_vencrypt is true/
+      it_raises 'a Puppet::Error', /vencrypt_cert and vencrypt_key are required when allow_vencrypt is true/
     end
 
     context 'with vencrypt missing cert' do
       let :params do
         {
           :allow_vencrypt => true,
-          :allow_noauth => false,
+          :allow_noauth   => false,
           :vencrypt_key   => '/foo.key',
           :vencrypt_ca    => '/baz.pem'
         }
       end
-      it_raises 'a Puppet::Error', /vencrypt_ca\/cert\/key params are required when allow_vencrypt is true/
+      it_raises 'a Puppet::Error', /vencrypt_cert and vencrypt_key are required when allow_vencrypt is true/
     end
 
   end
 
-  shared_examples 'nova_vnc_proxy debian package' do
+  shared_examples 'nova::vncproxy debian package' do
     let :pre_condition do
       'include nova'
     end
@@ -171,10 +170,10 @@ describe 'nova::vncproxy' do
         end
       end
 
-      it_behaves_like 'nova_vnc_proxy'
+      it_behaves_like 'nova::vncproxy'
 
       if facts[:os]['name'] == 'Debian'
-        it_behaves_like 'nova_vnc_proxy debian package'
+        it_behaves_like 'nova::vncproxy debian package'
       end
 
     end

@@ -58,8 +58,7 @@
 # [*vencrypt_ca*]
 #   (optional) path to the certificate authority cert to use when connecting
 #   to VNC servers that supporting vencrypt
-#   Required when allow_vencrypt is true.
-#   Defaults to undef
+#   Defaults to $facts['os_service_default']
 #
 class nova::vncproxy(
   Boolean $enabled                         = true,
@@ -73,7 +72,7 @@ class nova::vncproxy(
   Boolean $allow_vencrypt                  = false,
   $vencrypt_key                            = undef,
   $vencrypt_cert                           = undef,
-  $vencrypt_ca                             = undef,
+  $vencrypt_ca                             = $facts['os_service_default'],
 ) {
 
   include nova::deps
@@ -85,8 +84,8 @@ class nova::vncproxy(
 
   if $allow_vencrypt {
 
-    if (!$vencrypt_ca or !$vencrypt_cert or !$vencrypt_key) {
-      fail('vencrypt_ca/cert/key params are required when allow_vencrypt is true')
+    if (!$vencrypt_cert or !$vencrypt_key) {
+      fail('vencrypt_cert and vencrypt_key are required when allow_vencrypt is true')
     }
     nova_config {
       'vnc/vencrypt_ca_certs':    value => $vencrypt_ca;
