@@ -91,6 +91,14 @@
 #   (Optional) Limit the number of memory bytes used by the quorum queue.
 #   Defaults to $facts['os_service_default']
 #
+# [*rabbit_use_queue_manager*]
+#   (Optional) Should we use consistant queue names or random ones.
+#   Defaults to $facts['os_service_default']
+#
+# [*rabbit_stream_fanout*]
+#   (Optional) Use stream queues in RabbitMQ (x-queue-type: stream).
+#   Defaults to $facts['os_service_default']
+#
 # [*rabbit_enable_cancel_on_failover*]
 #   (Optional) Enable x-cancel-on-ha-failover flag so that rabbitmq server will
 #   cancel and notify consumers when queue is down.
@@ -372,6 +380,8 @@ class nova(
   $rabbit_quorum_delivery_limit            = $facts['os_service_default'],
   $rabbit_quorum_max_memory_length         = $facts['os_service_default'],
   $rabbit_quorum_max_memory_bytes          = $facts['os_service_default'],
+  $rabbit_use_queue_manager                = $facts['os_service_default'],
+  $rabbit_stream_fanout                    = $facts['os_service_default'],
   $rabbit_enable_cancel_on_failover        = $facts['os_service_default'],
   $rabbit_retry_interval                   = $facts['os_service_default'],
   $kombu_ssl_ca_certs                      = $facts['os_service_default'],
@@ -545,6 +555,8 @@ class nova(
     rabbit_quorum_delivery_limit    => $rabbit_quorum_delivery_limit,
     rabbit_quorum_max_memory_length => $rabbit_quorum_max_memory_length,
     rabbit_quorum_max_memory_bytes  => $rabbit_quorum_max_memory_bytes,
+    use_queue_manager               => $rabbit_use_queue_manager,
+    rabbit_stream_fanout            => $rabbit_stream_fanout,
     enable_cancel_on_failover       => $rabbit_enable_cancel_on_failover,
     rabbit_retry_interval           => $rabbit_retry_interval,
   }

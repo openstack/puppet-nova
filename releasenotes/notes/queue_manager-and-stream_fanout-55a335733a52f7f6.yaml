@@ -1,0 +1,5 @@
+---
+features:
+  - |
+    The ``nova`` class now has two new parameters
+    ``rabbit_use_queue_manager`` and ``rabbit_stream_fanout``.
