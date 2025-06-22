@@ -152,6 +152,14 @@ class nova::compute::libvirt::services (
   }
 
   if $virtlock_service_name {
+    if $::nova::params::virtlock_package_name {
+      package { 'virtlockd':
+        ensure => present,
+        name   => $::nova::params::virtlock_package_name,
+        tag    => ['openstack', 'nova-support-package'],
+      }
+      Package['virtlockd'] ~> Service['virtlockd']
+    }
     service { 'virtlockd':
       ensure => running,
       enable => true,

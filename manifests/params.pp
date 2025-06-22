@@ -41,6 +41,7 @@ class nova::params {
       $libvirt_service_name              = 'libvirtd'
       $libvirt_guests_service_name       = 'libvirt-guests'
       $virtlock_service_name             = 'virtlockd'
+      $virtlock_package_name             = undef
       $virtlog_service_name              = 'virtlogd'
       $virtsecret_service_name           = 'virtsecretd'
       $virtnodedev_service_name          = 'virtnodedevd'
@@ -117,6 +118,12 @@ class nova::params {
           $spicehtml5proxy_service_name = 'nova-spicehtml5proxy'
           $vncproxy_package_name        = 'nova-consoleproxy'
           $serialproxy_package_name     = 'nova-consoleproxy'
+          # Starting with Debian 13, virtlockd lives in a separate plugin package.
+          if Integer.new($facts['os']['release']['major']) >= 13 {
+            $virtlock_package_name      = 'libvirt-daemon-plugin-lockd'
+          } else {
+            $virtlock_package_name      = undef
+          }
           # Use default provider on Debian
         }
         default: {
@@ -125,6 +132,9 @@ class nova::params {
           $spicehtml5proxy_service_name = 'nova-spiceproxy'
           $vncproxy_package_name        = 'nova-novncproxy'
           $serialproxy_package_name     = 'nova-serialproxy'
+          # Starting with Ubuntu 25.10, virtlockd lives in a separate plugin package.
+          # We will need to fix this for Ubuntu 26.04 LTS.
+          $virtlock_package_name        = undef
         }
       }
     }
