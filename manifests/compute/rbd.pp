@@ -98,12 +98,6 @@
 #   (optional) Manage the libvirt secret
 #   Defaults to true
 #
-# == Deprecated parameters
-#
-# [*rbd_keyring*]
-#   (optional) The keyring name to use when retrieving the RBD secret
-#   Default to undef
-#
 class nova::compute::rbd (
   $libvirt_rbd_user,
   $libvirt_rbd_secret_uuid                      = undef,
@@ -121,16 +115,10 @@ class nova::compute::rbd (
   $ceph_client_ensure                           = 'present',
   $package_ensure                               = 'present',
   Boolean $manage_libvirt_secret                = true,
-  ## DEPRECATED PARAMETERS
-  $rbd_keyring                                  = undef,
 ) {
 
   include nova::deps
   include nova::params
-
-  if $rbd_keyring != undef {
-    warning('The rbd_keyring parameter is deprecated and has no effect')
-  }
 
   if $manage_ceph_client {
     # Install ceph client libraries

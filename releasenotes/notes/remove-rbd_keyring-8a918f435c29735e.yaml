@@ -1,0 +1,4 @@
+---
+upgrade:
+  - |
+    The ``nova::compute::rbd::rbd_keyring`` parameter has been removed.
