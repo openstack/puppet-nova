@@ -214,8 +214,7 @@ describe 'nova::migration::libvirt' do
           :auth => 'inexistent_auth',
         })
       end
-      it { expect { is_expected.to contain_class('nova::compute::libvirt') }.to \
-        raise_error(Puppet::Error) }
+      it { is_expected.to raise_error(Puppet::Error) }
     end
 
     context 'when not configuring libvirt' do
