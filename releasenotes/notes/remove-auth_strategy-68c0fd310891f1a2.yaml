@@ -1,0 +1,4 @@
+---
+upgrade:
+  - |
+    The ``nova::auth_strategy`` parameter has been removed.

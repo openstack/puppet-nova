@@ -353,10 +353,6 @@
 #
 # DEPRECATED PARAMETERS
 #
-# [*auth_strategy*]
-#   (optional) The strategy to use for auth: noauth or keystone.
-#   Defaults to undef
-#
 # [*rabbit_heartbeat_in_pthread*]
 #   (Optional) EXPERIMENTAL: Run the health check heartbeat thread
 #   through a native python thread. By default if this
@@ -436,7 +432,6 @@ class nova(
   $instance_name_template                  = $facts['os_service_default'],
   $cell_worker_thread_pool_size            = $facts['os_service_default'],
   # DEPRECATED PARAMETERS
-  $auth_strategy                           = undef,
   $rabbit_heartbeat_in_pthread             = undef,
   $use_ssl                                 = undef,
   $enabled_ssl_apis                        = undef,
@@ -506,13 +501,6 @@ class nova(
 
   resources { 'nova_config':
     purge => $purge_config,
-  }
-
-  if $auth_strategy {
-    warning('The auth_strategy parameter is deprecated, and will be removed in a future release.')
-  }
-  nova_config {
-    'api/auth_strategy': value => pick($auth_strategy, $facts['os_service_default']);
   }
 
   nova_config {

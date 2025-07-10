@@ -25,10 +25,6 @@ describe 'nova' do
         is_expected.to contain_nova_config('DEFAULT/rootwrap_config').with_value('/etc/nova/rootwrap.conf')
       end
 
-      it 'does not configure auth_strategy' do
-        is_expected.to contain_nova_config('api/auth_strategy').with_value('<SERVICE DEFAULT>')
-      end
-
       it 'configures rabbit' do
         is_expected.to contain_oslo__messaging__default('nova_config').with(
           :executor_thread_pool_size => '<SERVICE DEFAULT>',
@@ -140,7 +136,6 @@ describe 'nova' do
           :lock_path                          => '/var/locky/path',
           :state_path                         => '/var/lib/nova2',
           :service_down_time                  => '60',
-          :auth_strategy                      => 'foo',
           :ensure_package                     => '2012.1.1-15.el6',
           :host                               => 'test-001.example.org',
           :notification_transport_url         => 'rabbit://rabbit_user:password@localhost:5673',
@@ -181,10 +176,6 @@ describe 'nova' do
         is_expected.to contain_resources('nova_config').with({
           :purge => false
         })
-      end
-
-      it 'configures auth_strategy' do
-        is_expected.to contain_nova_config('api/auth_strategy').with_value('foo')
       end
 
       it 'configures rabbit' do
