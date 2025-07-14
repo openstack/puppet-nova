@@ -329,53 +329,6 @@ describe 'nova' do
       end
     end
 
-    context 'with SSL socket options set' do
-      let :params do
-        {
-          :use_ssl          => true,
-          :enabled_ssl_apis => ['osapi_compute'],
-          :cert_file        => '/path/to/cert',
-          :ca_file          => '/path/to/ca',
-          :key_file         => '/path/to/key',
-        }
-      end
-
-      it { is_expected.to contain_nova_config('DEFAULT/enabled_ssl_apis').with_value('osapi_compute') }
-      it { is_expected.to contain_nova_config('wsgi/ssl_ca_file').with_value('/path/to/ca') }
-      it { is_expected.to contain_nova_config('wsgi/ssl_cert_file').with_value('/path/to/cert') }
-      it { is_expected.to contain_nova_config('wsgi/ssl_key_file').with_value('/path/to/key') }
-    end
-
-    context 'with SSL socket options set with wrong parameters' do
-      let :params do
-        {
-          :use_ssl          => true,
-          :enabled_ssl_apis => ['osapi_compute'],
-          :ca_file          => '/path/to/ca',
-          :key_file         => '/path/to/key',
-        }
-      end
-
-      it_raises 'a Puppet::Error', /The cert_file parameter is required when use_ssl is set to true/
-    end
-
-    context 'with SSL socket options set to false' do
-      let :params do
-        {
-          :use_ssl          => false,
-          :enabled_ssl_apis => [],
-          :cert_file        => false,
-          :ca_file          => false,
-          :key_file         => false,
-        }
-      end
-
-      it { is_expected.to contain_nova_config('DEFAULT/enabled_ssl_apis').with_ensure('absent') }
-      it { is_expected.to contain_nova_config('wsgi/ssl_ca_file').with_ensure('absent') }
-      it { is_expected.to contain_nova_config('wsgi/ssl_cert_file').with_ensure('absent') }
-      it { is_expected.to contain_nova_config('wsgi/ssl_key_file').with_ensure('absent') }
-    end
-
     context 'with allocation ratios set' do
       let :params do
         {

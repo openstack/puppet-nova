@@ -20,34 +20,6 @@
 #   (optional) Whether the nova api package will be installed
 #   Defaults to 'present'
 #
-# [*api_bind_address*]
-#   (optional) IP address for nova-api server to listen
-#   Defaults to $facts['os_service_default']
-#
-# [*metadata_listen*]
-#   (optional) IP address  for metadata server to listen
-#   Defaults to $facts['os_service_default']
-#
-# [*metadata_listen_port*]
-#   (optional) The port on which the metadata API will listen.
-#   Defaults to $facts['os_service_default']
-#
-# [*enabled_apis*]
-#   (optional) A list of apis to enable
-#   Defaults to ['osapi_compute', 'metadata']
-#
-# [*osapi_compute_workers*]
-#   (optional) Number of workers for OpenStack API service
-#   Defaults to $facts['os_workers']
-#
-# [*osapi_compute_listen_port*]
-#   (optional) The port on which the OpenStack API will listen.
-#   Defaults to $facts['os_service_default']
-#
-# [*metadata_workers*]
-#   (optional) Number of workers for metadata service
-#   Defaults to $facts['os_workers']
-#
 # [*sync_db*]
 #   (optional) Run nova-manage db sync on api nodes after installing the package.
 #   Defaults to true
@@ -133,18 +105,41 @@
 #   the up cells.
 #   Defaults to $facts['os_service_default']
 #
+# DEPRECATED PARAMETERS
+#
+# [*api_bind_address*]
+#   (optional) IP address for nova-api server to listen
+#   Defaults to undef
+#
+# [*metadata_listen*]
+#   (optional) IP address for metadata server to listen
+#   Defaults to undef
+#
+# [*metadata_listen_port*]
+#   (optional) The port on which the metadata API will listen.
+#   Defaults to undef
+#
+# [*enabled_apis*]
+#   (optional) A list of apis to enable
+#   Defaults to undef
+#
+# [*osapi_compute_workers*]
+#   (optional) Number of workers for OpenStack API service
+#   Defaults to undef
+#
+# [*osapi_compute_listen_port*]
+#   (optional) The port on which the OpenStack API will listen.
+#   Defaults to undef
+#
+# [*metadata_workers*]
+#   (optional) Number of workers for metadata service
+#   Defaults to undef
+#
 class nova::api(
   Boolean $enabled                             = true,
   Boolean $manage_service                      = true,
   $api_paste_config                            = 'api-paste.ini',
   $ensure_package                              = 'present',
-  $api_bind_address                            = $facts['os_service_default'],
-  $osapi_compute_listen_port                   = $facts['os_service_default'],
-  $metadata_listen                             = $facts['os_service_default'],
-  $metadata_listen_port                        = $facts['os_service_default'],
-  $enabled_apis                                = ['osapi_compute', 'metadata'],
-  $osapi_compute_workers                       = $facts['os_workers'],
-  $metadata_workers                            = $facts['os_workers'],
   Boolean $sync_db                             = true,
   Boolean $sync_db_api                         = true,
   Boolean $db_online_data_migrations           = false,
@@ -162,6 +157,14 @@ class nova::api(
   $instance_list_cells_batch_strategy          = $facts['os_service_default'],
   $instance_list_cells_batch_fixed_size        = $facts['os_service_default'],
   $list_records_by_skipping_down_cells         = $facts['os_service_default'],
+  # DEPRECATED PARAMETERS
+  $api_bind_address                            = undef,
+  $osapi_compute_listen_port                   = undef,
+  $metadata_listen                             = undef,
+  $metadata_listen_port                        = undef,
+  $enabled_apis                                = undef,
+  $osapi_compute_workers                       = undef,
+  $metadata_workers                            = undef,
 ) inherits nova::params {
 
   include nova::deps
@@ -171,11 +174,17 @@ class nova::api(
   include nova::availability_zone
   include nova::pci
 
-  # sanitize service_name and prepare DEFAULT/enabled_apis parameter
-  if $service_name == $::nova::params::api_service_name {
-    nova_config {
-      'DEFAULT/enabled_apis': value => join(any2array($enabled_apis), ',');
+  [
+    'api_bind_address', 'osapi_compute_listen_port',
+    'metadata_listen', 'metadata_listen_port',
+    'enabled_apis', 'osapi_compute_workers', 'metadata_workers',
+  ].each |String $opt| {
+    if getvar($opt) != undef {
+      warning("The ${opt} parameter is deprecated and has no effect.")
     }
+  }
+
+  if $service_name == $::nova::params::api_service_name {
     $service_enabled = $enabled
 
     if $manage_service {
@@ -183,9 +192,6 @@ class nova::api(
       Nova_api_uwsgi_config<||> ~> Service['nova-api']
     }
   } elsif $service_name == 'httpd' {
-    nova_config {
-      'DEFAULT/enabled_apis': ensure => absent;
-    }
     $service_enabled = false
 
     policy_rcd { 'nova-api':
@@ -231,24 +237,14 @@ as a standalone service, or httpd for being run by a httpd server")
     }
   }
 
-  if $service_name != 'httpd' {
-    nova_config {
-      'DEFAULT/osapi_compute_listen':      value => $api_bind_address;
-      'DEFAULT/osapi_compute_listen_port': value => $osapi_compute_listen_port;
-      'DEFAULT/osapi_compute_workers':     value => $osapi_compute_workers;
-      'DEFAULT/metadata_workers':          value => $metadata_workers;
-      'DEFAULT/metadata_listen':           value => $metadata_listen;
-      'DEFAULT/metadata_listen_port':      value => $metadata_listen_port;
-    }
-  } else {
-    nova_config {
-      'DEFAULT/osapi_compute_listen':      ensure => absent;
-      'DEFAULT/osapi_compute_listen_port': ensure => absent;
-      'DEFAULT/osapi_compute_workers':     ensure => absent;
-      'DEFAULT/metadata_workers':          ensure => absent;
-      'DEFAULT/metadata_listen':           ensure => absent;
-      'DEFAULT/metadata_listen_port':      ensure => absent;
-    }
+  nova_config {
+    'DEFAULT/enabled_apis':              ensure => absent;
+    'DEFAULT/osapi_compute_listen':      ensure => absent;
+    'DEFAULT/osapi_compute_listen_port': ensure => absent;
+    'DEFAULT/osapi_compute_workers':     ensure => absent;
+    'DEFAULT/metadata_workers':          ensure => absent;
+    'DEFAULT/metadata_listen':           ensure => absent;
+    'DEFAULT/metadata_listen_port':      ensure => absent;
   }
 
   oslo::middleware {'nova_config':

@@ -400,11 +400,6 @@ class nova(
   $report_interval                         = $facts['os_service_default'],
   $periodic_fuzzy_delay                    = $facts['os_service_default'],
   $rootwrap_config                         = '/etc/nova/rootwrap.conf',
-  Boolean $use_ssl                         = false,
-  Array[String[1]] $enabled_ssl_apis       = ['metadata', 'osapi_compute'],
-  $ca_file                                 = undef,
-  $cert_file                               = undef,
-  $key_file                                = undef,
   Optional[Nova::SshKey] $nova_public_key  = undef,
   Optional[Nova::SshKey] $nova_private_key = undef,
   $record                                  = $facts['os_service_default'],
@@ -437,23 +432,24 @@ class nova(
   # DEPRECATED PARAMETERS
   $auth_strategy                           = undef,
   $rabbit_heartbeat_in_pthread             = undef,
+  $use_ssl                                 = undef,
+  $enabled_ssl_apis                        = undef,
+  $ca_file                                 = undef,
+  $cert_file                               = undef,
+  $key_file                                = undef,
 ) inherits nova::params {
 
   include nova::deps
   include nova::workarounds
 
-  if empty($enabled_ssl_apis) and $use_ssl {
-      warning('enabled_ssl_apis is empty but use_ssl is set to true')
+  [
+    'use_ssl', 'enabled_ssl_apis', 'ca_file', 'cert_file', 'key_file'
+  ].each |String $opt| {
+    if getvar($opt) != undef {
+      warning("The ${opt} parameter is deprecated and has no effect.")
+    }
   }
 
-  if $use_ssl {
-    if !$cert_file {
-      fail('The cert_file parameter is required when use_ssl is set to true')
-    }
-    if !$key_file {
-      fail('The key_file parameter is required when use_ssl is set to true')
-    }
-  }
 
   if $nova_public_key or $nova_private_key {
     file { '/var/lib/nova/.ssh':
@@ -561,30 +557,11 @@ class nova(
     rabbit_retry_interval           => $rabbit_retry_interval,
   }
 
-  # SSL Options
-  if $use_ssl {
-    nova_config {
-      'DEFAULT/enabled_ssl_apis': value => join($enabled_ssl_apis, ',');
-      'wsgi/ssl_cert_file':       value => $cert_file;
-      'wsgi/ssl_key_file':        value => $key_file;
-    }
-
-    if $ca_file {
-      nova_config {
-        'wsgi/ssl_ca_file': value => $ca_file;
-      }
-    } else {
-      nova_config {
-        'wsgi/ssl_ca_file': ensure => absent;
-      }
-    }
-  } else {
-    nova_config {
-      'DEFAULT/enabled_ssl_apis': ensure => absent;
-      'wsgi/ssl_cert_file':       ensure => absent;
-      'wsgi/ssl_key_file':        ensure => absent;
-      'wsgi/ssl_ca_file':         ensure => absent;
-    }
+  nova_config {
+    'DEFAULT/enabled_ssl_apis': ensure => absent;
+    'wsgi/ssl_cert_file':       ensure => absent;
+    'wsgi/ssl_key_file':        ensure => absent;
+    'wsgi/ssl_ca_file':         ensure => absent;
   }
 
   oslo::messaging::default { 'nova_config':

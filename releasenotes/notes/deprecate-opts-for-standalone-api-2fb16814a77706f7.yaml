@@ -1,0 +1,22 @@
+---
+deprecations:
+  - |
+    The following parmaeters have been deprecated and have no effect now.
+
+    - The ``nova::api`` class
+
+      - ``api_bind_address``
+      - ``metadata_listen``
+      - ``metadata_listen_port``
+      - ``enabled_apis``
+      - ``osapi_compute_workers``
+      - ``osapi_compute_listen_port``
+      - ``metadata_workers``
+
+    - The ``nova`` class
+
+      - ``use_ssl``
+      - ``enabled_ssl_apis``
+      - ``ca_file``
+      - ``cert_file``
+      - ``key_file``

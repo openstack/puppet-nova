@@ -37,26 +37,26 @@ describe 'nova::api' do
         is_expected.to contain_package('nova-api').that_notifies('Anchor[nova::install::end]')
       end
 
-      it 'enable metadata in evenlet configuration' do
-        is_expected.to contain_nova_config('DEFAULT/enabled_apis').with_value('osapi_compute,metadata')
-      end
-
-
       it { is_expected.to contain_class('nova::availability_zone') }
+
+      it 'clears eventlet options' do
+        is_expected.to contain_nova_config('DEFAULT/enabled_apis').with_ensure('absent')
+        is_expected.to contain_nova_config('DEFAULT/osapi_compute_workers').with_ensure('absent')
+        is_expected.to contain_nova_config('DEFAULT/osapi_compute_listen').with_ensure('absent')
+        is_expected.to contain_nova_config('DEFAULT/osapi_compute_listen_port').with_ensure('absent')
+        is_expected.to contain_nova_config('DEFAULT/metadata_workers').with_ensure('absent')
+        is_expected.to contain_nova_config('DEFAULT/metadata_listen').with_ensure('absent')
+        is_expected.to contain_nova_config('DEFAULT/metadata_listen_port').with_ensure('absent')
+      end
 
       it 'configures various stuff' do
         is_expected.to contain_nova_config('wsgi/api_paste_config').with_value('api-paste.ini')
-        is_expected.to contain_nova_config('DEFAULT/osapi_compute_listen').with_value('<SERVICE DEFAULT>')
-        is_expected.to contain_nova_config('DEFAULT/osapi_compute_listen_port').with_value('<SERVICE DEFAULT>')
-        is_expected.to contain_nova_config('DEFAULT/metadata_listen').with_value('<SERVICE DEFAULT>')
-        is_expected.to contain_nova_config('DEFAULT/metadata_listen_port').with_value('<SERVICE DEFAULT>')
-        is_expected.to contain_nova_config('DEFAULT/osapi_compute_workers').with_value('5')
-        is_expected.to contain_nova_config('DEFAULT/metadata_workers').with_value('5')
         is_expected.to contain_oslo__middleware('nova_config').with(
           :enable_proxy_headers_parsing => '<SERVICE DEFAULT>',
           :max_request_body_size        => '<SERVICE DEFAULT>',
         )
         is_expected.to contain_nova_config('api/max_limit').with_value('<SERVICE DEFAULT>')
+
         is_expected.to contain_nova_config('api/compute_link_prefix').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('api/glance_link_prefix').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('api/enable_instance_password').with_value('<SERVICE DEFAULT>')
@@ -74,12 +74,6 @@ describe 'nova::api' do
         params.merge!({
           :enabled                              => false,
           :ensure_package                       => '2012.1-2',
-          :api_bind_address                     => '192.168.56.210',
-          :metadata_listen                      => '127.0.0.1',
-          :metadata_listen_port                 => 8875,
-          :osapi_compute_listen_port            => 8874,
-          :osapi_compute_workers                => 1,
-          :metadata_workers                     => 2,
           :enable_proxy_headers_parsing         => true,
           :max_request_body_size                => '102400',
           :max_limit                            => 1000,
@@ -111,12 +105,6 @@ describe 'nova::api' do
       end
 
       it 'configures various stuff' do
-        is_expected.to contain_nova_config('DEFAULT/osapi_compute_listen').with_value('192.168.56.210')
-        is_expected.to contain_nova_config('DEFAULT/osapi_compute_listen_port').with_value('8874')
-        is_expected.to contain_nova_config('DEFAULT/metadata_listen').with_value('127.0.0.1')
-        is_expected.to contain_nova_config('DEFAULT/metadata_listen_port').with_value('8875')
-        is_expected.to contain_nova_config('DEFAULT/osapi_compute_workers').with_value('1')
-        is_expected.to contain_nova_config('DEFAULT/metadata_workers').with_value('2')
         is_expected.to contain_nova_config('api/max_limit').with_value('1000')
         is_expected.to contain_nova_config('api/compute_link_prefix').with_value('https://10.0.0.1:7777/')
         is_expected.to contain_nova_config('api/glance_link_prefix').with_value('https://10.0.0.1:6666/')
@@ -166,15 +154,7 @@ describe 'nova::api' do
           :enable => false,
           :tag    => 'nova-service',
         )
-        is_expected.to contain_nova_config('DEFAULT/enabled_apis').with_ensure('absent')
-        is_expected.to contain_nova_config('DEFAULT/osapi_compute_workers').with_ensure('absent')
-        is_expected.to contain_nova_config('DEFAULT/osapi_compute_listen').with_ensure('absent')
-        is_expected.to contain_nova_config('DEFAULT/osapi_compute_listen_port').with_ensure('absent')
-        is_expected.to contain_nova_config('DEFAULT/metadata_workers').with_ensure('absent')
-        is_expected.to contain_nova_config('DEFAULT/metadata_listen').with_ensure('absent')
-        is_expected.to contain_nova_config('DEFAULT/metadata_listen_port').with_ensure('absent')
       end
-
     end
 
     context 'when service_name is not valid' do
