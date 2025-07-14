@@ -197,7 +197,7 @@
 class nova::keystone::authtoken(
   String[1] $password,
   $username                       = 'nova',
-  $auth_url                       = 'http://127.0.0.1:5000/',
+  $auth_url                       = 'http://127.0.0.1:5000',
   $project_name                   = 'services',
   $user_domain_name               = 'Default',
   $project_domain_name            = 'Default',
