@@ -1,0 +1,4 @@
+---
+features:
+  - |
+    The new ``nova::cell_worker_thread_pool_size`` parameter has been added.
