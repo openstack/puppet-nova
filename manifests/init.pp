@@ -346,6 +346,11 @@
 #   (optional) Template string to be used to generate instance names
 #   Defaults to $facts['os_service_default']
 #
+# [*cell_worker_thread_pool_size*]
+#   (optional) The number of tasks that can run concurrently, one for each
+#   cell, for operations requires cross cell data gathering.
+#   Defaults to $facts['os_service_default']
+#
 # DEPRECATED PARAMETERS
 #
 # [*auth_strategy*]
@@ -429,6 +434,7 @@ class nova(
   $my_ip                                   = $facts['os_service_default'],
   $dhcp_domain                             = $facts['os_service_default'],
   $instance_name_template                  = $facts['os_service_default'],
+  $cell_worker_thread_pool_size            = $facts['os_service_default'],
   # DEPRECATED PARAMETERS
   $auth_strategy                           = undef,
   $rabbit_heartbeat_in_pthread             = undef,
@@ -527,6 +533,7 @@ class nova(
     'DEFAULT/initial_disk_allocation_ratio': value => $initial_disk_allocation_ratio;
     'DEFAULT/dhcp_domain':                   value => $dhcp_domain;
     'DEFAULT/instance_name_template':        value => $instance_name_template;
+    'DEFAULT/cell_worker_thread_pool_size':  value => $cell_worker_thread_pool_size;
   }
 
   oslo::messaging::rabbit {'nova_config':

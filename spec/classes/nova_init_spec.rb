@@ -99,6 +99,7 @@ describe 'nova' do
         is_expected.to contain_nova_config('console/ssl_minimum_version').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('DEFAULT/dhcp_domain').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('DEFAULT/instance_name_template').with_value('<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('DEFAULT/cell_worker_thread_pool_size').with_value('<SERVICE DEFAULT>')
       end
 
     end
@@ -164,6 +165,7 @@ describe 'nova' do
           :console_ssl_minimum_version        => 'tlsv1_2',
           :dhcp_domain                        => 'foo',
           :instance_name_template             => 'instance-%08x',
+          :cell_worker_thread_pool_size       => 5,
         }
       end
 
@@ -260,6 +262,7 @@ describe 'nova' do
         is_expected.to contain_nova_config('console/ssl_minimum_version').with_value('tlsv1_2')
         is_expected.to contain_nova_config('DEFAULT/dhcp_domain').with_value('foo')
         is_expected.to contain_nova_config('DEFAULT/instance_name_template').with_value('instance-%08x');
+        is_expected.to contain_nova_config('DEFAULT/cell_worker_thread_pool_size').with_value(5);
       end
 
       context 'with multiple notification_driver' do
