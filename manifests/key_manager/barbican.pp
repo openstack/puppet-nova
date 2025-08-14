@@ -51,7 +51,7 @@ class nova::key_manager::barbican (
   include nova::deps
 
   # cryptsetup is required when Barbican is encrypting volumes
-  ensure_packages('cryptsetup', {
+  stdlib::ensure_packages('cryptsetup', {
     ensure => present,
     tag    => 'openstack',
   })
