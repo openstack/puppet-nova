@@ -89,8 +89,8 @@ class nova::scheduler(
   nova::generic_service { 'scheduler':
     enabled        => $enabled,
     manage_service => $manage_service,
-    package_name   => $::nova::params::scheduler_package_name,
-    service_name   => $::nova::params::scheduler_service_name,
+    package_name   => $nova::params::scheduler_package_name,
+    service_name   => $nova::params::scheduler_service_name,
     ensure_package => $ensure_package,
   }
 

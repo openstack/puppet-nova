@@ -9,7 +9,7 @@ describe 'nova::compute::libvirt_guests' do
       it { is_expected.to contain_class('nova::params')}
 
       it { is_expected.to contain_file(platform_params[:libvirt_guests_environment_file]).with(
-        :ensure => 'present',
+        :ensure => 'file',
         :path   => platform_params[:libvirt_guests_environment_file],
         :tag    => 'libvirt-guests-file'
       )}
@@ -85,7 +85,7 @@ describe 'nova::compute::libvirt_guests' do
       end
 
       it { is_expected.to contain_file(platform_params[:libvirt_guests_environment_file]).with(
-        :ensure => 'present',
+        :ensure => 'file',
         :path   => platform_params[:libvirt_guests_environment_file],
         :tag    => 'libvirt-guests-file'
       )}

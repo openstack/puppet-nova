@@ -39,7 +39,7 @@ define nova::compute::libvirt::secret_ceph(
 
   $xml_file = "${secret_path}/libvirt-secret-${uuid}.xml"
   file { $xml_file:
-    ensure  => 'present',
+    ensure  => file,
     owner   => 'root',
     group   => 'root',
     mode    => '0600',
@@ -52,7 +52,7 @@ define nova::compute::libvirt::secret_ceph(
 
   $secret_file = "${secret_path}/libvirt-secret-${uuid}.secret"
   file { $secret_file:
-    ensure    => 'present',
+    ensure    => file,
     owner     => 'root',
     group     => 'root',
     mode      => '0600',

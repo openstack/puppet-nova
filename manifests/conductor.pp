@@ -43,13 +43,13 @@ class nova::conductor(
   nova::generic_service { 'conductor':
     enabled        => $enabled,
     manage_service => $manage_service,
-    package_name   => $::nova::params::conductor_package_name,
-    service_name   => $::nova::params::conductor_service_name,
+    package_name   => $nova::params::conductor_package_name,
+    service_name   => $nova::params::conductor_service_name,
     ensure_package => $ensure_package,
   }
 
   nova_config {
     'conductor/workers':           value => $workers;
-    'DEFAULT/enable_new_services': value => $enable_new_services
+    'DEFAULT/enable_new_services': value => $enable_new_services;
   }
 }

@@ -20,16 +20,16 @@ class nova::compute::libvirt::networks(
       path    => ['/bin', '/usr/bin'],
       onlyif  => [
         'virsh net-info default 2>/dev/null',
-        'virsh net-info default 2>/dev/null | grep -i "^autostart:\s*yes"'
-      ]
+        'virsh net-info default 2>/dev/null | grep -i "^autostart:\s*yes"',
+      ],
     }
     exec { 'libvirt-default-net-destroy':
       command => 'virsh net-destroy default',
       path    => ['/bin', '/usr/bin'],
       onlyif  => [
         'virsh net-info default 2>/dev/null',
-        'virsh net-info default 2>/dev/null | grep -i "^active:\s*yes"'
-      ]
+        'virsh net-info default 2>/dev/null | grep -i "^active:\s*yes"',
+      ],
     }
 
     Service<| tag == 'libvirt-service' |>

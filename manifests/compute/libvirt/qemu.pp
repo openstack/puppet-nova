@@ -47,8 +47,8 @@
 #
 # [*libvirt_version*]
 #   (optional) installed libvirt version. Default is automatic detected depending
-#   of the used OS installed via $::nova::compute::libvirt::version::default .
-#   Defaults to $::nova::compute::libvirt::version::default
+#   of the used OS installed via $nova::compute::libvirt::version::default .
+#   Defaults to $nova::compute::libvirt::version::default
 #
 class nova::compute::libvirt::qemu(
   Boolean $configure_qemu     = false,
@@ -61,7 +61,7 @@ class nova::compute::libvirt::qemu(
   Boolean $default_tls_verify = true,
   $memory_backing_dir         = undef,
   Boolean $nbd_tls            = false,
-  $libvirt_version            = $::nova::compute::libvirt::version::default,
+  $libvirt_version            = $nova::compute::libvirt::version::default,
 ) inherits nova::compute::libvirt::version {
 
   include nova::deps

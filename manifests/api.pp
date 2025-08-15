@@ -49,7 +49,7 @@
 #   service, and you must use another class to configure that
 #   web service. For example, use class { 'nova::wsgi::apache'...}
 #   to make nova be a web app using apache mod_wsgi.
-#   Defaults to '$::nova::params::api_service_name'
+#   Defaults to '$nova::params::api_service_name'
 #
 # [*metadata_service_name*]
 #   (optional) Name of the service that will be providing the
@@ -57,7 +57,7 @@
 #   If the value is undef, no management of the service will be
 #   done by puppet. If the value is defined, and manage_service
 #   is set to true, the service will be managed by Puppet.
-#   Default to $::nova::params::api_metadata_service_name
+#   Default to $nova::params::api_metadata_service_name
 #
 # [*max_limit*]
 #   (optional) This option is limit the maximum number of items in a single response.
@@ -143,8 +143,8 @@ class nova::api(
   Boolean $sync_db                             = true,
   Boolean $sync_db_api                         = true,
   Boolean $db_online_data_migrations           = false,
-  $service_name                                = $::nova::params::api_service_name,
-  $metadata_service_name                       = $::nova::params::api_metadata_service_name,
+  $service_name                                = $nova::params::api_service_name,
+  $metadata_service_name                       = $nova::params::api_metadata_service_name,
   $enable_proxy_headers_parsing                = $facts['os_service_default'],
   $max_request_body_size                       = $facts['os_service_default'],
   $max_limit                                   = $facts['os_service_default'],
@@ -184,7 +184,7 @@ class nova::api(
     }
   }
 
-  if $service_name == $::nova::params::api_service_name {
+  if $service_name == $nova::params::api_service_name {
     $service_enabled = $enabled
 
     if $manage_service {
@@ -220,8 +220,8 @@ as a standalone service, or httpd for being run by a httpd server")
     enabled        => $service_enabled,
     manage_service => $manage_service,
     ensure_package => $ensure_package,
-    package_name   => $::nova::params::api_package_name,
-    service_name   => $::nova::params::api_service_name,
+    package_name   => $nova::params::api_package_name,
+    service_name   => $nova::params::api_service_name,
   }
 
   if $metadata_service_name {
@@ -232,7 +232,7 @@ as a standalone service, or httpd for being run by a httpd server")
       enabled        => $service_enabled,
       manage_service => $manage_service,
       ensure_package => $ensure_package,
-      package_name   => $::nova::params::api_package_name,
+      package_name   => $nova::params::api_package_name,
       service_name   => $metadata_service_name,
     }
   }

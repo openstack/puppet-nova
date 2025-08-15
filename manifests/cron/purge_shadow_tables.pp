@@ -36,7 +36,7 @@
 #
 #  [*user*]
 #    (optional) User with access to nova files.
-#    Defaults to $::nova::params::user.
+#    Defaults to $nova::params::user.
 #
 #  [*destination*]
 #    (optional) Path to file to which rows should be archived
@@ -71,7 +71,7 @@ class nova::cron::purge_shadow_tables (
   $monthday                         = '*',
   $month                            = '*',
   $weekday                          = '*',
-  $user                             = $::nova::params::user,
+  $user                             = $nova::params::user,
   $destination                      = '/var/log/nova/nova-rowspurge.log',
   $age                              = 14,
   Boolean $all_cells                = false,
@@ -117,6 +117,6 @@ class nova::cron::purge_shadow_tables (
     monthday    => $monthday,
     month       => $month,
     weekday     => $weekday,
-    require     => Anchor['nova::dbsync::end']
+    require     => Anchor['nova::dbsync::end'],
   }
 }

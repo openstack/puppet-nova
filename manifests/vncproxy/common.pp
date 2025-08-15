@@ -25,14 +25,14 @@ class nova::vncproxy::common (
 
   include nova::deps
 
-  if defined('$::nova::compute::vncproxy_host') {
-    $compute_vncproxy_host_real = $::nova::compute::vncproxy_host
+  if defined('$nova::compute::vncproxy_host') {
+    $compute_vncproxy_host_real = $nova::compute::vncproxy_host
   } else {
     $compute_vncproxy_host_real = undef
   }
 
-  if defined('$::nova::vncproxy::host') {
-    $compat_vncproxy_host_real = $::nova::vncproxy::host
+  if defined('$nova::vncproxy::host') {
+    $compat_vncproxy_host_real = $nova::vncproxy::host
   } else {
     $compat_vncproxy_host_real = undef
   }
@@ -43,14 +43,14 @@ class nova::vncproxy::common (
     $compat_vncproxy_host_real,
     false))
 
-  if defined('$::nova::compute::vncproxy_protocol') {
-    $compute_vncproxy_protocol_real = $::nova::compute::vncproxy_protocol
+  if defined('$nova::compute::vncproxy_protocol') {
+    $compute_vncproxy_protocol_real = $nova::compute::vncproxy_protocol
   } else {
     $compute_vncproxy_protocol_real = undef
   }
 
-  if defined('$::nova::vncproxy::vncproxy_protocol') {
-    $compat_vncproxy_protocol_real = $::nova::vncproxy::vncproxy_protocol
+  if defined('$nova::vncproxy::vncproxy_protocol') {
+    $compat_vncproxy_protocol_real = $nova::vncproxy::vncproxy_protocol
   } else {
     $compat_vncproxy_protocol_real = undef
   }
@@ -61,14 +61,14 @@ class nova::vncproxy::common (
     $compat_vncproxy_protocol_real,
     'http')
 
-  if defined('$::nova::compute::vncproxy_port') {
-    $compute_vncproxy_port_real = $::nova::compute::vncproxy_port
+  if defined('$nova::compute::vncproxy_port') {
+    $compute_vncproxy_port_real = $nova::compute::vncproxy_port
   } else {
     $compute_vncproxy_port_real = undef
   }
 
-  if defined('$::nova::vncproxy::port') {
-    $compat_vncproxy_port_real = $::nova::vncproxy::port
+  if defined('$nova::vncproxy::port') {
+    $compat_vncproxy_port_real = $nova::vncproxy::port
   } else {
     $compat_vncproxy_port_real = undef
   }
@@ -79,14 +79,14 @@ class nova::vncproxy::common (
     $compat_vncproxy_port_real,
     6080)
 
-  if defined('$::nova::compute::vncproxy_path') {
-    $compute_vncproxy_path_real = $::nova::compute::vncproxy_path
+  if defined('$nova::compute::vncproxy_path') {
+    $compute_vncproxy_path_real = $nova::compute::vncproxy_path
   } else {
     $compute_vncproxy_path_real = undef
   }
 
-  if defined('$::nova::vncproxy::vncproxy_path') {
-    $compat_vncproxy_path_real = $::nova::vncproxy::vncproxy_path
+  if defined('$nova::vncproxy::vncproxy_path') {
+    $compat_vncproxy_path_real = $nova::vncproxy::vncproxy_path
   } else {
     $compat_vncproxy_path_real = undef
   }

@@ -43,7 +43,7 @@
 #
 #  [*user*]
 #    (optional) User with access to nova files.
-#    Defaults to $::nova::params::user.
+#    Defaults to $nova::params::user.
 #
 #  [*destination*]
 #    (optional) Path to file to which rows should be archived
@@ -99,7 +99,7 @@ class nova::cron::archive_deleted_rows (
   $month                            = '*',
   $weekday                          = '*',
   $max_rows                         = '100',
-  $user                             = $::nova::params::user,
+  $user                             = $nova::params::user,
   $destination                      = '/var/log/nova/nova-rowsflush.log',
   Boolean $until_complete           = false,
   Boolean $purge                    = false,
@@ -181,6 +181,6 @@ class nova::cron::archive_deleted_rows (
     monthday    => $monthday,
     month       => $month,
     weekday     => $weekday,
-    require     => Anchor['nova::dbsync::end']
+    require     => Anchor['nova::dbsync::end'],
   }
 }

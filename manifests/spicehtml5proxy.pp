@@ -71,8 +71,8 @@ class nova::spicehtml5proxy(
   nova::generic_service { 'spicehtml5proxy':
     enabled        => $enabled,
     manage_service => $manage_service,
-    package_name   => $::nova::params::spicehtml5proxy_package_name,
-    service_name   => $::nova::params::spicehtml5proxy_service_name,
+    package_name   => $nova::params::spicehtml5proxy_package_name,
+    service_name   => $nova::params::spicehtml5proxy_service_name,
     ensure_package => $ensure_package,
   }
 }

@@ -149,13 +149,13 @@
 #
 # [*libvirt_version*]
 #   (optional) installed libvirt version. Default is automatic detected depending
-#   of the used OS installed via $::nova::compute::libvirt::version::default .
-#   Defaults to $::nova::compute::libvirt::version::default
+#   of the used OS installed via $nova::compute::libvirt::version::default .
+#   Defaults to $nova::compute::libvirt::version::default
 #
 # [*modular_libvirt*]
 #   (optional) Whether to enable modular libvirt daemons or use monolithic
 #   libvirt daemon.
-#   Defaults to $::nova::params::modular_libvirt
+#   Defaults to $nova::params::modular_libvirt
 #
 # DEPRECATED PARAMETERS
 #
@@ -198,7 +198,7 @@ class nova::migration::libvirt(
   $ca_file                             = $facts['os_service_default'],
   $crl_file                            = $facts['os_service_default'],
   $libvirt_version                     = undef,
-  Boolean $modular_libvirt             = $::nova::params::modular_libvirt,
+  Boolean $modular_libvirt             = $nova::params::modular_libvirt,
   # DEPRECATED PARAMETERS
   $live_migration_tunnelled            = undef,
 ) inherits nova::params {
@@ -209,12 +209,12 @@ class nova::migration::libvirt(
     warning('The live_migration_tunnelled parameter has been deprecated.')
   }
 
-  if $modular_libvirt and !$::nova::params::modular_libvirt_support {
+  if $modular_libvirt and !$nova::params::modular_libvirt_support {
     fail('Modular libvirt daemons are not supported in this distribution')
   }
 
   include nova::compute::libvirt::version
-  $libvirt_version_real = pick($libvirt_version, $::nova::compute::libvirt::version::default)
+  $libvirt_version_real = pick($libvirt_version, $nova::compute::libvirt::version::default)
 
   if $configure_nova {
     if $transport == 'ssh' and ($client_user or $client_port or !empty($client_extraparams)) {
@@ -382,7 +382,7 @@ class nova::migration::libvirt(
         if is_service_default($listen_address) {
           file { "/etc/systemd/system/${socket_name}.socket":
             ensure  => absent,
-            require => Anchor['nova::install::end']
+            require => Anchor['nova::install::end'],
           } ~> exec { 'libvirt-socket-daemon-reload':
             command     => 'systemctl daemon-reload',
             path        => ['/sbin', '/usr/sbin', '/bin', '/usr/bin'],

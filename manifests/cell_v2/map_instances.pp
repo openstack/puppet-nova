@@ -43,7 +43,7 @@ class nova::cell_v2::map_instances (
   exec { 'nova-cell_v2-map_instances':
     path        => ['/bin', '/usr/bin'],
     command     => "nova-manage ${extra_params} cell_v2 map_instances --cell_uuid=${cell_uuid_real}",
-    user        => $::nova::params::user,
+    user        => $nova::params::user,
     refreshonly => true,
   }
 }

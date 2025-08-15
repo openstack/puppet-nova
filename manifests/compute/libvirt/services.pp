@@ -10,15 +10,15 @@
 #
 # [*libvirt_service_name*]
 #   (optional) libvirt service name.
-#   Defaults to $::nova::params::libvirt_service_name
+#   Defaults to $nova::params::libvirt_service_name
 #
 # [*virtlock_service_name*]
 #   (optional) virtlock service name.
-#   Defaults to $::nova::params::virtlock_service_name
+#   Defaults to $nova::params::virtlock_service_name
 #
 # [*virtlog_service_name*]
 #   (optional) virtlog service name.
-#   Defaults to $::nova::params::virtlog_service_name
+#   Defaults to $nova::params::virtlog_service_name
 #
 # [*libvirt_virt_type*]
 #   (optional) Libvirt domain type. Options are: kvm, lxc, qemu, parallels
@@ -27,27 +27,27 @@
 # [*modular_libvirt*]
 #   (optional) Whether to enable modular libvirt daemons or use monolithic
 #   libvirt daemon.
-#   Defaults to $::nova::params::modular_libvirt
+#   Defaults to $nova::params::modular_libvirt
 #
 # [*virtsecret_service_name*]
 #   (optional) virtsecret service name.
-#   Defaults to $::nova::params::virtsecret_socket_name
+#   Defaults to $nova::params::virtsecret_socket_name
 #
 # [*virtnodedev_service_name*]
 #   (optional) virtnodedev service name.
-#   Defaults to $::nova::params::virtnodedevd_socket_name
+#   Defaults to $nova::params::virtnodedevd_socket_name
 #
 # [*virtqemu_service_name*]
 #   (optional) virtqemu service name.
-#   Defaults to $::nova::params::virtqemu_socket_name
+#   Defaults to $nova::params::virtqemu_socket_name
 #
 # [*virtproxy_service_name*]
 #   (optional) virtproxy service name.
-#   Defaults to $::nova::params::virtproxy_socket_name
+#   Defaults to $nova::params::virtproxy_socket_name
 #
 # [*virtstorage_service_name*]
 #   (optional) virtstorage service name.
-#   Defaults to $::nova::params::virtstorage_socket_name
+#   Defaults to $nova::params::virtstorage_socket_name
 #
 # [*manage_ovmf*]
 #   (optional) install the OVMF package.
@@ -59,16 +59,16 @@
 #
 class nova::compute::libvirt::services (
   $ensure_package           = 'present',
-  $libvirt_service_name     = $::nova::params::libvirt_service_name,
-  $virtlock_service_name    = $::nova::params::virtlock_service_name,
-  $virtlog_service_name     = $::nova::params::virtlog_service_name,
+  $libvirt_service_name     = $nova::params::libvirt_service_name,
+  $virtlock_service_name    = $nova::params::virtlock_service_name,
+  $virtlog_service_name     = $nova::params::virtlog_service_name,
   $libvirt_virt_type        = 'kvm',
-  $modular_libvirt          = $::nova::params::modular_libvirt,
-  $virtsecret_service_name  = $::nova::params::virtsecret_socket_name,
-  $virtnodedev_service_name = $::nova::params::virtnodedev_socket_name,
-  $virtqemu_service_name    = $::nova::params::virtqemu_socket_name,
-  $virtproxy_service_name   = $::nova::params::virtproxy_socket_name,
-  $virtstorage_service_name = $::nova::params::virtstorage_socket_name,
+  $modular_libvirt          = $nova::params::modular_libvirt,
+  $virtsecret_service_name  = $nova::params::virtsecret_socket_name,
+  $virtnodedev_service_name = $nova::params::virtnodedev_socket_name,
+  $virtqemu_service_name    = $nova::params::virtqemu_socket_name,
+  $virtproxy_service_name   = $nova::params::virtproxy_socket_name,
+  $virtstorage_service_name = $nova::params::virtstorage_socket_name,
   Boolean $manage_ovmf      = true,
   Boolean $manage_swtpm     = false,
 ) inherits nova::params {
@@ -76,14 +76,14 @@ class nova::compute::libvirt::services (
   include nova::deps
   include nova::params
 
-  if $modular_libvirt and !$::nova::params::modular_libvirt_support {
+  if $modular_libvirt and !$nova::params::modular_libvirt_support {
     fail('Modular libvirt daemons are not supported in this distribution')
   }
 
   if $manage_ovmf {
     package { 'ovmf':
       ensure => $ensure_package,
-      name   => $::nova::params::ovmf_package_name,
+      name   => $nova::params::ovmf_package_name,
       tag    => ['openstack', 'nova-support-package'],
     }
     Package['ovmf'] ~> Service<| tag == 'libvirt-qemu-service' |>
@@ -93,7 +93,7 @@ class nova::compute::libvirt::services (
   if $manage_swtpm {
     package { 'swtpm':
       ensure => $ensure_package,
-      name   => $::nova::params::swtpm_package_name,
+      name   => $nova::params::swtpm_package_name,
       tag    => ['openstack', 'nova-support-package'],
     }
   }
@@ -102,17 +102,17 @@ class nova::compute::libvirt::services (
     if $facts['os']['family'] == 'RedHat' {
       case $libvirt_virt_type {
         'qemu': {
-          $libvirt_package_name_real = "${::nova::params::libvirt_daemon_package_prefix}kvm"
+          $libvirt_package_name_real = "${nova::params::libvirt_daemon_package_prefix}kvm"
         }
         'parallels': {
-          $libvirt_package_name_real = $::nova::params::libvirt_package_name
+          $libvirt_package_name_real = $nova::params::libvirt_package_name
         }
         default: {
-          $libvirt_package_name_real = "${::nova::params::libvirt_daemon_package_prefix}${libvirt_virt_type}"
+          $libvirt_package_name_real = "${nova::params::libvirt_daemon_package_prefix}${libvirt_virt_type}"
         }
       }
     } else {
-      $libvirt_package_name_real = $::nova::params::libvirt_package_name
+      $libvirt_package_name_real = $nova::params::libvirt_package_name
     }
 
     # libvirt
@@ -135,7 +135,7 @@ class nova::compute::libvirt::services (
       if $facts['os']['family'] == 'RedHat' {
         package { 'libvirt-daemon':
           ensure => $ensure_package,
-          name   => $::nova::params::libvirt_daemon_package_name,
+          name   => $nova::params::libvirt_daemon_package_name,
           tag    => ['openstack', 'nova-support-package'],
         }
         Package['libvirt-daemon'] ~> Service<| title == 'libvirt' |>
@@ -152,10 +152,10 @@ class nova::compute::libvirt::services (
   }
 
   if $virtlock_service_name {
-    if $::nova::params::virtlock_package_name {
+    if $nova::params::virtlock_package_name {
       package { 'virtlockd':
         ensure => present,
-        name   => $::nova::params::virtlock_package_name,
+        name   => $nova::params::virtlock_package_name,
         tag    => ['openstack', 'nova-support-package'],
       }
       Package['virtlockd'] ~> Service['virtlockd']
@@ -194,7 +194,7 @@ class nova::compute::libvirt::services (
     if $virtsecret_service_name {
       package { 'virtsecret':
         ensure => $ensure_package,
-        name   => "${::nova::params::libvirt_daemon_package_prefix}driver-secret",
+        name   => "${nova::params::libvirt_daemon_package_prefix}driver-secret",
         tag    => ['openstack', 'nova-support-package'],
       }
       service { 'virtsecretd':
@@ -224,7 +224,7 @@ class nova::compute::libvirt::services (
     if $virtnodedev_service_name {
       package { 'virtnodedev':
         ensure => $ensure_package,
-        name   => "${::nova::params::libvirt_daemon_package_prefix}driver-nodedev",
+        name   => "${nova::params::libvirt_daemon_package_prefix}driver-nodedev",
         tag    => ['openstack', 'nova-support-package'],
       }
       service { 'virtnodedevd':
@@ -255,7 +255,7 @@ class nova::compute::libvirt::services (
     if $virtqemu_service_name {
       package { 'virtqemu':
         ensure => $ensure_package,
-        name   => "${::nova::params::libvirt_daemon_package_prefix}driver-qemu",
+        name   => "${nova::params::libvirt_daemon_package_prefix}driver-qemu",
         tag    => ['openstack', 'nova-support-package'],
       }
       service { 'virtqemud':
@@ -308,7 +308,7 @@ class nova::compute::libvirt::services (
     if $virtstorage_service_name {
       package { 'virtstorage':
         ensure => $ensure_package,
-        name   => "${::nova::params::libvirt_daemon_package_prefix}driver-storage",
+        name   => "${nova::params::libvirt_daemon_package_prefix}driver-storage",
         tag    => ['openstack', 'nova-support-package'],
       }
       service { 'virtstoraged':

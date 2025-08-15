@@ -39,12 +39,12 @@ class nova::cell_v2::simple_setup (
   include nova::cell_v2::map_cell0
 
   nova_cell_v2 { 'cell0':
-    database_connection => $database_connection_cell0
+    database_connection => $database_connection_cell0,
   }
 
   nova_cell_v2 { 'default':
     transport_url       => $transport_url,
-    database_connection => $database_connection
+    database_connection => $database_connection,
   }
 
   include nova::cell_v2::discover_hosts

@@ -15,7 +15,7 @@ class nova::compute::mdev(
 
   if !empty($mdev_types) {
     nova_config {
-      'devices/enabled_mdev_types': value => join(keys($mdev_types), ',')
+      'devices/enabled_mdev_types': value => join(keys($mdev_types), ',');
     }
     create_resources('nova::compute::mdev_type', $mdev_types)
   } else {

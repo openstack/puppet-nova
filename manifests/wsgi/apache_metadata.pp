@@ -176,7 +176,7 @@ class nova::wsgi::apache_metadata (
 
   nova::generic_service { 'metadata-api':
     service_name   => false,
-    package_name   => $::nova::params::api_package_name,
+    package_name   => $nova::params::api_package_name,
     ensure_package => $ensure_package,
   }
 
@@ -189,7 +189,7 @@ class nova::wsgi::apache_metadata (
   openstacklib::wsgi::apache { 'nova_metadata_wsgi':
     bind_host                   => $bind_host,
     bind_port                   => $port,
-    group                       => $::nova::params::group,
+    group                       => $nova::params::group,
     path                        => $path,
     priority                    => $priority,
     servername                  => $servername,
@@ -202,15 +202,15 @@ class nova::wsgi::apache_metadata (
     ssl_crl_path                => $ssl_crl_path,
     ssl_key                     => $ssl_key,
     threads                     => $threads,
-    user                        => $::nova::params::user,
+    user                        => $nova::params::user,
     vhost_custom_fragment       => $vhost_custom_fragment,
     workers                     => $workers,
     wsgi_daemon_process         => 'nova-metadata',
     wsgi_process_display_name   => $wsgi_process_display_name,
     wsgi_process_group          => 'nova-metadata',
-    wsgi_script_dir             => $::nova::params::nova_wsgi_script_path,
+    wsgi_script_dir             => $nova::params::nova_wsgi_script_path,
     wsgi_script_file            => 'nova-metadata-api',
-    wsgi_script_source          => $::nova::params::nova_metadata_wsgi_script_source,
+    wsgi_script_source          => $nova::params::nova_metadata_wsgi_script_source,
     headers                     => $headers,
     request_headers             => $request_headers,
     custom_wsgi_process_options => $custom_wsgi_process_options,

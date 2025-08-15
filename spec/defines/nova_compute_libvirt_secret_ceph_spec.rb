@@ -21,7 +21,7 @@ describe 'nova::compute::libvirt::secret_ceph' do
       end
 
       it { is_expected.to contain_file('/tmp/libvirt-secret-4f515eff-47e4-425c-b24d-9c6adc56401c.xml').with(
-        :ensure  => 'present',
+        :ensure  => 'file',
         :owner   => 'root',
         :group   => 'root',
         :mode    => '0600',
@@ -40,7 +40,7 @@ describe 'nova::compute::libvirt::secret_ceph' do
       }
 
       it { is_expected.to contain_file('/tmp/libvirt-secret-4f515eff-47e4-425c-b24d-9c6adc56401c.secret').with(
-        :ensure    => 'present',
+        :ensure    => 'file',
         :owner     => 'root',
         :group     => 'root',
         :mode      => '0600',

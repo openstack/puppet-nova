@@ -88,20 +88,20 @@ class nova::compute::libvirt_guests (
   -> Anchor['nova::config::end']
 
   # NOTE(tkajinam): The environment file is not present in CentOS/RHEL
-  file { $::nova::params::libvirt_guests_environment_file:
-    ensure => present,
-    path   => $::nova::params::libvirt_guests_environment_file,
+  file { $nova::params::libvirt_guests_environment_file:
+    ensure => file,
+    path   => $nova::params::libvirt_guests_environment_file,
     tag    => 'libvirt-guests-file',
   }
 
   file_line { 'libvirt-guests ON_BOOT':
-    path  => $::nova::params::libvirt_guests_environment_file,
+    path  => $nova::params::libvirt_guests_environment_file,
     line  => "ON_BOOT=${on_boot}",
     match => '^ON_BOOT=.*',
     tag   => 'libvirt-guests-file_line',
   }
   file_line { 'libvirt-guests ON_SHUTDOWN':
-    path  => $::nova::params::libvirt_guests_environment_file,
+    path  => $nova::params::libvirt_guests_environment_file,
     line  => "ON_SHUTDOWN=${on_shutdown}",
     match => '^ON_SHUTDOWN=.*',
     tag   => 'libvirt-guests-file_line',
@@ -109,7 +109,7 @@ class nova::compute::libvirt_guests (
 
   if $start_delay {
     file_line { 'libvirt-guests START_DELAY':
-      path  => $::nova::params::libvirt_guests_environment_file,
+      path  => $nova::params::libvirt_guests_environment_file,
       line  => "START_DELAY=${start_delay}",
       match => '^START_DELAY=.*',
       tag   => 'libvirt-guests-file_line',
@@ -117,7 +117,7 @@ class nova::compute::libvirt_guests (
   } else {
     file_line { 'libvirt-guests START_DELAY':
       ensure            => absent,
-      path              => $::nova::params::libvirt_guests_environment_file,
+      path              => $nova::params::libvirt_guests_environment_file,
       match             => '^START_DELAY=.*',
       match_for_absence => true,
       tag               => 'libvirt-guests-file_line',
@@ -126,7 +126,7 @@ class nova::compute::libvirt_guests (
 
   if $parallel_shutdown {
     file_line { 'libvirt-guests PARALLEL_SHUTDOWN':
-      path  => $::nova::params::libvirt_guests_environment_file,
+      path  => $nova::params::libvirt_guests_environment_file,
       line  => "PARALLEL_SHUTDOWN=${parallel_shutdown}",
       match => '^PARALLEL_SHUTDOWN=.*',
       tag   => 'libvirt-guests-file_line',
@@ -134,7 +134,7 @@ class nova::compute::libvirt_guests (
   } else {
     file_line { 'libvirt-guests PARALLEL_SHUTDOWN':
       ensure            => absent,
-      path              => $::nova::params::libvirt_guests_environment_file,
+      path              => $nova::params::libvirt_guests_environment_file,
       match             => '^PARALLEL_SHUTDOWN=.*',
       match_for_absence => true,
       tag               => 'libvirt-guests-file_line',
@@ -143,7 +143,7 @@ class nova::compute::libvirt_guests (
 
   if $shutdown_timeout {
     file_line { 'libvirt-guests SHUTDOWN_TIMEOUT':
-      path  => $::nova::params::libvirt_guests_environment_file,
+      path  => $nova::params::libvirt_guests_environment_file,
       line  => "SHUTDOWN_TIMEOUT=${shutdown_timeout}",
       match => '^SHUTDOWN_TIMEOUT=.*',
       tag   => 'libvirt-guests-file_line',
@@ -151,7 +151,7 @@ class nova::compute::libvirt_guests (
   } else {
     file_line { 'libvirt-guests SHUTDOWN_TIMEOUT':
       ensure            => absent,
-      path              => $::nova::params::libvirt_guests_environment_file,
+      path              => $nova::params::libvirt_guests_environment_file,
       match             => '^SHUTDOWN_TIMEOUT=.*',
       match_for_absence => true,
       tag               => 'libvirt-guests-file_line',
@@ -160,7 +160,7 @@ class nova::compute::libvirt_guests (
 
   if $bypass_cache {
     file_line { 'libvirt-guests BYPASS_CACHE':
-      path  => $::nova::params::libvirt_guests_environment_file,
+      path  => $nova::params::libvirt_guests_environment_file,
       line  => 'BYPASS_CACHE=1',
       match => '^BYPASS_CACHE=.*',
       tag   => 'libvirt-guests-file_line',
@@ -168,7 +168,7 @@ class nova::compute::libvirt_guests (
   } else {
     file_line { 'libvirt-guests BYPASS_CACHE':
       ensure            => absent,
-      path              => $::nova::params::libvirt_guests_environment_file,
+      path              => $nova::params::libvirt_guests_environment_file,
       match             => '^BYPASS_CACHE=.*',
       match_for_absence => true,
       tag               => 'libvirt-guests-file_line',
@@ -177,7 +177,7 @@ class nova::compute::libvirt_guests (
 
   if $sync_time {
     file_line { 'libvirt-guests SYNC_TIME':
-      path  => $::nova::params::libvirt_guests_environment_file,
+      path  => $nova::params::libvirt_guests_environment_file,
       line  => 'SYNC_TIME=1',
       match => '^SYNC_TIME=.*',
       tag   => 'libvirt-guests-file_line',
@@ -185,7 +185,7 @@ class nova::compute::libvirt_guests (
   } else {
     file_line { 'libvirt-guests SYNC_TIME':
       ensure            => absent,
-      path              => $::nova::params::libvirt_guests_environment_file,
+      path              => $nova::params::libvirt_guests_environment_file,
       match             => '^SYNC_TIME=.*',
       match_for_absence => true,
       tag               => 'libvirt-guests-file_line',
@@ -194,7 +194,7 @@ class nova::compute::libvirt_guests (
 
   package { 'libvirt-client':
     ensure => $package_ensure,
-    name   => $::nova::params::libvirt_client_package_name,
+    name   => $nova::params::libvirt_client_package_name,
     tag    => ['openstack', 'nova-support-package'],
   }
 
@@ -211,10 +211,10 @@ class nova::compute::libvirt_guests (
     #                 this node are shut off if the service is restarted.
     service { 'libvirt-guests':
       ensure  => $service_ensure,
-      name    => $::nova::params::libvirt_guests_service_name,
+      name    => $nova::params::libvirt_guests_service_name,
       enable  => $enabled,
       require => Anchor['nova::service::begin'],
-      notify  => Anchor['nova::service::end']
+      notify  => Anchor['nova::service::end'],
     }
   }
 }

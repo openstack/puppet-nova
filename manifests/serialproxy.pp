@@ -43,9 +43,9 @@ class nova::serialproxy(
   nova::generic_service { 'serialproxy':
     enabled        => $enabled,
     manage_service => $manage_service,
-    package_name   => $::nova::params::serialproxy_package_name,
-    service_name   => $::nova::params::serialproxy_service_name,
-    ensure_package => $ensure_package
+    package_name   => $nova::params::serialproxy_package_name,
+    service_name   => $nova::params::serialproxy_service_name,
+    ensure_package => $ensure_package,
   }
 
 }

@@ -169,7 +169,7 @@
 # [*lock_path*]
 #   (optional) Directory for lock files.
 #   On RHEL will be '/var/lib/nova/tmp' and on Debian '/var/lock/nova'
-#   Defaults to $::nova::params::lock_path
+#   Defaults to $nova::params::lock_path
 #
 # [*report_interval*]
 #   (optional) Interval at which nodes report to data store.
@@ -401,7 +401,7 @@ class nova(
   $host                                    = $facts['os_service_default'],
   $service_down_time                       = $facts['os_service_default'],
   $state_path                              = '/var/lib/nova',
-  $lock_path                               = $::nova::params::lock_path,
+  $lock_path                               = $nova::params::lock_path,
   $report_interval                         = $facts['os_service_default'],
   $periodic_fuzzy_delay                    = $facts['os_service_default'],
   $rootwrap_config                         = '/etc/nova/rootwrap.conf',
@@ -449,7 +449,7 @@ class nova(
   include nova::workarounds
 
   [
-    'use_ssl', 'enabled_ssl_apis', 'ca_file', 'cert_file', 'key_file'
+    'use_ssl', 'enabled_ssl_apis', 'ca_file', 'cert_file', 'key_file',
   ].each |String $opt| {
     if getvar($opt) != undef {
       warning("The ${opt} parameter is deprecated and has no effect.")
@@ -461,8 +461,8 @@ class nova(
     file { '/var/lib/nova/.ssh':
       ensure  => directory,
       mode    => '0700',
-      owner   => $::nova::params::user,
-      group   => $::nova::params::group,
+      owner   => $nova::params::user,
+      group   => $nova::params::group,
       require => Anchor['nova::config::begin'],
       before  => Anchor['nova::config::end'],
     }
@@ -472,7 +472,7 @@ class nova(
         ensure  => present,
         key     => $nova_public_key['key'],
         type    => $nova_public_key['type'],
-        user    => $::nova::params::user,
+        user    => $nova::params::user,
         require => File['/var/lib/nova/.ssh'],
       }
     }
@@ -483,8 +483,8 @@ class nova(
       file { "/var/lib/nova/.ssh/${nova_private_key_file}":
         content   => $nova_private_key['key'],
         mode      => '0600',
-        owner     => $::nova::params::user,
-        group     => $::nova::params::group,
+        owner     => $nova::params::user,
+        group     => $nova::params::group,
         show_diff => false,
         require   => File['/var/lib/nova/.ssh'],
       }
@@ -493,13 +493,13 @@ class nova(
 
   package { 'python-nova':
     ensure => $ensure_package,
-    name   => $::nova::params::python_package_name,
+    name   => $nova::params::python_package_name,
     tag    => ['openstack', 'nova-package'],
   }
 
   package { 'nova-common':
     ensure  => $ensure_package,
-    name    => $::nova::params::common_package_name,
+    name    => $nova::params::common_package_name,
     require => Package['python-nova'],
     tag     => ['openstack', 'nova-package'],
   }
@@ -512,7 +512,7 @@ class nova(
     warning('The auth_strategy parameter is deprecated, and will be removed in a future release.')
   }
   nova_config {
-    'api/auth_strategy': value => pick($auth_strategy, $facts['os_service_default'])
+    'api/auth_strategy': value => pick($auth_strategy, $facts['os_service_default']);
   }
 
   nova_config {

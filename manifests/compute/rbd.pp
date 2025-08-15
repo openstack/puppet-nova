@@ -171,7 +171,7 @@ class nova::compute::rbd (
 
   if $ephemeral_storage {
     if defined('Class[nova::compute::libvirt]') {
-      if $::nova::compute::libvirt::images_type != 'rbd' {
+      if $nova::compute::libvirt::images_type != 'rbd' {
         fail('nova::compute::libvirt::images_type should be rbd if rbd ephemeral storage is used.')
       }
     }
