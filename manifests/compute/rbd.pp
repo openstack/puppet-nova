@@ -122,7 +122,7 @@ class nova::compute::rbd (
 
   if $manage_ceph_client {
     # Install ceph client libraries
-    ensure_packages( 'ceph-common', {
+    stdlib::ensure_packages( 'ceph-common', {
       ensure => $ceph_client_ensure,
       name   => $nova::params::ceph_common_package_name,
     })
