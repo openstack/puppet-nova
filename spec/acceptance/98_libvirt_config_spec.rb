@@ -16,6 +16,7 @@ describe 'basic libvirtd_config resource' do
       File <||> -> Virtqemud_config <||>
       File <||> -> Virtsecretd_config <||>
       File <||> -> Virtstoraged_config <||>
+      File <||> -> Qemu_config <||>
 
       file { '/etc/libvirt' :
         ensure => directory,
@@ -23,7 +24,7 @@ describe 'basic libvirtd_config resource' do
 
       [
         'libvirtd', 'virtlogd', 'virtlockd', 'virtnodedevd', 'virtproxyd',
-        'virtqemud', 'virtsecretd', 'virtstoraged'
+        'virtqemud', 'virtsecretd', 'virtstoraged', 'qemu'
       ].each | String $daemon | {
 
         file { "/etc/libvirt/${daemon}.conf" :
@@ -65,7 +66,7 @@ describe 'basic libvirtd_config resource' do
 
     [
       'libvirtd', 'virtlogd', 'virtlockd', 'virtnodedevd', 'virtproxyd',
-      'virtqemud', 'virtsecretd', 'virtstoraged'
+      'virtqemud', 'virtsecretd', 'virtstoraged', 'qemu'
     ].each do | daemon |
       describe file("/etc/libvirt/#{daemon}.conf") do
         it { is_expected.to exist }
