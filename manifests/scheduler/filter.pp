@@ -134,7 +134,6 @@ class nova::scheduler::filter (
   $aggregate_image_properties_isolation_separator = $facts['os_service_default'],
   $pci_in_placement                               = $facts['os_service_default'],
 ) {
-
   include nova::deps
 
   if empty($available_filters) {
@@ -194,5 +193,4 @@ class nova::scheduler::filter (
     'filter_scheduler/pci_in_placement':
       value => $pci_in_placement;
   }
-
 }

@@ -67,7 +67,7 @@
 #   (Optional) The region in which the identity server can be found.
 #   Defaults to $facts['os_service_default'].
 #
-class nova::keystone::service_user(
+class nova::keystone::service_user (
   $username                = 'nova',
   $password                = $facts['os_service_default'],
   $auth_url                = 'http://127.0.0.1:5000/',
@@ -84,7 +84,6 @@ class nova::keystone::service_user(
   $keyfile                 = $facts['os_service_default'],
   $region_name             = $facts['os_service_default'],
 ) {
-
   include nova::deps
 
   keystone::resource::service_user { 'nova_config':

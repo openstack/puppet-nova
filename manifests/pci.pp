@@ -11,7 +11,7 @@
 #   [{"vendor_id" => "1234", "product_id" => "5678", "name" => "default"},
 #    {"vendor_id" => "1234", "product_id" => "6789", "name" => "other"}]
 
-class nova::pci(
+class nova::pci (
   Array[Hash] $aliases = []
 ) {
   include nova::deps

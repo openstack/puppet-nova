@@ -142,5 +142,4 @@ class nova::params {
       fail("Unsupported osfamily: ${facts['os']['family']}")
     }
   }
-
 }

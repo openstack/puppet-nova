@@ -66,7 +66,7 @@
 #   limits.
 #   Defaults to $facts['os_service_default']
 #
-class nova::quota(
+class nova::quota (
   $driver                           = $facts['os_service_default'],
   $instances                        = $facts['os_service_default'],
   $cores                            = $facts['os_service_default'],
@@ -83,7 +83,6 @@ class nova::quota(
   $unified_limits_resource_strategy = $facts['os_service_default'],
   $unified_limits_resource_list     = $facts['os_service_default'],
 ) {
-
   include nova::deps
 
   nova_config {

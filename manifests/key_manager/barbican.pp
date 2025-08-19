@@ -47,7 +47,6 @@ class nova::key_manager::barbican (
   $barbican_region_name    = $facts['os_service_default'],
   $send_service_user_token = $facts['os_service_default'],
 ) {
-
   include nova::deps
 
   # cryptsetup is required when Barbican is encrypting volumes

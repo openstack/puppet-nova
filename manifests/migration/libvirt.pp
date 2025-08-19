@@ -170,7 +170,7 @@
 #   the availability of native encryption support in the hypervisor.
 #   Defaults to undef
 #
-class nova::migration::libvirt(
+class nova::migration::libvirt (
   Boolean $manage_service              = true,
   Enum['tcp', 'tls', 'ssh'] $transport = 'tcp',
   Enum['sasl', 'none'] $auth           = 'none',
@@ -202,7 +202,6 @@ class nova::migration::libvirt(
   # DEPRECATED PARAMETERS
   $live_migration_tunnelled            = undef,
 ) inherits nova::params {
-
   include nova::deps
 
   if $live_migration_tunnelled != undef {
@@ -388,7 +387,6 @@ class nova::migration::libvirt(
             path        => ['/sbin', '/usr/sbin', '/bin', '/usr/bin'],
             refreshonly => true,
           } ~> Service[$socket_name]
-
         } else {
           $listen_address_real = normalize_ip_for_uri($listen_address)
 

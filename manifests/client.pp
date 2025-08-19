@@ -8,7 +8,7 @@
 #   (optional) The state for the nova client package
 #   Defaults to 'present'
 #
-class nova::client(
+class nova::client (
   $ensure = 'present'
 ) {
   include nova::deps
@@ -22,5 +22,4 @@ in a future release.")
     name   => $nova::params::client_package,
     tag    => 'openstack',
   }
-
 }

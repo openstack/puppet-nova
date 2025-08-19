@@ -60,7 +60,7 @@
 #   to VNC servers that supporting vencrypt
 #   Defaults to $facts['os_service_default']
 #
-class nova::vncproxy(
+class nova::vncproxy (
   Boolean $enabled                         = true,
   Boolean $manage_service                  = true,
   Enum['http', 'https'] $vncproxy_protocol = 'http',
@@ -74,7 +74,6 @@ class nova::vncproxy(
   $vencrypt_cert                           = undef,
   $vencrypt_ca                             = $facts['os_service_default'],
 ) {
-
   include nova::deps
   include nova::params
 
@@ -83,7 +82,6 @@ class nova::vncproxy(
   }
 
   if $allow_vencrypt {
-
     if (!$vencrypt_cert or !$vencrypt_key) {
       fail('vencrypt_cert and vencrypt_key are required when allow_vencrypt is true')
     }
@@ -144,5 +142,4 @@ class nova::vncproxy(
     service_name   => $nova::params::vncproxy_service_name,
     ensure_package => $ensure_package,
   }
-
 }

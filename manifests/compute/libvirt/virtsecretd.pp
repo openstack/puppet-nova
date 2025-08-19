@@ -51,7 +51,6 @@ class nova::compute::libvirt::virtsecretd (
   $admin_max_client_requests = $facts['os_service_default'],
   $ovs_timeout               = $facts['os_service_default'],
 ) {
-
   include nova::deps
 
   virtsecretd_config {

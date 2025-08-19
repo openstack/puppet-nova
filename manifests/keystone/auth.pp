@@ -75,7 +75,7 @@
 #   (Optional) Should the service be configurd?
 #   Defaults to True
 #
-class nova::keystone::auth(
+class nova::keystone::auth (
   String[1] $password,
   String[1] $auth_name                    = 'nova',
   String[1] $service_name                 = 'nova',
@@ -95,7 +95,6 @@ class nova::keystone::auth(
   Boolean $configure_user_role            = true,
   Boolean $configure_service              = true,
 ) {
-
   include nova::deps
 
   Keystone::Resource::Service_identity['nova'] -> Anchor['nova::service::end']
@@ -120,5 +119,4 @@ class nova::keystone::auth(
     admin_url           => $admin_url,
     internal_url        => $internal_url,
   }
-
 }

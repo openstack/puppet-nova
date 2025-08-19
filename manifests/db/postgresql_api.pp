@@ -24,14 +24,13 @@
 #    (Optional) Privileges given to the database user.
 #    Default to 'ALL'
 #
-class nova::db::postgresql_api(
+class nova::db::postgresql_api (
   $password,
   $dbname     = 'nova_api',
   $user       = 'nova_api',
   $encoding   = undef,
   $privileges = 'ALL',
 ) {
-
   include nova::deps
 
   openstacklib::db::postgresql { 'nova_api':

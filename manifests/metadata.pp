@@ -28,13 +28,12 @@
 #   (optional) domain to use for building the hostnames
 #   Defaults to $facts['os_service_default']
 #
-class nova::metadata(
+class nova::metadata (
   $neutron_metadata_proxy_shared_secret = undef,
   $metadata_cache_expiration            = $facts['os_service_default'],
   $local_metadata_per_cell              = $facts['os_service_default'],
   $dhcp_domain                          = $facts['os_service_default'],
 ) inherits nova::params {
-
   include nova::deps
 
   nova_config {
@@ -43,7 +42,7 @@ class nova::metadata(
     'api/local_metadata_per_cell':   value => $local_metadata_per_cell;
   }
 
-  if ($neutron_metadata_proxy_shared_secret){
+  if ($neutron_metadata_proxy_shared_secret) {
     nova_config {
       'neutron/service_metadata_proxy': value => true;
       'neutron/metadata_proxy_shared_secret':

@@ -63,7 +63,6 @@ class nova::compute::libvirt::config (
   Hash $virtstoraged_config = {},
   Hash $qemu_config         = {},
 ) {
-
   include nova::deps
 
   create_resources('libvirtd_config', $libvirtd_config)

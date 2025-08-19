@@ -363,7 +363,7 @@
 #   will be run through a green thread.
 #   Defaults to undef
 #
-class nova(
+class nova (
   $ensure_package                          = 'present',
   $default_transport_url                   = $facts['os_service_default'],
   $rpc_response_timeout                    = $facts['os_service_default'],
@@ -439,7 +439,6 @@ class nova(
   $cert_file                               = undef,
   $key_file                                = undef,
 ) inherits nova::params {
-
   include nova::deps
   include nova::workarounds
 
@@ -450,7 +449,6 @@ class nova(
       warning("The ${opt} parameter is deprecated and has no effect.")
     }
   }
-
 
   if $nova_public_key or $nova_private_key {
     file { '/var/lib/nova/.ssh':
@@ -524,7 +522,7 @@ class nova(
     'DEFAULT/cell_worker_thread_pool_size':  value => $cell_worker_thread_pool_size;
   }
 
-  oslo::messaging::rabbit {'nova_config':
+  oslo::messaging::rabbit { 'nova_config':
     rabbit_use_ssl                  => $rabbit_use_ssl,
     heartbeat_timeout_threshold     => $rabbit_heartbeat_timeout_threshold,
     heartbeat_rate                  => $rabbit_heartbeat_rate,

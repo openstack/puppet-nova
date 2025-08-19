@@ -59,7 +59,6 @@ class nova::compute::libvirt::virtproxyd (
   $ovs_timeout               = $facts['os_service_default'],
   $tls_priority              = $facts['os_service_default'],
 ) {
-
   include nova::deps
 
   virtproxyd_config {

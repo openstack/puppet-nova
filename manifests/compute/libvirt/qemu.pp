@@ -50,7 +50,7 @@
 #   of the used OS installed via $nova::compute::libvirt::version::default .
 #   Defaults to $nova::compute::libvirt::version::default
 #
-class nova::compute::libvirt::qemu(
+class nova::compute::libvirt::qemu (
   Boolean $configure_qemu     = false,
   $user                       = undef,
   $group                      = undef,
@@ -63,7 +63,6 @@ class nova::compute::libvirt::qemu(
   Boolean $nbd_tls            = false,
   $libvirt_version            = $nova::compute::libvirt::version::default,
 ) inherits nova::compute::libvirt::version {
-
   include nova::deps
 
   if versioncmp($libvirt_version, '4.5') < 0 {
@@ -73,7 +72,6 @@ class nova::compute::libvirt::qemu(
   Qemu_config<||> ~> Service<| tag == 'libvirt-qemu-service' |>
 
   if $configure_qemu {
-
     if $vnc_tls {
       $vnc_tls_verify_real = $vnc_tls_verify
     } else {
@@ -89,25 +87,24 @@ class nova::compute::libvirt::qemu(
     }
 
     if $user and !empty($user) {
-      qemu_config { 'user': value => $user, quote =>true }
+      qemu_config { 'user': value => $user, quote => true }
     } else {
       qemu_config { 'user': ensure => absent }
     }
 
     if $group and !empty($group) {
-      qemu_config { 'group': value => $group, quote =>true }
+      qemu_config { 'group': value => $group, quote => true }
     } else {
       qemu_config { 'group': ensure => absent }
     }
 
     if $memory_backing_dir and !empty($memory_backing_dir) {
-      qemu_config { 'memory_backing_dir': value => $memory_backing_dir, quote =>true }
+      qemu_config { 'memory_backing_dir': value => $memory_backing_dir, quote => true }
     } else {
       qemu_config { 'memory_backing_dir': ensure => absent }
     }
 
     qemu_config { 'nbd_tls': value => $nbd_tls }
-
   } else {
     qemu_config {
       'max_files':               ensure => absent;

@@ -72,7 +72,7 @@
 #  (Optional) Always use this endpoint URL for requests for this client.
 #  Defaults to $facts['os_service_default'].
 #
-class nova::limit(
+class nova::limit (
   String[1] $password,
   Optional[String[1]] $endpoint_id = undef,
   String[1] $endpoint_service_name = 'nova',
@@ -91,7 +91,6 @@ class nova::limit(
   $region_name                     = $facts['os_service_default'],
   $endpoint_override               = $facts['os_service_default'],
 ) {
-
   include nova::deps
 
   if $endpoint_id != undef {

@@ -17,12 +17,11 @@
 #   should connect (string value)
 #   Defaults to $facts['os_service_default']
 #
-class nova::compute::serial(
+class nova::compute::serial (
   $port_range          = $facts['os_service_default'],
   $base_url            = $facts['os_service_default'],
   $proxyclient_address = $facts['os_service_default'],
 ) {
-
   include nova::deps
 
   nova_config {

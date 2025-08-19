@@ -30,14 +30,13 @@
 #   (optional) Control the ensure parameter for the package resource.
 #   Defaults to 'present'.
 #
-define nova::generic_service(
+define nova::generic_service (
   $package_name,
   $service_name,
   Boolean $enabled        = true,
   Boolean $manage_service = true,
   $ensure_package         = 'present'
 ) {
-
   include nova::deps
   include nova::params
 

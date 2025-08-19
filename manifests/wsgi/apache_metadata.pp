@@ -171,7 +171,6 @@ class nova::wsgi::apache_metadata (
   $request_headers             = undef,
   $vhost_custom_fragment       = undef,
 ) {
-
   include nova::params
 
   nova::generic_service { 'metadata-api':

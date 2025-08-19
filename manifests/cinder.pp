@@ -91,7 +91,6 @@ class nova::cinder (
   $cross_az_attach     = $facts['os_service_default'],
   $debug               = $facts['os_service_default'],
 ) {
-
   include nova::deps
 
   if is_service_default($password) {

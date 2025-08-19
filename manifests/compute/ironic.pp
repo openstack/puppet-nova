@@ -16,7 +16,6 @@ class nova::compute::ironic (
   $ensure_package = 'present',
   $compute_driver = 'ironic.IronicDriver',
 ) {
-
   include nova::deps
   require nova::ironic::common
 

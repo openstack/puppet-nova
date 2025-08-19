@@ -45,7 +45,6 @@ class nova::compute::libvirt::virtlogd (
   $max_size          = $facts['os_service_default'],
   $max_backups       = $facts['os_service_default'],
 ) {
-
   include nova::deps
 
   virtlogd_config {

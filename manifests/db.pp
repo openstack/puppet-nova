@@ -117,7 +117,6 @@ class nova::db (
   $api_database_max_overflow            = $facts['os_service_default'],
   $api_database_pool_timeout            = $facts['os_service_default'],
 ) {
-
   include nova::deps
 
   oslo::db { 'nova_config':

@@ -37,7 +37,6 @@ class nova::compute::image_cache (
   $remove_unused_resized_minimum_age_seconds  = $facts['os_service_default'],
   $precache_concurrency                       = $facts['os_service_default']
 ) {
-
   include nova::deps
 
   nova_config {

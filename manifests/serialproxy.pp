@@ -24,14 +24,13 @@
 #   (optional) The state of the nova-serialproxy package
 #   Defaults to 'present'
 #
-class nova::serialproxy(
+class nova::serialproxy (
   Boolean $enabled        = true,
   Boolean $manage_service = true,
   $serialproxy_host       = $facts['os_service_default'],
   $serialproxy_port       = $facts['os_service_default'],
   $ensure_package         = 'present'
 ) {
-
   include nova::deps
   include nova::params
 
@@ -47,5 +46,4 @@ class nova::serialproxy(
     service_name   => $nova::params::serialproxy_service_name,
     ensure_package => $ensure_package,
   }
-
 }

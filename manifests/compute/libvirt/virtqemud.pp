@@ -52,7 +52,6 @@ class nova::compute::libvirt::virtqemud (
   $admin_max_client_requests = $facts['os_service_default'],
   $ovs_timeout               = $facts['os_service_default'],
 ) {
-
   include nova::deps
 
   virtqemud_config {

@@ -11,7 +11,6 @@
 class nova::cell_v2::map_cell_and_hosts (
   $extra_params = '',
 ) {
-
   include nova::deps
   include nova::params
 

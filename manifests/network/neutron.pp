@@ -113,7 +113,6 @@ class nova::network::neutron (
   $vif_plugging_timeout    = $facts['os_service_default'],
   $default_floating_pool   = $facts['os_service_default'],
 ) {
-
   include nova::deps
 
   if is_service_default($system_scope) {

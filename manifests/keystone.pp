@@ -80,7 +80,6 @@ class nova::keystone (
   $username            = 'nova',
   $user_domain_name    = 'Default',
 ) {
-
   include nova::deps
 
   if is_service_default($system_scope) {

@@ -27,14 +27,13 @@
 #   by the conductor service which is responsible for creating the service entries.
 #   Defaults to $facts['os_service_default']
 #
-class nova::conductor(
+class nova::conductor (
   Boolean $enabled        = true,
   Boolean $manage_service = true,
   $ensure_package         = 'present',
   $workers                = $facts['os_workers'],
   $enable_new_services    = $facts['os_service_default'],
 ) {
-
   include nova::deps
   include nova::db
   include nova::params

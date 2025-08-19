@@ -135,7 +135,7 @@
 #   (optional) Number of workers for metadata service
 #   Defaults to undef
 #
-class nova::api(
+class nova::api (
   Boolean $enabled                             = true,
   Boolean $manage_service                      = true,
   $api_paste_config                            = 'api-paste.ini',
@@ -166,7 +166,6 @@ class nova::api(
   $osapi_compute_workers                       = undef,
   $metadata_workers                            = undef,
 ) inherits nova::params {
-
   include nova::deps
   include nova::db
   include nova::policy
@@ -247,7 +246,7 @@ as a standalone service, or httpd for being run by a httpd server")
     'DEFAULT/metadata_listen_port':      ensure => absent;
   }
 
-  oslo::middleware {'nova_config':
+  oslo::middleware { 'nova_config':
     enable_proxy_headers_parsing => $enable_proxy_headers_parsing,
     max_request_body_size        => $max_request_body_size,
   }

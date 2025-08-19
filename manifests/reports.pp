@@ -17,12 +17,11 @@
 #   is set.
 #   Defaults to $facts['os_service_default']
 #
-class nova::reports(
+class nova::reports (
   $log_dir                     = $facts['os_service_default'],
   $file_event_handler          = $facts['os_service_default'],
   $file_event_handler_interval = $facts['os_service_default'],
 ) {
-
   include nova::deps
 
   oslo::reports { 'nova_config':

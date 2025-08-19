@@ -80,6 +80,7 @@ class nova::workarounds (
   # DEPRECATED PARAMETER
   $enable_numa_live_migration              = undef,
 ) {
+  include nova::deps
 
   if $enable_numa_live_migration != undef {
     warning('The enable_numa_live_migration parameter is deprecated')
@@ -110,5 +111,4 @@ class nova::workarounds (
     'workarounds/skip_cpu_compare_at_startup':
       value => $skip_cpu_compare_at_startup;
   }
-
 }

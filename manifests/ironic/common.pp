@@ -87,7 +87,6 @@ class nova::ironic::common (
   $conductor_group      = $facts['os_service_default'],
   $shard                = $facts['os_service_default'],
 ) {
-
   include nova::deps
 
   if is_service_default($system_scope) {
@@ -117,5 +116,4 @@ class nova::ironic::common (
     'ironic/conductor_group':     value => $conductor_group;
     'ironic/shard':               value => $shard;
   }
-
 }

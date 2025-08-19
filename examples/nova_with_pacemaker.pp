@@ -46,4 +46,3 @@ class { 'nova::vncproxy':
   enabled        => false,
   manage_service => false,
 }
-
