@@ -5,6 +5,8 @@
 class nova::params {
   include openstacklib::defaults
 
+  $pyver3 = $openstacklib::defaults::pyver3
+
   $client_package = 'python3-novaclient'
   $user           = 'nova'
   $group          = 'nova'
@@ -64,8 +66,8 @@ class nova::params {
       $root_helper                       = 'sudo nova-rootwrap'
       $lock_path                         = '/var/lib/nova/tmp'
       $nova_wsgi_script_path             = '/var/www/cgi-bin/nova'
-      $nova_api_wsgi_script_source       = '/usr/bin/nova-api-wsgi'
-      $nova_metadata_wsgi_script_source  = '/usr/bin/nova-metadata-wsgi'
+      $nova_api_wsgi_script_source       = "/usr/lib/python${pyver3}/site-packages/nova/wsgi/osapi_compute.py"
+      $nova_metadata_wsgi_script_source  = "/usr/lib/python${pyver3}/site-packages/nova/wsgi/metadata.py"
     }
     'Debian': {
       # package names
