@@ -51,7 +51,6 @@ class nova::compute::libvirt::virtnodedevd (
   $admin_max_client_requests = $facts['os_service_default'],
   $ovs_timeout               = $facts['os_service_default'],
 ) {
-
   include nova::deps
 
   virtnodedevd_config {

@@ -291,7 +291,6 @@ class nova::compute::libvirt (
   $wait_soft_reboot_seconds                   = $facts['os_service_default'],
   $tb_cache_size                              = $facts['os_service_default'],
 ) inherits nova::params {
-
   include nova::deps
   include nova::params
 

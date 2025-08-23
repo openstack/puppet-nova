@@ -28,14 +28,12 @@ class nova::compute::libvirt::virtstoraged (
   $log_outputs       = $facts['os_service_default'],
   $ovs_timeout       = $facts['os_service_default'],
 ) {
-
   include nova::deps
 
   virtstoraged_config {
-    'log_level':         value => $log_level;
-    'log_filters':       value => join(any2array($log_filters), ' '), quote => true;
-    'log_outputs':       value => join(any2array($log_outputs), ' '), quote => true;
-    'ovs_timeout':       value => $ovs_timeout;
+    'log_level':   value => $log_level;
+    'log_filters': value => join(any2array($log_filters), ' '), quote => true;
+    'log_outputs': value => join(any2array($log_outputs), ' '), quote => true;
+    'ovs_timeout': value => $ovs_timeout;
   }
 }
-

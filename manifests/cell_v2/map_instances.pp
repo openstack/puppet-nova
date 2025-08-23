@@ -24,7 +24,6 @@ class nova::cell_v2::map_instances (
   $cell_name    = undef,
   $extra_params = '',
 ) {
-
   include nova::deps
   include nova::params
 

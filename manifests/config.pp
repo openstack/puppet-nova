@@ -38,7 +38,6 @@ class nova::config (
   Hash $nova_api_paste_ini   = {},
   Hash $nova_rootwrap_config = {},
 ) {
-
   include nova::deps
 
   create_resources('nova_config', $nova_config)

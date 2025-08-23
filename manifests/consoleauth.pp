@@ -16,7 +16,6 @@ class nova::consoleauth (
   $token_ttl               = $facts['os_service_default'],
   $enforce_session_timeout = $facts['os_service_default'],
 ) {
-
   include nova::deps
 
   nova_config {

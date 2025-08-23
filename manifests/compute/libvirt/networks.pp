@@ -8,10 +8,9 @@
 #   (optional) Whether or not delete the default network.
 #   Defaults to true.
 #
-class nova::compute::libvirt::networks(
+class nova::compute::libvirt::networks (
   Boolean $disable_default_network = true,
 ) {
-
   include nova::deps
 
   if $disable_default_network {

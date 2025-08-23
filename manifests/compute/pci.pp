@@ -21,7 +21,7 @@
 #   (optional) Pci passthrough list of hash.
 #   Defaults to undef
 #
-class nova::compute::pci(
+class nova::compute::pci (
   Array[Hash] $device_specs          = [],
   $report_in_placement               = $facts['os_service_default'],
   # DEPRECATED PARAMETERS

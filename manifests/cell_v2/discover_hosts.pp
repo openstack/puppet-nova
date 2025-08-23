@@ -11,7 +11,6 @@
 class nova::cell_v2::discover_hosts (
   $extra_params = '',
 ) {
-
   include nova::deps
   include nova::params
 

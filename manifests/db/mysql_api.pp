@@ -31,7 +31,7 @@
 #   (Optional) Additional hosts that are allowed to access this DB
 #   Defaults to undef
 #
-class nova::db::mysql_api(
+class nova::db::mysql_api (
   $password,
   $dbname        = 'nova_api',
   $user          = 'nova_api',
@@ -40,7 +40,6 @@ class nova::db::mysql_api(
   $collate       = 'utf8_general_ci',
   $allowed_hosts = undef,
 ) {
-
   include nova::deps
 
   openstacklib::db::mysql { 'nova_api':

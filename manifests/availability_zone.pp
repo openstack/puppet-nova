@@ -21,11 +21,11 @@ class nova::availability_zone (
   $default_schedule_zone              = $facts['os_service_default'],
   $internal_service_availability_zone = $facts['os_service_default'],
 ) {
+  include nova::deps
 
   nova_config {
     'DEFAULT/default_availability_zone':          value => $default_availability_zone;
     'DEFAULT/default_schedule_zone':              value => $default_schedule_zone;
     'DEFAULT/internal_service_availability_zone': value => $internal_service_availability_zone;
   }
-
 }

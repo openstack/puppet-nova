@@ -259,7 +259,6 @@ class nova::cache (
   $dead_timeout                         = $facts['os_service_default'],
   Boolean $manage_backend_package       = true,
 ) {
-
   include nova::deps
 
   oslo::cache { 'nova_config':

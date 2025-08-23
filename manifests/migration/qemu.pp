@@ -25,14 +25,13 @@
 #   (optional) Higher limit of port range used for migration.
 #   Defaults to $facts['os_service_default'].
 #
-class nova::migration::qemu(
+class nova::migration::qemu (
   Boolean $configure_qemu = false,
   $migration_address      = $facts['os_service_default'],
   $migration_host         = $facts['os_service_default'],
   $migration_port_min     = $facts['os_service_default'],
   $migration_port_max     = $facts['os_service_default'],
-){
-
+) {
   include nova::deps
 
   Qemu_config<||> ~> Service<| tag == 'libvirt-qemu-service' |>

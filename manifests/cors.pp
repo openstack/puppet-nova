@@ -44,7 +44,6 @@ class nova::cors (
   $allow_methods     = $facts['os_service_default'],
   $allow_headers     = $facts['os_service_default'],
 ) {
-
   include nova::deps
 
   oslo::cors { 'nova_config':

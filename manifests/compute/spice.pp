@@ -38,7 +38,7 @@
 #   (optional) Path of the spice html file for the html5 console proxy
 #   Defaults to '/spice_auto.html'
 #
-class nova::compute::spice(
+class nova::compute::spice (
   Boolean $agent_enabled                = true,
   $server_listen                        = $facts['os_service_default'],
   $server_proxyclient_address           = $facts['os_service_default'],
@@ -48,7 +48,6 @@ class nova::compute::spice(
   Stdlib::Port $proxy_port              = 6082,
   String $proxy_path                    = '/spice_auto.html',
 ) {
-
   include nova::deps
 
   if $proxy_host {

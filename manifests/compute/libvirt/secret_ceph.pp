@@ -30,13 +30,12 @@
 # (Optional) Directory to store files related to secrets.
 # Defaults to /etc/nova
 #
-define nova::compute::libvirt::secret_ceph(
+define nova::compute::libvirt::secret_ceph (
   Pattern[/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[0-9a-f]{4}-[0-9a-f]{12}$/] $uuid,
   Stdlib::Base64 $value,
   String[1] $secret_name            = $name,
   Stdlib::Absolutepath $secret_path = '/etc/nova',
 ) {
-
   $xml_file = "${secret_path}/libvirt-secret-${uuid}.xml"
   file { $xml_file:
     ensure  => file,

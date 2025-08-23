@@ -74,7 +74,7 @@
 #   (optional) User name for the vendordata dynamic plugin credentials.
 #   Defaults to $facts['os_service_default']
 #
-class nova::vendordata(
+class nova::vendordata (
   $vendordata_jsonfile_path                    = $facts['os_service_default'],
   $vendordata_providers                        = $facts['os_service_default'],
   $vendordata_dynamic_targets                  = $facts['os_service_default'],
@@ -93,13 +93,13 @@ class nova::vendordata(
 ) inherits nova::params {
   include nova::deps
 
-  if !is_service_default($vendordata_providers) and !empty($vendordata_providers){
+  if !is_service_default($vendordata_providers) and !empty($vendordata_providers) {
     $vendordata_providers_real = join(any2array($vendordata_providers), ',')
   } else {
     $vendordata_providers_real = $facts['os_service_default']
   }
 
-  if !is_service_default($vendordata_dynamic_targets) and !empty($vendordata_dynamic_targets){
+  if !is_service_default($vendordata_dynamic_targets) and !empty($vendordata_dynamic_targets) {
     $vendordata_dynamic_targets_real = join(any2array($vendordata_dynamic_targets), ',')
   } else {
     $vendordata_dynamic_targets_real = $facts['os_service_default']

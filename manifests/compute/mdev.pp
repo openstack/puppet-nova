@@ -8,7 +8,7 @@
 #   (Optional) A hash to define the nova::compute::mdev_type resources.
 #   Defaults to {}
 #
-class nova::compute::mdev(
+class nova::compute::mdev (
   Hash $mdev_types = {},
 ) {
   include nova::deps

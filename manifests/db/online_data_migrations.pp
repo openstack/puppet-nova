@@ -13,11 +13,10 @@
 #   (optional) Timeout for the execution of the db_sync
 #   Defaults to 300.
 #
-class nova::db::online_data_migrations(
+class nova::db::online_data_migrations (
   $extra_params    = undef,
   $db_sync_timeout = 300,
 ) {
-
   include nova::deps
   include nova::params
 

@@ -72,7 +72,6 @@ class nova::compute::provider (
   Stdlib::Absolutepath $config_location           = '/etc/nova/provider_config',
   String[1] $config_file                          = 'provider.yaml',
 ) {
-
   include nova::deps
   include nova::params
 

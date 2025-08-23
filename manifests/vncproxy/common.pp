@@ -22,7 +22,6 @@ class nova::vncproxy::common (
   Optional[Stdlib::Port] $vncproxy_port              = undef,
   Optional[String] $vncproxy_path                    = undef,
 ) {
-
   include nova::deps
 
   if defined('$nova::compute::vncproxy_host') {

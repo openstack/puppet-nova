@@ -316,7 +316,6 @@ class nova::compute (
   # DEPRECATED PARAMETERS
   $config_drive_format                         = undef,
 ) {
-
   include nova::deps
   include nova::params
 

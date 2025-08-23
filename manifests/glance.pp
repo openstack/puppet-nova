@@ -54,7 +54,6 @@ class nova::glance (
   $rbd_pool                 = $facts['os_service_default'],
   $rbd_ceph_conf            = $facts['os_service_default'],
 ) {
-
   include nova::deps
 
   nova_config {

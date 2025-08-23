@@ -72,7 +72,6 @@ class nova::compute::libvirt::services (
   Boolean $manage_ovmf      = true,
   Boolean $manage_swtpm     = false,
 ) inherits nova::params {
-
   include nova::deps
   include nova::params
 

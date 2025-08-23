@@ -59,7 +59,6 @@ class nova::compute::libvirt::libvirtd (
   $tls_priority              = $facts['os_service_default'],
   $ovs_timeout               = $facts['os_service_default'],
 ) {
-
   include nova::deps
 
   libvirtd_config {

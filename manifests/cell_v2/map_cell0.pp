@@ -14,7 +14,6 @@
 class nova::cell_v2::map_cell0 (
   $extra_params = '',
 ) {
-
   include nova::deps
   include nova::params
 

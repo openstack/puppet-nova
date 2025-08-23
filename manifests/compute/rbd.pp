@@ -116,7 +116,6 @@ class nova::compute::rbd (
   $package_ensure                               = 'present',
   Boolean $manage_libvirt_secret                = true,
 ) {
-
   include nova::deps
   include nova::params
 
@@ -198,5 +197,4 @@ class nova::compute::rbd (
       'libvirt/rbd_destroy_volume_retries':           ensure => absent;
     }
   }
-
 }

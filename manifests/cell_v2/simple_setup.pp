@@ -33,9 +33,7 @@ class nova::cell_v2::simple_setup (
   $database_connection = 'default',
   $database_connection_cell0 = 'default',
 ) {
-
   include nova::deps
-
   include nova::cell_v2::map_cell0
 
   nova_cell_v2 { 'cell0':
@@ -52,5 +50,4 @@ class nova::cell_v2::simple_setup (
   Class['nova::cell_v2::map_cell0']
     -> Nova_cell_v2 <| |>
       ~> Class['nova::cell_v2::discover_hosts']
-
 }

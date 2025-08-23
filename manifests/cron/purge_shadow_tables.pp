@@ -79,7 +79,6 @@ class nova::cron::purge_shadow_tables (
   Integer[0] $maxdelay              = 0,
   Enum['present', 'absent'] $ensure = 'present',
 ) inherits nova::params {
-
   include nova::deps
   include nova::params
 

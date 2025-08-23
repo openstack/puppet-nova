@@ -166,7 +166,6 @@ class nova::wsgi::apache_api (
   $request_headers             = undef,
   $vhost_custom_fragment       = undef,
 ) {
-
   include nova::params
 
   if ! defined(Class[nova::api]) {

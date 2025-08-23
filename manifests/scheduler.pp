@@ -66,7 +66,7 @@
 #   compute hosts affined to routed network segment aggregates.
 #   Defaults to $facts['os_service_default']
 #
-class nova::scheduler(
+class nova::scheduler (
   Boolean $enabled                               = true,
   Boolean $manage_service                        = true,
   $ensure_package                                = 'present',
@@ -80,7 +80,6 @@ class nova::scheduler(
   $enable_isolated_aggregate_filtering           = $facts['os_service_default'],
   $query_placement_for_routed_network_aggregates = $facts['os_service_default'],
 ) {
-
   include nova::deps
   include nova::db
   include nova::params

@@ -29,7 +29,7 @@
 #   be set to true by default in Ocata when the cell v2 setup is mandatory.
 #   Defaults to true
 #
-class nova::db::postgresql(
+class nova::db::postgresql (
   String[1] $password,
   $dbname              = 'nova',
   $user                = 'nova',
@@ -37,7 +37,6 @@ class nova::db::postgresql(
   $privileges          = 'ALL',
   Boolean $setup_cell0 = true,
 ) {
-
   include nova::deps
 
   openstacklib::db::postgresql { 'nova':

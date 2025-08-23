@@ -52,7 +52,7 @@
 #   and not the Identity service API IP and port.
 #   Defaults to 'http://127.0.0.1:5000/v3'
 #
-class nova::placement(
+class nova::placement (
   $password,
   $auth_type           = 'password',
   $auth_url            = 'http://127.0.0.1:5000/v3',
@@ -64,7 +64,6 @@ class nova::placement(
   $user_domain_name    = 'Default',
   $username            = 'placement',
 ) inherits nova::params {
-
   include nova::deps
 
   if is_service_default($system_scope) {
@@ -87,5 +86,4 @@ class nova::placement(
     'placement/region_name':         value => $region_name;
     'placement/valid_interfaces':    value => join(any2array($valid_interfaces), ',');
   }
-
 }
