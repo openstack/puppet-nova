@@ -61,7 +61,6 @@ class nova::params {
       $modular_libvirt_support           = true
       $libvirt_guests_environment_file   = '/etc/sysconfig/libvirt-guests'
       # redhat specific config defaults
-      $root_helper                       = 'sudo nova-rootwrap'
       $lock_path                         = '/var/lib/nova/tmp'
       $nova_wsgi_script_path             = '/var/www/cgi-bin/nova'
       $nova_api_wsgi_script_source       = '/usr/bin/nova-api-wsgi'
@@ -109,7 +108,6 @@ class nova::params {
       $nova_api_wsgi_script_source       = '/usr/bin/nova-api-wsgi'
       $nova_metadata_wsgi_script_source  = '/usr/bin/nova-metadata-wsgi'
       # debian specific nova config
-      $root_helper                       = 'sudo nova-rootwrap'
       $lock_path                         = '/var/lock/nova'
       case $facts['os']['name'] {
         'Debian': {
