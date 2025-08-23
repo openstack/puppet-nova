@@ -38,15 +38,14 @@
 #
 class nova::db::mysql (
   String[1] $password,
-  $dbname                = 'nova',
-  $user                  = 'nova',
-  $host                  = '127.0.0.1',
-  $charset               = 'utf8',
-  $collate               = 'utf8_general_ci',
-  $allowed_hosts         = undef,
-  Boolean $setup_cell0   = true,
+  $dbname              = 'nova',
+  $user                = 'nova',
+  $host                = '127.0.0.1',
+  $charset             = 'utf8',
+  $collate             = 'utf8_general_ci',
+  $allowed_hosts       = undef,
+  Boolean $setup_cell0 = true,
 ) {
-
   include nova::deps
 
   openstacklib::db::mysql { 'nova':
