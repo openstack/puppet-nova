@@ -229,7 +229,7 @@ describe 'nova::wsgi::apache_metadata' do
         when 'RedHat'
           {
             :wsgi_script_path            => '/var/www/cgi-bin/nova',
-            :metadata_wsgi_script_source => '/usr/bin/nova-metadata-wsgi',
+            :metadata_wsgi_script_source => '/usr/lib/python3.9/site-packages/nova/wsgi/metadata.py',
           }
         end
       end
