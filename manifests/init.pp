@@ -351,18 +351,6 @@
 #   cell, for operations requires cross cell data gathering.
 #   Defaults to $facts['os_service_default']
 #
-# DEPRECATED PARAMETERS
-#
-# [*rabbit_heartbeat_in_pthread*]
-#   (Optional) EXPERIMENTAL: Run the health check heartbeat thread
-#   through a native python thread. By default if this
-#   option isn't provided the  health check heartbeat will
-#   inherit the execution model from the parent process. By
-#   example if the parent process have monkey patched the
-#   stdlib by using eventlet/greenlet then the heartbeat
-#   will be run through a green thread.
-#   Defaults to undef
-#
 class nova (
   $ensure_package                          = 'present',
   $default_transport_url                   = $facts['os_service_default'],
@@ -432,7 +420,6 @@ class nova (
   $instance_name_template                  = $facts['os_service_default'],
   $cell_worker_thread_pool_size            = $facts['os_service_default'],
   # DEPRECATED PARAMETERS
-  $rabbit_heartbeat_in_pthread             = undef,
   $use_ssl                                 = undef,
   $enabled_ssl_apis                        = undef,
   $ca_file                                 = undef,
@@ -526,7 +513,6 @@ class nova (
     rabbit_use_ssl                  => $rabbit_use_ssl,
     heartbeat_timeout_threshold     => $rabbit_heartbeat_timeout_threshold,
     heartbeat_rate                  => $rabbit_heartbeat_rate,
-    heartbeat_in_pthread            => $rabbit_heartbeat_in_pthread,
     rabbit_qos_prefetch_count       => $rabbit_qos_prefetch_count,
     kombu_reconnect_delay           => $kombu_reconnect_delay,
     kombu_failover_strategy         => $kombu_failover_strategy,
