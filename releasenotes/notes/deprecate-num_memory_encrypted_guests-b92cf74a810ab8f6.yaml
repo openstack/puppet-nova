@@ -1,0 +1,5 @@
+---
+deprecations:
+  - |
+    The ``nova::compute::libvirt::num_memory_encrypted_guests`` parameter has
+    been deprecated and will be removed in a future release.

@@ -227,11 +227,6 @@
 #   based on the reported kernel major version will be used.
 #   Defaults to $facts['os_service_default']
 #
-# [*num_memory_encrypted_guests*]
-#   (optional) The maximum number of guests with encrypted memory which can
-#   run concurrently on this compute host.
-#   Defaults to $facts['os_service_default']
-#
 # [*wait_soft_reboot_seconds*]
 #   (optional) Number of seconds to wait for instance to shut down after soft
 #   reboot request is made.
@@ -240,6 +235,13 @@
 # [*tb_cache_size*]
 #   (optional) The tb-cache size (in MiB) of each guest VM.
 #   Defaults to $facts['os_service_default']
+#
+# DEPRECATED PARAMETERS
+#
+# [*num_memory_encrypted_guests*]
+#   (optional) The maximum number of guests with encrypted memory which can
+#   run concurrently on this compute host.
+#   Defaults to undef
 #
 class nova::compute::libvirt (
   $ensure_package                             = 'present',
@@ -287,12 +289,17 @@ class nova::compute::libvirt (
   $swtpm_user                                 = $facts['os_service_default'],
   $swtpm_group                                = $facts['os_service_default'],
   $max_queues                                 = $facts['os_service_default'],
-  $num_memory_encrypted_guests                = $facts['os_service_default'],
   $wait_soft_reboot_seconds                   = $facts['os_service_default'],
   $tb_cache_size                              = $facts['os_service_default'],
+  # DEPRECATED PARAMETERS
+  $num_memory_encrypted_guests                = undef,
 ) inherits nova::params {
   include nova::deps
-  include nova::params
+
+  if $num_memory_encrypted_guests {
+    warning("The num_memory_encrypted_guests parameter is deprecated and \
+will be removed in a future release")
+  }
 
   # cpu_mode has different defaults depending on hypervisor.
   if !$cpu_mode {
@@ -405,7 +412,7 @@ class nova::compute::libvirt (
     'libvirt/swtpm_user'   :                 value => $swtpm_user;
     'libvirt/swtpm_group':                   value => $swtpm_group;
     'libvirt/max_queues':                    value => $max_queues;
-    'libvirt/num_memory_encrypted_guests':   value => $num_memory_encrypted_guests;
+    'libvirt/num_memory_encrypted_guests':   value => pick($num_memory_encrypted_guests, $facts['os_service_default']);
     'libvirt/wait_soft_reboot_seconds':      value => $wait_soft_reboot_seconds;
     'libvirt/tb_cache_size':                 value => $tb_cache_size;
   }
