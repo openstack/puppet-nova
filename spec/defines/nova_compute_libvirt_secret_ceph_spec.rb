@@ -26,18 +26,15 @@ describe 'nova::compute::libvirt::secret_ceph' do
         :group   => 'root',
         :mode    => '0600',
         :require => 'Anchor[nova::config::begin]',
+        :content => <<EOS
+<secret ephemeral='no' private='no'>
+  <usage type='ceph'>
+    <name>client.openstack</name>
+  </usage>
+  <uuid>4f515eff-47e4-425c-b24d-9c6adc56401c</uuid>
+</secret>
+EOS
       )}
-
-      it {
-        verify_contents(catalogue, '/tmp/libvirt-secret-4f515eff-47e4-425c-b24d-9c6adc56401c.xml', [
-          "<secret ephemeral=\'no\' private=\'no\'>",
-          "  <usage type=\'ceph\'>",
-          "    <name>client.openstack</name>",
-          "  </usage>",
-          "  <uuid>4f515eff-47e4-425c-b24d-9c6adc56401c</uuid>",
-          "</secret>"
-        ])
-      }
 
       it { is_expected.to contain_file('/tmp/libvirt-secret-4f515eff-47e4-425c-b24d-9c6adc56401c.secret').with(
         :ensure    => 'file',
@@ -46,13 +43,8 @@ describe 'nova::compute::libvirt::secret_ceph' do
         :mode      => '0600',
         :show_diff => false,
         :require   => 'Anchor[nova::config::begin]',
+        :content   => 'AQBHCbtT6APDHhAA5W00cBchwkQjh3dkKsyPjw==',
       )}
-
-      it {
-        verify_contents(catalogue, '/tmp/libvirt-secret-4f515eff-47e4-425c-b24d-9c6adc56401c.secret', [
-          "AQBHCbtT6APDHhAA5W00cBchwkQjh3dkKsyPjw==",
-        ])
-      }
 
       it { is_expected.to contain_exec('get-or-set virsh secret 4f515eff-47e4-425c-b24d-9c6adc56401c').with(
         :command => [

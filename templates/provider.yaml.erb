@@ -4,28 +4,28 @@ providers:
   # for details check https://docs.openstack.org/nova/latest/admin/managing-resource-providers.html
 <% @custom_inventories.each do |provider| -%>
   - identification:
-<% if provider['name'] -%>
+  <%- if provider['name'] -%>
       name: '<%= provider['name'] %>'
-<% elsif provider['uuid'] -%>
+  <%- elsif provider['uuid'] -%>
       uuid: '<%= provider['uuid'] %>'
-<% else -%>
+  <%- else -%>
       uuid: '$COMPUTE_NODE'
-<% end -%>
-<% unless provider['inventories'].nil? -%>
+  <%- end -%>
+  <%- if !provider['inventories'].nil? -%>
     inventories:
       additional:
-<% provider['inventories'].each do |key,inventory| -%>
-        - <%= key %>:
-<% inventory.each do |key,value| -%>
-            <%= key %>: <%= value %>
-<% end -%>
-<% end -%>
-<% end -%>
-<% unless provider['traits'].nil? -%>
+    <%- provider['inventories'].sort.each do |inventory| -%>
+        - <%= inventory[0] %>:
+      <%- inventory[1].sort.each do |resource| -%>
+            <%= resource[0] %>: <%= resource[1] %>
+      <%- end -%>
+    <%- end -%>
+  <%- end -%>
+  <%- if !provider['traits'].nil? -%>
     traits:
       additional:
-<% provider['traits'].each do |trait| -%>
+    <%- provider['traits'].each do |trait| -%>
         - '<%= trait %>'
-<% end -%>
-<% end -%>
-<% end -%>
+    <%- end -%>
+  <%- end -%>
+<%- end -%>
