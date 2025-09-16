@@ -11,7 +11,7 @@ describe 'nova::network::neutron' do
       :region_name             => 'RegionOne',
       :username                => 'neutron',
       :user_domain_name        => 'Default',
-      :auth_url                => 'http://127.0.0.1:5000/v3',
+      :auth_url                => 'http://127.0.0.1:5000',
       :valid_interfaces        => '<SERVICE DEFAULT>',
       :endpoint_override       => '<SERVICE DEFAULT>',
       :http_retries            => '<SERVICE DEFAULT>',

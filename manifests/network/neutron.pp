@@ -40,7 +40,7 @@
 #   (optional) Points to the OpenStack Identity server IP and port.
 #   This is the Identity (keystone) admin API server IP and port value,
 #   and not the Identity service API IP and port.
-#   Defaults to 'http://127.0.0.1:5000/v3'
+#   Defaults to 'http://127.0.0.1:5000'
 #
 # [*valid_interfaces*]
 #   (optional) The endpoint type to lookup when talking to Neutron.
@@ -100,7 +100,7 @@ class nova::network::neutron (
   $system_scope            = $facts['os_service_default'],
   $username                = 'neutron',
   $user_domain_name        = 'Default',
-  $auth_url                = 'http://127.0.0.1:5000/v3',
+  $auth_url                = 'http://127.0.0.1:5000',
   $valid_interfaces        = $facts['os_service_default'],
   $endpoint_override       = $facts['os_service_default'],
   $timeout                 = '30',
