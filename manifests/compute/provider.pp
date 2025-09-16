@@ -79,7 +79,7 @@ class nova::compute::provider (
     'compute/provider_config_location':  value => $config_location;
   }
 
-  file { "${config_location}":
+  file { $config_location :
     ensure  => directory,
     mode    => '0750',
     owner   => $nova::params::user,
