@@ -55,30 +55,30 @@ describe 'nova::compute::provider' do
       end
 
       it 'configure provider.yaml on compute nodes' do
-        is_expected.to contain_file('/etc/nova/provider_config/provider.yaml')
-        verify_contents(catalogue, '/etc/nova/provider_config/provider.yaml', [
-          "meta:",
-          "  schema_version: \'1.0\'",
-          "providers:",
-          "  # for details check https://docs.openstack.org/nova/latest/admin/managing-resource-providers.html",
-          "  - identification:",
-          "      uuid: \'$COMPUTE_NODE\'",
-          "    inventories:",
-          "      additional:",
-          "        - CUSTOM_EXAMPLE_RESOURCE_CLASS_1:",
-          "            allocation_ratio: 1.0",
-          "            max_unit: 10",
-          "            min_unit: 1",
-          "            reserved: 0",
-          "            step_size: 1",
-          "            total: 100",
-          "        - CUSTOM_EXAMPLE_RESOURCE_CLASS_2:",
-          "            total: 100",
-          "    traits:",
-          "      additional:",
-          "        - \'CUSTOM_P_STATE_ENABLED\'",
-          "        - \'CUSTOM_C_STATE_ENABLED\'"
-        ])
+        is_expected.to contain_file('/etc/nova/provider_config/provider.yaml').with_content( <<EOS
+meta:
+  schema_version: '1.0'
+providers:
+  # for details check https://docs.openstack.org/nova/latest/admin/managing-resource-providers.html
+  - identification:
+      uuid: '$COMPUTE_NODE'
+    inventories:
+      additional:
+        - CUSTOM_EXAMPLE_RESOURCE_CLASS_1:
+            allocation_ratio: 1.0
+            max_unit: 10
+            min_unit: 1
+            reserved: 0
+            step_size: 1
+            total: 100
+        - CUSTOM_EXAMPLE_RESOURCE_CLASS_2:
+            total: 100
+    traits:
+      additional:
+        - 'CUSTOM_P_STATE_ENABLED'
+        - 'CUSTOM_C_STATE_ENABLED'
+EOS
+        )
       end
     end
 
@@ -111,30 +111,30 @@ describe 'nova::compute::provider' do
       end
 
       it 'configure provider.yaml on compute nodes' do
-        is_expected.to contain_file('/etc/nova/provider_config/provider.yaml')
-        verify_contents(catalogue, '/etc/nova/provider_config/provider.yaml', [
-          "meta:",
-          "  schema_version: \'1.0\'",
-          "providers:",
-          "  # for details check https://docs.openstack.org/nova/latest/admin/managing-resource-providers.html",
-          "  - identification:",
-          "      uuid: \'5213b75d-9260-42a6-b236-f39b0fd10561\'",
-          "    inventories:",
-          "      additional:",
-          "        - CUSTOM_EXAMPLE_RESOURCE_CLASS_1:",
-          "            allocation_ratio: 1.0",
-          "            max_unit: 10",
-          "            min_unit: 1",
-          "            reserved: 0",
-          "            step_size: 1",
-          "            total: 100",
-          "        - CUSTOM_EXAMPLE_RESOURCE_CLASS_2:",
-          "            total: 100",
-          "    traits:",
-          "      additional:",
-          "        - \'CUSTOM_P_STATE_ENABLED\'",
-          "        - \'CUSTOM_C_STATE_ENABLED\'"
-        ])
+        is_expected.to contain_file('/etc/nova/provider_config/provider.yaml').with_content( <<EOS
+meta:
+  schema_version: '1.0'
+providers:
+  # for details check https://docs.openstack.org/nova/latest/admin/managing-resource-providers.html
+  - identification:
+      uuid: '5213b75d-9260-42a6-b236-f39b0fd10561'
+    inventories:
+      additional:
+        - CUSTOM_EXAMPLE_RESOURCE_CLASS_1:
+            allocation_ratio: 1.0
+            max_unit: 10
+            min_unit: 1
+            reserved: 0
+            step_size: 1
+            total: 100
+        - CUSTOM_EXAMPLE_RESOURCE_CLASS_2:
+            total: 100
+    traits:
+      additional:
+        - 'CUSTOM_P_STATE_ENABLED'
+        - 'CUSTOM_C_STATE_ENABLED'
+EOS
+        )
       end
     end
 
@@ -167,30 +167,30 @@ describe 'nova::compute::provider' do
       end
 
       it 'configure provider.yaml on compute nodes' do
-        is_expected.to contain_file('/etc/nova/provider_config/provider.yaml')
-        verify_contents(catalogue, '/etc/nova/provider_config/provider.yaml', [
-          "meta:",
-          "  schema_version: \'1.0\'",
-          "providers:",
-          "  # for details check https://docs.openstack.org/nova/latest/admin/managing-resource-providers.html",
-          "  - identification:",
-          "      name: \'EXAMPLE_RESOURCE_PROVIDER\'",
-          "    inventories:",
-          "      additional:",
-          "        - CUSTOM_EXAMPLE_RESOURCE_CLASS_1:",
-          "            allocation_ratio: 1.0",
-          "            max_unit: 10",
-          "            min_unit: 1",
-          "            reserved: 0",
-          "            step_size: 1",
-          "            total: 100",
-          "        - CUSTOM_EXAMPLE_RESOURCE_CLASS_2:",
-          "            total: 100",
-          "    traits:",
-          "      additional:",
-          "        - \'CUSTOM_P_STATE_ENABLED\'",
-          "        - \'CUSTOM_C_STATE_ENABLED\'"
-        ])
+        is_expected.to contain_file('/etc/nova/provider_config/provider.yaml').with_content( <<EOS
+meta:
+  schema_version: '1.0'
+providers:
+  # for details check https://docs.openstack.org/nova/latest/admin/managing-resource-providers.html
+  - identification:
+      name: 'EXAMPLE_RESOURCE_PROVIDER'
+    inventories:
+      additional:
+        - CUSTOM_EXAMPLE_RESOURCE_CLASS_1:
+            allocation_ratio: 1.0
+            max_unit: 10
+            min_unit: 1
+            reserved: 0
+            step_size: 1
+            total: 100
+        - CUSTOM_EXAMPLE_RESOURCE_CLASS_2:
+            total: 100
+    traits:
+      additional:
+        - 'CUSTOM_P_STATE_ENABLED'
+        - 'CUSTOM_C_STATE_ENABLED'
+EOS
+        )
       end
     end
 
@@ -231,39 +231,37 @@ describe 'nova::compute::provider' do
       end
 
       it 'configure provider.yaml on compute nodes' do
-        is_expected.to contain_file('/etc/nova/provider_config/provider.yaml')
-        verify_contents(catalogue, '/etc/nova/provider_config/provider.yaml', [
-          "meta:",
-          "  schema_version: \'1.0\'",
-          "providers:",
-          "  # for details check https://docs.openstack.org/nova/latest/admin/managing-resource-providers.html",
-          "  - identification:",
-          "      uuid: \'$COMPUTE_NODE\'",
-          "    inventories:",
-          "      additional:",
-          "        - CUSTOM_EXAMPLE_RESOURCE_CLASS_1:",
-          "            allocation_ratio: 1.0",
-          "            max_unit: 10",
-          "            min_unit: 1",
-          "            reserved: 0",
-          "            step_size: 1",
-          "            total: 100",
-          "        - CUSTOM_EXAMPLE_RESOURCE_CLASS_2:",
-          "            total: 100",
-          "    traits:",
-          "      additional:",
-          "        - \'CUSTOM_P_STATE_ENABLED\'",
-          "        - \'CUSTOM_C_STATE_ENABLED\'",
-          "  - identification:",
-          "      name: \'EXAMPLE_RESOURCE_PROVIDER\'",
-          "    inventories:",
-          "      additional:",
-          "        - CUSTOM_EXAMPLE_RESOURCE_CLASS:",
-          "            reserved: 100",
-          "            total: 10000",
-          "    traits:",
-          "      additional:"
-        ])
+        is_expected.to contain_file('/etc/nova/provider_config/provider.yaml').with_content( <<EOS
+meta:
+  schema_version: '1.0'
+providers:
+  # for details check https://docs.openstack.org/nova/latest/admin/managing-resource-providers.html
+  - identification:
+      uuid: '$COMPUTE_NODE'
+    inventories:
+      additional:
+        - CUSTOM_EXAMPLE_RESOURCE_CLASS_1:
+            allocation_ratio: 1.0
+            max_unit: 10
+            min_unit: 1
+            reserved: 0
+            step_size: 1
+            total: 100
+        - CUSTOM_EXAMPLE_RESOURCE_CLASS_2:
+            total: 100
+    traits:
+      additional:
+        - 'CUSTOM_P_STATE_ENABLED'
+        - 'CUSTOM_C_STATE_ENABLED'
+  - identification:
+      name: 'EXAMPLE_RESOURCE_PROVIDER'
+    inventories:
+      additional:
+        - CUSTOM_EXAMPLE_RESOURCE_CLASS:
+            reserved: 100
+            total: 10000
+EOS
+        )
       end
     end
   end
