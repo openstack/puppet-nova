@@ -1,0 +1,15 @@
+---
+features:
+  - |
+    The following parameters have been added to
+    the ``nova::key_manager::barbican`` class.
+
+    - ``insecure``
+    - ``cafile``
+    - ``certfile``
+    - ``keyfile``
+    - ``timeout``
+
+  - |
+    The new ``nova::key_manager::barbican::service_user::timeout`` parameter
+    has been added.
