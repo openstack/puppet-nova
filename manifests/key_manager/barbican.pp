@@ -37,6 +37,29 @@
 #   (Optional) The service uses service token feature when this is set as true.
 #   Defaults to $facts['os_service_default']
 #
+# [*insecure*]
+#   (Optional) If true, explicitly allow TLS without checking server cert
+#   against any certificate authorities.  WARNING: not recommended.  Use with
+#   caution.
+#   Defaults to $facts['os_service_default']
+#
+# [*cafile*]
+#   (Optional) A PEM encoded Certificate Authority to use when verifying HTTPs
+#   connections.
+#   Defaults to $facts['os_service_default'].
+#
+# [*certfile*]
+#   (Optional) Required if identity server requires client certificate
+#   Defaults to $facts['os_service_default'].
+#
+# [*keyfile*]
+#   (Optional) Required if identity server requires client certificate
+#   Defaults to $facts['os_service_default'].
+#
+# [*timeout*]
+#   (Optional) Timeout value for connecting to barbican in seconds.
+#   Defaults to $facts['os_service_default']
+#
 class nova::key_manager::barbican (
   $barbican_endpoint       = $facts['os_service_default'],
   $barbican_api_version    = $facts['os_service_default'],
@@ -46,6 +69,11 @@ class nova::key_manager::barbican (
   $barbican_endpoint_type  = $facts['os_service_default'],
   $barbican_region_name    = $facts['os_service_default'],
   $send_service_user_token = $facts['os_service_default'],
+  $insecure                = $facts['os_service_default'],
+  $cafile                  = $facts['os_service_default'],
+  $certfile                = $facts['os_service_default'],
+  $keyfile                 = $facts['os_service_default'],
+  $timeout                 = $facts['os_service_default'],
 ) {
   include nova::deps
 
@@ -64,5 +92,10 @@ class nova::key_manager::barbican (
     barbican_endpoint_type  => $barbican_endpoint_type,
     barbican_region_name    => $barbican_region_name,
     send_service_user_token => $send_service_user_token,
+    insecure                => $insecure,
+    cafile                  => $cafile,
+    certfile                => $certfile,
+    keyfile                 => $keyfile,
+    timeout                 => $timeout,
   }
 }
