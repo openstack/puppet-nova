@@ -1,0 +1,5 @@
+---
+upgrade:
+  - |
+    The ``ipa_hostname`` fact has been removed. This was used by novajoin
+    support which was already removed.
