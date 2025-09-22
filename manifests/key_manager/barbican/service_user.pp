@@ -58,6 +58,10 @@
 #  (Optional) Required if identity server requires client certificate
 #  Defaults to $facts['os_service_default'].
 #
+# [*timeout*]
+#   (Optional) Timeout value for connecting to barbican in seconds.
+#   Defaults to $facts['os_service_default']
+#
 # [*region_name*]
 #  (Optional) The region in which the identity server can be found.
 #  Defaults to $facts['os_service_default'].
@@ -76,6 +80,7 @@ class nova::key_manager::barbican::service_user (
   $cafile              = $facts['os_service_default'],
   $certfile            = $facts['os_service_default'],
   $keyfile             = $facts['os_service_default'],
+  $timeout             = $facts['os_service_default'],
   $region_name         = $facts['os_service_default'],
 ) {
   include nova::deps
@@ -94,6 +99,7 @@ class nova::key_manager::barbican::service_user (
     cafile              => $cafile,
     certfile            => $certfile,
     keyfile             => $keyfile,
+    timeout             => $timeout,
     region_name         => $region_name,
   }
 }

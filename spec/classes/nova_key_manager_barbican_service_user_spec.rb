@@ -23,6 +23,7 @@ describe 'nova::key_manager::barbican::service_user' do
           :cafile              => '<SERVICE DEFAULT>',
           :certfile            => '<SERVICE DEFAULT>',
           :keyfile             => '<SERVICE DEFAULT>',
+          :timeout             => '<SERVICE DEFAULT>',
           :region_name         => '<SERVICE DEFAULT>',
         )
       }
@@ -43,6 +44,7 @@ describe 'nova::key_manager::barbican::service_user' do
           :cafile              => '/opt/stack/data/cafile.pem',
           :certfile            => 'certfile.crt',
           :keyfile             => 'keyfile',
+          :timeout             => 60,
           :region_name         => 'regionOne',
         })
       end
@@ -62,6 +64,7 @@ describe 'nova::key_manager::barbican::service_user' do
           :cafile              => '/opt/stack/data/cafile.pem',
           :certfile            => 'certfile.crt',
           :keyfile             => 'keyfile',
+          :timeout             => 60,
           :region_name         => 'regionOne',
         )
       }
