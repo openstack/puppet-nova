@@ -69,7 +69,7 @@
 #
 class nova::compute::libvirt_guests (
   Boolean $enabled                         = false,
-  $package_ensure                          = 'present',
+  Stdlib::Ensure::Package $package_ensure  = 'present',
   Enum['start', 'ignore'] $on_boot         = 'ignore',
   Enum['suspend', 'shutdown'] $on_shutdown = 'shutdown',
   Optional[Integer[0]] $start_delay        = undef,

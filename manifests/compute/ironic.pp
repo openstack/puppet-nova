@@ -13,8 +13,8 @@
 #   Defaults to 'ironic.IronicDriver'
 #
 class nova::compute::ironic (
-  $ensure_package = 'present',
-  $compute_driver = 'ironic.IronicDriver',
+  Stdlib::Ensure::Package $ensure_package = 'present',
+  $compute_driver                         = 'ironic.IronicDriver',
 ) {
   include nova::deps
   require nova::ironic::common

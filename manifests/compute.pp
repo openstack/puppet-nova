@@ -265,7 +265,7 @@
 class nova::compute (
   Boolean $enabled                             = true,
   Boolean $manage_service                      = true,
-  $ensure_package                              = 'present',
+  Stdlib::Ensure::Package $ensure_package      = 'present',
   Boolean $vnc_enabled                         = true,
   Boolean $spice_enabled                       = false,
   $vncserver_proxyclient_address               = $facts['os_service_default'],

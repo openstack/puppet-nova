@@ -69,7 +69,7 @@
 class nova::scheduler (
   Boolean $enabled                               = true,
   Boolean $manage_service                        = true,
-  $ensure_package                                = 'present',
+  Stdlib::Ensure::Package $ensure_package        = 'present',
   $workers                                       = $facts['os_workers'],
   $max_attempts                                  = $facts['os_service_default'],
   $discover_hosts_in_cells_interval              = $facts['os_service_default'],

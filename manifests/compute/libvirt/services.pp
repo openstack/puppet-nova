@@ -58,19 +58,19 @@
 #   Defaults to false
 #
 class nova::compute::libvirt::services (
-  $ensure_package           = 'present',
-  $libvirt_service_name     = $nova::params::libvirt_service_name,
-  $virtlock_service_name    = $nova::params::virtlock_service_name,
-  $virtlog_service_name     = $nova::params::virtlog_service_name,
-  $libvirt_virt_type        = 'kvm',
-  $modular_libvirt          = $nova::params::modular_libvirt,
-  $virtsecret_service_name  = $nova::params::virtsecret_socket_name,
-  $virtnodedev_service_name = $nova::params::virtnodedev_socket_name,
-  $virtqemu_service_name    = $nova::params::virtqemu_socket_name,
-  $virtproxy_service_name   = $nova::params::virtproxy_socket_name,
-  $virtstorage_service_name = $nova::params::virtstorage_socket_name,
-  Boolean $manage_ovmf      = true,
-  Boolean $manage_swtpm     = false,
+  Stdlib::Ensure::Package $ensure_package = 'present',
+  $libvirt_service_name                   = $nova::params::libvirt_service_name,
+  $virtlock_service_name                  = $nova::params::virtlock_service_name,
+  $virtlog_service_name                   = $nova::params::virtlog_service_name,
+  $libvirt_virt_type                      = 'kvm',
+  $modular_libvirt                        = $nova::params::modular_libvirt,
+  $virtsecret_service_name                = $nova::params::virtsecret_socket_name,
+  $virtnodedev_service_name               = $nova::params::virtnodedev_socket_name,
+  $virtqemu_service_name                  = $nova::params::virtqemu_socket_name,
+  $virtproxy_service_name                 = $nova::params::virtproxy_socket_name,
+  $virtstorage_service_name               = $nova::params::virtstorage_socket_name,
+  Boolean $manage_ovmf                    = true,
+  Boolean $manage_swtpm                   = false,
 ) inherits nova::params {
   include nova::deps
   include nova::params
