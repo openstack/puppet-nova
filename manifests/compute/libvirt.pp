@@ -244,7 +244,7 @@
 #   Defaults to undef
 #
 class nova::compute::libvirt (
-  $ensure_package                             = 'present',
+  Stdlib::Ensure::Package $ensure_package     = 'present',
   Nova::VirtType $virt_type                   = 'kvm',
   String[1] $vncserver_listen                 = '127.0.0.1',
   Boolean $migration_support                  = false,

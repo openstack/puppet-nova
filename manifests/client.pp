@@ -9,7 +9,7 @@
 #   Defaults to 'present'
 #
 class nova::client (
-  $ensure = 'present'
+  Stdlib::Ensure::Package $ensure = 'present',
 ) {
   include nova::deps
   include nova::params

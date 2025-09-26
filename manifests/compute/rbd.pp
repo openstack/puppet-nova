@@ -112,8 +112,8 @@ class nova::compute::rbd (
   $libvirt_rbd_destroy_volume_retries           = $facts['os_service_default'],
   Boolean $ephemeral_storage                    = true,
   Boolean $manage_ceph_client                   = true,
-  $ceph_client_ensure                           = 'present',
-  $package_ensure                               = 'present',
+  Stdlib::Ensure::Package $ceph_client_ensure   = 'present',
+  Stdlib::Ensure::Package $package_ensure       = 'present',
   Boolean $manage_libvirt_secret                = true,
 ) {
   include nova::deps

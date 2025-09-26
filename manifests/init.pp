@@ -352,7 +352,7 @@
 #   Defaults to $facts['os_service_default']
 #
 class nova (
-  $ensure_package                          = 'present',
+  Stdlib::Ensure::Package $ensure_package  = 'present',
   $default_transport_url                   = $facts['os_service_default'],
   $rpc_response_timeout                    = $facts['os_service_default'],
   $long_rpc_timeout                        = $facts['os_service_default'],

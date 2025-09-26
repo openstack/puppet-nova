@@ -67,7 +67,7 @@ class nova::vncproxy (
   String[1] $host                          = '0.0.0.0',
   Stdlib::Port $port                       = 6080,
   String $vncproxy_path                    = '/vnc_auto.html',
-  $ensure_package                          = 'present',
+  Stdlib::Ensure::Package $ensure_package  = 'present',
   Boolean $allow_noauth                    = true,
   Boolean $allow_vencrypt                  = false,
   $vencrypt_key                            = undef,

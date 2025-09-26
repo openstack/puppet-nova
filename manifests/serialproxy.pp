@@ -25,11 +25,11 @@
 #   Defaults to 'present'
 #
 class nova::serialproxy (
-  Boolean $enabled        = true,
-  Boolean $manage_service = true,
-  $serialproxy_host       = $facts['os_service_default'],
-  $serialproxy_port       = $facts['os_service_default'],
-  $ensure_package         = 'present'
+  Boolean $enabled                        = true,
+  Boolean $manage_service                 = true,
+  $serialproxy_host                       = $facts['os_service_default'],
+  $serialproxy_port                       = $facts['os_service_default'],
+  Stdlib::Ensure::Package $ensure_package = 'present',
 ) {
   include nova::deps
   include nova::params
