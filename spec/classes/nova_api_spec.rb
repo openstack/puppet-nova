@@ -157,22 +157,6 @@ describe 'nova::api' do
       end
     end
 
-    context 'when service_name is not valid' do
-      before do
-        params.merge!({ :service_name   => 'foobar' })
-      end
-
-      let :pre_condition do
-        "include apache
-         include nova
-         class { 'nova::keystone::authtoken':
-           password => 'a_big_secret',
-         }"
-      end
-
-      it_raises 'a Puppet::Error', /Invalid service_name/
-    end
-
   end
 
   shared_examples 'nova-api on Debian' do

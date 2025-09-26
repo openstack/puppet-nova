@@ -136,35 +136,35 @@
 #   Defaults to undef
 #
 class nova::api (
-  Boolean $enabled                        = true,
-  Boolean $manage_service                 = true,
-  $api_paste_config                       = 'api-paste.ini',
-  Stdlib::Ensure::Package $ensure_package = 'present',
-  Boolean $sync_db                        = true,
-  Boolean $sync_db_api                    = true,
-  Boolean $db_online_data_migrations      = false,
-  $service_name                           = $nova::params::api_service_name,
-  $metadata_service_name                  = $nova::params::api_metadata_service_name,
-  $enable_proxy_headers_parsing           = $facts['os_service_default'],
-  $max_request_body_size                  = $facts['os_service_default'],
-  $max_limit                              = $facts['os_service_default'],
-  $compute_link_prefix                    = $facts['os_service_default'],
-  $glance_link_prefix                     = $facts['os_service_default'],
-  $enable_instance_password               = $facts['os_service_default'],
-  $password_length                        = $facts['os_service_default'],
-  $allow_resize_to_same_host              = $facts['os_service_default'],
-  $instance_list_per_project_cells        = $facts['os_service_default'],
-  $instance_list_cells_batch_strategy     = $facts['os_service_default'],
-  $instance_list_cells_batch_fixed_size   = $facts['os_service_default'],
-  $list_records_by_skipping_down_cells    = $facts['os_service_default'],
+  Boolean $enabled                           = true,
+  Boolean $manage_service                    = true,
+  $api_paste_config                          = 'api-paste.ini',
+  Stdlib::Ensure::Package $ensure_package    = 'present',
+  Boolean $sync_db                           = true,
+  Boolean $sync_db_api                       = true,
+  Boolean $db_online_data_migrations         = false,
+  String[1] $service_name                    = $nova::params::api_service_name,
+  Optional[String[1]] $metadata_service_name = $nova::params::api_metadata_service_name,
+  $enable_proxy_headers_parsing              = $facts['os_service_default'],
+  $max_request_body_size                     = $facts['os_service_default'],
+  $max_limit                                 = $facts['os_service_default'],
+  $compute_link_prefix                       = $facts['os_service_default'],
+  $glance_link_prefix                        = $facts['os_service_default'],
+  $enable_instance_password                  = $facts['os_service_default'],
+  $password_length                           = $facts['os_service_default'],
+  $allow_resize_to_same_host                 = $facts['os_service_default'],
+  $instance_list_per_project_cells           = $facts['os_service_default'],
+  $instance_list_cells_batch_strategy        = $facts['os_service_default'],
+  $instance_list_cells_batch_fixed_size      = $facts['os_service_default'],
+  $list_records_by_skipping_down_cells       = $facts['os_service_default'],
   # DEPRECATED PARAMETERS
-  $api_bind_address                       = undef,
-  $osapi_compute_listen_port              = undef,
-  $metadata_listen                        = undef,
-  $metadata_listen_port                   = undef,
-  $enabled_apis                           = undef,
-  $osapi_compute_workers                  = undef,
-  $metadata_workers                       = undef,
+  $api_bind_address                          = undef,
+  $osapi_compute_listen_port                 = undef,
+  $metadata_listen                           = undef,
+  $metadata_listen_port                      = undef,
+  $enabled_apis                              = undef,
+  $osapi_compute_workers                     = undef,
+  $metadata_workers                          = undef,
 ) inherits nova::params {
   include nova::deps
   include nova::db
@@ -183,36 +183,36 @@ class nova::api (
     }
   }
 
-  if $service_name == $nova::params::api_service_name {
-    $service_enabled = $enabled
+  case $service_name {
+    'httpd': {
+      $service_enabled = false
 
-    if $manage_service {
-      Nova_api_paste_ini<||> ~> Service['nova-api']
-      Nova_api_uwsgi_config<||> ~> Service['nova-api']
-    }
-  } elsif $service_name == 'httpd' {
-    $service_enabled = false
-
-    policy_rcd { 'nova-api':
-      ensure   => present,
-      set_code => '101',
-      before   => Package['nova-api'],
-    }
-
-    if $manage_service {
-      Service <| title == 'httpd' |> { tag +> 'nova-service' }
-      # make sure we start apache before nova-api and nova-metadata-api are
-      # stopped to avoid binding issues
-      Service['nova-api'] -> Service[$service_name]
-      if $metadata_service_name {
-        Service['nova-api-metadata'] -> Service[$service_name]
+      policy_rcd { 'nova-api':
+        ensure   => present,
+        set_code => '101',
+        before   => Package['nova-api'],
       }
 
-      Nova_api_paste_ini<||> ~> Service[$service_name]
+      if $manage_service {
+        Service <| title == 'httpd' |> { tag +> 'nova-service' }
+        # make sure we start apache before nova-api and nova-metadata-api are
+        # stopped to avoid binding issues
+        Service['nova-api'] -> Service['httpd']
+        if $metadata_service_name {
+          Service['nova-api-metadata'] -> Service['httpd']
+        }
+
+        Nova_api_paste_ini<||> ~> Service['httpd']
+      }
     }
-  } else {
-    fail("Invalid service_name. Either nova-api/openstack-nova-api for running \
-as a standalone service, or httpd for being run by a httpd server")
+    default: {
+      $service_enabled = $enabled
+
+      if $manage_service {
+        Nova_api_paste_ini<||> ~> Service['nova-api']
+        Nova_api_uwsgi_config<||> ~> Service['nova-api']
+      }
+    }
   }
 
   nova::generic_service { 'api':
