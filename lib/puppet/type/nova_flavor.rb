@@ -88,26 +88,32 @@ Puppet::Type.newtype(:nova_flavor) do
 
   newproperty(:ram) do
     desc 'Amount of RAM to use (in megabytes).'
+    newvalues(/\d+/)
   end
 
   newproperty(:disk) do
     desc 'Amount of disk space (in gigabytes) to use for the root (/) partition.'
+    newvalues(/\d+/)
   end
 
   newproperty(:vcpus) do
     desc 'Number of virtual CPUs to use.'
+    newvalues(/\d+/)
   end
 
   newproperty(:ephemeral) do
     desc 'Amount of disk space (in gigabytes) to use for the ephemeral partition.'
+    newvalues(/\d+/)
   end
 
   newproperty(:swap) do
     desc 'Amount of swap space (in megabytes) to use.'
+    newvalues(/\d+/)
   end
 
   newproperty(:rxtx_factor) do
     desc 'The slice of bandwidth that the instances with this flavor can use (through the Virtual Interface (vif) creation in the hypervisor)'
+    newvalues(/\d+(\.\d+)?/)
   end
 
   newproperty(:is_public) do
