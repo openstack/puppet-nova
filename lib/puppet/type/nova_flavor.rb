@@ -82,35 +82,35 @@ Puppet::Type.newtype(:nova_flavor) do
     end
   end
 
-  newparam(:id) do
+  newproperty(:id) do
     desc 'Unique ID (integer or UUID) for the flavor.'
   end
 
-  newparam(:ram) do
+  newproperty(:ram) do
     desc 'Amount of RAM to use (in megabytes).'
   end
 
-  newparam(:disk) do
+  newproperty(:disk) do
     desc 'Amount of disk space (in gigabytes) to use for the root (/) partition.'
   end
 
-  newparam(:vcpus) do
+  newproperty(:vcpus) do
     desc 'Number of virtual CPUs to use.'
   end
 
-  newparam(:ephemeral) do
+  newproperty(:ephemeral) do
     desc 'Amount of disk space (in gigabytes) to use for the ephemeral partition.'
   end
 
-  newparam(:swap) do
+  newproperty(:swap) do
     desc 'Amount of swap space (in megabytes) to use.'
   end
 
-  newparam(:rxtx_factor) do
+  newproperty(:rxtx_factor) do
     desc 'The slice of bandwidth that the instances with this flavor can use (through the Virtual Interface (vif) creation in the hypervisor)'
   end
 
-  newparam(:is_public) do
+  newproperty(:is_public) do
     desc "Whether the flavor is public or not. Default true"
     newvalues(/(y|Y)es/, /(n|N)o/, /(t|T)rue/, /(f|F)alse/, true, false)
     defaultto(true)

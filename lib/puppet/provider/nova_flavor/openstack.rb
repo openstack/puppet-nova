@@ -118,7 +118,7 @@ Puppet::Type.type(:nova_flavor).provide(
         :disk         => attrs[:disk],
         :ephemeral    => attrs[:ephemeral],
         :vcpus        => attrs[:vcpus],
-        :is_public    => attrs[:is_public].downcase.chomp == 'true'? true : false,
+        :is_public    => attrs[:is_public].downcase.chomp == 'true'? :true : :false,
         :swap         => attrs[:swap],
         :rxtx_factor  => attrs[:rxtx_factor],
         :properties   => properties,
