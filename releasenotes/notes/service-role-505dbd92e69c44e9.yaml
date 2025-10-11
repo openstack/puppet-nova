@@ -1,0 +1,5 @@
+---
+features:
+  - |
+    The ``nova::keystone::auth`` class now adds the ``service`` role by
+    default. Set the ``roles`` parameter not to add the role.

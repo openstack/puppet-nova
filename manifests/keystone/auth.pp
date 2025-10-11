@@ -45,7 +45,7 @@
 #
 # [*roles*]
 #   (Optional) List of roles assigned to the nova service user
-#   Defaults to ['admin']
+#   Defaults to ['admin', 'service']
 #
 # [*system_scope*]
 #   Scope for system operations
@@ -83,7 +83,7 @@ class nova::keystone::auth (
   String[1] $service_description          = 'OpenStack Compute Service',
   String[1] $region                       = 'RegionOne',
   String[1] $tenant                       = 'services',
-  Array[String[1]] $roles                 = ['admin'],
+  Array[String[1]] $roles                 = ['admin', 'service'],
   String[1] $system_scope                 = 'all',
   Array[String[1]] $system_roles          = [],
   String[1] $email                        = 'nova@localhost',
