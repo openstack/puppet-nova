@@ -1,0 +1,4 @@
+---
+features:
+  - |
+    The new ``nova::console_allowed_origins`` parameter has been added.

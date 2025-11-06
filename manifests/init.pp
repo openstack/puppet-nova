@@ -236,6 +236,11 @@
 #   (optional) SSL key file (if separate from cert).
 #   Defaults to $facts['os_service_default']
 #
+# [*console_allowed_origins*]
+#   (optional) List of allowed origins to the console websockey proxy to allow
+#   connections from other origin hostnames.
+#   Defaults to $facts['os_service_default']
+#
 # [*console_ssl_ciphers*]
 #   (optional) OpenSSL cipher preference string that specifies what ciphers to
 #   allow for TLS connections from clients.  See the man page for the OpenSSL
@@ -396,6 +401,7 @@ class nova (
   $source_is_ipv6                          = $facts['os_service_default'],
   $cert                                    = $facts['os_service_default'],
   $key                                     = $facts['os_service_default'],
+  $console_allowed_origins                 = $facts['os_service_default'],
   $console_ssl_ciphers                     = $facts['os_service_default'],
   $console_ssl_minimum_version             = $facts['os_service_default'],
   $notification_transport_url              = $facts['os_service_default'],
@@ -494,6 +500,7 @@ class nova (
     'DEFAULT/source_is_ipv6':                value => $source_is_ipv6;
     'DEFAULT/cert':                          value => $cert;
     'DEFAULT/key':                           value => $key;
+    'console/allowed_origins':               value => join(any2array($console_allowed_origins), ',');
     'console/ssl_ciphers':                   value => join(any2array($console_ssl_ciphers), ':');
     'console/ssl_minimum_version':           value => $console_ssl_minimum_version;
     'DEFAULT/my_ip':                         value => $my_ip;
