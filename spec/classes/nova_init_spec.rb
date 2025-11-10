@@ -90,6 +90,7 @@ describe 'nova' do
         is_expected.to contain_nova_config('DEFAULT/source_is_ipv6').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('DEFAULT/cert').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('DEFAULT/key').with_value('<SERVICE DEFAULT>')
+        is_expected.to contain_nova_config('console/allowed_origins').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('console/ssl_ciphers').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('console/ssl_minimum_version').with_value('<SERVICE DEFAULT>')
         is_expected.to contain_nova_config('DEFAULT/dhcp_domain').with_value('<SERVICE DEFAULT>')
@@ -154,6 +155,7 @@ describe 'nova' do
           :source_is_ipv6                     => false,
           :cert                               => '/etc/ssl/private/snakeoil.pem',
           :key                                => '/etc/ssl/certs/snakeoil.pem',
+          :console_allowed_origins            => 'http://example.com',
           :console_ssl_ciphers                => 'kEECDH+aECDSA+AES:kEECDH+AES+aRSA:kEDH+aRSA+AES',
           :console_ssl_minimum_version        => 'tlsv1_2',
           :dhcp_domain                        => 'foo',
@@ -246,6 +248,7 @@ describe 'nova' do
         is_expected.to contain_nova_config('DEFAULT/source_is_ipv6').with_value(false)
         is_expected.to contain_nova_config('DEFAULT/cert').with_value('/etc/ssl/private/snakeoil.pem')
         is_expected.to contain_nova_config('DEFAULT/key').with_value('/etc/ssl/certs/snakeoil.pem')
+        is_expected.to contain_nova_config('console/allowed_origins').with_value('http://example.com')
         is_expected.to contain_nova_config('console/ssl_ciphers').with_value('kEECDH+aECDSA+AES:kEECDH+AES+aRSA:kEDH+aRSA+AES')
         is_expected.to contain_nova_config('console/ssl_minimum_version').with_value('tlsv1_2')
         is_expected.to contain_nova_config('DEFAULT/dhcp_domain').with_value('foo')
@@ -340,13 +343,17 @@ describe 'nova' do
       it { is_expected.to contain_nova_config('DEFAULT/initial_disk_allocation_ratio').with_value(3.0) }
     end
 
-    context 'with array used for console_ssl_ciphers' do
+    context 'with array used for console parameters' do
       let :params do
         {
-          :console_ssl_ciphers => ['kEECDH+aECDSA+AES', 'kEECDH+AES+aRSA', 'kEDH+aRSA+AES']
+          :console_allowed_origins => ['http://192.0.2.1', 'http://192.0.2.2'],
+          :console_ssl_ciphers     => ['kEECDH+aECDSA+AES', 'kEECDH+AES+aRSA', 'kEDH+aRSA+AES']
         }
       end
-      it {is_expected.to contain_nova_config('console/ssl_ciphers').with_value('kEECDH+aECDSA+AES:kEECDH+AES+aRSA:kEDH+aRSA+AES') }
+      it {
+        is_expected.to contain_nova_config('console/allowed_origins').with_value('http://192.0.2.1,http://192.0.2.2')
+        is_expected.to contain_nova_config('console/ssl_ciphers').with_value('kEECDH+aECDSA+AES:kEECDH+AES+aRSA:kEDH+aRSA+AES')
+      }
     end
   end
 
