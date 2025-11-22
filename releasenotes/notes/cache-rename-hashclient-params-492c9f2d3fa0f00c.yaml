@@ -1,0 +1,8 @@
+---
+deprecations:
+  - |
+    The ``nova::cache::hashclient_retry_delay`` parameter was deprecated
+    in favor of the new ``hashclient_retry_timeout`` parameter.
+  - |
+    The ``nova::cache::dead_timeout`` parameter was deprecated in favor
+    of the new ``hashclient_dead_timeout`` parameter.

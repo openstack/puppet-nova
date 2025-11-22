@@ -203,12 +203,12 @@
 #   the HashClient's internal mechanisms.
 #   Default to $facts['os_service_default']
 #
-# [*hashclient_retry_delay*]
+# [*hashclient_retry_timeout*]
 #   (Optional) Time in seconds that should pass between
 #   retry attempts in the HashClient's internal mechanisms.
 #   Default to $facts['os_service_default']
 #
-# [*dead_timeout*]
+# [*hashclient_dead_timeout*]
 #   (Optional) Time in seconds before attempting to add a node
 #   back in the pool in the HashClient's internal mechanisms.
 #   Default to $facts['os_service_default']
@@ -216,6 +216,18 @@
 # [*manage_backend_package*]
 #   (Optional) Whether to install the backend package for the cache.
 #   Defaults to true
+#
+# DEPRECATED PARAMETERS
+#
+# [*hashclient_retry_delay*]
+#   (Optional) Time in seconds that should pass between
+#   retry attempts in the HashClient's internal mechanisms.
+#   Default to undef
+#
+# [*dead_timeout*]
+#   (Optional) Time in seconds before attempting to add a node
+#   back in the pool in the HashClient's internal mechanisms.
+#   Default to undef
 #
 class nova::cache (
   $config_prefix                        = $facts['os_service_default'],
@@ -255,9 +267,11 @@ class nova::cache (
   $retry_attempts                       = $facts['os_service_default'],
   $retry_delay                          = $facts['os_service_default'],
   $hashclient_retry_attempts            = $facts['os_service_default'],
-  $hashclient_retry_delay               = $facts['os_service_default'],
-  $dead_timeout                         = $facts['os_service_default'],
+  $hashclient_retry_timeout             = $facts['os_service_default'],
+  $hashclient_dead_timeout              = $facts['os_service_default'],
   Boolean $manage_backend_package       = true,
+  $hashclient_retry_delay               = undef,
+  $dead_timeout                         = undef,
 ) {
   include nova::deps
 
@@ -299,9 +313,11 @@ class nova::cache (
     retry_attempts                       => $retry_attempts,
     retry_delay                          => $retry_delay,
     hashclient_retry_attempts            => $hashclient_retry_attempts,
+    hashclient_retry_timeout             => $hashclient_retry_timeout,
+    hashclient_dead_timeout              => $hashclient_dead_timeout,
+    manage_backend_package               => $manage_backend_package,
     hashclient_retry_delay               => $hashclient_retry_delay,
     dead_timeout                         => $dead_timeout,
-    manage_backend_package               => $manage_backend_package,
   }
 
   # all cache settings should be applied and all packages should be installed
