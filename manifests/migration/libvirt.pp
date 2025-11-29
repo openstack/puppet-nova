@@ -68,6 +68,10 @@
 #   to 0 to disable timeouts.
 #   Defaults to $facts['os_service_default']
 #
+# [*live_migration_parallel_connections*]
+#   (optional) Number of parallel connections to QEMU during live migrations.
+#   Defaults to $facts['os_service_default']
+#
 # [*live_migration_timeout_action*]
 #   (optional) This option will be used to determine what action will be taken
 #   against a VM after live_migration_completion_timeout expires. By default,
@@ -183,6 +187,7 @@ class nova::migration::libvirt (
   $live_migration_downtime_steps       = $facts['os_service_default'],
   $live_migration_downtime_delay       = $facts['os_service_default'],
   $live_migration_completion_timeout   = $facts['os_service_default'],
+  $live_migration_parallel_connections = $facts['os_service_default'],
   $live_migration_timeout_action       = $facts['os_service_default'],
   $live_migration_permit_post_copy     = $facts['os_service_default'],
   $live_migration_permit_auto_converge = $facts['os_service_default'],
@@ -245,6 +250,7 @@ class nova::migration::libvirt (
       'libvirt/live_migration_downtime_steps':       value => $live_migration_downtime_steps;
       'libvirt/live_migration_downtime_delay':       value => $live_migration_downtime_delay;
       'libvirt/live_migration_completion_timeout':   value => $live_migration_completion_timeout;
+      'libvirt/live_migration_parallel_connections': value => $live_migration_parallel_connections;
       'libvirt/live_migration_timeout_action':       value => $live_migration_timeout_action;
       'libvirt/live_migration_inbound_addr':         value => $live_migration_inbound_addr;
       'libvirt/live_migration_scheme':               value => $live_migration_scheme;
