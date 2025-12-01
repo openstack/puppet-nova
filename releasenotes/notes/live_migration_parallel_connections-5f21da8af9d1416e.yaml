@@ -1,0 +1,5 @@
+---
+features:
+  - |
+    The new ``nova::migration::libvirt::live_migration_parallel_connections``
+    parameter has been added.
