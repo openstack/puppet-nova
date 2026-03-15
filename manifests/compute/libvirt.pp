@@ -219,6 +219,11 @@
 #   Trusted Platform Module (TPM) functionality, runs as.
 #   Defaults to $facts['os_service_default']
 #
+# [*supported_tpm_secret_security*]
+#   (optional) The list of TPL security policies supported by this compute
+#   host.
+#   Defaults to $facts['os_service_default']
+#
 # [*max_queues*]
 #   (optional) The maximum number of virtio queue pairs that can be enabled
 #   when creating a multiqueue guest. The number of virtio queues allocated
@@ -288,6 +293,7 @@ class nova::compute::libvirt (
   $swtpm_enabled                              = $facts['os_service_default'],
   $swtpm_user                                 = $facts['os_service_default'],
   $swtpm_group                                = $facts['os_service_default'],
+  $supported_tpm_secret_security              = $facts['os_service_default'],
   $max_queues                                 = $facts['os_service_default'],
   $wait_soft_reboot_seconds                   = $facts['os_service_default'],
   $tb_cache_size                              = $facts['os_service_default'],
@@ -411,6 +417,7 @@ will be removed in a future release")
     'libvirt/swtpm_enabled':                 value => $swtpm_enabled;
     'libvirt/swtpm_user'   :                 value => $swtpm_user;
     'libvirt/swtpm_group':                   value => $swtpm_group;
+    'libvirt/supported_tpm_secret_security': value => join(any2array($supported_tpm_secret_security), ',');
     'libvirt/max_queues':                    value => $max_queues;
     'libvirt/num_memory_encrypted_guests':   value => pick($num_memory_encrypted_guests, $facts['os_service_default']);
     'libvirt/wait_soft_reboot_seconds':      value => $wait_soft_reboot_seconds;
