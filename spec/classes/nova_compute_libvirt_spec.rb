@@ -56,6 +56,7 @@ describe 'nova::compute::libvirt' do
       it { is_expected.to contain_nova_config('libvirt/swtpm_user').with_value('<SERVICE DEFAULT>')}
       it { is_expected.to contain_nova_config('libvirt/swtpm_group').with_value('<SERVICE DEFAULT>')}
       it { is_expected.to contain_nova_config('libvirt/supported_tpm_secret_security').with_value('<SERVICE DEFAULT>')}
+      it { is_expected.to contain_nova_config('libvirt/use_default_aio_mode_for_volumes').with_value('<SERVICE DEFAULT>')}
       it { is_expected.to contain_nova_config('libvirt/max_queues').with_value('<SERVICE DEFAULT>')}
       it { is_expected.to contain_nova_config('libvirt/num_memory_encrypted_guests').with_value('<SERVICE DEFAULT>')}
       it { is_expected.to contain_nova_config('libvirt/wait_soft_reboot_seconds').with_value('<SERVICE DEFAULT>')}
@@ -65,48 +66,49 @@ describe 'nova::compute::libvirt' do
     context 'with parameters' do
       let :params do
         {
-          :virt_type                     => 'qemu',
-          :vncserver_listen              => '0.0.0.0',
-          :cpu_mode                      => 'host-passthrough',
-          :cpu_model_extra_flags         => 'pcid',
-          :cpu_power_management          => false,
-          :cpu_power_management_strategy => 'cpu_state',
-          :cpu_power_governor_low        => 'powersave',
-          :cpu_power_governor_high       => 'performance',
-          :snapshot_image_format         => 'raw',
-          :snapshots_directory           => '/var/lib/nova/snapshots',
-          :disk_cachemodes               => ['file=directsync','block=none'],
-          :hw_disk_discard               => 'unmap',
-          :hw_machine_type               => 'x86_64=machinetype1,armv7l=machinetype2',
-          :sysinfo_serial                => 'auto',
-          :enabled_perf_events           => ['cmt', 'mbml', 'mbmt'],
-          :device_detach_attempts        => 8,
-          :device_detach_timeout         => 20,
-          :libvirt_service_name          => 'custom_libvirtd',
-          :virtlock_service_name         => 'custom_virtlockd',
-          :virtlog_service_name          => 'custom_virtlogd',
-          :compute_driver                => 'libvirt.FoobarDriver',
-          :preallocate_images            => 'space',
-          :rx_queue_size                 => 512,
-          :tx_queue_size                 => 1024,
-          :file_backed_memory            => 2048,
-          :images_type                   => 'raw',
-          :volume_use_multipath          => false,
-          :volume_enforce_multipath      => false,
-          :num_volume_scan_tries         => 3,
-          :nfs_mount_point_base          => '/var/lib/nova/mnt',
-          :nfs_mount_options             => 'rw,intr,nolock',
-          :num_pcie_ports                => 16,
-          :mem_stats_period_seconds      => 20,
-          :pmem_namespaces               => ['128G:ns0|ns1|ns2|ns3', '262144MB:ns4|ns5', 'MEDIUM:ns6|ns7'],
-          :swtpm_enabled                 => true,
-          :swtpm_user                    => 'libvirt',
-          :swtpm_group                   => 'libvirt',
-          :supported_tpm_secret_security => ['user', 'host', 'deployment'],
-          :max_queues                    => 4,
-          :num_memory_encrypted_guests   => 255,
-          :wait_soft_reboot_seconds      => 120,
-          :tb_cache_size                 => 32,
+          :virt_type                        => 'qemu',
+          :vncserver_listen                 => '0.0.0.0',
+          :cpu_mode                         => 'host-passthrough',
+          :cpu_model_extra_flags            => 'pcid',
+          :cpu_power_management             => false,
+          :cpu_power_management_strategy    => 'cpu_state',
+          :cpu_power_governor_low           => 'powersave',
+          :cpu_power_governor_high          => 'performance',
+          :snapshot_image_format            => 'raw',
+          :snapshots_directory              => '/var/lib/nova/snapshots',
+          :disk_cachemodes                  => ['file=directsync','block=none'],
+          :hw_disk_discard                  => 'unmap',
+          :hw_machine_type                  => 'x86_64=machinetype1,armv7l=machinetype2',
+          :sysinfo_serial                   => 'auto',
+          :enabled_perf_events              => ['cmt', 'mbml', 'mbmt'],
+          :device_detach_attempts           => 8,
+          :device_detach_timeout            => 20,
+          :libvirt_service_name             => 'custom_libvirtd',
+          :virtlock_service_name            => 'custom_virtlockd',
+          :virtlog_service_name             => 'custom_virtlogd',
+          :compute_driver                   => 'libvirt.FoobarDriver',
+          :preallocate_images               => 'space',
+          :rx_queue_size                    => 512,
+          :tx_queue_size                    => 1024,
+          :file_backed_memory               => 2048,
+          :images_type                      => 'raw',
+          :volume_use_multipath             => false,
+          :volume_enforce_multipath         => false,
+          :num_volume_scan_tries            => 3,
+          :nfs_mount_point_base             => '/var/lib/nova/mnt',
+          :nfs_mount_options                => 'rw,intr,nolock',
+          :num_pcie_ports                   => 16,
+          :mem_stats_period_seconds         => 20,
+          :pmem_namespaces                  => ['128G:ns0|ns1|ns2|ns3', '262144MB:ns4|ns5', 'MEDIUM:ns6|ns7'],
+          :swtpm_enabled                    => true,
+          :swtpm_user                       => 'libvirt',
+          :swtpm_group                      => 'libvirt',
+          :supported_tpm_secret_security    => ['user', 'host', 'deployment'],
+          :use_default_aio_mode_for_volumes => false,
+          :max_queues                       => 4,
+          :num_memory_encrypted_guests      => 255,
+          :wait_soft_reboot_seconds         => 120,
+          :tb_cache_size                    => 32,
         }
       end
 
@@ -155,6 +157,7 @@ describe 'nova::compute::libvirt' do
       it { is_expected.to contain_nova_config('libvirt/swtpm_user').with_value('libvirt')}
       it { is_expected.to contain_nova_config('libvirt/swtpm_group').with_value('libvirt')}
       it { is_expected.to contain_nova_config('libvirt/supported_tpm_secret_security').with_value('user,host,deployment')}
+      it { is_expected.to contain_nova_config('libvirt/use_default_aio_mode_for_volumes').with_value(false)}
       it { is_expected.to contain_nova_config('libvirt/max_queues').with_value(4)}
       it { is_expected.to contain_nova_config('libvirt/num_memory_encrypted_guests').with_value(255)}
       it { is_expected.to contain_nova_config('libvirt/wait_soft_reboot_seconds').with_value(120)}

@@ -1,0 +1,5 @@
+---
+features:
+  - |
+    The new ``nova::compute::libvirt::use_default_aio_mode_for_volumes``
+    parameter has been added.
