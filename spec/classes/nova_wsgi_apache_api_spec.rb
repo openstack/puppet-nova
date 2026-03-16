@@ -238,7 +238,7 @@ describe 'nova::wsgi::apache_api' do
         when 'Debian'
           {
             :wsgi_script_path       => '/usr/lib/cgi-bin/nova',
-            :api_wsgi_script_source => '/usr/bin/nova-api-wsgi',
+            :api_wsgi_script_source => '/usr/lib/python3/dist-packages/nova/wsgi/osapi_compute.py',
           }
         when 'RedHat'
           {

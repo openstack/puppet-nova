@@ -5,7 +5,7 @@
 class nova::params {
   include openstacklib::defaults
 
-  $pyver3 = $openstacklib::defaults::pyver3
+  $pybasedir = $openstacklib::defaults::pybasedir
 
   $client_package = 'python3-novaclient'
   $user           = 'nova'
@@ -65,8 +65,8 @@ class nova::params {
       # redhat specific config defaults
       $lock_path                         = '/var/lib/nova/tmp'
       $nova_wsgi_script_path             = '/var/www/cgi-bin/nova'
-      $nova_api_wsgi_script_source       = "/usr/lib/python${pyver3}/site-packages/nova/wsgi/osapi_compute.py"
-      $nova_metadata_wsgi_script_source  = "/usr/lib/python${pyver3}/site-packages/nova/wsgi/metadata.py"
+      $nova_api_wsgi_script_source       = "${pybasedir}/nova/wsgi/osapi_compute.py"
+      $nova_metadata_wsgi_script_source  = "${pybasedir}/nova/wsgi/metadata.py"
     }
     'Debian': {
       # package names
@@ -107,8 +107,8 @@ class nova::params {
       $vncproxy_service_name             = 'nova-novncproxy'
       $serialproxy_service_name          = 'nova-serialproxy'
       $nova_wsgi_script_path             = '/usr/lib/cgi-bin/nova'
-      $nova_api_wsgi_script_source       = '/usr/bin/nova-api-wsgi'
-      $nova_metadata_wsgi_script_source  = '/usr/bin/nova-metadata-wsgi'
+      $nova_api_wsgi_script_source       = "${pybasedir}/nova/wsgi/osapi_compute.py"
+      $nova_metadata_wsgi_script_source  = "${pybasedir}/nova/wsgi/metadata.py"
       # debian specific nova config
       $lock_path                         = '/var/lock/nova'
       case $facts['os']['name'] {
