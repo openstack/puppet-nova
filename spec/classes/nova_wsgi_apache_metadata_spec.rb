@@ -224,7 +224,7 @@ describe 'nova::wsgi::apache_metadata' do
         when 'Debian'
           {
             :wsgi_script_path            => '/usr/lib/cgi-bin/nova',
-            :metadata_wsgi_script_source => '/usr/bin/nova-metadata-wsgi',
+            :metadata_wsgi_script_source => '/usr/lib/python3/dist-packages/nova/wsgi/metadata.py',
           }
         when 'RedHat'
           {
