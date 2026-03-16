@@ -118,13 +118,7 @@ class nova::params {
           $spicehtml5proxy_service_name = 'nova-spicehtml5proxy'
           $vncproxy_package_name        = 'nova-consoleproxy'
           $serialproxy_package_name     = 'nova-consoleproxy'
-          # Starting with Debian 13, virtlockd lives in a separate plugin package.
-          if Integer.new($facts['os']['release']['major']) >= 13 {
-            $virtlock_package_name      = 'libvirt-daemon-plugin-lockd'
-          } else {
-            $virtlock_package_name      = undef
-          }
-          # Use default provider on Debian
+          $virtlock_package_name        = 'libvirt-daemon-plugin-lockd'
         }
         default: {
           $api_metadata_service_name    = undef
