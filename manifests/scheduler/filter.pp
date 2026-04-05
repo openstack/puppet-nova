@@ -96,17 +96,19 @@
 #   (optional) Prevent non-isolated images from being built on isolated hosts.
 #   Defaults to $facts['os_service_default']
 #
-# [*aggregate_image_properties_isolation_namespace*]
-#   (optional) Image property namespace for use in the host aggregate
-#   Defaults to $facts['os_service_default']
-#
-# [*aggregate_image_properties_isolation_separator*]
-#   (optional) Separator character(s) for image property namespace and name
-#   Defaults to $facts['os_service_default']
-#
 # [*pci_in_placement*]
 #   (optional) Enable scheduling and claiming PCI devices in Placement.
 #   Defaults to $facts['os_service_default']
+#
+# DEPRECATED PARAMETERS
+#
+# [*aggregate_image_properties_isolation_namespace*]
+#   (optional) Image property namespace for use in the host aggregate
+#   Defaults to undef
+#
+# [*aggregate_image_properties_isolation_separator*]
+#   (optional) Separator character(s) for image property namespace and name
+#   Defaults to undef
 #
 class nova::scheduler::filter (
   $host_subset_size                               = $facts['os_service_default'],
@@ -130,11 +132,20 @@ class nova::scheduler::filter (
   $hypervisor_version_weight_multiplier           = $facts['os_service_default'],
   $shuffle_best_same_weighed_hosts                = $facts['os_service_default'],
   $restrict_isolated_hosts_to_isolated_images     = $facts['os_service_default'],
-  $aggregate_image_properties_isolation_namespace = $facts['os_service_default'],
-  $aggregate_image_properties_isolation_separator = $facts['os_service_default'],
   $pci_in_placement                               = $facts['os_service_default'],
+  # DEPRECATED PARAMETERS
+  $aggregate_image_properties_isolation_namespace = undef,
+  $aggregate_image_properties_isolation_separator = undef,
 ) {
   include nova::deps
+
+  if $aggregate_image_properties_isolation_namespace != undef {
+    warning('The aggregate_image_properties_isolation_namespace parameter is deprecated.')
+  }
+
+  if $aggregate_image_properties_isolation_separator != undef {
+    warning('The aggregate_image_properties_isolation_separator parameter is deprecated.')
+  }
 
   if empty($available_filters) {
     warning('available_filters is empty. Nova is deployed without filters')
@@ -187,9 +198,9 @@ class nova::scheduler::filter (
     'filter_scheduler/restrict_isolated_hosts_to_isolated_images':
       value => $restrict_isolated_hosts_to_isolated_images;
     'filter_scheduler/aggregate_image_properties_isolation_namespace':
-      value => $aggregate_image_properties_isolation_namespace;
+      value => pick($aggregate_image_properties_isolation_namespace, $facts['os_service_default']);
     'filter_scheduler/aggregate_image_properties_isolation_separator':
-      value => $aggregate_image_properties_isolation_separator;
+      value => pick($aggregate_image_properties_isolation_separator, $facts['os_service_default']);
     'filter_scheduler/pci_in_placement':
       value => $pci_in_placement;
   }
