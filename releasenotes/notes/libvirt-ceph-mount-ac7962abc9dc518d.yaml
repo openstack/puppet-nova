@@ -1,0 +1,8 @@
+---
+features:
+  - |
+    The following parameters have been added to the ``nova::compute::libvirt``
+    class.
+
+    - ``ceph_mount_point_base``
+    - ``ceph_mount_options``

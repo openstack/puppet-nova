@@ -184,6 +184,15 @@
 #   nfs man page for details.
 #   Defaults to $facts['os_service_default']
 #
+# [*ceph_mount_point_base*]
+#   (optional) Directory where the ceph volume is mounted on the compute node.
+#   Defaults to $facts['os_service_default']
+#
+# [*ceph_mount_options*]
+#   (optional) Mount options passed to the ceph client. See section of the
+#   ceph man page for details.
+#   Defaults to $facts['os_service_default']
+#
 # [*num_pcie_ports*]
 #  (optional) The number of PCIe ports an instance will get.
 #  Libvirt allows a custom number of PCIe ports (pcie-root-port controllers) a
@@ -292,6 +301,8 @@ class nova::compute::libvirt (
   $num_volume_scan_tries                      = $facts['os_service_default'],
   $nfs_mount_point_base                       = $facts['os_service_default'],
   $nfs_mount_options                          = $facts['os_service_default'],
+  $ceph_mount_point_base                      = $facts['os_service_default'],
+  $ceph_mount_options                         = $facts['os_service_default'],
   $num_pcie_ports                             = $facts['os_service_default'],
   $mem_stats_period_seconds                   = $facts['os_service_default'],
   $pmem_namespaces                            = $facts['os_service_default'],
@@ -417,6 +428,8 @@ will be removed in a future release")
     'libvirt/num_volume_scan_tries':            value => $num_volume_scan_tries;
     'libvirt/nfs_mount_point_base':             value => $nfs_mount_point_base;
     'libvirt/nfs_mount_options':                value => $nfs_mount_options;
+    'libvirt/ceph_mount_point_base':            value => $ceph_mount_point_base;
+    'libvirt/ceph_mount_options':               value => join(any2array($ceph_mount_options), ',');
     'libvirt/num_pcie_ports':                   value => $num_pcie_ports;
     'libvirt/mem_stats_period_seconds':         value => $mem_stats_period_seconds;
     'libvirt/pmem_namespaces':                  value => join(any2array($pmem_namespaces), ',');

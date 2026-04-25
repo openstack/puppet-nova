@@ -49,6 +49,8 @@ describe 'nova::compute::libvirt' do
       it { is_expected.to contain_nova_config('libvirt/num_volume_scan_tries').with_value('<SERVICE DEFAULT>')}
       it { is_expected.to contain_nova_config('libvirt/nfs_mount_point_base').with_value('<SERVICE DEFAULT>')}
       it { is_expected.to contain_nova_config('libvirt/nfs_mount_options').with_value('<SERVICE DEFAULT>')}
+      it { is_expected.to contain_nova_config('libvirt/ceph_mount_point_base').with_value('<SERVICE DEFAULT>')}
+      it { is_expected.to contain_nova_config('libvirt/ceph_mount_options').with_value('<SERVICE DEFAULT>')}
       it { is_expected.to contain_nova_config('libvirt/num_pcie_ports').with_value('<SERVICE DEFAULT>')}
       it { is_expected.to contain_nova_config('libvirt/mem_stats_period_seconds').with_value('<SERVICE DEFAULT>')}
       it { is_expected.to contain_nova_config('libvirt/pmem_namespaces').with_value('<SERVICE DEFAULT>')}
@@ -97,6 +99,8 @@ describe 'nova::compute::libvirt' do
           :num_volume_scan_tries            => 3,
           :nfs_mount_point_base             => '/var/lib/nova/mnt',
           :nfs_mount_options                => 'rw,intr,nolock',
+          :ceph_mount_point_base            => '/var/lib/nova/cephmnt',
+          :ceph_mount_options               => 'vers=3,lookupcache=pos',
           :num_pcie_ports                   => 16,
           :mem_stats_period_seconds         => 20,
           :pmem_namespaces                  => ['128G:ns0|ns1|ns2|ns3', '262144MB:ns4|ns5', 'MEDIUM:ns6|ns7'],
@@ -150,6 +154,8 @@ describe 'nova::compute::libvirt' do
       it { is_expected.to contain_nova_config('libvirt/num_volume_scan_tries').with_value(3)}
       it { is_expected.to contain_nova_config('libvirt/nfs_mount_point_base').with_value('/var/lib/nova/mnt')}
       it { is_expected.to contain_nova_config('libvirt/nfs_mount_options').with_value('rw,intr,nolock')}
+      it { is_expected.to contain_nova_config('libvirt/ceph_mount_point_base').with_value('/var/lib/nova/cephmnt')}
+      it { is_expected.to contain_nova_config('libvirt/ceph_mount_options').with_value('vers=3,lookupcache=pos')}
       it { is_expected.to contain_nova_config('libvirt/num_pcie_ports').with_value(16)}
       it { is_expected.to contain_nova_config('libvirt/mem_stats_period_seconds').with_value(20)}
       it { is_expected.to contain_nova_config('libvirt/pmem_namespaces').with_value('128G:ns0|ns1|ns2|ns3,262144MB:ns4|ns5,MEDIUM:ns6|ns7')}
