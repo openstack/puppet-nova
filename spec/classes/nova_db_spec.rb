@@ -17,6 +17,7 @@ describe 'nova::db' do
         :retry_interval          => '<SERVICE DEFAULT>',
         :max_overflow            => '<SERVICE DEFAULT>',
         :pool_timeout            => '<SERVICE DEFAULT>',
+        :connection_parameters   => '<SERVICE DEFAULT>',
         :mysql_enable_ndb        => nil,
       )}
       it { should contain_oslo__db('nova_config_api').with(
@@ -30,6 +31,7 @@ describe 'nova::db' do
         :retry_interval          => '<SERVICE DEFAULT>',
         :max_overflow            => '<SERVICE DEFAULT>',
         :pool_timeout            => '<SERVICE DEFAULT>',
+        :connection_parameters   => '<SERVICE DEFAULT>',
       )}
     end
 
@@ -45,6 +47,7 @@ describe 'nova::db' do
           :database_max_overflow                => '5',
           :database_pool_timeout                => '20',
           :database_db_max_retries              => '10',
+          :connection_parameters                => { 'ssl' => true, 'ssl_ca' => '/etc/ca.pem' },
           :mysql_enable_ndb                     => 'true',
           :api_database_connection              => 'mysql+pymysql://user:pass@db/db2',
           :api_slave_connection                 => 'mysql+pymysql://user:pass@slave/db2',
@@ -54,6 +57,7 @@ describe 'nova::db' do
           :api_database_retry_interval          => '5',
           :api_database_max_overflow            => '0',
           :api_database_pool_timeout            => '30',
+          :api_connection_parameters            => { 'ssl' => true, 'ssl_ca' => '/etc/ca_api.pem' },
         )
       end
 
@@ -67,6 +71,7 @@ describe 'nova::db' do
         :max_overflow            => '5',
         :pool_timeout            => '20',
         :db_max_retries          => '10',
+        :connection_parameters   => { 'ssl' => true, 'ssl_ca' => '/etc/ca.pem' },
         :mysql_enable_ndb        => 'true',
       )}
 
@@ -81,6 +86,7 @@ describe 'nova::db' do
         :retry_interval          => '5',
         :max_overflow            => '0',
         :pool_timeout            => '30',
+        :connection_parameters   => { 'ssl' => true, 'ssl_ca' => '/etc/ca_api.pem' },
       )}
     end
   end
