@@ -1,0 +1,5 @@
+---
+features:
+  - |
+    The new ``nova::migration::libvirt::live_migration_monitor_interval``
+    parameter has been added.
