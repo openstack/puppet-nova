@@ -96,6 +96,11 @@
 #   due to the version of libvirt and QEMU in use.
 #   Defaults to $facts['os_service_default']
 #
+# [*live_migration_monitor_interval*]
+#   (optional) Interval, in seconds, at which to save migration stats to
+#   the database.
+#   Defaults to $facts['os_service_default']
+#
 # [*override_uuid*]
 #   (optional) Set uuid not equal to output from dmidecode (boolean)
 #   Defaults to false
@@ -191,6 +196,7 @@ class nova::migration::libvirt (
   $live_migration_timeout_action       = $facts['os_service_default'],
   $live_migration_permit_post_copy     = $facts['os_service_default'],
   $live_migration_permit_auto_converge = $facts['os_service_default'],
+  $live_migration_monitor_interval     = $facts['os_service_default'],
   Boolean $override_uuid               = false,
   $host_uuid                           = undef,
   Boolean $configure_libvirt           = true,
@@ -256,6 +262,7 @@ class nova::migration::libvirt (
       'libvirt/live_migration_scheme':               value => $live_migration_scheme;
       'libvirt/live_migration_permit_post_copy':     value => $live_migration_permit_post_copy;
       'libvirt/live_migration_permit_auto_converge': value => $live_migration_permit_auto_converge;
+      'libvirt/live_migration_monitor_interval':     value => $live_migration_monitor_interval;
     }
   }
 

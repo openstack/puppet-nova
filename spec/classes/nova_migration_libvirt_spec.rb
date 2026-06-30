@@ -54,6 +54,7 @@ describe 'nova::migration::libvirt' do
       it { is_expected.to contain_nova_config('libvirt/live_migration_scheme').with_value('tcp') }
       it { is_expected.to contain_nova_config('libvirt/live_migration_permit_post_copy').with_value('<SERVICE DEFAULT>')}
       it { is_expected.to contain_nova_config('libvirt/live_migration_permit_auto_converge').with_value('<SERVICE DEFAULT>')}
+      it { is_expected.to contain_nova_config('libvirt/live_migration_monitor_interval').with_value('<SERVICE DEFAULT>')}
     end
 
     context 'with override_uuid enabled' do
@@ -141,6 +142,7 @@ describe 'nova::migration::libvirt' do
           :live_migration_completion_timeout   => 1500,
           :live_migration_parallel_connections => 1,
           :live_migration_timeout_action       => 'force_complete',
+          :live_migration_monitor_interval     => 5,
         })
       end
       it { is_expected.to contain_nova_config('libvirt/live_migration_tunnelled').with(:value => true) }
@@ -151,6 +153,7 @@ describe 'nova::migration::libvirt' do
       it { is_expected.to contain_nova_config('libvirt/live_migration_completion_timeout').with_value(1500) }
       it { is_expected.to contain_nova_config('libvirt/live_migration_parallel_connections').with_value(1) }
       it { is_expected.to contain_nova_config('libvirt/live_migration_timeout_action').with_value('force_complete') }
+      it { is_expected.to contain_nova_config('libvirt/live_migration_monitor_interval').with_value(5) }
     end
 
     context 'with live migration auto converge on' do
