@@ -4,10 +4,6 @@
 #
 # === Parameters
 #
-# [*enforce_scope*]
-#  (Optional) Whether or not to enforce scope when evaluating policies.
-#  Defaults to $facts['os_service_default'].
-#
 # [*enforce_new_defaults*]
 #  (Optional) Whether or not to use old deprecated defaults when evaluating
 #  policies.
@@ -45,14 +41,21 @@
 #    file.
 #    Defaults to false.
 #
+# DEPRECATED PARAMETERS
+#
+# [*enforce_scope*]
+#  (Optional) Whether or not to enforce scope when evaluating policies.
+#  Defaults to undef.
+#
 class nova::policy (
-  $enforce_scope                    = $facts['os_service_default'],
   $enforce_new_defaults             = $facts['os_service_default'],
   Openstacklib::Policies $policies  = {},
   Stdlib::Absolutepath $policy_path = '/etc/nova/policy.yaml',
   $policy_default_rule              = $facts['os_service_default'],
   $policy_dirs                      = $facts['os_service_default'],
   Boolean $purge_config             = false,
+  # DEPRECATED PARAMETERS
+  $enforce_scope                    = undef,
 ) {
   include nova::deps
   include nova::params
