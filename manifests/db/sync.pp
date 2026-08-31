@@ -31,7 +31,7 @@ class nova::db::sync (
     subscribe   => [
       Anchor['nova::install::end'],
       Anchor['nova::config::end'],
-      Anchor['nova::dbsync::begin']
+      Anchor['nova::dbsync::begin'],
     ],
     notify      => Anchor['nova::dbsync::end'],
     tag         => 'openstack-db',
