@@ -59,11 +59,6 @@
 #   before error is raised. Set to -1 to specify an infinite retry count.
 #   Defaults to $facts['os_service_default']
 #
-# [*mysql_enable_ndb*]
-#   (Optional) If True, transparently enables support for handling MySQL
-#   Cluster (NDB).
-#   Defaults to $facts['os_service_default']
-#
 # [*api_database_connection*]
 #   (optional) Connection url to connect to nova api database.
 #   Defaults to $facts['os_service_default']
@@ -97,6 +92,13 @@
 #   (Optional) If set, use this value for pool_timeout with SQLAlchemy.
 #   Defaults to $facts['os_service_default']
 #
+# DEPRECATED PARAMETERS
+#
+# [*mysql_enable_ndb*]
+#   (Optional) If True, transparently enables support for handling MySQL
+#   Cluster (NDB).
+#   Defaults to undef
+#
 class nova::db (
   $database_connection                  = $facts['os_service_default'],
   $slave_connection                     = $facts['os_service_default'],
@@ -107,7 +109,6 @@ class nova::db (
   $database_max_overflow                = $facts['os_service_default'],
   $database_pool_timeout                = $facts['os_service_default'],
   $database_db_max_retries              = $facts['os_service_default'],
-  $mysql_enable_ndb                     = $facts['os_service_default'],
   $api_database_connection              = $facts['os_service_default'],
   $api_slave_connection                 = $facts['os_service_default'],
   $api_database_connection_recycle_time = $facts['os_service_default'],
@@ -116,6 +117,8 @@ class nova::db (
   $api_database_retry_interval          = $facts['os_service_default'],
   $api_database_max_overflow            = $facts['os_service_default'],
   $api_database_pool_timeout            = $facts['os_service_default'],
+  # DEPRECATED PARAMETERS
+  $mysql_enable_ndb                     = undef,
 ) {
   include nova::deps
 

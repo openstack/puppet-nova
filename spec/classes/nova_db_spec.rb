@@ -17,7 +17,7 @@ describe 'nova::db' do
         :retry_interval          => '<SERVICE DEFAULT>',
         :max_overflow            => '<SERVICE DEFAULT>',
         :pool_timeout            => '<SERVICE DEFAULT>',
-        :mysql_enable_ndb        => '<SERVICE DEFAULT>',
+        :mysql_enable_ndb        => nil,
       )}
       it { should contain_oslo__db('nova_config_api').with(
         :config                  => 'nova_config',
