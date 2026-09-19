@@ -184,26 +184,6 @@
 #   (optional) Path to the rootwrap configuration file to use for running commands as root
 #   Defaults to '/etc/nova/rootwrap.conf'
 #
-# [*use_ssl*]
-#   (optional) Enable SSL on the API server
-#   Defaults to false
-#
-# [*enabled_ssl_apis*]
-#   (optional) List of APIs to SSL enable
-#   Defaults to ['osapi_compute', 'metadata']
-#
-# [*cert_file*]
-#   (optional) Certificate file to use when starting API server securely
-#   Defaults to undef
-#
-# [*key_file*]
-#   (optional) Private key file to use when starting API server securely
-#   Defaults to undef
-#
-# [*ca_file*]
-#   (optional) CA certificate file to use to verify connecting clients
-#   Defaults to undef
-#
 # [*nova_public_key*]
 #   (optional) Install public key in .ssh/authorized_keys for the 'nova' user.
 #   Expects a hash of the form { type => 'key-type', key => 'key-data' } where
@@ -425,23 +405,9 @@ class nova (
   $dhcp_domain                             = $facts['os_service_default'],
   $instance_name_template                  = $facts['os_service_default'],
   $cell_worker_thread_pool_size            = $facts['os_service_default'],
-  # DEPRECATED PARAMETERS
-  $use_ssl                                 = undef,
-  $enabled_ssl_apis                        = undef,
-  $ca_file                                 = undef,
-  $cert_file                               = undef,
-  $key_file                                = undef,
 ) inherits nova::params {
   include nova::deps
   include nova::workarounds
-
-  [
-    'use_ssl', 'enabled_ssl_apis', 'ca_file', 'cert_file', 'key_file',
-  ].each |String $opt| {
-    if getvar($opt) != undef {
-      warning("The ${opt} parameter is deprecated and has no effect.")
-    }
-  }
 
   if $nova_public_key or $nova_private_key {
     file { '/var/lib/nova/.ssh':
@@ -541,13 +507,6 @@ class nova (
     rabbit_stream_fanout            => $rabbit_stream_fanout,
     enable_cancel_on_failover       => $rabbit_enable_cancel_on_failover,
     rabbit_retry_interval           => $rabbit_retry_interval,
-  }
-
-  nova_config {
-    'DEFAULT/enabled_ssl_apis': ensure => absent;
-    'wsgi/ssl_cert_file':       ensure => absent;
-    'wsgi/ssl_key_file':        ensure => absent;
-    'wsgi/ssl_ca_file':         ensure => absent;
   }
 
   oslo::messaging::default { 'nova_config':

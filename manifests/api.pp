@@ -105,36 +105,6 @@
 #   the up cells.
 #   Defaults to $facts['os_service_default']
 #
-# DEPRECATED PARAMETERS
-#
-# [*api_bind_address*]
-#   (optional) IP address for nova-api server to listen
-#   Defaults to undef
-#
-# [*metadata_listen*]
-#   (optional) IP address for metadata server to listen
-#   Defaults to undef
-#
-# [*metadata_listen_port*]
-#   (optional) The port on which the metadata API will listen.
-#   Defaults to undef
-#
-# [*enabled_apis*]
-#   (optional) A list of apis to enable
-#   Defaults to undef
-#
-# [*osapi_compute_workers*]
-#   (optional) Number of workers for OpenStack API service
-#   Defaults to undef
-#
-# [*osapi_compute_listen_port*]
-#   (optional) The port on which the OpenStack API will listen.
-#   Defaults to undef
-#
-# [*metadata_workers*]
-#   (optional) Number of workers for metadata service
-#   Defaults to undef
-#
 class nova::api (
   Boolean $enabled                                                   = true,
   Boolean $manage_service                                            = true,
@@ -157,14 +127,6 @@ class nova::api (
   $instance_list_cells_batch_strategy                                = $facts['os_service_default'],
   $instance_list_cells_batch_fixed_size                              = $facts['os_service_default'],
   $list_records_by_skipping_down_cells                               = $facts['os_service_default'],
-  # DEPRECATED PARAMETERS
-  $api_bind_address                                                  = undef,
-  $osapi_compute_listen_port                                         = undef,
-  $metadata_listen                                                   = undef,
-  $metadata_listen_port                                              = undef,
-  $enabled_apis                                                      = undef,
-  $osapi_compute_workers                                             = undef,
-  $metadata_workers                                                  = undef,
 ) inherits nova::params {
   include nova::deps
   include nova::db
@@ -172,16 +134,6 @@ class nova::api (
   include nova::keystone::authtoken
   include nova::availability_zone
   include nova::pci
-
-  [
-    'api_bind_address', 'osapi_compute_listen_port',
-    'metadata_listen', 'metadata_listen_port',
-    'enabled_apis', 'osapi_compute_workers', 'metadata_workers',
-  ].each |String $opt| {
-    if getvar($opt) != undef {
-      warning("The ${opt} parameter is deprecated and has no effect.")
-    }
-  }
 
   case $service_name {
     'httpd': {
@@ -234,16 +186,6 @@ class nova::api (
       package_name   => $nova::params::api_package_name,
       service_name   => $metadata_service_name,
     }
-  }
-
-  nova_config {
-    'DEFAULT/enabled_apis':              ensure => absent;
-    'DEFAULT/osapi_compute_listen':      ensure => absent;
-    'DEFAULT/osapi_compute_listen_port': ensure => absent;
-    'DEFAULT/osapi_compute_workers':     ensure => absent;
-    'DEFAULT/metadata_workers':          ensure => absent;
-    'DEFAULT/metadata_listen':           ensure => absent;
-    'DEFAULT/metadata_listen_port':      ensure => absent;
   }
 
   oslo::middleware { 'nova_config':
