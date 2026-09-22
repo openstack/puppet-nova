@@ -86,10 +86,44 @@ describe 'nova::compute::rbd' do
         )
       end
 
-      it { is_expected.to contain_nova__compute__libvirt__secret_ceph('4f515eff-47e4-425c-b24d-9c6adc56401c').with(
-        :uuid  => '4f515eff-47e4-425c-b24d-9c6adc56401c',
-        :value => 'AQBHCbtT6APDHhAA5W00cBchwkQjh3dkKsyPjw==',
-      )}
+      it 'should pass the secret key as a sensitive value' do
+        is_expected.to contain_nova__compute__libvirt__secret_ceph('4f515eff-47e4-425c-b24d-9c6adc56401c').with(
+          :uuid  => '4f515eff-47e4-425c-b24d-9c6adc56401c',
+          :value => sensitive('AQBHCbtT6APDHhAA5W00cBchwkQjh3dkKsyPjw=='),
+        )
+        is_expected.to contain_file('/etc/nova/libvirt-secret-4f515eff-47e4-425c-b24d-9c6adc56401c.secret').with(
+          :content => sensitive('AQBHCbtT6APDHhAA5W00cBchwkQjh3dkKsyPjw=='),
+        )
+      end
+    end
+
+    context 'when using cephx with a sensitive secret key' do
+      before do
+        params.merge!(
+          :libvirt_rbd_secret_uuid => '4f515eff-47e4-425c-b24d-9c6adc56401c',
+          :libvirt_rbd_secret_key  => sensitive('AQBHCbtT6APDHhAA5W00cBchwkQjh3dkKsyPjw=='),
+        )
+      end
+
+      it 'should pass the secret key as a sensitive value' do
+        is_expected.to contain_nova__compute__libvirt__secret_ceph('4f515eff-47e4-425c-b24d-9c6adc56401c').with(
+          :uuid  => '4f515eff-47e4-425c-b24d-9c6adc56401c',
+          :value => sensitive('AQBHCbtT6APDHhAA5W00cBchwkQjh3dkKsyPjw=='),
+        )
+        is_expected.to contain_file('/etc/nova/libvirt-secret-4f515eff-47e4-425c-b24d-9c6adc56401c.secret').with(
+          :content => sensitive('AQBHCbtT6APDHhAA5W00cBchwkQjh3dkKsyPjw=='),
+        )
+      end
+    end
+
+    context 'when using cephx without a secret key' do
+      before do
+        params.merge!(
+          :libvirt_rbd_secret_uuid => '4f515eff-47e4-425c-b24d-9c6adc56401c',
+        )
+      end
+
+      it { is_expected.to raise_error(Puppet::Error, /libvirt_rbd_secret_key is required/) }
     end
 
     context 'when using cephx but disabling ephemeral storage' do
@@ -116,7 +150,7 @@ describe 'nova::compute::rbd' do
 
       it { is_expected.to contain_nova__compute__libvirt__secret_ceph('4f515eff-47e4-425c-b24d-9c6adc56401c').with(
         :uuid  => '4f515eff-47e4-425c-b24d-9c6adc56401c',
-        :value => 'AQBHCbtT6APDHhAA5W00cBchwkQjh3dkKsyPjw==',
+        :value => sensitive('AQBHCbtT6APDHhAA5W00cBchwkQjh3dkKsyPjw=='),
       )}
     end
 

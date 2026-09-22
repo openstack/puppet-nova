@@ -21,6 +21,9 @@
 #
 # [*value*]
 # (Required) The value to store in the secret. It should be base64-encoded.
+# The value is always written as a Sensitive value so that it is redacted
+# in logs and reports. Wrap the value in Sensitive to also redact this
+# parameter in the catalog.
 #
 # [*secret_name*]
 # (Optional) The name of the libvirt secret.
@@ -32,10 +35,15 @@
 #
 define nova::compute::libvirt::secret_ceph (
   Pattern[/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[0-9a-f]{4}-[0-9a-f]{12}$/] $uuid,
-  Stdlib::Base64 $value,
+  Variant[Stdlib::Base64, Sensitive[Stdlib::Base64]] $value,
   String[1] $secret_name            = $name,
   Stdlib::Absolutepath $secret_path = '/etc/nova',
 ) {
+  # Always wrap the value in Sensitive so that it is redacted in the catalog,
+  # reports and logs. Sensitive() returns the value as-is when it is already
+  # a Sensitive.
+  $value_real = Sensitive($value)
+
   $xml_file = "${secret_path}/libvirt-secret-${uuid}.xml"
   file { $xml_file:
     ensure  => file,
@@ -55,7 +63,7 @@ define nova::compute::libvirt::secret_ceph (
     owner     => 'root',
     group     => 'root',
     mode      => '0600',
-    content   => $value,
+    content   => $value_real,
     show_diff => false,
     require   => Anchor['nova::config::begin'],
   }

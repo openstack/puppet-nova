@@ -32,9 +32,11 @@
 #
 # [*libvirt_rbd_secret_key*]
 #   (optional) The cephx key to use as key for the libvirt secret,
-#   it must be base64 encoded; when not provided this key will be
-#   requested to the ceph cluster, which assumes the node is
-#   provided of the client.admin keyring as well.
+#   it must be base64 encoded. The key is always passed on as a Sensitive
+#   value so that it is redacted in logs and reports. Wrap the value in
+#   Sensitive to also redact this parameter in the catalog.
+#   Required when libvirt_rbd_secret_uuid is set and manage_libvirt_secret
+#   is true.
 #   Default to undef.
 #
 # [*libvirt_images_rbd_pool*]
@@ -101,7 +103,7 @@
 class nova::compute::rbd (
   $libvirt_rbd_user,
   $libvirt_rbd_secret_uuid                      = undef,
-  $libvirt_rbd_secret_key                       = undef,
+  Optional[Variant[Stdlib::Base64, Sensitive[Stdlib::Base64]]] $libvirt_rbd_secret_key = undef,
   $libvirt_images_rbd_pool                      = 'rbd',
   $libvirt_images_rbd_ceph_conf                 = '/etc/ceph/ceph.conf',
   $libvirt_images_rbd_glance_store_name         = $facts['os_service_default'],
@@ -157,9 +159,11 @@ class nova::compute::rbd (
         fail('libvirt_rbd_secret_key is required when libvirt_rbd_secret_uuid is set')
       }
 
+      # Wrap the key in Sensitive so that it is redacted in the catalog,
+      # reports and logs.
       nova::compute::libvirt::secret_ceph { $libvirt_rbd_secret_uuid:
         uuid  => $libvirt_rbd_secret_uuid,
-        value => $libvirt_rbd_secret_key,
+        value => Sensitive($libvirt_rbd_secret_key),
       }
     }
   } else {

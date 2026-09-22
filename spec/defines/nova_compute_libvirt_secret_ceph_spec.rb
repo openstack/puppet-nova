@@ -2,11 +2,15 @@ require 'spec_helper'
 
 describe 'nova::compute::libvirt::secret_ceph' do
   shared_examples 'nova::compute::libvirt::secret_ceph' do
-    describe 'with required parameters' do
-      let :pre_condition do
-        "include nova"
-      end
+    let :pre_condition do
+      "include nova"
+    end
 
+    let :title do
+      'random'
+    end
+
+    describe 'with required parameters' do
       let :params do
         {
           :uuid        => '4f515eff-47e4-425c-b24d-9c6adc56401c',
@@ -14,10 +18,6 @@ describe 'nova::compute::libvirt::secret_ceph' do
           :secret_name => 'client.openstack',
           :secret_path => '/tmp',
         }
-      end
-
-      let :title do
-        'random'
       end
 
       it { is_expected.to contain_file('/tmp/libvirt-secret-4f515eff-47e4-425c-b24d-9c6adc56401c.xml').with(
@@ -43,7 +43,7 @@ EOS
         :mode      => '0600',
         :show_diff => false,
         :require   => 'Anchor[nova::config::begin]',
-        :content   => 'AQBHCbtT6APDHhAA5W00cBchwkQjh3dkKsyPjw==',
+        :content   => sensitive('AQBHCbtT6APDHhAA5W00cBchwkQjh3dkKsyPjw=='),
       )}
 
       it { is_expected.to contain_exec('get-or-set virsh secret 4f515eff-47e4-425c-b24d-9c6adc56401c').with(
@@ -66,6 +66,49 @@ EOS
           'Exec[get-or-set virsh secret 4f515eff-47e4-425c-b24d-9c6adc56401c]',
         ],
       )}
+    end
+
+    describe 'with a sensitive value' do
+      let :params do
+        {
+          :uuid        => '4f515eff-47e4-425c-b24d-9c6adc56401c',
+          :value       => sensitive('AQBHCbtT6APDHhAA5W00cBchwkQjh3dkKsyPjw=='),
+          :secret_name => 'client.openstack',
+          :secret_path => '/tmp',
+        }
+      end
+
+      it { is_expected.to contain_file('/tmp/libvirt-secret-4f515eff-47e4-425c-b24d-9c6adc56401c.secret').with(
+        :ensure    => 'file',
+        :owner     => 'root',
+        :group     => 'root',
+        :mode      => '0600',
+        :show_diff => false,
+        :require   => 'Anchor[nova::config::begin]',
+        :content   => sensitive('AQBHCbtT6APDHhAA5W00cBchwkQjh3dkKsyPjw=='),
+      )}
+    end
+
+    describe 'with an invalid value' do
+      let :params do
+        {
+          :uuid  => '4f515eff-47e4-425c-b24d-9c6adc56401c',
+          :value => 'not base64!',
+        }
+      end
+
+      it { is_expected.to raise_error(Puppet::Error) }
+    end
+
+    describe 'with an invalid sensitive value' do
+      let :params do
+        {
+          :uuid  => '4f515eff-47e4-425c-b24d-9c6adc56401c',
+          :value => sensitive('not base64!'),
+        }
+      end
+
+      it { is_expected.to raise_error(Puppet::Error) }
     end
   end
 
