@@ -59,6 +59,11 @@
 #   before error is raised. Set to -1 to specify an infinite retry count.
 #   Defaults to $facts['os_service_default']
 #
+# [*connection_parameters*]
+#   (optional) URL parameters to append to the main database connection
+#   URL at conect time
+#   Defaults to $facts['os_service_default']
+#
 # [*api_database_connection*]
 #   (optional) Connection url to connect to nova api database.
 #   Defaults to $facts['os_service_default']
@@ -92,6 +97,11 @@
 #   (Optional) If set, use this value for pool_timeout with SQLAlchemy.
 #   Defaults to $facts['os_service_default']
 #
+# [*api_connection_parameters*]
+#   (optional) URL parameters to append to the api database connection
+#   URL at conect time
+#   Defaults to $facts['os_service_default']
+#
 # DEPRECATED PARAMETERS
 #
 # [*mysql_enable_ndb*]
@@ -100,25 +110,27 @@
 #   Defaults to undef
 #
 class nova::db (
-  $database_connection                  = $facts['os_service_default'],
-  $slave_connection                     = $facts['os_service_default'],
-  $database_connection_recycle_time     = $facts['os_service_default'],
-  $database_max_pool_size               = $facts['os_service_default'],
-  $database_max_retries                 = $facts['os_service_default'],
-  $database_retry_interval              = $facts['os_service_default'],
-  $database_max_overflow                = $facts['os_service_default'],
-  $database_pool_timeout                = $facts['os_service_default'],
-  $database_db_max_retries              = $facts['os_service_default'],
-  $api_database_connection              = $facts['os_service_default'],
-  $api_slave_connection                 = $facts['os_service_default'],
-  $api_database_connection_recycle_time = $facts['os_service_default'],
-  $api_database_max_pool_size           = $facts['os_service_default'],
-  $api_database_max_retries             = $facts['os_service_default'],
-  $api_database_retry_interval          = $facts['os_service_default'],
-  $api_database_max_overflow            = $facts['os_service_default'],
-  $api_database_pool_timeout            = $facts['os_service_default'],
+  $database_connection                                 = $facts['os_service_default'],
+  $slave_connection                                    = $facts['os_service_default'],
+  $database_connection_recycle_time                    = $facts['os_service_default'],
+  $database_max_pool_size                              = $facts['os_service_default'],
+  $database_max_retries                                = $facts['os_service_default'],
+  $database_retry_interval                             = $facts['os_service_default'],
+  $database_max_overflow                               = $facts['os_service_default'],
+  $database_pool_timeout                               = $facts['os_service_default'],
+  $database_db_max_retries                             = $facts['os_service_default'],
+  Oslo::Dbconn::Conn_params $connection_parameters     = $facts['os_service_default'],
+  $api_database_connection                             = $facts['os_service_default'],
+  $api_slave_connection                                = $facts['os_service_default'],
+  $api_database_connection_recycle_time                = $facts['os_service_default'],
+  $api_database_max_pool_size                          = $facts['os_service_default'],
+  $api_database_max_retries                            = $facts['os_service_default'],
+  $api_database_retry_interval                         = $facts['os_service_default'],
+  $api_database_max_overflow                           = $facts['os_service_default'],
+  $api_database_pool_timeout                           = $facts['os_service_default'],
+  Oslo::Dbconn::Conn_params $api_connection_parameters = $facts['os_service_default'],
   # DEPRECATED PARAMETERS
-  $mysql_enable_ndb                     = undef,
+  $mysql_enable_ndb                                    = undef,
 ) {
   include nova::deps
 
@@ -133,6 +145,7 @@ class nova::db (
     pool_timeout            => $database_pool_timeout,
     mysql_enable_ndb        => $mysql_enable_ndb,
     slave_connection        => $slave_connection,
+    connection_parameters   => $connection_parameters,
   }
 
   oslo::db { 'nova_config_api':
@@ -146,6 +159,7 @@ class nova::db (
     retry_interval          => $api_database_retry_interval,
     max_overflow            => $api_database_max_overflow,
     pool_timeout            => $api_database_pool_timeout,
+    connection_parameters   => $api_connection_parameters,
   }
 
   # all db settings should be applied and all packages should be installed

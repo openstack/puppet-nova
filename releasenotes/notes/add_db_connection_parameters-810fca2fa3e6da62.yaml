@@ -1,0 +1,7 @@
+---
+features:
+  - |
+    Add possibility to specify database connection parameters for api and
+    main database (parameters ``nova::db::connection_parameters`` and
+    ``nova::db::api_connection_parameters``). This allows to eg. to specify
+    ssl connection with a trusted certificate.
