@@ -346,6 +346,16 @@ will be removed in a future release")
       ensure => $ensure_package,
       tag    => ['openstack', 'nova-package'],
     }
+    # On Debian, libvirtd's polkit configuration only grants access to
+    # the libvirt and libvirt-qemu groups, so the nova user must be a
+    # member of both for the compute service to work.
+    user { $nova::params::user:
+      ensure     => present,
+      membership => minimum,
+      groups     => ['libvirt', 'libvirt-qemu'],
+      require    => Anchor['nova::install::end'],
+      before     => Anchor['nova::service::begin'],
+    }
   }
 
   if $migration_support {
