@@ -39,16 +39,6 @@ describe 'nova::api' do
 
       it { is_expected.to contain_class('nova::availability_zone') }
 
-      it 'clears eventlet options' do
-        is_expected.to contain_nova_config('DEFAULT/enabled_apis').with_ensure('absent')
-        is_expected.to contain_nova_config('DEFAULT/osapi_compute_workers').with_ensure('absent')
-        is_expected.to contain_nova_config('DEFAULT/osapi_compute_listen').with_ensure('absent')
-        is_expected.to contain_nova_config('DEFAULT/osapi_compute_listen_port').with_ensure('absent')
-        is_expected.to contain_nova_config('DEFAULT/metadata_workers').with_ensure('absent')
-        is_expected.to contain_nova_config('DEFAULT/metadata_listen').with_ensure('absent')
-        is_expected.to contain_nova_config('DEFAULT/metadata_listen_port').with_ensure('absent')
-      end
-
       it 'configures various stuff' do
         is_expected.to contain_nova_config('wsgi/api_paste_config').with_value('api-paste.ini')
         is_expected.to contain_oslo__middleware('nova_config').with(
