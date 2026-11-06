@@ -265,6 +265,14 @@ describe 'nova::compute::libvirt' do
           :tag    => ['openstack', 'nova-package']
         )
       }
+
+      it {
+        is_expected.to contain_user('nova').with(
+          :ensure     => 'present',
+          :membership => 'minimum',
+          :groups     => ['libvirt', 'libvirt-qemu']
+        )
+      }
     end
 
     describe 'with params' do
@@ -284,6 +292,8 @@ describe 'nova::compute::libvirt' do
   shared_examples 'nova::compute::libvirt on RedHat' do
     context 'with default parameters' do
       it { is_expected.to_not contain_package('nova-compute-kvm') }
+
+      it { is_expected.to_not contain_user('nova') }
     end
 
     describe 'with params' do
