@@ -255,13 +255,6 @@
 #   (optional) The tb-cache size (in MiB) of each guest VM.
 #   Defaults to $facts['os_service_default']
 #
-# DEPRECATED PARAMETERS
-#
-# [*num_memory_encrypted_guests*]
-#   (optional) The maximum number of guests with encrypted memory which can
-#   run concurrently on this compute host.
-#   Defaults to undef
-#
 class nova::compute::libvirt (
   Stdlib::Ensure::Package $ensure_package     = 'present',
   Nova::VirtType $virt_type                   = 'kvm',
@@ -314,15 +307,8 @@ class nova::compute::libvirt (
   $max_queues                                 = $facts['os_service_default'],
   $wait_soft_reboot_seconds                   = $facts['os_service_default'],
   $tb_cache_size                              = $facts['os_service_default'],
-  # DEPRECATED PARAMETERS
-  $num_memory_encrypted_guests                = undef,
 ) inherits nova::params {
   include nova::deps
-
-  if $num_memory_encrypted_guests {
-    warning("The num_memory_encrypted_guests parameter is deprecated and \
-will be removed in a future release")
-  }
 
   # cpu_mode has different defaults depending on hypervisor.
   if !$cpu_mode {
@@ -449,7 +435,6 @@ will be removed in a future release")
     'libvirt/supported_tpm_secret_security':    value => join(any2array($supported_tpm_secret_security), ',');
     'libvirt/use_default_aio_mode_for_volumes': value => $use_default_aio_mode_for_volumes;
     'libvirt/max_queues':                       value => $max_queues;
-    'libvirt/num_memory_encrypted_guests':      value => pick($num_memory_encrypted_guests, $facts['os_service_default']);
     'libvirt/wait_soft_reboot_seconds':         value => $wait_soft_reboot_seconds;
     'libvirt/tb_cache_size':                    value => $tb_cache_size;
   }

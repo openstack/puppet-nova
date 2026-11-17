@@ -60,7 +60,6 @@ describe 'nova::compute::libvirt' do
       it { is_expected.to contain_nova_config('libvirt/supported_tpm_secret_security').with_value('<SERVICE DEFAULT>')}
       it { is_expected.to contain_nova_config('libvirt/use_default_aio_mode_for_volumes').with_value('<SERVICE DEFAULT>')}
       it { is_expected.to contain_nova_config('libvirt/max_queues').with_value('<SERVICE DEFAULT>')}
-      it { is_expected.to contain_nova_config('libvirt/num_memory_encrypted_guests').with_value('<SERVICE DEFAULT>')}
       it { is_expected.to contain_nova_config('libvirt/wait_soft_reboot_seconds').with_value('<SERVICE DEFAULT>')}
       it { is_expected.to contain_nova_config('libvirt/tb_cache_size').with_value('<SERVICE DEFAULT>')}
     end
@@ -110,7 +109,6 @@ describe 'nova::compute::libvirt' do
           :supported_tpm_secret_security    => ['user', 'host', 'deployment'],
           :use_default_aio_mode_for_volumes => false,
           :max_queues                       => 4,
-          :num_memory_encrypted_guests      => 255,
           :wait_soft_reboot_seconds         => 120,
           :tb_cache_size                    => 32,
         }
@@ -165,7 +163,6 @@ describe 'nova::compute::libvirt' do
       it { is_expected.to contain_nova_config('libvirt/supported_tpm_secret_security').with_value('user,host,deployment')}
       it { is_expected.to contain_nova_config('libvirt/use_default_aio_mode_for_volumes').with_value(false)}
       it { is_expected.to contain_nova_config('libvirt/max_queues').with_value(4)}
-      it { is_expected.to contain_nova_config('libvirt/num_memory_encrypted_guests').with_value(255)}
       it { is_expected.to contain_nova_config('libvirt/wait_soft_reboot_seconds').with_value(120)}
       it { is_expected.to contain_nova_config('libvirt/tb_cache_size').with_value(32)}
     end
